@@ -1,0 +1,22 @@
+node_modules/
+dist/
+.astro/
+.vercel/
+test-results*/
+playwright-report*/
+tmp/
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store
+.idea/
+.vscode/
+
+# Generated from canonical docs/ and content-map.mjs.
+/apps/starlight/src/content/docs/proposal/
+/apps/starlight/src/content/docs/architecture/
+/apps/starlight/src/content/docs/operations/
+/apps/starlight/src/content/docs/evidence/
+/apps/starlight/src/content/docs/reference/
+/apps/starlight/src/content/docs/implementation/

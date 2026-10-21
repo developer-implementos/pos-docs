@@ -1,0 +1,21 @@
+{
+  "name": "pos-docs",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Documentación técnica y presentaciones de POS Platform",
+  "engines": { "node": ">=22.19 <23 || >=24 <25" },
+  "packageManager": "npm@11.6.0",
+  "scripts": {
+    "setup": "npm --prefix apps/starlight ci",
+    "dev": "npm --prefix apps/starlight run dev",
+    "validate": "npm --prefix apps/starlight run validate",
+    "typecheck": "npm --prefix apps/starlight run typecheck",
+    "build": "npm --prefix apps/starlight run build",
+    "check": "npm --prefix apps/starlight run check",
+    "preview": "npm --prefix apps/starlight run preview",
+    "verify": "npm run validate && npm run typecheck && npm run build && npm run check",
+    "sync:catalog": "npm --prefix apps/starlight run sync:catalog",
+    "evidence:capture": "node tools/capture-product-evidence.mjs"
+  }
+}
