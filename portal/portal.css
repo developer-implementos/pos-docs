@@ -495,6 +495,19 @@ p {
   margin-top:2px
 }
 @media(max-width:900px) {
+  .filters {
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    gap:12px;
+  }
+  .filters .search-field {
+    grid-column:1/-1;
+    min-width:0;
+  }
+  .filters button {
+    grid-column:1/-1;
+    justify-self:end;
+  }
   .source-summary {
     flex-direction:column;
     align-items:flex-start;
@@ -596,19 +609,6 @@ p {
   }
   .actions {
     gap:16px
-  }
-  .filters {
-    display:grid;
-    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-    gap:12px;
-  }
-  .filters .search-field {
-    grid-column:1/-1;
-    min-width:0;
-  }
-  .filters button {
-    grid-column:1/-1;
-    justify-self:end;
   }
   .material {
     padding:20px;
