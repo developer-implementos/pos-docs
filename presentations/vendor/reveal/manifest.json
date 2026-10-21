@@ -1,0 +1,33 @@
+{
+  "name": "reveal.js",
+  "version": "5.1.0",
+  "repository": "https://github.com/hakimel/reveal.js",
+  "commit": "6b8c64ffa8fddd9ed4bcd92bcfd37b67ba410244",
+  "license": "MIT",
+  "files": [
+    {
+      "path": "dist/reveal.js",
+      "source": "https://raw.githubusercontent.com/hakimel/reveal.js/6b8c64ffa8fddd9ed4bcd92bcfd37b67ba410244/dist/reveal.js",
+      "bytes": 107670,
+      "sha256": "9736bf3d8918e391e8c07c85c53773800d4004dc25f948916e319ca371ca881a"
+    },
+    {
+      "path": "dist/reveal.css",
+      "source": "https://raw.githubusercontent.com/hakimel/reveal.js/6b8c64ffa8fddd9ed4bcd92bcfd37b67ba410244/dist/reveal.css",
+      "bytes": 52279,
+      "sha256": "9cbc5082797d938f0ee780328790a131ae3d7bc5c09c176e77927c174f29e60a"
+    },
+    {
+      "path": "dist/reset.css",
+      "source": "https://raw.githubusercontent.com/hakimel/reveal.js/6b8c64ffa8fddd9ed4bcd92bcfd37b67ba410244/dist/reset.css",
+      "bytes": 871,
+      "sha256": "1aa8e84c9cabcbfe4d95b19879fe48b9c2c5e6d54574cbe679bc22edb9fe12b6"
+    },
+    {
+      "path": "LICENSE",
+      "source": "https://raw.githubusercontent.com/hakimel/reveal.js/6b8c64ffa8fddd9ed4bcd92bcfd37b67ba410244/LICENSE",
+      "bytes": 1108,
+      "sha256": "34014800f4126ac2525e224166f099f26628612e95c41f76d70841b63138c989"
+    }
+  ]
+}

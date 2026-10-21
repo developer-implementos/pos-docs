@@ -55,3 +55,9 @@ La entrada `/` redirige a `/guide/`. Las rutas documentales se conservan respect
 El despliegue queda pendiente de importación por el equipo. Se puede reconectar el proyecto Vercel anterior a este repositorio para conservar su dominio. El monorepo de producto desactiva nuevos despliegues automáticos de su antigua guía; su último despliegue continúa disponible mientras se realiza el cambio.
 
 Este repositorio es público: los catálogos de configuración describen nombres y propósitos, nunca valores de despliegue o credenciales. Los cambios documentales no regeneran narraciones ni audio automáticamente.
+
+## Presentación de arquitectura y roadmap
+
+`presentations/architecture/` mantiene la presentación de Implementos de 16 diapositivas, su PowerPoint original y las fuentes editables de Reveal.js. `npm run build` la incluye en `/presentations/architecture/` junto al portal; `npm run presentations:check` comprueba recursos, navegación, notas, impresión y lectura accesible. Tras el build, `npm run preview` permite abrir `http://127.0.0.1:4207/presentations/architecture/`.
+
+El [manual de la presentación](presentations/architecture/README.md) explica la edición, las fuentes fijadas y la diferencia documental respecto al PowerPoint trasladado. La presentación anterior con laboratorios, video y narrador permanece en pos-architecture.

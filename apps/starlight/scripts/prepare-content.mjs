@@ -108,6 +108,8 @@ for (const source of new Set(generatedPages.map(page => page.source))) {
 
 function rewriteTarget(rawTarget, source) {
   const target = rawTarget.replace(/^<|>$/g, '');
+  // These routes are generated from the checked-in presentation sources during build.
+  if (/^\/presentations\/(?:$|architecture\/(?:$|reading\.html(?:#.*)?$|downloads\/Implementos-POS-Platform-Arquitectura-y-Roadmap\.pptx$))/.test(target)) return rawTarget;
   if (/^(?:[a-z][a-z\d+.-]*:|\/\/)/i.test(target) || target.startsWith(siteBase)) return rawTarget;
   const hashIndex = target.indexOf('#');
   const hash = hashIndex < 0 ? '' : target.slice(hashIndex + 1);

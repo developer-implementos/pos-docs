@@ -8,6 +8,8 @@ const output = path.join(root, 'dist');
 const configuration = JSON.parse(fs.readFileSync(path.join(root, 'vercel.json'), 'utf8'));
 const types = {'.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.svg':'image/svg+xml', '.jpg':'image/jpeg', '.jpeg':'image/jpeg', '.png':'image/png', '.md':'text/plain; charset=utf-8', '.mmd':'text/plain; charset=utf-8', '.json':'application/json', '.ico':'image/x-icon', '.wasm':'application/wasm', '.woff':'font/woff', '.woff2':'font/woff2', '.webp':'image/webp', '.avif':'image/avif', '.excalidraw':'application/json', '.drawio':'application/xml', '.zip':'application/zip', '.pdf':'application/pdf'};
 function servePublic(port = Number(process.env.POS_DOCS_PORT || 4207)) {
+  types['.ttf'] = 'font/ttf';
+  types['.pptx'] = 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
   if (!fs.existsSync(path.join(output, '.pos-docs-build')) || fs.lstatSync(output).isSymbolicLink()) throw new Error('Build pos-docs before previewing it');
   const server = http.createServer((request, response) => {
     let pathname;

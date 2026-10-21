@@ -1,0 +1,44 @@
+@font-face{font-family:Inter;src:url('assets/Inter-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:Inter;src:url('assets/Inter-Bold.ttf') format('truetype');font-weight:700;font-display:swap}
+:root{font-family:Inter,Arial,sans-serif;color:#34383e;background:#edf4f8;--blue:#006db6;--green:#00937f}
+*{box-sizing:border-box}body{margin:0}button,a{touch-action:manipulation}a{color:var(--blue)}button{font:inherit;cursor:pointer}button:disabled{opacity:.4;cursor:default}button:focus-visible,a:focus-visible{outline:3px solid var(--green);outline-offset:3px}
+.reveal{height:calc(100dvh - 54px);font-family:Inter,Arial,sans-serif;font-size:22px;color:#34383e}
+.reveal .slides{text-align:left}.reveal .slides>section{padding:0;width:1280px;height:720px}.canvas{position:relative;width:1280px;height:720px;overflow:hidden}
+.reveal .object{position:absolute;margin:0;padding:0;border:0;box-shadow:none;max-width:none;max-height:none}
+.reveal .text{white-space:pre-wrap;line-height:1.13;letter-spacing:0;overflow:visible;font-family:Inter,Arial,sans-serif;text-transform:none}
+.reveal .logo{object-fit:contain}.reveal .connector{position:absolute;overflow:visible;pointer-events:none;max-width:none;max-height:none;margin:0}
+.reveal .progress{height:3px;background:#d9e6ec;color:var(--green)}.reveal .controls{color:var(--blue)}
+.toolbar{height:54px;display:flex;align-items:center;gap:8px;padding:7px 16px;background:white;border-top:1px solid #d9e6ec;font-size:13px;position:relative;z-index:5}
+.toolbar button,.toolbar a,.dialog-heading button{border:1px solid #d9e6ec;background:white;border-radius:4px;padding:8px 12px;text-decoration:none;color:#005a97;min-height:36px}
+.toolbar button:hover,.toolbar a:hover{background:#edf4f8}.toolbar output{font-variant-numeric:tabular-nums;min-width:50px;text-align:center;color:#636569}.spacer{flex:1}
+.skip{position:fixed;top:8px;left:8px;z-index:20;background:white;padding:12px;transform:translateY(-160%)}.skip:focus{transform:none}
+dialog{border:0;border-top:5px solid var(--green);border-radius:6px;padding:26px;width:min(820px,92vw);max-height:85dvh;overflow:auto;box-shadow:0 20px 80px #172b4960;color:#34383e;font:16px/1.6 Inter,Arial,sans-serif}
+dialog::backdrop{background:#13283cb3}.dialog-heading{display:flex;align-items:center;justify-content:space-between;gap:20px}.dialog-heading h2{margin:0;color:var(--blue);font-size:26px}.index-list{list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:8px}.index-list button{display:flex;align-items:center;gap:12px;text-align:left;width:100%;height:100%;padding:12px;background:#edf4f8;border:1px solid transparent;color:#34383e;border-radius:3px;font-size:14px}.index-list button:hover{border-color:var(--blue)}.index-list span{color:var(--green);font-weight:700}
+#notes-body p{white-space:pre-wrap}#notes-body h3{color:var(--blue)}
+.reader{background:white;max-width:960px;padding:48px 32px;margin:auto;line-height:1.65}.reader header{border-bottom:4px solid var(--green);padding-bottom:30px}.reader h1,.reader h2{color:var(--blue);line-height:1.2}.reader nav{display:flex;gap:24px;flex-wrap:wrap}.reader article{padding:28px 0;border-bottom:1px solid #d9e6ec}.reader details{background:#edf4f8;padding:16px;margin:20px 0}.reader summary{cursor:pointer;font-weight:700}.reader footer{padding:32px 0}.notice{font-size:14px;color:#636569}
+@media(max-width:760px){.toolbar{padding:5px 8px;gap:4px;overflow-x:auto;white-space:nowrap}.toolbar button,.toolbar a{padding:8px;font-size:12px}.toolbar .guide-link,.toolbar #fullscreen{display:none}.index-list{grid-template-columns:1fr}.reader{padding:24px 20px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+html.print-pdf .toolbar,html.print-pdf .skip,html.print-pdf dialog{display:none!important}html.print-pdf .reveal{height:100%}
+.monorepo-static{display:none;position:absolute;inset:0}
+.monorepo-tour{position:absolute;left:64px;top:228px;width:1152px;height:392px}
+.zone-nav{display:flex;gap:6px;align-items:stretch;height:36px;margin-bottom:16px}
+.zone-nav button{border:1px solid #ccdce6;border-radius:0;padding:6px 12px;font:700 17px/1.2 Inter,Arial,sans-serif;background:white;color:#006db6;white-space:nowrap}
+.zone-nav button[aria-current]{background:#006db6;color:white;border-color:#006db6;font-weight:700}
+.zone-nav button:hover{box-shadow:inset 0 -3px #00937f}
+.tree-panel{position:absolute;left:0;top:52px;width:864px;height:340px;overflow:auto;background:#f2f6f8;border:1px solid #d9e6ec;padding:6px 0;overscroll-behavior:contain;scrollbar-color:#9bb5c6 #edf4f8;scrollbar-width:thin}
+.tree-row,.tree-root{display:grid;grid-template-columns:34px 328px 1fr;gap:10px;min-height:23px;align-items:center;padding:0 10px 0 5px;white-space:pre;font:18px/23px Consolas,'Liberation Mono',monospace;border-left:3px solid transparent}
+.tree-row{color:#667985;background:transparent;transition:background-color .22s ease,color .22s ease}
+.tree-number{font:14px/23px Inter,Arial,sans-serif;text-align:right;color:#788c98;user-select:none}
+.tree-description{color:#637e79;font:16px/23px Inter,Arial,sans-serif;white-space:nowrap}
+.tree-branch{color:#90a3ae}.tree-root{color:#006db6}
+.tree-row.is-active{background:#dfedf6;color:#193c55;border-left-color:#00937f}
+.tree-row.is-active .tree-path{font-weight:700}.tree-row.is-active .tree-description{color:#006c5b}.tree-row.is-active .tree-number{color:#006db6}
+.zone-detail{position:absolute;left:888px;top:52px;width:264px;height:340px;display:flex;flex-direction:column;color:#34383e;font:18px/1.35 Inter,Arial,sans-serif}
+.zone-detail [hidden]{display:none!important}.zone-detail h3{font:700 23px/1.15 Inter,Arial,sans-serif;color:#006db6;margin:10px 0 14px}
+.zone-detail p{margin:0 0 14px}.zone-detail .zone-count{font-size:14px;font-weight:700;letter-spacing:.05em;color:#00937f;margin:0}
+.zone-detail .zone-state{border-top:2px solid #00937f;padding-top:13px;font-size:16px;line-height:1.35;color:#636569}
+.zone-detail .zone-hint{margin-top:auto;margin-bottom:0;font-size:14px;color:#636569;line-height:1.5}
+.reveal .zone-fragment{position:absolute;width:0;height:0;opacity:0!important;visibility:hidden!important;pointer-events:none}
+.tree-reading{overflow:auto;padding:20px;background:#edf4f8;font:14px/1.7 Consolas,'Liberation Mono',monospace}
+html.print-pdf .monorepo-tour{display:none!important}html.print-pdf .monorepo-static{display:block}
+@media print{.toolbar,.skip,dialog{display:none!important}.reader{max-width:none;padding:0}.reader article{break-inside:avoid}.reader details{display:block}}

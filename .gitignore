@@ -1,5 +1,10 @@
 node_modules/
 dist/
+# Checked-in Reveal.js distribution, verified by its vendor manifest.
+!/presentations/vendor/reveal/dist/
+!/presentations/vendor/reveal/dist/reveal.js
+!/presentations/vendor/reveal/dist/reveal.css
+!/presentations/vendor/reveal/dist/reset.css
 .astro/
 .vercel/
 test-results*/

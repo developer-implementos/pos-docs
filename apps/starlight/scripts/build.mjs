@@ -79,4 +79,5 @@ function externalize(directory) {
 }
 externalize(output);
 run(path.join(root, 'tools/export-documentation.mjs'));
+run(path.join(root, 'presentations/tools/build.mjs'));
 console.log(`Documentation artifact: ${pages} HTML files, ${assets} downloads, ${scripts.size} shared scripts; dist/{guide,docs}.`);
