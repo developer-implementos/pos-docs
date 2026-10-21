@@ -1,6 +1,6 @@
 # Publicación de la documentación en Vercel
 
-El repositorio editorial [**POS Docs**](https://github.com/developer-implementos/pos-docs) construye un sitio estático con Starlight para Vercel. La guía conserva `/guide/` y la entrada `/` redirige a ella. El código de `pos-desktop`, `pos-mobile`, las APIs y los workers se mantiene en POS Platform, con entregas independientes.
+El repositorio editorial [**POS Docs**](https://github.com/developer-implementos/pos-docs) construye un único sitio estático para Vercel. La entrada `/` reúne la guía Starlight en `/guide/`, las presentaciones Reveal.js de `/presentations/` y los originales catalogados de reuniones y antecedentes. El código de `pos-desktop`, `pos-mobile`, las APIs y los workers se mantiene en POS Platform, con entregas independientes.
 
 ## Configuración del proyecto documental
 
@@ -11,11 +11,11 @@ Conectar el proyecto Vercel al repositorio **developer-implementos/pos-docs**, c
 | Production Branch | `main` |
 | Root Directory | Raíz del repositorio |
 | Framework Preset | `Other` |
-| Aplicación publicada | `apps/starlight` |
-| Install Command | `npm ci --prefix apps/starlight` |
-| Build Command | `npm --prefix apps/starlight run build` |
+| Aplicación publicada | Portal, Starlight, Reveal.js y materiales catalogados |
+| Install Command | `npx --yes npm@11.6.0 ci --prefix apps/starlight` |
+| Build Command | `npm run build` |
 | Salida estática | `dist` |
-| Entrada | `/guide/`, con redirección desde `/` |
+| Entrada | `/`, conservando `/guide/` para la documentación |
 | Node.js | `24.x`, compatible con el rango del paquete |
 | Variable pública | `PUBLIC_SITE_URL`: origen HTTPS verificado del sitio, sin ruta `/guide` |
 | Credenciales | El build documental no requiere secretos del producto o del legacy |
@@ -26,11 +26,15 @@ Conectar el proyecto Vercel al repositorio **developer-implementos/pos-docs**, c
 
 Desde la raíz de **pos-docs**, `npm --prefix apps/starlight ci` instala el compilador documental. Los comandos `npm --prefix apps/starlight run validate`, `typecheck`, `build` y `check` comprueban fuentes, tipos, generación e interacción; para el último se instala Chromium con `npm --prefix apps/starlight exec playwright install chromium`. Sus resultados no certifican el funcionamiento del POS. El workflow `Documentation quality` ejecuta esos controles de forma independiente.
 
-Tras el despliegue, abrir `/` y comprobar su llegada a `/guide/`. Recargar una página interna, buscar un término, recorrer los catálogos y abrir un diagrama. `documentation.snapshot.json` debe identificar el repositorio editorial y el commit publicado, con `dirty: false`. La evidencia del producto se identifica por separado: el commit del sitio no es un commit de POS Platform.
+Antes de publicar, `npm run verify` incluye además las pruebas del catálogo y de navegación del portal y Reveal.js. Tras el despliegue, abrir `/` y comprobar los accesos a `/guide/`, `/presentations/architecture/` y las descargas. Recargar una página interna, buscar un término, recorrer los catálogos y abrir un diagrama. `documentation.snapshot.json` debe identificar el repositorio editorial y el commit publicado, con `dirty: false`. La evidencia del producto se identifica por separado: el commit del sitio no es un commit de POS Platform.
 
 Si cambia el dominio, conservar las rutas y configurar redirecciones desde la publicación anterior cuando se controle su proyecto. Actualizar los enlaces de la presentación y sus consumidores mediante una revisión explícita; cambiar un dominio no actualiza automáticamente snapshots ni narraciones existentes.
 
-El despliegue del nuevo repositorio queda a cargo del equipo. Durante la migración, `pos-platform/vercel.json` desactiva nuevos despliegues automáticos de ese repositorio con `git.deploymentEnabled: false`; la publicación anterior conserva su último artefacto. Al conectar **pos-docs**, se puede reutilizar el proyecto Vercel anterior para conservar su dominio, o crear uno nuevo y configurar después las redirecciones. La opción está documentada en [configuración Git de Vercel](https://vercel.com/docs/project-configuration/git-configuration#turning-off-all-automatic-deployments).
+El proyecto `pos-docs-starlight` publica `https://pos-docs-starlight.vercel.app` desde `main` de **pos-docs**. No crear proyectos Vercel separados para cada presentación: el build las reúne con la guía y el portal. La configuración de despliegues del producto sigue siendo independiente.
+
+## Publicar materiales de reuniones
+
+`portal/catalog.json` registra los originales con título, descripción, formato, tipo y fecha conocida. Los nuevos archivos se organizan en `materials/` siguiendo [el manual de incorporación](https://github.com/developer-implementos/pos-docs/blob/main/materials/README.md). El build admite PPTX, DOCX y PDF, conserva los bytes originales y sólo copia archivos catalogados de esa carpeta. Un material histórico no sustituye una decisión canónica de `docs/`.
 
 El build local y CI utilizan un dominio reservado cuando no se define `PUBLIC_SITE_URL`; ese valor no representa una publicación real. En Vercel la variable es obligatoria para evitar publicar enlaces canónicos con un dominio provisional.
 

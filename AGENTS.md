@@ -1,8 +1,9 @@
 # POS Docs
 
-Repositorio editorial público de POS Platform. Contiene Starlight, fuentes técnicas y diagramas; `presentations/` reserva la organización de presentaciones Reveal.js. El código operativo pertenece a `floxcristian/pos-platform`.
+Repositorio editorial público de POS Platform. Contiene el portal de recursos, Starlight, fuentes técnicas, diagramas y presentaciones Reveal.js. El código operativo pertenece a `developer-implementos/pos-platform`.
 
 - Mantener rutas públicas en inglés y contenido en español. Conservar `/guide/` y sus enlaces permanentes.
+- `/` es el portal: `portal/catalog.json` registra las presentaciones y descargas. Publicar originales de `materials/` sólo cuando estén catalogados; no copiar indiscriminadamente el directorio. Ver `materials/README.md`.
 - `docs/` contiene las fuentes canónicas. `apps/starlight/src/content/docs/` combina páginas manuales con carpetas generadas que no se editan ni versionan.
 - El build público debe funcionar con este checkout y sus lockfiles, sin Angular, Nest, Nx ni repositorios vecinos.
 - Separar el repositorio editorial de la evidencia del producto. Identificar revisiones y distinguir propuesta, implementación, evidencia e historia. No atribuir cambios sin commit a una revisión limpia.

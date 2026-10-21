@@ -1,15 +1,24 @@
 # POS Docs
 
-Documentación técnica pública de POS Platform: propuesta, decisiones, evidencia de los sistemas actuales, guías de implementación y diagramas. Starlight publica el portal en `/guide/`. Este repositorio también organiza las presentaciones Reveal.js del producto.
+Centro público de documentación de POS Platform: [abrir portal](https://pos-docs-starlight.vercel.app/). Reúne la guía Starlight, las presentaciones Reveal.js de este repositorio y los originales de reuniones y antecedentes.
 
-El código de las aplicaciones pertenece a [POS Platform](https://github.com/floxcristian/pos-platform). La documentación se mantiene aquí, sin instalar ni compilar Angular, NestJS, Tauri o Capacitor.
+El código de las aplicaciones pertenece a [POS Platform](https://github.com/developer-implementos/pos-platform). La documentación se mantiene aquí, sin instalar ni compilar Angular, NestJS, Tauri o Capacitor.
+
+| Acceso público | Contenido |
+| --- | --- |
+| [`/`](https://pos-docs-starlight.vercel.app/) | Punto de entrada y catálogo de materiales |
+| [`/guide/`](https://pos-docs-starlight.vercel.app/guide/) | Documentación técnica Starlight |
+| [`/presentations/architecture/`](https://pos-docs-starlight.vercel.app/presentations/architecture/) | Arquitectura y roadmap en Reveal.js |
+| [`/#materials`](https://pos-docs-starlight.vercel.app/#materials) | Descargas originales catalogadas |
 
 ## Organización
 
 | Ruta | Responsabilidad |
 | --- | --- |
 | `docs/` | Fuentes técnicas canónicas en Markdown, decisiones y recursos públicos |
-| `apps/starlight/` | Portal, navegación, componentes, búsqueda y validaciones |
+| `apps/starlight/` | Guía Starlight, navegación, componentes, búsqueda y validaciones |
+| `portal/` | Portada estática, catálogo de recursos, filtros y comprobaciones |
+| `materials/` | Nuevos originales de reuniones, publicados sólo mediante el catálogo |
 | `apps/starlight/src/data/` | Catálogos revisados y procedencia de la evidencia |
 | `presentations/` | Organización de presentaciones Reveal.js y referencias vigentes |
 | `tools/diagrams/` | Modelos, generadores y comprobaciones C4, Excalidraw y draw.io |
@@ -35,10 +44,17 @@ npm run typecheck
 npm run build
 npm --prefix apps/starlight exec playwright install chromium
 npm run check
+npm run presentations:check
+npm run portal:test
+npm run portal:check
 npm run preview
 ```
 
-`check` revisa enlaces, anclas, búsqueda, catálogos e interacciones bajo la CSP del despliegue. Los resultados se guardan en `test-results-docs/`. El artefacto publicable se genera en `dist/`; no se versiona.
+`dev` sirve la guía Starlight. Para revisar el sitio completo, ejecutar `build` y `preview`, y abrir `http://127.0.0.1:4207/`. `npm run verify` ejecuta la validación completa. Los resultados y capturas se guardan en `test-results-docs/`, `test-results-presentations/` y `test-results-portal/`. El artefacto publicable se genera en `dist/`; no se versiona.
+
+## Incorporar fuentes y materiales
+
+Seguir [materials/README.md](materials/README.md): añadir el original y registrar su metadata en `portal/catalog.json`. El build comprueba formatos, rutas y archivos. Admite PPTX, DOCX y PDF; no publica carpetas enteras ni inventa fechas de reunión. Los dos PowerPoint existentes mantienen sus rutas. Las decisiones vigentes se documentan en `docs/`, separadas de sus antecedentes.
 
 ## Evidencia y actualización
 
@@ -50,9 +66,9 @@ La actualización de evidencia es una operación explícita sobre un checkout li
 
 Importar **`developer-implementos/pos-docs`**, usar la raíz del repositorio y preset **Other**. `vercel.json` define instalación, build, salida, cabeceras y rutas. Definir `PUBLIC_SITE_URL` con el origen HTTPS público elegido, sin `/guide/`, para los enlaces canónicos y el snapshot.
 
-La entrada `/` redirige a `/guide/`. Las rutas documentales se conservan respecto de la ubicación anterior. No se necesitan claves del producto, acceso a repositorios legacy ni servicios corporativos. Consultar la [guía de publicación](docs/vercel.md).
+Un único proyecto Vercel publica `/`, `/guide/`, `/presentations/` y las descargas en el mismo artefacto. No se requieren proyectos por presentación ni claves del producto, acceso a repositorios legacy o servicios corporativos. Consultar la [guía de publicación](docs/vercel.md).
 
-El despliegue queda pendiente de importación por el equipo. Se puede reconectar el proyecto Vercel anterior a este repositorio para conservar su dominio. El monorepo de producto desactiva nuevos despliegues automáticos de su antigua guía; su último despliegue continúa disponible mientras se realiza el cambio.
+El proyecto documental es `pos-docs-starlight`, con dominio `https://pos-docs-starlight.vercel.app` y rama de producción `main`. Definir `PUBLIC_SITE_URL=https://pos-docs-starlight.vercel.app` en Production y Preview. El monorepo de producto conserva su entrega independiente.
 
 Este repositorio es público: los catálogos de configuración describen nombres y propósitos, nunca valores de despliegue o credenciales. Los cambios documentales no regeneran narraciones ni audio automáticamente.
 

@@ -26,6 +26,7 @@ const files = Object.fromEntries(inputs.map(file => {
 }));
 const revision = execFileSync('git', ['rev-parse', 'HEAD'], {cwd: root, encoding: 'utf8'}).trim();
 const changes = execFileSync('git', ['status', '--porcelain'], {cwd: root, encoding: 'utf8'}).trim();
+if (changes) console.warn(`Documentation checkout changes (status and paths only):\n${changes}`);
 const snapshot = {
   schemaVersion: 1,
   repository: repositoryOrigin,

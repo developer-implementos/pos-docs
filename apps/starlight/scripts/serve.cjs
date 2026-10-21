@@ -10,6 +10,7 @@ const types = {'.html':'text/html; charset=utf-8', '.js':'text/javascript; chars
 function servePublic(port = Number(process.env.POS_DOCS_PORT || 4207)) {
   types['.ttf'] = 'font/ttf';
   types['.pptx'] = 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
+  types['.docx'] = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
   if (!fs.existsSync(path.join(output, '.pos-docs-build')) || fs.lstatSync(output).isSymbolicLink()) throw new Error('Build pos-docs before previewing it');
   const server = http.createServer((request, response) => {
     let pathname;
@@ -23,8 +24,7 @@ function servePublic(port = Number(process.env.POS_DOCS_PORT || 4207)) {
     if (!['GET','HEAD'].includes(request.method)) { response.writeHead(405); return response.end(); }
     const redirect = configuration.redirects?.find(item => item.source === pathname);
     if (redirect) { response.writeHead(redirect.permanent ? 308 : 307, {Location:redirect.destination}); return response.end(); }
-    if (pathname === '/') { response.writeHead(307, {Location:'/guide/'}); return response.end(); }
-    let file = path.resolve(output, '.' + pathname);
+    let file = path.resolve(output, '.' + (pathname === '/' ? '/index.html' : pathname));
     const relative = path.relative(output, file);
     if (!relative || relative.startsWith('..') || path.isAbsolute(relative) || relative.split(/[\\/]/).some(part => part.startsWith('.'))) {
       response.writeHead(404); return response.end();
@@ -53,5 +53,5 @@ function servePublic(port = Number(process.env.POS_DOCS_PORT || 4207)) {
     server.listen(port, '127.0.0.1', () => resolve(server));
   });
 }
-if (require.main === module) servePublic().then(server => console.log(`Documentation: http://127.0.0.1:${server.address().port}/guide/`)).catch(error => { console.error(error); process.exitCode = 1; });
+if (require.main === module) servePublic().then(server => console.log(`POS Docs: http://127.0.0.1:${server.address().port}/`)).catch(error => { console.error(error); process.exitCode = 1; });
 module.exports = {servePublic};

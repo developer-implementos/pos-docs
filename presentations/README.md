@@ -2,7 +2,7 @@
 
 Esta carpeta organiza las presentaciones Reveal.js del producto por tema, siguiendo la separación usada en [integration-presentations](https://github.com/developer-implementos/integration-presentations).
 
-La presentación detallada existente continúa disponible en [Propuesta de POS Platform](https://presentation-gamma-rust.vercel.app/reveal), con sus fuentes en [pos-architecture](https://github.com/floxcristian/pos-architecture). La extracción de Starlight no traslada todavía ese reproductor, sus animaciones, el asistente ni el narrador.
+El [portal público](https://pos-docs-starlight.vercel.app/) reúne las presentaciones de este repositorio. La presentación de arquitectura y roadmap se abre en [`/presentations/architecture/`](https://pos-docs-starlight.vercel.app/presentations/architecture/). El deck anterior de pos-architecture pertenece a otro repositorio y no forma parte del catálogo del portal.
 
 Al incorporar una presentación aquí:
 
@@ -11,6 +11,7 @@ Al incorporar una presentación aquí:
 - Fijar la revisión del snapshot documental que utiliza; no obtener `main` mutable durante el build.
 - Definir su build y sus pruebas de navegación, accesibilidad y recursos antes de añadirla al despliegue.
 - Conservar el alcance de propuesta: las animaciones ilustran secuencias y no acreditan ejecución del sistema.
+- Registrar el acceso en `portal/catalog.json` después de integrar su build; el portal rechaza accesos cuyo artefacto no existe.
 
 ## Arquitectura y roadmap de Implementos
 

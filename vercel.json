@@ -21,7 +21,6 @@
     }
   ],
   "redirects": [
-    { "source": "/", "destination": "/guide/", "permanent": false },
     { "source": "/guide", "destination": "/guide/", "permanent": false }
   ]
 }
