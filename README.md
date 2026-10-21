@@ -1,6 +1,6 @@
 # POS Docs
 
-Centro público de documentación de POS Platform: [abrir portal](https://pos-docs-starlight.vercel.app/). Reúne la guía Starlight, las presentaciones Reveal.js de este repositorio y los originales de reuniones y antecedentes.
+Centro público de documentación de POS Platform: [abrir portal](https://pos-docs-starlight.vercel.app/). Reúne la guía Starlight, las propuestas de este repositorio y las fuentes originales de reuniones y antecedentes. Las síntesis se identifican y enlazan sus documentos relacionados.
 
 El código de las aplicaciones pertenece a [POS Platform](https://github.com/developer-implementos/pos-platform). La documentación se mantiene aquí, sin instalar ni compilar Angular, NestJS, Tauri o Capacitor.
 
@@ -9,7 +9,8 @@ El código de las aplicaciones pertenece a [POS Platform](https://github.com/dev
 | [`/`](https://pos-docs-starlight.vercel.app/) | Punto de entrada y catálogo de materiales |
 | [`/guide/`](https://pos-docs-starlight.vercel.app/guide/) | Documentación técnica Starlight |
 | [`/presentations/architecture/`](https://pos-docs-starlight.vercel.app/presentations/architecture/) | Arquitectura y roadmap en Reveal.js |
-| [`/#materials`](https://pos-docs-starlight.vercel.app/#materials) | Descargas originales catalogadas |
+| [`/#materials`](https://pos-docs-starlight.vercel.app/#materials) | Fuentes de reuniones y cuestionarios, filtrables por país y formato |
+| [`/guide/evidence/country-comparison/`](https://pos-docs-starlight.vercel.app/guide/evidence/country-comparison/) | Síntesis comparativa aportada de Chile, Perú y España |
 
 ## Organización
 
@@ -54,7 +55,7 @@ npm run preview
 
 ## Incorporar fuentes y materiales
 
-Seguir [materials/README.md](materials/README.md): añadir el original y registrar su metadata en `portal/catalog.json`. El build comprueba formatos, rutas y archivos. Admite PPTX, DOCX y PDF; no publica carpetas enteras ni inventa fechas de reunión. Los dos PowerPoint existentes mantienen sus rutas. Las decisiones vigentes se documentan en `docs/`, separadas de sus antecedentes.
+Seguir [materials/README.md](materials/README.md): añadir el original y registrar su metadata en `portal/catalog.json`. El catálogo distingue país y función editorial, independientemente del formato. Admite PPTX, DOCX y PDF; no publica carpetas enteras ni inventa fechas de reunión. Arquitectura y roadmap, tanto en Reveal.js como en PowerPoint, aparece sólo bajo **Propuestas**. Las fuentes recibidas se conservan intactas; las síntesis y las decisiones se documentan en `docs/` con su alcance.
 
 ## Evidencia y actualización
 

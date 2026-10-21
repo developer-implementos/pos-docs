@@ -79,9 +79,9 @@ function fixture(t) {
     fs.writeFileSync(destination, content);
   };
   const manifest = {
-    schemaVersion: 1,
+    schemaVersion: 2,
     presentations: [{ id: 'architecture', title: 'Arquitectura', description: 'Propuesta local', source: 'presentations/architecture', format: 'revealjs' }],
-    materials: [{ id: 'architecture-original', title: 'Arquitectura original', description: 'Documento de propuesta', source: 'materials/architecture/original.pptx', format: 'pptx', date: null, kind: 'proposal' }],
+    materials: [{ id: 'architecture-original', title: 'Arquitectura original', description: 'Documento de propuesta', source: 'materials/architecture/original.pptx', format: 'pptx', date: null, kind: 'proposal', country: 'regional' }],
   };
   write('presentations/architecture/deck.json', JSON.stringify({ schemaVersion: 1, slides: [{ title: 'Propuesta' }] }));
   write(manifest.materials[0].source, office('pptx'));
@@ -90,26 +90,25 @@ function fixture(t) {
   return { root, manifest, write, save };
 }
 
-test('the real inventory contains only the local deck and two verified originals', () => {
+test('the real inventory derives local presentation links and verified material metadata', () => {
   const catalog = loadCatalog(repository);
-  assert.equal(catalog.presentations.length, 1);
-  assert.equal(catalog.presentations[0].href, '/presentations/architecture/');
-  assert.equal(catalog.presentations[0].readingHref, '/presentations/architecture/reading.html');
-  assert.equal(catalog.materials.length, 2);
+  for (const presentation of catalog.presentations) {
+    assert.match(presentation.href, /^\/presentations\/[a-z0-9-]+\/$/u);
+    assert.equal(presentation.readingHref, `${presentation.href}reading.html`);
+  }
   for (const material of catalog.materials) {
     assert.equal(material.bytes, fs.statSync(path.join(repository, material.source)).size);
-    assert.equal(material.date, null);
-    assert.equal(material.format, 'pptx');
+    assert.equal(material.href, '/' + material.source.split('/').map(encodeURIComponent).join('/'));
+    assert.ok(['proposal', 'historical', 'meeting', 'questionnaire'].includes(material.kind));
+    assert.ok(['chile', 'peru', 'spain', 'regional', null].includes(material.country));
   }
-  assert.equal(catalog.materials[1].href, '/docs/referencias/Ecosistema%20de%20Caja%20Mountain%204.pptx');
-  assert.ok(!JSON.stringify(catalog).includes('presentation-gamma-rust'));
 });
 
 test('accepts Word, PowerPoint and PDF sources, including dated meeting originals', t => {
   const f = fixture(t);
   f.manifest.materials.push(
-    { id: 'meeting', title: 'Revisión de reunión', description: 'Original de reunión', source: 'materials/meetings/Revisión técnica.docx', format: 'docx', date: '2024-02-29', kind: 'meeting' },
-    { id: 'legacy', title: 'Antecedente', description: 'Documento histórico', source: 'docs/referencias/legacy.pdf', format: 'pdf', date: null, kind: 'historical' },
+    { id: 'meeting', title: 'Revisión de reunión', description: 'Original de reunión', source: 'materials/meetings/Revisión técnica.docx', format: 'docx', date: '2024-02-29', kind: 'meeting', country: 'peru' },
+    { id: 'legacy', title: 'Antecedente', description: 'Documento histórico', source: 'docs/referencias/legacy.pdf', format: 'pdf', date: null, kind: 'historical', country: 'chile' },
   );
   f.write(f.manifest.materials[1].source, office('docx'));
   f.write(f.manifest.materials[2].source, '%PDF-1.7\n1 0 obj\n<< /Type /Catalog >>\nendobj\n%%EOF\n');
@@ -119,13 +118,14 @@ test('accepts Word, PowerPoint and PDF sources, including dated meeting original
   assert.equal(catalog.materials[1].href, '/materials/meetings/Revisi%C3%B3n%20t%C3%A9cnica.docx');
   assert.equal(catalog.materials[1].date, '2024-02-29');
   assert.equal(catalog.materials[1].kind, 'meeting');
+  assert.equal(catalog.materials[1].country, 'peru');
   assert.deepEqual(Object.keys(catalog.presentations[0]).sort(), ['description', 'format', 'href', 'id', 'readingHref', 'title'].sort());
-  assert.deepEqual(Object.keys(catalog.materials[0]).sort(), ['bytes', 'date', 'description', 'format', 'href', 'id', 'kind', 'source', 'title'].sort());
+  assert.deepEqual(Object.keys(catalog.materials[0]).sort(), ['bytes', 'country', 'date', 'description', 'format', 'href', 'id', 'kind', 'source', 'title'].sort());
   assert.equal(fs.existsSync(path.join(f.root, 'presentations/architecture/index.html')), false);
 });
 
 const invalidManifests = [
-  ['unsupported schema', f => { f.manifest.schemaVersion = 2; }, /schemaVersion/],
+  ['obsolete schema', f => { f.manifest.schemaVersion = 1; }, /schemaVersion/],
   ['unknown property', f => { f.manifest.unapproved = []; }, /declare exactly/],
   ['nonarray materials', f => { f.manifest.materials = {}; }, /arrays/],
   ['duplicate IDs across sections', f => { f.manifest.materials[0].id = 'architecture'; }, /duplicate id/],
@@ -133,10 +133,33 @@ const invalidManifests = [
   ['empty description', f => { f.manifest.materials[0].description = ' '; }, /nonempty plain text/],
   ['derived URL override', f => { f.manifest.materials[0].href = 'https://example.com'; }, /declare exactly/],
   ['unknown kind', f => { f.manifest.materials[0].kind = 'draft'; }, /kind must be/],
+  ['missing country', f => { delete f.manifest.materials[0].country; }, /declare exactly/],
+  ['unknown country', f => { f.manifest.materials[0].country = 'argentina'; }, /country must be/],
+  ['empty country', f => { f.manifest.materials[0].country = ''; }, /country must be/],
   ['missing date', f => { delete f.manifest.materials[0].date; }, /declare exactly/],
   ['invalid calendar date', f => { f.manifest.materials[0].date = '2025-02-29'; }, /invalid calendar date/],
   ['ambiguous date', f => { f.manifest.materials[0].date = '21/10/2026'; }, /YYYY-MM-DD/],
 ];
+
+test('preserves editorial kind independently from file format and country', t => {
+  const f = fixture(t);
+  f.manifest.materials = ['proposal', 'questionnaire', 'meeting', 'historical'].map((kind, index) => ({
+    id: `${kind}-original`, title: `Original ${kind}`, description: 'Material de prueba',
+    source: `materials/meetings/${kind}.docx`, format: 'docx', date: null,
+    kind, country: ['regional', 'spain', 'peru', null][index],
+  }));
+  for (const material of f.manifest.materials) f.write(material.source, office('docx'));
+  f.save();
+  const { materials } = loadCatalog(f.root);
+  assert.deepEqual(materials.map(({ kind, country, format }) => ({ kind, country, format })), [
+    { kind: 'proposal', country: 'regional', format: 'docx' },
+    { kind: 'questionnaire', country: 'spain', format: 'docx' },
+    { kind: 'meeting', country: 'peru', format: 'docx' },
+    { kind: 'historical', country: null, format: 'docx' },
+  ]);
+  assert.deepEqual(materials.filter(item => item.kind === 'proposal').map(item => item.id), ['proposal-original']);
+  assert.deepEqual(materials.filter(item => item.kind !== 'proposal').map(item => item.id), ['questionnaire-original', 'meeting-original', 'historical-original']);
+});
 for (const [name, mutate, error] of invalidManifests) {
   test(`rejects ${name}`, t => {
     const f = fixture(t);

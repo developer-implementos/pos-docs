@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "presentations": [
     {
       "id": "architecture-roadmap",
@@ -17,7 +17,8 @@
       "source": "presentations/architecture/downloads/Implementos-POS-Platform-Arquitectura-y-Roadmap.pptx",
       "format": "pptx",
       "date": null,
-      "kind": "proposal"
+      "kind": "proposal",
+      "country": "regional"
     },
     {
       "id": "mountain-cash-ecosystem",
@@ -26,7 +27,68 @@
       "source": "docs/referencias/Ecosistema de Caja Mountain 4.pptx",
       "format": "pptx",
       "date": null,
-      "kind": "historical"
+      "kind": "historical",
+      "country": "chile"
+    },
+    {
+      "id": "peru-cash-questionnaire",
+      "title": "Cuestionario de requerimientos de caja · Perú",
+      "description": "Cuestionario con respuestas parciales sobre ICS, clientes, facturación, pagos, precios y continuidad. Incluye Chile como referencia.",
+      "source": "materials/meetings/peru/requirements-questionnaire.docx",
+      "format": "docx",
+      "date": null,
+      "kind": "questionnaire",
+      "country": "peru"
+    },
+    {
+      "id": "peru-cash-first-meeting",
+      "title": "Caja Perú · Primera reunión",
+      "description": "Resumen de reunión sobre apertura, notas de venta, venta express, devoluciones e integraciones de caja dentro de ICS.",
+      "source": "materials/meetings/peru/first-meeting-2026-10-09.docx",
+      "format": "docx",
+      "date": "2026-10-09",
+      "kind": "meeting",
+      "country": "peru"
+    },
+    {
+      "id": "peru-cash-second-meeting",
+      "title": "Caja Perú · Segunda reunión",
+      "description": "Resumen de reunión sobre cobros, crédito, caja chica, conciliación, notas de crédito y problemas de concurrencia y consistencia en ICS.",
+      "source": "materials/meetings/peru/second-meeting-2026-10-13.docx",
+      "format": "docx",
+      "date": "2026-10-13",
+      "kind": "meeting",
+      "country": "peru"
+    },
+    {
+      "id": "spain-cash-questionnaire",
+      "title": "Cuestionario de requerimientos de caja · España",
+      "description": "Cuestionario con respuestas y pendientes sobre Gira, documentos, pagos, devoluciones y continuidad. Incluye Chile como referencia.",
+      "source": "materials/meetings/spain/requirements-questionnaire.docx",
+      "format": "docx",
+      "date": null,
+      "kind": "questionnaire",
+      "country": "spain"
+    },
+    {
+      "id": "spain-cash-first-meeting",
+      "title": "Caja España · Primera reunión",
+      "description": "Resumen de reunión sobre ventas y facturación en Gira, efectivo con CashKeeper y cierre de caja.",
+      "source": "materials/meetings/spain/first-meeting-alberto.docx",
+      "format": "docx",
+      "date": null,
+      "kind": "meeting",
+      "country": "spain"
+    },
+    {
+      "id": "spain-cash-second-meeting",
+      "title": "Caja España · Segunda reunión",
+      "description": "Notas complementarias sobre datos del cliente, pagos, relación Gira–CashKeeper y temas pendientes de soporte e integración.",
+      "source": "materials/meetings/spain/second-meeting-alberto.docx",
+      "format": "docx",
+      "date": null,
+      "kind": "meeting",
+      "country": "spain"
     }
   ]
 }

@@ -78,12 +78,13 @@ const result = spawnSync(process.execPath, ['apps/starlight/scripts/sync-monorep
 if (result.error) throw result.error;
 assert.equal(result.status, 0, 'Monorepo representations diverge from their canonical catalog');
 for (const command of [
+  ['--test', 'apps/starlight/scripts/prepare-content.test.mjs'],
   ['tools/diagrams/render-c4.cjs', '--check'],
   ['tools/diagrams/check-excalidraw.cjs', '--static'],
   ['tools/diagrams/generate-architecture-previews.cjs', '--check'],
 ]) {
   const validation = spawnSync(process.execPath, command, {cwd: root, stdio: 'inherit', windowsHide: true});
   if (validation.error) throw validation.error;
-  assert.equal(validation.status, 0, `Diagram sources and assets diverge: ${command[0]}`);
+  assert.equal(validation.status, 0, `Documentation validation failed: ${command.join(' ')}`);
 }
 console.log(`Editorial validation: ${routes.size} routes reachable once; ${readingPath.length} proposal steps; provenance and catalogs consistent.`);

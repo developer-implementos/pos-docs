@@ -3,7 +3,8 @@ import path from 'node:path';
 
 const slug = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const formats = new Set(['docx', 'pptx', 'pdf']);
-const kinds = new Set(['proposal', 'historical', 'meeting']);
+const kinds = new Set(['proposal', 'historical', 'meeting', 'questionnaire']);
+const countries = new Set(['chile', 'peru', 'spain', 'regional', null]);
 
 function fail(message) {
   throw new Error(`Portal catalog: ${message}`);
@@ -146,8 +147,8 @@ export function loadCatalog(root) {
     throw error;
   }
   object(catalog, ['schemaVersion', 'presentations', 'materials'], 'manifest');
-  if (catalog.schemaVersion !== 1 || !Array.isArray(catalog.presentations) || !Array.isArray(catalog.materials)) {
-    fail('expected schemaVersion 1 and presentation/material arrays');
+  if (catalog.schemaVersion !== 2 || !Array.isArray(catalog.presentations) || !Array.isArray(catalog.materials)) {
+    fail('expected schemaVersion 2 and presentation/material arrays');
   }
   const ids = new Set();
   function metadata(entry) {
@@ -174,17 +175,18 @@ export function loadCatalog(root) {
     return { ...result, href: href(entry.source) + '/', readingHref: href(entry.source) + '/reading.html', format: entry.format };
   });
   const materials = catalog.materials.map(entry => {
-    object(entry, ['id', 'title', 'description', 'source', 'format', 'date', 'kind'], 'material');
+    object(entry, ['id', 'title', 'description', 'source', 'format', 'date', 'kind', 'country'], 'material');
     const result = metadata(entry);
     safeSource(entry.source);
     if (!/^(?:materials\/|docs\/referencias\/|presentations\/[a-z0-9]+(?:-[a-z0-9]+)*\/downloads\/)/u.test(entry.source)) {
       fail(`material source is outside approved directories: ${entry.id}`);
     }
     if (!formats.has(entry.format) || path.posix.extname(entry.source).toLowerCase() !== `.${entry.format}`) fail(`unsupported or mismatched format: ${entry.id}`);
-    if (!kinds.has(entry.kind)) fail(`kind must be proposal, historical, or meeting: ${entry.id}`);
+    if (!kinds.has(entry.kind)) fail(`kind must be proposal, historical, meeting, or questionnaire: ${entry.id}`);
+    if (!countries.has(entry.country)) fail(`country must be chile, peru, spain, regional, or null: ${entry.id}`);
     const file = localPath(absoluteRoot, entry.source, 'file');
     const bytes = verifyFormat(file.absolute, entry.format, entry.source);
-    return { ...result, source: entry.source, href: href(entry.source), format: entry.format, bytes, date: date(entry.date, entry.id), kind: entry.kind };
+    return { ...result, source: entry.source, href: href(entry.source), format: entry.format, bytes, date: date(entry.date, entry.id), kind: entry.kind, country: entry.country };
   });
   return { presentations, materials };
 }

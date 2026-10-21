@@ -12,6 +12,14 @@ const require = createRequire(path.join(root, 'apps/starlight/package.json'));
 const { chromium } = require('playwright');
 const { servePublic } = require(path.join(root, 'apps/starlight/scripts/serve.cjs'));
 const catalog = loadCatalog(root);
+const sourceMaterials = catalog.materials.filter(item => item.kind !== 'proposal');
+const proposalMaterials = catalog.materials.filter(item => item.kind === 'proposal');
+const comparisonHref = '/guide/evidence/country-comparison/';
+const comparisonSourceIds = [
+  'mountain-cash-ecosystem',
+  'peru-cash-questionnaire', 'peru-cash-first-meeting', 'peru-cash-second-meeting',
+  'spain-cash-questionnaire', 'spain-cash-first-meeting', 'spain-cash-second-meeting',
+];
 const results = path.join(root, 'test-results-portal');
 fs.mkdirSync(results, { recursive: true });
 
@@ -39,7 +47,16 @@ function observe(page) {
 }
 
 async function visibleMaterials(page) {
-  return sorted(await page.locator('[data-material]:visible a[download]').evaluateAll(nodes => nodes.map(node => node.getAttribute('href'))));
+  return sorted(await page.locator('#materials [data-material]:visible a[download]').evaluateAll(nodes => nodes.map(node => node.getAttribute('href'))));
+}
+
+async function downloadHrefs(locator) {
+  return sorted(await locator.evaluateAll(nodes => nodes.map(node => node.getAttribute('href'))));
+}
+
+async function assertSources(page, expected, label) {
+  assert.deepEqual(await visibleMaterials(page), sorted(expected.map(item => item.href)), label);
+  assert.equal((await page.locator('#materials [data-count]').textContent()).trim(), `${expected.length} ${expected.length === 1 ? 'fuente' : 'fuentes'}`, `${label}: source count`);
 }
 
 async function assertFocus(locator, label) {
@@ -83,7 +100,7 @@ try {
     tag: node.tagName,
     href: node.getAttribute('href') || node.getAttribute('src'),
   })));
-  const local = new Set(['/guide/', ...catalog.presentations.flatMap(deck => [deck.href, deck.readingHref])]);
+  const local = new Set(['/guide/', comparisonHref, ...catalog.presentations.flatMap(deck => [deck.href, deck.readingHref])]);
   for (const reference of references) {
     const url = new URL(reference.href, origin);
     if (url.origin !== origin) continue;
@@ -102,8 +119,66 @@ try {
   report.checks.push('Every portal link, local asset, Starlight entry and local Reveal/reading page');
 
   assert.ok(catalog.materials.length, 'The portal publishes cataloged materials');
-  const allMaterials = sorted(catalog.materials.map(item => item.href));
-  assert.deepEqual(await visibleMaterials(page), allMaterials);
+  assert.ok(sourceMaterials.length && proposalMaterials.length, 'The catalog distinguishes source documents and proposals');
+  const proposals = page.locator('#presentations');
+  const sources = page.locator('#materials');
+  assert.equal(await proposals.getByRole('heading', { name: 'Propuestas', exact: true, level: 2 }).count(), 1);
+  assert.equal(await sources.getByRole('heading', { name: 'Fuentes de reuniones', exact: true, level: 2 }).count(), 1);
+  assert.deepEqual(await downloadHrefs(page.locator('a[download]')), sorted(catalog.materials.map(item => item.href)), 'Every catalog original has exactly one download link');
+  assert.deepEqual(await downloadHrefs(proposals.locator('a[download]')), sorted(proposalMaterials.map(item => item.href)), 'Proposal originals appear only with proposals');
+  assert.deepEqual(await downloadHrefs(proposals.locator('a[download][data-proposal-download]')), sorted(proposalMaterials.map(item => item.href)), 'Proposal downloads have their own semantic marker');
+  assert.deepEqual(await downloadHrefs(sources.locator('a[download]')), sorted(sourceMaterials.map(item => item.href)), 'Source downloads exclude every proposal, including the architecture PowerPoint');
+  for (const proposal of proposalMaterials) assert.equal(await sources.locator(`a[href="${proposal.href}"]`).count(), 0, `Proposal has no link in meeting sources: ${proposal.id}`);
+  assert.equal(await sources.locator('[data-material]').count(), sourceMaterials.length, 'Only original sources are filterable material rows');
+  assert.equal(await proposals.locator('[data-material]').count(), 0, 'Proposals are outside source filtering');
+  await assertSources(page, sourceMaterials, 'All source documents are initially visible');
+  const docxSources = sourceMaterials.filter(item => item.format === 'docx' && ['meeting', 'questionnaire'].includes(item.kind));
+  for (const id of comparisonSourceIds.slice(1)) {
+    assert.ok(docxSources.some(item => item.id === id), `The supplied meeting/questionnaire original remains cataloged: ${id}`);
+  }
+  const questionnaires = sourceMaterials.filter(item => item.kind === 'questionnaire');
+  assert.ok(questionnaires.length, 'Questionnaires are identified separately from meeting records');
+  for (const item of questionnaires) {
+    const row = sources.locator('[data-material]').filter({ has: page.getByRole('link', { name: `Descargar ${item.title} (${item.format.toUpperCase()})`, exact: true }) });
+    assert.equal(await row.count(), 1, `Questionnaire source exists: ${item.id}`);
+    assert.match(await row.locator('.metadata').innerText(), /cuestionario/iu, `Questionnaire is labeled as such: ${item.id}`);
+  }
+  const comparison = sources.locator(`a[href="${comparisonHref}"]`);
+  assert.equal(await comparison.count(), 1, 'The country synthesis has one link within source context');
+  assert.match(await sources.innerText(), /Síntesis comparativa por país/u);
+  assert.equal(await comparison.getAttribute('download'), null, 'The synthesis is a guide page, not an original download');
+  assert.ok(await comparison.evaluate(node => !node.closest('[data-material]')), 'The synthesis is outside the original-source list');
+  report.checks.push('Proposals separated from original sources; six DOCX sources, questionnaire labels and distinct country synthesis');
+
+  const summaryPage = await context.newPage();
+  observe(summaryPage);
+  assert.equal((await summaryPage.goto(origin + comparisonHref, { waitUntil: 'networkidle' })).status(), 200, 'The comparative synthesis is published in Starlight');
+  const summaryContent = summaryPage.locator('.sl-markdown-content');
+  const summaryLinks = await summaryContent.locator('a[href]').evaluateAll(nodes => nodes.map(node => node.getAttribute('href')));
+  assert.ok(summaryLinks.includes('/#materials'), 'The synthesis points back to portal sources, not their GitHub directory');
+  for (const id of comparisonSourceIds) {
+    const item = sourceMaterials.find(item => item.id === id);
+    assert.ok(item, `The comparative synthesis retains its source: ${id}`);
+    assert.ok(summaryLinks.includes(item.href), `The synthesis links the local published original: ${item.id}`);
+  }
+  assert.ok(!summaryLinks.some(href => /github\.com\/[^/]+\/[^/]+\/(?:blob|tree)\/[^/]+\/(?:materials\/|#materials$)/u.test(href)), 'Published source links and portal anchors are not rewritten to GitHub');
+  await summaryContent.locator('a[href="/#materials"]').first().click();
+  await summaryPage.waitForURL(origin + '/#materials');
+  assert.ok(await summaryPage.locator('#materials').isVisible(), 'Following the synthesis source link reaches the portal source section');
+  assert.equal((await summaryPage.goto(origin + comparisonHref, { waitUntil: 'networkidle' })).status(), 200);
+  const summaryImages = new Set(await summaryPage.locator('img[src]').evaluateAll(nodes => nodes.map(node => node.getAttribute('src'))));
+  for (const image of summaryImages) {
+    const url = new URL(image, origin + comparisonHref);
+    if (url.origin !== origin) continue;
+    const resource = await context.request.get(url.href, { maxRedirects: 0 });
+    assert.equal(resource.status(), 200, `Country synthesis image resolves: ${url.pathname}`);
+    if (/\.png$/iu.test(url.pathname)) assert.equal(resource.headers()['content-type'].split(';')[0], 'image/png', `Country synthesis PNG MIME: ${url.pathname}`);
+    report.links.push(url.pathname + url.search);
+    await resource.dispose();
+  }
+  await summaryPage.close();
+  report.checks.push('Country synthesis page, local original-source destinations, working portal return and local image resources');
+
   for (const item of catalog.materials) {
     const source = fs.readFileSync(path.join(root, item.source));
     const built = fs.readFileSync(path.join(root, 'dist', item.source));
@@ -129,11 +204,19 @@ try {
   report.checks.push('All materials: catalog, built file, HTTP bytes, MIME and browser downloads');
 
   await page.goto(origin + '/', { waitUntil: 'networkidle' });
-  const form = page.getByRole('search', { name: 'Buscar materiales' });
+  const form = page.getByRole('search', { name: 'Buscar fuentes de reuniones' });
   await form.waitFor({ state: 'visible' });
-  const query = page.getByRole('searchbox', { name: 'Buscar material', exact: true });
-  const format = page.getByRole('combobox', { name: 'Formato', exact: true });
-  const reset = page.getByRole('button', { name: 'Limpiar', exact: true });
+  const query = form.getByRole('searchbox', { name: 'Buscar fuente', exact: true });
+  const format = form.getByRole('combobox', { name: 'Formato', exact: true });
+  const country = form.getByRole('combobox', { name: 'País', exact: true });
+  const reset = form.getByRole('button', { name: 'Limpiar', exact: true });
+  assert.equal(await query.getAttribute('id'), 'material-query');
+  assert.equal(await format.getAttribute('id'), 'material-format');
+  assert.equal(await country.getAttribute('id'), 'material-country');
+  const countries = sorted(new Set(sourceMaterials.map(item => item.country).filter(value => value !== null)));
+  const formats = sorted(new Set(sourceMaterials.map(item => item.format)));
+  assert.deepEqual(await format.locator('option').evaluateAll(nodes => nodes.map(node => node.value).filter(Boolean).sort()), formats, 'Format options come from source documents only');
+  assert.deepEqual(await country.locator('option').evaluateAll(nodes => nodes.map(node => node.value).filter(Boolean).sort()), countries, 'Country options come from non-null source countries');
   await page.keyboard.press('Tab');
   const skip = page.getByRole('link', { name: 'Saltar al contenido' });
   await assertFocus(skip, 'Skip link');
@@ -148,34 +231,61 @@ try {
   await assertFocus(query, 'Search field');
   await page.keyboard.press('Tab');
   await page.keyboard.press('Tab');
+  await assertFocus(country, 'Country filter');
+  await page.keyboard.press('Tab');
   await assertFocus(reset, 'Reset button');
   report.checks.push('Accessible filter labels, skip link and keyboard focus indicators/order');
 
-  await query.fill('PRESENTACIÓN');
+  const accentedSource = sourceMaterials.find(item => /[áéíóúüñ]/iu.test(`${item.title} ${item.description}`));
+  const accentedWord = `${accentedSource?.title || ''} ${accentedSource?.description || ''}`.match(/\p{L}*[áéíóúüñ]\p{L}*/iu)?.[0];
+  assert.ok(accentedWord, 'The source catalog contains a word with an accent for the normalization check');
+  await query.fill(accentedWord.toLocaleUpperCase('es'));
   const accented = await visibleMaterials(page);
-  assert.ok(accented.length, 'The real catalog contains a presentation searchable with an accent');
-  await query.fill('  presentacion  ');
+  assert.ok(accented.length, 'A source document is searchable with an accent');
+  await query.fill(`  ${accentedWord.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLocaleLowerCase('es')}  `);
   assert.deepEqual(await visibleMaterials(page), accented, 'Search ignores accents, case and surrounding whitespace');
   await query.fill('material-inexistente-907d7fe0');
   await page.locator('[data-empty]').waitFor({ state: 'visible' });
   assert.deepEqual(await visibleMaterials(page), []);
-  assert.equal((await page.locator('[data-count]').textContent()).trim(), '0 materiales');
+  await assertSources(page, [], 'No sources match an unknown search');
   assert.equal(await page.locator('[data-count]').getAttribute('aria-live'), 'polite');
   assert.ok(await page.locator('.materials-list').isHidden(), 'No-results does not leave an empty list visible');
   await reset.click();
   await page.waitForFunction(() => document.querySelector('#material-query').value === '' && !document.querySelector('.materials-list').hidden);
   assert.equal(await query.inputValue(), '');
   assert.equal(await format.inputValue(), '');
-  assert.deepEqual(await visibleMaterials(page), allMaterials);
+  assert.equal(await country.inputValue(), '');
+  await assertSources(page, sourceMaterials, 'Reset restores all sources');
   assert.ok(await page.locator('[data-empty]').isHidden());
-  for (const value of new Set(catalog.materials.map(item => item.format))) {
+  for (const value of formats) {
     await format.selectOption(value);
-    assert.deepEqual(await visibleMaterials(page), sorted(catalog.materials.filter(item => item.format === value).map(item => item.href)), `Filter by ${value}`);
+    await assertSources(page, sourceMaterials.filter(item => item.format === value), `Filter by ${value}`);
   }
+  await format.selectOption('');
+  for (const value of countries) {
+    await country.selectOption(value);
+    await assertSources(page, sourceMaterials.filter(item => item.country === value), `Filter by ${value}`);
+  }
+  await country.selectOption('');
+  const intersectionSource = docxSources.find(item => item.country !== null);
+  assert.ok(intersectionSource, 'A country-specific source is available for combined filters');
+  await query.fill(intersectionSource.title);
+  await format.selectOption(intersectionSource.format);
+  await country.selectOption(intersectionSource.country);
+  await assertSources(page, [intersectionSource], 'Search, format and country intersect to one source');
+  const otherCountry = countries.find(value => value !== intersectionSource.country);
+  assert.ok(otherCountry, 'There is another country to test a nonmatching intersection');
+  await country.selectOption(otherCountry);
+  await assertSources(page, [], 'A mismatched country excludes the matching query and format');
+  assert.ok(await page.locator('[data-empty]').isVisible());
+  assert.ok(await page.locator(`#materials a[href="${comparisonHref}"]`).isVisible(), 'Source filtering does not remove the synthesis');
+  assert.deepEqual(await downloadHrefs(page.locator('#presentations a[download]:visible')), sorted(proposalMaterials.map(item => item.href)), 'Source filters do not affect proposal downloads');
   await reset.click();
-  await page.waitForFunction(() => document.querySelector('#material-format').value === '');
-  assert.deepEqual(await visibleMaterials(page), allMaterials, 'Reset restores all formats');
-  report.checks.push('Accent/case-insensitive search, no-results announcement, every format and reset');
+  await page.waitForFunction(() => ['material-query', 'material-format', 'material-country'].every(id => document.getElementById(id).value === ''));
+  await assertSources(page, sourceMaterials, 'Reset clears search, format and country together');
+  assert.ok(await page.locator('[data-empty]').isHidden());
+  assert.ok(await page.locator('.materials-list').isVisible());
+  report.checks.push('Accent/case-insensitive search, no-results announcement, format/country filters, combined intersection, singular count and complete reset');
 
   for (const width of [1440, 768, 375, 320]) {
     await page.setViewportSize({ width, height: 1000 });
@@ -201,7 +311,9 @@ try {
   const fallback = await noJs.newPage();
   observe(fallback);
   assert.equal((await fallback.goto(origin + '/')).status(), 200);
-  assert.deepEqual(await visibleMaterials(fallback), allMaterials, 'All materials are available without JavaScript');
+  await assertSources(fallback, sourceMaterials, 'All source documents are available without JavaScript');
+  assert.deepEqual(await downloadHrefs(fallback.locator('a[download]:visible')), sorted(catalog.materials.map(item => item.href)), 'Every original, including proposals, is downloadable without JavaScript');
+  assert.ok(await fallback.locator(`#materials a[href="${comparisonHref}"]`).isVisible(), 'The synthesis remains available without JavaScript');
   assert.ok(await fallback.locator('[data-filters]').isHidden(), 'Inert search controls are hidden without JavaScript');
   assert.ok(await fallback.locator('[data-empty]').isHidden());
   for (const deck of catalog.presentations) {

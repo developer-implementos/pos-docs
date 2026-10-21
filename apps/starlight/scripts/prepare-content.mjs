@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { generatedPages, generatedDirectories, labLinks, siteBase, sourceRouteAliases, documentKinds, readingPath, docsOrigin, presentationOrigin, repositoryOrigin, presentationRepository } from '../content-map.mjs';
 import { productEvidence, productReferences } from './product-evidence.mjs';
+import { loadCatalog } from '../../../portal/catalog.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const output = path.join(root, 'apps/starlight/src/content/docs');
@@ -10,6 +11,9 @@ const sourceCache = new Map();
 const warnings = new Set();
 const routeBySource = new Map();
 const anchorBySource = new Map();
+const publicCatalog = loadCatalog(root);
+const publishedDownloads = new Map(publicCatalog.materials.map(item => [item.source, item.href]));
+const publishedPages = new Set(['/presentations/', ...publicCatalog.presentations.flatMap(item => [item.href, item.readingHref])]);
 
 function slug(text) {
   return text.toLowerCase().replace(/<[^>]*>/g, '').replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
@@ -106,10 +110,8 @@ for (const source of new Set(generatedPages.map(page => page.source))) {
   if (coverage.some(count => count !== 1)) throw new Error(`Source ranges must cover each line exactly once: ${source}`);
 }
 
-function rewriteTarget(rawTarget, source) {
+export function rewriteTarget(rawTarget, source) {
   const target = rawTarget.replace(/^<|>$/g, '');
-  // These routes are generated from the checked-in presentation sources during build.
-  if (/^\/presentations\/(?:$|architecture\/(?:$|reading\.html(?:#.*)?$|downloads\/Implementos-POS-Platform-Arquitectura-y-Roadmap\.pptx$))/.test(target)) return rawTarget;
   if (/^(?:[a-z][a-z\d+.-]*:|\/\/)/i.test(target) || target.startsWith(siteBase)) return rawTarget;
   const hashIndex = target.indexOf('#');
   const hash = hashIndex < 0 ? '' : target.slice(hashIndex + 1);
@@ -121,9 +123,18 @@ function rewriteTarget(rawTarget, source) {
   let decodedHash;
   try { decodedPath = decodeURIComponent(targetPath); decodedHash = decodeURIComponent(hash); }
   catch { warnings.add(`Invalid URL encoding in ${source}: ${target}`); return rawTarget; }
+  const suffix = query + (hash ? `#${hash}` : '');
+  if (decodedPath === '/') return '/' + suffix;
+  if (publishedPages.has(decodedPath)) return decodedPath + suffix;
   const relative = decodedPath
     ? path.posix.normalize(decodedPath.startsWith('/') ? decodedPath.slice(1) : path.posix.join(path.posix.dirname(source), decodedPath))
     : source;
+  const download = publishedDownloads.get(relative);
+  if (download) return download + suffix;
+  // materials/ is selectively published. A file's presence in Git does not make it a public download.
+  if (decodedPath.startsWith('/materials/') || (relative.startsWith('materials/') && /\.(?:docx|pptx|pdf)$/iu.test(relative))) {
+    throw new Error(`Download is not published in portal/catalog.json: ${source} -> ${target}`);
+  }
   const route = routeBySource.get(relative) || sourceRouteAliases[relative.replace(/\/$/, '')];
   if (route) {
     const aliasSource = generatedPages.find(page => page.route === route)?.source;
