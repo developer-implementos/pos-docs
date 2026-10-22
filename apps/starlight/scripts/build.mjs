@@ -38,6 +38,22 @@ fs.mkdirSync(output, {recursive: true});
 fs.writeFileSync(path.join(output, marker), 'Generated from apps/starlight and docs/ in POS Docs.\n');
 run(path.resolve(path.dirname(astroPackage), typeof astro.bin === 'string' ? astro.bin : astro.bin.astro), ['build']);
 
+// A successful compiler exit must also produce a usable Spanish search index.
+const searchDirectory = path.join(output, 'guide/pagefind');
+let searchEntry;
+try {
+  searchEntry = JSON.parse(fs.readFileSync(path.join(searchDirectory, 'pagefind-entry.json'), 'utf8'));
+} catch (cause) {
+  throw new Error('Pagefind generated missing or invalid metadata; the documentation artifact cannot be published.', { cause });
+}
+const spanishIndex = searchEntry.languages?.es;
+if (!Number.isSafeInteger(spanishIndex?.page_count) || spanishIndex.page_count < 1 || !/^es_[a-f0-9]+$/.test(spanishIndex.hash)) {
+  throw new Error('Pagefind must index the Spanish documentation before publication.');
+}
+if (fs.statSync(path.join(searchDirectory, `pagefind.${spanishIndex.hash}.pf_meta`)).size === 0) {
+  throw new Error('Pagefind generated an empty Spanish search index.');
+}
+
 let assets = 0;
 const publicExtensions = /\.(md|svg|png|jpe?g|webp|pdf|pptx|excalidraw|drawio|html|zip|mmd|json)$/i;
 function copyDocuments(directory) {

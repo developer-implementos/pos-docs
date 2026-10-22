@@ -94,6 +94,7 @@ async function assertPlanFits(page, phase, label) {
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
     for (let node = walker.nextNode(); node; node = walker.nextNode()) {
       if (!node.textContent.trim()) continue;
+      if (node.parentElement.closest('.sr-only,[hidden]')) continue;
       const range = document.createRange(); range.selectNodeContents(node);
       for (const rect of range.getClientRects()) {
         if (rect.width && (rect.right > bounds.right + 2 || rect.left < bounds.left - 2)) issues.push({ reason: 'text outside plan', text: node.textContent.slice(0, 120) });
@@ -192,6 +193,13 @@ try {
     await page.keyboard.press('Enter');
     await page.waitForURL(gateUrl.href);
     assert.ok(await page.locator(`[id="${decodeURIComponent(gateUrl.hash.slice(1))}"]`).isVisible());
+  }
+  await page.goto(phaseUrl(roadmap.phases[0]));
+  for (const { width, height, theme } of [{ width: 1440, height: 1000, theme: 'light' }, { width: 375, height: 900, theme: 'dark' }]) {
+    await page.setViewportSize({ width, height });
+    await page.evaluate(theme => document.documentElement.dataset.theme = theme, theme);
+    await page.locator('[data-work-package]').first().scrollIntoViewIfNeeded();
+    await page.screenshot({ path: path.join(result, `phase-01-work-${width}-${theme}.png`), fullPage: false });
   }
   await page.setViewportSize({ width: 1600, height: 954 });
   await page.goto(slidesUrl + '#/slide-12');
