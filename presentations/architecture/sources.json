@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "reviewedOn": "2026-10-22",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "c2511106abb5ecc90d9b89e5974d75320a5cb5fb",
+  "revision": "61cb5f27ec449345f6b8c867dcd537fd1b190e18",
   "sourceStatus": "Fuentes documentales verificadas en la revisión indicada.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "powerpoint": {
@@ -13,7 +13,7 @@
   "inputs": [
     {
       "path": "docs/monorepo.md",
-      "sha256": "1f51b15fae668d6bda501d70a27a3997a40100576009abddcfebbb755208d643"
+      "sha256": "39ee52240b2f4050f00e41f0efdb53d134f90cc23a0fff3995b3083f9bb9371b"
     },
     {
       "path": "docs/propuesta-arquitectura.md",
@@ -21,7 +21,7 @@
     },
     {
       "path": "docs/implementation-plan.md",
-      "sha256": "86971c44a337fc4cbe7b4a8b2209be5b4c637611170672afa9a41d6c5843a707"
+      "sha256": "9a006a91d5b5c4d14269c2eb10c825e56ac685c3c5f8aebbf00ad2dfc1e564cb"
     },
     {
       "path": "docs/validacion-y-decisiones.md",
@@ -33,11 +33,11 @@
     },
     {
       "path": "docs/roadmap.md",
-      "sha256": "4a826a927b716afc2542fea3358e79fa925780cf3b33bfa87daf7953cc705bd8"
+      "sha256": "f243962da5e263d644c7da0270cfcb8a4958caf8ac92458d614e2697ce73c6f7"
     },
     {
       "path": "docs/roadmap.json",
-      "sha256": "082b25c73526dbcd80f907740d1c54acf9b09c146cb1dc3263bc83048aba20bc"
+      "sha256": "b13012e846bed5021d8212827cd2de9c89c668a7834c4e19c8980425b5d2493c"
     }
   ]
 }
