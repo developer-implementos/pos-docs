@@ -118,7 +118,7 @@
   }
   function update(){
     const current=deck.getCurrentSlide();
-    const label=current.hasAttribute('data-chapter-cover')
+    const label=current.hasAttribute('data-presentation-cover')?'Portada':current.hasAttribute('data-chapter-cover')
       ?`Capítulo ${current.dataset.chapterNumber}`
       :String(Number(current.dataset.slideIndex)+1);
     document.title=`${label}. ${current.dataset.title} · Implementos`;

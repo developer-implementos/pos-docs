@@ -1,6 +1,6 @@
 # Presentación de la propuesta
 
-La presentación de **arquitectura y roadmap de Implementos** se mantiene en `presentations/architecture/` de [**POS Docs**](https://github.com/developer-implementos/pos-docs). Reveal.js organiza la propuesta en cinco capítulos: cada uno comienza con una portada que presenta su título y alcance, seguida de las láminas de detalle al bajar. Son cinco portadas y 16 láminas de contenido, con notas y enlaces a las fuentes canónicas. El sitio ofrece también lectura continua, diagramas SVG ampliables y el PowerPoint original como material de referencia.
+La presentación de **arquitectura y roadmap de Implementos** se mantiene en `presentations/architecture/` de [**POS Docs**](https://github.com/developer-implementos/pos-docs). Abre con la portada «POS Platform» y organiza la propuesta en cinco capítulos: cada uno comienza con una portada que presenta su título y alcance, seguida de las láminas de detalle al bajar. Son 21 páginas: una portada general, cinco portadas de capítulo y 15 láminas de detalle, con notas y enlaces a las fuentes canónicas. El sitio ofrece también lectura continua, diagramas SVG ampliables y el PowerPoint original como material de referencia.
 
 ## Arquitectura y roadmap de Implementos
 
@@ -12,13 +12,13 @@ La presentación explica la arquitectura propuesta y distingue la base implement
 
 ## Recorrer la presentación
 
-Los controles nativos de Reveal.js están abajo a la derecha: `←` y `→` abren la portada del capítulo correspondiente; `↑` y `↓` recorren sus láminas y fragmentos. `Espacio` sigue el orden completo, incluidas las portadas, y `Shift` + `Espacio` retrocede. `I` abre el índice, `N` las notas y `O` la vista general.
+Los controles nativos de Reveal.js están abajo a la derecha: `←` y `→` recorren la portada general y las portadas de capítulo; `↑` y `↓` recorren las láminas y fragmentos dentro de cada capítulo. `Espacio` sigue el orden completo, incluidas las portadas, y `Shift` + `Espacio` retrocede. `I` abre el índice, `N` las notas y `O` la vista general.
 
 «Ampliar diagrama» o `D` abre el SVG de la lámina con controles de zoom, encuadre y descarga. El recorrido del monorepo y las dos vistas del roadmap usan fragmentos; sus enlaces conservan el paso seleccionado. El reproductor respeta la preferencia de movimiento reducido.
 
 «Recursos» reúne pantalla completa, documentación y acceso al portal; en móvil también incluye las notas.
 
-La [lectura continua](/presentations/architecture/reading.html) agrupa las 16 láminas de contenido bajo los cinco títulos de capítulo, sin depender de la navegación JavaScript. La [vista de impresión](/presentations/architecture/?print-pdf) prepara las 21 páginas, incluidas las portadas, para imprimir en Chrome/Chromium con fondos y sin márgenes. El PowerPoint original, enlazado arriba y en el portal, conserva sus 16 diapositivas como material de referencia.
+La [lectura continua](/presentations/architecture/reading.html) presenta primero «POS Platform» y agrupa las 15 láminas de detalle bajo los cinco títulos de capítulo, sin depender de la navegación JavaScript. La [vista de impresión](/presentations/architecture/?print-pdf) prepara las 21 páginas, incluidas la portada general y las de capítulo, para imprimir en Chrome/Chromium con fondos y sin márgenes. El PowerPoint original, enlazado arriba y en el portal, conserva sus 16 diapositivas como material de referencia.
 
 <span id="pos-platform-presentación-web-interactiva"></span>
 <span id="abrir"></span>

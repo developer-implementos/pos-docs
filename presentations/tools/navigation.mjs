@@ -7,7 +7,7 @@ function title(value, label) {
   assert.ok(typeof value === 'string' && value.trim() === value && value.length > 0 && !/[\u0000-\u001f\u007f]/u.test(value), `${label} must be nonempty plain text`);
 }
 
-/** Keep content IDs stable and reserve vertical index zero for each chapter cover. */
+/** A standalone opening slide precedes chapter stacks, each with its own cover. */
 export function buildNavigation(deck) {
   assert.ok(Array.isArray(deck.slides) && deck.slides.length > 0, 'Navigation requires slides');
   assert.ok(Array.isArray(deck.chapters) && deck.chapters.length > 0, 'Navigation requires chapters');
@@ -20,9 +20,12 @@ export function buildNavigation(deck) {
     leafById.set(slide.id, { id: slide.id, title: slide.title, index });
   }
 
+  assert.equal(deck.cover, deck.slides[0].id, 'The presentation cover must be its first canonical slide');
+  const opening = { ...leafById.get(deck.cover), h: 0, v: 0 };
   const chapterIds = new Set();
-  const covered = new Set();
-  const chapters = deck.chapters.map((chapter, h) => {
+  const covered = new Set([opening.id]);
+  const chapters = deck.chapters.map((chapter, index) => {
+    const h = index + 1;
     assert.ok(chapter && typeof chapter === 'object' && !Array.isArray(chapter), 'Invalid chapter metadata');
     assert.deepEqual(Object.keys(chapter).sort(), ['id', 'slides', 'summary', 'title'], 'A chapter must declare id, title, summary and slides');
     assert.match(chapter.id || '', chapterId, 'Invalid chapter id');
@@ -37,10 +40,10 @@ export function buildNavigation(deck) {
       covered.add(id);
       return { ...leafById.get(id), h, v: v + 1 };
     });
-    return { id: chapter.id, title: chapter.title, summary: chapter.summary, h,
+    return { id: chapter.id, title: chapter.title, summary: chapter.summary, number: index + 1, h,
       cover: { id: `chapter-${chapter.id}`, title: chapter.title, h, v: 0 }, slides };
   });
-  const slides = chapters.flatMap(chapter => chapter.slides);
-  assert.deepEqual(slides.map(slide => slide.id), [...leafById.keys()], 'Chapters must cover every slide exactly once in its canonical order');
-  return { chapters, slides, byId: new Map(slides.map(slide => [slide.id, slide])) };
+  const slides = [opening, ...chapters.flatMap(chapter => chapter.slides)];
+  assert.deepEqual(slides.map(slide => slide.id), [...leafById.keys()], 'The cover and chapters must cover every slide exactly once in its canonical order');
+  return { opening, chapters, slides, byId: new Map(slides.map(slide => [slide.id, slide])) };
 }

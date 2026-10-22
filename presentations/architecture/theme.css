@@ -47,7 +47,7 @@
 .resource-links .resource-separator{border-top:1px solid var(--line);border-radius:0;margin-top:4px;padding-top:14px}
 .index-chapters{list-style:none;padding:0}.index-chapter h3{margin:22px 0 10px;color:var(--primary);font-size:18px;font-weight:700}
 .index-cover{display:flex;align-items:center;gap:12px;width:100%;min-height:44px;padding:8px 12px;border:1px solid transparent;border-radius:8px;background:transparent;color:var(--primary);text-align:left;font:inherit;line-height:1.4}
-.index-cover:hover{background:var(--primary-soft)}.index-cover[aria-current]{border-color:var(--primary);background:var(--primary-soft);box-shadow:inset 3px 0 var(--primary)}
+.index-cover:hover{background:var(--primary-soft)}.index-cover[aria-current]{border-color:var(--primary);background:var(--primary-soft);box-shadow:inset 3px 0 var(--primary);font-weight:700}
 .skip{position:fixed;top:8px;left:8px;z-index:20;background:white;padding:12px;transform:translateY(-160%)}.skip:focus{transform:none}
 dialog{border:1px solid var(--line);border-radius:14px;padding:24px;width:min(820px,calc(100vw - 24px));max-height:85dvh;overflow:auto;box-shadow:0 20px 80px #172b4933;color:var(--text);font:16px/1.6 Inter,Arial,sans-serif;background:var(--surface)}
 dialog[open]{animation:panel-enter var(--motion-enter) var(--ease-out)}

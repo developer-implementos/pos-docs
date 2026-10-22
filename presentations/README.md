@@ -15,7 +15,7 @@ Al incorporar una presentación aquí:
 
 ## Arquitectura y roadmap de Implementos
 
-La [presentación de arquitectura y roadmap](architecture/README.md) vive en `architecture/`. Sus cinco capítulos comienzan con una portada común y reúnen 16 láminas de contenido: capacidades, contexto C4, monorepo, despliegue, infraestructura, frontera ERP y roadmap por funcionalidades. La presentación web y su impresión tienen 21 páginas; el PowerPoint original de 16 diapositivas está en `architecture/downloads/`.
+La [presentación de arquitectura y roadmap](architecture/README.md) vive en `architecture/`. Abre con la portada «POS Platform» y continúa con cinco capítulos, cada uno con su portada de título y alcance. Los capítulos reúnen 15 láminas de detalle sobre capacidades, contexto C4, monorepo, despliegue, infraestructura, frontera ERP y roadmap por funcionalidades. La presentación web y su impresión tienen 21 páginas; el PowerPoint original de 16 diapositivas está en `architecture/downloads/`.
 
 ```sh
 npm run build

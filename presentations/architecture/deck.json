@@ -3,13 +3,13 @@
   "title": "POS Platform · Arquitectura y roadmap",
   "width": 1280,
   "height": 720,
+  "cover": "slide-1",
   "chapters": [
     {
       "id": "proposal",
       "title": "Propuesta y alcance",
       "summary": "Una plataforma corporativa para varios países, con capacidades compartidas e integraciones propias de cada operación.",
       "slides": [
-        "slide-1",
         "slide-2",
         "slide-3"
       ]
