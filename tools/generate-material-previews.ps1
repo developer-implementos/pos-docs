@@ -82,9 +82,6 @@ public static class MaterialPreviewFontRegistry {
         }
         Add-Type -AssemblyName System.Drawing
         $fontFiles = @()
-        if (@($catalog.materials | Where-Object id -eq 'architecture-roadmap-pptx').Count -gt 0) {
-            $fontFiles += @((Join-Path $Root 'presentations/architecture/assets/Inter-Regular.ttf'), (Join-Path $Root 'presentations/architecture/assets/Inter-Bold.ttf'))
-        }
         if (@($catalog.materials | Where-Object id -eq 'mountain-cash-ecosystem').Count -gt 0) {
             $fontFiles += @((Join-Path $Root 'materials/previews/fonts/Rubik-Regular.ttf'), (Join-Path $Root 'materials/previews/fonts/Rubik-Bold.ttf'))
             $installedFonts = [Drawing.Text.InstalledFontCollection]::new()

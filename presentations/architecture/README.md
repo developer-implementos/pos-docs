@@ -11,7 +11,6 @@ Presentación Reveal.js en español con la identidad de Implementos. Abre con la
 - Pantalla completa desde «Recursos» o `F` cuando el navegador lo admite.
 - «Lectura» ofrece todo el contenido como documento, sin depender del reproductor. En móvil está visible en la barra; las notas pasan a «Recursos».
 - La [vista de impresión](https://pos-docs-starlight.vercel.app/presentations/architecture/?print-pdf) presenta 21 páginas: la portada general, las cinco portadas de capítulo y las 15 láminas de detalle. En Chrome/Chromium imprimir como PDF, sin márgenes y con fondos. [Instrucciones de Reveal.js](https://revealjs.com/pdf-export/).
-- El [PowerPoint original](https://pos-docs-starlight.vercel.app/presentations/architecture/downloads/Implementos-POS-Platform-Arquitectura-y-Roadmap.pptx), también disponible en el portal, contiene 16 diapositivas.
 - «Ampliar diagrama» o `D` abre el diagrama de la lámina fuera del escalado de Reveal. Permite acercar, reducir, encuadrar y descargar el SVG. Las flechas y el desplazamiento actúan sobre el diagrama mientras está abierto; Escape lo cierra y devuelve el foco al control.
 
 El reproductor respeta movimiento reducido. No activa reproducción automática, proveedores, voz, IA ni integraciones de negocio.
@@ -43,16 +42,15 @@ Al editar una fase, revisar sus tres niveles de texto y ejecutar `npm run verify
 | `deck.json` | Capítulos, textos, posiciones, diagramas editables, notas y enlaces por diapositiva |
 | `theme.css` | Inter local, paleta y diseño de lectura y controles |
 | `player.js` | Navegación Reveal.js, índice, notas y controles accesibles |
-| `sources.json` | Revisión editorial base, hashes revisados y procedencia del PowerPoint |
+| `sources.json` | Revisión editorial base y hashes revisados de las fuentes documentales |
 | `assets/` | Logo suministrado y fuentes Inter con su licencia |
-| `downloads/` | PowerPoint original, identificado por su hash y sin modificar su contenido |
 | `../vendor/reveal/` | Reveal.js 5.1.0 con licencia MIT y manifiesto de integridad |
 | `../tools/diagrams.mjs` | Deriva los SVG de las láminas marcadas con `diagram: true`, usando las posiciones y textos de `deck.json` |
 | `../tools/typography.mjs` | Escala tipográfica común por función del texto en los diagramas |
 
-El build es autónomo: usa Node, archivos de este repositorio y dependencias fijadas de Starlight. No necesita otro checkout, Python ni herramientas de PowerPoint. `npm run presentations:build` produce el HTML en `dist/`; no editar ese resultado. `npm run presentations:test` valida el generador SVG y `npm run presentations:check` verifica el reproductor en navegador. `npm run verify` comprueba el conjunto completo, incluidos Starlight y el portal.
+El build es autónomo: usa Node, archivos de este repositorio y dependencias fijadas de Starlight. `npm run presentations:build` produce el HTML en `dist/`; no editar ese resultado. `npm run presentations:test` valida el generador SVG y `npm run presentations:check` verifica el reproductor en navegador. `npm run verify` comprueba el conjunto completo, incluidos Starlight y el portal.
 
-La versión web resume la arquitectura propuesta y el roadmap compartido con Starlight. POS Platform reúne seis aplicaciones con arranque propio; POS Docs contiene la documentación y las presentaciones en un repositorio editorial independiente. El PowerPoint descargable corresponde a la revisión del 21-10-2026, identificada por SHA-256 en `sources.json`; su contenido se conserva como material de referencia.
+La presentación Reveal.js resume la arquitectura propuesta y el roadmap compartido con Starlight. POS Platform reúne seis aplicaciones con arranque propio; POS Docs contiene la documentación y las presentaciones en un repositorio editorial independiente.
 
 El árbol del monorepo expresa la estructura objetivo: aplicaciones, contextos de negocio, composición de interfaz y soporte técnico compartido, con pruebas E2E propias de los clientes. La base actual contiene una UI demostrativa y scaffolds de servidor; el roadmap propone la entrega de operaciones verificables por fases, sin fechas comprometidas ni implementación productiva implícita. La evidencia del producto está fijada por `apps/starlight/src/data/product-evidence.json`.
 
@@ -66,6 +64,6 @@ El visor amplía mediante dimensiones reales del SVG, fuera de la transformació
 
 Los modelos C4 detallados de referencia siguen en `tools/diagrams/` y sus escenas Excalidraw conservan su propio alcance. No se sustituyen automáticamente por los diagramas resumidos de esta presentación. Los SVG se regeneran durante `npm run presentations:build`; no editar los archivos derivados de `dist/presentations/architecture/diagrams/`.
 
-Logo: [SVG indicado por el usuario](https://www.implementos.com.pe/assets/public/svg/logos/logo.svg). Tipografía: Brand book Implementos 2026. La versión web usa el primario `#0545BA` indicado para POS Platform; `../tools/palette.mjs` centraliza primario, tonos, acento y neutros para el reproductor, el HTML de las láminas y los SVG descargables. El build adapta los colores de origen sin reescribir `deck.json`, el logo ni el PowerPoint original. `palette.css` es generado; no editar el derivado. Los pares de texto sobre las superficies de la paleta se comprueban con contraste mínimo de 4,5:1.
+Logo: [SVG indicado por el usuario](https://www.implementos.com.pe/assets/public/svg/logos/logo.svg). Tipografía: Brand book Implementos 2026. La presentación usa el primario `#0545BA` indicado para POS Platform; `../tools/palette.mjs` centraliza primario, tonos, acento y neutros para el reproductor, el HTML de las láminas y los SVG descargables. El build adapta los colores de origen sin reescribir `deck.json` ni el logo. `palette.css` es generado; no editar el derivado. Los pares de texto sobre las superficies de la paleta se comprueban con contraste mínimo de 4,5:1.
 
 Las microinteracciones usan duraciones compartidas de 140–200 ms, sin bloquear la navegación. La preferencia de movimiento reducido se aplica también si cambia con la presentación abierta. [Configuración de Reveal.js](https://revealjs.com/config/).

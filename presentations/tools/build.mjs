@@ -31,7 +31,6 @@ assert.equal(deck.schemaVersion, 1);
 assert.equal(deck.slides.length, 16);
 assert.equal(new Set(deck.slides.map(s => s.id)).size, deck.slides.length);
 for (const input of sources.inputs) assert.equal(hash(path.join(root,input.path)), input.sha256, `Review the deck and refresh sources.json after editing ${input.path}`);
-assert.equal(hash(path.join(source,sources.powerpoint.file)),sources.powerpoint.sha256,'PowerPoint differs from the original');
 const vendorRoot = path.join(root,'presentations/vendor/reveal');
 const vendor = JSON.parse(fs.readFileSync(path.join(vendorRoot,'manifest.json'),'utf8'));
 for (const file of vendor.files) assert.equal(hash(path.join(vendorRoot,file.path)),file.sha256,`Invalid Reveal.js file: ${file.path}`);
@@ -43,7 +42,7 @@ if(fs.existsSync(output)) {
 }
 fs.mkdirSync(target,{recursive:true});
 fs.writeFileSync(path.join(target,'palette.css'),renderPaletteCss());
-for(const dir of ['assets','downloads']) fs.cpSync(path.join(source,dir),path.join(target,dir),{recursive:true});
+fs.cpSync(path.join(source,'assets'),path.join(target,'assets'),{recursive:true});
 fs.cpSync(vendorRoot,path.join(output,'presentations/vendor/reveal'),{recursive:true});
 for(const file of ['theme.css','player.js','sources.json']) fs.copyFileSync(path.join(source,file),path.join(target,file));
 const diagrams = new Map();
@@ -109,7 +108,6 @@ const markup = renderSlide(deck.slides[navigation.opening.index],navigation.open
 }).join('\n');
 const indexMarkup = `<button type="button" class="index-cover" data-slide="${navigation.opening.id}">Portada · ${escape(navigation.opening.title)}</button>`+navigation.chapters.map(chapter => `<section class="index-chapter" aria-labelledby="index-chapter-${chapter.id}"><h3 id="index-chapter-${chapter.id}"><button class="index-cover" type="button" data-slide="${chapter.cover.id}"><span class="index-chapter-number">${String(chapter.number).padStart(2,'0')}</span> ${escape(chapter.title)}</button></h3><ol class="index-list">${chapter.slides.map(slide=>`<li><button type="button" data-slide="${slide.id}"><span>${String(slide.index+1).padStart(2,'0')}</span>${escape(slide.title)}</button></li>`).join('')}</ol></section>`).join('');
 const head = (title,extra='') => `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escape(title)} · Implementos</title><meta name="description" content="Propuesta de arquitectura de POS Platform y roadmap funcional para el equipo de desarrollo.">${extra}<link rel="stylesheet" href="palette.css"><link rel="stylesheet" href="theme.css"></head>`;
-const ppt=escape(sources.powerpoint.file);
 const html = head(deck.title,'<link rel="stylesheet" href="../vendor/reveal/dist/reset.css"><link rel="stylesheet" href="../vendor/reveal/dist/reveal.css">')+`<body>
 <a class="skip" href="reading.html">Leer el contenido sin diapositivas</a>
 <main class="reveal" aria-label="Propuesta de arquitectura" tabindex="-1"><div class="slides">${markup}</div></main>
@@ -132,7 +130,7 @@ const html = head(deck.title,'<link rel="stylesheet" href="../vendor/reveal/dist
 <div class="diagram-controls" aria-label="Zoom del diagrama"><button id="diagram-zoom-out" aria-label="Reducir diagrama">−</button><output id="diagram-zoom" aria-live="polite">100%</output><button id="diagram-zoom-in" aria-label="Ampliar diagrama">+</button><button id="diagram-fit">Encuadrar</button><a id="diagram-download" download>Descargar SVG</a></div>
 <p id="diagram-description" class="visually-hidden"></p>
 <div id="diagram-viewport" tabindex="0" role="region" aria-label="Diagrama ampliado, desplazable con las flechas"><img id="diagram-image" alt="" aria-describedby="diagram-description"></div></dialog>
-<noscript><p>La navegación requiere JavaScript. <a href="reading.html">Leer todo el contenido</a> o <a href="${ppt}">descargar el PowerPoint</a>.</p></noscript>
+<noscript><p>La navegación requiere JavaScript. <a href="reading.html">Leer todo el contenido</a>.</p></noscript>
 <script src="../vendor/reveal/dist/reveal.js"></script><script src="player.js"></script></body></html>`;
 fs.writeFileSync(path.join(target,'index.html'),html);
 function readingDiagram(slide) {
@@ -150,7 +148,7 @@ function readingArticle(index, heading) {
 }
 const readingOpening=readingArticle(navigation.opening.index,2);
 const readingChapters=navigation.chapters.map(chapter=>`<section class="reading-chapter" id="${chapter.cover.id}" aria-labelledby="reading-${chapter.id}"><header><p class="chapter-kicker">Capítulo ${String(chapter.number).padStart(2,'0')}</p><h2 id="reading-${chapter.id}">${escape(chapter.title)}</h2><p>${escape(chapter.summary)}</p><a href="./#/${chapter.cover.id}">Ver portada del capítulo</a></header>${chapter.slides.map(({index})=>readingArticle(index,3)).join('')}</section>`).join('');
-const reading=head(deck.title)+`<body class="reader"><header><img src="assets/logo.svg" alt="Implementos" width="210"><h1>POS Platform</h1><p>Propuesta de arquitectura y roadmap funcional</p><nav><a href="/">Portal</a><a href="./">Presentar</a><a href="${ppt}" download>PowerPoint original</a><a href="/guide/">Documentación</a></nav><p class="notice">La versión web refleja POS Docs como repositorio independiente. El PowerPoint conserva la revisión original. El roadmap es una propuesta para acordar con el equipo.</p></header><main>${readingOpening}${readingChapters}</main><footer>Reveal.js ${escape(vendor.version)} · <a href="https://revealjs.com/config/">Configuración</a> · <a href="https://revealjs.com/pdf-export/">Exportar PDF</a></footer></body></html>`;
+const reading=head(deck.title)+`<body class="reader"><header><img src="assets/logo.svg" alt="Implementos" width="210"><h1>POS Platform</h1><p>Propuesta de arquitectura y roadmap funcional</p><nav><a href="/">Portal</a><a href="./">Presentar</a><a href="/guide/">Documentación</a></nav><p class="notice">La presentación refleja la arquitectura y el roadmap documentados en POS Docs. El roadmap es una propuesta para acordar con el equipo.</p></header><main>${readingOpening}${readingChapters}</main><footer>Reveal.js ${escape(vendor.version)} · <a href="https://revealjs.com/config/">Configuración</a> · <a href="https://revealjs.com/pdf-export/">Exportar PDF</a></footer></body></html>`;
 fs.writeFileSync(path.join(target,'reading.html'),reading);
 fs.writeFileSync(path.join(output,'presentations/index.html'),`<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Presentaciones POS Platform</title></head><body><h1>Presentaciones de POS Platform</h1><p><a href="architecture/">Arquitectura y roadmap · Portada general, ${navigation.chapters.length} capítulos con portada y ${deck.slides.length-1} láminas de detalle</a></p><p><a href="/guide/reference/presentation/">Guía de la presentación</a></p></body></html>`);
-console.log(`Reveal.js: standalone opening, ${navigation.chapters.length} chapter covers, ${deck.slides.length-1} detail slides, local assets and original PowerPoint in dist/presentations/architecture/`);
+console.log(`Reveal.js: standalone opening, ${navigation.chapters.length} chapter covers, ${deck.slides.length-1} detail slides and local assets in dist/presentations/architecture/`);

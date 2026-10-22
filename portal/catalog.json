@@ -11,16 +11,6 @@
   ],
   "materials": [
     {
-      "id": "architecture-roadmap-pptx",
-      "title": "Arquitectura y roadmap de POS Platform",
-      "description": "PowerPoint original de 16 diapositivas de la propuesta. La versión web refleja la arquitectura y el roadmap vigentes documentados en POS Docs.",
-      "source": "presentations/architecture/downloads/Implementos-POS-Platform-Arquitectura-y-Roadmap.pptx",
-      "format": "pptx",
-      "date": null,
-      "kind": "proposal",
-      "country": "regional"
-    },
-    {
       "id": "mountain-cash-ecosystem",
       "title": "Ecosistema de Caja Mountain",
       "description": "Presentación recibida como antecedente del sistema de caja de Chile. Describe el contexto histórico analizado, no la propuesta vigente de POS Platform.",

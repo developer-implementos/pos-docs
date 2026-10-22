@@ -82,6 +82,7 @@ try {
   assert.equal(response.request().redirectedFrom(), null, 'The portal does not redirect to Starlight');
   const html = await response.text();
   assert.doesNotMatch(html, /presentation-gamma/iu, 'The portal does not promote the external deck');
+  assert.doesNotMatch(html, /architecture-roadmap-pptx|Implementos-POS-Platform-Arquitectura-y-Roadmap\.pptx/iu, 'The portal does not link to the retired proposal material');
   const csp = response.headers()['content-security-policy'] || '';
   const scripts = csp.split(';').find(value => value.trim().startsWith('script-src ')) || '';
   assert.match(scripts, /'self'/u, 'The portal restricts script execution to local assets');
@@ -118,8 +119,19 @@ try {
   }
   report.checks.push('Every portal link, local asset, Starlight entry and local Reveal/reading page');
 
-  assert.ok(catalog.materials.length, 'The portal publishes cataloged materials');
-  assert.ok(sourceMaterials.length && proposalMaterials.length, 'The catalog distinguishes source documents and proposals');
+  for (const href of [
+    '/presentations/architecture/downloads/Implementos-POS-Platform-Arquitectura-y-Roadmap.pptx',
+    '/materials/previews/architecture-roadmap-pptx.pdf',
+    '/materials/view/architecture-roadmap-pptx/',
+  ]) {
+    const response = await context.request.get(origin + href, { maxRedirects: 0 });
+    assert.equal(response.status(), 404, `Retired proposal resource is no longer published: ${href}`);
+    await response.dispose();
+  }
+  report.checks.push('The retired proposal PowerPoint, derivative PDF and document viewer are absent');
+
+  assert.deepEqual(sorted(catalog.materials.map(item => item.id)), sorted(comparisonSourceIds), 'All seven historical and meeting originals remain published');
+  assert.ok(sourceMaterials.length && catalog.presentations.length, 'The portal distinguishes original sources from Reveal proposals without requiring a downloadable proposal');
   const proposals = page.locator('#presentations');
   const sources = page.locator('#materials');
   assert.equal(await proposals.getByRole('heading', { name: 'Propuestas', exact: true, level: 2 }).count(), 1);
@@ -127,7 +139,7 @@ try {
   assert.deepEqual(await downloadHrefs(page.locator('a[download]')), sorted(catalog.materials.map(item => item.href)), 'Every catalog original has exactly one download link');
   assert.deepEqual(await downloadHrefs(proposals.locator('a[download]')), sorted(proposalMaterials.map(item => item.href)), 'Proposal originals appear only with proposals');
   assert.deepEqual(await downloadHrefs(proposals.locator('a[download][data-proposal-download]')), sorted(proposalMaterials.map(item => item.href)), 'Proposal downloads have their own semantic marker');
-  assert.deepEqual(await downloadHrefs(sources.locator('a[download]')), sorted(sourceMaterials.map(item => item.href)), 'Source downloads exclude every proposal, including the architecture PowerPoint');
+  assert.deepEqual(await downloadHrefs(sources.locator('a[download]')), sorted(sourceMaterials.map(item => item.href)), 'Source downloads contain every retained historical and meeting original');
   for (const proposal of proposalMaterials) assert.equal(await sources.locator(`a[href="${proposal.href}"]`).count(), 0, `Proposal has no link in meeting sources: ${proposal.id}`);
   assert.equal(await sources.locator('[data-material]').count(), sourceMaterials.length, 'Only original sources are filterable material rows');
   assert.equal(await proposals.locator('[data-material]').count(), 0, 'Proposals are outside source filtering');

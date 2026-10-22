@@ -240,8 +240,8 @@ try {
   }
   report.checks.push('Every preview renders nonblank content and selectable text; original and PDF downloads preserve their hashes and MIME types.');
 
-  const representative = catalog.materials.find(item => item.id === 'architecture-roadmap-pptx');
-  assert.ok(representative && previews.get(representative.id).pages >= 2, 'Navigation and layout coverage use the architecture PowerPoint');
+  const representative = catalog.materials.find(item => item.id === 'mountain-cash-ecosystem');
+  assert.ok(representative?.format === 'pptx' && representative.kind === 'historical' && previews.get(representative.id).pages >= 2, 'Navigation and layout coverage use the retained historical PowerPoint');
   const preview = previews.get(representative.id);
   const url = `${origin}/materials/view/${representative.id}/`;
   await page.goto(url + '#page=2');

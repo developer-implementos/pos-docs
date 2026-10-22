@@ -5,11 +5,6 @@
   "revision": "61cb5f27ec449345f6b8c867dcd537fd1b190e18",
   "sourceStatus": "Fuentes documentales verificadas en la revisión indicada.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
-  "powerpoint": {
-    "file": "downloads/Implementos-POS-Platform-Arquitectura-y-Roadmap.pptx",
-    "sha256": "b533d07df5b63c3d48aac38ac013704c52041ab7eede74d9c033a785fc17704d",
-    "notice": "PowerPoint original de la propuesta. La versión web refleja la arquitectura y el roadmap vigentes documentados en POS Docs."
-  },
   "inputs": [
     {
       "path": "docs/monorepo.md",

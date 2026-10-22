@@ -13,8 +13,8 @@ export const presentationPalette = Object.freeze({
   line: '#D8E1EF',
 });
 
-// Keep the imported source palette in deck.json and the original PowerPoint intact.
-// Only known source colors change; other semantic colors and transparency are retained.
+// Map deck.json source colors to the presentation theme.
+// Other semantic colors and transparency are retained.
 const sourceColors = new Map([
   ['#006DB6', presentationPalette.primary],
   ['#EDF4F8', presentationPalette.primarySoft],

@@ -56,7 +56,7 @@ npm run preview
 
 ## Incorporar fuentes y materiales
 
-Seguir [materials/README.md](materials/README.md): añadir el original y registrar su metadata en `portal/catalog.json`. El catálogo distingue país y función editorial, independientemente del formato. Admite PPTX, DOCX y PDF; no publica carpetas enteras ni inventa fechas de reunión. Arquitectura y roadmap, tanto en Reveal.js como en PowerPoint, aparece sólo bajo **Propuestas**. Las fuentes recibidas se conservan intactas; las síntesis y las decisiones se documentan en `docs/` con su alcance.
+Seguir [materials/README.md](materials/README.md): añadir el original y registrar su metadata en `portal/catalog.json`. El catálogo distingue país y función editorial, independientemente del formato. Admite PPTX, DOCX y PDF; no publica carpetas enteras ni inventa fechas de reunión. La presentación Reveal.js de Arquitectura y roadmap aparece sólo bajo **Propuestas**. Las fuentes recibidas se conservan intactas; las síntesis y las decisiones se documentan en `docs/` con su alcance.
 
 Cada archivo ofrece **Visualizar** y **Descargar**. Las vistas de lectura `/materials/view/<id>/` usan PDF.js local y PDF revisados vinculados al original por SHA-256. La conversión se hace antes de publicar; Vercel sólo construye el sitio y copia los derivados registrados. Para regenerarlos, consultar [los requisitos de conversión](materials/previews/README.md).
 
@@ -78,6 +78,6 @@ Este repositorio es público: los catálogos de configuración describen nombres
 
 ## Presentación de arquitectura y roadmap
 
-`presentations/architecture/` mantiene la presentación de Implementos de 16 diapositivas, su PowerPoint original y las fuentes editables de Reveal.js. `npm run build` la incluye en `/presentations/architecture/` junto al portal; `npm run presentations:check` comprueba recursos, navegación, notas, impresión y lectura accesible. Tras el build, `npm run preview` permite abrir `http://127.0.0.1:4207/presentations/architecture/`.
+`presentations/architecture/` mantiene la presentación Reveal.js de Implementos y sus fuentes editables: una portada general, cinco portadas de capítulo y 15 láminas de detalle. `npm run build` la incluye en `/presentations/architecture/` junto al portal; `npm run presentations:check` comprueba recursos, navegación, notas, impresión y lectura accesible. Tras el build, `npm run preview` permite abrir `http://127.0.0.1:4207/presentations/architecture/`.
 
-El [manual de la presentación](presentations/architecture/README.md) explica la edición, las fuentes fijadas y la diferencia documental respecto al PowerPoint trasladado. La presentación anterior con laboratorios, video y narrador permanece en pos-architecture.
+El [manual de la presentación](presentations/architecture/README.md) explica la edición, las fuentes fijadas, la lectura continua y la impresión. La presentación anterior con laboratorios, video y narrador permanece en pos-architecture.

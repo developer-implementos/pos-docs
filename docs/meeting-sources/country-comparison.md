@@ -13,7 +13,7 @@ El contenido describe lo comunicado durante el levantamiento. **No es la arquite
 | **Propuestas** | Diseño objetivo, alternativas de solución y roadmap elaborados por el equipo. | [Arquitectura y roadmap](/presentations/architecture/) y [propuesta del producto](/guide/proposal/product/). |
 | **Decisiones** | Acuerdos y alternativas con el estado indicado en su registro. La existencia de un documento no equivale a su aprobación. | [Registro de decisiones](/guide/proposal/decisions/). |
 
-El formato no determina la categoría: un PowerPoint puede ser una fuente recibida o una propuesta. **Arquitectura y roadmap de POS Platform**, tanto en Reveal.js como en su PowerPoint, pertenece a **Propuestas**.
+El formato no determina la categoría: un PowerPoint puede ser una fuente recibida o una propuesta. La presentación Reveal.js **Arquitectura y roadmap de POS Platform** pertenece a **Propuestas**.
 
 ## Comparación aportada
 

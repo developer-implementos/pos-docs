@@ -1,10 +1,10 @@
 # Presentación de la propuesta
 
-La presentación de **arquitectura y roadmap de Implementos** se mantiene en `presentations/architecture/` de [**POS Docs**](https://github.com/developer-implementos/pos-docs). Abre con la portada «POS Platform» y organiza la propuesta en cinco capítulos: cada uno comienza con una portada que presenta su título y alcance, seguida de las láminas de detalle al bajar. Son 21 páginas: una portada general, cinco portadas de capítulo y 15 láminas de detalle, con notas y enlaces a las fuentes canónicas. El sitio ofrece también lectura continua, diagramas SVG ampliables y el PowerPoint original como material de referencia.
+La presentación de **arquitectura y roadmap de Implementos** se mantiene en `presentations/architecture/` de [**POS Docs**](https://github.com/developer-implementos/pos-docs). Abre con la portada «POS Platform» y organiza la propuesta en cinco capítulos: cada uno comienza con una portada que presenta su título y alcance, seguida de las láminas de detalle al bajar. Son 21 páginas: una portada general, cinco portadas de capítulo y 15 láminas de detalle, con notas y enlaces a las fuentes canónicas. El sitio ofrece también lectura continua, impresión y diagramas SVG ampliables.
 
 ## Arquitectura y roadmap de Implementos
 
-[Abrir la presentación](/presentations/architecture/) · [Lectura continua](/presentations/architecture/reading.html) · [Descargar PowerPoint original](/presentations/architecture/downloads/Implementos-POS-Platform-Arquitectura-y-Roadmap.pptx).
+[Abrir la presentación](/presentations/architecture/) · [Lectura continua](/presentations/architecture/reading.html) · [Vista de impresión](/presentations/architecture/?print-pdf).
 
 Incluye capacidades, contexto C4, monorepo, despliegue, infraestructura, desacoplamiento del ERP y seis fases de entrega funcional. Cada fase describe operación, construcción y aceptación. La secuencia se acuerda con el equipo, sin fechas comprometidas ni funcionalidades productivas implícitas.
 
@@ -18,7 +18,7 @@ Los controles nativos de Reveal.js están abajo a la derecha: `←` y `→` reco
 
 «Recursos» reúne pantalla completa, documentación y acceso al portal; en móvil también incluye las notas.
 
-La [lectura continua](/presentations/architecture/reading.html) presenta primero «POS Platform» y agrupa las 15 láminas de detalle bajo los cinco títulos de capítulo, sin depender de la navegación JavaScript. La [vista de impresión](/presentations/architecture/?print-pdf) prepara las 21 páginas, incluidas la portada general y las de capítulo, para imprimir en Chrome/Chromium con fondos y sin márgenes. El PowerPoint original, enlazado arriba y en el portal, conserva sus 16 diapositivas como material de referencia.
+La [lectura continua](/presentations/architecture/reading.html) presenta primero «POS Platform» y agrupa las 15 láminas de detalle bajo los cinco títulos de capítulo, sin depender de la navegación JavaScript. La [vista de impresión](/presentations/architecture/?print-pdf) prepara las 21 páginas, incluidas la portada general y las de capítulo, para imprimir en Chrome/Chromium con fondos y sin márgenes.
 
 <span id="pos-platform-presentación-web-interactiva"></span>
 <span id="abrir"></span>
@@ -51,9 +51,9 @@ Los cambios de arquitectura se realizan primero en las fuentes de POS Docs y des
 | `docs/roadmap.json` | Fases, resúmenes y criterios compartidos por Starlight, Reveal y lectura continua |
 | `presentations/architecture/theme.css` y `player.js` | Diseño y comportamiento del reproductor |
 | `presentations/tools/palette.mjs` | Colores compartidos por el reproductor, las láminas y los SVG |
-| `presentations/architecture/sources.json` | Revisión de fuentes, hashes revisados y procedencia del PowerPoint original |
+| `presentations/architecture/sources.json` | Revisión de las fuentes documentales y hashes revisados |
 
-El [modelo C4 detallado](/guide/architecture/c4-model/) conserva sus propias vistas y alcance. Los SVG de la presentación se generan desde `deck.json`; no se editan en `dist/`. El PowerPoint original se conserva sin modificar y se identifica por su hash como fuente de referencia.
+El [modelo C4 detallado](/guide/architecture/c4-model/) conserva sus propias vistas y alcance. Los SVG de la presentación se generan desde `deck.json`; no se editan en `dist/`.
 
 El build genera `/presentations/architecture/` con recursos locales y scripts externalizados bajo la CSP del portal. Cuando cambia una fuente canónica, revisar su síntesis antes de actualizar la revisión y los hashes de `sources.json`; el build rechaza discrepancias. El [mantenimiento de la documentación](/guide/reference/maintenance/) explica la publicación conjunta de Starlight, Reveal y el portal.
 

@@ -512,8 +512,10 @@ try{
   await page.keyboard.press('Shift+Space');await assertCurrentSlide(page,2);
   const links=await page.locator('a[href]').evaluateAll(nodes=>[...new Set(nodes.map(a=>a.href))]);
   for(const href of links){if(!href.startsWith(origin))continue;const res=await context.request.get(href);assert.equal(res.status(),200,href);}
-  const download=await context.request.get(url+'downloads/Implementos-POS-Platform-Arquitectura-y-Roadmap.pptx');
-  assert.equal(download.headers()['content-type'],'application/vnd.openxmlformats-officedocument.presentationml.presentation');
+  assert.equal(await page.locator('a[href$="Implementos-POS-Platform-Arquitectura-y-Roadmap.pptx"]').count(),0,'Reveal does not offer the retired proposal PowerPoint');
+  const retiredDownload=await context.request.get(url+'downloads/Implementos-POS-Platform-Arquitectura-y-Roadmap.pptx',{maxRedirects:0});
+  assert.equal(retiredDownload.status(),404,'The retired proposal PowerPoint is absent while the Reveal presentation remains available');
+  await retiredDownload.dispose();
   await page.setViewportSize({width:390,height:844});await page.goto(url+'#/slide-12');await page.waitForFunction(()=>window.posPresentation?.isReady());
   await page.screenshot({path:path.join(result,'mobile.png')});
   assert.ok(await page.locator('#index').isVisible());await page.locator('#index').click();await page.locator('[data-slide="slide-16"]').click();
