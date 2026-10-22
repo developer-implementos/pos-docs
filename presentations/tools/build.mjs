@@ -119,10 +119,7 @@ const html = head(deck.title,'<link rel="stylesheet" href="../vendor/reveal/dist
 </nav>
 <div id="resources-panel" popover="auto" aria-labelledby="resources-title">
 <div class="resources-heading"><h2 id="resources-title">Recursos</h2><button popovertarget="resources-panel" popovertargetaction="hide" aria-label="Cerrar recursos">Cerrar</button></div>
-<nav class="resource-links" aria-label="Lectura y materiales de la presentación">
-<a href="reading.html">Lectura continua <small>${navigation.chapters.length} capítulos</small></a>
-<a href="${ppt}" download>PowerPoint original <small>PPTX</small></a>
-<a href="?print-pdf" id="print-link">Imprimir presentación <small>PDF</small></a>
+<nav class="resource-links" aria-label="Opciones y documentación de la presentación">
 <button id="mobile-notes" class="mobile-action">Notas de la lámina</button>
 <button id="fullscreen" aria-keyshortcuts="F">Pantalla completa</button>
 <a href="/guide/reference/presentation/" class="resource-separator">Documentación de la propuesta</a>

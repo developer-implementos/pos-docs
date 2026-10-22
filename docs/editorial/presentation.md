@@ -16,7 +16,9 @@ Los controles nativos de Reveal.js están abajo a la derecha: `←` y `→` abre
 
 «Ampliar diagrama» o `D` abre el SVG de la lámina con controles de zoom, encuadre y descarga. El recorrido del monorepo y las dos vistas del roadmap usan fragmentos; sus enlaces conservan el paso seleccionado. El reproductor respeta la preferencia de movimiento reducido.
 
-«Recursos» reúne lectura continua, PowerPoint original, impresión PDF, pantalla completa y documentación. La lectura continua agrupa las 16 láminas de contenido bajo los cinco títulos de capítulo, sin depender de la navegación JavaScript. «Imprimir presentación» prepara las 21 páginas, incluidas las portadas, para imprimir en Chrome/Chromium con fondos y sin márgenes. El PowerPoint original conserva sus 16 diapositivas como material de referencia.
+«Recursos» reúne pantalla completa, documentación y acceso al portal; en móvil también incluye las notas.
+
+La [lectura continua](/presentations/architecture/reading.html) agrupa las 16 láminas de contenido bajo los cinco títulos de capítulo, sin depender de la navegación JavaScript. La [vista de impresión](/presentations/architecture/?print-pdf) prepara las 21 páginas, incluidas las portadas, para imprimir en Chrome/Chromium con fondos y sin márgenes. El PowerPoint original, enlazado arriba y en el portal, conserva sus 16 diapositivas como material de referencia.
 
 <span id="pos-platform-presentación-web-interactiva"></span>
 <span id="abrir"></span>

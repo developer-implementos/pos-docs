@@ -307,14 +307,13 @@ try{
   assert.equal(await resources.getAttribute('popovertarget'),'resources-panel','The resource trigger uses native popover semantics');
   assert.equal(await resourcePanel.getAttribute('popover'),'auto','Resources support native light dismissal');
   await resources.focus();await page.keyboard.press('Space');await waitForResources(page,true);
-  await resourcePanel.locator('a[href="reading.html"]').focus();
+  await resourcePanel.locator('a[href="/guide/reference/presentation/"]').focus();
   for(const key of ['ArrowRight','ArrowDown','ArrowLeft','ArrowUp','Space','PageDown','n','i','d'])await page.keyboard.press(key);
   await assertCurrentSlide(page,8,'Navigation keys and shortcuts do not change the presentation while resources are open');
   assert.equal(await page.locator('dialog[open]').count(),0,'Presentation shortcuts do not open competing dialogs from resources');
-  for(const href of ['reading.html','downloads/Implementos-POS-Platform-Arquitectura-y-Roadmap.pptx','?print-pdf','/guide/reference/presentation/','/']){
+  for(const href of ['/guide/reference/presentation/','/']){
     assert.equal(await resourcePanel.locator(`a[href="${href}"]`).count(),1,`Resources retain ${href}`);
   }
-  assert.notEqual(await resourcePanel.locator('a[download]').getAttribute('download'),null,'The original PowerPoint remains an explicit download');
   assert.ok(await resourcePanel.locator('#fullscreen').isVisible(),'Fullscreen remains available through resources');
   await page.keyboard.press('Escape');await waitForResources(page,false);
   await assertCurrentSlide(page,8,'Dismissing resources does not navigate');

@@ -7,11 +7,11 @@ Cinco capítulos de Reveal.js con una portada de título y alcance por capítulo
 - Los controles nativos de Reveal.js se muestran abajo a la derecha. `←`/`→` abren la portada del capítulo correspondiente; `↑`/`↓` recorren sus láminas y fragmentos. La numeración indica capítulo y lámina (`4.3`), contando la portada como primera lámina del capítulo.
 - `Espacio` recorre todo el contenido en orden, incluidos fragmentos y láminas verticales; `Shift` + `Espacio` retrocede. `O` abre la vista general de Reveal.js.
 - `I` abre el índice y `N` las notas del expositor. Escape cierra el diálogo.
-- «Recursos» reúne lectura continua, PowerPoint original, impresión PDF, pantalla completa y enlaces a la documentación y al portal. Se cierra con Escape o al pulsar fuera; sus teclas no avanzan la presentación.
+- «Recursos» reúne pantalla completa y enlaces a la documentación y al portal; en móvil también incluye las notas. Se cierra con Escape o al pulsar fuera; sus teclas no avanzan la presentación.
 - Pantalla completa desde «Recursos» o `F` cuando el navegador lo admite.
 - «Lectura» ofrece todo el contenido como documento, sin depender del reproductor. En móvil está visible en la barra; las notas pasan a «Recursos».
-- «Imprimir presentación» abre `?print-pdf` con 21 páginas: las cinco portadas y las 16 láminas de contenido. En Chrome/Chromium imprimir como PDF, sin márgenes y con fondos. [Instrucciones de Reveal.js](https://revealjs.com/pdf-export/).
-- «PowerPoint original» descarga el archivo de 16 diapositivas.
+- La [vista de impresión](https://pos-docs-starlight.vercel.app/presentations/architecture/?print-pdf) presenta 21 páginas: las cinco portadas y las 16 láminas de contenido. En Chrome/Chromium imprimir como PDF, sin márgenes y con fondos. [Instrucciones de Reveal.js](https://revealjs.com/pdf-export/).
+- El [PowerPoint original](https://pos-docs-starlight.vercel.app/presentations/architecture/downloads/Implementos-POS-Platform-Arquitectura-y-Roadmap.pptx), también disponible en el portal, contiene 16 diapositivas.
 - «Ampliar diagrama» o `D` abre el diagrama de la lámina fuera del escalado de Reveal. Permite acercar, reducir, encuadrar y descargar el SVG. Las flechas y el desplazamiento actúan sobre el diagrama mientras está abierto; Escape lo cierra y devuelve el foco al control.
 
 El reproductor respeta movimiento reducido. No activa reproducción automática, proveedores, voz, IA ni integraciones de negocio.
