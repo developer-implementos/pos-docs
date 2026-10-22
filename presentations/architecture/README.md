@@ -1,16 +1,16 @@
 # Arquitectura y roadmap · Implementos
 
-16 diapositivas en español con la identidad de Implementos, agrupadas en cinco capítulos de Reveal.js. Ruta tras el build: `/presentations/architecture/`.
+Cinco capítulos de Reveal.js con una portada de título y alcance por capítulo, seguida de sus láminas de detalle. La presentación reúne cinco portadas y 16 láminas de contenido en español, con la identidad de Implementos. Ruta tras el build: `/presentations/architecture/`.
 
 ## Uso
 
-- Los controles nativos de Reveal.js se muestran abajo a la derecha. `←`/`→` cambian de capítulo; `↑`/`↓` recorren sus láminas y fragmentos. La numeración indica capítulo y lámina (`4.3`).
+- Los controles nativos de Reveal.js se muestran abajo a la derecha. `←`/`→` abren la portada del capítulo correspondiente; `↑`/`↓` recorren sus láminas y fragmentos. La numeración indica capítulo y lámina (`4.3`), contando la portada como primera lámina del capítulo.
 - `Espacio` recorre todo el contenido en orden, incluidos fragmentos y láminas verticales; `Shift` + `Espacio` retrocede. `O` abre la vista general de Reveal.js.
 - `I` abre el índice y `N` las notas del expositor. Escape cierra el diálogo.
 - «Recursos» reúne lectura continua, PowerPoint original, impresión PDF, pantalla completa y enlaces a la documentación y al portal. Se cierra con Escape o al pulsar fuera; sus teclas no avanzan la presentación.
 - Pantalla completa desde «Recursos» o `F` cuando el navegador lo admite.
 - «Lectura» ofrece todo el contenido como documento, sin depender del reproductor. En móvil está visible en la barra; las notas pasan a «Recursos».
-- «Imprimir presentación» abre `?print-pdf`. En Chrome/Chromium imprimir como PDF, sin márgenes y con fondos. [Instrucciones de Reveal.js](https://revealjs.com/pdf-export/).
+- «Imprimir presentación» abre `?print-pdf` con 21 páginas: las cinco portadas y las 16 láminas de contenido. En Chrome/Chromium imprimir como PDF, sin márgenes y con fondos. [Instrucciones de Reveal.js](https://revealjs.com/pdf-export/).
 - «PowerPoint original» descarga el archivo de 16 diapositivas.
 - «Ampliar diagrama» o `D` abre el diagrama de la lámina fuera del escalado de Reveal. Permite acercar, reducir, encuadrar y descargar el SVG. Las flechas y el desplazamiento actúan sobre el diagrama mientras está abierto; Escape lo cierra y devuelve el foco al control.
 
@@ -18,7 +18,9 @@ El reproductor respeta movimiento reducido. No activa reproducción automática,
 
 El índice destaca la lámina actual y la enfoca al abrir. Sólo su lista se desplaza, de modo que el título y el botón de cierre permanecen visibles. Las flechas nativas habilitadas mantienen contraste completo. Los controles exteriores tienen un área mínima de 44 px y la barra cabe desde 320 px sin desplazamiento horizontal.
 
-Los capítulos son Propuesta y alcance (láminas 1–3), Código y responsabilidades (4–5), Despliegue e infraestructura (6–7), Integración y evolución (8–10), y Entrega y roadmap (11–16). `deck.json` declara esta agrupación; `../tools/navigation.mjs` comprueba que cada lámina aparezca una vez y en el orden original. Los enlaces `#/slide-N` siguen abriendo la misma lámina. Lectura continua e impresión mantienen las 16 páginas en ese orden.
+Los capítulos son Propuesta y alcance (contenido 1–3), Código y responsabilidades (4–5), Despliegue e infraestructura (6–7), Integración y evolución (8–10), y Entrega y roadmap (11–16). `deck.json` declara sus títulos, alcance y agrupación; `../tools/navigation.mjs` comprueba que cada lámina de contenido aparezca una vez y en el orden original. La lectura continua organiza los 16 artículos bajo los cinco títulos de capítulo.
+
+Los enlaces `#/slide-N` identifican las láminas de contenido. Las portadas tienen enlaces propios: `#/chapter-proposal`, `#/chapter-structure`, `#/chapter-deployment`, `#/chapter-erp-integration` y `#/chapter-delivery-roadmap`. El índice permite acceder tanto a las portadas como a las láminas de detalle.
 
 ### Recorrido del monorepo
 

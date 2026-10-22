@@ -94,7 +94,8 @@ try {
   await page.goto(slidesUrl + '#/slide-12');
   await waitForSlide(page, 11, -1);
   const slide = page.locator('#slide-12');
-  assert.equal(await page.locator('.slides section[data-leaf]').count(), 16);
+  assert.equal(await page.locator('.slides section[data-leaf]').count(), 21);
+  assert.equal(await page.locator('.slides section[data-chapter-cover]').count(), 5);
   for (const [index, phases] of [roadmap.phases.slice(0, 3), roadmap.phases.slice(3)].entries()) {
     if (index) await page.keyboard.press('ArrowDown');
     await waitForSlide(page, 11, index - 1);
@@ -134,7 +135,7 @@ try {
     await page.screenshot({ path: path.join(result, `slide-${index + 1}.png`) });
   }
   await page.goto(slidesUrl + '?print-pdf#/slide-12');
-  await page.waitForFunction(() => document.querySelectorAll('.pdf-page').length === 16);
+  await page.waitForFunction(() => document.querySelectorAll('.pdf-page').length === 21);
   assert.equal(await page.locator('#slide-12 .roadmap-print-phase').count(), 6);
   assert.equal(await page.locator('#slide-12 .roadmap-tour').isVisible(), false);
   await assertSlideFits(page, '#slide-12 .roadmap-print');
@@ -152,7 +153,7 @@ try {
   }
   await assertNoPageOverflow(staticPage, 'Reading without JavaScript');
   assert.deepEqual(errors, [], 'No runtime, network or CSP errors');
-  console.log('Roadmap checked: shared content, six phases, responsive guide, two Reveal views, history, keyboard, detail slides, 16-page print, no-JS reading.');
+  console.log('Roadmap checked: shared content, six phases, responsive guide, two Reveal views, history, keyboard, detail slides, 21-page print including chapter covers, no-JS reading.');
 } finally {
   await browser.close();
   await new Promise(resolve => server.close(resolve));

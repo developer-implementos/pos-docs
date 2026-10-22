@@ -14,6 +14,7 @@ const url=origin+'/presentations/architecture/';
 const browser=await chromium.launch({headless:true});
 const errors=[],failedRequests=[],overflow=[],diagrams=[],visualChecks=[];
 const deck=JSON.parse(fs.readFileSync(path.join(root,'presentations/architecture/deck.json'),'utf8'));
+const leafIds=deck.chapters.flatMap(chapter=>[`chapter-${chapter.id}`,...chapter.slides]);
 const diagramSlides=[3,6,7,8,9,10].map(number=>deck.slides[number-1]);
 const normalizeLabel=text=>text.replace(/\s+/gu,' ').trim();
 function observe(page){
@@ -22,13 +23,34 @@ function observe(page){
   page.on('requestfailed',request=>failedRequests.push(request.url()));
   page.on('response',response=>{if(response.status()>=400)failedRequests.push(`${response.status()} ${response.url()}`);});
 }
-async function waitForSlide(page,index){
+async function waitForLeaf(page,id){
   await page.waitForFunction(id=>{
     const deck=window.posPresentation,slide=deck?.getCurrentSlide();
     return deck?.isReady()&&slide?.id===id&&slide.classList.contains('present')&&
       Number(getComputedStyle(slide).opacity)===1&&slide.getAnimations({subtree:true}).every(animation=>!['running','pending'].includes(animation.playState));
-  },deck.slides[index].id);
+  },id);
   await page.evaluate(()=>document.fonts.ready);
+}
+async function waitForSlide(page,index){await waitForLeaf(page,deck.slides[index].id);}
+async function goToCover(page,chapter){
+  await page.evaluate(id=>{
+    const deck=window.posPresentation,position=deck.getIndices(document.getElementById(id));
+    deck.slide(position.h,position.v,-1);
+  },`chapter-${chapter.id}`);
+  await waitForLeaf(page,`chapter-${chapter.id}`);
+}
+async function assertCoverFits(page,chapter,label){
+  const layout=await page.locator(`#chapter-${chapter.id} .chapter-cover-body`).evaluate(body=>{
+    const frame=body.getBoundingClientRect(),scale=window.posPresentation.getScale();
+    const clipped=[...body.children].some(node=>{
+      const range=document.createRange();range.selectNodeContents(node);const text=range.getBoundingClientRect();
+      return text.left<frame.left-1||text.right>frame.right+1||text.top<frame.top-1||text.bottom>frame.bottom+1;
+    });
+    return {clipped,titleSize:parseFloat(getComputedStyle(body.querySelector('h2')).fontSize)*scale,
+      summarySize:parseFloat(getComputedStyle(body.querySelector('.chapter-summary')).fontSize)*scale};
+  });
+  assert.equal(layout.clipped,false,`${label}: chapter title and scope fit the cover`);
+  assert.ok(layout.titleSize>=28&&layout.summarySize>=16,`${label}: chapter title and scope remain readable at presentation size`);
 }
 async function goToSlide(page,index,fragment=-1){
   await page.evaluate(({id,fragment})=>{
@@ -92,7 +114,7 @@ async function assertIndexSelection(page,index){
       closeVisible:close.top>=0&&close.bottom<=innerHeight&&close.left>=0&&close.right<=innerWidth,
       weight:Number(current.fontWeight),background:current.backgroundColor,otherBackground:rest.backgroundColor,
       border:current.borderColor,otherBorder:rest.borderColor};
-  },deck.slides[index].id);
+  },typeof index==='string'?index:deck.slides[index].id);
   assert.ok(state.focused,'Opening the index focuses the current slide');
   assert.ok(state.headerVisible&&state.closeVisible,'The index heading and Close action remain visible when focusing the current slide');
   assert.ok(state.top>=state.frameTop&&state.bottom<=state.frameBottom,'The selected slide is visible without searching through the index');
@@ -136,8 +158,38 @@ try{
   assert.ok(response.headers()['content-security-policy'].includes("script-src 'self'"));
   await page.waitForFunction(()=>window.posPresentation?.isReady());
   assert.equal(await page.locator('.slides>section').count(),5,'Five horizontal chapters contain the presentation');
-  assert.equal(await page.locator('.slides section[data-leaf]').count(),16,'Only the sixteen content leaves count as slides');
-  assert.deepEqual(await page.evaluate(()=>window.posPresentation.getSlides().map(slide=>slide.id)),deck.slides.map(slide=>slide.id),'Native slide order preserves all existing IDs and reading order');
+  assert.equal(await page.locator('.slides section[data-leaf]').count(),21,'Five chapter covers precede the sixteen content slides');
+  assert.equal(await page.locator('.slides section[data-chapter-cover]').count(),5,'Each chapter has its own cover');
+  assert.deepEqual(await page.evaluate(()=>window.posPresentation.getSlides().map(slide=>slide.id)),leafIds,'Native slide order inserts chapter covers without changing existing detail IDs or order');
+  await waitForLeaf(page,'chapter-proposal');
+  assert.equal(await page.locator('#index-dialog [data-slide]').count(),21,'The index includes every cover and detail slide');
+  assert.equal(await page.locator('#index-dialog h3 button[data-slide]').count(),5,'Chapter headings are actionable cover links');
+  for(const [h,chapter] of deck.chapters.entries()){
+    const stack=page.locator(`#stack-${chapter.id}`),cover=stack.locator(`[data-chapter-cover]`);
+    assert.equal(await stack.getAttribute('data-chapter'),chapter.id);
+    assert.equal(await stack.getAttribute('data-start-indexv'),'0','Horizontal navigation always enters the chapter cover');
+    assert.equal(await cover.getAttribute('id'),`chapter-${chapter.id}`);
+    assert.equal((await cover.locator('h2').textContent()).trim(),chapter.title);
+    assert.equal((await cover.locator('.chapter-summary').textContent()).trim(),chapter.summary);
+    assert.equal((await cover.locator('aside.notes').textContent()).trim(),chapter.summary);
+    assert.deepEqual(await stack.locator(':scope > section[data-leaf]').evaluateAll(nodes=>nodes.map(node=>node.id)),[`chapter-${chapter.id}`,...chapter.slides]);
+    await goToCover(page,chapter);
+    const position=await page.evaluate(()=>window.posPresentation.getIndices());
+    assert.equal(position.h,h);assert.equal(position.v,0);
+    await assertControlsFit(page,`Chapter ${chapter.id} navigation`);
+    await assertCoverFits(page,chapter,`Chapter ${chapter.id}`);
+    await page.screenshot({path:path.join(result,`chapter-${chapter.id}.png`)});
+  }
+  for(const viewport of [{width:1280,height:800},{width:1920,height:1080}]){
+    await page.setViewportSize(viewport);
+    for(const chapter of deck.chapters){
+      await goToCover(page,chapter);
+      await assertCoverFits(page,chapter,`${chapter.id} at ${viewport.width}x${viewport.height}`);
+      await assertControlsFit(page,`${chapter.id} at ${viewport.width}x${viewport.height}`);
+      await page.screenshot({path:path.join(result,`chapter-${chapter.id}-${viewport.width}.png`)});
+    }
+  }
+  await page.setViewportSize({width:1600,height:954});
   assert.deepEqual(await page.locator('.slides section[data-diagram-src]').evaluateAll(nodes=>nodes.map(node=>node.id)),diagramSlides.map(slide=>slide.id),'Exactly the six source diagrams expose vector detail');
   assert.equal(await page.evaluate(()=>window.posPresentation.getConfig().controls),true,'Reveal supplies the native navigation controls');
   assert.equal(await page.evaluate(()=>window.posPresentation.getConfig().navigationMode),'default','Arrows use Reveal horizontal and vertical navigation');
@@ -204,26 +256,37 @@ try{
     }));
     overflow.push(...issues.map(x=>({slide:i+1,...x})));
   }
-  // Reveal remembers the last vertical position per chapter. Start this route
-  // test with known positions after visiting every leaf for layout checks.
-  await goToSlide(page,3);
-  await goToSlide(page,0);
-  await assertCurrentSlide(page,0);
+  // Horizontal entry always uses the cover, even after visiting every detail.
+  await goToCover(page,deck.chapters[0]);
   assert.equal(await page.locator('.navigate-left').evaluate(node=>node.classList.contains('enabled')),false,'No previous chapter on the opening slide');
   assert.equal(await page.locator('.navigate-up').evaluate(node=>node.classList.contains('enabled')),false,'No upper slide on the opening slide');
-  await page.keyboard.press('ArrowDown');await assertCurrentSlide(page,1);
-  await page.keyboard.press('ArrowUp');await assertCurrentSlide(page,0);
+  await page.keyboard.press('ArrowDown');await assertCurrentSlide(page,0);
+  await page.keyboard.press('ArrowUp');await waitForLeaf(page,'chapter-proposal');
   await page.keyboard.press('ArrowRight');
-  await assertCurrentSlide(page,3,'Right enters the next chapter instead of moving down the current chapter');
-  await page.keyboard.press('ArrowLeft');await assertCurrentSlide(page,0);
+  await waitForLeaf(page,'chapter-structure');
+  await page.keyboard.press('ArrowLeft');await waitForLeaf(page,'chapter-proposal');
+  // Space follows all covers, details and native fragments in canonical order.
+  await page.locator('.reveal').focus();
+  for(let index=0;index<leafIds.length;index++){
+    await waitForLeaf(page,leafIds[index]);
+    if(index===leafIds.length-1)break;
+    let presses=0;
+    while(await page.evaluate(()=>window.posPresentation.getCurrentSlide().id)===leafIds[index]){
+      assert.ok(presses++<12,`Space must leave ${leafIds[index]} after its native fragments`);
+      await page.keyboard.press('Space');
+    }
+    await waitForLeaf(page,leafIds[index+1]);
+  }
   await goToSlide(page,10);
   await goToSlide(page,8);
   for(const direction of ['left','right','up','down'])assert.equal(await page.locator(`.navigate-${direction}`).evaluate(node=>node.classList.contains('enabled')),true,`The middle integration slide enables ${direction}`);
   await assertControlsFit(page,'Desktop navigation');
   await page.locator('.navigate-up').click();await assertCurrentSlide(page,7);
   await page.locator('.navigate-down').click();await assertCurrentSlide(page,8);
-  await page.locator('.navigate-right').click();await assertCurrentSlide(page,10);
-  await page.locator('.navigate-left').click();await assertCurrentSlide(page,8,'Returning horizontally preserves the previous vertical position');
+  await page.locator('.navigate-right').click();await waitForLeaf(page,'chapter-delivery-roadmap');
+  await page.locator('.navigate-left').click();await waitForLeaf(page,'chapter-erp-integration');
+  await page.locator('.navigate-down').click();await assertCurrentSlide(page,7,'Down enters the first detail beneath the chapter cover');
+  await page.locator('.navigate-down').click();await assertCurrentSlide(page,8);
   await page.locator('.navigate-up').focus();
   await page.keyboard.press('Space');
   await assertCurrentSlide(page,7,'Space activates the focused native up arrow once instead of advancing sequentially');
@@ -266,9 +329,28 @@ try{
   await page.goBack();await waitForSlide(page,8);
   await page.goForward();await waitForSlide(page,9);
   await page.reload();await waitForSlide(page,9);
-  for(const index of [2,3,11,15]){
+  for(const index of deck.slides.keys()){
     await page.goto(url+`#/${deck.slides[index].id}`);await waitForSlide(page,index);
     assert.equal(await page.evaluate(()=>window.posPresentation.getCurrentSlide().id),deck.slides[index].id,'Published named links resolve to the same leaf after grouping');
+  }
+  for(const chapter of deck.chapters){
+    const id=`chapter-${chapter.id}`;
+    await page.goto(url+`#/${id}`);await waitForLeaf(page,id);
+    await page.reload();await waitForLeaf(page,id);
+    assert.equal(await page.evaluate(()=>window.posPresentation.getIndices().v),0,'Chapter links and reloads target the cover');
+    await page.locator('#notes').click();
+    assert.equal(await page.locator('#notes-title').textContent(),chapter.title,'Cover notes identify the chapter');
+    assert.ok((await page.locator('#notes-body').textContent()).includes(chapter.summary),'Cover notes explain the chapter scope');
+    await page.keyboard.press('Escape');
+    await page.locator('#index').click();await assertIndexSelection(page,id);
+    await page.keyboard.press('Escape');
+    await goToSlide(page,15);
+    await page.locator('#index').click();
+    await page.locator(`#index-dialog h3 button[data-slide="${id}"]`).click();
+    await waitForLeaf(page,id);
+    assert.equal(await page.locator('#index-dialog').evaluate(dialog=>dialog.open),false,'Selecting a chapter closes the index');
+    await page.keyboard.press('ArrowDown');await waitForLeaf(page,chapter.slides[0]);
+    await page.keyboard.press('ArrowUp');await waitForLeaf(page,id);
   }
   await page.locator('#index').click();await page.locator('[data-slide="slide-12"]').click();
   await assertCurrentSlide(page,11);
@@ -387,6 +469,7 @@ try{
   assert.equal(await page.locator('[data-zone-step][aria-current]').getAttribute('data-zone-step'),'4','Space selects the focused nonadjacent zone without an additional fragment advance');
   await page.locator('[data-zone-step="0"]').click();
   await page.locator('.reveal').focus();
+  await page.keyboard.press('Shift+Space');await waitForLeaf(page,'chapter-structure');
   await page.keyboard.press('Shift+Space');await assertCurrentSlide(page,2);
   const links=await page.locator('a[href]').evaluateAll(nodes=>[...new Set(nodes.map(a=>a.href))]);
   for(const href of links){if(!href.startsWith(origin))continue;const res=await context.request.get(href);assert.equal(res.status(),200,href);}
@@ -430,12 +513,21 @@ try{
     await waitForResources(page,false);
   }
   await page.setViewportSize({width:1600,height:954});
-  await page.goto(url+'?print-pdf');await page.waitForFunction(()=>document.querySelectorAll('.pdf-page').length===16);
+  await page.goto(url+'?print-pdf');await page.waitForFunction(()=>document.querySelectorAll('.pdf-page').length===21);
+  assert.equal(await page.locator('.pdf-page [data-chapter-cover]').count(),5,'Print includes every chapter cover');
   assert.ok(await page.locator('.monorepo-static').isVisible());assert.equal(await page.locator('.monorepo-tour').isVisible(),false);
   await page.pdf({path:path.join(result,'architecture.pdf'),printBackground:true,preferCSSPageSize:true});
   const reader=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});
   const reading=await reader.newPage();observe(reading);await reading.goto(url+'reading.html');
   assert.equal(await reading.locator('article').count(),16);
+  assert.equal(await reading.locator('section.reading-chapter').count(),5,'Continuous reading groups the sixteen details under their five chapter headings');
+  for(const [index,chapter] of deck.chapters.entries()){
+    const section=reading.locator('section.reading-chapter').nth(index);
+    assert.equal((await section.locator(':scope > header h2').textContent()).trim(),chapter.title);
+    assert.equal((await section.locator(':scope > header p:not(.chapter-kicker)').textContent()).trim(),chapter.summary);
+    assert.deepEqual(await section.locator('article').evaluateAll(nodes=>nodes.map(node=>node.id)),chapter.slides,'Reading chapter grouping follows the same canonical detail order');
+    assert.equal(await section.locator(':scope > article > h3').count(),chapter.slides.length,'Reading details sit beneath the chapter heading');
+  }
   assert.ok(await reading.locator('h1').isVisible());
   const readingTree=await reading.locator('.tree-reading').textContent();
   assert.ok(['branch-api/','branch-sync-worker/','shared/','Base técnica del servidor'].every(value=>readingTree.includes(value)),'Continuous reading presents the target names and responsibilities');
@@ -452,7 +544,7 @@ try{
   for(const dpr of [1.25,2]){
     const display=await browser.newContext({viewport:{width:1280,height:720},deviceScaleFactor:dpr,reducedMotion:'no-preference'});
     const screen=await display.newPage();observe(screen);
-    await screen.goto(url);await waitForSlide(screen,0);
+    await screen.goto(url);await waitForLeaf(screen,'chapter-proposal');
     assert.equal(await screen.evaluate(()=>devicePixelRatio),dpr);
     for(const index of [2,8]){
       await goToSlide(screen,index);
@@ -469,10 +561,10 @@ try{
     }
     await display.close();
   }
-  fs.writeFileSync(path.join(result,'report.json'),JSON.stringify({slides:16,errors,failedRequests,overflow,diagrams,visualChecks},null,2));
+  fs.writeFileSync(path.join(result,'report.json'),JSON.stringify({slides:21,details:16,covers:5,errors,failedRequests,overflow,diagrams,visualChecks},null,2));
   assert.deepEqual(errors,[]);assert.deepEqual(failedRequests,[]);assert.deepEqual(overflow,[],'Text exceeds its editable box; inspect report.json');
-  console.log('Presentations: 16 leaves in five chapters; four native arrows, sequential Space navigation, history, named links, notes, fragments, six source-preserving SVG diagrams, keyboard viewer, real zoom, DPR 1.25/2, mobile, downloads, print and no-JS reading passed.');
+  console.log('Presentations: five chapter covers and sixteen details; four native arrows, cover entry, sequential Space navigation, history, all permanent links, cover and detail notes, fragments, six source-preserving SVG diagrams, keyboard viewer, real zoom, DPR 1.25/2, mobile, downloads, 21-page print and grouped no-JS reading passed.');
 }finally{
-  fs.writeFileSync(path.join(result,'report.json'),JSON.stringify({slides:16,errors,failedRequests,overflow,diagrams,visualChecks},null,2));
+  fs.writeFileSync(path.join(result,'report.json'),JSON.stringify({slides:21,details:16,covers:5,errors,failedRequests,overflow,diagrams,visualChecks},null,2));
   await browser.close();await new Promise(resolve=>server.close(resolve));
 }

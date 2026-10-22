@@ -118,8 +118,10 @@
   }
   function update(){
     const current=deck.getCurrentSlide();
-    const index=Number(current.dataset.slideIndex);
-    document.title=`${index+1}. ${current.dataset.title} · Implementos`;
+    const label=current.hasAttribute('data-chapter-cover')
+      ?`Capítulo ${current.dataset.chapterNumber}`
+      :String(Number(current.dataset.slideIndex)+1);
+    document.title=`${label}. ${current.dataset.title} · Implementos`;
     document.querySelectorAll('[data-slide]').forEach(button=>{
       if(button.dataset.slide===current.id)button.setAttribute('aria-current','step');
       else button.removeAttribute('aria-current');

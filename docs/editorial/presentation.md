@@ -1,10 +1,10 @@
 # Presentación de la propuesta
 
-La presentación de **arquitectura y roadmap de Implementos** se mantiene en `presentations/architecture/` de [**POS Docs**](https://github.com/developer-implementos/pos-docs). Reveal.js resume la propuesta en 16 diapositivas y cinco capítulos, con notas y enlaces a las fuentes canónicas. El sitio ofrece también lectura continua, diagramas SVG ampliables y el PowerPoint original como material de referencia.
+La presentación de **arquitectura y roadmap de Implementos** se mantiene en `presentations/architecture/` de [**POS Docs**](https://github.com/developer-implementos/pos-docs). Reveal.js organiza la propuesta en cinco capítulos: cada uno comienza con una portada que presenta su título y alcance, seguida de las láminas de detalle al bajar. Son cinco portadas y 16 láminas de contenido, con notas y enlaces a las fuentes canónicas. El sitio ofrece también lectura continua, diagramas SVG ampliables y el PowerPoint original como material de referencia.
 
 ## Arquitectura y roadmap de Implementos
 
-[Abrir las 16 diapositivas](/presentations/architecture/) · [Lectura continua](/presentations/architecture/reading.html) · [Descargar PowerPoint original](/presentations/architecture/downloads/Implementos-POS-Platform-Arquitectura-y-Roadmap.pptx).
+[Abrir la presentación](/presentations/architecture/) · [Lectura continua](/presentations/architecture/reading.html) · [Descargar PowerPoint original](/presentations/architecture/downloads/Implementos-POS-Platform-Arquitectura-y-Roadmap.pptx).
 
 Incluye capacidades, contexto C4, monorepo, despliegue, infraestructura, desacoplamiento del ERP y seis fases de entrega funcional. Cada fase describe operación, construcción y aceptación. La secuencia se acuerda con el equipo, sin fechas comprometidas ni funcionalidades productivas implícitas.
 
@@ -12,11 +12,11 @@ La presentación explica la arquitectura propuesta y distingue la base implement
 
 ## Recorrer la presentación
 
-Los controles nativos de Reveal.js están abajo a la derecha: `←` y `→` cambian de capítulo; `↑` y `↓` recorren sus láminas y fragmentos. `Espacio` sigue el orden completo y `Shift` + `Espacio` retrocede. `I` abre el índice, `N` las notas y `O` la vista general.
+Los controles nativos de Reveal.js están abajo a la derecha: `←` y `→` abren la portada del capítulo correspondiente; `↑` y `↓` recorren sus láminas y fragmentos. `Espacio` sigue el orden completo, incluidas las portadas, y `Shift` + `Espacio` retrocede. `I` abre el índice, `N` las notas y `O` la vista general.
 
 «Ampliar diagrama» o `D` abre el SVG de la lámina con controles de zoom, encuadre y descarga. El recorrido del monorepo y las dos vistas del roadmap usan fragmentos; sus enlaces conservan el paso seleccionado. El reproductor respeta la preferencia de movimiento reducido.
 
-«Recursos» reúne lectura continua, PowerPoint original, impresión PDF, pantalla completa y documentación. La lectura continua presenta el contenido sin depender de la navegación JavaScript. «Imprimir presentación» prepara las 16 láminas para imprimir en Chrome/Chromium con fondos y sin márgenes.
+«Recursos» reúne lectura continua, PowerPoint original, impresión PDF, pantalla completa y documentación. La lectura continua agrupa las 16 láminas de contenido bajo los cinco títulos de capítulo, sin depender de la navegación JavaScript. «Imprimir presentación» prepara las 21 páginas, incluidas las portadas, para imprimir en Chrome/Chromium con fondos y sin márgenes. El PowerPoint original conserva sus 16 diapositivas como material de referencia.
 
 <span id="pos-platform-presentación-web-interactiva"></span>
 <span id="abrir"></span>

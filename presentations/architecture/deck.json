@@ -7,6 +7,7 @@
     {
       "id": "proposal",
       "title": "Propuesta y alcance",
+      "summary": "Una plataforma corporativa para varios países, con capacidades compartidas e integraciones propias de cada operación.",
       "slides": [
         "slide-1",
         "slide-2",
@@ -16,6 +17,7 @@
     {
       "id": "structure",
       "title": "Código y responsabilidades",
+      "summary": "Aplicaciones y bibliotecas con límites claros para compartir negocio, interfaz e infraestructura sin mezclar responsabilidades.",
       "slides": [
         "slide-4",
         "slide-5"
@@ -24,6 +26,7 @@
     {
       "id": "deployment",
       "title": "Despliegue e infraestructura",
+      "summary": "Operación de sucursal, servicios de país e integración con el ERP, conectados mediante persistencia y sincronización durables.",
       "slides": [
         "slide-6",
         "slide-7"
@@ -32,6 +35,7 @@
     {
       "id": "erp-integration",
       "title": "Integración y evolución",
+      "summary": "Contratos comunes para conectar los ERP actuales y preparar una migración controlada, con conciliación y trazabilidad.",
       "slides": [
         "slide-8",
         "slide-9",
@@ -41,6 +45,7 @@
     {
       "id": "delivery-roadmap",
       "title": "Entrega y roadmap",
+      "summary": "Incrementos verificables desde la primera venta persistida hasta el piloto y la expansión, con criterios de aceptación por fase.",
       "slides": [
         "slide-11",
         "slide-12",
