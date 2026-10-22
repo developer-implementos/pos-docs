@@ -46,6 +46,7 @@ Al editar una fase, revisar sus tres niveles de texto y ejecutar `npm run verify
 | `downloads/` | PowerPoint original, identificado por su hash y sin modificar su contenido |
 | `../vendor/reveal/` | Reveal.js 5.1.0 con licencia MIT y manifiesto de integridad |
 | `../tools/diagrams.mjs` | Deriva los SVG de las láminas marcadas con `diagram: true`, usando las posiciones y textos de `deck.json` |
+| `../tools/typography.mjs` | Escala tipográfica común por función del texto en los diagramas |
 
 El build es autónomo: usa Node, archivos de este repositorio y dependencias fijadas de Starlight. No necesita otro checkout, Python ni herramientas de PowerPoint. `npm run presentations:build` produce el HTML en `dist/`; no editar ese resultado. `npm run presentations:test` valida el generador SVG y `npm run presentations:check` verifica el reproductor en navegador. `npm run verify` comprueba el conjunto completo, incluidos Starlight y el portal.
 
@@ -56,6 +57,8 @@ El árbol del monorepo expresa la estructura objetivo: aplicaciones, contextos d
 Cuando cambien fuentes canónicas, revisar las diapositivas y actualizar explícitamente la revisión y hashes de `sources.json`. El build falla ante discrepancias para evitar que la presentación aparente resumir documentación todavía no revisada. No consultar una rama remota mutable ni actualizar hashes automáticamente durante el build.
 
 Los diagramas de contexto, despliegue, infraestructura e integración se generan como SVG desde el mismo `deck.json` editable. El build usa Fontkit con las fuentes Inter locales para medir líneas y convertir las letras a trazados vectoriales: el SVG descargado conserva su tipografía sin cargar fuentes externas. No contiene imágenes raster ni `foreignObject`. Cada etiqueta conserva su texto accesible y la lectura continua ofrece los textos seleccionables junto al diagrama.
+
+Cada texto del diagrama declara `style.typographyRole`: `group` para encabezados de zona (24 px, negrita), `title` para títulos de elementos (22 px, negrita), `body` para descripciones (20 px) y `label` para conexiones o notas (16 px). Son coordenadas del lienzo de 1280 × 720. La escala se comparte entre todas las láminas, la lectura, la impresión y el SVG descargable. No se admiten tamaños ni pesos particulares por elemento: si el contenido no cabe, se ajusta su caja o la distribución. La generación comprueba el ancho y la altura sin reducir automáticamente las letras.
 
 El visor amplía mediante dimensiones reales del SVG, fuera de la transformación global de Reveal. «Encuadrar» muestra el conjunto; para leer etiquetas pequeñas se puede acercar y desplazar el área. El formato vectorial evita perder resolución al ampliar, pero no vuelve legible por sí solo una lámina reducida a pocos píxeles.
 

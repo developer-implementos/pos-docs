@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { presentationColor } from './palette.mjs';
+import { diagramTextStyle } from './typography.mjs';
 
 const fontCache = new Map();
 const lineHeight = 1.13;
@@ -77,9 +78,10 @@ function wrap(text, font, size, width, label) {
 
 function textElement(element, fontSet, label) {
   keys(element, ['type', 'text', 'position', 'style'], label);
-  const { text, style, position: box } = element;
+  const { text, position: box } = element;
   assert.equal(typeof text, 'string', `${label}: missing text`);
-  keys(style, ['typeface', 'fontSize', 'color', 'bold', 'verticalAlignment', 'autoFit', 'wrap', 'insets'], label);
+  const style = diagramTextStyle(element.style, label);
+  keys(element.style, ['typeface', 'typographyRole', 'color', 'verticalAlignment', 'autoFit', 'wrap', 'insets'], label);
   assert.ok(style.typeface === 'Inter' && style.verticalAlignment === 'top' && style.autoFit === 'none' && style.wrap === 'square' && style.insets === 0, `${label}: unsupported text layout`);
   assert.equal(typeof style.bold, 'boolean', `${label}: unsupported font weight`);
   assert.ok(Number.isFinite(style.fontSize) && style.fontSize > 0, `${label}: invalid font size`);
@@ -109,7 +111,7 @@ function textElement(element, fontSet, label) {
       return outline ? `<path d="${outline}" transform="${transform}"/>` : '';
     }).join('')}</g>`;
   }).join('');
-  return `<g data-label="${attribute(text)}" fill="${fill}"><title>${escape(text)}</title>${paths}</g>`;
+  return `<g data-label="${attribute(text)}" fill="${fill}" data-typography-role="${style.typographyRole}" data-font-size="${style.fontSize}"><title>${escape(text)}</title>${paths}</g>`;
 }
 
 /** Derive a standalone, font-independent SVG from the deck's existing diagram region. */

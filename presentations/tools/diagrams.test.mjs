@@ -4,12 +4,13 @@ import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 import { createDiagram } from './diagrams.mjs';
 import { presentationColor, presentationPalette, renderPaletteCss } from './palette.mjs';
+import { diagramTextStyle, diagramTypography } from './typography.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const text = (value, width = 180, height = 60) => ({
   type: 'text', text: value,
   position: { left: 80, top: 240, width, height },
-  style: { typeface: 'Inter', fontSize: 20, color: '#123456', bold: false, verticalAlignment: 'top', autoFit: 'none', wrap: 'square', insets: 0 },
+  style: { typeface: 'Inter', typographyRole: 'body', color: '#123456', verticalAlignment: 'top', autoFit: 'none', wrap: 'square', insets: 0 },
 });
 const slide = (...elements) => ({ id: 'slide-test', title: 'Árbol y acción', elements });
 const create = (...elements) => createDiagram(slide(...elements), { root });
@@ -93,9 +94,28 @@ test('keeps shaping and font sizes without shrinking overflowing text', () => {
   assert.throws(() => create(text('Árbol\nBogotá', 100, 40)), /text lines need/u);
   assert.throws(() => create(text('supercalifragilisticoespialidoso', 40, 100)), /exceeds its width/u);
   const regular = create(text('Oficina e integración'));
-  const boldText = text('Oficina e integración'); boldText.style.bold = true;
+  const boldText = text('Oficina e integración'); boldText.style.typographyRole = 'title';
   assert.notEqual(create(boldText).svg, regular.svg, 'Bold text uses the bold font outlines');
   assert.equal(create(text('Oficina e integración')).svg, regular.svg, 'The same source produces identical bytes');
+});
+
+test('requires semantic typography and rejects per-node size or weight overrides', () => {
+  assert.throws(() => diagramTextStyle({ typographyRole: 'custom' }, 'Custom'), /unknown diagram typography role/u);
+  for (const override of [{ fontSize: 19 }, { bold: true }]) {
+    assert.throws(() => diagramTextStyle({ typographyRole: 'body', ...override }, 'Body'), /per-element overrides/u);
+  }
+  const deck = JSON.parse(fs.readFileSync(new URL('../architecture/deck.json', import.meta.url), 'utf8'));
+  for (const source of deck.slides.filter(item => item.diagram)) {
+    const elements = source.elements.filter(item => item.type === 'text' && item.position.top >= 220 && item.position.top < 630);
+    for (const element of elements) {
+      const style = diagramTextStyle(element.style, `${source.id}: ${element.text}`);
+      assert.equal(style.fontSize, diagramTypography[style.typographyRole].fontSize);
+    }
+    const { svg } = createDiagram(source, { root });
+    const rendered = [...svg.matchAll(/data-typography-role="(\w+)" data-font-size="(\d+)"/gu)];
+    assert.equal(rendered.length, elements.length, `${source.id}: every exported label uses the same role-based scale`);
+    for (const [, role, size] of rendered) assert.equal(Number(size), diagramTypography[role].fontSize);
+  }
 });
 
 test('retains rectangle strokes, drawing order and both connector arrow directions', () => {

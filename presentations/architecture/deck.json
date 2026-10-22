@@ -7,27 +7,48 @@
     {
       "id": "proposal",
       "title": "Propuesta y alcance",
-      "slides": ["slide-1", "slide-2", "slide-3"]
+      "slides": [
+        "slide-1",
+        "slide-2",
+        "slide-3"
+      ]
     },
     {
       "id": "structure",
       "title": "Código y responsabilidades",
-      "slides": ["slide-4", "slide-5"]
+      "slides": [
+        "slide-4",
+        "slide-5"
+      ]
     },
     {
       "id": "deployment",
       "title": "Despliegue e infraestructura",
-      "slides": ["slide-6", "slide-7"]
+      "slides": [
+        "slide-6",
+        "slide-7"
+      ]
     },
     {
       "id": "erp-integration",
       "title": "Integración y evolución",
-      "slides": ["slide-8", "slide-9", "slide-10"]
+      "slides": [
+        "slide-8",
+        "slide-9",
+        "slide-10"
+      ]
     },
     {
       "id": "delivery-roadmap",
       "title": "Entrega y roadmap",
-      "slides": ["slide-11", "slide-12", "slide-13", "slide-14", "slide-15", "slide-16"]
+      "slides": [
+        "slide-11",
+        "slide-12",
+        "slide-13",
+        "slide-14",
+        "slide-15",
+        "slide-16"
+      ]
     }
   ],
   "slides": [
@@ -941,13 +962,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 23,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -961,13 +981,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 21,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -1011,13 +1030,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 26,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -1031,13 +1049,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 22,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -1081,13 +1098,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 22,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -1101,13 +1117,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 18,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -1151,13 +1166,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 23,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -1171,13 +1185,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 20,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -1221,13 +1234,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 22,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -1241,13 +1253,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 18,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -1291,13 +1302,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 22,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -1311,13 +1321,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 18,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -1350,13 +1359,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 17,
             "color": "#636569",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "label"
           }
         },
         {
@@ -1389,13 +1397,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 17,
             "color": "#636569",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "label"
           }
         },
         {
@@ -1428,13 +1435,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 17,
             "color": "#636569",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "label"
           }
         },
         {
@@ -1542,13 +1548,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 16,
             "color": "#636569",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "label"
           }
         },
         {
@@ -1562,13 +1567,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 16,
             "color": "#636569",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "label"
           }
         },
         {
@@ -1907,7 +1911,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 16,
+            "fontSize": 18,
             "color": "#636569",
             "bold": false,
             "verticalAlignment": "top",
@@ -1947,7 +1951,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 16,
+            "fontSize": 18,
             "color": "#636569",
             "bold": false,
             "verticalAlignment": "top",
@@ -1987,7 +1991,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 16,
+            "fontSize": 18,
             "color": "#636569",
             "bold": false,
             "verticalAlignment": "top",
@@ -2027,7 +2031,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 16,
+            "fontSize": 18,
             "color": "#636569",
             "bold": false,
             "verticalAlignment": "top",
@@ -2067,7 +2071,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 16,
+            "fontSize": 18,
             "color": "#636569",
             "bold": false,
             "verticalAlignment": "top",
@@ -2107,7 +2111,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 16,
+            "fontSize": 18,
             "color": "#636569",
             "bold": false,
             "verticalAlignment": "top",
@@ -2147,7 +2151,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 16,
+            "fontSize": 18,
             "color": "#636569",
             "bold": false,
             "verticalAlignment": "top",
@@ -2187,7 +2191,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 17,
+            "fontSize": 18,
             "color": "#636569",
             "bold": false,
             "verticalAlignment": "top",
@@ -2227,7 +2231,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 17,
+            "fontSize": 18,
             "color": "#636569",
             "bold": false,
             "verticalAlignment": "top",
@@ -2267,7 +2271,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 17,
+            "fontSize": 18,
             "color": "#636569",
             "bold": false,
             "verticalAlignment": "top",
@@ -2307,7 +2311,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 17,
+            "fontSize": 18,
             "color": "#636569",
             "bold": false,
             "verticalAlignment": "top",
@@ -2347,7 +2351,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 17,
+            "fontSize": 18,
             "color": "#636569",
             "bold": false,
             "verticalAlignment": "top",
@@ -2387,7 +2391,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 17,
+            "fontSize": 18,
             "color": "#636569",
             "bold": false,
             "verticalAlignment": "top",
@@ -2407,7 +2411,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 22,
+            "fontSize": 20,
             "color": "#34383E",
             "bold": true,
             "verticalAlignment": "top",
@@ -2447,7 +2451,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 22,
+            "fontSize": 20,
             "color": "#34383E",
             "bold": true,
             "verticalAlignment": "top",
@@ -2487,7 +2491,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 22,
+            "fontSize": 20,
             "color": "#34383E",
             "bold": true,
             "verticalAlignment": "top",
@@ -2527,7 +2531,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 22,
+            "fontSize": 20,
             "color": "#34383E",
             "bold": true,
             "verticalAlignment": "top",
@@ -2567,7 +2571,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 22,
+            "fontSize": 20,
             "color": "#34383E",
             "bold": true,
             "verticalAlignment": "top",
@@ -2847,7 +2851,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 20,
+            "fontSize": 21,
             "color": "#34383E",
             "bold": true,
             "verticalAlignment": "top",
@@ -2902,7 +2906,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 20,
+            "fontSize": 21,
             "color": "#34383E",
             "bold": true,
             "verticalAlignment": "top",
@@ -2957,7 +2961,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 20,
+            "fontSize": 21,
             "color": "#34383E",
             "bold": true,
             "verticalAlignment": "top",
@@ -3012,7 +3016,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 20,
+            "fontSize": 21,
             "color": "#34383E",
             "bold": true,
             "verticalAlignment": "top",
@@ -3067,7 +3071,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 20,
+            "fontSize": 21,
             "color": "#34383E",
             "bold": true,
             "verticalAlignment": "top",
@@ -3122,7 +3126,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 20,
+            "fontSize": 21,
             "color": "#34383E",
             "bold": true,
             "verticalAlignment": "top",
@@ -3616,40 +3620,38 @@
           "type": "text",
           "text": "01 / Cambio",
           "position": {
-            "left": 78,
+            "left": 72,
             "top": 236,
-            "width": 224,
+            "width": 236,
             "height": 38
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 22,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
           "type": "text",
           "text": "PR y revisión\nContratos versionados",
           "position": {
-            "left": 78,
+            "left": 72,
             "top": 290,
-            "width": 224,
+            "width": 236,
             "height": 52
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 19,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -3705,40 +3707,38 @@
           "type": "text",
           "text": "02 / Validación",
           "position": {
-            "left": 378,
+            "left": 372,
             "top": 236,
-            "width": 224,
+            "width": 236,
             "height": 38
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 22,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
           "type": "text",
           "text": "Lint, tipos y pruebas\nBuilds afectados",
           "position": {
-            "left": 378,
+            "left": 372,
             "top": 290,
-            "width": 224,
+            "width": 236,
             "height": 52
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 19,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -3794,40 +3794,38 @@
           "type": "text",
           "text": "03 / Artefactos",
           "position": {
-            "left": 678,
+            "left": 672,
             "top": 236,
-            "width": 224,
+            "width": 236,
             "height": 38
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 22,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
           "type": "text",
           "text": "Clientes firmados\nServicios versionados",
           "position": {
-            "left": 678,
+            "left": 672,
             "top": 290,
-            "width": 224,
+            "width": 236,
             "height": 52
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 19,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -3883,40 +3881,38 @@
           "type": "text",
           "text": "04 / Promoción",
           "position": {
-            "left": 978,
+            "left": 972,
             "top": 236,
-            "width": 224,
+            "width": 236,
             "height": 38
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 22,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
           "type": "text",
           "text": "QA y aprobación\nMisma versión aprobada",
           "position": {
-            "left": 978,
+            "left": 972,
             "top": 290,
-            "width": 224,
+            "width": 236,
             "height": 52
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 19,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -4030,13 +4026,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 25,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "group"
           }
         },
         {
@@ -4065,13 +4060,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 24,
             "color": "#34383E",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -4104,13 +4098,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 24,
             "color": "#34383E",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -4158,13 +4151,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 25,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "group"
           }
         },
         {
@@ -4193,13 +4185,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 24,
             "color": "#34383E",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -4232,13 +4223,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 24,
             "color": "#34383E",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -4286,13 +4276,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 25,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "group"
           }
         },
         {
@@ -4321,13 +4310,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 24,
             "color": "#34383E",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -4360,13 +4348,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 24,
             "color": "#34383E",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -4414,13 +4401,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 24,
             "color": "#006DB6",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -4434,13 +4420,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 23,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -4454,13 +4439,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 17,
             "color": "#636569",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "label"
           }
         },
         {
@@ -4645,13 +4629,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 24,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "group"
           }
         },
         {
@@ -4661,7 +4644,7 @@
             "left": 64,
             "top": 291,
             "width": 368,
-            "height": 81
+            "height": 86
           },
           "fill": "#EDF4F8",
           "line": {
@@ -4673,40 +4656,38 @@
           "type": "text",
           "text": "Clientes",
           "position": {
-            "left": 78,
+            "left": 76,
             "top": 298,
-            "width": 340,
+            "width": 344,
             "height": 27
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 20,
             "color": "#34383E",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
           "type": "text",
           "text": "Angular + Tauri\nAngular + Capacitor",
           "position": {
-            "left": 78,
-            "top": 327,
-            "width": 340,
-            "height": 45
+            "left": 76,
+            "top": 324,
+            "width": 344,
+            "height": 46
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 18,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -4714,9 +4695,9 @@
           "geometry": "rect",
           "position": {
             "left": 64,
-            "top": 382,
+            "top": 385,
             "width": 368,
-            "height": 81
+            "height": 86
           },
           "fill": "#EDF4F8",
           "line": {
@@ -4728,40 +4709,38 @@
           "type": "text",
           "text": "Integración nativa",
           "position": {
-            "left": 78,
-            "top": 389,
-            "width": 340,
+            "left": 76,
+            "top": 392,
+            "width": 344,
             "height": 27
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 20,
             "color": "#34383E",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
           "type": "text",
           "text": "SDK y periféricos homologados\nPermisos por dispositivo",
           "position": {
-            "left": 78,
+            "left": 76,
             "top": 418,
-            "width": 340,
-            "height": 45
+            "width": 344,
+            "height": 46
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 18,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -4769,9 +4748,9 @@
           "geometry": "rect",
           "position": {
             "left": 64,
-            "top": 473,
+            "top": 479,
             "width": 368,
-            "height": 81
+            "height": 86
           },
           "fill": "#EDF4F8",
           "line": {
@@ -4783,40 +4762,38 @@
           "type": "text",
           "text": "Conectividad",
           "position": {
-            "left": 78,
-            "top": 480,
-            "width": 340,
+            "left": 76,
+            "top": 486,
+            "width": 344,
             "height": 27
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 20,
             "color": "#34383E",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
           "type": "text",
           "text": "API autorizada de sucursal\nSin acceso SQL desde el cliente",
           "position": {
-            "left": 78,
-            "top": 509,
-            "width": 340,
-            "height": 45
+            "left": 76,
+            "top": 512,
+            "width": 344,
+            "height": 46
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 18,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -4845,13 +4822,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 24,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "group"
           }
         },
         {
@@ -4861,7 +4837,7 @@
             "left": 456,
             "top": 291,
             "width": 368,
-            "height": 81
+            "height": 86
           },
           "fill": "#EDF4F8",
           "line": {
@@ -4873,40 +4849,38 @@
           "type": "text",
           "text": "Aplicaciones",
           "position": {
-            "left": 470,
+            "left": 468,
             "top": 298,
-            "width": 340,
+            "width": 344,
             "height": 27
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 20,
             "color": "#34383E",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
           "type": "text",
           "text": "NestJS + Fastify / Node.js\nAPI y worker supervisados",
           "position": {
-            "left": 470,
-            "top": 327,
-            "width": 340,
-            "height": 45
+            "left": 468,
+            "top": 324,
+            "width": 344,
+            "height": 46
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 18,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -4914,9 +4888,9 @@
           "geometry": "rect",
           "position": {
             "left": 456,
-            "top": 382,
+            "top": 385,
             "width": 368,
-            "height": 81
+            "height": 86
           },
           "fill": "#EDF4F8",
           "line": {
@@ -4928,40 +4902,38 @@
           "type": "text",
           "text": "Datos",
           "position": {
-            "left": 470,
-            "top": 389,
-            "width": 340,
+            "left": 468,
+            "top": 392,
+            "width": 344,
             "height": 27
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 20,
             "color": "#34383E",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
           "type": "text",
           "text": "PostgreSQL\nNegocio, inbox/outbox y espejos",
           "position": {
-            "left": 470,
+            "left": 468,
             "top": 418,
-            "width": 340,
-            "height": 45
+            "width": 344,
+            "height": 46
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 18,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -4969,9 +4941,9 @@
           "geometry": "rect",
           "position": {
             "left": 456,
-            "top": 473,
+            "top": 479,
             "width": 368,
-            "height": 81
+            "height": 86
           },
           "fill": "#EDF4F8",
           "line": {
@@ -4983,40 +4955,38 @@
           "type": "text",
           "text": "Continuidad",
           "position": {
-            "left": 470,
-            "top": 480,
-            "width": 340,
+            "left": 468,
+            "top": 486,
+            "width": 344,
             "height": 27
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 20,
             "color": "#34383E",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
           "type": "text",
           "text": "Backups y restore probado\nOpera sin WAN con LAN disponible",
           "position": {
-            "left": 470,
-            "top": 509,
-            "width": 340,
-            "height": 45
+            "left": 468,
+            "top": 512,
+            "width": 344,
+            "height": 46
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 18,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -5045,13 +5015,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 24,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "group"
           }
         },
         {
@@ -5061,7 +5030,7 @@
             "left": 848,
             "top": 291,
             "width": 368,
-            "height": 81
+            "height": 86
           },
           "fill": "#EDF4F8",
           "line": {
@@ -5073,40 +5042,38 @@
           "type": "text",
           "text": "Aplicaciones",
           "position": {
-            "left": 862,
+            "left": 860,
             "top": 298,
-            "width": 340,
+            "width": 344,
             "height": 27
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 20,
             "color": "#34383E",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
           "type": "text",
           "text": "API de país y workers\nAdaptador ERP en su red autorizada",
           "position": {
-            "left": 862,
-            "top": 327,
-            "width": 340,
-            "height": 45
+            "left": 860,
+            "top": 324,
+            "width": 344,
+            "height": 46
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 18,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -5114,9 +5081,9 @@
           "geometry": "rect",
           "position": {
             "left": 848,
-            "top": 382,
+            "top": 385,
             "width": 368,
-            "height": 81
+            "height": 86
           },
           "fill": "#EDF4F8",
           "line": {
@@ -5128,40 +5095,38 @@
           "type": "text",
           "text": "Datos y seguridad",
           "position": {
-            "left": 862,
-            "top": 389,
-            "width": 340,
+            "left": 860,
+            "top": 392,
+            "width": 344,
             "height": 27
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 20,
             "color": "#34383E",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
           "type": "text",
           "text": "PostgreSQL operativo por país\nTLS, identidad y secretos",
           "position": {
-            "left": 862,
+            "left": 860,
             "top": 418,
-            "width": 340,
-            "height": 45
+            "width": 344,
+            "height": 46
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 18,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -5169,9 +5134,9 @@
           "geometry": "rect",
           "position": {
             "left": 848,
-            "top": 473,
+            "top": 479,
             "width": 368,
-            "height": 81
+            "height": 86
           },
           "fill": "#EDF4F8",
           "line": {
@@ -5183,40 +5148,38 @@
           "type": "text",
           "text": "Alojamiento",
           "position": {
-            "left": 862,
-            "top": 480,
-            "width": 340,
+            "left": 860,
+            "top": 486,
+            "width": 344,
             "height": 27
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 20,
             "color": "#34383E",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
           "type": "text",
           "text": "Cloud autorizado o VM privada\nGCP es opción por confirmar",
           "position": {
-            "left": 862,
-            "top": 509,
-            "width": 340,
-            "height": 45
+            "left": 860,
+            "top": 512,
+            "width": 344,
+            "height": 46
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 18,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -5245,13 +5208,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 21,
             "color": "#006DB6",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -5265,13 +5227,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 19,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -5445,13 +5406,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 25,
             "color": "#006DB6",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "group"
           }
         },
         {
@@ -5465,13 +5425,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 25,
             "color": "#006DB6",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "group"
           }
         },
         {
@@ -5508,40 +5467,38 @@
           "type": "text",
           "text": "Núcleo POS",
           "position": {
-            "left": 78,
+            "left": 76,
             "top": 298,
-            "width": 180,
+            "width": 184,
             "height": 38
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 21,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
           "type": "text",
           "text": "Venta y caja\nbranch-api",
           "position": {
-            "left": 78,
+            "left": 76,
             "top": 345,
-            "width": 180,
+            "width": 184,
             "height": 93
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 19,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -5597,40 +5554,38 @@
           "type": "text",
           "text": "PostgreSQL",
           "position": {
-            "left": 314,
+            "left": 312,
             "top": 298,
-            "width": 180,
+            "width": 184,
             "height": 38
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 21,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
           "type": "text",
           "text": "Negocio + outbox\nMisma transacción",
           "position": {
-            "left": 314,
+            "left": 312,
             "top": 345,
-            "width": 180,
+            "width": 184,
             "height": 93
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 19,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -5686,40 +5641,38 @@
           "type": "text",
           "text": "Entrega durable",
           "position": {
-            "left": 550,
+            "left": 548,
             "top": 298,
-            "width": 180,
+            "width": 184,
             "height": 38
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 21,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
           "type": "text",
           "text": "Worker de sucursal\nRecepción de país",
           "position": {
-            "left": 550,
+            "left": 548,
             "top": 345,
-            "width": 180,
+            "width": 184,
             "height": 93
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 19,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -5775,40 +5728,38 @@
           "type": "text",
           "text": "Fachada y ACL",
           "position": {
-            "left": 786,
+            "left": 784,
             "top": 298,
-            "width": 180,
+            "width": 184,
             "height": 38
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 21,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
           "type": "text",
           "text": "Contrato del POS\nTraducción al ERP",
           "position": {
-            "left": 786,
+            "left": 784,
             "top": 345,
-            "width": 180,
+            "width": 184,
             "height": 93
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 19,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -5864,40 +5815,38 @@
           "type": "text",
           "text": "ERP del país",
           "position": {
-            "left": 1022,
+            "left": 1020,
             "top": 298,
-            "width": 180,
+            "width": 184,
             "height": 38
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 21,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
           "type": "text",
           "text": "AX, Gira o custom\nDestino registrado",
           "position": {
-            "left": 1022,
+            "left": 1020,
             "top": 345,
-            "width": 180,
+            "width": 184,
             "height": 93
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 19,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -5911,13 +5860,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 20,
             "color": "#636569",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -5931,13 +5879,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 20,
             "color": "#636569",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -5981,13 +5928,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 22,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -6001,13 +5947,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 18,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -6051,13 +5996,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 22,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -6071,13 +6015,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 18,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -6121,13 +6064,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 22,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -6141,13 +6083,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 18,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -6317,13 +6258,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 23,
             "color": "#006DB6",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "group"
           }
         },
         {
@@ -6337,13 +6277,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 23,
             "color": "#006DB6",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "group"
           }
         },
         {
@@ -6387,13 +6326,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 25,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -6407,13 +6345,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 22,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -6457,13 +6394,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 22,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -6477,13 +6413,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 18,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -6527,13 +6462,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 22,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -6547,13 +6481,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 18,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -6586,13 +6519,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 16,
             "color": "#636569",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "label"
           }
         },
         {
@@ -6606,13 +6538,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 15,
             "color": "#636569",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "label"
           }
         },
         {
@@ -6645,13 +6576,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 16,
             "color": "#636569",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "label"
           }
         },
         {
@@ -6695,13 +6625,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 22,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -6715,13 +6644,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 18,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -6765,13 +6693,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 22,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -6785,13 +6712,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 18,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -6824,13 +6750,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 16,
             "color": "#636569",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "label"
           }
         },
         {
@@ -6844,13 +6769,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 15,
             "color": "#636569",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "label"
           }
         },
         {
@@ -6883,13 +6807,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 16,
             "color": "#636569",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "label"
           }
         },
         {
@@ -6933,13 +6856,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 22,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -6953,13 +6875,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 18,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -7003,13 +6924,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 22,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -7023,13 +6943,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 18,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -7062,13 +6981,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 16,
             "color": "#636569",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "label"
           }
         },
         {
@@ -7082,13 +7000,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 15,
             "color": "#636569",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "label"
           }
         },
         {
@@ -7121,13 +7038,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 16,
             "color": "#636569",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "label"
           }
         },
         {
@@ -7327,13 +7243,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 25,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -7347,13 +7262,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 21,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -7397,13 +7311,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 24,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -7417,13 +7330,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 21,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -7467,13 +7379,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 22,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -7487,13 +7398,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 20,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -7537,13 +7447,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 22,
             "color": "#FFFFFF",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "title"
           }
         },
         {
@@ -7557,13 +7466,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 20,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "body"
           }
         },
         {
@@ -7596,13 +7504,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 15,
             "color": "#636569",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "label"
           }
         },
         {
@@ -7682,13 +7589,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 16,
             "color": "#636569",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "label"
           }
         },
         {
@@ -7702,13 +7608,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 16,
             "color": "#636569",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "label"
           }
         },
         {
@@ -7722,13 +7627,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 24,
             "color": "#006DB6",
-            "bold": true,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "group"
           }
         },
         {
@@ -7757,13 +7661,12 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 18,
             "color": "#34383E",
-            "bold": false,
             "verticalAlignment": "top",
             "autoFit": "none",
             "wrap": "square",
-            "insets": 0
+            "insets": 0,
+            "typographyRole": "label"
           }
         },
         {
@@ -9059,7 +8962,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 25,
+            "fontSize": 24,
             "color": "#FFFFFF",
             "bold": true,
             "verticalAlignment": "top",
@@ -9629,7 +9532,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 23,
+            "fontSize": 24,
             "color": "#FFFFFF",
             "bold": true,
             "verticalAlignment": "top",
@@ -9649,7 +9552,7 @@
           },
           "style": {
             "typeface": "Inter",
-            "fontSize": 19,
+            "fontSize": 20,
             "color": "#34383E",
             "bold": false,
             "verticalAlignment": "top",
