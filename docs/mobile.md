@@ -2,7 +2,7 @@
 
 `apps/pos-mobile` contiene un cliente Angular con arranque propio y un host Capacitor para Android e iOS. Consume `libs/client-shell` y los componentes, estilos y activos de `libs/ui`; no depende del build de escritorio. La [decisión de clientes nativos](decisions/native-clients.md) explica la separación y sus límites.
 
-La UI transversal permanece hoy en `libs/ui`; su destino acordado es `libs/shared/frontend/ui`. `client-shell` conserva su responsabilidad de composición fuera del grupo técnico shared. Ver la [correspondencia del monorepo](monorepo.md#correspondencia-con-el-checkout-actual).
+La estructura objetivo define `libs/shared/frontend/ui` para la presentación transversal y `client-shell` para la composición del cliente. El [catálogo del monorepo](monorepo.md) distingue esa organización del código revisado al que corresponden los comandos de esta guía.
 
 ## Comandos
 

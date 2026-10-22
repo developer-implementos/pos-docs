@@ -76,14 +76,6 @@ if (workspace) {
   console.log(`Workspace evidence checked: ${projects.length} application project files and ${catalog.libraries.length} library locations.`);
 }
 
-const full = [
-  'apps/',
-  ...catalog.applications.map(app => `  ${(app.name + '/').padEnd(23)} # ${app.description}`),
-  ...catalog.documentationApplications.map(app => `  ${(app.name + '/').padEnd(23)} # Documentación estática; fuera del runtime POS`),
-  'libs/',
-  ...catalog.libraries.map(lib => `  ${(lib.path + '/').padEnd(23)} # ${lib.description}`),
-  ...catalog.workspaceSupport.map(entry => (entry.path + '/').padEnd(25) + ' # ' + entry.description),
-].join('\n');
 function renderTarget(entries) {
   const tree = new Map();
   for (const entry of entries) {
@@ -100,7 +92,7 @@ function renderTarget(entries) {
   const visit = (nodes, depth) => {
     for (const [name, node] of nodes) {
       const label = '  '.repeat(depth) + name + '/';
-      lines.push(node.entry ? label.padEnd(31) + ' # [' + node.entry.state + '] ' + node.entry.description : label);
+      lines.push(node.entry ? label.padEnd(31) + ' # ' + node.entry.description : label);
       visit(node.children, depth + 1);
     }
   };
@@ -108,13 +100,6 @@ function renderTarget(entries) {
   return lines.join('\n');
 }
 const targetTree = renderTarget(target.entries);
-const migration = [
-  '| Ruta física actual | Destino acordado | Estado |',
-  '| --- | --- | --- |',
-  ...target.entries.filter(entry => entry.state !== 'conservado').map(entry =>
-    '| `' + (entry.currentPath || (entry.state === 'transitorio' ? entry.path : 'sin biblioteca dedicada')) +
-    '` | `' + entry.path + '` | ' + entry.state + ' |'),
-].join('\n');
 const table = [
   '| Aplicación | Lugar previsto | Responsabilidad | Estado revisado |',
   '| --- | --- | --- | --- |',
@@ -123,7 +108,7 @@ const table = [
 const fence = value => '```text\n' + value + '\n```';
 const outputs = [
   ['docs/opciones-tecnologicas.md', [['target', fence(targetTree)], ['applications', table]]],
-  ['docs/monorepo.md', [['target', fence(targetTree)], ['current', fence(full)], ['migration', migration], ['applications', table]]],
+  ['docs/monorepo.md', [['target', fence(targetTree)], ['applications', table]]],
   ['docs/product-repository.md', [['target', fence(targetTree)]]],
 ];
 let changed = 0;
@@ -145,5 +130,5 @@ for (const [relative, blocks] of outputs) {
   if (!check && stale) { fs.writeFileSync(file, expected); changed++; }
 }
 console.log('Monorepo catalog: ' + catalog.applications.length + ' runtime apps, ' + catalog.documentationApplications.length +
-  ' documentation app, ' + catalog.libraries.length + ' current library locations; target structure and migration map ' +
+  ' documentation app, ' + catalog.libraries.length + ' current library locations; target structure and application catalog ' +
   (check ? 'consistent' : 'synchronized (' + changed + ' documents updated)') + '.');

@@ -10,5 +10,6 @@ Repositorio editorial público de POS Platform. Contiene el portal de recursos, 
 - Los catálogos de sistemas legacy contienen nombres y propósitos, nunca credenciales ni valores de despliegue. No publicar archivos locales, `.env`, estados de herramientas ni datos personales.
 - Mantener CSP, scripts externalizados y la excepción WASM limitada a Pagefind bajo `/guide/`.
 - Las presentaciones resumen la documentación y enlazan sus fuentes. No introducir decisiones diferentes ni duplicar fuentes de diagramas; no migrar video o narraciones sin alcance explícito.
+- Documentar la decisión vigente, sus responsabilidades y su estado de implementación. Evitar relatos de renombres, traslados y alternativas descartadas del propio proyecto; el historial de cambios pertenece a Git. Conservar antecedentes originales y análisis de compatibilidad legacy cuando sustentan una decisión.
 - Validar contenido, Astro, build y enlaces/navegador antes de publicar. Los generadores de diagramas conservan modelos, escenas y derivados verificables.
 - Los cambios de publicación no deben alterar servicios, credenciales ni operaciones corporativas.

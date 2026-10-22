@@ -6,7 +6,7 @@ La [propuesta y sus decisiones](propuesta-arquitectura.md) gobiernan la recomend
 
 ## Niveles y alcance
 
-Los nombres funcionales de los diagramas se corresponden con los proyectos del [monorepo](monorepo.md#nombres-de-las-aplicaciones-backend): **Backend de sucursal** es `branch-api`, **Sincronizador de sucursal** es `branch-sync-worker`, **API de país** es `country-api` y el proceso de integración ERP es `erp-worker`. Los identificadores de nodos y los títulos C4 se conservan para mantener las referencias. La existencia de estos proyectos no acredita las capacidades de negocio futuras representadas en las vistas.
+Los nombres funcionales de los diagramas se corresponden con los proyectos del [monorepo](monorepo.md#nombres-de-las-aplicaciones-backend): **Backend de sucursal** es `branch-api`, **Sincronizador de sucursal** es `branch-sync-worker`, **API de país** es `country-api` y el proceso de integración ERP es `erp-worker`. La existencia de estos proyectos no acredita las capacidades de negocio futuras representadas en las vistas.
 
 También está disponible la [colección editable para draw.io](diagramas-drawio/README.md), con un [atlas de siete pestañas](diagramas-drawio/00-atlas-completo.drawio), archivos individuales y un [paquete ZIP](diagramas-drawio/diagramas-c4-drawio.zip).
 
@@ -82,7 +82,7 @@ Las flechas hacia proveedores son contratos lógicos: una integración con API r
 
 La separación es de responsabilidades y contratos de código. No se despliega un proceso HTTP por cada bloque. El backend no consulta obligatoriamente el ERP ni un precio remoto al confirmar una venta habilitada para operar sin WAN.
 
-El bloque de acceso no representa una capacidad completamente nueva ni acredita permisos granulares ya implementados. La migración debe conservar y mapear usuarios, perfiles y accesos vigentes; el [análisis del legacy](analisis-repositorios/mountain-implementos.md#login-perfiles-y-alcance-de-los-permisos) documenta login/JWT, controles de menú y autenticación de rutas, además de una autorización de devolución solicitada por correo.
+El diseño de acceso incorpora los usuarios, perfiles y accesos vigentes del legacy; el [análisis de Mountain](analisis-repositorios/mountain-implementos.md#login-perfiles-y-alcance-de-los-permisos) documenta login/JWT, controles de menú y autenticación de rutas, además de una autorización de devolución solicitada por correo. La autorización granular de las operaciones propuestas requiere implementación y validación; el diagrama no acredita que ya exista.
 
 ## C3 de sincronización: entrega y activación de precios
 
@@ -110,18 +110,14 @@ Cada puesto ejecuta el cliente y, cuando corresponda, un puente de periféricos.
 
 La autonomía ante pérdida de LAN es **otro perfil** que requiere resolver exclusión, permisos, datos, compensaciones y dispositivos. No forma parte del perfil WAN inicial. La propuesta tampoco acredita RPO/RTO ni alta disponibilidad sin pruebas de recuperación y dimensionamiento.
 
-## Mantenimiento del modelo y del visor
+<span id="mantenimiento-del-modelo-y-del-visor"></span>
+
+## Mantenimiento de los diagramas
 
 Los cinco `.mmd` enlazados, ubicados en `docs/diagramas-excalidraw/mermaid/`, son las fuentes de render. No se duplican como bloques Mermaid en este documento. `tools/diagrams/models/c4-data.js` conserva el catálogo canónico de fichas, vistas, límites, IDs y relaciones; cada actualización debe mantener correspondencia con las fuentes. Las escenas editables, los SVG y sus recortes se mantienen en `docs/diagramas-excalidraw/`. El [manual de autoría](../tools/diagrams/README.md) describe los modelos, la generación y sus comprobaciones.
 
-El [explorador externo de la presentación](editorial/presentation.md) consume una revisión fijada de estos derivados. Sus componentes de interfaz permanecen en el repositorio de presentación, con este contrato de integración:
+La [presentación de arquitectura y roadmap](editorial/presentation.md) utiliza diagramas resumidos de la misma propuesta, con fuentes y generación propias. Las vistas detalladas de esta página se mantienen en el modelo C4 canónico.
 
-- `window.POS_C4.views`: `id`, `key`, `level`, `title`, `scope`, `note`, `nodeIds`, `boundaries`, `relationships`.
-- `window.POS_C4.nodes`: nombre, estereotipo, tecnología, resumen, detalle, propiedad, continuidad y fuentes por ID estable.
-- `window.POS_C4_UI.html()`: construye la sección; `mount({openModal})`: vincula controles y observa cambios de tamaño/visibilidad.
-- `destroy()`: retira listeners y observadores antes de reemplazar el capítulo. `refresh()`: recalcula la escala si el contenedor se vuelve visible.
-- El visor usa `.c4-viewport` y `data-c4-node`; no participa en el cableado de `.diagram-canvas` del mapa anterior.
-
-La leyenda existe en cada fuente exportable y en el visor. El nodo técnico `legend` pertenece al inventario del render, pero no es una pieza arquitectónica seleccionable. Los SVG locales se publican ya generados; el visor no necesita CDN, motor Mermaid en tiempo de ejecución, cuentas externas ni acceso a servicios corporativos.
+Cada fuente exportable incluye su leyenda. El nodo técnico `legend` pertenece al inventario del render, no a la arquitectura. Los SVG locales se publican ya generados, sin depender de un CDN, cuentas externas ni servicios corporativos.
 
 Validar tras cada cambio: correspondencia de IDs, flechas/contratos, fronteras de proceso, render sin solapamientos, teclado/zoom/desplazamiento, fichas y enlaces. Las decisiones de negocio y tecnología deben actualizarse primero en la propuesta vigente y luego propagarse a estas vistas.

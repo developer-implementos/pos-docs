@@ -12,7 +12,7 @@ Una plataforma POS corporativa para **Chile, Perú y España**, con módulos de 
 <CardGrid>
   <LinkCard title="Visión general de la solución" description="Producto compartido, responsabilidades por zona y recorrido completo de una venta." href="/guide/overview/" />
   <LinkCard title="Roadmap del producto" description="Seis fases propuestas: operación, construcción y aceptación. El mismo plan de la presentación, con su detalle." href="/guide/proposal/roadmap/" />
-  <LinkCard title="Estructura del código" description="Estructura objetivo con shared, límites DDD y proyectos de pruebas; rutas actuales y migración pendiente." href="/guide/architecture/monorepo/" />
+  <LinkCard title="Estructura del código" description="Aplicaciones, bibliotecas compartidas, límites DDD y proyectos de pruebas del producto." href="/guide/architecture/monorepo/" />
   <LinkCard title="Diagramas C4" description="Contexto, contenedores, componentes, despliegue y recorridos editables." href="/guide/diagrams/" />
   <LinkCard title="Decisiones y validación" description="Estado de las decisiones, alternativas y evidencia que requiere el piloto." href="/guide/proposal/decisions/" />
 </CardGrid>
@@ -21,22 +21,22 @@ Una plataforma POS corporativa para **Chile, Perú y España**, con módulos de 
 
 El diseño objetivo y el estado del código se consultan por separado. Las guías de implementación indican los procesos disponibles, los límites del scaffolding y sus comandos de desarrollo.
 
-- [Estructura objetivo, rutas actuales y límites DDD](/guide/implementation/monorepo/) · [Arquitectura implementada](/guide/implementation/architecture/) · [Pruebas y E2E](/guide/implementation/testing/).
+- [Estructura y límites DDD](/guide/implementation/monorepo/) · [Arquitectura implementada](/guide/implementation/architecture/) · [Pruebas y E2E](/guide/implementation/testing/).
 - [API NestJS](/guide/implementation/api/) · [API simulada](/guide/implementation/mock-api/) · [Cliente de escritorio](/guide/implementation/desktop/).
 - [Seguridad y controles](/guide/implementation/security/) · [Publicación en Vercel](/guide/implementation/deployment/).
 
 ## Recorridos de la propuesta
 
-Los ejemplos visuales de esta tabla pertenecen a la **presentación anterior**, alojada en otro repositorio. La presentación de este portal es [Arquitectura y roadmap](/presentations/architecture/).
+La presentación [Arquitectura y roadmap](/presentations/architecture/) sintetiza la propuesta del portal. Los recorridos siguientes enlazan el detalle y los criterios de aceptación mantenidos en esta guía.
 
-| Tema | Diseño y detalle | Ejemplo visual |
-| --- | --- | --- |
-| Venta y continuidad | [Confirmación local y condiciones de operación](/guide/proposal/continuity/) | [Venta, pago y commit](https://presentation-gamma-rust.vercel.app/presentation/pos-corporativo-reveal.html?lectura=0#/laboratorio-venta) |
-| Precios y ofertas | [Evaluación local y versiones de reglas](/guide/proposal/pricing-promotions/) | [Eventos](https://presentation-gamma-rust.vercel.app/presentation/pos-corporativo-reveal.html?lectura=0#/laboratorio-eventos-precios) · [Carga masiva](https://presentation-gamma-rust.vercel.app/presentation/pos-corporativo-reveal.html?lectura=0#/laboratorio-snapshot-precios) |
-| Sincronización | [Entrega, acuses y propiedad de datos](/guide/proposal/synchronization/) | [Custodia durable](https://presentation-gamma-rust.vercel.app/presentation/pos-corporativo-reveal.html?lectura=0#/laboratorio-entrega) |
-| Integración ERP | [Contratos, fachada y ACL](/guide/proposal/contracts/) | [Frontera ERP](https://presentation-gamma-rust.vercel.app/presentation/pos-corporativo-reveal.html?lectura=0#/laboratorio-frontera-erp) |
-| Procesamiento central | [Criterios de mensajería](/guide/architecture/messaging/) | [BullMQ](https://presentation-gamma-rust.vercel.app/presentation/pos-corporativo-reveal.html?lectura=0#/laboratorio-bullmq) · [RabbitMQ](https://presentation-gamma-rust.vercel.app/presentation/pos-corporativo-reveal.html?lectura=0#/laboratorio-rabbitmq) |
-| Organización del código | [Monorepo y límites de módulos](/guide/architecture/monorepo/) | [Estructura propuesta](https://presentation-gamma-rust.vercel.app/presentation/pos-corporativo-reveal.html?lectura=0#/arbol-nx) |
+| Tema | Diseño y detalle |
+| --- | --- |
+| Venta y continuidad | [Confirmación local y condiciones de operación](/guide/proposal/continuity/) |
+| Precios y ofertas | [Evaluación local y versiones de reglas](/guide/proposal/pricing-promotions/) |
+| Sincronización | [Entrega, acuses y propiedad de datos](/guide/proposal/synchronization/) |
+| Integración ERP | [Contratos, fachada y ACL](/guide/proposal/contracts/) |
+| Procesamiento central | [Criterios de mensajería](/guide/architecture/messaging/) |
+| Organización del código | [Monorepo y límites de módulos](/guide/architecture/monorepo/) |
 
 ## Estado del material
 

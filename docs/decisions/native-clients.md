@@ -4,9 +4,9 @@
 
 ## Decisión
 
-POS Platform tiene dos aplicaciones cliente: `apps/pos-desktop`, con Angular y Tauri para el puesto de escritorio, y `apps/pos-mobile`, con Angular y Capacitor para Android e iOS. Cada aplicación posee su arranque, configuración del host y build. Se elimina `pos-web`: el producto no necesita una tercera aplicación para publicar una demo en navegador.
+POS Platform tiene dos aplicaciones cliente: `apps/pos-desktop`, con Angular y Tauri para el puesto de escritorio, y `apps/pos-mobile`, con Angular y Capacitor para Android e iOS. Cada aplicación posee su arranque, configuración del host y build.
 
-El servidor Angular de desarrollo sigue disponible para trabajar y probar la interfaz. No constituye otro cliente de producto ni una oferta PWA. El sitio Vercel se construye desde el repositorio editorial **pos-docs** y publica Starlight en `/guide/`; la entrada `/` redirige a la guía.
+El servidor Angular de desarrollo permite trabajar y probar la interfaz. No constituye otro cliente de producto ni una oferta PWA. El sitio Vercel se construye desde el repositorio editorial **pos-docs**: `/` publica el portal de recursos, `/guide/` contiene Starlight y `/presentations/architecture/` aloja la presentación de arquitectura y roadmap.
 
 ## Código compartido y dependencias
 
@@ -29,11 +29,11 @@ El código nativo y sus permisos pertenecen al host correspondiente. Una integra
 
 ## Datos y acceso
 
-La dirección de backend no cambia: los dos clientes consumirán la API autorizada de sucursal; PostgreSQL conserva la autoridad transaccional de la tienda. No se incorpora una base SQL de ventas por móvil ni acceso directo a la base desde la interfaz.
+Los dos clientes consumirán la API autorizada de sucursal; PostgreSQL conserva la autoridad transaccional de la tienda. La interfaz no accede directamente a SQL ni mantiene una base transaccional de ventas por móvil en el perfil de continuidad ante caída de WAN.
 
 El cliente móvil depende de la conectividad autorizada al backend para las operaciones que la requieran. Compartir interfaz no habilita venta fuera de la sucursal, operación sin LAN, acceso remoto público ni permisos adicionales. Esos recorridos necesitan una decisión y pruebas propias.
 
-Actualmente ambos clientes conservan datos sintéticos y adaptadores mock. No se implementan autenticación corporativa, almacenamiento seguro de credenciales ni nuevas operaciones comerciales mediante esta separación. Tauri mantiene `com.floxcristian.corporatepos` por compatibilidad; Capacitor utiliza `com.implementos.posplatform.mobile`. Sus almacenes locales son independientes: compartir código no sincroniza datos ni sesiones entre dispositivos.
+Actualmente ambos clientes utilizan datos sintéticos y adaptadores mock. La autenticación corporativa, el almacenamiento seguro de credenciales y las operaciones comerciales contra el backend están pendientes. Tauri utiliza el identificador `com.floxcristian.corporatepos`, cuya estabilidad debe respetarse por compatibilidad; Capacitor utiliza `com.implementos.posplatform.mobile`. Sus almacenes locales son independientes: compartir código no sincroniza datos ni sesiones entre dispositivos.
 
 ## Entrega y verificación
 
@@ -47,8 +47,10 @@ Actualmente ambos clientes conservan datos sintéticos y adaptadores mock. No se
 
 Las guías de [escritorio](../desktop.md) y [móvil](../mobile.md) mantienen los comandos y prerrequisitos, sin duplicarlos aquí. El [catálogo del monorepo](../monorepo.md) registra seis aplicaciones operativas. La guía Starlight se mantiene por separado en el repositorio editorial [POS Docs](https://github.com/developer-implementos/pos-docs).
 
-## Consecuencias y alternativas
+<span id="consecuencias-y-alternativas"></span>
+
+## Consecuencias
 
 Esta separación permite evolucionar permisos, integración nativa, empaquetado y distribución por plataforma, conservando una sola implementación de las pantallas compartidas. Exige verificar los dos builds y probar los hosts de manera independiente; el resultado de Windows no certifica Android o iOS.
 
-Mantener `pos-web` como aplicación compartida haría depender los hosts de una tercera aplicación cuyo despliegue ya no se requiere. Copiar la interfaz en cada cliente produciría deriva de reglas, accesibilidad y experiencia. El shell compartido conserva la reutilización y deja explícita la composición de cada aplicación.
+El shell compartido centraliza la composición de las pantallas y permite mantener reglas, accesibilidad y experiencia comunes. Cada host conserva sus permisos, integración nativa y ciclo de entrega.

@@ -1,6 +1,6 @@
 # Auditoría de consistencia y organización documental
 
-Revisión editorial y técnica del **21 de octubre de 2026** sobre la guía Starlight de POS Platform, sus fuentes, catálogos, diagramas y recorridos vinculados. El punto de partida publicado era el commit `61bdb60`, anterior al traslado temporal de la guía al monorepo del producto. Las ubicaciones y comandos de este informe reflejan ahora el repositorio editorial **POS Docs**. La revisión documental y la revisión de código se identifican por separado. Esta revisión no ejecuta el legacy ni acredita la arquitectura desplegada.
+Revisión editorial y técnica del **21 de octubre de 2026** sobre la guía Starlight de POS Platform, sus fuentes, catálogos, diagramas y recorridos vinculados, con referencia documental en el commit `61bdb60`. Las fuentes y los comandos documentales pertenecen a **POS Docs**. La revisión documental y la revisión de código se identifican por separado. Esta revisión no ejecuta el legacy ni acredita la arquitectura desplegada.
 
 ## Resultado y alcance
 

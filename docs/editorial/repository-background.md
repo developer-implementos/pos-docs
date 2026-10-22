@@ -1,14 +1,19 @@
-# Repositorio y antecedentes de la documentación
+# Repositorios y publicación
 
-La documentación técnica comenzó junto al análisis y la presentación y después se integró en el monorepo del producto. Desde la separación editorial del 21 de octubre de 2026, sus fuentes editables pertenecen a [**POS Docs**](https://github.com/developer-implementos/pos-docs): decisiones y evidencias en `docs/`, Starlight en `apps/starlight/` y autoría de diagramas en `tools/diagrams/`. La [síntesis del repositorio del producto](../product-repository.md) describe las aplicaciones y los comandos de **pos-platform**, que conserva el código operativo.
+POS Platform y POS Docs tienen responsabilidades y entregas independientes. El código operativo se desarrolla en **POS Platform**; la documentación y las presentaciones se mantienen en [**POS Docs**](https://github.com/developer-implementos/pos-docs).
 
-La [presentación y el narrador](presentation.md) existentes conservan el repositorio `pos-architecture`. Sus síntesis consumen una revisión identificada de la documentación técnica. POS Docs reserva `presentations/` para nuevas presentaciones Reveal.js; los materiales existentes no se trasladan automáticamente. Los cambios de propuesta se registran en las fuentes editoriales; los cambios de implementación se contrastan con una revisión del producto y se reflejan en su documentación.
+| Repositorio | Responsabilidad | Entrega |
+| --- | --- | --- |
+| POS Platform | Clientes Angular/Tauri y Angular/Capacitor, aplicaciones backend, workers y bibliotecas del producto | Artefactos de las aplicaciones y sus comprobaciones. La [guía del producto](../product-repository.md) describe comandos y alcance implementado. |
+| POS Docs | Fuentes técnicas, documentación Starlight, diagramas, presentaciones Reveal.js y materiales de referencia | Sitio estático público: portal en `/`, guía en `/guide/` y presentaciones en `/presentations/`. |
 
-## Consulta de los antecedentes
+<span id="consulta-de-los-antecedentes"></span>
 
-El [README histórico del análisis](https://github.com/floxcristian/pos-architecture/blob/7ff835f440fece2f2d8f32efff9c08ad93e50308/README.md) conserva el contexto, las fuentes originales y el estado anterior a la migración. Es una referencia fijada a un commit, no la guía para ejecutar el producto actual.
+## Fuentes y responsabilidades editoriales
 
-Los temas vigentes tienen su propia fuente:
+En POS Docs, `docs/` contiene las decisiones y fuentes técnicas; `apps/starlight/` organiza su navegación y presentación; `tools/diagrams/` mantiene los modelos y generadores de diagramas; y `presentations/architecture/` contiene la presentación de arquitectura y roadmap. El catálogo `portal/catalog.json` identifica las presentaciones y los materiales publicados.
+
+Cada tema tiene una fuente canónica. Starlight la organiza para consulta y Reveal resume la propuesta para exponerla al equipo. Los documentos originales de reuniones son fuentes de evidencia; sus conclusiones se integran en las páginas técnicas con procedencia explícita.
 
 - [Objetivo y propuesta de arquitectura](../propuesta-arquitectura.md).
 - [Mapa de repositorios y conexiones](../mapa-repositorios-y-conexiones.md).
@@ -17,7 +22,13 @@ Los temas vigentes tienen su propia fuente:
 - [Información pendiente de validación](../solicitud-informacion-equipo.md).
 - [Mantenimiento de Starlight](../../apps/starlight/README.md).
 
-<!-- Retained fragments from the former repository page. The historical source above preserves their full contents. -->
+## Publicación y revisión
+
+El build de POS Docs genera `dist/` usando sus dependencias fijadas y los archivos del propio repositorio. No necesita ejecutar el producto ni acceder a sistemas corporativos. La [guía de Vercel](../vercel.md) describe la publicación del sitio; los clientes nativos y los servicios backend tienen su propia distribución.
+
+Los cambios de propuesta se realizan en las fuentes canónicas y se reflejan en las vistas que las resumen. Las afirmaciones sobre código se contrastan con la revisión de POS Platform identificada en la evidencia del producto. Documentar una capacidad propuesta no acredita su implementación ni su validación productiva.
+
+<!-- Stable deep links supported by this reference page. -->
 <span id="pos-platform-para-chile-perú-y-españa"></span>
 <span id="estado-del-documento"></span>
 <span id="mapa-de-la-documentación"></span>

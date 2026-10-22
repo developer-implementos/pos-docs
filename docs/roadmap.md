@@ -8,7 +8,7 @@ La entrega avanza por recorridos completos del negocio: una venta persistida, un
 
 Esta secuencia es la referencia compartida por Starlight y [la presentación de arquitectura](/presentations/architecture/). Los títulos, resultados y criterios de las seis fases proceden de `docs/roadmap.json`; las dos vistas se generan desde ese archivo. La fecha de revisión identifica esta propuesta editorial y no una entrega de producto.
 
-El [plan técnico de implementación](implementation-plan.md) conserva los trabajos de estructura, contratos, UI y pruebas que habilitan estos recorridos. El traslado a `shared/` o la incorporación de proyectos E2E se realiza con las verificaciones correspondientes y según sus dependencias; completar esas tareas no equivale a completar una fase funcional.
+El [plan técnico de implementación](implementation-plan.md) define la estructura, los contratos, la UI y las pruebas que habilitan estos recorridos. Cada fase se acepta por sus capacidades operativas verificadas, además de los controles técnicos del monorepo.
 
 La [correspondencia con las etapas anteriores](validacion-y-decisiones.md#etapas-de-entrega) conserva el vínculo con descubrimiento, prueba vertical, piloto y despliegue. La [migración al ERP común](propuesta-arquitectura.md#coexistencia-y-corte-de-erp) mantiene su propio programa: el piloto POS no acredita que un nuevo ERP esté listo ni requiere automáticamente sustituir el actual.
 

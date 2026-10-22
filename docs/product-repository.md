@@ -4,11 +4,11 @@ Esta página es una síntesis editorial del repositorio del producto, mantenida 
 
 Plataforma POS corporativa preparada para evolucionar a varios países: monorepo Nx con clientes de escritorio y móvil, backend de sucursal, backend de país y workers. Incluye una demostración funcional de Chile con datos sintéticos y una base técnica NestJS/Fastify; las operaciones de negocio del backend y las integraciones están pendientes. Conserva el lenguaje visual de **prime-showcase** (PrimeNG, Aura corporativo, Inter, tablas y navegación).
 
-Producto y repositorio: [POS Platform](https://github.com/floxcristian/pos-platform). Los aliases internos usan `@pos-platform/*`. La [guía del monorepo](monorepo.md) explica aplicaciones, propietarios de datos, estructura por contexto y compatibilidad del cambio de nombre.
+Producto y repositorio: [POS Platform](https://github.com/developer-implementos/pos-platform). Los aliases internos usan `@pos-platform/*`. La [guía del monorepo](monorepo.md) explica aplicaciones, propietarios de datos, estructura por contexto y configuración del workspace.
 
 ## Repositorio del producto
 
-Los clientes Angular con PrimeNG para escritorio (Tauri) y móvil (Capacitor) y la base del backend se mantienen en **pos-platform**. La guía Starlight, sus fuentes y diagramas pertenecen al repositorio editorial [POS Docs](https://github.com/developer-implementos/pos-docs). `floxcristian/corporate-pos` conserva una versión anterior del frontend; el desarrollo vigente del software continúa en `floxcristian/pos-platform`.
+Los clientes Angular con PrimeNG para escritorio (Tauri) y móvil (Capacitor) y la base del backend se mantienen en **pos-platform**. La guía Starlight, sus fuentes y diagramas pertenecen al repositorio editorial [POS Docs](https://github.com/developer-implementos/pos-docs).
 
 | Ubicación | Responsabilidad y estado |
 | --- | --- |
@@ -31,7 +31,7 @@ Requiere Node.js 22.19 o posterior en la rama 22, o Node.js 24, y npm 11.6.0.
 Si tu instalación usa otra versión de npm, instala las dependencias con `npx --yes npm@11.6.0 ci`.
 
 ```sh
-git clone https://github.com/floxcristian/pos-platform.git
+git clone https://github.com/developer-implementos/pos-platform.git
 cd pos-platform
 npm ci
 npm start
@@ -53,7 +53,7 @@ npm run api:dev
 
 La API escucha en **http://127.0.0.1:3000**. Expone información de la base en `/api/v1`, sondas en `/health/live` y `/health/ready`, y OpenAPI en `/api/docs` durante el desarrollo. Usa NestJS con Fastify como un proyecto Nx independiente: `apps/branch-api`.
 
-Los nombres backend expresan ámbito y proceso: `branch-api`, `branch-sync-worker`, `country-api` y `erp-worker`. Para actualizar un checkout anterior, revisar la [migración de nombres y variables de entorno](api.md#actualización-de-nombres-y-configuración); los comandos `api:*` y `sync:check` se conservan.
+Los nombres backend expresan ámbito y proceso: `branch-api`, `branch-sync-worker`, `country-api` y `erp-worker`. La [configuración de las aplicaciones](api.md#configuración) identifica sus rutas, artefactos y variables de entorno. Los comandos `api:*` operan sobre la API de sucursal; `sync:check` verifica la composición y cierre del worker de sincronización.
 
 La base sigue las convenciones verificadas de **Core**: composición de arranque separada, configuración tipada e inyectable, logging unificado con `nestjs-pino`, errores HTTP con contrato estable, versionado URI y pruebas Vitest/SWC. La [guía de la API](api.md#referencia-core) identifica el commit de referencia y las decisiones adaptadas al backend de sucursal.
 
@@ -75,7 +75,7 @@ El frontend sigue usando sus adaptadores mock. Esta base de API aún no implemen
 
 ## Publicar la documentación en Vercel
 
-La configuración `vercel.json` del repositorio **pos-docs** construye la guía Starlight en `/guide/` y redirige `/` hacia ella. El sitio documental se publica desde ese repositorio; los clientes y el backend conservan sus artefactos y entregas en POS Platform. Consulta la [guía de publicación documental](vercel.md).
+La configuración `vercel.json` del repositorio **pos-docs** publica el portal de recursos en `/`, la guía Starlight en `/guide/` y las presentaciones en `/presentations/`. Los clientes y el backend tienen sus artefactos y entregas en POS Platform. Consulta la [guía de publicación documental](vercel.md).
 
 ## Recorridos
 
@@ -99,55 +99,55 @@ El inventario consultivo no cambia al vender: la caja de Chile no es la autorida
 
 ## Arquitectura
 
-La organización acordada agrupa lo transversal en `libs/shared/` y conserva los contextos en `libs/backend/`. **La migración física está pendiente:** el árbol siguiente es el destino, y la [guía del monorepo](monorepo.md#correspondencia-con-el-checkout-actual) conserva las rutas actuales y su correspondencia.
+La organización acordada agrupa lo transversal en `libs/shared/` y los contextos de negocio en `libs/backend/`. El árbol siguiente describe esa estructura. La implementación de `shared/` y del proyecto E2E está pendiente; la [guía del monorepo](monorepo.md#estado-de-implementación) delimita las capacidades disponibles y las pendientes.
 
 <!-- monorepo:target:start -->
 ```text
 apps/
-  pos-desktop/                  # [conservado] Cliente Angular con arranque propio y host Tauri
-  pos-mobile/                   # [conservado] Cliente Angular con arranque propio y host Capacitor
-  branch-api/                   # [conservado] API y composición de negocio de sucursal
-  branch-sync-worker/           # [conservado] Proceso de entrega y recepción de sucursal
-  country-api/                  # [conservado] API de recepción y capacidades de país
-  erp-worker/                   # [conservado] Proceso de integración, traducción y conciliación ERP
-  pos-clients-e2e/              # [mover] Pruebas de la UI; proyecto Nx de pruebas, sin despliegue
-    mobile/                     # [mover] Suite Angular móvil; no prueba el host Capacitor
+  pos-desktop/                  # Cliente Angular con arranque propio y host Tauri
+  pos-mobile/                   # Cliente Angular con arranque propio y host Capacitor
+  branch-api/                   # API y composición de negocio de sucursal
+  branch-sync-worker/           # Proceso de entrega y recepción de sucursal
+  country-api/                  # API de recepción y capacidades de país
+  erp-worker/                   # Proceso de integración, traducción y conciliación ERP
+  pos-clients-e2e/              # Pruebas de la UI; proyecto Nx de pruebas, sin despliegue
+    mobile/                     # Suite Angular móvil; no prueba el host Capacitor
 libs/
   backend/
-    sales/                      # [conservado] Ventas y documentos comerciales; scaffold comercial
-    cash/                       # [conservado] Turnos y movimientos de caja; scaffold comercial
-    payments/                   # [conservado] Intentos, resultados y conciliación de pagos; scaffold comercial
-    collections/                # [conservado] Cobranzas y anticipos; scaffold comercial
-    returns/                    # [conservado] Devoluciones y referencias al documento original; scaffold comercial
-    pricing/                    # [conservado] Evaluación y versiones de precios y promociones; scaffold comercial
-    catalog/                    # [conservado] Maestros y proyecciones de consulta; scaffold comercial
-    fiscal/                     # [conservado] Documentos y estados fiscales por país/proveedor; scaffold comercial
-    devices/                    # [conservado] Contratos y coordinación de periféricos; scaffold comercial
-    sync/                       # [conservado] Protocolo y progreso de sincronización; scaffold comercial
-    erp/                        # [conservado] Contratos, ACL y adaptadores ERP; scaffold comercial
-    reporting/                  # [conservado] Consultas y proyecciones de reportes; scaffold comercial
-    administration/             # [conservado] Configuración y ámbito organizacional; scaffold comercial
-  client-shell/                 # [conservado] Composición Angular compartida; no es una aplicación desplegable
-  features/                     # [conservado] Funcionalidades de la interfaz
+    sales/                      # Ventas y documentos comerciales
+    cash/                       # Turnos y movimientos de caja
+    payments/                   # Intentos, resultados y conciliación de pagos
+    collections/                # Cobranzas y anticipos
+    returns/                    # Devoluciones y referencias al documento original
+    pricing/                    # Evaluación y versiones de precios y promociones
+    catalog/                    # Maestros y proyecciones de consulta
+    fiscal/                     # Documentos y estados fiscales por país/proveedor
+    devices/                    # Contratos y coordinación de periféricos
+    sync/                       # Protocolo y progreso de sincronización
+    erp/                        # Contratos, ACL y adaptadores ERP
+    reporting/                  # Consultas y proyecciones de reportes
+    administration/             # Configuración y ámbito organizacional
+  client-shell/                 # Composición Angular compartida; no es una aplicación desplegable
+  features/                     # Funcionalidades de la interfaz
   shared/
-    backend/                    # [mover] Base técnica del servidor; división de proyectos por definir
-      bootstrap/                # [mover] Creación, arranque y cierre
-      config/                   # [mover] Configuración validada e inyectable
-      http/                     # [mover] Adaptación HTTP, errores y contrato técnico
-      observability/            # [mover] Pino, correlación y Sentry opcional
-      health/                   # [mover] Sondas del proceso y disponibilidad comprobada
-      worker/                   # [mover] Ciclo de vida de procesos de trabajo
+    backend/                    # Base técnica del servidor; división de proyectos por definir
+      bootstrap/                # Creación, arranque y cierre
+      config/                   # Configuración validada e inyectable
+      http/                     # Adaptación HTTP, errores y contrato técnico
+      observability/            # Pino, correlación y Sentry opcional
+      health/                   # Sondas del proceso y disponibilidad comprobada
+      worker/                   # Ciclo de vida de procesos de trabajo
     frontend/
-      ui/                       # [mover] Preset, tokens y componentes de presentación
-    kernel/                     # [mover] Modelo mínimo acordado entre contextos; sin frameworks
-    contracts/                  # [mover] Sobres y metadatos técnicos comunes; no todos los DTO de negocio
-    testing/                    # [por incorporar] Soporte técnico extraído cuando existan consumidores comunes
-  country-policies/             # [transitorio] Perfiles puros actuales; reglas específicas bajo su contexto
-  domain/                       # [transitorio] Reglas del prototipo; revisar propiedad antes de migrar
-  data-access/                  # [transitorio] Adaptadores mock; revisar por funcionalidad, sin mover en bloque a shared
-tools/                          # [conservado] Herramientas de build, lint y pruebas del producto
+      ui/                       # Preset, tokens y componentes de presentación
+    kernel/                     # Modelo mínimo acordado entre contextos; sin frameworks
+    contracts/                  # Sobres y metadatos técnicos comunes; no todos los DTO de negocio
+    testing/                    # Soporte técnico extraído cuando existan consumidores comunes
+  country-policies/             # Perfiles nacionales; reglas específicas bajo su contexto
+  domain/                       # Reglas puras del prototipo frontend
+  data-access/                  # Estado y adaptadores mock de las funcionalidades
+tools/                          # Herramientas de build, lint y pruebas del producto
 .github/
-  workflows/                    # [conservado] Validaciones y entrega
+  workflows/                    # Validaciones y entrega
 ```
 <!-- monorepo:target:end -->
 
@@ -174,7 +174,7 @@ Las pruebas cubren políticas, montos, persistencia, permisos, reintentos, calen
 
 Validación tras la revisión de calidad (3 de octubre de 2026): **144 pruebas de lógica e infraestructura y 37 recorridos de navegador pasan**, junto con lint, formato y compilación web de producción. Los recorridos ejecutan el bundle productivo con la CSP de Tauri, incluyen tamaños de 375 y 1440 px y verifican controles de prime-showcase y accesibilidad del dashboard/reportes en claro y oscuro. El [informe de revisión](quality-review.md) detalla correcciones y condiciones pendientes para producción.
 
-La [ejecución histórica de CI](https://github.com/floxcristian/corporate-pos/actions/runs/37151843645), del repositorio anterior, completó las validaciones de esa revisión. Las comprobaciones actuales se consultan en [Actions de pos-platform](https://github.com/floxcristian/pos-platform/actions). El instalador se puede regenerar con `npm run desktop:build`.
+Las comprobaciones de CI se consultan en [Actions de pos-platform](https://github.com/developer-implementos/pos-platform/actions). El instalador se puede generar con `npm run desktop:build`.
 
 ## Clientes nativos
 

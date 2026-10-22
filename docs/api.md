@@ -1,6 +1,6 @@
 # Base de API de sucursal
 
-**Rutas actuales y destino:** la base técnica propia del POS continúa en `libs/platform/backend`. Su destino acordado es `libs/shared/backend`; la migración física está pendiente. Los contratos transversales y el kernel pasarán a `libs/shared/contracts` y `libs/shared/kernel`. Los comandos, imports y rutas de esta guía describen el código que existe hoy. Ver la [correspondencia del monorepo](monorepo.md#correspondencia-con-el-checkout-actual).
+**Código disponible:** la base técnica de estas aplicaciones está en `libs/platform/backend`. Los comandos, imports y rutas de esta guía describen la implementación disponible. La organización acordada en `libs/shared/` está pendiente; consulta el [estado de implementación del monorepo](monorepo.md#estado-de-implementación).
 
 > **Alcance de esta base:** el monorepo incluye el frontend Angular/PrimeNG y las entradas backend con su configuración, dependencias y comprobaciones. La API ofrece información del servicio y sondas; los módulos comerciales siguen siendo estructuras iniciales. Compartir repositorio no conecta automáticamente la interfaz a la API ni habilita una caja real.
 
@@ -27,22 +27,20 @@ Para Sentry se toma como referencia la [inicialización y cierre de Core](https:
 
 No se trasladan MongoDB, Redis, servicios cloud, OpenTelemetry ni la autenticación ecommerce de Core: el scaffold no tiene esos consumidores ni contratos, y el backend de sucursal conserva el alcance de la propuesta POS.
 
-## Actualización de nombres y configuración
+<span id="actualización-de-nombres-y-configuración"></span>
+
+## Configuración
 
 La aplicación HTTP de sucursal se llama `branch-api` y el worker de sincronización `branch-sync-worker`. La [convención de nombres](monorepo.md#nombres-de-las-aplicaciones-backend) distingue ámbito y tipo de proceso.
 
-| Referencia anterior | Referencia vigente |
-| --- | --- |
-| Proyecto Nx y paquete `pos-runtime` | `branch-api` |
-| Proyecto Nx y paquete `pos-sync-worker` | `branch-sync-worker` |
-| `apps/pos-runtime` y `dist/apps/pos-runtime` | `apps/branch-api` y `dist/apps/branch-api` |
-| `apps/pos-sync-worker` y `dist/apps/pos-sync-worker` | `apps/branch-sync-worker` y `dist/apps/branch-sync-worker` |
-| Variables `POS_API_*` | `BRANCH_API_*` |
-| Variables `POS_SYNC_WORKER_*` | `BRANCH_SYNC_WORKER_*` |
+| Aplicación | Código fuente | Artefacto de distribución | Variables de entorno |
+| --- | --- | --- | --- |
+| `branch-api` | `apps/branch-api` | `dist/apps/branch-api` | `BRANCH_API_*` |
+| `branch-sync-worker` | `apps/branch-sync-worker` | `dist/apps/branch-sync-worker` | `BRANCH_SYNC_WORKER_*` |
 
-Actualizar archivos `.env` locales, variables del supervisor de procesos y rutas de despliegue antes de usar los nuevos artefactos. Los prefijos antiguos no se leen ni se mantienen como aliases; copiar únicamente el archivo `.env` sin cambiar las claves no conserva la configuración. Los ejemplos versionados contienen las claves vigentes y ningún secreto.
+Los archivos `.env` de desarrollo y las variables del supervisor de procesos usan el prefijo de cada aplicación. Los ejemplos versionados documentan sus claves y valores predeterminados, sin secretos. La sección [Desarrollo](#desarrollo) detalla la carga y validación de esa configuración.
 
-El campo `service` de `GET /api/v1`, logs y eventos Sentry de sucursal pasa a `branch-api`; la salida de inspección, logs y eventos del worker usan `branch-sync-worker`. Actualizar cualquier filtro o comprobación externa que compare esas identidades. Se conservan los puertos, rutas HTTP, versión de API, `operationId`, comandos `api:*` y `sync:check`. Las configuraciones de `country-api` y `erp-worker` no cambian.
+El campo `service` de `GET /api/v1`, logs y eventos Sentry de sucursal identifica `branch-api`; la salida de inspección, logs y eventos del worker identifican `branch-sync-worker`. Los comandos `api:*` operan sobre la API de sucursal y `sync:check` verifica la composición y cierre de su worker. `country-api` y `erp-worker` tienen configuración e identidad propias.
 
 ## Organización del runtime
 

@@ -1,8 +1,8 @@
 # Iconografía
 
-**Ubicación durante la transición:** las rutas `libs/ui` de esta guía siguen vigentes. El destino de la UI transversal es `libs/shared/frontend/ui`, según el [mapa del monorepo](monorepo.md#correspondencia-con-el-checkout-actual). La migración debe actualizar generadores, licencias, imports y referencias a activos antes de cambiar estas instrucciones.
+Los componentes, estilos y activos documentados en esta guía están en `libs/ui`. Los comandos de generación usan esas rutas disponibles. La [guía del monorepo](monorepo.md#estado-de-implementación) distingue la implementación disponible de la organización compartida pendiente.
 
-Corporate POS utiliza geometría de Phosphor Icons 2.1.1, con licencia MIT. Los controles compactos usan dibujos Bold oficiales; los iconos decorativos grandes combinan el dibujo Bold con la capa secundaria del Duotone del mismo nombre. Esta combinación es una adaptación propia del producto, no una variante publicada por Phosphor.
+POS Platform utiliza geometría de Phosphor Icons 2.1.1, con licencia MIT. Los controles compactos usan dibujos Bold oficiales; los iconos decorativos grandes combinan el dibujo Bold con la capa secundaria del Duotone del mismo nombre. Esta combinación es una adaptación propia del producto, no una variante publicada por Phosphor.
 
 `DuotoneIconComponent` dibuja dos capas SVG de 256 × 256 unidades, sin modificar sus coordenadas: secundaria al 40 % y principal opaca. Ambas heredan `currentColor`. Las tarjetas usan 28–32 px; los estados vacíos, 40 px; las confirmaciones, 48 px. Se conserva `aria-hidden` porque su texto acompaña al dibujo. Los botones mantienen su nombre accesible y tooltip.
 

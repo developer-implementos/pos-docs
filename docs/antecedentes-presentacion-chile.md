@@ -12,7 +12,7 @@ Este documento organiza lo que la presentación **declara sobre el sistema actua
 
 Las instrucciones para exponer las láminas se consideran notas de la fuente. No se convierten en tareas del proyecto ni sustituyen el requisito del usuario de preparar una arquitectura para Chile, Perú y España con operación offline y un módulo de ofertas local.
 
-Los [antecedentes del análisis](editorial/repository-background.md) integran estas fuentes con lo informado directamente por el usuario. La presentación no aporta una arquitectura de Perú o España. El usuario confirmó posteriormente **Gira como ERP de España**; su versión, interfaces y capacidades por operación siguen pendientes de documentar.
+El [contraste de operación de Chile](contraste-apuntes-operacion-chile.md) relaciona estas fuentes con lo informado directamente por el usuario. La presentación no aporta una arquitectura de Perú o España. El usuario confirmó posteriormente **Gira como ERP de España**; su versión, interfaces y capacidades por operación siguen pendientes de documentar.
 
 ### Índice de la fuente
 

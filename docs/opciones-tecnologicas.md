@@ -1,10 +1,10 @@
-# Opciones tecnológicas discutidas para el POS
+# Opciones tecnológicas del POS
 
-Registro iniciado el 1 de octubre de 2026, precisado el 5 de octubre de 2026. Complementa la [propuesta de arquitectura](propuesta-arquitectura.md) y conserva las alternativas planteadas por el usuario después del análisis inicial de repositorios. **Angular empaquetado en Tauri y el uso de Nx son direcciones indicadas por el usuario. NestJS/Fastify y PostgreSQL en sucursal y país son la recomendación técnica explícita, aún pendiente de aprobación y piloto.** Aceptar cliente y Nx no aprueba automáticamente backend, datos, topología, operación ni todos los dispositivos. Este documento no acredita implementación ni despliegue del producto POS objetivo.
+Selección tecnológica y condiciones de adopción de la [propuesta de arquitectura](propuesta-arquitectura.md). **Angular empaquetado en Tauri y el uso de Nx son decisiones de producto. NestJS/Fastify y PostgreSQL en sucursal y país son la recomendación técnica explícita, aún pendiente de aprobación y piloto.** Aceptar cliente y Nx no aprueba automáticamente backend, datos, topología, operación ni todos los dispositivos. Este documento no acredita implementación ni despliegue del producto POS objetivo.
 
 La evaluación de **WSO2, RabbitMQ, BullMQ, workers PostgreSQL y Pub/Sub** está en [Investigación de mensajería](investigacion-mensajeria-pos.md). Incluye el backend PostgreSQL documentado actualmente por BullMQ, sin asumir que sea tan probado como Redis ni que comparta automáticamente la transacción de venta. La [revisión corporativa](revision-arquitectura-corporativa.md) reúne selección provisional, simplificación de motores, horario y condiciones de retirada. Estas decisiones son independientes de NestJS/Fastify o del monorepo.
 
-La [revisión de la plataforma corporativa](analisis-repositorios/aportes-plataforma-corporativa.md) encontró precedentes de Nx, NestJS/Fastify, Pino y Sentry en Core. **Decisión vigente del 21 de octubre de 2026:** ese código es referencia de organización y convenciones; el POS no consume sus bibliotecas ni servicios. La estructura propia con `shared/` está acordada y su migración física sigue pendiente.
+La [revisión de la plataforma corporativa](analisis-repositorios/aportes-plataforma-corporativa.md) encontró precedentes de Nx, NestJS/Fastify, Pino y Sentry en Core. Core es referencia de organización y convenciones; el POS no consume sus bibliotecas ni servicios. La estructura del producto agrupa los mecanismos técnicos propios en `shared/`, con fronteras y controles definidos en la [guía del monorepo](monorepo.md).
 
 La evaluación de **servicios de IA** está en [Propuestas de IA para el POS](servicios-ia-pos.md). Compara tareas y alternativas convencionales antes de seleccionar generación de texto, búsqueda semántica, OCR o modelos de anomalías. Los proveedores y runtimes son candidatos; se conservan contratos propios, autonomía del núcleo, autorización de datos y alternativas offline. Incorporar IA no obliga a otro motor de base ni a un modelo por caja.
 
@@ -12,7 +12,7 @@ La evaluación de **servicios de IA** está en [Propuestas de IA para el POS](se
 
 **Evolución futura adicional:** [RFID y autoservicio](evolucion-rfid-autoservicio.md). Evaluar lectores/antenas/etiquetas junto con los productos y el entorno físico, detrás de contratos de captura. RFID no obliga a cambiar NestJS, Tauri o el motor de datos, ni a crear un POS distinto por fabricante. SDK, middleware del lector y configuración regional requieren homologación. El eventual conteo se integra con el dueño de inventario; no introduce autoridad de stock en caja por defecto.
 
-| ID | Alternativa planteada por el usuario | Evaluación y recomendación inicial | Decisión pendiente |
+| ID | Opción evaluada | Evaluación y recomendación inicial | Decisión pendiente |
 | --- | --- | --- | --- |
 | TEC-01 | NestJS con Fastify en lugar de Express | Backend recomendado de sucursal y país. Monolito modular en sucursal; workers supervisados según responsabilidad. | Aprobación técnica, compatibilidad, experiencia del equipo, recursos locales, versiones y alcance de migración. |
 | TEC-02 | Usar `nestjs-pino` y Sentry | Pino para logging estructurado; Sentry para errores y trazas, con política de captura, correlación y operación desconectada. | Retención, datos permitidos, alojamiento, presupuesto de telemetría y validación de integración. |
@@ -165,7 +165,7 @@ El requisito de variantes por país/sucursal se desarrolla en [Extensibilidad de
 
 ## 5. Monorepo con Nx
 
-El producto y su monorepo se llaman **POS Platform**, con aliases `@pos-platform/*`. El [repositorio del producto](https://github.com/floxcristian/pos-platform) reúne el software operativo. Esta propuesta, sus evidencias, los diagramas y Starlight se mantienen en el repositorio editorial [POS Docs](https://github.com/developer-implementos/pos-docs). Cada revisión documental identifica el código que describe. La carpeta local histórica `corporate-pos` no cambia el nombre del producto.
+El producto y su monorepo se llaman **POS Platform**, con aliases `@pos-platform/*`. El [repositorio del producto](https://github.com/floxcristian/pos-platform) reúne el software operativo. Esta propuesta, sus evidencias, los diagramas y Starlight se mantienen en el repositorio editorial [POS Docs](https://github.com/developer-implementos/pos-docs). Cada revisión documental identifica el código que describe.
 
 **Estado revisado el 21 de octubre de 2026:** la UI Angular/PrimeNG de demostración, el contenedor Tauri, la base técnica NestJS/Fastify y los esqueletos de workers se mantienen en el mismo monorepo. El frontend continúa usando adaptadores mock; la base HTTP aporta arranque, configuración, observabilidad, sondas y OpenAPI. Una base que arranca no implica tener ventas, autenticación corporativa, PostgreSQL, sincronización o integración ERP funcionando. Los límites de negocio descritos a continuación son el objetivo de implementación; no representan un despliegue backend productivo.
 
@@ -180,58 +180,58 @@ Nx tiene integraciones para Angular y NestJS. Para Rust/Tauri y otros componente
 <!-- monorepo:target:start -->
 ```text
 apps/
-  pos-desktop/                  # [conservado] Cliente Angular con arranque propio y host Tauri
-  pos-mobile/                   # [conservado] Cliente Angular con arranque propio y host Capacitor
-  branch-api/                   # [conservado] API y composición de negocio de sucursal
-  branch-sync-worker/           # [conservado] Proceso de entrega y recepción de sucursal
-  country-api/                  # [conservado] API de recepción y capacidades de país
-  erp-worker/                   # [conservado] Proceso de integración, traducción y conciliación ERP
-  pos-clients-e2e/              # [mover] Pruebas de la UI; proyecto Nx de pruebas, sin despliegue
-    mobile/                     # [mover] Suite Angular móvil; no prueba el host Capacitor
+  pos-desktop/                  # Cliente Angular con arranque propio y host Tauri
+  pos-mobile/                   # Cliente Angular con arranque propio y host Capacitor
+  branch-api/                   # API y composición de negocio de sucursal
+  branch-sync-worker/           # Proceso de entrega y recepción de sucursal
+  country-api/                  # API de recepción y capacidades de país
+  erp-worker/                   # Proceso de integración, traducción y conciliación ERP
+  pos-clients-e2e/              # Pruebas de la UI; proyecto Nx de pruebas, sin despliegue
+    mobile/                     # Suite Angular móvil; no prueba el host Capacitor
 libs/
   backend/
-    sales/                      # [conservado] Ventas y documentos comerciales; scaffold comercial
-    cash/                       # [conservado] Turnos y movimientos de caja; scaffold comercial
-    payments/                   # [conservado] Intentos, resultados y conciliación de pagos; scaffold comercial
-    collections/                # [conservado] Cobranzas y anticipos; scaffold comercial
-    returns/                    # [conservado] Devoluciones y referencias al documento original; scaffold comercial
-    pricing/                    # [conservado] Evaluación y versiones de precios y promociones; scaffold comercial
-    catalog/                    # [conservado] Maestros y proyecciones de consulta; scaffold comercial
-    fiscal/                     # [conservado] Documentos y estados fiscales por país/proveedor; scaffold comercial
-    devices/                    # [conservado] Contratos y coordinación de periféricos; scaffold comercial
-    sync/                       # [conservado] Protocolo y progreso de sincronización; scaffold comercial
-    erp/                        # [conservado] Contratos, ACL y adaptadores ERP; scaffold comercial
-    reporting/                  # [conservado] Consultas y proyecciones de reportes; scaffold comercial
-    administration/             # [conservado] Configuración y ámbito organizacional; scaffold comercial
-  client-shell/                 # [conservado] Composición Angular compartida; no es una aplicación desplegable
-  features/                     # [conservado] Funcionalidades de la interfaz
+    sales/                      # Ventas y documentos comerciales
+    cash/                       # Turnos y movimientos de caja
+    payments/                   # Intentos, resultados y conciliación de pagos
+    collections/                # Cobranzas y anticipos
+    returns/                    # Devoluciones y referencias al documento original
+    pricing/                    # Evaluación y versiones de precios y promociones
+    catalog/                    # Maestros y proyecciones de consulta
+    fiscal/                     # Documentos y estados fiscales por país/proveedor
+    devices/                    # Contratos y coordinación de periféricos
+    sync/                       # Protocolo y progreso de sincronización
+    erp/                        # Contratos, ACL y adaptadores ERP
+    reporting/                  # Consultas y proyecciones de reportes
+    administration/             # Configuración y ámbito organizacional
+  client-shell/                 # Composición Angular compartida; no es una aplicación desplegable
+  features/                     # Funcionalidades de la interfaz
   shared/
-    backend/                    # [mover] Base técnica del servidor; división de proyectos por definir
-      bootstrap/                # [mover] Creación, arranque y cierre
-      config/                   # [mover] Configuración validada e inyectable
-      http/                     # [mover] Adaptación HTTP, errores y contrato técnico
-      observability/            # [mover] Pino, correlación y Sentry opcional
-      health/                   # [mover] Sondas del proceso y disponibilidad comprobada
-      worker/                   # [mover] Ciclo de vida de procesos de trabajo
+    backend/                    # Base técnica del servidor; división de proyectos por definir
+      bootstrap/                # Creación, arranque y cierre
+      config/                   # Configuración validada e inyectable
+      http/                     # Adaptación HTTP, errores y contrato técnico
+      observability/            # Pino, correlación y Sentry opcional
+      health/                   # Sondas del proceso y disponibilidad comprobada
+      worker/                   # Ciclo de vida de procesos de trabajo
     frontend/
-      ui/                       # [mover] Preset, tokens y componentes de presentación
-    kernel/                     # [mover] Modelo mínimo acordado entre contextos; sin frameworks
-    contracts/                  # [mover] Sobres y metadatos técnicos comunes; no todos los DTO de negocio
-    testing/                    # [por incorporar] Soporte técnico extraído cuando existan consumidores comunes
-  country-policies/             # [transitorio] Perfiles puros actuales; reglas específicas bajo su contexto
-  domain/                       # [transitorio] Reglas del prototipo; revisar propiedad antes de migrar
-  data-access/                  # [transitorio] Adaptadores mock; revisar por funcionalidad, sin mover en bloque a shared
-tools/                          # [conservado] Herramientas de build, lint y pruebas del producto
+      ui/                       # Preset, tokens y componentes de presentación
+    kernel/                     # Modelo mínimo acordado entre contextos; sin frameworks
+    contracts/                  # Sobres y metadatos técnicos comunes; no todos los DTO de negocio
+    testing/                    # Soporte técnico extraído cuando existan consumidores comunes
+  country-policies/             # Perfiles nacionales; reglas específicas bajo su contexto
+  domain/                       # Reglas puras del prototipo frontend
+  data-access/                  # Estado y adaptadores mock de las funcionalidades
+tools/                          # Herramientas de build, lint y pruebas del producto
 .github/
-  workflows/                    # [conservado] Validaciones y entrega
+  workflows/                    # Validaciones y entrega
 ```
 <!-- monorepo:target:end -->
 
-El árbol expresa el destino. La migración física está pendiente y no cambia las seis aplicaciones operativas: `pos-docs` es documental y `pos-clients-e2e` será un proyecto de pruebas sin despliegue. La [guía del monorepo](monorepo.md#correspondencia-con-el-checkout-actual) muestra rutas actuales, correspondencia y reglas DDD.
+El árbol expresa la organización del producto, con seis aplicaciones operativas. `pos-clients-e2e` es el proyecto de pruebas previsto, sin despliegue de negocio; POS Docs es un repositorio editorial independiente. La [guía del monorepo](monorepo.md) distingue responsabilidades, reglas DDD y estado de implementación.
 
 `shared` es una agrupación, no una biblioteca universal. `shared/backend` contiene mecanismos técnicos; `shared/kernel`, conceptos de dominio mínimos acordados; `shared/contracts`, sobres y metadatos comunes. Los eventos y DTO de negocio conservan propietario en su contexto. El dominio permanece independiente de Nest, Angular, ORM y transporte.
 
-`libs/domain` y `libs/data-access` siguen siendo piezas transitorias del prototipo; no se trasladan completas a `shared`. `country-policies` conserva inicialmente perfiles puros, mientras que las reglas nacionales concretas pertenecen a fiscalidad, pagos o al contexto correspondiente.
+El prototipo utiliza `libs/domain` y `libs/data-access` para reglas y adaptadores mock. Esa cobertura no acredita los contextos comerciales del backend. `country-policies` contiene perfiles puros; las reglas nacionales concretas pertenecen a fiscalidad, pagos o al contexto correspondiente.
 
 ### Estado de las aplicaciones
 
@@ -248,7 +248,7 @@ El árbol expresa el destino. La migración física está pendiente y no cambia 
 
 Los módulos de `libs/backend` tienen ubicación y composición inicial, pero sus casos de uso comerciales, repositorios, transacciones y adaptadores reales siguen pendientes. `contracts`, `shared-kernel` y `country-policies` contienen contratos iniciales que deben evolucionar con casos de uso y validación, no un protocolo productivo ya aprobado. La base técnica de Node incorpora configuración, logging con `nestjs-pino` y reporte opcional de errores a Sentry; su política exacta se mantiene junto al código del producto.
 
-Una aplicación `backoffice` separada, un publicador central adicional o un puente nativo de periféricos requieren justificar su proceso y sus contratos. No se incluyen entre las seis aplicaciones operativas existentes. `pos-docs` es una aplicación documental adicional. La administración de demostración se compone desde `client-shell` y sus features.
+Una aplicación `backoffice` separada, un publicador central adicional o un puente nativo de periféricos requieren justificar su proceso y sus contratos. No se incluyen entre las seis aplicaciones operativas existentes. Starlight pertenece a POS Docs y no es una aplicación del producto. La administración de demostración se compone desde `client-shell` y sus features.
 
 ### Correspondencia del legacy con POS Platform
 
@@ -348,7 +348,7 @@ Probar que una dependencia prohibida/circular falla en CI; que un cambio de cont
 
 ## 7. Información adicional para decidir
 
-La relación con Core ya está decidida: es únicamente una referencia; el POS tendrá código, contratos, infraestructura y releases propios. La organización acordada se detalla en la [guía del monorepo](monorepo.md). Siguen pendientes responsables internos por contexto, autoridad de precios/ofertas y requisitos de entrega.
+Core es únicamente una referencia; el POS tiene código, contratos, infraestructura y releases propios. La organización acordada se detalla en la [guía del monorepo](monorepo.md). Siguen pendientes responsables internos por contexto, autoridad de precios/ofertas y requisitos de entrega.
 
 Ampliar Q08–Q10 de la [solicitud al equipo](solicitud-informacion-equipo.md) con: versiones/SO y recursos mínimos de cajas; modelos, drivers y SDK de periféricos; administración de dispositivos y permisos de instalación; experiencia NestJS/Rust; política de telemetría; capacidad de distribuir paquetes y soporte de sucursales desconectadas.
 

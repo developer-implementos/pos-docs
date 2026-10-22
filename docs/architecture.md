@@ -1,18 +1,18 @@
 # Decisiones de arquitectura
 
-**Organización acordada:** la estructura objetivo agrupa lo transversal en `libs/shared/`. El código todavía conserva las rutas anteriores. La [guía del monorepo](monorepo.md#correspondencia-con-el-checkout-actual) distingue el destino y la migración pendiente; este documento conserva los detalles ejecutables actuales. Core es únicamente referencia de organización, sin dependencia de código, paquetes o servicios.
+**Alcance:** esta guía describe la base de código revisada y distingue las capacidades implementadas del diseño objetivo. La estructura de producto agrupa lo transversal en `libs/shared/`, según la [guía del monorepo](monorepo.md). Los ejemplos ejecutables corresponden al snapshot identificado del producto; la estructura propuesta no acredita por sí sola su implementación. Core es únicamente referencia de organización, sin dependencia de código, paquetes o servicios.
 
 ## 1. Monorepo Nx con límites de dependencia
 
 Un producto multipaís con seis aplicaciones operativas: `pos-desktop`, `pos-mobile`, `branch-api`, `branch-sync-worker`, `country-api` y `erp-worker`. Las apps componen librerías por responsabilidad; no equivalen a seis servicios ya desplegados. La documentación Starlight pertenece al repositorio editorial [POS Docs](https://github.com/developer-implementos/pos-docs), separado del código operativo. La [guía del monorepo](monorepo.md) detalla el scaffold, su propiedad de datos y la evidencia del legado que orienta las fronteras.
 
-Los clientes de escritorio (Angular + Tauri) y móvil (Angular + Capacitor para Android/iOS) tienen entradas independientes. Comparten `client-shell`, que compone configuración, rutas y navegación, y `ui`, que concentra componentes, activos y estilos. La [decisión de clientes nativos](decisions/native-clients.md) fija sus límites; `pos-web` se elimina y Vercel publica sólo documentación.
+Los clientes de escritorio (Angular + Tauri) y móvil (Angular + Capacitor para Android/iOS) tienen entradas independientes. Comparten `client-shell`, que compone configuración, rutas y navegación, y `ui`, que concentra componentes, activos y estilos. La [decisión de clientes nativos](decisions/native-clients.md) fija sus límites. Vercel publica el portal, la documentación y las presentaciones desde POS Docs.
 
 El frontend conserva `domain`, que no importa Angular, y `data-access`, que implementa las mutaciones mock. Las features no se importan entre sí; el shell compone sus rutas. `ui` contiene presentación y formatos, sin acceso a persistencia ni reglas de operación. El backend dispone de contextos en `libs/backend`, contratos y políticas puras en `contracts`, `shared-kernel` y `country-policies`, y reutiliza la infraestructura técnica de `platform/backend`. ESLint verifica las direcciones de importación y Nx conoce los proyectos.
 
-Las aplicaciones Node se empaquetan con Rspack/SWC y el plugin oficial de Nx para incluir las librerías fuente internas; TSC conserva la comprobación de tipos. Esta reutilización entre aplicaciones justifica la evolución desde el build TSC inicial de una sola API. Las dependencias externas se instalan desde el manifiesto y lockfile de cada artefacto, cuya ejecución se verifica fuera del workspace. No se copian los plugins de parcheo de Core ni se obliga a publicar librerías internas como paquetes independientes.
+Las aplicaciones Node se empaquetan con Rspack/SWC y el plugin oficial de Nx para incluir las librerías fuente internas; TSC conserva la comprobación de tipos. Las dependencias externas se instalan desde el manifiesto y lockfile de cada artefacto, cuya ejecución se verifica fuera del workspace. Las bibliotecas internas se consumen desde el monorepo y no requieren publicación como paquetes independientes.
 
-No se copió el backend, autenticación, módulos sociales, marketing o integraciones de prime-showcase. La referencia aporta el sistema visual. Los formularios utilizan componentes PrimeNG nativos y las capacidades de Angular; no hay modificaciones a paquetes de terceros.
+Prime-showcase aporta la referencia visual. Los formularios utilizan componentes PrimeNG nativos y las capacidades de Angular; no hay modificaciones a paquetes de terceros.
 
 ### Organización compartida objetivo
 
@@ -34,7 +34,7 @@ flowchart TB
     Tests["Suites de pruebas"] --> Support["shared/testing"]
 ```
 
-Las dependencias de servidor se limitan a adaptación/composición; el dominio permanece puro. La migración deberá actualizar reglas Nx/ESLint y pruebas negativas. `apps/pos-clients-e2e` será un proyecto de pruebas vinculado a ambos clientes Angular; no amplía las seis aplicaciones operativas.
+Las dependencias de servidor se limitan a adaptación/composición; el dominio permanece puro. Estos límites requieren reglas Nx/ESLint y pruebas negativas que rechacen imports prohibidos. El diseño incluye `apps/pos-clients-e2e` como proyecto de pruebas vinculado a ambos clientes Angular; no amplía las seis aplicaciones operativas. Su estado se detalla en la [guía de pruebas](testing.md).
 
 ## 2. Estado y puertos
 
@@ -61,7 +61,7 @@ Una nota de crédito conserva las cantidades y valores del documento original. E
 
 Los flujos tienen dirección, entidades, programación, siguiente ejecución y ejecuciones históricas. Admiten manual, intervalo y hora diaria con selección de días en `America/Santiago`. Las ejecuciones en curso no se duplican. Un cierre interrumpido se recupera como error revisable.
 
-Ese comportamiento sigue siendo el mock del frontend. La estructura nueva asigna la ejecución supervisada a `branch-sync-worker` y los contratos/progreso a `libs/backend/sync`. Persistencia durable, locks, transportes, programación fuera de la pestaña y conciliación entre aplicaciones quedan pendientes.
+Ese comportamiento sigue siendo el mock del frontend. La arquitectura asigna la ejecución supervisada a `branch-sync-worker` y los contratos/progreso a `libs/backend/sync`. Persistencia durable, locks, transportes, programación fuera de la pestaña y conciliación entre aplicaciones quedan pendientes.
 
 La cola de salida conserva la identidad de la operación y del evento durante los reintentos. Fiscal y ERP tienen confirmación independiente. El modo offline conserva el trabajo local autorizado y bloquea acciones que exigen un proveedor. En el producto real, la deduplicación debe existir también en el receptor; el mock no prueba garantías de servicios externos.
 

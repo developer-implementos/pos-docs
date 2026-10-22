@@ -163,7 +163,7 @@
   "documentationApplications": [],
   "targetStructure": {
     "decidedOn": "2026-10-21",
-    "status": "Decisión de organización aprobada; migración física pendiente.",
+    "status": "Estructura objetivo acordada; consultar la evidencia del producto para el alcance implementado.",
     "coreRelationship": "Core es únicamente referencia de organización y convenciones; no es dependencia, proveedor de paquetes ni servicio del POS.",
     "entries": [
       {
@@ -210,67 +210,67 @@
       },
       {
         "path": "libs/backend/sales",
-        "description": "Ventas y documentos comerciales; scaffold comercial",
+        "description": "Ventas y documentos comerciales",
         "state": "conservado"
       },
       {
         "path": "libs/backend/cash",
-        "description": "Turnos y movimientos de caja; scaffold comercial",
+        "description": "Turnos y movimientos de caja",
         "state": "conservado"
       },
       {
         "path": "libs/backend/payments",
-        "description": "Intentos, resultados y conciliación de pagos; scaffold comercial",
+        "description": "Intentos, resultados y conciliación de pagos",
         "state": "conservado"
       },
       {
         "path": "libs/backend/collections",
-        "description": "Cobranzas y anticipos; scaffold comercial",
+        "description": "Cobranzas y anticipos",
         "state": "conservado"
       },
       {
         "path": "libs/backend/returns",
-        "description": "Devoluciones y referencias al documento original; scaffold comercial",
+        "description": "Devoluciones y referencias al documento original",
         "state": "conservado"
       },
       {
         "path": "libs/backend/pricing",
-        "description": "Evaluación y versiones de precios y promociones; scaffold comercial",
+        "description": "Evaluación y versiones de precios y promociones",
         "state": "conservado"
       },
       {
         "path": "libs/backend/catalog",
-        "description": "Maestros y proyecciones de consulta; scaffold comercial",
+        "description": "Maestros y proyecciones de consulta",
         "state": "conservado"
       },
       {
         "path": "libs/backend/fiscal",
-        "description": "Documentos y estados fiscales por país/proveedor; scaffold comercial",
+        "description": "Documentos y estados fiscales por país/proveedor",
         "state": "conservado"
       },
       {
         "path": "libs/backend/devices",
-        "description": "Contratos y coordinación de periféricos; scaffold comercial",
+        "description": "Contratos y coordinación de periféricos",
         "state": "conservado"
       },
       {
         "path": "libs/backend/sync",
-        "description": "Protocolo y progreso de sincronización; scaffold comercial",
+        "description": "Protocolo y progreso de sincronización",
         "state": "conservado"
       },
       {
         "path": "libs/backend/erp",
-        "description": "Contratos, ACL y adaptadores ERP; scaffold comercial",
+        "description": "Contratos, ACL y adaptadores ERP",
         "state": "conservado"
       },
       {
         "path": "libs/backend/reporting",
-        "description": "Consultas y proyecciones de reportes; scaffold comercial",
+        "description": "Consultas y proyecciones de reportes",
         "state": "conservado"
       },
       {
         "path": "libs/backend/administration",
-        "description": "Configuración y ámbito organizacional; scaffold comercial",
+        "description": "Configuración y ámbito organizacional",
         "state": "conservado"
       },
       {
@@ -350,17 +350,17 @@
       },
       {
         "path": "libs/country-policies",
-        "description": "Perfiles puros actuales; reglas específicas bajo su contexto",
+        "description": "Perfiles nacionales; reglas específicas bajo su contexto",
         "state": "transitorio"
       },
       {
         "path": "libs/domain",
-        "description": "Reglas del prototipo; revisar propiedad antes de migrar",
+        "description": "Reglas puras del prototipo frontend",
         "state": "transitorio"
       },
       {
         "path": "libs/data-access",
-        "description": "Adaptadores mock; revisar por funcionalidad, sin mover en bloque a shared",
+        "description": "Estado y adaptadores mock de las funcionalidades",
         "state": "transitorio"
       },
       {
