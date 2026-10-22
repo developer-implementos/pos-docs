@@ -18,8 +18,8 @@ El código de las aplicaciones pertenece a [POS Platform](https://github.com/dev
 | --- | --- |
 | `docs/` | Fuentes técnicas canónicas en Markdown, decisiones y recursos públicos |
 | `apps/starlight/` | Guía Starlight, navegación, componentes, búsqueda y validaciones |
-| `portal/` | Portada estática, catálogo de recursos, filtros y comprobaciones |
-| `materials/` | Nuevos originales de reuniones, publicados sólo mediante el catálogo |
+| `portal/` | Portada estática, catálogo de recursos, filtros y visor de materiales |
+| `materials/` | Originales y vistas previas PDF revisadas, publicados sólo mediante el catálogo |
 | `apps/starlight/src/data/` | Catálogos revisados y procedencia de la evidencia |
 | `presentations/` | Organización de presentaciones Reveal.js y referencias vigentes |
 | `tools/diagrams/` | Modelos, generadores y comprobaciones C4, Excalidraw y draw.io |
@@ -48,14 +48,17 @@ npm run check
 npm run presentations:check
 npm run portal:test
 npm run portal:check
+npm run viewer:check
 npm run preview
 ```
 
-`dev` sirve la guía Starlight. Para revisar el sitio completo, ejecutar `build` y `preview`, y abrir `http://127.0.0.1:4207/`. `npm run verify` ejecuta la validación completa. Los resultados y capturas se guardan en `test-results-docs/`, `test-results-presentations/` y `test-results-portal/`. El artefacto publicable se genera en `dist/`; no se versiona.
+`dev` sirve la guía Starlight. Para revisar el sitio completo, ejecutar `build` y `preview`, y abrir `http://127.0.0.1:4207/`. `npm run verify` ejecuta la validación completa. Los resultados y capturas se guardan en `test-results-docs/`, `test-results-presentations/`, `test-results-roadmap/`, `test-results-portal/` y `test-results-viewer/`. El artefacto publicable se genera en `dist/`; no se versiona.
 
 ## Incorporar fuentes y materiales
 
 Seguir [materials/README.md](materials/README.md): añadir el original y registrar su metadata en `portal/catalog.json`. El catálogo distingue país y función editorial, independientemente del formato. Admite PPTX, DOCX y PDF; no publica carpetas enteras ni inventa fechas de reunión. Arquitectura y roadmap, tanto en Reveal.js como en PowerPoint, aparece sólo bajo **Propuestas**. Las fuentes recibidas se conservan intactas; las síntesis y las decisiones se documentan en `docs/` con su alcance.
+
+Cada archivo ofrece **Visualizar** y **Descargar**. Las vistas de lectura `/materials/view/<id>/` usan PDF.js local y PDF revisados vinculados al original por SHA-256. La conversión se hace antes de publicar; Vercel sólo construye el sitio y copia los derivados registrados. Para regenerarlos, consultar [los requisitos de conversión](materials/previews/README.md).
 
 ## Evidencia y actualización
 

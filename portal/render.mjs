@@ -11,7 +11,7 @@ function downloadItem(item, proposal = false) {
   return `<li class="material" ${proposal ? '' : `data-material data-format="${escape(item.format)}" data-country="${escape(item.country || '')}"`}>
     <span class="file-type" aria-hidden="true">${escape(item.format.toUpperCase())}</span>
     <div class="material-info"><h3>${escape(item.title)}</h3><p>${escape(item.description)}</p><div class="metadata"><span>${kindNames[item.kind]}</span>${item.country ? `<span>${countryNames[item.country]}</span>` : ''}<span>${escape(item.format.toUpperCase())} · ${size(item.bytes)}</span>${item.date ? `<time datetime="${escape(item.date)}">${new Intl.DateTimeFormat('es-CL', {dateStyle:'long', timeZone:'UTC'}).format(new Date(item.date))}</time>` : '<span>Sin fecha registrada</span>'}</div></div>
-    <a class="text-link download" ${proposal ? 'data-proposal-download' : ''} href="${escape(item.href)}" download aria-label="Descargar ${escape(item.title)} (${escape(item.format.toUpperCase())})">Descargar</a>
+    <div class="material-actions"><a class="button secondary" data-material-preview href="/materials/view/${escape(item.id)}/" aria-label="Visualizar ${escape(item.title)} (${escape(item.format.toUpperCase())})">Visualizar</a><a class="text-link download" ${proposal ? 'data-proposal-download' : ''} href="${escape(item.href)}" download aria-label="Descargar ${escape(item.title)} (${escape(item.format.toUpperCase())})">Descargar</a></div>
   </li>`;
 }
 

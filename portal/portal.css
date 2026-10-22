@@ -414,6 +414,13 @@ p {
   flex:1;
   min-width:0
 }
+.material-actions {
+  display:flex;
+  flex:none;
+  flex-direction:column;
+  align-items:center;
+  gap:8px
+}
 .material-info h3 {
   font-size:18px;
   line-height:1.4;
@@ -624,8 +631,12 @@ p {
   .material-info {
     flex-basis:calc(100% - 60px)
   }
-  .download {
-    margin-left:60px
+  .material-actions {
+    margin-left:60px;
+    flex-direction:row;
+    flex-wrap:wrap;
+    gap:12px 20px;
+    max-width:calc(100% - 60px)
   }
   .metadata {
     gap:4px 12px

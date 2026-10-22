@@ -1,0 +1,21 @@
+{
+  "family": "Rubik",
+  "repository": "https://github.com/googlefonts/rubik",
+  "revision": "e337a5f69a9bea30e58d05bd40184d79cc099628",
+  "sourceDirectory": "old/version-2/fonts/ttf",
+  "license": "SIL Open Font License 1.1",
+  "files": [
+    {
+      "name": "Rubik-Bold.ttf",
+      "sha256": "3e8cb87213b78a0143c11754ac4047f99c6d5187430bee46614b497dcbf37ea6"
+    },
+    {
+      "name": "Rubik-OFL.txt",
+      "sha256": "472cbe7c25441df63e9c7864b43eb3c0f4b3df950c66a76224e6cfe1eae843fb"
+    },
+    {
+      "name": "Rubik-Regular.ttf",
+      "sha256": "a66d53c66f8e31520c9b6212eae9e1c6bdd59e01eab2f2068ddd1f80f062c235"
+    }
+  ]
+}

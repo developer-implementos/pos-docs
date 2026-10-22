@@ -34,6 +34,7 @@ jobs:
       - run: npm run presentations:check
       - run: npm run roadmap:check
       - run: npm run portal:check
+      - run: npm run viewer:check
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
@@ -43,5 +44,6 @@ jobs:
             test-results-presentations/
             test-results-portal/
             test-results-roadmap/
+            test-results-viewer/
           if-no-files-found: ignore
           retention-days: 14

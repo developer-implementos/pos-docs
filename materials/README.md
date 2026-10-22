@@ -1,4 +1,4 @@
-# Materiales descargables
+# Materiales y vistas previas
 
 Esta carpeta aloja archivos originales que complementan el portal: documentos Word (`.docx`), presentaciones PowerPoint (`.pptx`) y documentos PDF (`.pdf`). Su formato no determina su función editorial. Un PowerPoint puede ser una propuesta o un antecedente; un Word puede contener un cuestionario o notas de una reunión.
 
@@ -39,19 +39,28 @@ El ID debe ser único en todo el catálogo, incluidas las presentaciones. `sourc
 
 `date` representa la fecha documentada del material o de la reunión resumida, en `YYYY-MM-DD`. Usar `null` cuando no exista evidencia clara: no deducirla de la fecha de copia, subida, modificación del archivo, revisión de la página o cabecera de una plantilla. Una fecha escrita en una columna ajena a la fecha de respuesta tampoco confirma la fecha del cuestionario. Las reuniones de Perú del 9 y 13 de octubre de 2026 se fechan por sus nombres originales; los cuestionarios y reuniones de España conservan `null`. El portal obtiene el tamaño del archivo y deriva su enlace; no introducir manualmente `bytes` ni `href`.
 
-4. Ejecutar las pruebas del catálogo y la validación del portal desde la raíz:
+4. Generar una vista previa PDF con `npm run materials:previews` en Windows con Microsoft Word y PowerPoint instalados. El generador abre los originales en lectura y exporta sus páginas, sin reescribirlos. Revisar todas las páginas y guardar los PDF y `materials/previews/manifest.json` en el mismo cambio. El manifiesto vincula cada vista previa con el SHA-256 del original y del PDF; si cambia cualquiera, el build exige regenerarla. Las vistas previas son derivados de lectura y conservan la clasificación editorial del original.
+
+5. Ejecutar las pruebas del catálogo y la validación del portal desde la raíz:
 
 ```sh
-node --test portal/catalog.test.mjs
+npm run portal:test
 npm run validate
 npm run build
 npm run check
 npm run portal:check
+npm run viewer:check
 ```
 
-5. Abrir un PR con el archivo y su entrada de catálogo. Explicar su procedencia, alcance y condición de publicación. Revisar el enlace de descarga y cómo se diferencia de la documentación vigente antes de integrar el cambio.
+6. Abrir un PR con el original, su entrada de catálogo y su vista previa. Explicar su procedencia, alcance y condición de publicación. Revisar tanto «Visualizar» como «Descargar» y cómo se diferencia de la documentación vigente antes de integrar el cambio.
 
 Sólo los archivos registrados en el manifiesto se deben publicar desde `materials/`. No usar una copia recursiva de esta carpeta: puede contener borradores pendientes de revisión. La verificación del catálogo comprueba rutas, presencia y estructura básica del formato; no reemplaza la revisión editorial del contenido ni constituye un análisis antivirus.
+
+## Visualización en el portal
+
+Cada material tiene una página permanente `/materials/view/<id>/`. El visor usa PDF.js servido desde este repositorio, con navegación por página, ampliación y texto seleccionable. La opción «Descargar original» conserva el Word, PowerPoint o PDF recibido. El visor muestra una conversión PDF del archivo original; las revisiones posteriores de Reveal.js se consultan en la presentación web correspondiente.
+
+Vercel sólo verifica hashes y publica los PDF revisados. No necesita Microsoft Office, LibreOffice ni un servicio de conversión remoto. El build copia exclusivamente los derivados declarados, junto con la versión de PDF.js fijada en el lockfile. El visor no ejecuta scripts del PDF ni carga documentos desde URLs indicadas por el visitante.
 
 ## Presentaciones del portal
 

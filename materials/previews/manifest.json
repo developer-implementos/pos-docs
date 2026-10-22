@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "generator": {
+    "name": "Microsoft Office ExportAsFixedFormat",
+    "version": "Word 16.0.20430.20182; PowerPoint 16.0.20430.20182; generator 1.0.0"
+  },
+  "documents": [
+    {
+      "id": "architecture-roadmap-pptx",
+      "sourceSha256": "b533d07df5b63c3d48aac38ac013704c52041ab7eede74d9c033a785fc17704d",
+      "pdf": "materials/previews/architecture-roadmap-pptx.pdf",
+      "pdfSha256": "dcc2d99bbdcbc2c70a598afb386275537aa021f2f6a23c7ca86329b403da8089",
+      "pages": 16
+    },
+    {
+      "id": "mountain-cash-ecosystem",
+      "sourceSha256": "4590c267a92f5e1e05b9f0e5c1c0629c61ab5c616f3590ab7ce1b37274f52381",
+      "pdf": "materials/previews/mountain-cash-ecosystem.pdf",
+      "pdfSha256": "a7daa11d946bbba5d393e2b9a33d62d88877db05200b57a711694543b44f3d36",
+      "pages": 15
+    },
+    {
+      "id": "peru-cash-questionnaire",
+      "sourceSha256": "e41e3e6d533c1ba397d8858adb5c116724a2c2dad55575d39cd505715f821546",
+      "pdf": "materials/previews/peru-cash-questionnaire.pdf",
+      "pdfSha256": "c21120241b8a0346a279a55bc93eed116680ebb0bf8de1208c43c4beed015f56",
+      "pages": 7
+    },
+    {
+      "id": "peru-cash-first-meeting",
+      "sourceSha256": "d45f9c11b6c9730020041ae5d62e567aafd9fc585b274cfa7d1713178af00639",
+      "pdf": "materials/previews/peru-cash-first-meeting.pdf",
+      "pdfSha256": "d29d286a3ae8e97f83df5fbbef33a54913938b865bf1faa39ba3502ff86b619d",
+      "pages": 6
+    },
+    {
+      "id": "peru-cash-second-meeting",
+      "sourceSha256": "25440414e536b791b38463dfb9efcdc754c6ae68023e2236120eb5bc9eee5b3e",
+      "pdf": "materials/previews/peru-cash-second-meeting.pdf",
+      "pdfSha256": "7044afa176ea7f5a2dfca9d614440b55278b7b09445cdf4add668b355997504e",
+      "pages": 9
+    },
+    {
+      "id": "spain-cash-questionnaire",
+      "sourceSha256": "96a996382c471339c7196cc391fb833bd838ff3d9ce656104b34a6e462d4433f",
+      "pdf": "materials/previews/spain-cash-questionnaire.pdf",
+      "pdfSha256": "1c0be2c0675054092f791a95358ffd554bcaf7bb4f7ca5990ee6b5fb36ad3881",
+      "pages": 6
+    },
+    {
+      "id": "spain-cash-first-meeting",
+      "sourceSha256": "dea92b8de4f5433bce8437d7c75b4639340759d9d1f532ca82c11fa96005c2e4",
+      "pdf": "materials/previews/spain-cash-first-meeting.pdf",
+      "pdfSha256": "0f75b1c5ad65617f30b455251858cc1eccc4f6b81629f63397ad9cffa1feba40",
+      "pages": 2
+    },
+    {
+      "id": "spain-cash-second-meeting",
+      "sourceSha256": "fabe763f75b64aee1d354e9ee3adf951526108e2e809fc87d2dfdb261385c9ae",
+      "pdf": "materials/previews/spain-cash-second-meeting.pdf",
+      "pdfSha256": "20e0e620ae1e52a5977ced5cb8075e47d699e2ba806a1850f28eb5fea65cf1df",
+      "pages": 3
+    }
+  ]
+}
