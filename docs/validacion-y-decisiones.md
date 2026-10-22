@@ -249,11 +249,17 @@ La [solicitud de información al equipo](solicitud-informacion-equipo.md) convie
 
 ## Etapas de entrega
 
-1. **Descubrimiento y contratos.** Cerrar las decisiones críticas, mapa de autoridades de datos, perfil offline, hardware y regímenes fiscales. Inventariar las aplicaciones y flujos existentes de Chile, incluyendo ofertas y reserva de inventario. Acordar glosario, convenciones y límites de integración, e incorporar el calendario tentativo del programa ERP. Entregar diagramas de despliegue concretos y contratos con ejemplos; estimar esfuerzo y coste con estos datos.
-2. **Prueba vertical de mayor riesgo.** Venta local, pago con respuesta incierta, emisión del documento seleccionado, sincronización y asiento en un entorno de pruebas de AX. Chile sigue como candidato inicial del piloto POS, considerando también la intención de comenzar allí la migración ERP. Confirmar la secuencia de ambos programas: el piloto POS no demuestra por sí solo que el nuevo ERP esté listo.
-3. **Piloto controlado.** Tienda y equipos representativos, inyección de fallos, cierres y conciliación. Evitar emitir dos documentos fiscales o cobrar dos veces al comparar con el POS anterior; definir cuál es el sistema activo.
-4. **Extensión a los tres países.** Incorporar adaptadores, modalidades fiscales y proveedores de pago con sus propias evidencias de validación. Un piloto exitoso en un país no acredita los otros.
-5. **Despliegue gradual y operación.** Anillos de tiendas, monitoreo, runbooks, restauración ensayada y soporte habilitado. Para volver al sistema anterior, reconciliar pendientes y números fiscales; no hacer un rollback de datos indiscriminado.
+El [roadmap de POS Platform](roadmap.md) concentra la secuencia propuesta de seis fases, sus dependencias, recorridos y criterios de aceptación. Starlight y Reveal consumen la misma fuente. No hay fechas comprometidas ni fases acreditadas como completadas por la existencia del prototipo o del scaffold.
+
+La siguiente correspondencia conserva la relación con las cinco etapas del planteamiento anterior; no constituye un segundo calendario:
+
+| Etapa anterior | Relación con el roadmap único |
+| --- | --- |
+| Descubrimiento y contratos | Preparación transversal desde F1. Cerrar autoridades de datos, perfil de continuidad, hardware, identidad, modalidades fiscales, contratos y capacidad antes de habilitar lo que depende de ellos. Inventariar flujos existentes, incluyendo ofertas y reserva de inventario, y acordar convenciones y límites de integración. |
+| Prueba vertical de mayor riesgo | F1–F3 incorporan venta persistida, pago y documento, sincronización y registro en el primer ERP. Chile y escritorio siguen como hipótesis inicial; un resultado de laboratorio no habilita operación productiva. |
+| Piloto controlado | F4 completa la jornada requerida y F5 prueba una tienda acotada, con fallos, cierres y conciliación. Definir el sistema activo para evitar doble cobro o doble emisión durante la comparación con el anterior. |
+| Extensión a los tres países | F6 incorpora el país siguiente con adaptadores, modalidades fiscales y pagos validados para ese alcance. Un piloto exitoso en un país no acredita los demás. |
+| Despliegue gradual y operación | Se prepara en F5 y se extiende por anillos en F6, con soporte, monitoreo y restauración ensayada. La reversión de una habilitación exige conciliar pendientes y números fiscales; no admite rollback indiscriminado de datos. |
 
 La migración al ERP común tiene un calendario propio todavía tentativo. Cuando se defina el destino, se validarán sus mapeos y contratos, se ensayará la coexistencia y el corte en Chile, y se incorporarán los demás países conforme al programa aprobado. No se asigna aquí una fecha de sustitución de AX ni un orden entre Perú y España.
 

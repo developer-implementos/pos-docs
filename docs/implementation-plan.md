@@ -1,5 +1,7 @@
 # Caja corporativa — plan de entrega
 
+El [roadmap de POS Platform](roadmap.md) define la secuencia funcional compartida por Starlight y Reveal. Este documento conserva el alcance de la demostración y los trabajos técnicos que habilitan su evolución. Sus etapas de reorganización del monorepo no representan fases funcionales completadas; cada entrega requiere la aceptación del recorrido correspondiente.
+
 ## Producto
 
 Demostración de una caja corporativa para Chile, con recorridos conectados y datos sintéticos. Reutiliza la identidad visual de prime-showcase y separa operación, gestión comercial y administración técnica. La cobertura y las variantes del sistema anterior están detalladas en [el inventario de Chile](audit-chile-for-product.md).

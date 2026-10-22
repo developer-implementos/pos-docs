@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "title": "Roadmap de POS Platform",
+  "reviewedOn": "2026-10-22",
+  "status": "proposed",
+  "statusLabel": "Secuencia propuesta",
+  "notice": "Propuesta para acordar con producto, operaciones y desarrollo. No hay fechas, recursos ni habilitaciones productivas aprobadas. Los criterios de aceptación determinan el avance.",
+  "baseline": "La evidencia documentada del producto acredita una interfaz con adaptadores mock y una base técnica de APIs y workers. La persistencia comercial, la autenticación del backend y las integraciones de negocio siguen pendientes; el scaffold no acredita una fase completada.",
+  "phases": [
+    {
+      "id": "phase-01",
+      "number": 1,
+      "title": "Venta persistida",
+      "summary": "Abrir caja, vender en efectivo y recuperar la operación.",
+      "operation": {
+        "title": "Venta en efectivo",
+        "summary": "Abrir caja, vender en efectivo y consultar el ticket después de reiniciar.",
+        "slideDetail": "En laboratorio, identificar al operador, abrir caja y vender con datos de prueba. Consultar la operación tras reiniciar; el ticket de prueba no habilita venta productiva.",
+        "detail": "Recorrido de laboratorio con datos comerciales versionados de prueba: identificar al operador, abrir caja, buscar productos, vender en efectivo y consultar la operación después de reiniciar. Chile y escritorio son la hipótesis inicial de priorización, pendiente de confirmar con producto y operaciones. Los documentos de prueba no habilitan venta fiscal ni productiva."
+      },
+      "construction": {
+        "title": "Transacción local",
+        "summary": "Conectar UI y branch-api; confirmar venta y outbox en PostgreSQL.",
+        "slideDetail": "Implementar turno, precios, importes y permisos desde la UI hasta la API. Persistir venta, pago, movimiento de caja y outbox en una misma transacción de PostgreSQL.",
+        "detail": "Implementar el caso de uso completo: UI, branch-api, control de turno, precios, importes, identidad, autorización básica y aislamiento del ámbito operativo. Incorporar PostgreSQL y migraciones; confirmar cabecera, detalle, impuestos, pago, movimiento de caja y outbox en una transacción. Diseñar la entrega de eventos desde esta fase, aunque se active en la fase 3. Preparar contratos, casos, sandbox y dispositivos de las integraciones siguientes en paralelo."
+      },
+      "acceptance": {
+        "title": "Reinicio y reintento",
+        "summary": "Repetir el comando no duplica la venta; turno, importes y recuperación coinciden.",
+        "slideDetail": "Repetir el comando conserva la identidad y el resultado de la venta. Tras un fallo queda completa o ausente; al reiniciar se recupera con importes y turno correctos.",
+        "detail": "Demostrar el recorrido integrado con persistencia real, permisos comprobados y diagnóstico. Un comando repetido conserva la misma operación; un reinicio permite recuperar el resultado. La transacción queda completa o ausente, sin venta parcial. Las reglas de importes y turno coinciden con el caso acordado y la evidencia distingue los componentes reales de los simuladores."
+      },
+      "requires": [],
+      "links": [
+        { "label": "Estado actual del producto", "href": "/guide/implementation/repository/" },
+        { "label": "Confirmación local de la venta", "href": "/guide/proposal/continuity/" },
+        { "label": "Plan técnico de implementación", "href": "/guide/implementation/plan/" }
+      ]
+    },
+    {
+      "id": "phase-02",
+      "number": 2,
+      "title": "Cobro y documento",
+      "summary": "Pagar con un primer proveedor y consultar el estado fiscal.",
+      "operation": {
+        "title": "Pago y estado fiscal",
+        "summary": "Cobrar con un proveedor de prueba y consultar pago, documento y reimpresión.",
+        "slideDetail": "Probar una combinación de país, pago, proveedor y dispositivo. Consultar por separado pago, venta y documento; distinguir simulador, sandbox y hardware real.",
+        "detail": "Demostrar una combinación acordada de país, medio de pago, proveedor y dispositivo en un ambiente autorizado. Consultar por separado el resultado del pago, la confirmación de la venta y el estado fiscal; solicitar una reimpresión de la misma operación. Identificar qué se simula, qué utiliza un sandbox y qué se prueba con hardware real."
+      },
+      "construction": {
+        "title": "Contratos de proveedores",
+        "summary": "Implementar contratos de pagos, fiscalidad y dispositivos con referencias estables.",
+        "slideDetail": "Implementar adaptadores de pago, fiscalidad y dispositivos con referencias estables. Consultar y conciliar resultados inciertos antes de intentar una nueva operación.",
+        "detail": "Implementar contratos, adaptadores y consultas para el primer proveedor de pago, la modalidad fiscal y los dispositivos seleccionados. Mantener referencias estables y estados independientes de pago, venta, documento e impresión. Recuperar resultados inciertos mediante consulta o conciliación, sin interpretar un timeout como rechazo definitivo."
+      },
+      "acceptance": {
+        "title": "Recuperación del cobro",
+        "summary": "Un timeout no dispara otro cobro; rechazos fiscales e impresión quedan trazables.",
+        "slideDetail": "Probar timeout, rechazo y recuperación sin otro cobro. Mantener trazabilidad fiscal y de impresión; una confirmación del software no prueba que el papel se haya impreso.",
+        "detail": "Probar respuestas inciertas, rechazos, reintentos y recuperación con el alcance acordado. Un timeout no provoca un segundo cobro; la consulta conserva la referencia original. Los rechazos fiscales y los intentos de impresión son visibles y trazables. La aceptación por software de una impresión no demuestra su efecto físico. La homologación y la autorización de uso productivo de la modalidad elegida son requisitos anteriores al piloto."
+      },
+      "requires": ["phase-01"],
+      "links": [
+        { "label": "Proveedores y dispositivos", "href": "/guide/architecture/providers/" },
+        { "label": "Fiscalidad por país", "href": "/guide/proposal/fiscal-compliance/" },
+        { "label": "Escenarios de aceptación", "href": "/guide/operations/validation/" }
+      ]
+    },
+    {
+      "id": "phase-03",
+      "number": 3,
+      "title": "Sucursal conectada",
+      "summary": "Desconectar Internet, reconectar y comprobar el resultado en el ERP.",
+      "operation": {
+        "title": "Corte y reconexión",
+        "summary": "Cortar Internet, vender según la política y seguir pendientes hasta el ERP.",
+        "slideDetail": "Con LAN y servidor disponibles, cortar Internet y vender sólo lo autorizado. Al reconectar, seguir la recepción durable por país y el resultado del primer ERP.",
+        "detail": "Demostrar un corte de Internet con LAN y servidor de sucursal disponibles. Vender únicamente las operaciones autorizadas por la política, los datos vigentes y las modalidades de pago y fiscalidad validadas. Al reconectar, seguir los pendientes, la recepción durable por país y el resultado de la integración con el primer ERP en un entorno autorizado."
+      },
+      "construction": {
+        "title": "Entrega e integración",
+        "summary": "Conectar workers y country-api con inbox/outbox, maestros y ACL del primer ERP.",
+        "slideDetail": "Implementar acuse tras commit, deduplicación, cursores y espejo comercial. La ACL consulta el resultado ERP; el drenaje respeta su capacidad y atiende ventas nuevas.",
+        "detail": "Implementar branch-sync-worker, country-api y erp-worker: entrega durable, acuse posterior al commit en país, deduplicación, cursores y recuperación. Distribuir el espejo de datos comerciales con sus versiones y autoridades. Incorporar la ACL del primer ERP y comprobar sus garantías de registro y consulta. Limitar el drenaje del backlog para respetar la capacidad de los destinos y atender operaciones nuevas."
+      },
+      "acceptance": {
+        "title": "Backlog conciliado",
+        "summary": "Reenvíos y reinicios conservan operaciones; backlog y resultado ERP se concilian.",
+        "slideDetail": "Probar pérdida de acuse, repetición y reinicio sin duplicados. Medir el drenaje y conciliar el resultado; perder LAN o escritor detiene nuevas ventas en el perfil base.",
+        "detail": "Probar corte de Internet, repetición de eventos, pérdida de acuse y reinicio con almacenamiento sano. La operación conserva su identidad y su resultado ERP es comprobable sin registros duplicados. Conciliar el backlog y medir su drenaje frente a objetivos acordados. El perfil base detiene nuevas ventas cuando se pierde la LAN o el escritor de sucursal: esta fase no acredita autonomía de una caja aislada ni corrige por sí sola los defectos del ERP."
+      },
+      "requires": ["phase-02"],
+      "links": [
+        { "label": "Sincronización durable", "href": "/guide/proposal/synchronization/" },
+        { "label": "Integración y ACL", "href": "/guide/proposal/integration/" },
+        { "label": "Precios y promociones locales", "href": "/guide/proposal/pricing-promotions/" }
+      ]
+    },
+    {
+      "id": "phase-04",
+      "number": 4,
+      "title": "Jornada de tienda",
+      "summary": "Devolver, cobrar deuda, cerrar y conciliar la jornada priorizada.",
+      "operation": {
+        "title": "Jornada completa",
+        "summary": "Devolver, cobrar deuda y anticipos; arquear y cerrar con diferencias visibles.",
+        "slideDetail": "Recorrer devoluciones autorizadas, cobranzas, anticipos, arqueo y cierre del alcance priorizado para el piloto. Mostrar diferencias, pendientes y sus responsables.",
+        "detail": "Completar los recorridos exigidos para el piloto: devolución autorizada, referencias de notas de crédito, cobranzas, anticipos, arqueo, cierre y reporte de diferencias. Producto y operaciones delimitan cuáles se habilitarán y bajo qué condiciones. La demostración recorre una jornada completa y muestra pendientes, responsables y resolución."
+      },
+      "construction": {
+        "title": "Saldos y aprobaciones",
+        "summary": "Implementar saldos, referencias, aprobaciones y conciliación de la jornada.",
+        "slideDetail": "Vincular cada movimiento con la operación original y controlar autoridad y consumo de saldos. Ampliar permisos y auditoría; conciliar caja, pagos, documentos y ERP.",
+        "detail": "Implementar autoridad y consumo de saldos, referencias a la operación original, aprobaciones y consultas operativas. Ampliar a los nuevos casos los controles de autorización y auditoría incorporados desde el primer incremento. Conciliar caja, pagos, documentos y registro ERP, manteniendo separados los resultados y las excepciones de cada proceso."
+      },
+      "acceptance": {
+        "title": "Cierre trazable",
+        "summary": "No se consume dos veces un saldo; caja, pagos, documentos y ERP se concilian.",
+        "slideDetail": "Probar concurrencia y reintentos sin exceder ni duplicar saldos autorizados. El cierre explica diferencias; aprobaciones, referencias y restricciones quedan auditadas.",
+        "detail": "Comprobar que devoluciones y consumos concurrentes no exceden el saldo autorizado ni se repiten. Las referencias originales y aprobaciones quedan auditadas. El cierre explica diferencias y pendientes entre caja, pagos, documentos y ERP; su tratamiento está acordado con los responsables del negocio. Las restricciones offline de las operaciones sensibles se respetan y se prueban."
+      },
+      "requires": ["phase-03"],
+      "links": [
+        { "label": "Operación y accesos", "href": "/guide/proposal/access-operations/" },
+        { "label": "Contratos y autoridad de datos", "href": "/guide/proposal/contracts/" },
+        { "label": "Escenarios de aceptación", "href": "/guide/operations/validation/" }
+      ]
+    },
+    {
+      "id": "phase-05",
+      "number": 5,
+      "title": "Piloto controlado",
+      "summary": "Operar en una tienda acotada con soporte y recuperación ensayada.",
+      "operation": {
+        "title": "Tienda acotada",
+        "summary": "Operar una jornada completa en una tienda, con cajas y operadores seleccionados.",
+        "slideDetail": "Habilitar tienda, cajas, medios y operadores definidos tras aceptar el alcance previo. Designar el sistema activo para evitar doble cobro o emisión al comparar resultados.",
+        "detail": "Habilitar una tienda y un conjunto explícito de cajas, operadores, medios, proveedores y operaciones, con seguimiento del equipo. Antes del inicio deben estar aceptadas las fases 1 a 4 para ese alcance, la identidad y permisos reales, las modalidades fiscales y de pago, y los controles de protección de datos. Definir cuál es el sistema activo para evitar doble cobro o doble emisión durante la comparación con el sistema anterior."
+      },
+      "construction": {
+        "title": "Preparación operativa",
+        "summary": "Preparar equipos, formación, alertas, backups, restauración y versión firmada.",
+        "slideDetail": "Ensayar instalación, actualización compatible, carga y contingencias. Preparar formación, alertas, backups y restauración con soporte responsable y objetivos acordados.",
+        "detail": "Preparar instalación y actualización compatible, equipos y proveedores homologados, formación, monitoreo, alertas, copias de seguridad y restauración. Ensayar carga representativa y contingencias. Acordar objetivos operativos y responsables de soporte; preparar el tratamiento de pendientes cuando se detiene o revierte una habilitación, sin borrar ventas nuevas ni restaurar datos indiscriminadamente."
+      },
+      "acceptance": {
+        "title": "Aceptación del piloto",
+        "summary": "Conciliación aceptada, recuperación ensayada y soporte listo; sin defectos críticos.",
+        "slideDetail": "Producto y operaciones revisan conciliación, recuperación y métricas del piloto. Sin defectos críticos abiertos; la aceptación aplica a esa configuración y revisión.",
+        "detail": "Registrar evidencia de conciliación, recuperación y cumplimiento de los criterios operativos acordados. No declarar exitoso el piloto sin una revisión del alcance por producto y operaciones, sin soporte habilitado o con defectos críticos abiertos. La aceptación corresponde a esa tienda, configuración y revisión; no acredita automáticamente otros países, proveedores o dispositivos."
+      },
+      "requires": ["phase-04"],
+      "links": [
+        { "label": "Validación y criterios del piloto", "href": "/guide/operations/validation/" },
+        { "label": "Seguridad y límites actuales", "href": "/guide/implementation/security/" },
+        { "label": "Operación y accesos", "href": "/guide/proposal/access-operations/" }
+      ]
+    },
+    {
+      "id": "phase-06",
+      "number": 6,
+      "title": "Expansión validada",
+      "summary": "Validar otro país y ampliar canales y tiendas por anillos.",
+      "operation": {
+        "title": "Otro país y canal",
+        "summary": "Demostrar el recorrido en un segundo país y móvil en un uso acotado.",
+        "slideDetail": "Demostrar el mismo recorrido en otro país y móvil en un uso delimitado. Acordar el orden de países, canales y tiendas según el piloto y las dependencias locales.",
+        "detail": "Demostrar el mismo recorrido de negocio en un segundo país antes de generalizarlo a todos. Incorporar móvil en un caso de uso delimitado y homologado. Producto y operaciones acuerdan el orden de países, canales y tiendas a partir de la evidencia del piloto y de las dependencias locales; no se fija aquí un orden entre Perú y España."
+      },
+      "construction": {
+        "title": "Adaptación y anillos",
+        "summary": "Añadir políticas y adaptadores del país; distribuir por anillos compatibles.",
+        "slideDetail": "Incorporar políticas y adaptadores locales; validar host móvil, permisos y dispositivos. Distribuir por anillos compatibles y coordinar conectores con el programa ERP.",
+        "detail": "Incorporar políticas, contratos y adaptadores del país siguiente; comprobar fiscalidad, pagos, operación y soporte locales. Validar el host móvil, los permisos, dispositivos y distribución nativa. Preparar despliegue por anillos y compatibilidad de versiones. Coordinar la evolución de conectores con el programa ERP, cuyo calendario es independiente; móvil no implica venta sin LAN ni exposición pública del backend."
+      },
+      "acceptance": {
+        "title": "Validación por alcance",
+        "summary": "Probar reutilización del núcleo y aceptación propia de cada país y canal.",
+        "slideDetail": "Cada país y canal demuestra reutilización del núcleo y supera su aceptación propia. Ampliar anillos con conciliación, soporte y recuperación verificados por escenario.",
+        "detail": "Demostrar con escenarios verificables qué comportamiento del núcleo se reutiliza y qué adaptación corresponde al país. Cada país, canal y configuración supera su propia aceptación antes de habilitarse. Los anillos se amplían con conciliación, observabilidad, soporte y recuperación comprobados. IA, RFID y omnicanal permanecen como extensiones posteriores sujetas a priorización."
+      },
+      "requires": ["phase-05"],
+      "links": [
+        { "label": "Adaptación del producto por país", "href": "/guide/proposal/product/" },
+        { "label": "Clientes de escritorio y móvil", "href": "/guide/architecture/native-clients/" },
+        { "label": "Coexistencia y migración ERP", "href": "/guide/proposal/erp-migration/" }
+      ]
+    }
+  ]
+}
