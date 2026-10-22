@@ -31,6 +31,7 @@ jobs:
       - run: npm run build
       - run: npm --prefix apps/starlight exec playwright install --with-deps chromium
       - run: npm run check
+      - run: npm run architecture:check
       - run: npm run presentations:check
       - run: npm run roadmap:check
       - run: npm run portal:check
@@ -41,6 +42,7 @@ jobs:
           name: documentation-check
           path: |
             test-results-docs/
+            test-results-architecture/
             test-results-presentations/
             test-results-portal/
             test-results-roadmap/
