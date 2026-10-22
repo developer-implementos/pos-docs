@@ -13,6 +13,8 @@ const inputs = [
   'docs/vistas-arquitectura-y-flujos.md',
   'docs/recorridos-datos-tablas.md',
   'docs/operacion-caja-y-evolucion.md',
+  'docs/roadmap.md',
+  'docs/roadmap.json',
   'tools/diagrams/models/c4-data.js',
   'tools/diagrams/models/dynamic-data.cjs',
   'tools/diagrams/models/c4-layouts.json',

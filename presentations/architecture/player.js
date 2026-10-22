@@ -21,7 +21,12 @@
   const tree=monorepo.querySelector('.tree-panel');
   const zoneButtons=[...monorepo.querySelectorAll('[data-zone-step]')];
   const zoneIds=['apps','business','frontend','backend','shared','transition','delivery'];
+  const roadmap=document.querySelector('#slide-12');
+  const roadmapButtons=[...roadmap.querySelectorAll('[data-roadmap-step]')];
+  const roadmapPanels=[...roadmap.querySelectorAll('[data-roadmap-panel]')];
+  const printMode=new URLSearchParams(location.search).has('print-pdf');
   let currentZone=-1;
+  let currentRoadmapView=-1;
   let diagramSlide=null,diagramReturnFocus=null;
   let diagramWidth=0,diagramHeight=0,diagramScale=1,diagramFitMode=false;
   const deck=new Reveal(root,{
@@ -106,9 +111,10 @@
     diagramOpen.hidden=!hasDiagram;diagramOpen.disabled=!hasDiagram;
     if(diagramDialog.open&&deck.getCurrentSlide()!==diagramSlide)diagramDialog.close();
     updateMonorepo();
+    updateRoadmap();
   }
   function updateMonorepo(){
-    if(deck.getCurrentSlide()!==monorepo||new URLSearchParams(location.search).has('print-pdf'))return;
+    if(deck.getCurrentSlide()!==monorepo||printMode)return;
     const step=Math.max(0,Math.min(zoneIds.length-1,(deck.getIndices().f??-1)+1));
     zoneButtons.forEach((button,i)=>{if(i===step)button.setAttribute('aria-current','step');else button.removeAttribute('aria-current');});
     monorepo.querySelectorAll('[data-zone-detail]').forEach(node=>{node.hidden=Number(node.dataset.zoneDetail)!==step;});
@@ -123,7 +129,25 @@
     }
     currentZone=step;
   }
+  function updateRoadmap(){
+    if(deck.getCurrentSlide()!==roadmap||printMode)return;
+    const step=(deck.getIndices().f??-1)<0?0:1;
+    roadmapButtons.forEach((button,index)=>{
+      if(index===step)button.setAttribute('aria-current','step');
+      else button.removeAttribute('aria-current');
+    });
+    roadmapPanels.forEach(panel=>{panel.hidden=Number(panel.dataset.roadmapPanel)!==step;});
+    if(step!==currentRoadmapView){
+      roadmap.querySelector('[data-roadmap-announcement]').textContent=roadmapButtons[step].textContent;
+      currentRoadmapView=step;
+    }
+  }
   zoneButtons.forEach((button,i)=>button.addEventListener('click',()=>deck.slide(3,0,i-1)));
+  roadmapButtons.forEach((button,index)=>{
+    button.addEventListener('click',()=>deck.slide(11,0,index-1));
+    // Preserve native Space activation instead of Reveal's next-slide shortcut.
+    button.addEventListener('keydown',event=>{if(event.key===' ')event.stopPropagation();});
+  });
   // Space and arrows on a focused tree scroll that region; presentation arrows
   // elsewhere continue through Reveal fragments before leaving the slide.
   tree.addEventListener('keydown',event=>{
@@ -158,7 +182,8 @@
   document.addEventListener('fullscreenchange',()=>{full.textContent=document.fullscreenElement?'Salir de pantalla completa':'Pantalla completa';deck.layout();});
   await document.fonts.ready;
   await deck.initialize();
-  deck.on('slidechanged',()=>{currentZone=-1;update();});
-  deck.on('fragmentshown',updateMonorepo);deck.on('fragmenthidden',updateMonorepo);update();
+  deck.on('slidechanged',()=>{currentZone=-1;currentRoadmapView=-1;update();});
+  const updateFragmentViews=()=>{updateMonorepo();updateRoadmap();};
+  deck.on('fragmentshown',updateFragmentViews);deck.on('fragmenthidden',updateFragmentViews);update();
   window.posPresentation=deck;
 })();

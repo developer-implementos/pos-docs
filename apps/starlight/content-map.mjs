@@ -1,4 +1,8 @@
 /** Editorial map. Markdown under docs/ remains the source of architectural decisions. */
+import roadmapSource from '../../docs/roadmap.json' with { type: 'json' };
+import { validateRoadmap } from '../../tools/roadmap.mjs';
+
+const roadmap = validateRoadmap(roadmapSource);
 export { docsOrigin, repositoryOrigin, presentationOrigin, presentationRepository } from './site-config.mjs';
 export const siteBase = '/guide/';
 export const generatedDirectories = ['proposal', 'architecture', 'operations', 'evidence', 'reference', 'implementation'];
@@ -38,6 +42,7 @@ export const readingPath = [
   { route: 'proposal/access-operations', title: 'Acceso, permisos y operación' },
   { route: 'proposal/fiscal-compliance', title: 'Fiscalidad y documentos' },
   { route: 'proposal/decisions', title: 'Registro de decisiones' },
+  { route: 'proposal/roadmap', title: 'Roadmap del producto' },
   { route: 'operations/validation', title: 'Validación y criterios del piloto' },
 ];
 
@@ -49,6 +54,7 @@ const proposal = (route, title, description, from, to, extra = {}) => ({
 const reference = (route, source, title, description, kind = 'reference') => ({ route, source, title, description, kind });
 
 export const generatedPages = [
+  { ...reference('proposal/roadmap', 'docs/roadmap.md', roadmap.title, 'Seis fases propuestas, con operación demostrable, construcción y criterios de aceptación compartidos con Reveal.', 'proposal'), roadmap: true },
   proposal('product', 'Producto, alcance y países', 'Objetivo corporativo, módulos compartidos, variantes por país y alcance de la propuesta.', null, 'Evolución desde la arquitectura actual de Chile'),
   proposal('evolution', 'Evolución desde Chile', 'Punto de partida, continuidad por sucursal y límites de la migración desde Mountain.', 'Evolución desde la arquitectura actual de Chile', 'Independencia del POS y referencias de organización'),
   proposal('corporate-reuse', 'POS independiente y referencias', 'Organización propia con shared; Core como referencia y alternativas históricas de plataforma.', 'Independencia del POS y referencias de organización', 'Arquitectura de referencia: perfil WAN preferente'),
@@ -139,6 +145,7 @@ const item = (route, label) => ({ label: label || generatedPages.find(page => pa
 export const sidebar = [
   { label: 'Inicio', link: '/' },
   { label: 'Visión general de la solución', link: '/overview/' },
+  item('proposal/roadmap', 'Roadmap del producto'),
   { label: 'Mapa de contenidos', link: '/contents/' },
   { label: 'Glosario del POS', link: '/glossary/' },
   { label: 'Producto y alcance', collapsed: true, items: ['product', 'evolution', 'corporate-reuse'].map(route => item(`proposal/${route}`)) },

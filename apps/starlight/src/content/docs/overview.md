@@ -61,4 +61,6 @@ El [catálogo del monorepo](/guide/architecture/monorepo/) es la referencia de n
 
 El [registro de decisiones](/guide/proposal/decisions/) fija los motivos y las condiciones de aprobación. La [validación del piloto](/guide/operations/validation/) define las evidencias necesarias. Las simulaciones explican el comportamiento propuesto; las garantías se demuestran mediante esas pruebas y la homologación.
 
+El [roadmap del producto](/guide/proposal/roadmap/) organiza la entrega en seis fases: qué operación se demostrará, qué se construirá y qué evidencia permitirá aceptar cada una. La guía y la presentación comparten ese mismo plan.
+
 [Mapa de contenidos](/guide/contents/) · [Glosario con el significado aplicado al POS](/guide/glossary/)

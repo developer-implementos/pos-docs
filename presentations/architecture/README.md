@@ -22,6 +22,14 @@ La diapositiva 4 tiene siete zonas: aplicaciones, negocio, interfaz, shared/back
 
 ## Fuentes y edición
 
+### Roadmap compartido con Starlight
+
+La diapositiva 12 organiza las seis fases en una matriz de operación, construcción y aceptación, inspirada en la [distribución del roadmap de PrimeNG](https://v21.primeng.org/roadmap). Usa fases en lugar de trimestres porque aún no hay fechas comprometidas. Las flechas recorren primero F01–F03 y F04–F06 mediante un fragment de Reveal; los botones permiten seleccionar el grupo y el hash conserva la vista. La impresión muestra las seis fases en una página.
+
+`docs/roadmap.json` es la fuente de títulos, resúmenes, dependencias y criterios compartidos con `/guide/proposal/roadmap/`. `summary` alimenta la matriz; `slideDetail` resume cada frente en las diapositivas 13–15 y `detail` conserva su explicación completa en Starlight y lectura continua. Son síntesis editoriales explícitas, sin truncamiento automático. `tools/roadmap.mjs` valida el catálogo y genera las matrices; `presentations/tools/roadmap.mjs` adapta la navegación, lectura e impresión.
+
+Al editar una fase, revisar sus tres niveles de texto y ejecutar `npm run verify`. `npm run roadmap:check` comprueba correspondencia de contenidos, navegación, persistencia del fragment, impresión, lectura sin JavaScript, accesibilidad básica y ajuste en varios tamaños de pantalla. Las capturas quedan en `test-results-roadmap/`.
+
 | Archivo | Uso |
 | --- | --- |
 | `deck.json` | Textos, posiciones, diagramas editables, notas y enlaces por diapositiva |
@@ -35,7 +43,7 @@ La diapositiva 4 tiene siete zonas: aplicaciones, negocio, interfaz, shared/back
 
 El build es autónomo: usa Node, archivos de este repositorio y dependencias fijadas de Starlight. No necesita otro checkout, Python ni herramientas de PowerPoint. `npm run presentations:build` produce el HTML en `dist/`; no editar ese resultado. `npm run presentations:test` valida el generador SVG y `npm run presentations:check` verifica el reproductor en navegador. `npm run verify` comprueba el conjunto completo, incluidos Starlight y el portal.
 
-El contenido proviene de la presentación revisada el 21-10-2026. La versión web actualiza el monorepo: `pos-docs` es un repositorio editorial separado de las seis aplicaciones operativas. El PowerPoint conserva la revisión original, identificada por SHA-256 en `sources.json`. Son revisiones documentales distintas, no exportaciones idénticas.
+El contenido proviene de la presentación revisada el 21-10-2026. La versión web actualiza el monorepo y el roadmap compartido con Starlight: `pos-docs` es un repositorio editorial separado de las seis aplicaciones operativas. El PowerPoint conserva la revisión original, identificada por SHA-256 en `sources.json`. Son revisiones documentales distintas, no exportaciones idénticas.
 
 Los traslados a `shared/` y de las suites E2E siguen presentados como estructura objetivo. El roadmap es una propuesta para discutir con producto, operaciones y desarrollo, sin fechas ni implementación productiva implícitas. La evidencia del producto está fijada por `apps/starlight/src/data/product-evidence.json`.
 

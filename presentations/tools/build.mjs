@@ -5,6 +5,8 @@ import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 import {monorepoView} from './monorepo.mjs';
 import {createDiagram} from './diagrams.mjs';
+import {loadRoadmap} from '../../tools/roadmap.mjs';
+import {roadmapView,roadmapPairView} from './roadmap.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const source = path.join(root, 'presentations/architecture');
@@ -15,6 +17,13 @@ const sources = JSON.parse(fs.readFileSync(path.join(source, 'sources.json'), 'u
 const hash = file => createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const monorepo=monorepoView(fs.readFileSync(path.join(root,'docs/monorepo.md'),'utf8'),escape);
+const roadmapData=loadRoadmap(root);
+const roadmap=roadmapView(roadmapData);
+function roadmapPair(slide) {
+  const phases=slide.roadmap.phases.map(id=>roadmapData.phases.find(phase=>phase.id===id));
+  assert.ok(phases.length===2&&phases.every(Boolean),`Invalid roadmap pair: ${slide.id}`);
+  return roadmapPairView(phases);
+}
 assert.equal(deck.schemaVersion, 1);
 assert.equal(deck.slides.length, 16);
 assert.equal(new Set(deck.slides.map(s => s.id)).size, deck.slides.length);
@@ -62,6 +71,12 @@ function element(e,index,slide) {
 }
 const refs = slide => `<ul>${slide.sources.map(s=>`<li><a href="${escape(s.href)}" target="_blank" rel="noopener">${escape(s.label)}</a></li>`).join('')}</ul>`;
 function slideElements(slide,index){
+  if(slide.roadmap) {
+    const chrome=slide.elements.map((e,i)=>element(e,i,index)).join('');
+    if(slide.roadmap.kind==='overview')return chrome+roadmap.markup+roadmap.print;
+    assert.equal(slide.roadmap.kind,'pair');
+    return chrome+roadmapPair(slide).markup;
+  }
   const diagram=diagrams.get(slide.id);
   if(diagram) {
     const chrome=slide.elements.flatMap((e,i)=>e.position.top>=220&&e.position.top<630?[]:[element(e,i,index)]).join('');
@@ -101,7 +116,12 @@ function readingDiagram(slide) {
   const diagram=diagrams.get(slide.id);
   return diagram?`<figure class="reading-diagram"><a href="${diagram.src}" target="_blank" rel="noopener"><img src="${diagram.src}" alt="Diagrama: ${escape(slide.title)}. Descripción textual a continuación." width="${diagram.width}" height="${diagram.height}"></a><figcaption><a href="${diagram.src}" download>Descargar SVG de ${escape(slide.title)}</a></figcaption></figure>`:'';
 }
-const reading=head(deck.title)+`<body class="reader"><header><img src="assets/logo.svg" alt="Implementos" width="210"><h1>POS Platform</h1><p>Propuesta de arquitectura y roadmap funcional</p><nav><a href="/">Portal</a><a href="./">Presentar</a><a href="${ppt}" download>PowerPoint original</a><a href="/guide/">Documentación</a></nav><p class="notice">La versión web refleja POS Docs como repositorio independiente. El PowerPoint conserva la revisión original. El roadmap es una propuesta para acordar con el equipo.</p></header><main>${deck.slides.map((s,i)=>`<article id="${s.id}"><h2>${i+1}. ${escape(s.title)}</h2>${readingDiagram(s)}${s.id==='slide-4'?monorepo.reading:s.elements.filter(e=>e.type==='text'&&e.position.top>=220&&e.position.top<680).map(e=>`<p>${escape(e.text).replaceAll('\n','<br>')}</p>`).join('')}<details><summary>Notas y fuentes</summary><p>${escape(s.notes)}</p>${refs(s)}</details><a href="./#/${s.id}">Ver diapositiva</a></article>`).join('')}</main><footer>Reveal.js ${escape(vendor.version)} · <a href="https://revealjs.com/config/">Configuración</a> · <a href="https://revealjs.com/pdf-export/">Exportar PDF</a></footer></body></html>`;
+function readingBody(slide) {
+  if(slide.roadmap)return slide.roadmap.kind==='overview'?roadmap.reading:roadmapPair(slide).reading;
+  if(slide.id==='slide-4')return monorepo.reading;
+  return slide.elements.filter(e=>e.type==='text'&&e.position.top>=220&&e.position.top<680).map(e=>`<p>${escape(e.text).replaceAll('\n','<br>')}</p>`).join('');
+}
+const reading=head(deck.title)+`<body class="reader"><header><img src="assets/logo.svg" alt="Implementos" width="210"><h1>POS Platform</h1><p>Propuesta de arquitectura y roadmap funcional</p><nav><a href="/">Portal</a><a href="./">Presentar</a><a href="${ppt}" download>PowerPoint original</a><a href="/guide/">Documentación</a></nav><p class="notice">La versión web refleja POS Docs como repositorio independiente. El PowerPoint conserva la revisión original. El roadmap es una propuesta para acordar con el equipo.</p></header><main>${deck.slides.map((s,i)=>`<article id="${s.id}"><h2>${i+1}. ${escape(s.title)}</h2>${readingDiagram(s)}${readingBody(s)}<details><summary>Notas y fuentes</summary><p>${escape(s.notes)}</p>${refs(s)}</details><a href="./#/${s.id}">Ver diapositiva</a></article>`).join('')}</main><footer>Reveal.js ${escape(vendor.version)} · <a href="https://revealjs.com/config/">Configuración</a> · <a href="https://revealjs.com/pdf-export/">Exportar PDF</a></footer></body></html>`;
 fs.writeFileSync(path.join(target,'reading.html'),reading);
 fs.writeFileSync(path.join(output,'presentations/index.html'),`<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Presentaciones POS Platform</title></head><body><h1>Presentaciones de POS Platform</h1><p><a href="architecture/">Arquitectura y roadmap · 16 diapositivas</a></p><p><a href="/guide/reference/presentation/">Guía y materiales anteriores</a></p></body></html>`);
 console.log(`Reveal.js: ${deck.slides.length} slides, local assets and original PowerPoint in dist/presentations/architecture/`);

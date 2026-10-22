@@ -4,6 +4,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { generatedPages, generatedDirectories, labLinks, siteBase, sourceRouteAliases, documentKinds, readingPath, docsOrigin, presentationOrigin, repositoryOrigin, presentationRepository } from '../content-map.mjs';
 import { productEvidence, productReferences } from './product-evidence.mjs';
 import { loadCatalog } from '../../../portal/catalog.mjs';
+import { loadRoadmap, renderRoadmapDocs } from '../../../tools/roadmap.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const output = path.join(root, 'apps/starlight/src/content/docs');
@@ -71,6 +72,9 @@ for (const page of generatedPages) {
   }
   for (const match of source.lines.slice(start, end).join('\n').matchAll(/\bid=["']([^"']+)["']/g)) {
     anchorBySource.get(page.source).set(match[1], page.route);
+  }
+  if (page.roadmap) {
+    for (const phase of loadRoadmap(root).phases) anchorBySource.get(page.source).set(phase.id, page.route);
   }
 }
 
@@ -216,6 +220,22 @@ function pagination(page) {
   return `prev: ${JSON.stringify(target(-1))}\nnext: ${JSON.stringify(target(1))}\n`;
 }
 
+function roadmapContent(body) {
+  const marker = '<!-- roadmap:board -->';
+  if (body.split(marker).length !== 2) throw new Error('The roadmap document must contain exactly one roadmap:board marker.');
+  const roadmap = loadRoadmap(root);
+  for (const phase of roadmap.phases) {
+    for (const link of phase.links) {
+      const pathname = link.href.split('#')[0];
+      const route = pathname.startsWith(siteBase) ? pathname.slice(siteBase.length).replace(/\/$/, '') : null;
+      const guideExists = route !== null && (generatedPages.some(page => page.route === route)
+        || ['.md', '.mdx', '/index.md', '/index.mdx'].some(extension => fs.existsSync(path.join(output, (route || 'index') + extension))));
+      if (!guideExists && !publishedPages.has(pathname)) throw new Error(`Roadmap supporting link has no published page: ${link.href}`);
+    }
+  }
+  return body.replace(marker, renderRoadmapDocs(roadmap));
+}
+
 export function prepareContent() {
   const generatedFiles = new Set();
   for (const page of generatedPages) {
@@ -226,6 +246,7 @@ export function prepareContent() {
     const firstHeading = source.headings.find(heading => heading.index === start);
     if (firstHeading) body = body.replace(/^#{1,6}\s+[^\n]+\n?/, `<span id="${firstHeading.id}"></span>\n`);
     body = normalizeHeadings(rewriteLinks(body, page.linkSource || page.source));
+    if (page.roadmap) body = roadmapContent(body);
     const extension = page.flow ? '.mdx' : '.md';
     const sourceLabel = page.kind === 'evidence' ? 'Evidencia y alcance de la revisión' : page.kind === 'research' ? 'Análisis que sustenta la propuesta' : 'Fuente del contenido';
     let imports = '';

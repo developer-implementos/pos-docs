@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "reviewedOn": "2026-10-21",
+  "reviewedOn": "2026-10-22",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "06e68d5f13fa389903656411156a9080a2560aa6",
+  "revision": "9d129c3f83239b787bae543bce40a5a52a9c4e9e",
   "sourceStatus": "Fuentes documentales fijadas a la revisión indicada. El historial de Git identifica la revisión de esta presentación por separado.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "powerpoint": {
     "file": "downloads/Implementos-POS-Platform-Arquitectura-y-Roadmap.pptx",
     "sha256": "b533d07df5b63c3d48aac38ac013704c52041ab7eede74d9c033a785fc17704d",
-    "notice": "Versión original trasladada sin modificaciones. La versión web actualiza la separación de POS Docs del monorepo."
+    "notice": "Versión original trasladada sin modificaciones. La versión web actualiza la separación de POS Docs del monorepo y el roadmap compartido con Starlight."
   },
   "inputs": [
     {
@@ -21,15 +21,23 @@
     },
     {
       "path": "docs/implementation-plan.md",
-      "sha256": "974a2e3f060ab3bf101dfcb47d9239da874171fb2f76cedcf049962dc7b1dbfc"
+      "sha256": "fa73172940ebbabf17815a847bfd8c683c377d4f458222066bf931e8fb0c7f5f"
     },
     {
       "path": "docs/validacion-y-decisiones.md",
-      "sha256": "9c52a710d50a1f622ac9df60182e6a9d50e61f99db11979b819ff9eb2506b78a"
+      "sha256": "37e4a8f8712e6fe9fc47578bb61a4b478c67c206e315b98601f6a21ef978c09c"
     },
     {
       "path": "apps/starlight/src/data/product-evidence.json",
       "sha256": "0a058bc4c31b9a8a37ea28a32a52a1a87587b4f4a3e68810b9be94461168def3"
+    },
+    {
+      "path": "docs/roadmap.md",
+      "sha256": "c9651ab66e8b52d4e0735c192b031ac93c07712ff50dad0f0ad4f43204746e5c"
+    },
+    {
+      "path": "docs/roadmap.json",
+      "sha256": "082b25c73526dbcd80f907740d1c54acf9b09c146cb1dc3263bc83048aba20bc"
     }
   ]
 }
