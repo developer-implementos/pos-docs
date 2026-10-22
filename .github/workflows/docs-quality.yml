@@ -25,6 +25,7 @@ jobs:
       - run: npm install --global npm@11.6.0
       - run: npm run setup
       - run: npm run portal:test
+      - run: npm run presentations:test
       - run: npm run validate
       - run: npm run typecheck
       - run: npm run build

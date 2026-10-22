@@ -10,6 +10,7 @@
 - «Lectura» ofrece todo el contenido como documento, sin depender del reproductor.
 - «PDF» abre `?print-pdf`. En Chrome/Chromium imprimir como PDF, sin márgenes y con fondos. [Instrucciones de Reveal.js](https://revealjs.com/pdf-export/).
 - «PowerPoint» descarga el archivo original de 16 diapositivas.
+- «Ampliar diagrama» o `D` abre el diagrama de la lámina fuera del escalado de Reveal. Permite acercar, reducir, encuadrar y descargar el SVG. Las flechas y el desplazamiento actúan sobre el diagrama mientras está abierto; Escape lo cierra y devuelve el foco al control.
 
 El reproductor respeta movimiento reducido. No activa reproducción automática, proveedores, voz, IA ni integraciones de negocio.
 
@@ -30,8 +31,9 @@ La diapositiva 4 tiene siete zonas: aplicaciones, negocio, interfaz, shared/back
 | `assets/` | Logo suministrado y fuentes Inter con su licencia |
 | `downloads/` | PowerPoint original trasladado, sin modificar su contenido |
 | `../vendor/reveal/` | Reveal.js 5.1.0 con licencia MIT y manifiesto de integridad |
+| `../tools/diagrams.mjs` | Deriva los SVG de las láminas marcadas con `diagram: true`, usando las posiciones y textos de `deck.json` |
 
-El build es autónomo: usa Node, archivos de este repositorio y dependencias fijadas de Starlight. No necesita otro checkout, Python ni herramientas de PowerPoint. `npm run presentations:build` produce el HTML en `dist/`; no editar ese resultado. Para comprobar el conjunto usar `npm run validate`, `npm run typecheck`, `npm run build`, `npm run check` y `npm run presentations:check`.
+El build es autónomo: usa Node, archivos de este repositorio y dependencias fijadas de Starlight. No necesita otro checkout, Python ni herramientas de PowerPoint. `npm run presentations:build` produce el HTML en `dist/`; no editar ese resultado. `npm run presentations:test` valida el generador SVG y `npm run presentations:check` verifica el reproductor en navegador. `npm run verify` comprueba el conjunto completo, incluidos Starlight y el portal.
 
 El contenido proviene de la presentación revisada el 21-10-2026. La versión web actualiza el monorepo: `pos-docs` es un repositorio editorial separado de las seis aplicaciones operativas. El PowerPoint conserva la revisión original, identificada por SHA-256 en `sources.json`. Son revisiones documentales distintas, no exportaciones idénticas.
 
@@ -39,6 +41,10 @@ Los traslados a `shared/` y de las suites E2E siguen presentados como estructura
 
 Cuando cambien fuentes canónicas, revisar las diapositivas y actualizar explícitamente la revisión y hashes de `sources.json`. El build falla ante discrepancias para evitar que la presentación aparente resumir documentación todavía no revisada. No consultar una rama remota mutable ni actualizar hashes automáticamente durante el build.
 
-Los diagramas HTML son transcripciones editables del PowerPoint y enlazan la documentación de la que derivan; los modelos C4 de referencia siguen en `tools/diagrams/`. La web mantiene texto seleccionable y no usa capturas como diapositivas.
+Los diagramas de contexto, despliegue, infraestructura e integración se generan como SVG desde el mismo `deck.json` editable. El build usa Fontkit con las fuentes Inter locales para medir líneas y convertir las letras a trazados vectoriales: el SVG descargado conserva su tipografía sin cargar fuentes externas. No contiene imágenes raster ni `foreignObject`. Cada etiqueta conserva su texto accesible y la lectura continua ofrece los textos seleccionables junto al diagrama.
+
+El visor amplía mediante dimensiones reales del SVG, fuera de la transformación global de Reveal. «Encuadrar» muestra el conjunto; para leer etiquetas pequeñas se puede acercar y desplazar el área. El formato vectorial evita perder resolución al ampliar, pero no vuelve legible por sí solo una lámina reducida a pocos píxeles.
+
+Los modelos C4 detallados de referencia siguen en `tools/diagrams/` y sus escenas Excalidraw conservan su propio alcance. No se sustituyen automáticamente por los diagramas resumidos de esta presentación. Los SVG se regeneran durante `npm run presentations:build`; no editar los archivos derivados de `dist/presentations/architecture/diagrams/`.
 
 Logo: [SVG indicado por el usuario](https://www.implementos.com.pe/assets/public/svg/logos/logo.svg). Colores y tipografía: Brand book Implementos 2026. [Configuración de Reveal.js](https://revealjs.com/config/).

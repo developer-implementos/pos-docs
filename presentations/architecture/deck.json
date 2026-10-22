@@ -756,6 +756,7 @@
     },
     {
       "id": "slide-3",
+      "diagram": true,
       "title": "Contexto del sistema",
       "background": "#FFFFFF",
       "notes": "C1 muestra el sistema completo y sus actores y dependencias externas. Los conectores indican propósito, no un camino técnico de red. Los nombres ERP corresponden al contexto informado, no a integraciones implementadas.",
@@ -3437,6 +3438,7 @@
     },
     {
       "id": "slide-6",
+      "diagram": true,
       "title": "Flujo de deployment por país",
       "background": "#FFFFFF",
       "notes": "Flujo objetivo, no pipeline productivo existente. GitHub Actions se alinea con el precedente de devops-platform y Nx coordina tareas. Compilaciones y firma nativas dependen de runners/herramientas de cada plataforma. Cada país promueve artefactos inmutables después de validación y aprobación. Credenciales/entornos aislados. La distribución por anillos incluye validación de dispositivos. Revertir binarios requiere esquema compatible: no restaurar una base antigua sobre ventas nuevas. pos-docs tiene entrega estática separada; no forma parte del runtime comercial.",
@@ -4473,6 +4475,7 @@
     },
     {
       "id": "slide-7",
+      "diagram": true,
       "title": "Stack de infraestructura propuesto",
       "background": "#FFFFFF",
       "notes": "La base recomendada es PostgreSQL en sucursal y país, NestJS/Fastify y workers. Ningún motor/broker confirma por sí solo la durabilidad: se implementan transacciones, outbox/inbox, deduplicación y recuperación. GCP/Cloud Run, Pub/Sub, RabbitMQ, Redis/BullMQ y Kubernetes no se presentan como servicios elegidos. Cloud autorizado o VM privada requiere decisión operativa. El móvil no habilita por sí solo venta sin LAN ni acceso remoto público. LAN/escritor disponibles son requisito del perfil WAN. El OS, dimensionamiento, HA, RPO/RTO y distribución se homologan en piloto.",
@@ -5283,6 +5286,7 @@
     },
     {
       "id": "slide-8",
+      "diagram": true,
       "title": "Desacoplamiento del ERP",
       "background": "#FFFFFF",
       "notes": "Diagrama lógico de la integración ERP de POS Platform. El commit local confirma únicamente las operaciones habilitadas por la matriz offline y las políticas vigentes. La entrega agrupa branch-sync-worker y country-api sin fusionarlos en un único proceso. Negocio/outbox local y recepción durable de país requieren implementación transaccional. La fachada ofrece contratos del POS; la ACL traduce identidades, unidades, importes, estados y errores; el adaptador implementa el protocolo. No se obliga a tres servicios distintos. Pagos/fiscalidad tienen protocolos propios. No se afirma que todo el legacy escriba directamente en AX ni se incorporan VTEX u otros canales como consumidores existentes del POS.",
@@ -6158,6 +6162,7 @@
     },
     {
       "id": "slide-9",
+      "diagram": true,
       "title": "ACL e integración con los ERP actuales",
       "background": "#FFFFFF",
       "notes": "Topología objetivo para conectar los ERP actuales, no evidencia de ACL desplegadas. La plataforma lógica se repite/aisla por país y no implica una base mundial compartida. El proceso erp-worker consume trabajo mediante conexión saliente autenticada y conserva resultados; las flechas izquierdas muestran el inicio de la conexión, no la única dirección del flujo de datos. En Chile se ubica dentro de la red autorizada de AX. AX versión, servicios y personalizaciones requieren inventario; no se asume API Dynamics 365. España usa Gira y Perú un sistema custom, con interfaces y ubicación por confirmar. ACL/fachada/adaptador pueden ser responsabilidades dentro de erp-worker + libs/backend/erp. Elegir país no implementa automáticamente un adaptador ni sus reglas.",
@@ -7137,6 +7142,7 @@
     },
     {
       "id": "slide-10",
+      "diagram": true,
       "title": "Migración hacia un ERP común",
       "background": "#FFFFFF",
       "notes": "Las dos ramas son destinos seleccionables según política de migración, nunca doble contabilización. El destino de cada operación se persiste y se conserva durante reintentos. Reasignación exige reconciliar el efecto anterior y registrar evidencia. El corte se define por país, entidad y capacidad, con tratamiento de ventas offline tardías y pagos/devoluciones/NC que referencian documentos anteriores. Preparar mapeos y contratos, validar pruebas de negocio, pilotar, conciliar/drenar pendientes y retirar cada conector con criterios explícitos. Una comparación paralela no autoriza escribir en ambos ERP. El ERP común no implica instancia única ni elimina reglas fiscales nacionales. Cloud es una posibilidad, sin decisión de Cloud Run, proveedor ni fecha. El objetivo es mantener consumidores estables, no una garantía de cero cambios ni de cambiar únicamente un adaptador.",
@@ -7642,9 +7648,9 @@
           "type": "text",
           "text": "Destino\nanterior",
           "position": {
-            "left": 824,
+            "left": 832,
             "top": 250,
-            "width": 80,
+            "width": 72,
             "height": 47
           },
           "style": {
@@ -7662,9 +7668,9 @@
           "type": "text",
           "text": "Destino\nnuevo",
           "position": {
-            "left": 824,
+            "left": 832,
             "top": 452,
-            "width": 80,
+            "width": 72,
             "height": 47
           },
           "style": {

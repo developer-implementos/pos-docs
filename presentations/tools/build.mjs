@@ -4,6 +4,7 @@ import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 import {monorepoView} from './monorepo.mjs';
+import {createDiagram} from './diagrams.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const source = path.join(root, 'presentations/architecture');
@@ -32,6 +33,14 @@ fs.mkdirSync(target,{recursive:true});
 for(const dir of ['assets','downloads']) fs.cpSync(path.join(source,dir),path.join(target,dir),{recursive:true});
 fs.cpSync(vendorRoot,path.join(output,'presentations/vendor/reveal'),{recursive:true});
 for(const file of ['theme.css','player.js','sources.json']) fs.copyFileSync(path.join(source,file),path.join(target,file));
+const diagrams = new Map();
+fs.mkdirSync(path.join(target,'diagrams'),{recursive:true});
+for(const slide of deck.slides.filter(slide=>slide.diagram)) {
+  const diagram = createDiagram(slide,{root});
+  diagram.src = `diagrams/${slide.id}.svg`;
+  fs.writeFileSync(path.join(target,diagram.src),diagram.svg);
+  diagrams.set(slide.id,diagram);
+}
 
 function position(p) {
   for (const n of [p.left,p.top,p.width,p.height]) assert.ok(Number.isFinite(n),'Invalid element position');
@@ -53,12 +62,21 @@ function element(e,index,slide) {
 }
 const refs = slide => `<ul>${slide.sources.map(s=>`<li><a href="${escape(s.href)}" target="_blank" rel="noopener">${escape(s.label)}</a></li>`).join('')}</ul>`;
 function slideElements(slide,index){
+  const diagram=diagrams.get(slide.id);
+  if(diagram) {
+    const chrome=slide.elements.flatMap((e,i)=>e.position.top>=220&&e.position.top<630?[]:[element(e,i,index)]).join('');
+    return chrome+`<div class="object diagram-figure" style="${position(diagram)}">${diagram.svg}</div>`;
+  }
   if(slide.id!=='slide-4')return slide.elements.map((e,i)=>element(e,i,index)).join('\n');
   const chrome=[],staticBody=[];
   slide.elements.forEach((e,i)=>{(e.position.top>=220&&e.position.top<630?staticBody:chrome).push(element(e,i,index));});
   return chrome.join('')+`<div class="monorepo-static">${staticBody.join('')}</div>`+monorepo.markup;
 }
-const markup = deck.slides.map((slide,index) => `<section id="${slide.id}" aria-label="${escape(slide.title)}" data-title="${escape(slide.title)}" data-background-color="${escape(slide.background)}"><div class="canvas" style="background:${escape(slide.background)}">${slideElements(slide,index)}</div><aside class="notes"><p>${escape(slide.notes)}</p><h3>Fuentes de la guía</h3>${refs(slide)}</aside></section>`).join('\n');
+const markup = deck.slides.map((slide,index) => {
+  const diagram=diagrams.get(slide.id);
+  const attributes=diagram?` data-diagram-src="${escape(diagram.src)}" data-diagram-width="${diagram.width}" data-diagram-height="${diagram.height}"`:'';
+  return `<section id="${slide.id}" aria-label="${escape(slide.title)}" data-title="${escape(slide.title)}" data-background-color="${escape(slide.background)}"${attributes}><div class="canvas" style="background:${escape(slide.background)}">${slideElements(slide,index)}</div><aside class="notes"><p>${escape(slide.notes)}</p><h3>Fuentes de la guía</h3>${refs(slide)}</aside></section>`;
+}).join('\n');
 const head = (title,extra='') => `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escape(title)} · Implementos</title><meta name="description" content="Propuesta de arquitectura de POS Platform y roadmap funcional para el equipo de desarrollo.">${extra}<link rel="stylesheet" href="theme.css"></head>`;
 const ppt=escape(sources.powerpoint.file);
 const html = head(deck.title,'<link rel="stylesheet" href="../vendor/reveal/dist/reset.css"><link rel="stylesheet" href="../vendor/reveal/dist/reveal.css">')+`<body>
@@ -67,14 +85,23 @@ const html = head(deck.title,'<link rel="stylesheet" href="../vendor/reveal/dist
 <nav class="toolbar" aria-label="Controles de presentación">
 <button id="previous" aria-label="Diapositiva anterior">←</button><output id="status" aria-live="polite">1 / 16</output><button id="next" aria-label="Diapositiva siguiente">→</button>
 <button id="index" aria-keyshortcuts="I">Índice</button><button id="notes" aria-keyshortcuts="N">Notas</button><button id="fullscreen" aria-keyshortcuts="F">Pantalla completa</button>
+<button id="diagram-open" aria-keyshortcuts="D" hidden>Ampliar diagrama</button>
 <span class="spacer"></span><a href="/">Portal</a><a href="reading.html">Lectura</a><a href="${ppt}" download>PowerPoint</a><a href="?print-pdf" id="print-link">PDF</a><a href="/guide/reference/presentation/" class="guide-link">Guía</a>
 </nav>
 <dialog id="index-dialog" aria-labelledby="index-title"><div class="dialog-heading"><h2 id="index-title">Arquitectura y roadmap</h2><button data-close aria-label="Cerrar índice">Cerrar</button></div><p>16 diapositivas · Flechas para avanzar · N para las notas · O para vista general</p><ol class="index-list">${deck.slides.map((s,i)=>`<li><button data-slide="${i}"><span>${String(i+1).padStart(2,'0')}</span>${escape(s.title)}</button></li>`).join('')}</ol></dialog>
 <dialog id="notes-dialog" aria-labelledby="notes-title"><div class="dialog-heading"><h2 id="notes-title">Notas del expositor</h2><button data-close aria-label="Cerrar notas">Cerrar</button></div><div id="notes-body"></div></dialog>
+<dialog id="diagram-dialog" aria-labelledby="diagram-title"><div class="dialog-heading"><h2 id="diagram-title">Diagrama</h2><button data-close aria-label="Cerrar diagrama">Cerrar</button></div>
+<div class="diagram-controls" aria-label="Zoom del diagrama"><button id="diagram-zoom-out" aria-label="Reducir diagrama">−</button><output id="diagram-zoom" aria-live="polite">100%</output><button id="diagram-zoom-in" aria-label="Ampliar diagrama">+</button><button id="diagram-fit">Encuadrar</button><a id="diagram-download" download>Descargar SVG</a></div>
+<p id="diagram-description" class="visually-hidden"></p>
+<div id="diagram-viewport" tabindex="0" role="region" aria-label="Diagrama ampliado, desplazable con las flechas"><img id="diagram-image" alt="" aria-describedby="diagram-description"></div></dialog>
 <noscript><p>La navegación requiere JavaScript. <a href="reading.html">Leer todo el contenido</a> o <a href="${ppt}">descargar el PowerPoint</a>.</p></noscript>
 <script src="../vendor/reveal/dist/reveal.js"></script><script src="player.js"></script></body></html>`;
 fs.writeFileSync(path.join(target,'index.html'),html);
-const reading=head(deck.title)+`<body class="reader"><header><img src="assets/logo.svg" alt="Implementos" width="210"><h1>POS Platform</h1><p>Propuesta de arquitectura y roadmap funcional</p><nav><a href="/">Portal</a><a href="./">Presentar</a><a href="${ppt}" download>PowerPoint original</a><a href="/guide/">Documentación</a></nav><p class="notice">La versión web refleja POS Docs como repositorio independiente. El PowerPoint conserva la revisión original. El roadmap es una propuesta para acordar con el equipo.</p></header><main>${deck.slides.map((s,i)=>`<article id="${s.id}"><h2>${i+1}. ${escape(s.title)}</h2>${s.id==='slide-4'?monorepo.reading:s.elements.filter(e=>e.type==='text'&&e.position.top>=220&&e.position.top<680).map(e=>`<p>${escape(e.text).replaceAll('\n','<br>')}</p>`).join('')}<details><summary>Notas y fuentes</summary><p>${escape(s.notes)}</p>${refs(s)}</details><a href="./#/${s.id}">Ver diapositiva</a></article>`).join('')}</main><footer>Reveal.js ${escape(vendor.version)} · <a href="https://revealjs.com/config/">Configuración</a> · <a href="https://revealjs.com/pdf-export/">Exportar PDF</a></footer></body></html>`;
+function readingDiagram(slide) {
+  const diagram=diagrams.get(slide.id);
+  return diagram?`<figure class="reading-diagram"><a href="${diagram.src}" target="_blank" rel="noopener"><img src="${diagram.src}" alt="Diagrama: ${escape(slide.title)}. Descripción textual a continuación." width="${diagram.width}" height="${diagram.height}"></a><figcaption><a href="${diagram.src}" download>Descargar SVG de ${escape(slide.title)}</a></figcaption></figure>`:'';
+}
+const reading=head(deck.title)+`<body class="reader"><header><img src="assets/logo.svg" alt="Implementos" width="210"><h1>POS Platform</h1><p>Propuesta de arquitectura y roadmap funcional</p><nav><a href="/">Portal</a><a href="./">Presentar</a><a href="${ppt}" download>PowerPoint original</a><a href="/guide/">Documentación</a></nav><p class="notice">La versión web refleja POS Docs como repositorio independiente. El PowerPoint conserva la revisión original. El roadmap es una propuesta para acordar con el equipo.</p></header><main>${deck.slides.map((s,i)=>`<article id="${s.id}"><h2>${i+1}. ${escape(s.title)}</h2>${readingDiagram(s)}${s.id==='slide-4'?monorepo.reading:s.elements.filter(e=>e.type==='text'&&e.position.top>=220&&e.position.top<680).map(e=>`<p>${escape(e.text).replaceAll('\n','<br>')}</p>`).join('')}<details><summary>Notas y fuentes</summary><p>${escape(s.notes)}</p>${refs(s)}</details><a href="./#/${s.id}">Ver diapositiva</a></article>`).join('')}</main><footer>Reveal.js ${escape(vendor.version)} · <a href="https://revealjs.com/config/">Configuración</a> · <a href="https://revealjs.com/pdf-export/">Exportar PDF</a></footer></body></html>`;
 fs.writeFileSync(path.join(target,'reading.html'),reading);
 fs.writeFileSync(path.join(output,'presentations/index.html'),`<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Presentaciones POS Platform</title></head><body><h1>Presentaciones de POS Platform</h1><p><a href="architecture/">Arquitectura y roadmap · 16 diapositivas</a></p><p><a href="/guide/reference/presentation/">Guía y materiales anteriores</a></p></body></html>`);
 console.log(`Reveal.js: ${deck.slides.length} slides, local assets and original PowerPoint in dist/presentations/architecture/`);
