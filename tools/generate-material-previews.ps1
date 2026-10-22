@@ -71,7 +71,7 @@ try {
     if ($needsPowerPoint) {
         # COM is out of process, so FR_PRIVATE cannot reach Office. Register
         # fonts for this Windows session only, then remove them in finally.
-        Add-Type -TypeDefinition @'
+        if (-not ('MaterialPreviewFontRegistry' -as [type])) { Add-Type -TypeDefinition @'
 using System;
 using System.Runtime.InteropServices;
 public static class MaterialPreviewFontRegistry {
@@ -79,6 +79,7 @@ public static class MaterialPreviewFontRegistry {
  [DllImport("gdi32.dll", CharSet=CharSet.Unicode)] public static extern bool RemoveFontResourceEx(string path,uint flags,IntPtr reserved);
 }
 '@
+        }
         Add-Type -AssemblyName System.Drawing
         $fontFiles = @()
         if (@($catalog.materials | Where-Object id -eq 'architecture-roadmap-pptx').Count -gt 0) {
@@ -205,15 +206,25 @@ public static class MaterialPreviewFontRegistry {
         Write-Host "$($material.id): $pages pages; original hash unchanged"
     }
 } finally {
-    if ($null -ne $word) {
-        foreach ($option in $wordOptions.Keys) { $word.Options.$option = $wordOptions[$option] }
-        $word.Quit(0)
-        Release-ComObject $word
+    try {
+        if ($null -ne $word) {
+            try {
+                foreach ($option in $wordOptions.Keys) { $word.Options.$option = $wordOptions[$option] }
+            } finally {
+                try { $word.Quit(0) } finally { Release-ComObject $word }
+            }
+        }
+    } finally {
+        try {
+            if ($null -ne $powerpoint) {
+                try { $powerpoint.Quit() } finally { Release-ComObject $powerpoint }
+            }
+        } finally {
+            foreach ($fontFile in $registeredFonts) { [void][MaterialPreviewFontRegistry]::RemoveFontResourceEx($fontFile, 0, [IntPtr]::Zero) }
+            [GC]::Collect()
+            [GC]::WaitForPendingFinalizers()
+        }
     }
-    if ($null -ne $powerpoint) { $powerpoint.Quit(); Release-ComObject $powerpoint }
-    foreach ($fontFile in $registeredFonts) { [void][MaterialPreviewFontRegistry]::RemoveFontResourceEx($fontFile, 0, [IntPtr]::Zero) }
-    [GC]::Collect()
-    [GC]::WaitForPendingFinalizers()
 }
 
 # Replace published previews only after every export and source check succeeds.
