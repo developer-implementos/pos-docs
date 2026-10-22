@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 
-// Folder names, hierarchy and status come from the canonical target, not a second inventory.
+// Folder names, hierarchy and responsibilities come from the canonical target.
 export function monorepoView(source, escape) {
   const tree=source.match(/<!-- monorepo:target:start -->\s*```text\s*\n([\s\S]*?)\n```/);
   assert.ok(tree,'Canonical monorepo target not found');
@@ -11,7 +11,7 @@ export function monorepoView(source, escape) {
     const depth=match[1].length/2,name=match[2].trim();
     parents.length=depth;parents.push(name.replace(/\/$/,''));
     const description=match[3]||'';
-    return {depth,name,path:parents.join('/'),state:description.match(/^\[([^\]]+)\]/)?.[1]||'',description:description.replace(/^\[[^\]]+\]\s*/,'').replace(/; scaffold comercial$/,'')};
+    return {depth,name,path:parents.join('/'),description:description.replace(/^\[[^\]]+\]\s*/,'').replace(/; scaffold comercial$/,'')};
   });
   const short={
     'apps/pos-desktop':'Cliente Angular + Tauri',
@@ -33,19 +33,19 @@ export function monorepoView(source, escape) {
     'libs/shared/kernel':'Conceptos mínimos entre contextos',
     'libs/shared/contracts':'Sobres y metadatos técnicos comunes',
     'libs/shared/testing':'Soporte técnico de pruebas',
-    'libs/country-policies':'Perfiles actuales por país',
-    'libs/domain':'Reglas del prototipo; revisar propiedad',
-    'libs/data-access':'Adaptadores mock; revisar por función',
+    'libs/country-policies':'Perfiles y selección de políticas',
+    'libs/domain':'Reglas puras del prototipo',
+    'libs/data-access':'Estado y adaptadores mock',
     'tools':'Build, lint y pruebas del producto'
   };
   const zones=[
-    {id:'apps',label:'Aplicaciones',title:'Entradas del producto',detail:'Seis aplicaciones operativas, con arranques y despliegues independientes.',status:'E2E: traslado pendiente. Es un proyecto de pruebas, sin proceso comercial.',paths:['apps']},
-    {id:'business',label:'Negocio',title:'Contextos de negocio',detail:'Trece contextos con responsabilidad propia. Las aplicaciones componen sus casos de uso.',status:'La estructura comercial es scaffold. No acredita operaciones implementadas.',paths:['libs/backend']},
-    {id:'frontend',label:'Interfaz',title:'Composición y pantallas',detail:'El shell compone las features compartidas por escritorio y móvil. Cada cliente conserva su arranque.',status:'Shell y features quedan fuera de shared: tienen responsabilidad de producto.',paths:['libs/client-shell','libs/features']},
-    {id:'backend',label:'Shared / backend',title:'Mecanismos del servidor',detail:'Arranque, configuración, HTTP, observabilidad, sondas y ciclo de vida de los workers.',status:'Destino acordado. La base técnica todavía vive en libs/platform/backend.',paths:['libs/shared/backend']},
-    {id:'shared',label:'Shared / común',title:'Soporte técnico común',detail:'UI reutilizable, conceptos mínimos, sobres técnicos y soporte de pruebas.',status:'Traslados a shared pendientes. Testing se extraerá cuando haya consumidores comunes.',paths:['libs/shared/frontend','libs/shared/kernel','libs/shared/contracts','libs/shared/testing']},
-    {id:'transition',label:'Transición',title:'Revisar por responsabilidad',detail:'Perfiles, reglas del prototipo y adaptadores mock se revisan por contexto y funcionalidad.',status:'No se trasladan en bloque a shared por ser usados por varias pantallas.',paths:['libs/country-policies','libs/domain','libs/data-access']},
-    {id:'delivery',label:'Entrega',title:'Herramientas y validación',detail:'Las herramientas y workflows validan y construyen los artefactos del producto.',status:'POS Docs es otro repositorio: documentación y presentaciones con entrega propia.',paths:['tools','.github']}
+    {id:'apps',label:'Aplicaciones',title:'Entradas del producto',detail:'Seis aplicaciones con arranques y despliegues independientes.',status:'E2E es el proyecto de pruebas de los clientes.',paths:['apps']},
+    {id:'business',label:'Negocio',title:'Contextos de negocio',detail:'Trece contextos con responsabilidad propia. Las aplicaciones componen sus casos de uso.',status:'Base estructural disponible; lógica comercial pendiente.',paths:['libs/backend']},
+    {id:'frontend',label:'Interfaz',title:'Composición y pantallas',detail:'El shell compone las features compartidas por escritorio y móvil. Cada cliente conserva su arranque.',status:'UI demostrativa con datos sintéticos. Operaciones reales pendientes.',paths:['libs/client-shell','libs/features']},
+    {id:'backend',label:'Shared / backend',title:'Mecanismos del servidor',detail:'Arranque, configuración, HTTP, observabilidad, sondas y ciclo de vida de los workers.',status:'La organización en shared/backend es el objetivo arquitectónico.',paths:['libs/shared/backend']},
+    {id:'shared',label:'Shared / común',title:'Soporte técnico común',detail:'UI reutilizable, conceptos mínimos, sobres técnicos y soporte de pruebas.',status:'Organización objetivo. Testing requiere consumidores comunes.',paths:['libs/shared/frontend','libs/shared/kernel','libs/shared/contracts','libs/shared/testing']},
+    {id:'transition',label:'Prototipo',title:'Perfiles y datos de prueba',detail:'Perfiles por país, reglas puras y adaptadores mock de la demostración.',status:'Las reglas de ventas, caja y pagos pertenecen a sus contextos de negocio.',paths:['libs/country-policies','libs/domain','libs/data-access']},
+    {id:'delivery',label:'Entrega',title:'Herramientas y validación',detail:'Las herramientas y workflows validan y construyen los artefactos del producto.',status:'POS Docs publica documentación y presentaciones desde su repositorio editorial.',paths:['tools','.github']}
   ];
   const inZone=(row,zone)=>zone.paths.some(p=>row.path===p||row.path.startsWith(p+'/'));
   for(const zone of zones) assert.ok(rows.some(r=>inZone(r,zone)),`Empty monorepo zone: ${zone.id}`);
@@ -59,9 +59,9 @@ export function monorepoView(source, escape) {
   const markup=`<div class="monorepo-tour" aria-label="Recorrido de la estructura objetivo del monorepo">
     <nav class="zone-nav" aria-label="Zonas del monorepo">${zones.map((z,i)=>`<button type="button" data-zone-step="${i}"${i===0?' aria-current="step"':''}>${escape(z.label)}</button>`).join('')}</nav>
     <div class="tree-panel" tabindex="0" role="region" aria-label="Árbol de carpetas. Puede desplazarse manualmente."><div class="tree-root"><span class="tree-number" aria-hidden="true">1</span><strong>pos-platform/</strong><span class="tree-description"># estructura objetivo</span></div>${rowHTML}</div>
-    <aside class="zone-detail" aria-live="polite" aria-atomic="true">${zones.map((z,i)=>`<div data-zone-detail="${i}"${i?' hidden':''}><p class="zone-count">ZONA ${i+1} / ${zones.length}</p><h3>${escape(z.title)}</h3><p>${escape(z.detail)}</p><p class="zone-state">${escape(z.status)}</p></div>`).join('')}<p class="zone-hint">← → para recorrer las zonas<br>También puedes elegirlas arriba</p></aside>
+    <aside class="zone-detail" aria-live="polite" aria-atomic="true">${zones.map((z,i)=>`<div data-zone-detail="${i}"${i?' hidden':''}><p class="zone-count">ZONA ${i+1} / ${zones.length}</p><h3>${escape(z.title)}</h3><p>${escape(z.detail)}</p><p class="zone-state">${escape(z.status)}</p></div>`).join('')}<p class="zone-hint">↑ ↓ o Espacio: recorrer zonas</p></aside>
     ${zones.slice(1).map((z,i)=>`<span class="fragment custom zone-fragment" data-fragment-index="${i}" aria-hidden="true"></span>`).join('')}
   </div>`;
-  const reading=`<p>Árbol objetivo derivado de la guía del monorepo. Los estados distinguen lo conservado, los traslados pendientes y el código transitorio.</p><pre class="tree-reading">${escape('pos-platform/\n'+rows.map(r=>'  '.repeat(r.depth+1)+r.name+(r.description?'  # '+(r.state?'['+r.state+'] ':'')+r.description:'')).join('\n'))}</pre>`;
+  const reading=`<p>Estructura objetivo y responsabilidades del monorepo. La base actual combina una UI demostrativa y scaffolds de servidor; las operaciones comerciales se implementan por fases. El árbol describe la organización propuesta, no acredita funcionalidades productivas.</p><pre class="tree-reading">${escape('pos-platform/\n'+rows.map(r=>'  '.repeat(r.depth+1)+r.name+(r.description?'  # '+r.description:'')).join('\n'))}</pre>`;
   return {markup,reading};
 }

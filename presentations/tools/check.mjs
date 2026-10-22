@@ -437,7 +437,8 @@ try{
   const reading=await reader.newPage();observe(reading);await reading.goto(url+'reading.html');
   assert.equal(await reading.locator('article').count(),16);
   assert.ok(await reading.locator('h1').isVisible());
-  assert.ok((await reading.locator('.tree-reading').textContent()).includes('[mover]'));
+  const readingTree=await reading.locator('.tree-reading').textContent();
+  assert.ok(['branch-api/','branch-sync-worker/','shared/','Base técnica del servidor'].every(value=>readingTree.includes(value)),'Continuous reading presents the target names and responsibilities');
   for(const slide of diagramSlides){
     const illustration=reading.locator(`article#${slide.id} figure img`);
     assert.equal(await illustration.count(),1,`${slide.id}: continuous reading includes the diagram`);

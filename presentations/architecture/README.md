@@ -22,9 +22,9 @@ Los capítulos son Propuesta y alcance (láminas 1–3), Código y responsabilid
 
 ### Recorrido del monorepo
 
-La diapositiva 4 tiene siete zonas: aplicaciones, negocio, interfaz, shared/backend, soporte común, código transitorio y entrega. `↓` o `Espacio` recorre esas zonas mediante fragments de Reveal.js antes de pasar a la lámina siguiente del capítulo. `↑` retrocede por ellas. Los botones superiores permiten saltar directamente a una zona; el hash conserva el paso al recargar. El árbol se desplaza hacia las líneas resaltadas, con movimiento inmediato si el usuario prefiere movimiento reducido. No hay reproducción automática.
+La diapositiva 4 tiene siete zonas: aplicaciones, negocio, interfaz, shared/backend, soporte común, prototipo y entrega. `↓` o `Espacio` recorre esas zonas mediante fragments de Reveal.js antes de pasar a la lámina siguiente del capítulo. `↑` retrocede por ellas. Los botones superiores permiten saltar directamente a una zona; el hash conserva el paso al recargar. El árbol se desplaza hacia las líneas resaltadas, con movimiento inmediato si el usuario prefiere movimiento reducido. No hay reproducción automática.
 
-`../tools/monorepo.mjs` deriva carpetas, jerarquía y estados del bloque objetivo de `docs/monorepo.md`; añade descripciones breves y comentarios para exponer. La lectura continua incluye el árbol completo con estados. La impresión conserva el resumen estático en una sola página. El patrón de rangos procede de la [presentación de Integration Platform](https://github.com/developer-implementos/integration-presentations/blob/main/presentations/architecture/enterprise-integration-platform-detailed.md), adaptado al POS y a sus fuentes propias. [Fragments de Reveal.js](https://revealjs.com/fragments/).
+`../tools/monorepo.mjs` deriva carpetas y jerarquía del bloque objetivo de `docs/monorepo.md`; añade descripciones breves de sus responsabilidades y madurez. La lectura continua incluye el árbol completo. El recorrido explica la organización propuesta y distingue la UI demostrativa, la base técnica y la lógica comercial pendiente. La impresión conserva el resumen estático en una sola página. El patrón de rangos procede de la [presentación de Integration Platform](https://github.com/developer-implementos/integration-presentations/blob/main/presentations/architecture/enterprise-integration-platform-detailed.md), adaptado al POS y a sus fuentes propias. [Fragments de Reveal.js](https://revealjs.com/fragments/).
 
 ## Fuentes y edición
 
@@ -43,15 +43,15 @@ Al editar una fase, revisar sus tres niveles de texto y ejecutar `npm run verify
 | `player.js` | Navegación Reveal.js, índice, notas y controles accesibles |
 | `sources.json` | Revisión editorial base, hashes revisados y procedencia del PowerPoint |
 | `assets/` | Logo suministrado y fuentes Inter con su licencia |
-| `downloads/` | PowerPoint original trasladado, sin modificar su contenido |
+| `downloads/` | PowerPoint original, identificado por su hash y sin modificar su contenido |
 | `../vendor/reveal/` | Reveal.js 5.1.0 con licencia MIT y manifiesto de integridad |
 | `../tools/diagrams.mjs` | Deriva los SVG de las láminas marcadas con `diagram: true`, usando las posiciones y textos de `deck.json` |
 
 El build es autónomo: usa Node, archivos de este repositorio y dependencias fijadas de Starlight. No necesita otro checkout, Python ni herramientas de PowerPoint. `npm run presentations:build` produce el HTML en `dist/`; no editar ese resultado. `npm run presentations:test` valida el generador SVG y `npm run presentations:check` verifica el reproductor en navegador. `npm run verify` comprueba el conjunto completo, incluidos Starlight y el portal.
 
-El contenido proviene de la presentación revisada el 21-10-2026. La versión web actualiza el monorepo y el roadmap compartido con Starlight: `pos-docs` es un repositorio editorial separado de las seis aplicaciones operativas. El PowerPoint conserva la revisión original, identificada por SHA-256 en `sources.json`. Son revisiones documentales distintas, no exportaciones idénticas.
+La versión web resume la arquitectura propuesta y el roadmap compartido con Starlight. POS Platform reúne seis aplicaciones con arranque propio; POS Docs contiene la documentación y las presentaciones en un repositorio editorial independiente. El PowerPoint descargable corresponde a la revisión del 21-10-2026, identificada por SHA-256 en `sources.json`; su contenido se conserva como material de referencia.
 
-Los traslados a `shared/` y de las suites E2E siguen presentados como estructura objetivo. El roadmap es una propuesta para discutir con producto, operaciones y desarrollo, sin fechas ni implementación productiva implícitas. La evidencia del producto está fijada por `apps/starlight/src/data/product-evidence.json`.
+El árbol del monorepo expresa la estructura objetivo: aplicaciones, contextos de negocio, composición de interfaz y soporte técnico compartido, con pruebas E2E propias de los clientes. La base actual contiene una UI demostrativa y scaffolds de servidor; el roadmap propone la entrega de operaciones verificables por fases, sin fechas comprometidas ni implementación productiva implícita. La evidencia del producto está fijada por `apps/starlight/src/data/product-evidence.json`.
 
 Cuando cambien fuentes canónicas, revisar las diapositivas y actualizar explícitamente la revisión y hashes de `sources.json`. El build falla ante discrepancias para evitar que la presentación aparente resumir documentación todavía no revisada. No consultar una rama remota mutable ni actualizar hashes automáticamente durante el build.
 

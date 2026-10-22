@@ -35,7 +35,7 @@
       "id": "slide-1",
       "title": "POS Platform",
       "background": "#006DB6",
-      "notes": "Propuesta de arquitectura y roadmap por funcionalidades. La versión web incorpora la separación del repositorio editorial POS Docs. El PowerPoint descargable conserva la revisión original de 16 diapositivas.",
+      "notes": "Propuesta de arquitectura y roadmap por funcionalidades de POS Platform. El producto comparte una base común y contratos de integración para operar en distintos países. POS Docs reúne la documentación y las presentaciones en un repositorio editorial independiente.",
       "sources": [
         {
           "label": "product",
@@ -210,7 +210,7 @@
       "id": "slide-2",
       "title": "Capacidades de negocio resumidas",
       "background": "#FFFFFF",
-      "notes": "Síntesis del mapa anterior de 26 dominios. Las agrupaciones no representan microservicios. CRM y omnicanal son extensiones sujetas a alcance. IA y RFID quedan fuera de esta síntesis de capacidades base.",
+      "notes": "Mapa de capacidades de POS Platform: venta y caja, pagos y cobranzas, gestión comercial, fiscalidad, operación e integración corporativa. Estas agrupaciones organizan responsabilidades del producto, sin prescribir microservicios. CRM y omnicanal son extensiones sujetas a alcance; IA y RFID requieren una propuesta específica.",
       "sources": [
         {
           "label": "product",
@@ -1612,7 +1612,7 @@
       "id": "slide-4",
       "title": "Estructura objetivo del monorepo",
       "background": "#FFFFFF",
-      "notes": "Organización objetivo acordada el 21-10-2026. Las aplicaciones branch-api y branch-sync-worker ya están renombradas físicamente, incluidos proyectos Nx, paquetes, artefactos e identidad de servicio. Verificado en sus carpetas y project.json. Los prefijos de configuración son BRANCH_API_* y BRANCH_SYNC_WORKER_*; los anteriores no son aliases. Este renombrado no implementa persistencia, sincronización ni negocio. El checkout conserva libs/platform/backend, libs/ui, libs/shared-kernel y libs/contracts; sus destinos son shared/backend, shared/frontend/ui, shared/kernel y shared/contracts. Testing aún no tiene biblioteca dedicada. E2E se trasladará a apps/pos-clients-e2e, incluida la suite mobile; es un proyecto de pruebas, sin despliegue de negocio. Seis aplicaciones operativas. POS Docs es un repositorio editorial independiente. Backend agrupa trece contextos; las bibliotecas de composición y transitorias se detallan en la siguiente lámina. Core es referencia organizacional, no dependencia de código, paquetes ni servicios. Cada biblioteca conserva entrada pública; no se propone un barrel universal shared.",
+      "notes": "Estructura objetivo de POS Platform: seis aplicaciones con arranque propio. Los clientes de escritorio y móvil comparten la interfaz; branch-api atiende la operación de sucursal, branch-sync-worker intercambia información con país, country-api recibe operaciones y ofrece capacidades nacionales, y erp-worker integra el ERP. libs/backend organiza trece contextos de negocio; libs/shared reúne mecanismos técnicos y conceptos mínimos. El shell compone las funcionalidades de la interfaz. Cada biblioteca ofrece una entrada pública y dependencias explícitas. pos-clients-e2e es el proyecto de pruebas de los clientes y shared/testing el soporte técnico de pruebas previsto. La base actual incluye una UI demostrativa y estructura técnica de APIs, workers y contextos; persistencia, sincronización y operaciones comerciales forman parte del roadmap. POS Docs tiene repositorio y entrega independientes. Core es una referencia de organización y convenciones.",
       "sources": [
         {
           "label": "monorepo",
@@ -2138,7 +2138,7 @@
         },
         {
           "type": "text",
-          "text": "Pruebas UI; traslado pendiente",
+          "text": "Pruebas UI; sin despliegue de negocio",
           "position": {
             "left": 78,
             "top": 580,
@@ -2613,7 +2613,7 @@
         },
         {
           "type": "text",
-          "text": "Shared y E2E: traslado pendiente. Documentación y presentaciones en el repositorio pos-docs.",
+          "text": "Estructura objetivo. UI demostrativa y base técnica; negocio e integraciones pendientes.",
           "position": {
             "left": 64,
             "top": 644,
@@ -2637,7 +2637,7 @@
       "id": "slide-5",
       "title": "Responsabilidad de las bibliotecas",
       "background": "#FFFFFF",
-      "notes": "Shared agrupa mecanismos técnicos y conceptos mínimos, no todo el código usado por más de una app. El shell compone features y queda fuera de shared/frontend. Country-policies, domain y data-access son transitorios y requieren revisión por responsabilidad; no se mueven completos a shared. Las carpetas de shared/backend describen responsabilidades, sin imponer una biblioteca Nx por carpeta. Los contratos de negocio permanecen en su contexto, por ejemplo SaleConfirmedV1 en ventas; shared/contracts contiene sobres y metadatos técnicos. Shared/testing solo puede ser dependencia de pruebas. Las features no importan SDK nativos directamente.",
+      "notes": "Shared agrupa mecanismos técnicos y conceptos mínimos. El shell compone features y pertenece a la interfaz del producto. Country-policies define perfiles y selección de políticas por país; domain contiene reglas puras del prototipo y data-access su estado y adaptadores mock. Las reglas comerciales definitivas pertenecen a los contextos de negocio. Las carpetas de shared/backend describen responsabilidades; el número de bibliotecas Nx se determina por sus límites y consumidores. Los contratos de negocio pertenecen a su contexto, por ejemplo SaleConfirmedV1 en ventas; shared/contracts contiene sobres y metadatos técnicos. Shared/testing es soporte exclusivo de pruebas. Los clientes ofrecen puertos de acceso a capacidades nativas para las features.",
       "sources": [
         {
           "label": "monorepo",
@@ -3298,7 +3298,7 @@
         },
         {
           "type": "text",
-          "text": "Perfiles actuales por país; transitorio",
+          "text": "Perfiles y selección de políticas por país",
           "position": {
             "left": 674,
             "top": 446,
@@ -3353,7 +3353,7 @@
         },
         {
           "type": "text",
-          "text": "Reglas del prototipo; revisar su propietario",
+          "text": "Reglas puras del prototipo frontend",
           "position": {
             "left": 674,
             "top": 508,
@@ -3408,7 +3408,7 @@
         },
         {
           "type": "text",
-          "text": "Estado y adaptadores mock; transitorio",
+          "text": "Estado y adaptadores mock de la demo",
           "position": {
             "left": 674,
             "top": 570,
@@ -8919,7 +8919,7 @@
       "id": "slide-16",
       "title": "Cómo ejecutar el primer incremento",
       "background": "#FFFFFF",
-      "notes": "Backlog inicial propuesto para descomponer la F1 en historias pequeñas. Las filas son un orden de dependencias, no asignaciones por persona ni sprints. Los contratos y ejemplos permiten trabajar UI/API en paralelo; la aceptación final exige integración real del recorrido. El movimiento de shared/E2E se acomete con pruebas de comportamiento y según las dependencias necesarias, sin convertirlo en una fase funcional para el cliente. Las demos usan un guion de negocio y explicitan simulaciones. Arquitectura revisa decisiones y límites sin monopolizar ejecución; desarrollo y QA presentan evidencia, y producto acuerda el siguiente objetivo con el cliente. La estimación necesita equipo disponible, accesos, hardware, proveedores y alcance. Roadmap propuesto para revisión con desarrollo y producto. El orden y los criterios son una propuesta editorial para esta presentación, no un calendario aprobado.",
+      "notes": "Backlog inicial propuesto para descomponer la F1 en historias pequeñas. Las filas son un orden de dependencias, no asignaciones por persona ni sprints. Los contratos y ejemplos permiten trabajar UI/API en paralelo; la aceptación final exige integración real del recorrido. El incremento incluye las bibliotecas, las pruebas y las dependencias necesarias para confirmar y recuperar una venta. Las demos usan un guion de negocio y explicitan simulaciones. Arquitectura revisa decisiones y límites sin monopolizar ejecución; desarrollo y QA presentan evidencia, y producto acuerda el siguiente objetivo con el cliente. La estimación necesita equipo disponible, accesos, hardware, proveedores y alcance. Roadmap propuesto para revisión con desarrollo y producto. El orden y los criterios son una propuesta editorial para esta presentación, no un calendario aprobado.",
       "sources": [
         {
           "label": "plan",
