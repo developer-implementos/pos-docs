@@ -8,6 +8,7 @@ El código de las aplicaciones pertenece a [POS Platform](https://github.com/dev
 | --- | --- |
 | [`/`](https://pos-docs-starlight.vercel.app/) | Punto de entrada y catálogo de materiales |
 | [`/guide/`](https://pos-docs-starlight.vercel.app/guide/) | Documentación técnica Starlight |
+| [`/architecture/`](https://pos-docs-starlight.vercel.app/architecture/) | Mapa SVG interactivo de aplicaciones, tecnologías y contratos de integración |
 | [`/presentations/architecture/`](https://pos-docs-starlight.vercel.app/presentations/architecture/) | Arquitectura y roadmap en Reveal.js |
 | [`/#materials`](https://pos-docs-starlight.vercel.app/#materials) | Fuentes de reuniones y cuestionarios, filtrables por país y formato |
 | [`/guide/evidence/country-comparison/`](https://pos-docs-starlight.vercel.app/guide/evidence/country-comparison/) | Síntesis comparativa aportada de Chile, Perú y España |
@@ -23,6 +24,7 @@ El código de las aplicaciones pertenece a [POS Platform](https://github.com/dev
 | `apps/starlight/src/data/` | Catálogos revisados y procedencia de la evidencia |
 | `presentations/` | Organización de presentaciones Reveal.js y referencias vigentes |
 | `tools/diagrams/` | Modelos, generadores y comprobaciones C4, Excalidraw y draw.io |
+| `tools/architecture/` | Modelo, SVG descargable y explorador interactivo de la propuesta |
 | `tools/export-documentation.mjs` | Snapshot documental derivado para consumidores como las presentaciones |
 | `.github/workflows/` | Validación automática independiente del producto |
 

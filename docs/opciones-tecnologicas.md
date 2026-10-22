@@ -140,7 +140,8 @@ flowchart LR
         Worker <--> DB
     end
     UI <-->|"LAN autenticada"| API
-    Worker <-->|"Cuando hay conexión"| Central["Plataforma del país<br/>ACL e integración ERP"]
+    Worker -->|"HTTPS: entrega, consulta y acuses"| Central["country-api<br/>Recepción y trabajo durable"]
+    ERPWorker["erp-worker en la red autorizada del ERP<br/>Fachada, ACL y adaptadores"] -->|"HTTPS saliente: solicitar trabajo y reportar"| Central
 ```
 
 El diagrama corresponde al perfil WAN. Instalar Tauri no resuelve la dependencia de precios online, contingencias fiscales ni autorización de pagos. El perfil de aislamiento por caja exige otro despliegue y garantías adicionales; no consiste en habilitar automáticamente otro escritor cuando falla la sucursal.

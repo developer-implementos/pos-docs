@@ -17,6 +17,7 @@ function run(file, args = []) {
   if (result.error) throw result.error;
   if (result.status !== 0) throw new Error(`Documentation command failed (${result.status}): ${file}`);
 }
+run(path.join(root, 'tools/architecture/build.mjs'), ['--source-only']);
 run(path.join(app, 'scripts/validate-content.mjs'));
 run(path.join(app, 'scripts/prepare-content.mjs'));
 
@@ -96,5 +97,6 @@ function externalize(directory) {
 externalize(output);
 run(path.join(root, 'tools/export-documentation.mjs'));
 run(path.join(root, 'presentations/tools/build.mjs'));
+run(path.join(root, 'tools/architecture/build.mjs'));
 run(path.join(root, 'portal/build.mjs'));
 console.log(`Documentation artifact: ${pages} guide HTML files, ${assets} downloads, ${scripts.size} shared scripts; dist/{index.html,guide,docs,presentations,portal}.`);

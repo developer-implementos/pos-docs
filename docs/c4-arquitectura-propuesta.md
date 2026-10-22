@@ -4,6 +4,16 @@ Fecha de revisión: 22 de octubre de 2026. Alcance: arquitectura de referencia p
 
 La [propuesta y sus decisiones](propuesta-arquitectura.md) gobiernan la recomendación. Estas vistas explican sus límites, procesos y responsabilidades. **Los clientes son Angular + Tauri para escritorio y Angular + Capacitor para móvil**. La base técnica NestJS/Fastify y los scaffolds no acreditan los contratos comerciales, persistencia o integraciones aquí propuestos. El [estado del monorepo](monorepo.md#estado-de-implementación) delimita lo implementado; el [catálogo de integraciones](catalogo-integraciones-actuales.md) conserva la evidencia del legado.
 
+## Explorador general de arquitectura
+
+[Abrir el mapa interactivo](/architecture/) · [Abrir el SVG completo](/docs/architecture/pos-platform.svg).
+
+El explorador reúne las seis aplicaciones, sus tecnologías, los almacenes y las integraciones en una vista de clientes, sucursal, plataforma de país y red autorizada del ERP. Es un **mapa compuesto de arquitectura y despliegue**; las vistas C1, C2 y C3 de esta página conservan su alcance propio. No representa el nivel de código de C4 ni una topología productiva comprobada.
+
+Las conexiones explican quién inicia la interacción, su propósito y su contrato: API HTTPS, lectura o escritura de datos, entrega asíncrona y relación condicional. El mapa distingue el transporte del commit que confirma custodia y de los resultados de pago, fiscalidad o ERP. Redis para caché, BullMQ para trabajos y RabbitMQ para distribución mantienen su condición de candidatos según los [contratos de caché y mensajería](#caché-de-país-opcional); el espejo comercial durable de sucursal permanece en PostgreSQL.
+
+El [manual del explorador](../tools/architecture/README.md) identifica el modelo, las salidas y las comprobaciones para mantener esta vista alineada con la propuesta. Las galerías editables de Excalidraw y draw.io permiten consultar por separado cada vista estructural y dinámica.
+
 ## Niveles y alcance
 
 Los nombres funcionales de los diagramas se corresponden con los proyectos del [monorepo](monorepo.md#nombres-de-las-aplicaciones-backend): **Backend de sucursal** es `branch-api`, **Sincronizador de sucursal** es `branch-sync-worker`, **API de país** es `country-api` y el proceso de integración ERP es `erp-worker`. La existencia de estos proyectos no acredita las capacidades de negocio futuras representadas en las vistas.

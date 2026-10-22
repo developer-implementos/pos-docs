@@ -22,7 +22,7 @@ Actualizada con el [análisis estático de nueve repositorios](analisis-reposito
 
 Las [vistas técnicas](vistas-arquitectura-y-flujos.md) separan despliegue y secuencias actuales de actividades/estados propuestos. El [catálogo de integraciones](catalogo-integraciones-actuales.md) conserva rutas y repositorios por SHA; la [matriz de cobertura](cobertura-documentacion-presentacion.md) indica qué se explica en la presentación y qué permanece en documentación de consulta.
 
-Las [vistas C4 de la propuesta](c4-arquitectura-propuesta.md) detallan C1 de contexto, C2 de contenedores y C3 de componentes del backend y del worker de sucursal. Añaden una vista de despliegue complementaria para distinguir puesto, servidor de sucursal y plataforma de país; esa vista no es C4 de código ni acredita infraestructura implementada.
+Las [vistas C4 de la propuesta](c4-arquitectura-propuesta.md) detallan C1 de contexto, C2 de contenedores y C3 de componentes de `branch-api`, `branch-sync-worker`, `country-api` y `erp-worker`. Añaden una vista de despliegue complementaria para distinguir puesto, servidor de sucursal, plataforma de país y red autorizada del ERP; esa vista no es C4 de código ni acredita infraestructura implementada. El [mapa interactivo](/architecture/) permite explorar las aplicaciones y los contratos entre ellas en conjunto.
 
 ## Objetivo de producto y criterios de evolución
 

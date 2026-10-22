@@ -10,6 +10,8 @@ Incluye capacidades, contexto C4, monorepo, despliegue, infraestructura, desacop
 
 La presentación explica la arquitectura propuesta y distingue la base implementada del trabajo pendiente. Los diagramas resumen responsabilidades y contratos; no demuestran que las integraciones estén desplegadas. El [manual de arquitectura y roadmap](https://github.com/developer-implementos/pos-docs/blob/main/presentations/architecture/README.md) detalla los controles, las fuentes y el build.
 
+El [explorador general de arquitectura](/architecture/) complementa las láminas con un mapa de las seis aplicaciones, sus tecnologías, almacenes y conexiones. Conserva el alcance de propuesta y enlaza los [contratos y vistas C4](/guide/architecture/c4-model/).
+
 ## Recorrer la presentación
 
 Los controles nativos de Reveal.js están abajo a la derecha: `←` y `→` recorren la portada general y las portadas de capítulo; `↑` y `↓` recorren las láminas y fragmentos dentro de cada capítulo. `Espacio` sigue el orden completo, incluidas las portadas, y `Shift` + `Espacio` retrocede. `I` abre el índice, `N` las notas y `O` la vista general.

@@ -14,7 +14,7 @@ const routeBySource = new Map();
 const anchorBySource = new Map();
 const publicCatalog = loadCatalog(root);
 const publishedDownloads = new Map(publicCatalog.materials.map(item => [item.source, item.href]));
-const publishedPages = new Set(['/presentations/', ...publicCatalog.presentations.flatMap(item => [item.href, item.readingHref])]);
+const publishedPages = new Set(['/architecture/', '/presentations/', ...publicCatalog.presentations.flatMap(item => [item.href, item.readingHref])]);
 
 function slug(text) {
   return text.toLowerCase().replace(/<[^>]*>/g, '').replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
