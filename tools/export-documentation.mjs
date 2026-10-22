@@ -8,6 +8,7 @@ import {productEvidence} from '../apps/starlight/scripts/product-evidence.mjs';
 import {repositoryOrigin} from '../apps/starlight/site-config.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
+const diagrams = JSON.parse(fs.readFileSync(path.join(root, 'tools/diagrams/collection.json'), 'utf8'));
 const inputs = [
   'docs/propuesta-arquitectura.md',
   'docs/vistas-arquitectura-y-flujos.md',
@@ -18,7 +19,7 @@ const inputs = [
   'tools/diagrams/models/c4-data.js',
   'tools/diagrams/models/dynamic-data.cjs',
   'tools/diagrams/models/c4-layouts.json',
-  ...['01-contexto.svg', '02-contenedores.svg', '03-backend-sucursal.svg', '04-sincronizador.svg', '05-despliegue.svg', 'bounds.json'].map(file => 'docs/diagramas-excalidraw/previews/' + file),
+  ...[...diagrams.boards.filter(board => board.kind === 'structural').map(board => board.file + '.svg'), 'bounds.json'].map(file => 'docs/diagramas-excalidraw/previews/' + file),
 ].map(file => ({key: file, path: file}));
 // Schema 1 consumers use this logical identifier; its physical source now belongs to POS Docs.
 inputs.push({key: 'apps/pos-docs/src/data/monorepo-catalog.json', path: 'apps/starlight/src/data/monorepo-catalog.json'});

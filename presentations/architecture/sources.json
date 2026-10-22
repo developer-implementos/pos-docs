@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "reviewedOn": "2026-10-22",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "2ba72d2899575364c9a42de6ed150eede1866ccb",
+  "revision": "c2511106abb5ecc90d9b89e5974d75320a5cb5fb",
   "sourceStatus": "Fuentes documentales verificadas en la revisión indicada.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "powerpoint": {
@@ -13,11 +13,11 @@
   "inputs": [
     {
       "path": "docs/monorepo.md",
-      "sha256": "a27159e739077e70ac396f9efa3388234b5b41c8ddabcfa4a3ca536759d13431"
+      "sha256": "1f51b15fae668d6bda501d70a27a3997a40100576009abddcfebbb755208d643"
     },
     {
       "path": "docs/propuesta-arquitectura.md",
-      "sha256": "2e0e43fb2b320d1da0e40e863a32456895a24355a66725edbf4de8c9ffc997cf"
+      "sha256": "771eb16a2714d8fdffc5329ec7e8168c115326ca9799cc1e0557cb5cbf9409be"
     },
     {
       "path": "docs/implementation-plan.md",
