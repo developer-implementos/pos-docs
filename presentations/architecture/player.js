@@ -14,8 +14,6 @@
   const diagramFit=document.querySelector('#diagram-fit');
   const diagramZoom=document.querySelector('#diagram-zoom');
   const diagramDownload=document.querySelector('#diagram-download');
-  const previous=document.querySelector('#previous');
-  const next=document.querySelector('#next');
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const monorepo=document.querySelector('#slide-4');
   const tree=monorepo.querySelector('.tree-panel');
@@ -31,13 +29,19 @@
   let diagramWidth=0,diagramHeight=0,diagramScale=1,diagramFitMode=false;
   const deck=new Reveal(root,{
     width:1280,height:720,margin:0.025,minScale:0.1,maxScale:2,
-    center:false,hash:true,history:true,controls:false,progress:true,
-    transition:reduced?'none':'fade',transitionSpeed:'fast',backgroundTransition:'none',
-    slideNumber:false,autoSlide:0,autoPlayMedia:false,disableLayout:false,
+    center:false,hash:true,history:true,controls:true,progress:true,
+    controlsLayout:'bottom-right',controlsBackArrows:'faded',controlsTutorial:false,
+    navigationMode:'default',
+    transition:reduced?'none':'slide',transitionSpeed:'fast',backgroundTransition:'none',
+    slideNumber:'h.v',showSlideNumber:'all',autoSlide:0,autoPlayMedia:false,disableLayout:false,
     view:'slide',scrollActivationWidth:0,pdfMaxPagesPerSlide:1,pdfSeparateFragments:false,
-    keyboardCondition:()=>!dialogs.some(d=>d.open),
+    keyboardCondition:event=>!dialogs.some(d=>d.open)&&!(event.key===' '&&event.target instanceof Element&&event.target.closest('button')),
     keyboard:{73:()=>indexDialog.showModal(),78:()=>openNotes(),68:()=>openDiagram(document.activeElement)}
   });
+  function goToSlide(slide,fragment){
+    const {h,v}=deck.getIndices(slide);
+    deck.slide(h,v,fragment);
+  }
   function openNotes(){
     const current=deck.getCurrentSlide();
     document.querySelector('#notes-title').textContent=current.dataset.title;
@@ -99,12 +103,11 @@
     diagramViewport.focus({preventScroll:true});
   }
   function update(){
-    const index=deck.getIndices().h;
-    document.querySelector('#status').textContent=`${index+1} / ${deck.getTotalSlides()}`;
-    previous.disabled=index===0;next.disabled=index===deck.getTotalSlides()-1;
-    document.title=`${index+1}. ${deck.getCurrentSlide().dataset.title} · Implementos`;
+    const current=deck.getCurrentSlide();
+    const index=Number(current.dataset.slideIndex);
+    document.title=`${index+1}. ${current.dataset.title} · Implementos`;
     document.querySelectorAll('[data-slide]').forEach(button=>{
-      if(Number(button.dataset.slide)===index)button.setAttribute('aria-current','step');
+      if(button.dataset.slide===current.id)button.setAttribute('aria-current','step');
       else button.removeAttribute('aria-current');
     });
     const hasDiagram=Boolean(currentDiagram());
@@ -142,9 +145,9 @@
       currentRoadmapView=step;
     }
   }
-  zoneButtons.forEach((button,i)=>button.addEventListener('click',()=>deck.slide(3,0,i-1)));
+  zoneButtons.forEach((button,i)=>button.addEventListener('click',()=>goToSlide(monorepo,i-1)));
   roadmapButtons.forEach((button,index)=>{
-    button.addEventListener('click',()=>deck.slide(11,0,index-1));
+    button.addEventListener('click',()=>goToSlide(roadmap,index-1));
     // Preserve native Space activation instead of Reveal's next-slide shortcut.
     button.addEventListener('keydown',event=>{if(event.key===' ')event.stopPropagation();});
   });
@@ -153,7 +156,6 @@
   tree.addEventListener('keydown',event=>{
     if(['ArrowUp','ArrowDown','PageUp','PageDown','Home','End',' '].includes(event.key))event.stopPropagation();
   });
-  previous.addEventListener('click',()=>deck.prev());next.addEventListener('click',()=>deck.next());
   document.querySelector('#index').addEventListener('click',()=>indexDialog.showModal());
   document.querySelector('#notes').addEventListener('click',openNotes);
   diagramOpen.addEventListener('click',()=>openDiagram(diagramOpen));
@@ -172,7 +174,9 @@
     dialog.querySelector('[data-close]').addEventListener('click',()=>dialog.close());
     dialog.addEventListener('keydown',event=>{if(event.key==='Escape')event.stopPropagation();});
   }
-  document.querySelectorAll('[data-slide]').forEach(button=>button.addEventListener('click',()=>{deck.slide(Number(button.dataset.slide));indexDialog.close();}));
+  document.querySelectorAll('[data-slide]').forEach(button=>button.addEventListener('click',()=>{
+    goToSlide(document.getElementById(button.dataset.slide));indexDialog.close();
+  }));
   const full=document.querySelector('#fullscreen');
   if(!document.fullscreenEnabled)full.hidden=true;
   full.addEventListener('click',async()=>{
@@ -182,6 +186,11 @@
   document.addEventListener('fullscreenchange',()=>{full.textContent=document.fullscreenElement?'Salir de pantalla completa':'Pantalla completa';deck.layout();});
   await document.fonts.ready;
   await deck.initialize();
+  const navigationLabels={left:'Capítulo anterior',right:'Capítulo siguiente',up:'Lámina anterior del capítulo',down:'Lámina siguiente del capítulo'};
+  for(const [direction,label] of Object.entries(navigationLabels)){
+    const button=root.querySelector(`.controls .navigate-${direction}`);
+    button.setAttribute('aria-label',label);button.title=label;
+  }
   deck.on('slidechanged',()=>{currentZone=-1;currentRoadmapView=-1;update();});
   const updateFragmentViews=()=>{updateMonorepo();updateRoadmap();};
   deck.on('fragmentshown',updateFragmentViews);deck.on('fragmenthidden',updateFragmentViews);update();

@@ -28,13 +28,21 @@ async function assertNoPageOverflow(page, label) {
   const extra = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
   assert.ok(extra <= 1, `${label}: page overflows by ${extra}px`);
 }
-async function waitForSlide(page, h, f) {
-  await page.waitForFunction(({ h, f }) => {
+async function waitForSlide(page, index, f) {
+  await page.waitForFunction(({ id, f }) => {
     const deck = window.posPresentation;
-    return deck?.isReady() && deck.getIndices().h === h &&
+    return deck?.isReady() && deck.getCurrentSlide()?.id === id &&
       (f === undefined || deck.getIndices().f === f);
-  }, { h, f });
+  }, { id: `slide-${index + 1}`, f });
   await page.evaluate(() => document.fonts.ready);
+}
+async function goToSlide(page, index) {
+  await page.evaluate(id => {
+    const deck = window.posPresentation;
+    const { h, v } = deck.getIndices(document.getElementById(id));
+    deck.slide(h, v, -1);
+  }, `slide-${index + 1}`);
+  await waitForSlide(page, index);
 }
 async function assertMatrix(page, selector, phases) {
   for (const phase of phases) for (const lane of lanes) {
@@ -86,9 +94,9 @@ try {
   await page.goto(slidesUrl + '#/slide-12');
   await waitForSlide(page, 11, -1);
   const slide = page.locator('#slide-12');
-  assert.equal(await page.locator('.slides>section').count(), 16);
+  assert.equal(await page.locator('.slides section[data-leaf]').count(), 16);
   for (const [index, phases] of [roadmap.phases.slice(0, 3), roadmap.phases.slice(3)].entries()) {
-    if (index) await page.keyboard.press('ArrowRight');
+    if (index) await page.keyboard.press('ArrowDown');
     await waitForSlide(page, 11, index - 1);
     assert.equal(await slide.locator(`[data-roadmap-panel="${index}"]`).isVisible(), true);
     assert.equal(await slide.locator(`[data-roadmap-panel="${1 - index}"]`).isVisible(), false);
@@ -100,11 +108,11 @@ try {
   await page.reload();
   await waitForSlide(page, 11, 0);
   assert.equal(await slide.locator('[data-roadmap-panel="1"]').isVisible(), true, 'Fragment survives reload');
-  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('ArrowDown');
   await waitForSlide(page, 12);
-  await page.keyboard.press('ArrowLeft');
+  await page.keyboard.press('ArrowUp');
   await waitForSlide(page, 11, 0);
-  await page.keyboard.press('ArrowLeft');
+  await page.keyboard.press('ArrowUp');
   await waitForSlide(page, 11, -1);
   await slide.locator('[data-roadmap-step="1"]').focus();
   await page.keyboard.press('Enter');
@@ -117,14 +125,13 @@ try {
   await waitForSlide(page, 11, 0);
   await slide.locator('[data-roadmap-step="0"]').click();
   await waitForSlide(page, 11, -1);
-  for (const h of [12, 13, 14]) {
-    await page.evaluate(h => window.posPresentation.slide(h), h);
-    await waitForSlide(page, h);
-    await assertSlideFits(page, `#slide-${h + 1} .roadmap-pair`);
-    for (const phase of roadmap.phases.slice((h - 12) * 2, (h - 11) * 2)) for (const lane of lanes) {
+  for (const index of [12, 13, 14]) {
+    await goToSlide(page, index);
+    await assertSlideFits(page, `#slide-${index + 1} .roadmap-pair`);
+    for (const phase of roadmap.phases.slice((index - 12) * 2, (index - 11) * 2)) for (const lane of lanes) {
       assert.equal((await page.locator(`[data-roadmap-phase="${phase.id}"] [data-row="${lane}"] p`).textContent()).trim(), phase[lane].slideDetail);
     }
-    await page.screenshot({ path: path.join(result, `slide-${h + 1}.png`) });
+    await page.screenshot({ path: path.join(result, `slide-${index + 1}.png`) });
   }
   await page.goto(slidesUrl + '?print-pdf#/slide-12');
   await page.waitForFunction(() => document.querySelectorAll('.pdf-page').length === 16);

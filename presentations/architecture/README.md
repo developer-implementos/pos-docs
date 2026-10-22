@@ -1,10 +1,11 @@
 # Arquitectura y roadmap · Implementos
 
-16 diapositivas en español con la identidad de Implementos. Ruta tras el build: `/presentations/architecture/`.
+16 diapositivas en español con la identidad de Implementos, agrupadas en cinco capítulos de Reveal.js. Ruta tras el build: `/presentations/architecture/`.
 
 ## Uso
 
-- Flechas o botones para avanzar. `O` abre la vista general de Reveal.js.
+- Los controles nativos de Reveal.js se muestran abajo a la derecha. `←`/`→` cambian de capítulo; `↑`/`↓` recorren sus láminas y fragmentos. La numeración indica capítulo y lámina (`4.3`).
+- `Espacio` recorre todo el contenido en orden, incluidos fragmentos y láminas verticales; `Shift` + `Espacio` retrocede. `O` abre la vista general de Reveal.js.
 - `I` abre el índice y `N` las notas del expositor. Escape cierra el diálogo.
 - Pantalla completa desde el botón o `F` cuando el navegador lo admite.
 - «Lectura» ofrece todo el contenido como documento, sin depender del reproductor.
@@ -14,9 +15,11 @@
 
 El reproductor respeta movimiento reducido. No activa reproducción automática, proveedores, voz, IA ni integraciones de negocio.
 
+Los capítulos son Propuesta y alcance (láminas 1–3), Código y responsabilidades (4–5), Despliegue e infraestructura (6–7), Integración y evolución (8–10), y Entrega y roadmap (11–16). `deck.json` declara esta agrupación; `../tools/navigation.mjs` comprueba que cada lámina aparezca una vez y en el orden original. Los enlaces `#/slide-N` siguen abriendo la misma lámina. Lectura continua e impresión mantienen las 16 páginas en ese orden.
+
 ### Recorrido del monorepo
 
-La diapositiva 4 tiene siete zonas: aplicaciones, negocio, interfaz, shared/backend, soporte común, código transitorio y entrega. Avanzar o retroceder recorre esas zonas mediante fragments de Reveal.js antes de cambiar de diapositiva. Los botones superiores permiten saltar directamente a una zona; el hash conserva el paso al recargar. El árbol se desplaza hacia las líneas resaltadas, con movimiento inmediato si el usuario prefiere movimiento reducido. No hay reproducción automática.
+La diapositiva 4 tiene siete zonas: aplicaciones, negocio, interfaz, shared/backend, soporte común, código transitorio y entrega. `↓` o `Espacio` recorre esas zonas mediante fragments de Reveal.js antes de pasar a la lámina siguiente del capítulo. `↑` retrocede por ellas. Los botones superiores permiten saltar directamente a una zona; el hash conserva el paso al recargar. El árbol se desplaza hacia las líneas resaltadas, con movimiento inmediato si el usuario prefiere movimiento reducido. No hay reproducción automática.
 
 `../tools/monorepo.mjs` deriva carpetas, jerarquía y estados del bloque objetivo de `docs/monorepo.md`; añade descripciones breves y comentarios para exponer. La lectura continua incluye el árbol completo con estados. La impresión conserva el resumen estático en una sola página. El patrón de rangos procede de la [presentación de Integration Platform](https://github.com/developer-implementos/integration-presentations/blob/main/presentations/architecture/enterprise-integration-platform-detailed.md), adaptado al POS y a sus fuentes propias. [Fragments de Reveal.js](https://revealjs.com/fragments/).
 
@@ -24,7 +27,7 @@ La diapositiva 4 tiene siete zonas: aplicaciones, negocio, interfaz, shared/back
 
 ### Roadmap compartido con Starlight
 
-La diapositiva 12 organiza las seis fases en una matriz de operación, construcción y aceptación, inspirada en la [distribución del roadmap de PrimeNG](https://v21.primeng.org/roadmap). Usa fases en lugar de trimestres porque aún no hay fechas comprometidas. Las flechas recorren primero F01–F03 y F04–F06 mediante un fragment de Reveal; los botones permiten seleccionar el grupo y el hash conserva la vista. La impresión muestra las seis fases en una página.
+La diapositiva 12 organiza las seis fases en una matriz de operación, construcción y aceptación, inspirada en la [distribución del roadmap de PrimeNG](https://v21.primeng.org/roadmap). Usa fases en lugar de trimestres porque aún no hay fechas comprometidas. `↓` o `Espacio` recorre primero F01–F03 y F04–F06 mediante un fragment de Reveal; los botones permiten seleccionar el grupo y el hash conserva la vista. La impresión muestra las seis fases en una página.
 
 `docs/roadmap.json` es la fuente de títulos, resúmenes, dependencias y criterios compartidos con `/guide/proposal/roadmap/`. `summary` alimenta la matriz; `slideDetail` resume cada frente en las diapositivas 13–15 y `detail` conserva su explicación completa en Starlight y lectura continua. Son síntesis editoriales explícitas, sin truncamiento automático. `tools/roadmap.mjs` valida el catálogo y genera las matrices; `presentations/tools/roadmap.mjs` adapta la navegación, lectura e impresión.
 
@@ -32,7 +35,7 @@ Al editar una fase, revisar sus tres niveles de texto y ejecutar `npm run verify
 
 | Archivo | Uso |
 | --- | --- |
-| `deck.json` | Textos, posiciones, diagramas editables, notas y enlaces por diapositiva |
+| `deck.json` | Capítulos, textos, posiciones, diagramas editables, notas y enlaces por diapositiva |
 | `theme.css` | Inter local, paleta y diseño de lectura y controles |
 | `player.js` | Navegación Reveal.js, índice, notas y controles accesibles |
 | `sources.json` | Revisión editorial base, hashes revisados y procedencia del PowerPoint |

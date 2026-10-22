@@ -18,7 +18,7 @@
     "sync:catalog": "npm --prefix apps/starlight run sync:catalog",
     "evidence:capture": "node tools/capture-product-evidence.mjs",
     "presentations:build": "node presentations/tools/build.mjs",
-    "presentations:test": "node --test presentations/tools/diagrams.test.mjs tools/roadmap.test.mjs",
+    "presentations:test": "node --test presentations/tools/diagrams.test.mjs presentations/tools/navigation.test.mjs tools/roadmap.test.mjs",
     "presentations:check": "node presentations/tools/check.mjs",
     "roadmap:check": "node tools/check-roadmap.mjs",
     "portal:test": "node --test portal/catalog.test.mjs portal/previews.test.mjs",
