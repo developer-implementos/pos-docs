@@ -7,13 +7,16 @@
 - Los controles nativos de Reveal.js se muestran abajo a la derecha. `←`/`→` cambian de capítulo; `↑`/`↓` recorren sus láminas y fragmentos. La numeración indica capítulo y lámina (`4.3`).
 - `Espacio` recorre todo el contenido en orden, incluidos fragmentos y láminas verticales; `Shift` + `Espacio` retrocede. `O` abre la vista general de Reveal.js.
 - `I` abre el índice y `N` las notas del expositor. Escape cierra el diálogo.
-- Pantalla completa desde el botón o `F` cuando el navegador lo admite.
-- «Lectura» ofrece todo el contenido como documento, sin depender del reproductor.
-- «PDF» abre `?print-pdf`. En Chrome/Chromium imprimir como PDF, sin márgenes y con fondos. [Instrucciones de Reveal.js](https://revealjs.com/pdf-export/).
-- «PowerPoint» descarga el archivo original de 16 diapositivas.
+- «Recursos» reúne lectura continua, PowerPoint original, impresión PDF, pantalla completa y enlaces a la documentación y al portal. Se cierra con Escape o al pulsar fuera; sus teclas no avanzan la presentación.
+- Pantalla completa desde «Recursos» o `F` cuando el navegador lo admite.
+- «Lectura» ofrece todo el contenido como documento, sin depender del reproductor. En móvil está visible en la barra; las notas pasan a «Recursos».
+- «Imprimir presentación» abre `?print-pdf`. En Chrome/Chromium imprimir como PDF, sin márgenes y con fondos. [Instrucciones de Reveal.js](https://revealjs.com/pdf-export/).
+- «PowerPoint original» descarga el archivo de 16 diapositivas.
 - «Ampliar diagrama» o `D` abre el diagrama de la lámina fuera del escalado de Reveal. Permite acercar, reducir, encuadrar y descargar el SVG. Las flechas y el desplazamiento actúan sobre el diagrama mientras está abierto; Escape lo cierra y devuelve el foco al control.
 
 El reproductor respeta movimiento reducido. No activa reproducción automática, proveedores, voz, IA ni integraciones de negocio.
+
+El índice destaca la lámina actual y la enfoca al abrir. Sólo su lista se desplaza, de modo que el título y el botón de cierre permanecen visibles. Las flechas nativas habilitadas mantienen contraste completo. Los controles exteriores tienen un área mínima de 44 px y la barra cabe desde 320 px sin desplazamiento horizontal.
 
 Los capítulos son Propuesta y alcance (láminas 1–3), Código y responsabilidades (4–5), Despliegue e infraestructura (6–7), Integración y evolución (8–10), y Entrega y roadmap (11–16). `deck.json` declara esta agrupación; `../tools/navigation.mjs` comprueba que cada lámina aparezca una vez y en el orden original. Los enlaces `#/slide-N` siguen abriendo la misma lámina. Lectura continua e impresión mantienen las 16 páginas en ese orden.
 
@@ -58,4 +61,6 @@ El visor amplía mediante dimensiones reales del SVG, fuera de la transformació
 
 Los modelos C4 detallados de referencia siguen en `tools/diagrams/` y sus escenas Excalidraw conservan su propio alcance. No se sustituyen automáticamente por los diagramas resumidos de esta presentación. Los SVG se regeneran durante `npm run presentations:build`; no editar los archivos derivados de `dist/presentations/architecture/diagrams/`.
 
-Logo: [SVG indicado por el usuario](https://www.implementos.com.pe/assets/public/svg/logos/logo.svg). Colores y tipografía: Brand book Implementos 2026. [Configuración de Reveal.js](https://revealjs.com/config/).
+Logo: [SVG indicado por el usuario](https://www.implementos.com.pe/assets/public/svg/logos/logo.svg). Tipografía: Brand book Implementos 2026. La versión web usa el primario `#0545BA` indicado para POS Platform; `../tools/palette.mjs` centraliza primario, tonos, acento y neutros para el reproductor, el HTML de las láminas y los SVG descargables. El build adapta los colores de origen sin reescribir `deck.json`, el logo ni el PowerPoint original. `palette.css` es generado; no editar el derivado. Los pares de texto sobre las superficies de la paleta se comprueban con contraste mínimo de 4,5:1.
+
+Las microinteracciones usan duraciones compartidas de 140–200 ms, sin bloquear la navegación. La preferencia de movimiento reducido se aplica también si cambia con la presentación abierta. [Configuración de Reveal.js](https://revealjs.com/config/).

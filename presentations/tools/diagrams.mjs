@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import path from 'node:path';
+import { presentationColor } from './palette.mjs';
 
 const fontCache = new Map();
 const lineHeight = 1.13;
@@ -30,7 +31,7 @@ function keys(object, allowed, label) {
 
 function color(value, label) {
   assert.ok(typeof value === 'string' && /^(?:none|#[\da-f]{3}|#[\da-f]{6}|#[\da-f]{8})$/iu.test(value), `${label}: unsupported color`);
-  return value;
+  return presentationColor(value);
 }
 
 function position(element, label) {
@@ -44,9 +45,9 @@ function position(element, label) {
 
 function stroke(line, label) {
   keys(line, ['fill', 'width'], label);
-  color(line.fill, label);
+  const fill = color(line.fill, label);
   assert.ok(Number.isFinite(line.width) && line.width >= 0, `${label}: invalid stroke width`);
-  return `stroke="${line.fill}" stroke-width="${number(line.width)}"`;
+  return `stroke="${fill}" stroke-width="${number(line.width)}"`;
 }
 
 function wrap(text, font, size, width, label) {
@@ -82,7 +83,7 @@ function textElement(element, fontSet, label) {
   assert.ok(style.typeface === 'Inter' && style.verticalAlignment === 'top' && style.autoFit === 'none' && style.wrap === 'square' && style.insets === 0, `${label}: unsupported text layout`);
   assert.equal(typeof style.bold, 'boolean', `${label}: unsupported font weight`);
   assert.ok(Number.isFinite(style.fontSize) && style.fontSize > 0, `${label}: invalid font size`);
-  color(style.color, label);
+  const fill = color(style.color, label);
   const font = style.bold ? fontSet.bold : fontSet.regular;
   for (const character of text) {
     assert.ok(character === '\n' || font.hasGlyphForCodePoint(character.codePointAt(0)), `${label}: missing Inter glyph ${JSON.stringify(character)}`);
@@ -108,7 +109,7 @@ function textElement(element, fontSet, label) {
       return outline ? `<path d="${outline}" transform="${transform}"/>` : '';
     }).join('')}</g>`;
   }).join('');
-  return `<g data-label="${attribute(text)}" fill="${style.color}"><title>${escape(text)}</title>${paths}</g>`;
+  return `<g data-label="${attribute(text)}" fill="${fill}"><title>${escape(text)}</title>${paths}</g>`;
 }
 
 /** Derive a standalone, font-independent SVG from the deck's existing diagram region. */
@@ -147,7 +148,7 @@ export function createDiagram(slide, { root }) {
       assert.ok(marker.type === 'triangle' && marker.width === 'sm' && marker.length === 'sm', `${label}: unsupported arrow marker`);
     }
     const markerId = `${prefix}-arrow-${index}`;
-    if (element.head || element.tail) definitions.push(`<marker id="${markerId}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="${element.line.fill}"/></marker>`);
+    if (element.head || element.tail) definitions.push(`<marker id="${markerId}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="${color(element.line.fill, label)}"/></marker>`);
     return `<line x1="${number(box.left)}" y1="${number(box.top)}" x2="${number(box.left + box.width)}" y2="${number(box.top + box.height)}" ${line}${element.head ? ` marker-start="url(#${markerId})"` : ''}${element.tail ? ` marker-end="url(#${markerId})"` : ''}/>`;
   }).join('\n');
   const backdrop = `<rect x="${number(left)}" y="${number(top)}" width="${number(width)}" height="${number(height)}" fill="${color(slide.background ?? '#FFFFFF', `${slide.id} background`)}"/>`;

@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 import { createDiagram } from './diagrams.mjs';
+import { presentationColor, presentationPalette, renderPaletteCss } from './palette.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const text = (value, width = 180, height = 60) => ({
@@ -12,6 +13,57 @@ const text = (value, width = 180, height = 60) => ({
 });
 const slide = (...elements) => ({ id: 'slide-test', title: 'Árbol y acción', elements });
 const create = (...elements) => createDiagram(slide(...elements), { root });
+
+test('publishes the requested primary color and readable foreground/background pairs', () => {
+  const luminance = hex => hex.slice(1).match(/../gu)
+    .map(channel => Number.parseInt(channel, 16) / 255)
+    .map(channel => channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4)
+    .reduce((sum, channel, index) => sum + channel * [0.2126, 0.7152, 0.0722][index], 0);
+  const contrast = (a, b) => {
+    const values = [luminance(a), luminance(b)].sort((x, y) => y - x);
+    return (values[0] + 0.05) / (values[1] + 0.05);
+  };
+  const palette = presentationPalette;
+  assert.equal(palette.primary, '#0545BA');
+  for (const background of ['surface', 'primarySoft', 'accentSoft', 'page']) {
+    for (const foreground of ['primary', 'primaryHover', 'accent', 'text', 'muted']) {
+      assert.ok(contrast(palette[foreground], palette[background]) >= 4.5,
+        `${foreground} on ${background}: ordinary text must retain WCAG AA contrast`);
+    }
+  }
+  for (const background of ['primary', 'primaryHover', 'accent']) {
+    assert.ok(contrast(palette.surface, palette[background]) >= 4.5, `White text on ${background}`);
+  }
+  assert.match(renderPaletteCss(), /--primary: #0545BA;/u);
+  assert.match(renderPaletteCss(), /--blue: var\(--primary\);/u);
+  assert.match(renderPaletteCss(), /--green: var\(--accent\);/u);
+});
+
+test('maps only known source colors without replacing unrelated semantic colors', () => {
+  assert.equal(presentationColor('#006db6'), '#0545BA');
+  for (const value of ['none', '#FFFFFF', '#fff', '#123456', '#C93232', '#006DB680', '#0545BA']) {
+    assert.equal(presentationColor(value), value);
+  }
+  for (const value of ['#006DB6', '#EDF4F8', '#00937F', '#34383E', '#636569']) {
+    assert.equal(presentationColor(presentationColor(value)), presentationColor(value), 'The presentation palette is idempotent');
+  }
+});
+
+test('applies the web palette to SVG backgrounds, shapes, text, strokes and arrowheads without mutating the source', () => {
+  const shape = { type: 'shape', geometry: 'rect', position: { left: 64, top: 220, width: 260, height: 120 }, fill: '#EDF4F8', line: { fill: '#006DB6', width: 2 } };
+  const label = text('Arquitectura'); label.style.color = '#006DB6';
+  const arrow = { type: 'connector', geometry: 'connector', position: { left: 324, top: 280, width: 50, height: 0 }, line: { fill: '#00937F', width: 2 }, tail: { type: 'triangle', width: 'sm', length: 'sm' } };
+  const source = { ...slide(shape, label, arrow), background: '#EDF4F8' };
+  const original = structuredClone(source);
+  const result = createDiagram(source, { root });
+  assert.deepEqual(source, original, 'Original colors, geometry and content remain traceable to the source');
+  assert.match(result.svg, /<rect[^>]+fill="#EFF4FF"\/>/u);
+  assert.match(result.svg, /<rect[^>]+fill="#EFF4FF" stroke="#0545BA"/u);
+  assert.match(result.svg, /<g data-label="Arquitectura" fill="#0545BA"/u);
+  assert.match(result.svg, /<marker[^>]+><path[^>]+fill="#007B6D"/u);
+  assert.match(result.svg, /<line[^>]+stroke="#007B6D"/u);
+  assert.doesNotMatch(result.svg, /#(?:006DB6|EDF4F8|00937F)/iu);
+});
 
 test('derives the padded region while excluding header and footer objects', () => {
   const header = text('Encabezado'); header.position.top = 105;
@@ -74,10 +126,13 @@ test('generates all six source diagrams deterministically with every label intac
   const selected = ['slide-3', 'slide-6', 'slide-7', 'slide-8', 'slide-9', 'slide-10'];
   for (const id of selected) {
     const source = deck.slides.find(item => item.id === id);
+    const original = structuredClone(source);
     const result = createDiagram(source, { root });
     const expected = source.elements.filter(item => item.type === 'text' && item.position.top >= 220 && item.position.top < 630).map(item => item.text);
     assert.deepEqual(result.labels, expected, `${id}: every diagram label is preserved in source order`);
     assert.equal(result.svg, createDiagram(source, { root }).svg, `${id}: reproducible output`);
+    assert.deepEqual(source, original, `${id}: source colors, text and positions remain unchanged`);
+    assert.doesNotMatch(result.svg, /#(?:006DB6|EDF4F8|00937F|34383E|636569)/iu, `${id}: standalone downloads retain the web palette`);
     assert.doesNotMatch(result.svg, /NaN|Infinity|<text\b|<image\b|<foreignObject\b/iu);
     assert.ok(result.width > 0 && result.height > 0);
   }

@@ -47,15 +47,62 @@ async function assertControlsFit(page,label){
     const controls=[...document.querySelectorAll('.reveal .controls button')].filter(node=>node.classList.contains('enabled'));
     const slide=window.posPresentation.getCurrentSlide();
     const content=slide.querySelector('.canvas');
-    return {width:innerWidth,height:innerHeight,controls:controls.map(node=>({className:node.className,...rect(node)})),
+    return {width:innerWidth,height:innerHeight,controls:controls.map(node=>({className:node.className,...rect(node),opacity:getComputedStyle(node).opacity,color:getComputedStyle(node).color})),
       content:rect(content),toolbar:rect(document.querySelector('.toolbar'))};
   });
   const overlaps=(a,b)=>Math.min(a.right,b.right)-Math.max(a.left,b.left)>1&&Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>1;
   for(const control of boxes.controls){
+    assert.equal(Number(control.opacity),1,`${label}: available native arrows remain fully visible`);
+    assert.equal(control.color,'rgb(5, 69, 186)',`${label}: native arrows use the corporate primary color`);
     assert.ok(control.left>=0&&control.right<=boxes.width+1&&control.top>=0&&control.bottom<=boxes.height+1,`${label}: native arrow is inside the viewport`);
     assert.ok(!overlaps(control,boxes.content),`${label}: native arrow does not cover slide content`);
     assert.ok(!overlaps(control,boxes.toolbar),`${label}: native arrow does not cover toolbar actions`);
   }
+}
+async function assertToolbar(page,label){
+  const state=await page.locator('.toolbar').evaluate(toolbar=>({
+    width:toolbar.clientWidth,scrollWidth:toolbar.scrollWidth,
+    controls:[...toolbar.querySelectorAll(':scope > button,:scope > a')].filter(node=>node.getClientRects().length>0).map(node=>{
+      const box=node.getBoundingClientRect();return {text:node.textContent.trim(),height:box.height,left:box.left,right:box.right};
+    }),screen:innerWidth,
+  }));
+  assert.ok(state.scrollWidth<=state.width+1,`${label}: toolbar needs no horizontal scrolling`);
+  for(const control of state.controls){
+    assert.ok(control.height>=44,`${label}: ${control.text} has a 44px touch target`);
+    assert.ok(control.left>=0&&control.right<=state.screen+1,`${label}: ${control.text} is entirely visible`);
+  }
+  const mobile=state.screen<=760;
+  assert.equal(await page.locator('#notes').isVisible(),!mobile,`${label}: notes use the appropriate desktop or resource action`);
+  assert.equal(await page.locator('.mobile-reading').isVisible(),mobile,`${label}: continuous reading is directly available on mobile`);
+  assert.equal(await page.locator('#diagram-open').getAttribute('aria-label'),'Ampliar diagrama','Compact visible labels preserve the full accessible action name');
+}
+async function assertIndexSelection(page,index){
+  const state=await page.locator('#index-dialog').evaluate((dialog,id)=>{
+    const selected=dialog.querySelector(`[data-slide="${id}"][aria-current="step"]`);
+    const other=dialog.querySelector('[data-slide]:not([aria-current])');
+    const scroller=dialog.querySelector('.index-chapters');
+    const box=selected.getBoundingClientRect(),frame=scroller.getBoundingClientRect();
+    const header=dialog.querySelector('.dialog-heading').getBoundingClientRect();
+    const close=dialog.querySelector('[data-close]').getBoundingClientRect();
+    const current=getComputedStyle(selected),rest=getComputedStyle(other);
+    return {focused:document.activeElement===selected,top:box.top,bottom:box.bottom,center:(box.top+box.bottom)/2,
+      frameTop:frame.top,frameBottom:frame.bottom,frameCenter:(frame.top+frame.bottom)/2,
+      scrollTop:scroller.scrollTop,maxScroll:scroller.scrollHeight-scroller.clientHeight,
+      headerVisible:header.top>=0&&header.bottom<=innerHeight&&header.left>=0&&header.right<=innerWidth,
+      closeVisible:close.top>=0&&close.bottom<=innerHeight&&close.left>=0&&close.right<=innerWidth,
+      weight:Number(current.fontWeight),background:current.backgroundColor,otherBackground:rest.backgroundColor,
+      border:current.borderColor,otherBorder:rest.borderColor};
+  },deck.slides[index].id);
+  assert.ok(state.focused,'Opening the index focuses the current slide');
+  assert.ok(state.headerVisible&&state.closeVisible,'The index heading and Close action remain visible when focusing the current slide');
+  assert.ok(state.top>=state.frameTop&&state.bottom<=state.frameBottom,'The selected slide is visible without searching through the index');
+  if(state.scrollTop>1&&state.scrollTop<state.maxScroll-1)assert.ok(Math.abs(state.center-state.frameCenter)<=3,'The current index row is centered where scrolling allows it');
+  assert.ok(state.weight>=700,'The current index row has a distinct font weight');
+  assert.notEqual(state.background,state.otherBackground,'The current index row has a distinct tonal background');
+  assert.notEqual(state.border,state.otherBorder,'The current index row has a distinct border');
+}
+async function waitForResources(page,open){
+  await page.waitForFunction(open=>document.querySelector('#resources-panel').matches(':popover-open')===open,open);
 }
 async function viewerGeometry(page){
   return page.locator('#diagram-viewport').evaluate(viewport=>{
@@ -95,6 +142,16 @@ try{
   assert.equal(await page.evaluate(()=>window.posPresentation.getConfig().controls),true,'Reveal supplies the native navigation controls');
   assert.equal(await page.evaluate(()=>window.posPresentation.getConfig().navigationMode),'default','Arrows use Reveal horizontal and vertical navigation');
   assert.equal(await page.locator('#next,#previous,#status').count(),0,'There is no competing flat navigation toolbar');
+  assert.equal(await page.locator(':root').evaluate(node=>getComputedStyle(node).getPropertyValue('--primary').trim().toUpperCase()),'#0545BA','The UI exposes the requested corporate primary color');
+  assert.equal(await page.locator('#slide-2 .slide-title').evaluate(node=>getComputedStyle(node).color),'rgb(5, 69, 186)','Generated HTML slide headings use the same corporate primary');
+  await assertToolbar(page,'Desktop toolbar');
+  assert.equal(await page.evaluate(()=>window.posPresentation.getConfig().transition),'none','Reduced motion disables Reveal transitions initially');
+  await page.emulateMedia({reducedMotion:'no-preference'});
+  await page.waitForFunction(()=>window.posPresentation.getConfig().transition==='slide');
+  assert.notEqual(await page.locator('#index').evaluate(node=>getComputedStyle(node).transitionDuration),'0s','CSS feedback follows the live motion preference');
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await page.waitForFunction(()=>window.posPresentation.getConfig().transition==='none');
+  assert.equal(await page.locator('#index').evaluate(node=>getComputedStyle(node).transitionDuration),'0s','Reduced motion also removes CSS transition effects live');
   for(const slide of diagramSlides){
     const section=page.locator(`#${slide.id}`),href=`diagrams/${slide.id}.svg`;
     assert.equal(await section.getAttribute('data-diagram-src'),href);
@@ -106,6 +163,8 @@ try{
     assert.equal(resource.status(),200,`${slide.id}: standalone SVG is published`);
     assert.equal(resource.headers()['content-type'].split(';')[0],'image/svg+xml',`${slide.id}: SVG MIME type`);
     const svg=await resource.text();
+    assert.match(svg,/#0545BA/iu,`${slide.id}: standalone SVG uses the corporate primary color`);
+    assert.doesNotMatch(svg,/#006DB6/iu,`${slide.id}: old primary blue is not retained in a generated diagram`);
     const structure=await page.evaluate(markup=>{
       const xml=new DOMParser().parseFromString(markup,'image/svg+xml'),svg=xml.documentElement;
       const labels=[...svg.querySelectorAll('[data-label]')].map(node=>node.getAttribute('data-label'));
@@ -174,11 +233,34 @@ try{
   await page.locator('#index').focus();
   await page.keyboard.press('Space');
   assert.equal(await page.locator('#index-dialog').evaluate(dialog=>dialog.open),true,'Space opens the focused toolbar index button');
+  await assertIndexSelection(page,8);
+  assert.equal(await page.locator('#index-dialog').evaluate(node=>getComputedStyle(node).animationName),'none','Reduced-motion dialogs do not animate');
   await assertCurrentSlide(page,8,'Activating the index with Space does not change the slide');
   await page.keyboard.press('Escape');
   await page.locator('.reveal').focus();
   await page.keyboard.press('Space');await assertCurrentSlide(page,9);
   await page.keyboard.press('Shift+Space');await assertCurrentSlide(page,8);
+  const resources=page.locator('#resources'),resourcePanel=page.locator('#resources-panel');
+  assert.equal(await resources.getAttribute('popovertarget'),'resources-panel','The resource trigger uses native popover semantics');
+  assert.equal(await resourcePanel.getAttribute('popover'),'auto','Resources support native light dismissal');
+  await resources.focus();await page.keyboard.press('Space');await waitForResources(page,true);
+  await resourcePanel.locator('a[href="reading.html"]').focus();
+  for(const key of ['ArrowRight','ArrowDown','ArrowLeft','ArrowUp','Space','PageDown','n','i','d'])await page.keyboard.press(key);
+  await assertCurrentSlide(page,8,'Navigation keys and shortcuts do not change the presentation while resources are open');
+  assert.equal(await page.locator('dialog[open]').count(),0,'Presentation shortcuts do not open competing dialogs from resources');
+  for(const href of ['reading.html','downloads/Implementos-POS-Platform-Arquitectura-y-Roadmap.pptx','?print-pdf','/guide/reference/presentation/','/']){
+    assert.equal(await resourcePanel.locator(`a[href="${href}"]`).count(),1,`Resources retain ${href}`);
+  }
+  assert.notEqual(await resourcePanel.locator('a[download]').getAttribute('download'),null,'The original PowerPoint remains an explicit download');
+  assert.ok(await resourcePanel.locator('#fullscreen').isVisible(),'Fullscreen remains available through resources');
+  await page.keyboard.press('Escape');await waitForResources(page,false);
+  await assertCurrentSlide(page,8,'Dismissing resources does not navigate');
+  await resources.click();await waitForResources(page,true);
+  await page.mouse.click(8,8);await waitForResources(page,false);
+  await assertCurrentSlide(page,8,'Clicking outside resources dismisses them without changing slides');
+  await resources.focus();await page.keyboard.press('Space');await waitForResources(page,true);
+  await page.keyboard.press('Space');await waitForResources(page,false);
+  await assertCurrentSlide(page,8,'Space toggles the resource trigger without an extra sequential advance');
   await page.goto(url+'#/slide-9');await waitForSlide(page,8);
   await page.keyboard.press('ArrowDown');await waitForSlide(page,9);
   await page.goBack();await waitForSlide(page,8);
@@ -253,6 +335,26 @@ try{
   await page.keyboard.press('Escape');await page.setViewportSize({width:1600,height:954});
   // A monorepo step is a native Reveal fragment, not a slide or an autoplay timer.
   await goToSlide(page,3,-1);
+  await page.emulateMedia({reducedMotion:'no-preference'});
+  await page.waitForFunction(()=>window.posPresentation.getConfig().transition==='slide');
+  await page.locator('[data-zone-step="6"]').click();
+  await page.waitForFunction(()=>{
+    const tree=document.querySelector('#slide-4 .tree-panel');
+    return tree.scrollTop>2&&tree.scrollTop<tree.scrollHeight-tree.clientHeight-2;
+  });
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await page.waitForFunction(()=>window.posPresentation.getConfig().transition==='none');
+  const stoppedScroll=await page.locator('#slide-4 .tree-panel').evaluate(async tree=>{
+    const frame=()=>new Promise(resolve=>requestAnimationFrame(resolve));
+    await frame();await frame();
+    const positions=[tree.scrollTop];
+    for(let index=0;index<6;index++){await frame();positions.push(tree.scrollTop);}
+    return positions;
+  });
+  assert.ok(Math.max(...stoppedScroll)-Math.min(...stoppedScroll)<=1,'Enabling reduced motion stops an in-flight smooth monorepo scroll');
+  assert.equal(await page.locator('#slide-4 .tree-row').first().evaluate(node=>getComputedStyle(node).transitionDuration),'0s','Reduced motion also disables the tree highlight transition');
+  await goToSlide(page,3,-1);
+  await page.locator('.reveal').focus();
   const zones=['apps','business','frontend','backend','shared','transition','delivery'];
   for(let step=0;step<zones.length;step++){
     if(step)await page.keyboard.press('Space');
@@ -300,9 +402,32 @@ try{
   for(const width of [320,390,768]){
     await page.setViewportSize({width,height:844});await goToSlide(page,8);
     await assertControlsFit(page,`${width}px navigation`);
+    await assertToolbar(page,`${width}px toolbar`);
     const extra=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
     assert.ok(extra<=1,`${width}px navigation has no horizontal page overflow`);
     await page.screenshot({path:path.join(result,`native-controls-${width}.png`)});
+    for(const index of [8,15]){
+      await goToSlide(page,index);
+      await page.locator('#index').click();await assertIndexSelection(page,index);
+      if(width===320)await page.screenshot({path:path.join(result,`index-${index+1}-${width}.png`)});
+      await page.keyboard.press('Escape');
+    }
+    await goToSlide(page,8);
+    await page.locator('#resources').click();await waitForResources(page,true);
+    const bounds=await resourcePanel.evaluate(panel=>{
+      const box=panel.getBoundingClientRect();return {left:box.left,right:box.right,top:box.top,bottom:box.bottom,width:innerWidth,height:innerHeight,scrollWidth:panel.scrollWidth,clientWidth:panel.clientWidth};
+    });
+    assert.ok(bounds.left>=0&&bounds.right<=bounds.width+1&&bounds.top>=0&&bounds.bottom<=bounds.height+1,`${width}px: resources stay within the screen`);
+    assert.ok(bounds.scrollWidth<=bounds.clientWidth+1,`${width}px: resources need no horizontal scrolling`);
+    if(width<=760){
+      assert.ok(await resourcePanel.locator('#mobile-notes').isVisible(),'Mobile notes remain accessible in resources');
+      await resourcePanel.locator('#mobile-notes').click();
+      assert.equal(await page.locator('#notes-dialog').evaluate(dialog=>dialog.open),true,'The mobile notes action opens the current slide notes');
+      assert.equal(await page.locator('#notes-title').textContent(),deck.slides[8].title);
+      await waitForResources(page,false);
+      await page.keyboard.press('Escape');
+    }else await page.keyboard.press('Escape');
+    await waitForResources(page,false);
   }
   await page.setViewportSize({width:1600,height:954});
   await page.goto(url+'?print-pdf');await page.waitForFunction(()=>document.querySelectorAll('.pdf-page').length===16);

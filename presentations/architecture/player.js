@@ -6,6 +6,7 @@
   const notesDialog=document.querySelector('#notes-dialog');
   const diagramDialog=document.querySelector('#diagram-dialog');
   const dialogs=[indexDialog,notesDialog,diagramDialog];
+  const resources=document.querySelector('#resources-panel');
   const diagramOpen=document.querySelector('#diagram-open');
   const diagramViewport=document.querySelector('#diagram-viewport');
   const diagramImage=document.querySelector('#diagram-image');
@@ -14,7 +15,8 @@
   const diagramFit=document.querySelector('#diagram-fit');
   const diagramZoom=document.querySelector('#diagram-zoom');
   const diagramDownload=document.querySelector('#diagram-download');
-  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const motionPreference=window.matchMedia('(prefers-reduced-motion: reduce)');
+  let reduced=motionPreference.matches;
   const monorepo=document.querySelector('#slide-4');
   const tree=monorepo.querySelector('.tree-panel');
   const zoneButtons=[...monorepo.querySelectorAll('[data-zone-step]')];
@@ -30,23 +32,35 @@
   const deck=new Reveal(root,{
     width:1280,height:720,margin:0.025,minScale:0.1,maxScale:2,
     center:false,hash:true,history:true,controls:true,progress:true,
-    controlsLayout:'bottom-right',controlsBackArrows:'faded',controlsTutorial:false,
+    controlsLayout:'bottom-right',controlsBackArrows:'visible',controlsTutorial:false,
     navigationMode:'default',
     transition:reduced?'none':'slide',transitionSpeed:'fast',backgroundTransition:'none',
     slideNumber:'h.v',showSlideNumber:'all',autoSlide:0,autoPlayMedia:false,disableLayout:false,
     view:'slide',scrollActivationWidth:0,pdfMaxPagesPerSlide:1,pdfSeparateFragments:false,
-    keyboardCondition:event=>!dialogs.some(d=>d.open)&&!(event.key===' '&&event.target instanceof Element&&event.target.closest('button')),
-    keyboard:{73:()=>indexDialog.showModal(),78:()=>openNotes(),68:()=>openDiagram(document.activeElement)}
+    keyboardCondition:event=>!dialogs.some(d=>d.open)&&!resources.matches(':popover-open')&&!(event.key===' '&&event.target instanceof Element&&event.target.closest('button')),
+    keyboard:{73:()=>openIndex(),78:()=>openNotes(),68:()=>openDiagram(document.activeElement)}
+  });
+  motionPreference.addEventListener('change',event=>{
+    reduced=event.matches;
+    deck.configure({transition:reduced?'none':'slide'});
+    if(reduced)tree.scrollTo({top:tree.scrollTop,left:tree.scrollLeft,behavior:'instant'});
   });
   function goToSlide(slide,fragment){
     const {h,v}=deck.getIndices(slide);
     deck.slide(h,v,fragment);
   }
   function openNotes(){
+    resources.hidePopover();
     const current=deck.getCurrentSlide();
     document.querySelector('#notes-title').textContent=current.dataset.title;
     document.querySelector('#notes-body').replaceChildren(...[...current.querySelector('.notes').childNodes].map(node=>node.cloneNode(true)));
     notesDialog.showModal();
+  }
+  function openIndex(){
+    indexDialog.showModal();
+    const current=indexDialog.querySelector('[aria-current="step"]');
+    current?.focus({preventScroll:true});
+    current?.scrollIntoView({block:'center',behavior:'instant'});
   }
   function currentDiagram(){
     const slide=deck.getCurrentSlide();
@@ -156,8 +170,9 @@
   tree.addEventListener('keydown',event=>{
     if(['ArrowUp','ArrowDown','PageUp','PageDown','Home','End',' '].includes(event.key))event.stopPropagation();
   });
-  document.querySelector('#index').addEventListener('click',()=>indexDialog.showModal());
+  document.querySelector('#index').addEventListener('click',openIndex);
   document.querySelector('#notes').addEventListener('click',openNotes);
+  document.querySelector('#mobile-notes').addEventListener('click',openNotes);
   diagramOpen.addEventListener('click',()=>openDiagram(diagramOpen));
   diagramZoomOut.addEventListener('click',()=>scaleDiagram(Math.max(0.5,diagramScale-0.25)));
   diagramZoomIn.addEventListener('click',()=>scaleDiagram(Math.min(4,Math.max(0.5,diagramScale+0.25))));
@@ -180,6 +195,7 @@
   const full=document.querySelector('#fullscreen');
   if(!document.fullscreenEnabled)full.hidden=true;
   full.addEventListener('click',async()=>{
+    resources.hidePopover();
     try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}
     catch{full.textContent='Usar F11 del navegador';}
   });
