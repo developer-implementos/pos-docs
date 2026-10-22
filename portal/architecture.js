@@ -67,6 +67,7 @@ function showIndex({clearHash=true,focus=false}={}){
   hidePanels();index.hidden=false;back.hidden=true;copy.hidden=true;focusItem.disabled=true;
   current=null;activeScenario=null;scenarioSelect.value='';highlight([]);
   inspector.dataset.active='index';
+  inspector.scrollTop=0;
   if(clearHash)updateHash(null);
   if(focus)search.focus({preventScroll:true});
   announce('Explora los elementos y sus conexiones.');
@@ -115,6 +116,7 @@ function showScenario(id){
   if(!panel){showIndex();return;}
   hidePanels();panel.hidden=false;back.hidden=false;copy.hidden=true;focusItem.disabled=true;
   current=null;activeScenario=id;inspector.dataset.active=id;updateHash(null);setStep(0);
+  inspector.scrollTop=0;
 }
 
 document.documentElement.classList.add('js');
