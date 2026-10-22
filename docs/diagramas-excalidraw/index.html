@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0545BA">
-  <meta name="description" content="Siete diagramas editables de la arquitectura propuesta del POS: contexto, contenedores, componentes, despliegue, precios y venta.">
+  <meta name="description" content="Nueve diagramas editables del POS: contexto, contenedores, cuatro vistas de componentes, despliegue, precios y venta.">
   <title>POS Platform · Diagramas editables</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='12' fill='%230545BA'/%3E%3Cpath d='M12 32V16h10v16m4 0V16h10v16M9 24h30' fill='none' stroke='%23FFFFFF' stroke-width='3'/%3E%3C/svg%3E">
   <style>
@@ -84,7 +84,7 @@
   <main id="contenido" class="wrap" tabindex="-1">
     <p class="eyebrow">Arquitectura propuesta / Colección editable</p>
     <h1>Del mapa del sistema<br>al recorrido de una venta.</h1>
-    <p class="intro">Siete diagramas para recorrer la propuesta del POS: cinco vistas estructurales y dos dinámicas. Cada archivo de Excalidraw permite editar formas, textos y relaciones; el SVG permite consultar la vista completa.</p>
+    <p class="intro">Nueve diagramas para recorrer la propuesta del POS: siete vistas estructurales y dos dinámicas. Cada archivo de Excalidraw permite editar formas, textos y relaciones; el SVG permite consultar la vista completa.</p>
     <div class="actions" aria-label="Descargar colección">
       <a class="button primary" href="diagramas-c4-excalidraw.zip" download>Descargar colección ZIP</a>
       <a class="button" href="00-atlas-completo.excalidraw" download>Descargar atlas completo · Excalidraw</a>
@@ -94,7 +94,7 @@
       <section aria-labelledby="abrir-title">
         <h2 id="abrir-title">Abrir y editar</h2>
         <ol>
-          <li>Descarga un archivo <strong>.excalidraw</strong> o el atlas con las siete vistas.</li>
+          <li>Descarga un archivo <strong>.excalidraw</strong> o el atlas con las nueve vistas.</li>
           <li>Abre Excalidraw y utiliza <strong>Abrir</strong> en su menú o <kbd>Ctrl</kbd> + <kbd>O</kbd> para elegir el archivo. En macOS, <kbd>⌘</kbd> + <kbd>O</kbd>.</li>
           <li>Edita el diagrama y guarda una copia del archivo para conservar tus cambios.</li>
         </ol>
@@ -106,35 +106,45 @@
       </section>
     </div>
     <nav class="jump" aria-label="Ir a un diagrama">
-      <a href="#contexto">01 Contexto</a><a href="#contenedores">02 Contenedores</a><a href="#backend">03 Backend</a><a href="#sincronizador">04 Sincronizador</a><a href="#despliegue">05 Despliegue</a><a href="#precios">06 Precios</a><a href="#venta">07 Venta</a>
+      <a href="#contexto">01 Contexto</a><a href="#contenedores">02 Contenedores</a><a href="#backend">03 Backend</a><a href="#sincronizador">04 Sincronizador</a><a href="#country-api">08 API de país</a><a href="#erp-worker">09 Worker ERP</a><a href="#despliegue">05 Despliegue</a><a href="#precios">06 Precios</a><a href="#venta">07 Venta</a>
     </nav>
 
     <section aria-labelledby="estructurales-title">
-      <div class="section-heading"><h2 id="estructurales-title">La estructura del POS</h2><p>Del sistema y su entorno a los procesos que operan en cada sucursal.</p></div>
+      <div class="section-heading"><h2 id="estructurales-title">La estructura del POS</h2><p>Del producto y su entorno a las aplicaciones de sucursal, país e integración ERP.</p></div>
       <article class="diagram" id="contexto" aria-labelledby="contexto-title">
         <div class="diagram-header"><span class="number" aria-hidden="true">01</span><div><p class="level">C1 · Contexto</p><h3 id="contexto-title">El POS y su entorno</h3><p>Personas, sistemas externos y límites de responsabilidad. Distingue maestros y precios, ERP, pagos y fiscalidad.</p></div></div>
         <div class="diagram-links"><a class="button" href="01-contexto.excalidraw" download>Descargar contexto · editable</a><a class="button" href="01-contexto.svg" target="_blank" rel="noopener">Abrir SVG en tamaño original ↗</a></div>
         <figure><div class="preview" tabindex="0" role="region" aria-label="Vista desplazable del contexto"><img src="01-contexto.svg" alt="C1: el POS se relaciona con cajero, supervisor, operación, maestros y precios, ERP, pagos y fiscalidad." decoding="async"></div><figcaption>Vista completa desplazable. El enlace al SVG abre una pestaña nueva; el archivo editable conserva los elementos del diagrama.</figcaption></figure>
       </article>
       <article class="diagram" id="contenedores" aria-labelledby="contenedores-title">
-        <div class="diagram-header"><span class="number" aria-hidden="true">02</span><div><p class="level">C2 · Contenedores</p><h3 id="contenedores-title">Aplicaciones, procesos y datos</h3><p>Cliente Angular + Tauri, backend y PostgreSQL de sucursal, sincronizador y plataforma de país. Un contenedor C4 representa una aplicación o almacén de datos.</p></div></div>
+        <div class="diagram-header"><span class="number" aria-hidden="true">02</span><div><p class="level">C2 · Contenedores</p><h3 id="contenedores-title">Aplicaciones, procesos y datos</h3><p>Seis aplicaciones, PostgreSQL de sucursal y país, publicación de maestros por asignar y caché opcional. Los contratos separan la operación local de la integración ERP.</p></div></div>
         <div class="diagram-links"><a class="button" href="02-contenedores.excalidraw" download>Descargar contenedores · editable</a><a class="button" href="02-contenedores.svg" target="_blank" rel="noopener">Abrir SVG en tamaño original ↗</a></div>
         <figure><div class="preview" tabindex="0" role="region" aria-label="Vista desplazable de los contenedores"><img src="02-contenedores.svg" alt="C2: contenedores del POS, propiedad de los datos y contratos entre puesto, sucursal, país y sistemas externos." loading="lazy" decoding="async"></div><figcaption>Vista completa desplazable. Consulta los contratos de persistencia, comunicación y continuidad junto al mapa.</figcaption></figure>
       </article>
       <article class="diagram" id="backend" aria-labelledby="backend-title">
-        <div class="diagram-header"><span class="number" aria-hidden="true">03</span><div><p class="level">C3 · Componentes del backend</p><h3 id="backend-title">Un backend de sucursal, varios módulos</h3><p>Acceso, ventas, precios, caja, pagos, fiscalidad y persistencia dentro de un único proceso NestJS + Fastify.</p></div></div>
+        <div class="diagram-header"><span class="number" aria-hidden="true">03</span><div><p class="level">C3 · branch-api</p><h3 id="backend-title">Un backend de sucursal, varios módulos</h3><p>Contextos de operación, consulta comercial y efectos externos; outbox transaccional y soporte técnico compartido dentro de un proceso NestJS + Fastify.</p></div></div>
         <div class="diagram-links"><a class="button" href="03-backend-sucursal.excalidraw" download>Descargar backend · editable</a><a class="button" href="03-backend-sucursal.svg" target="_blank" rel="noopener">Abrir SVG en tamaño original ↗</a></div>
         <figure><div class="preview" tabindex="0" role="region" aria-label="Vista desplazable del backend de sucursal"><img src="03-backend-sucursal.svg" alt="C3: módulos del monolito de sucursal y sus relaciones con cliente, datos, pagos y fiscalidad." loading="lazy" decoding="async"></div><figcaption>Vista completa desplazable. Los módulos interiores comparten proceso; las responsabilidades conservan sus propios contratos.</figcaption></figure>
       </article>
       <article class="diagram" id="sincronizador" aria-labelledby="sincronizador-title">
-        <div class="diagram-header"><span class="number" aria-hidden="true">04</span><div><p class="level">C3 · Componentes del sincronizador</p><h3 id="sincronizador-title">Entregar operaciones y activar versiones</h3><p>Planificación, envío, recepción, deduplicación, preparación y validación de candidatas antes de su activación atómica.</p></div></div>
+        <div class="diagram-header"><span class="number" aria-hidden="true">04</span><div><p class="level">C3 · branch-sync-worker</p><h3 id="sincronizador-title">Entregar operaciones y activar versiones</h3><p>Planificación, envío, recepción, deduplicación, preparación y validación de candidatas, con los contratos de catálogo/precios y la base técnica compartida.</p></div></div>
         <div class="diagram-links"><a class="button" href="04-sincronizador.excalidraw" download>Descargar sincronizador · editable</a><a class="button" href="04-sincronizador.svg" target="_blank" rel="noopener">Abrir SVG en tamaño original ↗</a></div>
         <figure><div class="preview" tabindex="0" role="region" aria-label="Vista desplazable del sincronizador"><img src="04-sincronizador.svg" alt="C3: componentes del worker de sincronización, cursores de recepción y aplicación, validación y activación de precios." loading="lazy" decoding="async"></div><figcaption>Vista completa desplazable. Recibir datos y aplicarlos son estados distintos; la versión activa permanece íntegra durante la preparación.</figcaption></figure>
       </article>
+      <article class="diagram" id="country-api" aria-labelledby="country-api-title">
+        <div class="diagram-header"><span class="number" aria-hidden="true">08</span><div><p class="level">C3 · country-api</p><h3 id="country-api-title">Recepción durable y servicios de país</h3><p>Autorización, inbox y efecto transaccional, trabajo y resultados ERP, publicaciones y consultas. PostgreSQL conserva la autoridad; Redis es caché opcional reconstruible.</p></div></div>
+        <div class="diagram-links"><a class="button" href="08-country-api.excalidraw" download>Descargar API de país · editable</a><a class="button" href="08-country-api.svg" target="_blank" rel="noopener">Abrir SVG en tamaño original ↗</a></div>
+        <figure><div class="preview" tabindex="0" role="region" aria-label="Vista desplazable de country-api"><img src="08-country-api.svg" alt="C3 de country-api: módulos de recepción, consultas y entrega de trabajo, PostgreSQL, caché opcional y bibliotecas de soporte técnico." loading="lazy" decoding="async"></div><figcaption>Vista completa desplazable. El ACK confirma el efecto local pactado; el resultado ERP conserva su estado independiente.</figcaption></figure>
+      </article>
+      <article class="diagram" id="erp-worker" aria-labelledby="erp-worker-title">
+        <div class="diagram-header"><span class="number" aria-hidden="true">09</span><div><p class="level">C3 · erp-worker</p><h3 id="erp-worker-title">Traducción y conciliación en la red del ERP</h3><p>El worker inicia HTTPS a país para obtener trabajo y entregar resultados. Fachadas, ACL, adaptadores y conciliación comparten proceso, con límites por destino.</p></div></div>
+        <div class="diagram-links"><a class="button" href="09-erp-worker.excalidraw" download>Descargar worker ERP · editable</a><a class="button" href="09-erp-worker.svg" target="_blank" rel="noopener">Abrir SVG en tamaño original ↗</a></div>
+        <figure><div class="preview" tabindex="0" role="region" aria-label="Vista desplazable de erp-worker"><img src="09-erp-worker.svg" alt="C3 de erp-worker: admisión, cliente HTTPS de país, fachadas, ACL y adaptadores, consulta y conciliación de resultados inciertos." loading="lazy" decoding="async"></div><figcaption>Vista completa desplazable. No hay SQL remoto hacia la base del POS; el contrato de cada ERP debe validarse.</figcaption></figure>
+      </article>
       <article class="diagram" id="despliegue" aria-labelledby="despliegue-title">
-        <div class="diagram-header"><span class="number" aria-hidden="true">05</span><div><p class="level">Complemento C4 · Despliegue</p><h3 id="despliegue-title">Puestos, sucursal y plataforma de país</h3><p>Distribución de instancias, conectividad LAN/WAN y recuperación. La topología definitiva y sus objetivos operativos requieren validación.</p></div></div>
+        <div class="diagram-header"><span class="number" aria-hidden="true">05</span><div><p class="level">Complemento C4 · Despliegue</p><h3 id="despliegue-title">Puestos, sucursal, país y red ERP</h3><p>Distribución de clientes, APIs, workers y datos, con caché opcional y recuperación. La topología definitiva y sus objetivos operativos requieren validación.</p></div></div>
         <div class="diagram-links"><a class="button" href="05-despliegue.excalidraw" download>Descargar despliegue · editable</a><a class="button" href="05-despliegue.svg" target="_blank" rel="noopener">Abrir SVG en tamaño original ↗</a></div>
-        <figure><div class="preview" tabindex="0" role="region" aria-label="Vista desplazable del despliegue"><img src="05-despliegue.svg" alt="Despliegue de referencia: puestos conectados por LAN al servidor de sucursal y por WAN a la plataforma de país, con respaldo e integraciones externas." loading="lazy" decoding="async"></div><figcaption>Vista completa desplazable. Despliegue es una vista complementaria; el cuarto nivel de C4 sería código.</figcaption></figure>
+        <figure><div class="preview" tabindex="0" role="region" aria-label="Vista desplazable del despliegue"><img src="05-despliegue.svg" alt="Despliegue de referencia: puestos y móviles, servidor de sucursal, plataforma de país y worker en la red autorizada ERP, con respaldo y caché opcional." loading="lazy" decoding="async"></div><figcaption>Vista completa desplazable. Despliegue es una vista complementaria; el cuarto nivel de C4 sería código.</figcaption></figure>
       </article>
     </section>
 
@@ -153,10 +163,11 @@
     </section>
     <aside class="scope" aria-labelledby="alcance-title">
       <h2 id="alcance-title">Una propuesta para revisar y evolucionar</h2>
-      <p>Angular + Tauri es la dirección elegida para el cliente. Backend, datos, sincronización, integraciones y despliegue describen el diseño recomendado. La propiedad de maestros por país, los contratos de proveedores, la infraestructura y los objetivos de recuperación siguen sujetos a validación.</p>
+      <p>Los clientes usan Angular con Tauri para escritorio y Capacitor para móvil. Las capacidades comerciales, persistencia, sincronización e integraciones describen el diseño objetivo, no lo acreditan los scaffolds. La propiedad de maestros por país, contratos de proveedores, infraestructura y objetivos de recuperación requieren validación.</p>
+      <p>La caché de país es opcional y reconstruible; no sustituye ventas, pendientes ni el espejo comercial PostgreSQL local. BullMQ y RabbitMQ requieren una responsabilidad y una decisión de adopción propias.</p>
       <p>El perfil inicial contempla pérdida de WAN con LAN y servidor de sucursal disponibles. Consulta la <a href="../c4-arquitectura-propuesta.md">guía del modelo C4</a> y el <a href="README.md">alcance de esta colección</a> antes de interpretar un diagrama como una decisión de implementación.</p>
     </aside>
   </main>
-  <footer><div class="wrap"><span>POS Platform · 5 vistas estructurales + 2 dinámicas · Archivos locales editables</span><a href="#contenido">Volver al inicio ↑</a></div></footer>
+  <footer><div class="wrap"><span>POS Platform · 7 vistas estructurales + 2 dinámicas · Archivos locales editables</span><a href="#contenido">Volver al inicio ↑</a></div></footer>
 </body>
 </html>

@@ -10,10 +10,7 @@ const root = path.resolve(__dirname, '../..');
 const input = path.join(root, 'docs/diagramas-excalidraw');
 const output = path.join(root, 'docs/diagramas-excalidraw/previews');
 const margin = 28;
-const names = {
-  context: '01-contexto', containers: '02-contenedores', backend: '03-backend-sucursal',
-  sync: '04-sincronizador', deployment: '05-despliegue'
-};
+const { byId, structuralBoards, assertModels } = require('./collection.cjs');
 const hash = value => crypto.createHash('sha256').update(value).digest('hex');
 const round = value => Math.round(value * 1000) / 1000;
 const escape = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' }[char]));
@@ -90,7 +87,7 @@ function cropPoster(source, scene, view) {
   return {
     svg: croppedTag + metadata + source.slice(tag.length),
     report: {
-      id: view.id, file: `${names[view.id]}.svg`, source: `docs/diagramas-excalidraw/${names[view.id]}.svg`,
+      id: view.id, file: `${byId.get(view.id).file}.svg`, source: `docs/diagramas-excalidraw/${byId.get(view.id).file}.svg`,
       sourceSha256: hash(source),
       sourceViewBox: box, viewBox: crop, margin,
       nodes: view.nodeIds.filter(id => id !== 'legend').length,
@@ -150,13 +147,13 @@ async function verify(previews) {
 async function main() {
   const context = { window: {} };
   vm.runInNewContext(fs.readFileSync(path.join(root, 'tools/diagrams/models/c4-data.js'), 'utf8'), context);
+  assertModels(context.window.POS_C4);
   const check = process.argv.includes('--check');
   if (!check) fs.mkdirSync(output, { recursive: true });
   const previews = [];
   for (const view of context.window.POS_C4.views) {
-    if (!names[view.id]) continue;
-    const sourcePath = path.join(input, `${names[view.id]}.svg`);
-    const nativePath = path.join(input, `${names[view.id]}.excalidraw`);
+    const sourcePath = path.join(input, `${byId.get(view.id).file}.svg`);
+    const nativePath = path.join(input, `${byId.get(view.id).file}.excalidraw`);
     const source = fs.readFileSync(sourcePath, 'utf8'), native = fs.readFileSync(nativePath, 'utf8');
     const preview = cropPoster(source, JSON.parse(native), view);
     preview.report.nativeSha256 = hash(native);
@@ -167,7 +164,8 @@ async function main() {
     previews.push(preview);
     console.log(`${view.id}: ${preview.report.viewBox[2]} × ${preview.report.viewBox[3]}, ${preview.report.nodes} nodes / ${preview.report.relationships} relationships`);
   }
-  assert.equal(previews.length, 5);
+  assert.equal(previews.length, structuralBoards.length);
+  assert.deepEqual(fs.readdirSync(output).filter(file => file.endsWith('.svg')).sort(), structuralBoards.map(board => board.file + '.svg').sort(), 'Preview inventory differs from the published collection');
   const report = JSON.stringify(previews.map(preview => preview.report), null, 2) + '\n';
   if (check) assert.equal(fs.readFileSync(path.join(output, 'bounds.json'), 'utf8').replaceAll('\r\n','\n'), report, 'Stale preview metadata');
   else fs.writeFileSync(path.join(output, 'bounds.json'), report);

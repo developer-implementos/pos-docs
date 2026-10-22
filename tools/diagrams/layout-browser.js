@@ -7,7 +7,7 @@ const configuration = {
   fontFamily: 'Arial, sans-serif', fontSize: 20,
   flowchart: {
     htmlLabels: false, useMaxWidth: false, curve: 'basis', padding: 12,
-    nodeSpacing: 40, rankSpacing: 55, diagramPadding: 16, wrappingWidth: 320,
+    nodeSpacing: 100, rankSpacing: 110, diagramPadding: 16, wrappingWidth: 320,
     subGraphTitleMargin: {top: 90, bottom: 70},
   },
   themeVariables: {

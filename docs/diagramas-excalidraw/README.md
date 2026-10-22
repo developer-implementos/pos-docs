@@ -1,6 +1,6 @@
 # POS Platform · Diagramas editables de la arquitectura propuesta
 
-Esta colección reúne **cinco vistas estructurales y dos dinámicas** del POS corporativo para Chile, Perú y España. Son documentos de diseño para revisar y evolucionar; no acreditan una implementación, un proveedor homologado ni una topología productiva.
+Esta colección reúne **siete vistas estructurales y dos dinámicas** del POS corporativo para Chile, Perú y España. Son documentos de diseño para revisar y evolucionar; no acreditan una implementación, un proveedor homologado ni una topología productiva.
 
 Abre [la galería local](index.html) para recorrer los diagramas. Funciona sin dependencias externas y muestra los SVG mediante vistas desplazables. Los textos conservan su tamaño de lectura; cada vista incluye un enlace al SVG completo.
 
@@ -15,8 +15,10 @@ Abre [la galería local](index.html) para recorrer los diagramas. Funciona sin d
 | 05 · Complemento: despliegue | [05-despliegue.excalidraw](05-despliegue.excalidraw) | [SVG](05-despliegue.svg) |
 | 06 · Dinámica: publicación y activación de precios | [06-flujo-precios.excalidraw](06-flujo-precios.excalidraw) | [SVG](06-flujo-precios.svg) |
 | 07 · Dinámica: venta e integración | [07-flujo-venta.excalidraw](07-flujo-venta.excalidraw) | [SVG](07-flujo-venta.svg) |
+| 08 · C3: API de país | [08-country-api.excalidraw](08-country-api.excalidraw) | [SVG](08-country-api.svg) |
+| 09 · C3: worker ERP | [09-erp-worker.excalidraw](09-erp-worker.excalidraw) | [SVG](09-erp-worker.svg) |
 
-- [Atlas completo](00-atlas-completo.excalidraw): las siete vistas en un único archivo de Excalidraw.
+- [Atlas completo](00-atlas-completo.excalidraw): las nueve vistas en un único archivo de Excalidraw.
 - [Colección ZIP](diagramas-c4-excalidraw.zip): paquete para descargar y compartir.
 
 Los `.excalidraw` contienen formas, textos y relaciones editables. Los SVG son exportaciones para consultar la composición completa. Para editar, utiliza el archivo nativo correspondiente. Al compartir o extraer la colección, conserva juntos el HTML, los SVG y los archivos editables para que funcionen los enlaces relativos.
@@ -34,14 +36,16 @@ La galería no necesita conexión. Para usar el editor, utiliza tu instalación 
 La colección usa **#0545BA** como color primario. Azul identifica software POS, azul oscuro a personas, violeta a almacenes de datos, gris a sistemas externos y ámbar a infraestructura o condiciones. Los nombres y estereotipos también identifican cada tipo; el significado no depende solo del color.
 
 - **Contexto** identifica actores, el POS y los sistemas externos.
-- **Contenedores** explica aplicaciones, procesos, almacenes y comunicaciones. Un contenedor C4 no implica Docker.
-- **Componentes** amplía un proceso de backend y un proceso de sincronización. Los módulos interiores no se representan como microservicios separados.
-- **Despliegue** distribuye instancias entre puestos, sucursal y país. Es una vista complementaria; el cuarto nivel de C4 sería código.
+- **Contenedores** explica las seis apps, los almacenes, la publicación de maestros por asignar y la caché opcional de país. Un contenedor C4 no implica Docker.
+- **Componentes** amplía cuatro procesos: `branch-api`, `branch-sync-worker`, `country-api` y `erp-worker`. Muestra grupos de bibliotecas y soporte técnico dentro de cada aplicación; no microservicios por módulo.
+- **Despliegue** distribuye instancias entre puestos, móviles, sucursal, plataforma de país y red autorizada del ERP. Es una vista complementaria; el cuarto nivel de C4 sería código.
 - **Dinámicas** numeran interacciones de precios y venta, con condiciones, fallos y recuperación. Complementan las vistas estructurales.
 
 Los diagramas mantienen separadas las autoridades y los estados de venta, pago, fiscalidad, precios e integración ERP. La sucursal conserva su autoridad de negocio local; la plataforma de país recibe y consolida bajo el contrato definido. El ACK de aplicación requiere el commit de inbox, efecto local y outbox, y no certifica el resultado de un sistema externo.
 
-Angular + Tauri es la dirección elegida para el cliente. Backend, PostgreSQL, sincronización, integración y topología son parte de la propuesta por implementar y validar. La propiedad de maestros por dato y país, contratos de proveedores, infraestructura, dimensionamiento y objetivos de recuperación siguen pendientes de definición o validación.
+Los clientes usan Angular con Tauri para escritorio y Capacitor para móvil. PostgreSQL, sincronización, integración y topología representan capacidades por implementar y validar; la base técnica y los scaffolds no acreditan operaciones comerciales. La propiedad de maestros por dato y país, contratos de proveedores, infraestructura, dimensionamiento y objetivos de recuperación siguen pendientes de definición o validación.
+
+`erp-worker` inicia HTTPS hacia `country-api` desde la red autorizada del ERP; no accede por SQL a la base de país. Redis figura como candidato de caché reconstruible para consultas de país, sin reemplazar el espejo PostgreSQL local ni el registro financiero. BullMQ y RabbitMQ mantienen decisiones de adopción propias. El [contrato de caché](../c4-arquitectura-propuesta.md#caché-de-país-opcional) precisa sus límites.
 
 La continuidad inicial contempla pérdida de WAN con LAN, backend y PostgreSQL de sucursal disponibles. No incorpora una base de ventas independiente por puesto. Las capacidades efectivas de pago y fiscalidad, vigencia de precios y permisos limitan las operaciones habilitadas.
 
@@ -59,7 +63,7 @@ Las fuentes, los modelos y la generación de estos diagramas pertenecen al repos
 
 Los diagramas deben evolucionar junto con estos documentos. Una edición visual no modifica automáticamente la propuesta ni las fuentes que generan otros artefactos del repositorio. Antes de regenerar o integrar cambios, conserva tu copia editada y propaga las decisiones al modelo correspondiente.
 
-Existe un [MCP oficial de Excalidraw](https://github.com/excalidraw/excalidraw-mcp), con el endpoint `https://mcp.excalidraw.com`. **No estaba conectado a esta sesión.** La colección se genera localmente mediante las API de Excalidraw; no necesita ese servidor para abrirse o consultarse.
+La colección se genera localmente mediante las API de Excalidraw; no necesita un MCP ni servicios remotos para abrirse o consultarse.
 
 Referencias primarias para el formato y la notación:
 
@@ -68,4 +72,4 @@ Referencias primarias para el formato y la notación:
 - [Creación programática de elementos](https://docs.excalidraw.com/docs/@excalidraw/excalidraw/api/excalidraw-element-skeleton).
 - [Exportación de SVG y otros formatos](https://docs.excalidraw.com/docs/@excalidraw/excalidraw/api/utils/export).
 
-Fecha de revisión: 5 de octubre de 2026.
+Fecha de revisión: 22 de octubre de 2026.

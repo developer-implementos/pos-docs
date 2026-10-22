@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "atlas": "00-atlas-completo",
+  "boards": [
+    { "id": "context", "kind": "structural", "key": "c4-context", "file": "01-contexto", "title": "C1 · Contexto" },
+    { "id": "containers", "kind": "structural", "key": "c4-containers", "file": "02-contenedores", "title": "C2 · Contenedores" },
+    { "id": "backend", "kind": "structural", "key": "c4-backend", "file": "03-backend-sucursal", "title": "C3 · Backend de sucursal" },
+    { "id": "sync", "kind": "structural", "key": "c4-sync", "file": "04-sincronizador", "title": "C3 · Sincronizador" },
+    { "id": "deployment", "kind": "structural", "key": "c4-deployment", "file": "05-despliegue", "title": "Despliegue" },
+    { "id": "prices", "kind": "dynamic", "file": "06-flujo-precios", "title": "Flujo de precios" },
+    { "id": "sale", "kind": "dynamic", "file": "07-flujo-venta", "title": "Flujo de venta" },
+    { "id": "country", "kind": "structural", "key": "c4-country", "file": "08-country-api", "title": "C3 · API de país" },
+    { "id": "erp", "kind": "structural", "key": "c4-erp", "file": "09-erp-worker", "title": "C3 · Worker ERP" }
+  ]
+}

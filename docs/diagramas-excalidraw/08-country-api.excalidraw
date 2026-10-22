@@ -1,0 +1,5686 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "https://excalidraw.com",
+  "elements": [
+    {
+      "id": "sheet",
+      "type": "rectangle",
+      "x": 0,
+      "y": 0,
+      "width": 2509.6507812500085,
+      "height": 350,
+      "angle": 0,
+      "strokeColor": "#fff",
+      "backgroundColor": "#fff",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a0",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 689336668,
+      "version": 2,
+      "versionNonce": 2477796,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "kicker",
+      "type": "text",
+      "x": 64,
+      "y": 40,
+      "width": 428.2978515625,
+      "height": 23.75,
+      "angle": 0,
+      "strokeColor": "#0545BA",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a1",
+      "roundness": null,
+      "seed": 1858658916,
+      "version": 2,
+      "versionNonce": 1494090076,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "POS CORPORATIVO  /  08  /  C3 · COUNTRY-API",
+      "fontSize": 19,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "POS CORPORATIVO  /  08  /  C3 · COUNTRY-API",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "title",
+      "type": "text",
+      "x": 64,
+      "y": 85,
+      "width": 755.77734375,
+      "height": 55,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a2",
+      "roundness": null,
+      "seed": 1752688092,
+      "version": 2,
+      "versionNonce": 131224164,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Recepción, trabajo y consultas de país",
+      "fontSize": 44,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Recepción, trabajo y consultas de país",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "scope",
+      "type": "text",
+      "x": 64,
+      "y": 152,
+      "width": 1834.2890625,
+      "height": 30,
+      "angle": 0,
+      "strokeColor": "#4C607D",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a3",
+      "roundness": null,
+      "seed": 1741092324,
+      "version": 2,
+      "versionNonce": 1392342492,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Un proceso HTTP apps/country-api. Recibe operaciones, ofrece trabajo al ERP y sirve publicaciones; no ejecuta la ACL ni construye cargas masivas dentro de una petición.",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Un proceso HTTP apps/country-api. Recibe operaciones, ofrece trabajo al ERP y sirve publicaciones; no ejecuta la ACL ni construye cargas masivas dentro de una petición.",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "status",
+      "type": "text",
+      "x": 64,
+      "y": 230,
+      "width": 1020.8046875,
+      "height": 23.75,
+      "angle": 0,
+      "strokeColor": "#4C607D",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a4",
+      "roundness": null,
+      "seed": 347523676,
+      "version": 2,
+      "versionNonce": 2116183524,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "ARQUITECTURA PROPUESTA · 22 OCT 2026 · Chile / Perú / España · No representa una implementación homologada",
+      "fontSize": 19,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "ARQUITECTURA PROPUESTA · 22 OCT 2026 · Chile / Perú / España · No representa una implementación homologada",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "key-0",
+      "type": "rectangle",
+      "x": 64,
+      "y": 290,
+      "width": 18,
+      "height": 18,
+      "angle": 0,
+      "strokeColor": "#163A73",
+      "backgroundColor": "#163A73",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a5",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 1320589668,
+      "version": 2,
+      "versionNonce": 940202588,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "key-text-0",
+      "type": "text",
+      "x": 92,
+      "y": 285,
+      "width": 74.4921875,
+      "height": 25,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a6",
+      "roundness": null,
+      "seed": 279256796,
+      "version": 2,
+      "versionNonce": 1747192164,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Persona",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Persona",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "key-1",
+      "type": "rectangle",
+      "x": 254,
+      "y": 290,
+      "width": 18,
+      "height": 18,
+      "angle": 0,
+      "strokeColor": "#0545BA",
+      "backgroundColor": "#0545BA",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a7",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 249941220,
+      "version": 2,
+      "versionNonce": 587640540,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "key-text-1",
+      "type": "text",
+      "x": 282,
+      "y": 285,
+      "width": 126.71875,
+      "height": 25,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a8",
+      "roundness": null,
+      "seed": 349496156,
+      "version": 2,
+      "versionNonce": 2032483556,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Software POS",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Software POS",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "key-2",
+      "type": "rectangle",
+      "x": 456.71875,
+      "y": 290,
+      "width": 18,
+      "height": 18,
+      "angle": 0,
+      "strokeColor": "#6545A4",
+      "backgroundColor": "#6545A4",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "a9",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 2044891236,
+      "version": 2,
+      "versionNonce": 75789148,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "key-text-2",
+      "type": "text",
+      "x": 484.71875,
+      "y": 285,
+      "width": 160.09765625,
+      "height": 25,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "aA",
+      "roundness": null,
+      "seed": 2006456284,
+      "version": 2,
+      "versionNonce": 1253310564,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Almacén de datos",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Almacén de datos",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "key-3",
+      "type": "rectangle",
+      "x": 692.81640625,
+      "y": 290,
+      "width": 18,
+      "height": 18,
+      "angle": 0,
+      "strokeColor": "#64748B",
+      "backgroundColor": "#64748B",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "aB",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 2138760164,
+      "version": 2,
+      "versionNonce": 1792387036,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "key-text-3",
+      "type": "text",
+      "x": 720.81640625,
+      "y": 285,
+      "width": 144.51171875,
+      "height": 25,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "aC",
+      "roundness": null,
+      "seed": 1962982492,
+      "version": 2,
+      "versionNonce": 345920484,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Sistema externo",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Sistema externo",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "key-4",
+      "type": "rectangle",
+      "x": 952.81640625,
+      "y": 290,
+      "width": 18,
+      "height": 18,
+      "angle": 0,
+      "strokeColor": "#946019",
+      "backgroundColor": "#946019",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "aD",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 1706870628,
+      "version": 2,
+      "versionNonce": 1242319964,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "key-text-4",
+      "type": "text",
+      "x": 980.81640625,
+      "y": 285,
+      "width": 230.1171875,
+      "height": 25,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "aE",
+      "roundness": null,
+      "seed": 1994445020,
+      "version": 2,
+      "versionNonce": 1693595492,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Infraestructura / condición",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Infraestructura / condición",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "legend-desc",
+      "type": "text",
+      "x": 64,
+      "y": 330,
+      "width": 1039.2666015625,
+      "height": 23.75,
+      "angle": 0,
+      "strokeColor": "#4C607D",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "aF",
+      "roundness": null,
+      "seed": 16136932,
+      "version": 2,
+      "versionNonce": 1140482268,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Flecha: iniciador → destino; texto: propósito y protocolo. Borde discontinuo: límite nombrado. Todo el contenido es editable.",
+      "fontSize": 19,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Flecha: iniciador → destino; texto: propósito y protocolo. Borde discontinuo: límite nombrado. Todo el contenido es editable.",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "reading-title",
+      "type": "text",
+      "x": 64,
+      "y": 2878.066017133184,
+      "width": 496.3125,
+      "height": 40,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "aG",
+      "roundness": null,
+      "seed": 1556763996,
+      "version": 2,
+      "versionNonce": 1476242148,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Contratos que gobiernan esta vista",
+      "fontSize": 32,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Contratos que gobiernan esta vista",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-2942-0-bg",
+      "type": "rectangle",
+      "x": 64,
+      "y": 2942.066017133184,
+      "width": 777.8835937500029,
+      "height": 219.25,
+      "angle": 0,
+      "strokeColor": "#CCD7E8",
+      "backgroundColor": "#F7F9FD",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-2942-0"
+      ],
+      "frameId": null,
+      "index": "aH",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 1807040100,
+      "version": 2,
+      "versionNonce": 1882318172,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "notes-2942-0-title",
+      "type": "text",
+      "x": 86,
+      "y": 2964.066017133184,
+      "width": 428.02734375,
+      "height": 31.25,
+      "angle": 0,
+      "strokeColor": "#0545BA",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-2942-0"
+      ],
+      "frameId": null,
+      "index": "aI",
+      "roundness": null,
+      "seed": 1141852636,
+      "version": 2,
+      "versionNonce": 1347333732,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "ACK local, resultado externo separado",
+      "fontSize": 25,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "ACK local, resultado externo separado",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-2942-0-body",
+      "type": "text",
+      "x": 86,
+      "y": 3016.316017133184,
+      "width": 723.958984375,
+      "height": 110,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-2942-0"
+      ],
+      "frameId": null,
+      "index": "aJ",
+      "roundness": null,
+      "seed": 1053282788,
+      "version": 2,
+      "versionNonce": 604297692,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "country-api confirma inbox, efecto/proyección y outbox en una transacción\nantes del ACK. El trabajo ERP es durable; su aceptación, ejecución y\nconciliación conservan estados propios. El ACK de país no acredita el\nregistro en el ERP.",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "country-api confirma inbox, efecto/proyección y outbox en una transacción\nantes del ACK. El trabajo ERP es durable; su aceptación, ejecución y\nconciliación conservan estados propios. El ACK de país no acredita el\nregistro en el ERP.",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-2942-1-bg",
+      "type": "rectangle",
+      "x": 865.8835937500029,
+      "y": 2942.066017133184,
+      "width": 777.8835937500029,
+      "height": 219.25,
+      "angle": 0,
+      "strokeColor": "#CCD7E8",
+      "backgroundColor": "#F7F9FD",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-2942-1"
+      ],
+      "frameId": null,
+      "index": "aK",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 1338093148,
+      "version": 2,
+      "versionNonce": 783499748,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "notes-2942-1-title",
+      "type": "text",
+      "x": 887.8835937500029,
+      "y": 2964.066017133184,
+      "width": 341.85791015625,
+      "height": 31.25,
+      "angle": 0,
+      "strokeColor": "#0545BA",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-2942-1"
+      ],
+      "frameId": null,
+      "index": "aL",
+      "roundness": null,
+      "seed": 1228666212,
+      "version": 2,
+      "versionNonce": 981810780,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Caché opcional y reconstruible",
+      "fontSize": 25,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Caché opcional y reconstruible",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-2942-1-body",
+      "type": "text",
+      "x": 887.8835937500029,
+      "y": 3016.316017133184,
+      "width": 717.9541015625,
+      "height": 110,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-2942-1"
+      ],
+      "frameId": null,
+      "index": "aM",
+      "roundness": null,
+      "seed": 1890812636,
+      "version": 2,
+      "versionNonce": 171533668,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Redis sirve lecturas de country-api; PostgreSQL conserva la autoridad.\nClaves por país, entidad, versión y alcance de acceso; TTL e invalidación\nexplícitos. Ante fallos, timeout corto y fallback limitado evitan saturar la\nbase. Ventas, saldos y mensajes pendientes no dependen de esta caché.",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Redis sirve lecturas de country-api; PostgreSQL conserva la autoridad.\nClaves por país, entidad, versión y alcance de acceso; TTL e invalidación\nexplícitos. Ante fallos, timeout corto y fallback limitado evitan saturar la\nbase. Ventas, saldos y mensajes pendientes no dependen de esta caché.",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-2942-2-bg",
+      "type": "rectangle",
+      "x": 1667.7671875000058,
+      "y": 2942.066017133184,
+      "width": 777.8835937500029,
+      "height": 219.25,
+      "angle": 0,
+      "strokeColor": "#CCD7E8",
+      "backgroundColor": "#F7F9FD",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-2942-2"
+      ],
+      "frameId": null,
+      "index": "aN",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 1214228708,
+      "version": 2,
+      "versionNonce": 1552224988,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "notes-2942-2-title",
+      "type": "text",
+      "x": 1689.7671875000058,
+      "y": 2964.066017133184,
+      "width": 351.6357421875,
+      "height": 31.25,
+      "angle": 0,
+      "strokeColor": "#0545BA",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-2942-2"
+      ],
+      "frameId": null,
+      "index": "aO",
+      "roundness": null,
+      "seed": 762759004,
+      "version": 2,
+      "versionNonce": 1747917028,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Responsabilidad de publicación",
+      "fontSize": 25,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Responsabilidad de publicación",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-2942-2-body",
+      "type": "text",
+      "x": 1689.7671875000058,
+      "y": 3016.316017133184,
+      "width": 714.162109375,
+      "height": 110,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-2942-2"
+      ],
+      "frameId": null,
+      "index": "aP",
+      "roundness": null,
+      "seed": 532737124,
+      "version": 2,
+      "versionNonce": 1217812316,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "country-api ofrece publicaciones versionadas y consulta de cursores. El\nproceso que importa y construye snapshots/deltas de maestros sigue por\nasignar; no es una séptima app existente. La base actual no implementa\npersistencia, caché ni estos protocolos.",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "country-api ofrece publicaciones versionadas y consulta de cursores. El\nproceso que importa y construye snapshots/deltas de maestros sigue por\nasignar; no es una séptima app existente. La base actual no implementa\npersistencia, caché ni estos protocolos.",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "details-title",
+      "type": "text",
+      "x": 64,
+      "y": 3220.316017133184,
+      "width": 848.515625,
+      "height": 40,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "aQ",
+      "roundness": null,
+      "seed": 1784511452,
+      "version": 2,
+      "versionNonce": 1948408932,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Responsabilidades, propiedad y comportamiento ante fallos",
+      "fontSize": 32,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Responsabilidades, propiedad y comportamiento ante fallos",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-3295-0-bg",
+      "type": "rectangle",
+      "x": 64,
+      "y": 3295.316017133184,
+      "width": 777.8835937500029,
+      "height": 549.25,
+      "angle": 0,
+      "strokeColor": "#CCD7E8",
+      "backgroundColor": "#F7F9FD",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-0"
+      ],
+      "frameId": null,
+      "index": "aR",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 288210916,
+      "version": 2,
+      "versionNonce": 453708764,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "notes-3295-0-title",
+      "type": "text",
+      "x": 86,
+      "y": 3317.316017133184,
+      "width": 219.5068359375,
+      "height": 31.25,
+      "angle": 0,
+      "strokeColor": "#0545BA",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-0"
+      ],
+      "frameId": null,
+      "index": "aS",
+      "roundness": null,
+      "seed": 830054492,
+      "version": 2,
+      "versionNonce": 937504740,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "branch-sync-worker",
+      "fontSize": 25,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "branch-sync-worker",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-3295-0-body",
+      "type": "text",
+      "x": 86,
+      "y": 3369.566017133184,
+      "width": 712.916015625,
+      "height": 357.5,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-0"
+      ],
+      "frameId": null,
+      "index": "aT",
+      "roundness": null,
+      "seed": 1957962596,
+      "version": 2,
+      "versionNonce": 368390236,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Contenedor · NestJS / Node.js · sin servidor HTTP\n\napps/branch-sync-worker compone libs/backend/sync con pricing/catalog\npara preparar y activar versiones. Entrega outbox por HTTPS con\nidentidad y cursor; confirma acuses durables. El proceso supervisado\nsigue activo aunque el cliente se cierre. Descarga, staging, validación y\nactivación conservan límites transaccionales.\n\nAUTORIDAD · Proceso supervisado; modifica datos técnicos y versiones\nde maestros, nunca venta libremente.\n\nCONTINUIDAD · Retiene pendientes durables y reanuda al recuperar\nWAN; limita reintentos y trabajo en curso.",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Contenedor · NestJS / Node.js · sin servidor HTTP\n\napps/branch-sync-worker compone libs/backend/sync con pricing/catalog\npara preparar y activar versiones. Entrega outbox por HTTPS con\nidentidad y cursor; confirma acuses durables. El proceso supervisado\nsigue activo aunque el cliente se cierre. Descarga, staging, validación y\nactivación conservan límites transaccionales.\n\nAUTORIDAD · Proceso supervisado; modifica datos técnicos y versiones\nde maestros, nunca venta libremente.\n\nCONTINUIDAD · Retiene pendientes durables y reanuda al recuperar\nWAN; limita reintentos y trabajo en curso.",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-3295-1-bg",
+      "type": "rectangle",
+      "x": 865.8835937500029,
+      "y": 3295.316017133184,
+      "width": 777.8835937500029,
+      "height": 549.25,
+      "angle": 0,
+      "strokeColor": "#CCD7E8",
+      "backgroundColor": "#F7F9FD",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-1"
+      ],
+      "frameId": null,
+      "index": "aU",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 2057123036,
+      "version": 2,
+      "versionNonce": 1400476516,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "notes-3295-1-title",
+      "type": "text",
+      "x": 887.8835937500029,
+      "y": 3317.316017133184,
+      "width": 119.47021484375,
+      "height": 31.25,
+      "angle": 0,
+      "strokeColor": "#0545BA",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-1"
+      ],
+      "frameId": null,
+      "index": "aV",
+      "roundness": null,
+      "seed": 1889670884,
+      "version": 2,
+      "versionNonce": 1764148444,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "erp-worker",
+      "fontSize": 25,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "erp-worker",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-3295-1-body",
+      "type": "text",
+      "x": 887.8835937500029,
+      "y": 3369.566017133184,
+      "width": 721.48828125,
+      "height": 440,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-1"
+      ],
+      "frameId": null,
+      "index": "aW",
+      "roundness": null,
+      "seed": 1935292764,
+      "version": 2,
+      "versionNonce": 892962532,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Contenedor · NestJS / Node.js · libs/backend/erp\n\napps/erp-worker se ejecuta en la red autorizada del ERP e inicia HTTPS\nautenticado hacia country-api para reclamar trabajo, renovar su lease y\nregistrar resultados. Mantiene destino, versión de contrato e identidad de\nintento. Fachada, ACL y adaptadores son componentes de\nlibs/backend/erp, no servicios HTTP separados obligatorios. Chile: AX;\nPerú: custom; España: Gira, con interfaces por homologar. No accede por\nSQL remoto a PostgreSQL de país.\n\nAUTORIDAD · Proceso ejecutable con fachada, ACL y adaptadores\ninternos. Country-api conserva trabajo, destinos, intentos y resultados\ndurables.\n\nCONTINUIDAD · Si país o ERP no responde, conserva identidad y\nresultado incierto. Consulta o concilia antes de repetir un efecto.",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Contenedor · NestJS / Node.js · libs/backend/erp\n\napps/erp-worker se ejecuta en la red autorizada del ERP e inicia HTTPS\nautenticado hacia country-api para reclamar trabajo, renovar su lease y\nregistrar resultados. Mantiene destino, versión de contrato e identidad de\nintento. Fachada, ACL y adaptadores son componentes de\nlibs/backend/erp, no servicios HTTP separados obligatorios. Chile: AX;\nPerú: custom; España: Gira, con interfaces por homologar. No accede por\nSQL remoto a PostgreSQL de país.\n\nAUTORIDAD · Proceso ejecutable con fachada, ACL y adaptadores\ninternos. Country-api conserva trabajo, destinos, intentos y resultados\ndurables.\n\nCONTINUIDAD · Si país o ERP no responde, conserva identidad y\nresultado incierto. Consulta o concilia antes de repetir un efecto.",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-3295-2-bg",
+      "type": "rectangle",
+      "x": 1667.7671875000058,
+      "y": 3295.316017133184,
+      "width": 777.8835937500029,
+      "height": 549.25,
+      "angle": 0,
+      "strokeColor": "#CCD7E8",
+      "backgroundColor": "#F7F9FD",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-2"
+      ],
+      "frameId": null,
+      "index": "aX",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 830839396,
+      "version": 2,
+      "versionNonce": 2050083164,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "notes-3295-2-title",
+      "type": "text",
+      "x": 1689.7671875000058,
+      "y": 3317.316017133184,
+      "width": 248.7548828125,
+      "height": 31.25,
+      "angle": 0,
+      "strokeColor": "#0545BA",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-2"
+      ],
+      "frameId": null,
+      "index": "aY",
+      "roundness": null,
+      "seed": 1191357916,
+      "version": 2,
+      "versionNonce": 1370425956,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Entrada y autorización",
+      "fontSize": 25,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Entrada y autorización",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-3295-2-body",
+      "type": "text",
+      "x": 1689.7671875000058,
+      "y": 3369.566017133184,
+      "width": 724.689453125,
+      "height": 302.5,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-2"
+      ],
+      "frameId": null,
+      "index": "aZ",
+      "roundness": null,
+      "seed": 573353444,
+      "version": 2,
+      "versionNonce": 745029084,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Componente · administration + sync · NestJS\n\nControllers y guards de country-api validan identidad, país, entidad,\nsucursal y versión de contrato. Componen administration y sync; un token\nno habilita acceso a otros países ni a SQL.\n\nAUTORIDAD · Autentica sucursal o worker; propaga identidad y límites de\npaís/entidad.\n\nCONTINUIDAD · Rechaza contratos o capacidades no autorizadas; no\nconfunde recepción con aplicación.",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Componente · administration + sync · NestJS\n\nControllers y guards de country-api validan identidad, país, entidad,\nsucursal y versión de contrato. Componen administration y sync; un token\nno habilita acceso a otros países ni a SQL.\n\nAUTORIDAD · Autentica sucursal o worker; propaga identidad y límites de\npaís/entidad.\n\nCONTINUIDAD · Rechaza contratos o capacidades no autorizadas; no\nconfunde recepción con aplicación.",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-3295-3-bg",
+      "type": "rectangle",
+      "x": 64,
+      "y": 3868.566017133184,
+      "width": 777.8835937500029,
+      "height": 521.75,
+      "angle": 0,
+      "strokeColor": "#CCD7E8",
+      "backgroundColor": "#F7F9FD",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-3"
+      ],
+      "frameId": null,
+      "index": "aa",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 1722323548,
+      "version": 2,
+      "versionNonce": 1537744356,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "notes-3295-3-title",
+      "type": "text",
+      "x": 86,
+      "y": 3890.566017133184,
+      "width": 296.03271484375,
+      "height": 31.25,
+      "angle": 0,
+      "strokeColor": "#0545BA",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-3"
+      ],
+      "frameId": null,
+      "index": "ab",
+      "roundness": null,
+      "seed": 598036836,
+      "version": 2,
+      "versionNonce": 685515356,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Recepción de operaciones",
+      "fontSize": 25,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Recepción de operaciones",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-3295-3-body",
+      "type": "text",
+      "x": 86,
+      "y": 3942.816017133184,
+      "width": 732.4560546875,
+      "height": 302.5,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-3"
+      ],
+      "frameId": null,
+      "index": "ac",
+      "roundness": null,
+      "seed": 1360914140,
+      "version": 2,
+      "versionNonce": 2083701092,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Componente · libs/backend/sync\n\nVerifica orden, identidad y contrato; usa restricciones y una transacción\npara confirmar inbox, efecto/proyección local y outbox. El ACK certifica ese\ncommit, no contabilización ERP, liquidación de pago ni aceptación fiscal.\n\nAUTORIDAD · Inbox, proyección operativa y outbox se confirman juntos\nantes del ACK.\n\nCONTINUIDAD · Un duplicado equivalente conserva resultado; igual ID\ncon otro contenido es conflicto.",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Componente · libs/backend/sync\n\nVerifica orden, identidad y contrato; usa restricciones y una transacción\npara confirmar inbox, efecto/proyección local y outbox. El ACK certifica ese\ncommit, no contabilización ERP, liquidación de pago ni aceptación fiscal.\n\nAUTORIDAD · Inbox, proyección operativa y outbox se confirman juntos\nantes del ACK.\n\nCONTINUIDAD · Un duplicado equivalente conserva resultado; igual ID\ncon otro contenido es conflicto.",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-3295-4-bg",
+      "type": "rectangle",
+      "x": 865.8835937500029,
+      "y": 3868.566017133184,
+      "width": 777.8835937500029,
+      "height": 521.75,
+      "angle": 0,
+      "strokeColor": "#CCD7E8",
+      "backgroundColor": "#F7F9FD",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-4"
+      ],
+      "frameId": null,
+      "index": "ad",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 1161659620,
+      "version": 2,
+      "versionNonce": 643790556,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "notes-3295-4-title",
+      "type": "text",
+      "x": 887.8835937500029,
+      "y": 3890.566017133184,
+      "width": 283.92333984375,
+      "height": 31.25,
+      "angle": 0,
+      "strokeColor": "#0545BA",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-4"
+      ],
+      "frameId": null,
+      "index": "ae",
+      "roundness": null,
+      "seed": 1525984092,
+      "version": 2,
+      "versionNonce": 178058468,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Trabajo y resultados ERP",
+      "fontSize": 25,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Trabajo y resultados ERP",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-3295-4-body",
+      "type": "text",
+      "x": 887.8835937500029,
+      "y": 3942.816017133184,
+      "width": 733.669921875,
+      "height": 412.5,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-4"
+      ],
+      "frameId": null,
+      "index": "af",
+      "roundness": null,
+      "seed": 2088978532,
+      "version": 2,
+      "versionNonce": 830749532,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Componente · sync + erp · contratos públicos propuestos\n\nComposición objetivo con contratos y casos de uso públicos de sync y erp:\natiende solicitudes HTTPS salientes de erp-worker, reclama trabajo\nmediante transiciones condicionales y un lease limitado, preservando\ndestino y versión. Registra resultados e incertidumbre con la identidad\noriginal. La ACL y los adaptadores de proveedor se ejecutan sólo en\nerp-worker; esta vista no afirma que estos imports estén implementados en\nla base actual.\n\nAUTORIDAD · Country-api conserva intentos, lease, destino, versión y\nreferencias durables.\n\nCONTINUIDAD · Lease vencido no demuestra que una llamada externa se\nhaya detenido; resultado incierto exige consulta/conciliación.",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Componente · sync + erp · contratos públicos propuestos\n\nComposición objetivo con contratos y casos de uso públicos de sync y erp:\natiende solicitudes HTTPS salientes de erp-worker, reclama trabajo\nmediante transiciones condicionales y un lease limitado, preservando\ndestino y versión. Registra resultados e incertidumbre con la identidad\noriginal. La ACL y los adaptadores de proveedor se ejecutan sólo en\nerp-worker; esta vista no afirma que estos imports estén implementados en\nla base actual.\n\nAUTORIDAD · Country-api conserva intentos, lease, destino, versión y\nreferencias durables.\n\nCONTINUIDAD · Lease vencido no demuestra que una llamada externa se\nhaya detenido; resultado incierto exige consulta/conciliación.",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-3295-5-bg",
+      "type": "rectangle",
+      "x": 1667.7671875000058,
+      "y": 3868.566017133184,
+      "width": 777.8835937500029,
+      "height": 521.75,
+      "angle": 0,
+      "strokeColor": "#CCD7E8",
+      "backgroundColor": "#F7F9FD",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-5"
+      ],
+      "frameId": null,
+      "index": "ag",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 1988026332,
+      "version": 2,
+      "versionNonce": 1148500068,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "notes-3295-5-title",
+      "type": "text",
+      "x": 1689.7671875000058,
+      "y": 3890.566017133184,
+      "width": 286.26708984375,
+      "height": 31.25,
+      "angle": 0,
+      "strokeColor": "#0545BA",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-5"
+      ],
+      "frameId": null,
+      "index": "ah",
+      "roundness": null,
+      "seed": 1564777444,
+      "version": 2,
+      "versionNonce": 1956409308,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Publicaciones y consultas",
+      "fontSize": 25,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Publicaciones y consultas",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-3295-5-body",
+      "type": "text",
+      "x": 1689.7671875000058,
+      "y": 3942.816017133184,
+      "width": 711.60546875,
+      "height": 330,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-5"
+      ],
+      "frameId": null,
+      "index": "ai",
+      "roundness": null,
+      "seed": 2077131868,
+      "version": 2,
+      "versionNonce": 92802020,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Componente · catalog + pricing + reporting\n\nExpone manifiestos, deltas, chunks y consultas de estado por ámbito.\nPostgreSQL identifica la versión autorizada y su watermark.\nCatalog/pricing/reporting conservan sus contratos; country-api no\nconstruye cargas masivas dentro de la solicitud HTTP.\n\nAUTORIDAD · Lee publicaciones completas y autorizadas; el publicador\npesado vive fuera de este proceso.\n\nCONTINUIDAD · Sólo sirve versiones compatibles y vigentes; una caché\nno cambia su autoridad.",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Componente · catalog + pricing + reporting\n\nExpone manifiestos, deltas, chunks y consultas de estado por ámbito.\nPostgreSQL identifica la versión autorizada y su watermark.\nCatalog/pricing/reporting conservan sus contratos; country-api no\nconstruye cargas masivas dentro de la solicitud HTTP.\n\nAUTORIDAD · Lee publicaciones completas y autorizadas; el publicador\npesado vive fuera de este proceso.\n\nCONTINUIDAD · Sólo sirve versiones compatibles y vigentes; una caché\nno cambia su autoridad.",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-3295-6-bg",
+      "type": "rectangle",
+      "x": 64,
+      "y": 4414.316017133184,
+      "width": 777.8835937500029,
+      "height": 521.75,
+      "angle": 0,
+      "strokeColor": "#CCD7E8",
+      "backgroundColor": "#F7F9FD",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-6"
+      ],
+      "frameId": null,
+      "index": "aj",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 1368358756,
+      "version": 2,
+      "versionNonce": 2142901340,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "notes-3295-6-title",
+      "type": "text",
+      "x": 86,
+      "y": 4436.316017133184,
+      "width": 282.14111328125,
+      "height": 31.25,
+      "angle": 0,
+      "strokeColor": "#0545BA",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-6"
+      ],
+      "frameId": null,
+      "index": "ak",
+      "roundness": null,
+      "seed": 1890949340,
+      "version": 2,
+      "versionNonce": 2145709924,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Puerto de caché opcional",
+      "fontSize": 25,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Puerto de caché opcional",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-3295-6-body",
+      "type": "text",
+      "x": 86,
+      "y": 4488.566017133184,
+      "width": 730.791015625,
+      "height": 412.5,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-6"
+      ],
+      "frameId": null,
+      "index": "al",
+      "roundness": null,
+      "seed": 1370616548,
+      "version": 2,
+      "versionNonce": 279914716,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Componente · Adaptador TypeScript / cache-aside\n\nConsulta Redis sólo cuando está habilitado y después de comprobar\nautorización, país, entidad y alcance de permisos. Comprueba versión y\nvigencia; TTL controla retención/frescura técnica, no autoriza una versión\ncomercial vencida. Reconstruye entradas desde PostgreSQL con límites\nde concurrencia, espera y llenados para evitar saturar el origen. Una clave\no prefijo no es una frontera de seguridad. No contiene leases, outbox ni\nresultados financieros únicos.\n\nAUTORIDAD · Claves por país, entidad y versión; PostgreSQL conserva la\nverdad durable.\n\nCONTINUIDAD · Miss, expiración o fallo permite leer PostgreSQL con\ncarga y espera limitadas; la caché no es condición del commit.",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Componente · Adaptador TypeScript / cache-aside\n\nConsulta Redis sólo cuando está habilitado y después de comprobar\nautorización, país, entidad y alcance de permisos. Comprueba versión y\nvigencia; TTL controla retención/frescura técnica, no autoriza una versión\ncomercial vencida. Reconstruye entradas desde PostgreSQL con límites\nde concurrencia, espera y llenados para evitar saturar el origen. Una clave\no prefijo no es una frontera de seguridad. No contiene leases, outbox ni\nresultados financieros únicos.\n\nAUTORIDAD · Claves por país, entidad y versión; PostgreSQL conserva la\nverdad durable.\n\nCONTINUIDAD · Miss, expiración o fallo permite leer PostgreSQL con\ncarga y espera limitadas; la caché no es condición del commit.",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-3295-7-bg",
+      "type": "rectangle",
+      "x": 865.8835937500029,
+      "y": 4414.316017133184,
+      "width": 777.8835937500029,
+      "height": 521.75,
+      "angle": 0,
+      "strokeColor": "#CCD7E8",
+      "backgroundColor": "#F7F9FD",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-7"
+      ],
+      "frameId": null,
+      "index": "am",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 1355160924,
+      "version": 2,
+      "versionNonce": 1943626468,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "notes-3295-7-title",
+      "type": "text",
+      "x": 887.8835937500029,
+      "y": 4436.316017133184,
+      "width": 225.1220703125,
+      "height": 31.25,
+      "angle": 0,
+      "strokeColor": "#0545BA",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-7"
+      ],
+      "frameId": null,
+      "index": "an",
+      "roundness": null,
+      "seed": 473560676,
+      "version": 2,
+      "versionNonce": 1527623004,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Persistencia de país",
+      "fontSize": 25,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Persistencia de país",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-3295-7-body",
+      "type": "text",
+      "x": 887.8835937500029,
+      "y": 4488.566017133184,
+      "width": 730.0498046875,
+      "height": 357.5,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-7"
+      ],
+      "frameId": null,
+      "index": "ao",
+      "roundness": null,
+      "seed": 1431441884,
+      "version": 2,
+      "versionNonce": 1744004708,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Componente · Repositorios TypeScript / SQL\n\nComposición objetivo de persistencia para sync y los contratos públicos de\nerp: coordina inbox, proyección y outbox; conserva trabajo ERP, leases,\nintentos y resultados mediante transiciones condicionales. Las respuestas\nHTTP y la caché no reemplazan el registro durable. La llamada ERP y sus\nadaptadores quedan fuera de esta transacción y del proceso country-api.\n\nAUTORIDAD · Transacciones y restricciones por país/entidad; no otro\nescritor libre de ventas de sucursal.\n\nCONTINUIDAD · Un commit fallido no produce ACK de aplicación ni\nresultado definitivo.",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Componente · Repositorios TypeScript / SQL\n\nComposición objetivo de persistencia para sync y los contratos públicos de\nerp: coordina inbox, proyección y outbox; conserva trabajo ERP, leases,\nintentos y resultados mediante transiciones condicionales. Las respuestas\nHTTP y la caché no reemplazan el registro durable. La llamada ERP y sus\nadaptadores quedan fuera de esta transacción y del proceso country-api.\n\nAUTORIDAD · Transacciones y restricciones por país/entidad; no otro\nescritor libre de ventas de sucursal.\n\nCONTINUIDAD · Un commit fallido no produce ACK de aplicación ni\nresultado definitivo.",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-3295-8-bg",
+      "type": "rectangle",
+      "x": 1667.7671875000058,
+      "y": 4414.316017133184,
+      "width": 777.8835937500029,
+      "height": 521.75,
+      "angle": 0,
+      "strokeColor": "#CCD7E8",
+      "backgroundColor": "#F7F9FD",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-8"
+      ],
+      "frameId": null,
+      "index": "ap",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 1844808164,
+      "version": 2,
+      "versionNonce": 1344774620,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "notes-3295-8-title",
+      "type": "text",
+      "x": 1689.7671875000058,
+      "y": 4436.316017133184,
+      "width": 273.7548828125,
+      "height": 31.25,
+      "angle": 0,
+      "strokeColor": "#0545BA",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-8"
+      ],
+      "frameId": null,
+      "index": "aq",
+      "roundness": null,
+      "seed": 1030452828,
+      "version": 2,
+      "versionNonce": 1627453924,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Base técnica compartida",
+      "fontSize": 25,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Base técnica compartida",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-3295-8-body",
+      "type": "text",
+      "x": 1689.7671875000058,
+      "y": 4488.566017133184,
+      "width": 728.79296875,
+      "height": 357.5,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-8"
+      ],
+      "frameId": null,
+      "index": "ar",
+      "roundness": null,
+      "seed": 972205412,
+      "version": 2,
+      "versionNonce": 1729037916,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Componente · shared/backend · composición objetivo\n\nComposición de bootstrap, config, http/worker, health y observability. Pino\nregistra diagnóstico estructurado; Sentry es opt-in y requiere filtrado. El\nobjetivo organizacional es libs/shared/backend; la evidencia del producto\nidentifica la base actualmente implementada. No se presume un proyecto\nNx por subcarpeta.\n\nAUTORIDAD · Mecanismos de proceso: configuración validada, errores y\ncorrelación. No contiene reglas monetarias ni auditoría de negocio.\n\nCONTINUIDAD · Falla cerrada ante configuración inválida. La ausencia de\ntelemetría no altera el resultado de negocio.",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Componente · shared/backend · composición objetivo\n\nComposición de bootstrap, config, http/worker, health y observability. Pino\nregistra diagnóstico estructurado; Sentry es opt-in y requiere filtrado. El\nobjetivo organizacional es libs/shared/backend; la evidencia del producto\nidentifica la base actualmente implementada. No se presume un proyecto\nNx por subcarpeta.\n\nAUTORIDAD · Mecanismos de proceso: configuración validada, errores y\ncorrelación. No contiene reglas monetarias ni auditoría de negocio.\n\nCONTINUIDAD · Falla cerrada ante configuración inválida. La ausencia de\ntelemetría no altera el resultado de negocio.",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-3295-9-bg",
+      "type": "rectangle",
+      "x": 64,
+      "y": 4960.066017133184,
+      "width": 777.8835937500029,
+      "height": 604.25,
+      "angle": 0,
+      "strokeColor": "#CCD7E8",
+      "backgroundColor": "#F7F9FD",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-9"
+      ],
+      "frameId": null,
+      "index": "as",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 367282908,
+      "version": 2,
+      "versionNonce": 437263716,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "notes-3295-9-title",
+      "type": "text",
+      "x": 86,
+      "y": 4982.066017133184,
+      "width": 276.55029296875,
+      "height": 31.25,
+      "angle": 0,
+      "strokeColor": "#0545BA",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-9"
+      ],
+      "frameId": null,
+      "index": "at",
+      "roundness": null,
+      "seed": 1635737828,
+      "version": 2,
+      "versionNonce": 1687542492,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Datos operativos de país",
+      "fontSize": 25,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Datos operativos de país",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-3295-9-body",
+      "type": "text",
+      "x": 86,
+      "y": 5034.316017133184,
+      "width": 723.9482421875,
+      "height": 302.5,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-9"
+      ],
+      "frameId": null,
+      "index": "au",
+      "roundness": null,
+      "seed": 21925724,
+      "version": 2,
+      "versionNonce": 1013895396,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Contenedor de datos · PostgreSQL\n\nAislamiento lógico y recursos por país/entidad legal. Retención, backups y\ndeduplicación deben cubrir el horizonte de replay y restauración. ACK de\naplicación local no equivale a contabilización ERP.\n\nAUTORIDAD · Proyección de operaciones de sucursal; inbox, outbox,\nversiones y resultados de integración.\n\nCONTINUIDAD · No sustituye la autoridad local ni habilita consumo\nconcurrente offline de saldos globales.",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Contenedor de datos · PostgreSQL\n\nAislamiento lógico y recursos por país/entidad legal. Retención, backups y\ndeduplicación deben cubrir el horizonte de replay y restauración. ACK de\naplicación local no equivale a contabilización ERP.\n\nAUTORIDAD · Proyección de operaciones de sucursal; inbox, outbox,\nversiones y resultados de integración.\n\nCONTINUIDAD · No sustituye la autoridad local ni habilita consumo\nconcurrente offline de saldos globales.",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-3295-10-bg",
+      "type": "rectangle",
+      "x": 865.8835937500029,
+      "y": 4960.066017133184,
+      "width": 777.8835937500029,
+      "height": 604.25,
+      "angle": 0,
+      "strokeColor": "#CCD7E8",
+      "backgroundColor": "#F7F9FD",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-10"
+      ],
+      "frameId": null,
+      "index": "av",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 1814668388,
+      "version": 2,
+      "versionNonce": 592322396,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "notes-3295-10-title",
+      "type": "text",
+      "x": 887.8835937500029,
+      "y": 4982.066017133184,
+      "width": 358.5205078125,
+      "height": 31.25,
+      "angle": 0,
+      "strokeColor": "#0545BA",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-10"
+      ],
+      "frameId": null,
+      "index": "aw",
+      "roundness": null,
+      "seed": 2147238876,
+      "version": 2,
+      "versionNonce": 397087844,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Redis · caché de país (opcional)",
+      "fontSize": 25,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Redis · caché de país (opcional)",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "notes-3295-10-body",
+      "type": "text",
+      "x": 887.8835937500029,
+      "y": 5034.316017133184,
+      "width": 731.3388671875,
+      "height": 495,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "notes-3295-10"
+      ],
+      "frameId": null,
+      "index": "ax",
+      "roundness": null,
+      "seed": 1069512676,
+      "version": 2,
+      "versionNonce": 1535759324,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "Contenedor de datos · Redis · datos reconstruibles\n\nAmpliación opcional sujeta a medición, capacidad y operación. La API\ncomprueba identidad, ámbito y autorización antes de leer. Las claves\nincluyen país, entidad legal, versión y alcance de permisos cuando afecte\nal resultado; un prefijo no sustituye autorización. TTL y vigencia comercial\nson independientes. El fallback limita concurrencia, esperas y llenados\npara proteger PostgreSQL. No es la inbox, outbox, base de ventas ni único\nregistro de permisos, dinero o trabajos; no implica BullMQ ni Redis en\ncada sucursal. Las versiones inmutables evitan mezclar publicaciones y\nPostgreSQL resuelve la versión autorizada.\n\nAUTORIDAD · Country-api lee y escribe entradas identificadas por país,\nentidad y versión. PostgreSQL conserva la autoridad y el estado durable.\n\nCONTINUIDAD · Un miss, expiración o caída permite consultar\nPostgreSQL con límites de carga y espera. La ausencia de caché no es\ncondición del commit; la capacidad del origen sigue siendo necesaria.",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Contenedor de datos · Redis · datos reconstruibles\n\nAmpliación opcional sujeta a medición, capacidad y operación. La API\ncomprueba identidad, ámbito y autorización antes de leer. Las claves\nincluyen país, entidad legal, versión y alcance de permisos cuando afecte\nal resultado; un prefijo no sustituye autorización. TTL y vigencia comercial\nson independientes. El fallback limita concurrencia, esperas y llenados\npara proteger PostgreSQL. No es la inbox, outbox, base de ventas ni único\nregistro de permisos, dinero o trabajos; no implica BullMQ ni Redis en\ncada sucursal. Las versiones inmutables evitan mezclar publicaciones y\nPostgreSQL resuelve la versión autorizada.\n\nAUTORIDAD · Country-api lee y escribe entradas identificadas por país,\nentidad y versión. PostgreSQL conserva la autoridad y el estado durable.\n\nCONTINUIDAD · Un miss, expiración o caída permite consultar\nPostgreSQL con límites de carga y espera. La ausencia de caché no es\ncondición del commit; la capacidad del origen sigue siendo necesaria.",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "footer",
+      "type": "text",
+      "x": 64,
+      "y": 5623.316017133184,
+      "width": 1424.169921875,
+      "height": 25,
+      "angle": 0,
+      "strokeColor": "#4C607D",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "ay",
+      "roundness": null,
+      "seed": 939485276,
+      "version": 2,
+      "versionNonce": 1502799844,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "C4: contenedor = aplicación o almacén; componente = módulo dentro de un proceso. Despliegue y dinámicas son vistas complementarias, no el nivel de código.",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "C4: contenedor = aplicación o almacén; componente = módulo dentro de un proceso. Despliegue y dinámicas son vistas complementarias, no el nivel de código.",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "glossary",
+      "type": "text",
+      "x": 64,
+      "y": 5689.316017133184,
+      "width": 1681.240234375,
+      "height": 25,
+      "angle": 0,
+      "strokeColor": "#4C607D",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "az",
+      "roundness": null,
+      "seed": 1481562980,
+      "version": 2,
+      "versionNonce": 1801123932,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "LAN: red de tienda · WAN: enlace a país · ACK: acuse de aplicación durable · ACL: capa anticorrupción · outbox/inbox: registros de envío/recepción · watermark: corte consistente del origen",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "LAN: red de tienda · WAN: enlace a país · ACK: acuse de aplicación durable · ACL: capa anticorrupción · outbox/inbox: registros de envío/recepción · watermark: corte consistente del origen",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "sources",
+      "type": "text",
+      "x": 64,
+      "y": 5758.316017133184,
+      "width": 1643.8095703125,
+      "height": 67.5,
+      "angle": 0,
+      "strokeColor": "#4C607D",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b00",
+      "roundness": null,
+      "seed": 1026161884,
+      "version": 2,
+      "versionNonce": 1177832292,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523901,
+      "link": null,
+      "locked": false,
+      "text": "FUENTES DEL REPOSITORIO\ndocs/c4-arquitectura-propuesta.md  ·  docs/propuesta-arquitectura.md  ·  docs/opciones-tecnologicas.md  ·  docs/operacion-caja-y-evolucion.md  ·  docs/revision-resiliencia-datos-pos.md\nAngular + Tauri (escritorio), Angular + Capacitor (móvil) y Nx: dirección elegida. Backend, bases, integración y topología: diseño por implementar y validar. Nx organiza código y CI; no es un proceso runtime.",
+      "fontSize": 18,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "FUENTES DEL REPOSITORIO\ndocs/c4-arquitectura-propuesta.md  ·  docs/propuesta-arquitectura.md  ·  docs/opciones-tecnologicas.md  ·  docs/operacion-caja-y-evolucion.md  ·  docs/revision-resiliencia-datos-pos.md\nAngular + Tauri (escritorio), Angular + Capacitor (móvil) y Nx: dirección elegida. Backend, bases, integración y topología: diseño por implementar y validar. Nx organiza código y CI; no es un proceso runtime.",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "countryScope",
+      "type": "rectangle",
+      "x": 93.54414062500871,
+      "y": 641.1999999999999,
+      "width": 1921.0816406249996,
+      "height": 1717.0787109374996,
+      "angle": 0,
+      "strokeColor": "#CCD7E8",
+      "backgroundColor": "#ffffff",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "dashed",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b01",
+      "roundness": null,
+      "seed": 496793444,
+      "version": 3,
+      "versionNonce": 512986332,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "countryScope-title",
+      "type": "text",
+      "x": 111.54414062500871,
+      "y": 655.5998558044435,
+      "width": 465.2333984375,
+      "height": 27.5,
+      "angle": 0,
+      "strokeColor": "#4C607D",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b02",
+      "roundness": null,
+      "seed": 1913921756,
+      "version": 3,
+      "versionNonce": 1876770532,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "text": "apps/country-api · UN proceso NestJS + Fastify",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "apps/country-api · UN proceso NestJS + Fastify",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "syncWorker",
+      "type": "rectangle",
+      "x": 64.00000000000001,
+      "y": 430,
+      "width": 382.01015624999997,
+      "height": 187.19999999999993,
+      "angle": 0,
+      "strokeColor": "#0545BA",
+      "backgroundColor": "#EDF3FF",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b03",
+      "roundness": null,
+      "seed": 23063268,
+      "version": 4,
+      "versionNonce": 1992659292,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "type": "text",
+          "id": "50iqmDUaYSU2jBNjAa_Xa"
+        },
+        {
+          "id": "syncWorker_countryEntry",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "c4NodeId": "syncWorker",
+        "type": "Contenedor"
+      }
+    },
+    {
+      "id": "erpAdapter",
+      "type": "rectangle",
+      "x": 987.7919921875086,
+      "y": 443.20000000000005,
+      "width": 439.16249999999997,
+      "height": 160.79999999999993,
+      "angle": 0,
+      "strokeColor": "#0545BA",
+      "backgroundColor": "#EDF3FF",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b04",
+      "roundness": null,
+      "seed": 890479964,
+      "version": 4,
+      "versionNonce": 1864090212,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "type": "text",
+          "id": "puuJ8ADecq00IS8JqLH85"
+        },
+        {
+          "id": "erpAdapter_countryEntry",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "c4NodeId": "erpAdapter",
+        "type": "Contenedor"
+      }
+    },
+    {
+      "id": "countryEntry",
+      "type": "rectangle",
+      "x": 742.7957031249999,
+      "y": 899.2,
+      "width": 398.56874999999997,
+      "height": 160.79999999999998,
+      "angle": 0,
+      "strokeColor": "#0545BA",
+      "backgroundColor": "#EDF3FF",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b05",
+      "roundness": null,
+      "seed": 325643876,
+      "version": 9,
+      "versionNonce": 1933772252,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "type": "text",
+          "id": "-vSQMnIdUNQY99rYlrMCV"
+        },
+        {
+          "id": "syncWorker_countryEntry",
+          "type": "arrow"
+        },
+        {
+          "id": "erpAdapter_countryEntry",
+          "type": "arrow"
+        },
+        {
+          "id": "countryEntry_countryInbox",
+          "type": "arrow"
+        },
+        {
+          "id": "countryEntry_countryJobs",
+          "type": "arrow"
+        },
+        {
+          "id": "countryEntry_countryPublications",
+          "type": "arrow"
+        },
+        {
+          "id": "countryEntry_technicalBase",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "c4NodeId": "countryEntry",
+        "type": "Componente"
+      }
+    },
+    {
+      "id": "countryInbox",
+      "type": "rectangle",
+      "x": 165.54414062500874,
+      "y": 1665.9999999999998,
+      "width": 405.84375,
+      "height": 160.79999999999998,
+      "angle": 0,
+      "strokeColor": "#0545BA",
+      "backgroundColor": "#EDF3FF",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b06",
+      "roundness": null,
+      "seed": 1722718684,
+      "version": 5,
+      "versionNonce": 448648676,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "type": "text",
+          "id": "9pksyGAxuwa4HyLoPcMuA"
+        },
+        {
+          "id": "countryEntry_countryInbox",
+          "type": "arrow"
+        },
+        {
+          "id": "countryInbox_countryUow",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "c4NodeId": "countryInbox",
+        "type": "Componente"
+      }
+    },
+    {
+      "id": "countryJobs",
+      "type": "rectangle",
+      "x": 955.8191406249999,
+      "y": 1652.7999999999997,
+      "width": 383.79375,
+      "height": 187.2,
+      "angle": 0,
+      "strokeColor": "#0545BA",
+      "backgroundColor": "#EDF3FF",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b07",
+      "roundness": null,
+      "seed": 344293860,
+      "version": 5,
+      "versionNonce": 1495132764,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "type": "text",
+          "id": "s3WHGenVBfgm0NxBhDwUN"
+        },
+        {
+          "id": "countryEntry_countryJobs",
+          "type": "arrow"
+        },
+        {
+          "id": "countryJobs_countryUow",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "c4NodeId": "countryJobs",
+        "type": "Componente"
+      }
+    },
+    {
+      "id": "countryPublications",
+      "type": "rectangle",
+      "x": 1463.344140625,
+      "y": 1302.4,
+      "width": 431.15625,
+      "height": 134.4,
+      "angle": 0,
+      "strokeColor": "#0545BA",
+      "backgroundColor": "#EDF3FF",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b08",
+      "roundness": null,
+      "seed": 32964188,
+      "version": 5,
+      "versionNonce": 1070692708,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "type": "text",
+          "id": "2oMMUmAiJFUtIiyvliRC1"
+        },
+        {
+          "id": "countryEntry_countryPublications",
+          "type": "arrow"
+        },
+        {
+          "id": "countryPublications_countryCachePort",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "c4NodeId": "countryPublications",
+        "type": "Componente"
+      }
+    },
+    {
+      "id": "countryCachePort",
+      "type": "rectangle",
+      "x": 1459.612890625,
+      "y": 1679.1999999999998,
+      "width": 438.61875,
+      "height": 134.4,
+      "angle": 0,
+      "strokeColor": "#0545BA",
+      "backgroundColor": "#EDF3FF",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b09",
+      "roundness": null,
+      "seed": 2076419428,
+      "version": 6,
+      "versionNonce": 2066235100,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "type": "text",
+          "id": "ysQuX6nI9gp5bMoU94aKf"
+        },
+        {
+          "id": "countryPublications_countryCachePort",
+          "type": "arrow"
+        },
+        {
+          "id": "countryCachePort_countryCache",
+          "type": "arrow"
+        },
+        {
+          "id": "countryCachePort_countryUow",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "c4NodeId": "countryCachePort",
+        "type": "Componente"
+      }
+    },
+    {
+      "id": "countryUow",
+      "type": "rectangle",
+      "x": 958.378515625,
+      "y": 2106.9393554687495,
+      "width": 378.675,
+      "height": 160.79999999999998,
+      "angle": 0,
+      "strokeColor": "#0545BA",
+      "backgroundColor": "#EDF3FF",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b0A",
+      "roundness": null,
+      "seed": 1337905884,
+      "version": 7,
+      "versionNonce": 1503964388,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "type": "text",
+          "id": "oDrV_fbxQ1TSnqHI5Mf7b"
+        },
+        {
+          "id": "countryInbox_countryUow",
+          "type": "arrow"
+        },
+        {
+          "id": "countryJobs_countryUow",
+          "type": "arrow"
+        },
+        {
+          "id": "countryCachePort_countryUow",
+          "type": "arrow"
+        },
+        {
+          "id": "countryUow_countryDb",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "c4NodeId": "countryUow",
+        "type": "Componente"
+      }
+    },
+    {
+      "id": "technicalBase",
+      "type": "rectangle",
+      "x": 519.591015625,
+      "y": 1276,
+      "width": 433.70625,
+      "height": 187.2,
+      "angle": 0,
+      "strokeColor": "#0545BA",
+      "backgroundColor": "#EDF3FF",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b0B",
+      "roundness": null,
+      "seed": 779180260,
+      "version": 4,
+      "versionNonce": 32768860,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "type": "text",
+          "id": "52IHIBx6yexCmNxCedBcR"
+        },
+        {
+          "id": "countryEntry_technicalBase",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "c4NodeId": "technicalBase",
+        "type": "Componente"
+      }
+    },
+    {
+      "id": "countryDb",
+      "type": "rectangle",
+      "x": 981.7410156250087,
+      "y": 2547.8787490667773,
+      "width": 331.95,
+      "height": 208.3745361328125,
+      "angle": 0,
+      "strokeColor": "#6545A4",
+      "backgroundColor": "#F2EEFA",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b0C",
+      "roundness": null,
+      "seed": 781719388,
+      "version": 4,
+      "versionNonce": 1237676132,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "type": "text",
+          "id": "z30NKdciU9sGWL4xW7gcO"
+        },
+        {
+          "id": "countryUow_countryDb",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "c4NodeId": "countryDb",
+        "type": "Contenedor de datos"
+      }
+    },
+    {
+      "id": "countryCache",
+      "type": "rectangle",
+      "x": 2086.6257812500085,
+      "y": 2082.3999999999996,
+      "width": 359.025,
+      "height": 209.8787109375,
+      "angle": 0,
+      "strokeColor": "#6545A4",
+      "backgroundColor": "#F2EEFA",
+      "fillStyle": "solid",
+      "strokeWidth": 1.5,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b0D",
+      "roundness": null,
+      "seed": 941399140,
+      "version": 4,
+      "versionNonce": 869480412,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "type": "text",
+          "id": "U8RcngiwkLPSWwkykYkSK"
+        },
+        {
+          "id": "countryCachePort_countryCache",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "c4NodeId": "countryCache",
+        "type": "Contenedor de datos"
+      }
+    },
+    {
+      "id": "syncWorker_countryEntry",
+      "type": "arrow",
+      "x": 255.50520629882809,
+      "y": 617.7,
+      "width": 482.59596557617186,
+      "height": 317.93720703125,
+      "angle": 0,
+      "strokeColor": "#48638C",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-syncWorker_countryEntry"
+      ],
+      "frameId": null,
+      "index": "b0E",
+      "roundness": null,
+      "seed": 1523895260,
+      "version": 5,
+      "versionNonce": 268551140,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "from": "syncWorker",
+        "to": "countryEntry",
+        "label": "Lotes, acuses y publicaciones · HTTPS"
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -0.5,
+          25.25400390625
+        ],
+        [
+          -0.5,
+          51.0080078125
+        ],
+        [
+          -0.5,
+          76.76197509765625
+        ],
+        [
+          -0.5,
+          102.51597900390625
+        ],
+        [
+          0.072113037109375,
+          128.25577392578126
+        ],
+        [
+          5.663714599609375,
+          153.29207763671874
+        ],
+        [
+          19.320196533203124,
+          174.977587890625
+        ],
+        [
+          38.5948486328125,
+          191.975927734375
+        ],
+        [
+          60.57737426757812,
+          205.35654296875
+        ],
+        [
+          83.87518310546875,
+          216.31470947265623
+        ],
+        [
+          107.86110229492188,
+          225.68472900390626
+        ],
+        [
+          132.21273803710938,
+          234.063525390625
+        ],
+        [
+          156.78860473632812,
+          241.76179199218748
+        ],
+        [
+          181.5165588378906,
+          248.95761718749998
+        ],
+        [
+          206.35510864257813,
+          255.76236572265623
+        ],
+        [
+          231.2780334472656,
+          262.2512939453125
+        ],
+        [
+          256.2670593261719,
+          268.4812744140625
+        ],
+        [
+          281.3093688964844,
+          274.493212890625
+        ],
+        [
+          306.39577026367186,
+          280.3189331054687
+        ],
+        [
+          331.5183898925781,
+          285.98623046874997
+        ],
+        [
+          356.66994018554686,
+          291.5239624023437
+        ],
+        [
+          381.8437927246094,
+          296.9594482421875
+        ],
+        [
+          407.03038940429684,
+          302.33571777343747
+        ],
+        [
+          432.21889038085936,
+          307.70286865234374
+        ],
+        [
+          457.40746459960934,
+          313.07005615234374
+        ],
+        [
+          482.09596557617186,
+          317.93720703125
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "syncWorker",
+        "focus": -6.710493217748235e-7,
+        "gap": 1
+      },
+      "endBinding": {
+        "elementId": "countryEntry",
+        "focus": -0.000007419939968356689,
+        "gap": 4.6945312499999545
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "erpAdapter_countryEntry",
+      "type": "arrow",
+      "x": 1206.8731689453125,
+      "y": 604.5,
+      "width": 114.8968017578125,
+      "height": 291.88038330078126,
+      "angle": 0,
+      "strokeColor": "#48638C",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-erpAdapter_countryEntry"
+      ],
+      "frameId": null,
+      "index": "b0F",
+      "roundness": null,
+      "seed": 43216868,
+      "version": 5,
+      "versionNonce": 1020779612,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "from": "erpAdapter",
+        "to": "countryEntry",
+        "label": "Claim, consulta y resultado · HTTPS saliente"
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0.5,
+          24.209716796875
+        ],
+        [
+          0.5,
+          48.91939697265625
+        ],
+        [
+          0.5,
+          73.62911376953124
+        ],
+        [
+          0.5,
+          98.33883056640624
+        ],
+        [
+          0.4969970703125,
+          123.04854736328124
+        ],
+        [
+          0.1612548828125,
+          147.754638671875
+        ],
+        [
+          -1.7526367187499998,
+          172.38045654296874
+        ],
+        [
+          -6.944995117187499,
+          196.5058837890625
+        ],
+        [
+          -17.181103515625,
+          218.9224609375
+        ],
+        [
+          -32.7471923828125,
+          238.04365234374998
+        ],
+        [
+          -51.4853271484375,
+          254.12108154296874
+        ],
+        [
+          -71.904443359375,
+          268.0215698242187
+        ],
+        [
+          -93.2635498046875,
+          280.43996582031247
+        ],
+        [
+          -114.3968017578125,
+          291.88038330078126
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "erpAdapter",
+        "focus": 3.335539636820619e-7,
+        "gap": 1
+      },
+      "endBinding": {
+        "elementId": "countryEntry",
+        "focus": 0.00008010985871835275,
+        "gap": 2.3196166992187273
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "countryEntry_countryInbox",
+      "type": "arrow",
+      "x": 742.7956298828125,
+      "y": 1045.5539794921874,
+      "width": 374.32924804687497,
+      "height": 615.1460205078125,
+      "angle": 0,
+      "strokeColor": "#48638C",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryEntry_countryInbox"
+      ],
+      "frameId": null,
+      "index": "b0G",
+      "roundness": null,
+      "seed": 914813020,
+      "version": 5,
+      "versionNonce": 40347492,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "from": "countryEntry",
+        "to": "countryInbox",
+        "label": "Recibe evento identificado · TypeScript"
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -24.9406494140625,
+          7.691699218749999
+        ],
+        [
+          -49.8813720703125,
+          15.883398437499999
+        ],
+        [
+          -74.81956787109375,
+          24.0826416015625
+        ],
+        [
+          -99.710595703125,
+          32.423681640625
+        ],
+        [
+          -124.49886474609374,
+          41.06494140625
+        ],
+        [
+          -149.145849609375,
+          50.1009033203125
+        ],
+        [
+          -173.6108642578125,
+          59.617919921875
+        ],
+        [
+          -197.8423828125,
+          69.7142822265625
+        ],
+        [
+          -221.77100830078123,
+          80.5078369140625
+        ],
+        [
+          -245.2953369140625,
+          92.15488281249999
+        ],
+        [
+          -268.2571655273437,
+          104.87236328125
+        ],
+        [
+          -290.39267578125,
+          118.97441406249999
+        ],
+        [
+          -311.2211059570312,
+          134.9335205078125
+        ],
+        [
+          -329.89954833984376,
+          153.3483642578125
+        ],
+        [
+          -345.58912353515626,
+          174.3605224609375
+        ],
+        [
+          -357.6722900390625,
+          197.6330810546875
+        ],
+        [
+          -366.00018310546875,
+          222.5039306640625
+        ],
+        [
+          -370.9921508789062,
+          248.261376953125
+        ],
+        [
+          -373.4395751953125,
+          274.39140625
+        ],
+        [
+          -374.249267578125,
+          300.6281494140625
+        ],
+        [
+          -374.32924804687497,
+          326.8794677734375
+        ],
+        [
+          -374.32924804687497,
+          353.1309326171875
+        ],
+        [
+          -374.32924804687497,
+          379.38247070312497
+        ],
+        [
+          -374.32924804687497,
+          405.6340087890625
+        ],
+        [
+          -374.32924804687497,
+          431.8854736328125
+        ],
+        [
+          -374.32924804687497,
+          458.13701171875
+        ],
+        [
+          -374.32924804687497,
+          484.3884765625
+        ],
+        [
+          -374.32924804687497,
+          510.6400146484375
+        ],
+        [
+          -374.32924804687497,
+          536.8914794921875
+        ],
+        [
+          -374.32924804687497,
+          563.1430908203125
+        ],
+        [
+          -374.32924804687497,
+          589.3945556640625
+        ],
+        [
+          -374.32924804687497,
+          615.1460205078125
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "countryEntry",
+        "focus": 0.0000037121485762702836,
+        "gap": 1
+      },
+      "endBinding": {
+        "elementId": "countryInbox",
+        "focus": 0.0000018046892621282987,
+        "gap": 4.799999999999727
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "countryEntry_countryJobs",
+      "type": "arrow",
+      "x": 1029.8355712890625,
+      "y": 1060.5,
+      "width": 117.880810546875,
+      "height": 587,
+      "angle": 0,
+      "strokeColor": "#48638C",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryEntry_countryJobs"
+      ],
+      "frameId": null,
+      "index": "b0H",
+      "roundness": null,
+      "seed": 233034596,
+      "version": 5,
+      "versionNonce": 1993601244,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "from": "countryEntry",
+        "to": "countryJobs",
+        "label": "Asigna trabajo / recibe resultado · TypeScript"
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          19.231713867187498,
+          17.120019531249998
+        ],
+        [
+          38.1684814453125,
+          35.053149414062496
+        ],
+        [
+          55.9319091796875,
+          54.14365234375
+        ],
+        [
+          72.00849609375,
+          74.670947265625
+        ],
+        [
+          85.9177734375,
+          96.7201416015625
+        ],
+        [
+          97.1227294921875,
+          120.25432128906249
+        ],
+        [
+          105.222802734375,
+          145.0305419921875
+        ],
+        [
+          110.684765625,
+          170.5262939453125
+        ],
+        [
+          114.18625488281249,
+          196.3685546875
+        ],
+        [
+          116.2669921875,
+          222.3660888671875
+        ],
+        [
+          117.3535400390625,
+          248.42536621093748
+        ],
+        [
+          117.7896240234375,
+          274.5042724609375
+        ],
+        [
+          117.8783203125,
+          300.58706054687497
+        ],
+        [
+          117.880810546875,
+          326.67006835937497
+        ],
+        [
+          117.880810546875,
+          352.75307617187497
+        ],
+        [
+          117.880810546875,
+          378.83608398437497
+        ],
+        [
+          117.880810546875,
+          404.9190185546875
+        ],
+        [
+          117.880810546875,
+          431.0020263671875
+        ],
+        [
+          117.880810546875,
+          457.0850341796875
+        ],
+        [
+          117.880810546875,
+          483.16796875
+        ],
+        [
+          117.880810546875,
+          509.2509765625
+        ],
+        [
+          117.880810546875,
+          535.333984375
+        ],
+        [
+          117.880810546875,
+          561.4169921875
+        ],
+        [
+          117.880810546875,
+          587
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "countryEntry",
+        "focus": -0.000004687695570822754,
+        "gap": 1
+      },
+      "endBinding": {
+        "elementId": "countryJobs",
+        "focus": 0.000001908373637440518,
+        "gap": 4.799999999999727
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "countryEntry_countryPublications",
+      "type": "arrow",
+      "x": 1141.8648193359372,
+      "y": 1031.0543701171875,
+      "width": 537.0392822265625,
+      "height": 266.0456298828125,
+      "angle": 0,
+      "strokeColor": "#48638C",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryEntry_countryPublications"
+      ],
+      "frameId": null,
+      "index": "b0I",
+      "roundness": null,
+      "seed": 293635292,
+      "version": 5,
+      "versionNonce": 88414948,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "from": "countryEntry",
+        "to": "countryPublications",
+        "label": "Consulta versión y estado · TypeScript"
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          24.324560546875,
+          5.8473876953124995
+        ],
+        [
+          49.14912109375,
+          12.194775390624999
+        ],
+        [
+          73.973681640625,
+          18.5421630859375
+        ],
+        [
+          98.79758300781249,
+          24.892114257812498
+        ],
+        [
+          123.6140869140625,
+          31.271069335937497
+        ],
+        [
+          148.4118408203125,
+          37.722094726562496
+        ],
+        [
+          173.18146972656248,
+          44.280859375
+        ],
+        [
+          197.91828613281248,
+          50.961718749999996
+        ],
+        [
+          222.6143798828125,
+          57.791406249999994
+        ],
+        [
+          247.26301269531248,
+          64.7906494140625
+        ],
+        [
+          271.85524902343747,
+          71.985595703125
+        ],
+        [
+          296.3799560546875,
+          79.407373046875
+        ],
+        [
+          320.8223388671875,
+          87.0955322265625
+        ],
+        [
+          345.1630615234375,
+          95.09958496093749
+        ],
+        [
+          369.3719482421875,
+          103.49387207031249
+        ],
+        [
+          393.4054931640625,
+          112.37705078124999
+        ],
+        [
+          417.19265136718747,
+          121.898828125
+        ],
+        [
+          440.60305175781247,
+          132.3095458984375
+        ],
+        [
+          463.37624511718747,
+          144.0423583984375
+        ],
+        [
+          485.09943847656245,
+          157.6119384765625
+        ],
+        [
+          505.0809326171875,
+          173.6184326171875
+        ],
+        [
+          521.9724853515625,
+          192.821435546875
+        ],
+        [
+          533.3635498046875,
+          215.6620849609375
+        ],
+        [
+          537.0392822265625,
+          240.922509765625
+        ],
+        [
+          536.5580322265624,
+          266.0456298828125
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "countryEntry",
+        "focus": -0.000005418290619916203,
+        "gap": 1
+      },
+      "endBinding": {
+        "elementId": "countryPublications",
+        "focus": 0.00024705929937107724,
+        "gap": 4.800000000000068
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "countryEntry_technicalBase",
+      "type": "arrow",
+      "x": 853.8248046875,
+      "y": 1060.5,
+      "width": 117.32785644531249,
+      "height": 210.2,
+      "angle": 0,
+      "strokeColor": "#48638C",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryEntry_technicalBase"
+      ],
+      "frameId": null,
+      "index": "b0J",
+      "roundness": null,
+      "seed": 677103332,
+      "version": 5,
+      "versionNonce": 827946332,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "from": "countryEntry",
+        "to": "technicalBase",
+        "label": "Configura, limita y correlaciona · TypeScript"
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -18.173974609374998,
+          16.60908203125
+        ],
+        [
+          -36.71787109375,
+          33.8582763671875
+        ],
+        [
+          -54.6841064453125,
+          51.7064453125
+        ],
+        [
+          -71.7262451171875,
+          70.4363037109375
+        ],
+        [
+          -87.3426513671875,
+          90.36447753906249
+        ],
+        [
+          -100.5296142578125,
+          111.95957031249999
+        ],
+        [
+          -109.9592529296875,
+          135.43193359375
+        ],
+        [
+          -115.42473144531249,
+          160.1353515625
+        ],
+        [
+          -117.32785644531249,
+          185.3736572265625
+        ],
+        [
+          -116.880810546875,
+          210.2
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "countryEntry",
+        "focus": 0.0000050119165715015345,
+        "gap": 1
+      },
+      "endBinding": {
+        "elementId": "technicalBase",
+        "focus": -0.0009485797994234874,
+        "gap": 4.7999999999999545
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "countryInbox_countryUow",
+      "type": "arrow",
+      "x": 368.96638183593745,
+      "y": 1827.3,
+      "width": 584.7898193359374,
+      "height": 303.255224609375,
+      "angle": 0,
+      "strokeColor": "#48638C",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryInbox_countryUow"
+      ],
+      "frameId": null,
+      "index": "b0K",
+      "roundness": null,
+      "seed": 1901300060,
+      "version": 5,
+      "versionNonce": 1126702692,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "from": "countryInbox",
+        "to": "countryUow",
+        "label": "Inbox + efecto + outbox · una transacción"
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -0.48740234375,
+          25.411181640625
+        ],
+        [
+          3.0607421875,
+          50.983544921875
+        ],
+        [
+          14.235595703125,
+          74.25742187499999
+        ],
+        [
+          30.808911132812497,
+          94.117626953125
+        ],
+        [
+          50.45059814453125,
+          110.9875
+        ],
+        [
+          71.86156005859375,
+          125.56416015625
+        ],
+        [
+          94.36441650390624,
+          138.39985351562498
+        ],
+        [
+          117.57537841796875,
+          149.911181640625
+        ],
+        [
+          141.22187499999998,
+          160.50244140625
+        ],
+        [
+          165.15185546875,
+          170.43818359374998
+        ],
+        [
+          189.282080078125,
+          179.877783203125
+        ],
+        [
+          213.563330078125,
+          188.92216796875
+        ],
+        [
+          237.96011962890623,
+          197.65029296875
+        ],
+        [
+          262.4525634765625,
+          206.10639648437498
+        ],
+        [
+          287.02191162109375,
+          214.336474609375
+        ],
+        [
+          311.6563720703125,
+          222.369677734375
+        ],
+        [
+          336.346533203125,
+          230.23017578124998
+        ],
+        [
+          361.0837158203125,
+          237.94140625
+        ],
+        [
+          385.8619140625,
+          245.520068359375
+        ],
+        [
+          410.675048828125,
+          252.98330078125
+        ],
+        [
+          435.5174072265625,
+          260.34853515624997
+        ],
+        [
+          460.384521484375,
+          267.630126953125
+        ],
+        [
+          485.26416015625,
+          274.868505859375
+        ],
+        [
+          510.14870605468747,
+          282.090625
+        ],
+        [
+          535.0332519531249,
+          289.31215820312497
+        ],
+        [
+          559.9177978515625,
+          296.53369140625
+        ],
+        [
+          584.3024169921874,
+          303.255224609375
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "countryInbox",
+        "focus": 0.00019079112738846547,
+        "gap": 1
+      },
+      "endBinding": {
+        "elementId": "countryUow",
+        "focus": 0.000003828452461902997,
+        "gap": 4.609716796875091
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "countryJobs_countryUow",
+      "type": "arrow",
+      "x": 1147.7163818359372,
+      "y": 1840.5,
+      "width": 0,
+      "height": 261.13876953125,
+      "angle": 0,
+      "strokeColor": "#48638C",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryJobs_countryUow"
+      ],
+      "frameId": null,
+      "index": "b0L",
+      "roundness": null,
+      "seed": 646531684,
+      "version": 5,
+      "versionNonce": 2042259932,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "from": "countryJobs",
+        "to": "countryUow",
+        "label": "Lease, intento y resultado · transiciones condicionales"
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          25.713818359375
+        ],
+        [
+          0,
+          51.927783203124996
+        ],
+        [
+          0,
+          78.1416015625
+        ],
+        [
+          0,
+          104.35556640624999
+        ],
+        [
+          0,
+          130.569384765625
+        ],
+        [
+          0,
+          156.783203125
+        ],
+        [
+          0,
+          182.99716796875
+        ],
+        [
+          0,
+          209.210986328125
+        ],
+        [
+          0,
+          235.424951171875
+        ],
+        [
+          0,
+          261.13876953125
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "countryJobs",
+        "focus": -0.000001908373637440518,
+        "gap": 1
+      },
+      "endBinding": {
+        "elementId": "countryUow",
+        "focus": 0.0000019341701315085796,
+        "gap": 4.800585937499591
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "countryPublications_countryCachePort",
+      "type": "arrow",
+      "x": 1678.9228515625,
+      "y": 1437.3,
+      "width": 0,
+      "height": 236.6,
+      "angle": 0,
+      "strokeColor": "#48638C",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryPublications_countryCachePort"
+      ],
+      "frameId": null,
+      "index": "b0M",
+      "roundness": null,
+      "seed": 1498545628,
+      "version": 5,
+      "versionNonce": 1692316132,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "from": "countryPublications",
+        "to": "countryCachePort",
+        "label": "Lee por ámbito y versión · TypeScript"
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          25.9
+        ],
+        [
+          0,
+          52.3
+        ],
+        [
+          0,
+          78.7
+        ],
+        [
+          0,
+          105.1
+        ],
+        [
+          0,
+          131.5
+        ],
+        [
+          0,
+          157.9
+        ],
+        [
+          0,
+          184.29999999999998
+        ],
+        [
+          0,
+          210.7
+        ],
+        [
+          0,
+          236.6
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "countryPublications",
+        "focus": -0.000002717982170597779,
+        "gap": 1
+      },
+      "endBinding": {
+        "elementId": "countryCachePort",
+        "focus": 0.000002671739409491422,
+        "gap": 4.7999999999999545
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "countryCachePort_countryCache",
+      "type": "arrow",
+      "x": 1717.7412597656248,
+      "y": 1814.1000000000001,
+      "width": 364.198291015625,
+      "height": 304.19960937499997,
+      "angle": 0,
+      "strokeColor": "#48638C",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryCachePort_countryCache"
+      ],
+      "frameId": null,
+      "index": "b0N",
+      "roundness": null,
+      "seed": 456809956,
+      "version": 5,
+      "versionNonce": 1661521500,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "from": "countryCachePort",
+        "to": "countryCache",
+        "label": "Cache-aside · Redis opcional"
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          12.130615234375,
+          21.651513671874998
+        ],
+        [
+          25.01611328125,
+          43.654052734375
+        ],
+        [
+          39.00185546875,
+          64.97119140625
+        ],
+        [
+          54.265234375,
+          85.392724609375
+        ],
+        [
+          70.753076171875,
+          104.8392578125
+        ],
+        [
+          88.373974609375,
+          123.26567382812499
+        ],
+        [
+          107.02231445312499,
+          140.65205078124998
+        ],
+        [
+          126.588525390625,
+          156.999560546875
+        ],
+        [
+          146.870458984375,
+          172.452197265625
+        ],
+        [
+          167.656005859375,
+          187.221337890625
+        ],
+        [
+          188.815673828125,
+          201.45009765625
+        ],
+        [
+          210.265234375,
+          215.23823242187498
+        ],
+        [
+          231.94843749999998,
+          228.656494140625
+        ],
+        [
+          253.818408203125,
+          241.76787109375
+        ],
+        [
+          275.842333984375,
+          254.61923828124998
+        ],
+        [
+          297.989599609375,
+          267.257177734375
+        ],
+        [
+          320.21596679687497,
+          279.7556640625
+        ],
+        [
+          342.45712890625,
+          292.22763671875
+        ],
+        [
+          364.198291015625,
+          304.19960937499997
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "countryCachePort",
+        "focus": -0.00000812692775777306,
+        "gap": 1
+      },
+      "endBinding": {
+        "elementId": "countryCache",
+        "focus": -0.16765960834464608,
+        "gap": 4.186230468758595
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "countryCachePort_countryUow",
+      "type": "arrow",
+      "x": 1629.98837890625,
+      "y": 1814.1000000000001,
+      "width": 343.83916015625,
+      "height": 289.86684570312497,
+      "angle": 0,
+      "strokeColor": "#48638C",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryCachePort_countryUow"
+      ],
+      "frameId": null,
+      "index": "b0O",
+      "roundness": null,
+      "seed": 311288412,
+      "version": 5,
+      "versionNonce": 1232524644,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "from": "countryCachePort",
+        "to": "countryUow",
+        "label": "Miss o fallo: lectura durable · TypeScript"
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -14.310888671874999,
+          20.04853515625
+        ],
+        [
+          -29.221826171874998,
+          40.524267578125
+        ],
+        [
+          -44.692919921874996,
+          60.5787109375
+        ],
+        [
+          -60.89306640625,
+          80.04853515625
+        ],
+        [
+          -77.851123046875,
+          98.861962890625
+        ],
+        [
+          -95.566064453125,
+          116.9640625
+        ],
+        [
+          -114.032177734375,
+          134.29902343749998
+        ],
+        [
+          -133.22822265624998,
+          150.82216796875
+        ],
+        [
+          -153.070703125,
+          166.564111328125
+        ],
+        [
+          -173.393798828125,
+          181.68159179687498
+        ],
+        [
+          -194.08251953125,
+          196.295166015625
+        ],
+        [
+          -215.060400390625,
+          210.49052734375
+        ],
+        [
+          -236.273681640625,
+          224.33198242187498
+        ],
+        [
+          -257.67783203125,
+          237.87666015624998
+        ],
+        [
+          -279.23974609375,
+          251.1689453125
+        ],
+        [
+          -300.914892578125,
+          264.27578124999997
+        ],
+        [
+          -322.62666015625,
+          277.321826171875
+        ],
+        [
+          -343.83916015625,
+          289.86684570312497
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "countryCachePort",
+        "focus": -0.00000841450798682922,
+        "gap": 1
+      },
+      "endBinding": {
+        "elementId": "countryUow",
+        "focus": -0.000006651375057773621,
+        "gap": 2.472509765624636
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "countryUow_countryDb",
+      "type": "arrow",
+      "x": 1147.7163818359372,
+      "y": 2268.23876953125,
+      "width": 0,
+      "height": 274.340087890625,
+      "angle": 0,
+      "strokeColor": "#48638C",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryUow_countryDb"
+      ],
+      "frameId": null,
+      "index": "b0P",
+      "roundness": null,
+      "seed": 259850596,
+      "version": 5,
+      "versionNonce": 1310106332,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "from": "countryUow",
+        "to": "countryDb",
+        "label": "Persistencia y lectura autorizada · SQL"
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          24.53095703125
+        ],
+        [
+          0,
+          49.561767578125
+        ],
+        [
+          0,
+          74.592724609375
+        ],
+        [
+          0,
+          99.623681640625
+        ],
+        [
+          0,
+          124.65463867187499
+        ],
+        [
+          0,
+          149.68544921875
+        ],
+        [
+          0,
+          174.71640625
+        ],
+        [
+          0,
+          199.74736328125
+        ],
+        [
+          0,
+          224.7783203125
+        ],
+        [
+          0,
+          249.809130859375
+        ],
+        [
+          0,
+          274.340087890625
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "countryUow",
+        "focus": -0.0000019341701315085796,
+        "gap": 1
+      },
+      "endBinding": {
+        "elementId": "countryDb",
+        "focus": 0.0000022064222239047832,
+        "gap": 4.799891644902345
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "label-bg-syncWorker_countryEntry",
+      "type": "rectangle",
+      "x": 194.7844787597656,
+      "y": 696.477587890625,
+      "width": 161.217578125,
+      "height": 89.2,
+      "angle": 0,
+      "strokeColor": "#fff",
+      "backgroundColor": "#fff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-syncWorker_countryEntry"
+      ],
+      "frameId": null,
+      "index": "b0Q",
+      "roundness": null,
+      "seed": 1943615196,
+      "version": 3,
+      "versionNonce": 1044285668,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "label-syncWorker_countryEntry",
+      "type": "text",
+      "x": 199.7844787597656,
+      "y": 701.477587890625,
+      "width": 150.08184814453125,
+      "height": 79.19999999999999,
+      "angle": 0,
+      "strokeColor": "#4C607D",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-syncWorker_countryEntry"
+      ],
+      "frameId": null,
+      "index": "b0R",
+      "roundness": null,
+      "seed": 983512292,
+      "version": 3,
+      "versionNonce": 829810524,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "relationshipIndex": 0
+      },
+      "text": "Lotes, acuses y\npublicaciones ·\nHTTPS",
+      "fontSize": 21.6,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Lotes, acuses y\npublicaciones ·\nHTTPS",
+      "autoResize": true,
+      "lineHeight": 1.222222222222222
+    },
+    {
+      "id": "label-bg-erpAdapter_countryEntry",
+      "type": "rectangle",
+      "x": 1100.5982421875087,
+      "y": 680.5998741149903,
+      "width": 188.78244018554688,
+      "height": 89.2,
+      "angle": 0,
+      "strokeColor": "#fff",
+      "backgroundColor": "#fff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-erpAdapter_countryEntry"
+      ],
+      "frameId": null,
+      "index": "b0S",
+      "roundness": null,
+      "seed": 700840796,
+      "version": 3,
+      "versionNonce": 918801508,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "label-erpAdapter_countryEntry",
+      "type": "text",
+      "x": 1105.5982421875087,
+      "y": 685.5998741149903,
+      "width": 178.853759765625,
+      "height": 79.19999999999999,
+      "angle": 0,
+      "strokeColor": "#4C607D",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-erpAdapter_countryEntry"
+      ],
+      "frameId": null,
+      "index": "b0T",
+      "roundness": null,
+      "seed": 976156772,
+      "version": 3,
+      "versionNonce": 1635294172,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "relationshipIndex": 1
+      },
+      "text": "Claim, consulta y\nresultado · HTTPS\nsaliente",
+      "fontSize": 21.6,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Claim, consulta y\nresultado · HTTPS\nsaliente",
+      "autoResize": true,
+      "lineHeight": 1.222222222222222
+    },
+    {
+      "id": "label-bg-countryEntry_countryInbox",
+      "type": "rectangle",
+      "x": 284.3410156250087,
+      "y": 1324.9998741149902,
+      "width": 148.01966552734373,
+      "height": 89.2,
+      "angle": 0,
+      "strokeColor": "#fff",
+      "backgroundColor": "#fff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryEntry_countryInbox"
+      ],
+      "frameId": null,
+      "index": "b0U",
+      "roundness": null,
+      "seed": 2124820444,
+      "version": 3,
+      "versionNonce": 81043428,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "label-countryEntry_countryInbox",
+      "type": "text",
+      "x": 289.3410156250087,
+      "y": 1329.9998741149902,
+      "width": 138.090087890625,
+      "height": 79.19999999999999,
+      "angle": 0,
+      "strokeColor": "#4C607D",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryEntry_countryInbox"
+      ],
+      "frameId": null,
+      "index": "b0V",
+      "roundness": null,
+      "seed": 1241140196,
+      "version": 3,
+      "versionNonce": 1479589980,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "relationshipIndex": 2
+      },
+      "text": "Recibe evento\nidentificado ·\nTypeScript",
+      "fontSize": 21.6,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Recibe evento\nidentificado ·\nTypeScript",
+      "autoResize": true,
+      "lineHeight": 1.222222222222222
+    },
+    {
+      "id": "label-bg-countryEntry_countryJobs",
+      "type": "rectangle",
+      "x": 1019.0972576141444,
+      "y": 1338.1998741149903,
+      "width": 226.03892822265624,
+      "height": 62.8,
+      "angle": 0,
+      "strokeColor": "#fff",
+      "backgroundColor": "#fff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryEntry_countryJobs"
+      ],
+      "frameId": null,
+      "index": "b0W",
+      "roundness": null,
+      "seed": 579589212,
+      "version": 3,
+      "versionNonce": 276759396,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "label-countryEntry_countryJobs",
+      "type": "text",
+      "x": 1024.0972576141444,
+      "y": 1343.1998741149903,
+      "width": 214.9239959716797,
+      "height": 52.8,
+      "angle": 0,
+      "strokeColor": "#4C607D",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryEntry_countryJobs"
+      ],
+      "frameId": null,
+      "index": "b0X",
+      "roundness": null,
+      "seed": 2081369956,
+      "version": 3,
+      "versionNonce": 2104513756,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "relationshipIndex": 3
+      },
+      "text": "Asigna trabajo / recibe\nresultado · TypeScript",
+      "fontSize": 21.6,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Asigna trabajo / recibe\nresultado · TypeScript",
+      "autoResize": true,
+      "lineHeight": 1.222222222222222
+    },
+    {
+      "id": "label-bg-countryEntry_countryPublications",
+      "type": "rectangle",
+      "x": 1568.0808593750085,
+      "y": 1136.5998741149901,
+      "width": 196.81419677734374,
+      "height": 62.8,
+      "angle": 0,
+      "strokeColor": "#fff",
+      "backgroundColor": "#fff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryEntry_countryPublications"
+      ],
+      "frameId": null,
+      "index": "b0Y",
+      "roundness": null,
+      "seed": 1934158044,
+      "version": 3,
+      "versionNonce": 269547236,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "label-countryEntry_countryPublications",
+      "type": "text",
+      "x": 1573.0808593750085,
+      "y": 1141.5998741149901,
+      "width": 186.0888671875,
+      "height": 52.8,
+      "angle": 0,
+      "strokeColor": "#4C607D",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryEntry_countryPublications"
+      ],
+      "frameId": null,
+      "index": "b0Z",
+      "roundness": null,
+      "seed": 1891345124,
+      "version": 3,
+      "versionNonce": 1858689372,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "relationshipIndex": 4
+      },
+      "text": "Consulta versión y\nestado · TypeScript",
+      "fontSize": 21.6,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Consulta versión y\nestado · TypeScript",
+      "autoResize": true,
+      "lineHeight": 1.222222222222222
+    },
+    {
+      "id": "label-bg-countryEntry_technicalBase",
+      "type": "rectangle",
+      "x": 632.4007812500087,
+      "y": 1123.3998741149903,
+      "width": 183.99899291992188,
+      "height": 89.2,
+      "angle": 0,
+      "strokeColor": "#fff",
+      "backgroundColor": "#fff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryEntry_technicalBase"
+      ],
+      "frameId": null,
+      "index": "b0a",
+      "roundness": null,
+      "seed": 1148153180,
+      "version": 3,
+      "versionNonce": 1075346020,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "label-countryEntry_technicalBase",
+      "type": "text",
+      "x": 637.4007812500087,
+      "y": 1128.3998741149903,
+      "width": 172.8631134033203,
+      "height": 79.19999999999999,
+      "angle": 0,
+      "strokeColor": "#4C607D",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryEntry_technicalBase"
+      ],
+      "frameId": null,
+      "index": "b0b",
+      "roundness": null,
+      "seed": 244164196,
+      "version": 3,
+      "versionNonce": 1200475612,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "relationshipIndex": 5
+      },
+      "text": "Configura, limita y\ncorrelaciona ·\nTypeScript",
+      "fontSize": 21.6,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Configura, limita y\ncorrelaciona ·\nTypeScript",
+      "autoResize": true,
+      "lineHeight": 1.222222222222222
+    },
+    {
+      "id": "label-bg-countryInbox_countryUow",
+      "type": "rectangle",
+      "x": 274.9753906250087,
+      "y": 1916.59987411499,
+      "width": 164.876025390625,
+      "height": 89.2,
+      "angle": 0,
+      "strokeColor": "#fff",
+      "backgroundColor": "#fff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryInbox_countryUow"
+      ],
+      "frameId": null,
+      "index": "b0c",
+      "roundness": null,
+      "seed": 659644892,
+      "version": 3,
+      "versionNonce": 459509220,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "label-countryInbox_countryUow",
+      "type": "text",
+      "x": 279.9753906250087,
+      "y": 1921.59987411499,
+      "width": 154.91232299804688,
+      "height": 79.19999999999999,
+      "angle": 0,
+      "strokeColor": "#4C607D",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryInbox_countryUow"
+      ],
+      "frameId": null,
+      "index": "b0d",
+      "roundness": null,
+      "seed": 978532836,
+      "version": 3,
+      "versionNonce": 1758442076,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "relationshipIndex": 6
+      },
+      "text": "Inbox + efecto +\noutbox · una\ntransacción",
+      "fontSize": 21.6,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Inbox + efecto +\noutbox · una\ntransacción",
+      "autoResize": true,
+      "lineHeight": 1.222222222222222
+    },
+    {
+      "id": "label-bg-countryJobs_countryUow",
+      "type": "rectangle",
+      "x": 1054.9789062500085,
+      "y": 1903.39987411499,
+      "width": 163.63634643554687,
+      "height": 115.6,
+      "angle": 0,
+      "strokeColor": "#fff",
+      "backgroundColor": "#fff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryJobs_countryUow"
+      ],
+      "frameId": null,
+      "index": "b0e",
+      "roundness": null,
+      "seed": 855688796,
+      "version": 3,
+      "versionNonce": 318779748,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "label-countryJobs_countryUow",
+      "type": "text",
+      "x": 1059.9789062500085,
+      "y": 1908.39987411499,
+      "width": 152.50762939453125,
+      "height": 105.6,
+      "angle": 0,
+      "strokeColor": "#4C607D",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryJobs_countryUow"
+      ],
+      "frameId": null,
+      "index": "b0f",
+      "roundness": null,
+      "seed": 253386084,
+      "version": 3,
+      "versionNonce": 1096877788,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "relationshipIndex": 7
+      },
+      "text": "Lease, intento y\nresultado ·\ntransiciones\ncondicionales",
+      "fontSize": 21.6,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Lease, intento y\nresultado ·\ntransiciones\ncondicionales",
+      "autoResize": true,
+      "lineHeight": 1.222222222222222
+    },
+    {
+      "id": "label-bg-countryPublications_countryCachePort",
+      "type": "rectangle",
+      "x": 1563.6277263641355,
+      "y": 1526.5998741149904,
+      "width": 202.79548339843748,
+      "height": 62.8,
+      "angle": 0,
+      "strokeColor": "#fff",
+      "backgroundColor": "#fff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryPublications_countryCachePort"
+      ],
+      "frameId": null,
+      "index": "b0g",
+      "roundness": null,
+      "seed": 1280285404,
+      "version": 3,
+      "versionNonce": 1178363108,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "label-countryPublications_countryCachePort",
+      "type": "text",
+      "x": 1568.6277263641355,
+      "y": 1531.5998741149904,
+      "width": 190.86660766601562,
+      "height": 52.8,
+      "angle": 0,
+      "strokeColor": "#4C607D",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryPublications_countryCachePort"
+      ],
+      "frameId": null,
+      "index": "b0h",
+      "roundness": null,
+      "seed": 372314340,
+      "version": 3,
+      "versionNonce": 366201692,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "relationshipIndex": 8
+      },
+      "text": "Lee por ámbito y\nversión · TypeScript",
+      "fontSize": 21.6,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Lee por ámbito y\nversión · TypeScript",
+      "autoResize": true,
+      "lineHeight": 1.222222222222222
+    },
+    {
+      "id": "label-bg-countryCachePort_countryCache",
+      "type": "rectangle",
+      "x": 1753.7855468750085,
+      "y": 2064.22008895874,
+      "width": 205.62005004882812,
+      "height": 62.8,
+      "angle": 0,
+      "strokeColor": "#fff",
+      "backgroundColor": "#fff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryCachePort_countryCache"
+      ],
+      "frameId": null,
+      "index": "b0i",
+      "roundness": null,
+      "seed": 1842339676,
+      "version": 3,
+      "versionNonce": 983967844,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "label-countryCachePort_countryCache",
+      "type": "text",
+      "x": 1758.7855468750085,
+      "y": 2069.22008895874,
+      "width": 195.6865234375,
+      "height": 52.8,
+      "angle": 0,
+      "strokeColor": "#4C607D",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryCachePort_countryCache"
+      ],
+      "frameId": null,
+      "index": "b0j",
+      "roundness": null,
+      "seed": 2133152868,
+      "version": 3,
+      "versionNonce": 1215954908,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "relationshipIndex": 9
+      },
+      "text": "Cache-aside · Redis\nopcional",
+      "fontSize": 21.6,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Cache-aside · Redis\nopcional",
+      "autoResize": true,
+      "lineHeight": 1.222222222222222
+    },
+    {
+      "id": "label-bg-countryCachePort_countryUow",
+      "type": "rectangle",
+      "x": 1365.9640625000088,
+      "y": 2051.81872177124,
+      "width": 204.01423339843748,
+      "height": 62.8,
+      "angle": 0,
+      "strokeColor": "#fff",
+      "backgroundColor": "#fff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryCachePort_countryUow"
+      ],
+      "frameId": null,
+      "index": "b0k",
+      "roundness": null,
+      "seed": 1876136924,
+      "version": 3,
+      "versionNonce": 336296932,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "label-countryCachePort_countryUow",
+      "type": "text",
+      "x": 1370.9640625000088,
+      "y": 2056.81872177124,
+      "width": 193.29238891601562,
+      "height": 52.8,
+      "angle": 0,
+      "strokeColor": "#4C607D",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryCachePort_countryUow"
+      ],
+      "frameId": null,
+      "index": "b0l",
+      "roundness": null,
+      "seed": 1472538596,
+      "version": 3,
+      "versionNonce": 560309340,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "relationshipIndex": 10
+      },
+      "text": "Miss o fallo: lectura\ndurable · TypeScript",
+      "fontSize": 21.6,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Miss o fallo: lectura\ndurable · TypeScript",
+      "autoResize": true,
+      "lineHeight": 1.222222222222222
+    },
+    {
+      "id": "label-bg-countryUow_countryDb",
+      "type": "rectangle",
+      "x": 1026.2597656250086,
+      "y": 2421.67858505249,
+      "width": 215.2013732910156,
+      "height": 62.8,
+      "angle": 0,
+      "strokeColor": "#fff",
+      "backgroundColor": "#fff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryUow_countryDb"
+      ],
+      "frameId": null,
+      "index": "b0m",
+      "roundness": null,
+      "seed": 1349302364,
+      "version": 3,
+      "versionNonce": 1283088228,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "label-countryUow_countryDb",
+      "type": "text",
+      "x": 1031.2597656250086,
+      "y": 2426.67858505249,
+      "width": 205.28416442871094,
+      "height": 52.8,
+      "angle": 0,
+      "strokeColor": "#4C607D",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "relation-countryUow_countryDb"
+      ],
+      "frameId": null,
+      "index": "b0n",
+      "roundness": null,
+      "seed": 1142852452,
+      "version": 3,
+      "versionNonce": 375961820,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "relationshipIndex": 11
+      },
+      "text": "Persistencia y lectura\nautorizada · SQL",
+      "fontSize": 21.6,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Persistencia y lectura\nautorizada · SQL",
+      "autoResize": true,
+      "lineHeight": 1.222222222222222
+    },
+    {
+      "id": "50iqmDUaYSU2jBNjAa_Xa",
+      "type": "text",
+      "x": 93.6203125,
+      "y": 444.4,
+      "width": 322.76953125,
+      "height": 158.4,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b0o",
+      "roundness": null,
+      "seed": 270734052,
+      "version": 4,
+      "versionNonce": 1816187620,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "text": "branch-sync-worker\n«Contenedor»\nNestJS / Node.js · sin servidor\nHTTP\nEntrega eventos y actualiza\nespejos.",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "syncWorker",
+      "originalText": "branch-sync-worker\n«Contenedor»\nNestJS / Node.js · sin servidor\nHTTP\nEntrega eventos y actualiza\nespejos.",
+      "autoResize": true,
+      "lineHeight": 1.1
+    },
+    {
+      "id": "puuJ8ADecq00IS8JqLH85",
+      "type": "text",
+      "x": 1016.6095703125086,
+      "y": 457.59999999999997,
+      "width": 381.52734375,
+      "height": 132,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b0p",
+      "roundness": null,
+      "seed": 797382244,
+      "version": 4,
+      "versionNonce": 320159068,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "text": "erp-worker\n«Contenedor»\nNestJS / Node.js · libs/backend/erp\nConsume trabajo; traduce y concilia\ncon ERP.",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "erpAdapter",
+      "originalText": "erp-worker\n«Contenedor»\nNestJS / Node.js · libs/backend/erp\nConsume trabajo; traduce y concilia\ncon ERP.",
+      "autoResize": true,
+      "lineHeight": 1.1
+    },
+    {
+      "id": "-vSQMnIdUNQY99rYlrMCV",
+      "type": "text",
+      "x": 772.2226562499999,
+      "y": 913.5999999999999,
+      "width": 339.71484375,
+      "height": 132,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b0q",
+      "roundness": null,
+      "seed": 1520347620,
+      "version": 4,
+      "versionNonce": 1106040420,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "text": "Entrada y autorización\n«Componente»\nadministration + sync · NestJS\nValida emisor, ámbito y contrato\nHTTP.",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "countryEntry",
+      "originalText": "Entrada y autorización\n«Componente»\nadministration + sync · NestJS\nValida emisor, ámbito y contrato\nHTTP.",
+      "autoResize": true,
+      "lineHeight": 1.1
+    },
+    {
+      "id": "9pksyGAxuwa4HyLoPcMuA",
+      "type": "text",
+      "x": 194.36640625000874,
+      "y": 1680.3999999999999,
+      "width": 348.19921875,
+      "height": 132,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b0r",
+      "roundness": null,
+      "seed": 1954008420,
+      "version": 4,
+      "versionNonce": 1086140892,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "text": "Recepción de operaciones\n«Componente»\nlibs/backend/sync\nDeduplica y aplica el efecto local\npactado.",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "countryInbox",
+      "originalText": "Recepción de operaciones\n«Componente»\nlibs/backend/sync\nDeduplica y aplica el efecto local\npactado.",
+      "autoResize": true,
+      "lineHeight": 1.1
+    },
+    {
+      "id": "s3WHGenVBfgm0NxBhDwUN",
+      "type": "text",
+      "x": 984.637890625,
+      "y": 1667.1999999999998,
+      "width": 326.15625,
+      "height": 158.4,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b0s",
+      "roundness": null,
+      "seed": 1314947300,
+      "version": 4,
+      "versionNonce": 441215460,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "text": "Trabajo y resultados ERP\n«Componente»\nsync + erp · contratos públicos\npropuestos\nAsigna trabajo y registra su\nresultado.",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "countryJobs",
+      "originalText": "Trabajo y resultados ERP\n«Componente»\nsync + erp · contratos públicos\npropuestos\nAsigna trabajo y registra su\nresultado.",
+      "autoResize": true,
+      "lineHeight": 1.1
+    },
+    {
+      "id": "2oMMUmAiJFUtIiyvliRC1",
+      "type": "text",
+      "x": 1492.160546875,
+      "y": 1316.8,
+      "width": 373.5234375,
+      "height": 105.60000000000001,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b0t",
+      "roundness": null,
+      "seed": 1608959076,
+      "version": 4,
+      "versionNonce": 1316132444,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "text": "Publicaciones y consultas\n«Componente»\ncatalog + pricing + reporting\nSirve versiones y estado operativo.",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "countryPublications",
+      "originalText": "Publicaciones y consultas\n«Componente»\ncatalog + pricing + reporting\nSirve versiones y estado operativo.",
+      "autoResize": true,
+      "lineHeight": 1.1
+    },
+    {
+      "id": "ysQuX6nI9gp5bMoU94aKf",
+      "type": "text",
+      "x": 1488.81484375,
+      "y": 1693.6,
+      "width": 380.21484375,
+      "height": 105.60000000000001,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b0u",
+      "roundness": null,
+      "seed": 2128123876,
+      "version": 4,
+      "versionNonce": 2020445540,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "text": "Puerto de caché opcional\n«Componente»\nAdaptador TypeScript / cache-aside\nAcelera lecturas reconstruibles.",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "countryCachePort",
+      "originalText": "Puerto de caché opcional\n«Componente»\nAdaptador TypeScript / cache-aside\nAcelera lecturas reconstruibles.",
+      "autoResize": true,
+      "lineHeight": 1.1
+    },
+    {
+      "id": "oDrV_fbxQ1TSnqHI5Mf7b",
+      "type": "text",
+      "x": 986.981640625,
+      "y": 2121.3393554687495,
+      "width": 321.46875,
+      "height": 132,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b0v",
+      "roundness": null,
+      "seed": 390331236,
+      "version": 4,
+      "versionNonce": 956787420,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "text": "Persistencia de país\n«Componente»\nRepositorios TypeScript / SQL\nConfirma estado y trabajo en\nPostgreSQL.",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "countryUow",
+      "originalText": "Persistencia de país\n«Componente»\nRepositorios TypeScript / SQL\nConfirma estado y trabajo en\nPostgreSQL.",
+      "autoResize": true,
+      "lineHeight": 1.1
+    },
+    {
+      "id": "52IHIBx6yexCmNxCedBcR",
+      "type": "text",
+      "x": 549.0085937499999,
+      "y": 1290.3999999999999,
+      "width": 374.87109375,
+      "height": 158.4,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b0w",
+      "roundness": null,
+      "seed": 1668738788,
+      "version": 4,
+      "versionNonce": 1302216932,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "text": "Base técnica compartida\n«Componente»\nshared/backend · composición\nobjetivo\nConfiguración, salud, Pino y Sentry\nopt-in.",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "technicalBase",
+      "originalText": "Base técnica compartida\n«Componente»\nshared/backend · composición\nobjetivo\nConfiguración, salud, Pino y Sentry\nopt-in.",
+      "autoResize": true,
+      "lineHeight": 1.1
+    },
+    {
+      "id": "z30NKdciU9sGWL4xW7gcO",
+      "type": "text",
+      "x": 988.9562500000087,
+      "y": 2586.066017133184,
+      "width": 317.51953125,
+      "height": 132,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b0x",
+      "roundness": null,
+      "seed": 603943524,
+      "version": 4,
+      "versionNonce": 319663964,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "text": "Datos operativos de país\n«Contenedor de datos»\nPostgreSQL\nConsolida y conserva entrega\ndurable.",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "countryDb",
+      "originalText": "Datos operativos de país\n«Contenedor de datos»\nPostgreSQL\nConsolida y conserva entrega\ndurable.",
+      "autoResize": true,
+      "lineHeight": 1.1
+    },
+    {
+      "id": "U8RcngiwkLPSWwkykYkSK",
+      "type": "text",
+      "x": 2094.0484375000087,
+      "y": 2121.3393554687495,
+      "width": 344.1796875,
+      "height": 132,
+      "angle": 0,
+      "strokeColor": "#182842",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "b0y",
+      "roundness": null,
+      "seed": 1470858724,
+      "version": 4,
+      "versionNonce": 829195364,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1792682523904,
+      "link": null,
+      "locked": false,
+      "text": "Redis · caché de país (opcional)\n«Contenedor de datos»\nRedis · datos reconstruibles\nAcelera consultas; no confirma\noperaciones.",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "countryCache",
+      "originalText": "Redis · caché de país (opcional)\n«Contenedor de datos»\nRedis · datos reconstruibles\nAcelera consultas; no confirma\noperaciones.",
+      "autoResize": true,
+      "lineHeight": 1.1
+    }
+  ],
+  "appState": {
+    "viewBackgroundColor": "#ffffff",
+    "gridSize": null
+  },
+  "files": {}
+}

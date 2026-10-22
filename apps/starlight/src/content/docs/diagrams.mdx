@@ -1,12 +1,12 @@
 ---
 title: Diagramas de arquitectura
-description: Contexto, contenedores, componentes y despliegue C4, con recorridos de venta y precios y archivos editables en Excalidraw.
+description: Siete vistas estructurales C4 y dos recorridos de venta y precios, con aplicaciones, bibliotecas y archivos editables en Excalidraw.
 editUrl: false
 ---
 
 import Diagram from '../../components/Diagram.astro';
 
-Estas vistas representan **el diseño propuesto**. El [modelo C4](/guide/architecture/c4-model/) conserva los contratos y el alcance; las [decisiones](/guide/proposal/decisions/) gobiernan la recomendación. La [evidencia del sistema actual](/guide/evidence/audit/) se consulta por separado.
+Estas siete vistas estructurales y dos dinámicas representan **el diseño propuesto**. El [modelo C4](/guide/architecture/c4-model/) conserva los contratos y el alcance; las [decisiones](/guide/proposal/decisions/) gobiernan la recomendación. El [monorepo](/guide/architecture/monorepo/#estado-de-implementación) distingue la base técnica de las capacidades pendientes; la [evidencia del legado](/guide/evidence/audit/) se consulta por separado.
 
 ## Contexto del producto
 
@@ -18,33 +18,49 @@ Actores, POS corporativo y sistemas externos. La operación supervisada represen
 
 ## Aplicaciones y persistencia
 
-Cliente POS, servicio de sucursal, sincronizador y plataforma de país. La venta habilitada no depende de una llamada central para confirmar su persistencia local.
+Las seis aplicaciones son `pos-desktop`, `pos-mobile`, `branch-api`, `branch-sync-worker`, `country-api` y `erp-worker`. La vista separa los almacenes, la publicación de maestros por asignar y la caché opcional de país; la venta habilitada conserva su persistencia local.
 
-<Diagram src="/docs/diagramas-excalidraw/previews/02-contenedores.svg" alt="C2: aplicaciones y bases de POS Platform distribuidas entre puesto, sucursal y plataforma de país." caption="C2 · Contenedores y propiedad de los datos." sourceHref="/docs/diagramas-excalidraw/02-contenedores.excalidraw" />
+<Diagram src="/docs/diagramas-excalidraw/previews/02-contenedores.svg" alt="C2: seis aplicaciones, PostgreSQL de sucursal y país, publicación de maestros por asignar y caché Redis opcional; ERP mediante conexión saliente de su worker." caption="C2 · Aplicaciones, almacenes y contratos; cada bloque declara su alcance." sourceHref="/docs/diagramas-excalidraw/02-contenedores.excalidraw" />
 
 [Contratos de contenedores](/guide/proposal/architecture/#contratos-de-contenedores-y-propiedad-de-datos)
 
 ## Backend de sucursal
 
-Módulos del mismo proceso con responsabilidades propias. Sus límites no implican desplegar un microservicio por módulo.
+`branch-api` compone los contextos de negocio y la base técnica compartida en un proceso. Los grupos de bibliotecas no implican un microservicio por módulo.
 
-<Diagram src="/docs/diagramas-excalidraw/previews/03-backend-sucursal.svg" alt="C3: módulos del backend de sucursal y dependencias hacia acceso, venta, precios, caja, pagos, fiscalidad y persistencia." caption="C3 · Un proceso de backend con módulos de negocio." sourceHref="/docs/diagramas-excalidraw/03-backend-sucursal.excalidraw" />
+<Diagram src="/docs/diagramas-excalidraw/previews/03-backend-sucursal.svg" alt="C3 de branch-api: contextos de operación, precios, catálogo, pagos, fiscalidad y dispositivos; persistencia transaccional y soporte compartido." caption="C3 · branch-api: casos de uso, bibliotecas y autoridad de sucursal." sourceHref="/docs/diagramas-excalidraw/03-backend-sucursal.excalidraw" />
 
 [Backend modular](/guide/architecture/c4-model/#c3-del-backend-módulos-de-un-único-proceso) · [Estructura del monorepo](/guide/architecture/monorepo/)
 
 ## Sincronizador
 
-Publicación de eventos, custodia durable, recepción de paquetes y activación de versiones. El acuse de central no confirma el resultado del ERP.
+`branch-sync-worker` entrega eventos, conserva progreso y prepara versiones locales. Usa las bibliotecas de sincronización y los contratos de catálogo/precios; el acuse de país no confirma el resultado del ERP.
 
-<Diagram src="/docs/diagramas-excalidraw/previews/04-sincronizador.svg" alt="C3: publicador, receptor y activador del sincronizador de sucursal con outbox, inbox y comunicación con central." caption="C3 · Entrega recuperable y activación de datos." sourceHref="/docs/diagramas-excalidraw/04-sincronizador.excalidraw" />
+<Diagram src="/docs/diagramas-excalidraw/previews/04-sincronizador.svg" alt="C3 de branch-sync-worker: emisor, receptor, validación, activación y soporte técnico con outbox, inbox y comunicación con país." caption="C3 · branch-sync-worker: entrega recuperable y activación de datos." sourceHref="/docs/diagramas-excalidraw/04-sincronizador.excalidraw" />
 
 [Sincronización y propiedad de datos](/guide/proposal/synchronization/) · [Simulación de entrega durable](https://presentation-gamma-rust.vercel.app/presentation/pos-corporativo-reveal.html?lectura=0#/laboratorio-entrega)
 
+## API de país
+
+`country-api` recibe operaciones, confirma el efecto local antes del ACK y sirve trabajo, resultados y publicaciones. Redis es una caché opcional de lecturas reconstruibles; PostgreSQL conserva la autoridad.
+
+<Diagram src="/docs/diagramas-excalidraw/previews/08-country-api.svg" alt="C3 de country-api: autorización por ámbito, recepción transaccional, trabajo y resultados ERP, consultas y publicaciones, PostgreSQL y caché Redis opcional." caption="C3 · country-api: recepción durable y servicios de país en un proceso." sourceHref="/docs/diagramas-excalidraw/08-country-api.excalidraw" />
+
+[Contratos de país](/guide/architecture/c4-model/#c3-de-país-recepción-consulta-y-entrega-de-trabajo) · [Caché de país opcional](/guide/architecture/c4-model/#caché-de-país-opcional)
+
+## Integración ERP
+
+`erp-worker` corre en la red autorizada del ERP. Inicia HTTPS a `country-api` para solicitar trabajo y entregar resultados; compone fachadas, ACL y adaptadores sin SQL remoto a la base del POS.
+
+<Diagram src="/docs/diagramas-excalidraw/previews/09-erp-worker.svg" alt="C3 de erp-worker: admisión, cliente de trabajo y resultados, fachadas, ACL, adaptadores y conciliación; conexión HTTPS saliente a país y protocolo ERP por validar." caption="C3 · erp-worker: traducción y conciliación con destino e identidad estables." sourceHref="/docs/diagramas-excalidraw/09-erp-worker.excalidraw" />
+
+[Responsabilidades del worker ERP](/guide/architecture/c4-model/#c3-de-integración-erp-ejecución-dentro-de-la-red-autorizada) · [Contratos ERP](/guide/proposal/contracts/)
+
 ## Despliegue y continuidad
 
-El perfil inicial cubre la pérdida de WAN con el servidor y la LAN de sucursal disponibles. La autonomía por terminal exige otra decisión de despliegue; no se activa automáticamente.
+Puestos, móviles, servidor de sucursal, plataforma de país y red autorizada del ERP. El perfil inicial cubre pérdida de WAN con LAN y escritor local disponibles; Redis no es requisito para operar offline.
 
-<Diagram src="/docs/diagramas-excalidraw/previews/05-despliegue.svg" alt="Despliegue complementario: puestos de caja, servidor de sucursal y plataforma del país con sus límites de continuidad." caption="Vista de despliegue complementaria · No corresponde al cuarto nivel de C4." sourceHref="/docs/diagramas-excalidraw/05-despliegue.excalidraw" />
+<Diagram src="/docs/diagramas-excalidraw/previews/05-despliegue.svg" alt="Despliegue de referencia entre puestos, móviles, servidor local, plataforma de país y red autorizada ERP, con caché opcional y recuperación." caption="Vista de despliegue complementaria · No corresponde al cuarto nivel de C4." sourceHref="/docs/diagramas-excalidraw/05-despliegue.excalidraw" />
 
 [Tecnología y despliegue](/guide/proposal/technology/) · [Condiciones de continuidad](/guide/proposal/continuity/)
 

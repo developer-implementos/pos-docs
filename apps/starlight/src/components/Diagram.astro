@@ -63,6 +63,17 @@ const labelId = `diagram-${crypto.randomUUID()}`;
       const canvas = this.querySelector<HTMLElement>('.pos-diagram__canvas');
       if (!dialog || !openButton || !closeButton || !scale || !scaleLabel || !canvas) return;
 
+      const image = canvas.querySelector<HTMLImageElement>('img');
+      if (image) {
+        const updateImageWidth = () => {
+          if (image.naturalWidth > 0) {
+            canvas.style.setProperty('--diagram-image-width', `${image.naturalWidth}px`);
+          }
+        };
+        image.addEventListener('load', updateImageWidth);
+        updateImageWidth();
+      }
+
       openButton.addEventListener('click', () => {
         dialog.showModal();
         scale.value = '100';

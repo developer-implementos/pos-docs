@@ -1,4 +1,4 @@
-/* Regenerate only the five C4 geometry records owned by POS Platform. */
+/* Regenerate the reviewed C4 geometry records in the published collection. */
 'use strict';
 const fs = require('node:fs');
 const path = require('node:path');
@@ -10,6 +10,7 @@ const output = path.join(__dirname, 'models/c4-layouts.json');
 const context = {window: {}};
 vm.runInNewContext(fs.readFileSync(path.join(__dirname, 'models/c4-data.js'), 'utf8'), context);
 const views = context.window.POS_C4.views;
+require('./collection.cjs').assertModels(context.window.POS_C4);
 const normalize = text => text.replaceAll('\r\n', '\n').trim();
 function playwright() {
   for (const candidate of [process.env.PLAYWRIGHT_MODULE_PATH, 'playwright', path.join(root, 'apps/starlight/node_modules/playwright')].filter(Boolean)) {
@@ -29,7 +30,7 @@ async function main() {
       assert.deepEqual([...layout.nodes].sort(), Array.from(view.nodeIds).sort(), `C4 model/layout nodes differ: ${view.key}`);
       assert.ok(layout.svg.startsWith('<svg') && !layout.svg.includes('<foreignObject'));
     }
-    console.log('Five reviewed C4 layouts match their Mermaid sources and model node contracts.');
+    console.log(`${views.length} reviewed C4 layouts match their Mermaid sources and model node contracts.`);
     return;
   }
   if (!process.argv.includes('--write')) throw new Error('Use --check (read-only) or --write (replace reviewed geometry).');
@@ -53,7 +54,7 @@ async function main() {
       layouts[view.key] = layout;
     }
     fs.writeFileSync(output, JSON.stringify(layouts, null, 2) + '\n');
-    console.log('Updated five C4 layouts. Regenerate and verify Excalidraw scenes and previews before publishing.');
+    console.log(`Updated ${views.length} C4 layouts. Regenerate and verify Excalidraw scenes and previews before publishing.`);
   } finally { await browser.close(); }
 }
 main().catch(error => { console.error(error); process.exitCode = 1; });

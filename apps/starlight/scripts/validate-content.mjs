@@ -79,6 +79,7 @@ if (result.error) throw result.error;
 assert.equal(result.status, 0, 'Monorepo representations diverge from their canonical catalog');
 for (const command of [
   ['--test', 'apps/starlight/scripts/prepare-content.test.mjs'],
+  ['--test', 'tools/diagrams/route-layout.test.mjs'],
   ['tools/diagrams/render-c4.cjs', '--check'],
   ['tools/diagrams/check-excalidraw.cjs', '--static'],
   ['tools/diagrams/generate-architecture-previews.cjs', '--check'],

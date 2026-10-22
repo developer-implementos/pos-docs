@@ -2,6 +2,7 @@
 import * as E from '@excalidraw/excalidraw';
 import React from 'react';
 import {createRoot} from 'react-dom/client';
+import {routeAroundObstacles} from './route-layout.js';
 
 const C={
   primary:'#0545BA',primarySoft:'#EDF3FF',person:'#163A73',
@@ -25,7 +26,7 @@ function header(skeleton,width,number,level,title,scope){
   skeleton.push(text('kicker',64,40,`POS CORPORATIVO  /  ${number}  /  ${level.toUpperCase()}`,19,width-128,C.primary));
   skeleton.push(text('title',64,85,title,44,width-128));
   skeleton.push(text('scope',64,152,scope,24,width-128,C.muted));
-  skeleton.push(text('status',64,230,'ARQUITECTURA PROPUESTA · 21 OCT 2026 · Chile / Perú / España · No representa una implementación homologada',19,width-128,C.muted));
+  skeleton.push(text('status',64,230,'ARQUITECTURA PROPUESTA · 22 OCT 2026 · Chile / Perú / España · No representa una implementación homologada',19,width-128,C.muted));
   const items=[['Persona',C.person],['Software POS',C.primary],['Almacén de datos',C.data],['Sistema externo',C.external],['Infraestructura / condición',C.infra]];
   let x=64;for(let i=0;i<items.length;i++){skeleton.push(box(`key-${i}`,x,290,18,18,items[i][1],items[i][1]));skeleton.push(text(`key-text-${i}`,x+28,285,items[i][0],20,310));x+=i===3?260:Math.max(190,ctx.measureText(items[i][0]).width+76);}
   skeleton.push(text('legend-desc',64,330,'Flecha: iniciador → destino; texto: propósito y protocolo. Borde discontinuo: límite nombrado. Todo el contenido es editable.',19,width-128,C.muted));
@@ -43,10 +44,12 @@ function footer(skeleton,width,y,sources){
 }
 const decisionNotes={
   context:[{title:'Límites de autoridad',body:'Sucursal conserva la venta original. País consolida una proyección. Precio, efecto financiero del pago, documento fiscal y contabilización ERP tienen autoridades y estados diferentes.'},{title:'Continuidad autorizada',body:'Perfil inicial: caída de WAN con LAN, backend y PostgreSQL de sucursal disponibles. Vigencia de precios, permisos, límites y capacidades de pago/fiscalidad determinan qué puede continuar.'},{title:'Chile y evolución multinacional',body:'Antecedentes: Chile Dynamics AX on-premise; España Gira; Perú sistema custom. Interfaces por validar. No se asigna stock al POS ni se declara un ERP futuro ya aprobado.'}],
-  containers:[{title:'PostgreSQL, con responsabilidades explícitas',body:'Relaciones, restricciones, transacciones y outbox/inbox comparten un commit local. JSONB admite payloads variables. PostgreSQL de país conserva integración y proyecciones; no cambia la autoridad de ventas. MongoDB también soporta transacciones; una segunda base requiere una necesidad probada.'},{title:'Entrega durable y ACK de aplicación',body:'País confirma inbox + efecto/proyección local + outbox antes de acusar aplicación. Workers procesan después la outbox confirmada. Un ACK no certifica contabilización ERP, aceptación fiscal ni liquidación del pago.'},{title:'Autonomía y efectos externos',body:'No se sostiene SQL abierto esperando un proveedor. Un pago incierto se consulta o concilia con su identidad original. El puente es condicional según SDK y transporta autorización emitida por backend; no incorpora otra base de ventas.'}],
+  containers:[{title:'Aplicaciones, procesos y propiedad',body:'Los seis nombres de app identifican sus proyectos en apps/. PostgreSQL de sucursal conserva negocio y espejo comercial; PostgreSQL de país conserva integración y proyecciones. El publicador de maestros es una responsabilidad cuyo proceso sigue por asignar.'},{title:'Entrega durable y ACK de aplicación',body:'País confirma inbox + efecto/proyección local + outbox antes de acusar aplicación. erp-worker obtiene el trabajo por HTTPS saliente y reporta resultados. Un ACK no certifica contabilización ERP, aceptación fiscal ni liquidación del pago.'},{title:'Caché y capacidades condicionales',body:'Redis de país es opcional y reconstruible para country-api; no reemplaza PostgreSQL ni el espejo local. El puente de periféricos depende del SDK homologado y ejecuta comandos autorizados. Ninguna de estas piezas crea otra autoridad de ventas.'}],
   backend:[{title:'Un monolito modular, un proceso',body:'Los bloques interiores llaman código TypeScript. No hay HTTP ni bases separadas entre módulos. UI valida experiencia; el backend valida permisos, integridad, turno y capacidades antes de mutar negocio.'},{title:'Transacción y efectos externos',body:'Intención de pago durable antes de invocar el proveedor; resultado y confirmación local después. Venta + auditoría + outbox se confirman juntas. Venta, pago, fiscalidad y ERP conservan estados separados y recuperación explícita.'},{title:'Precios y caja son dominios diferentes',body:'La cotización fija versión inmutable y revalida vigencia antes de cobrar. Turno de caja no equivale a sesión de acceso. Devoluciones y compensaciones son nuevas operaciones auditables; no reescritura de historia.'}],
   sync:[{title:'Programado, incremental o manual',body:'Calendario y zona horaria IANA, ventanas, límites, backoff y jitter son configuración explícita. Carga masiva programada o manual utiliza el mismo pipeline auditado. Una ejecución manual no salta validaciones.'},{title:'Recibido no equivale a aplicado',body:'Inbox y cursor recibidos permiten reanudar descarga. Deltas crean una candidata completa aislada; snapshot incorpora cambios posteriores al corte H, incluyendo bajas. Toda candidata pasa por validación antes de activar.'},{title:'Publicación atómica, sin bloqueo prolongado',body:'Descarga, checksum, referencias, cobertura, compatibilidad y vigencia se validan fuera del commit final. Una transacción corta cambia inbox aplicada + puntero activo + cursor aplicado. Impedir regresión por snapshots lentos y retener versiones referenciadas.'}],
-  deployment:[{title:'Frontera de continuidad',body:'Sin WAN pueden continuar operaciones autorizadas con LAN y escritor sanos. Sin LAN/backend se detienen nuevos comandos dependientes; el puesto no se convierte en escritor de emergencia. La autonomía por terminal sería otro perfil de arquitectura.'},{title:'Seguridad y operación',body:'Identidad de usuario y puesto, permisos por sucursal/país, TLS y credenciales de mínimos privilegios. Logs correlacionan commandId/eventId/intento. Observar cola pendiente, antigüedad, fallos, huecos y versión/vigencia activa.'},{title:'Recuperación y decisiones pendientes',body:'Backups fuera de la instancia y ensayos de restore. RPO/RTO, retención, dimensionamiento, sistema operativo, alojamiento y alta disponibilidad deben validarse. Excluir al escritor antiguo antes de recuperar; réplica no reemplaza backup.'}],
+  deployment:[{title:'Frontera de continuidad',body:'Sin WAN pueden continuar operaciones autorizadas con LAN y escritor sanos. Sin LAN/backend se detienen nuevos comandos dependientes; el puesto no se convierte en escritor de emergencia. Redis de país y la telemetría externa no son dependencias de la venta local.'},{title:'Red autorizada del ERP',body:'erp-worker inicia HTTPS autenticado hacia country-api para obtener trabajo y reportar resultados. El acceso al ERP permanece en su red autorizada; no se expone SQL ni se exige conexión entrante desde país. Protocolo, alojamiento y credenciales se homologan por destino.'},{title:'Recuperación y operación',body:'Backups fuera de la instancia y ensayos de restore. RPO/RTO, retención, dimensionamiento y alta disponibilidad deben validarse. Excluir al escritor antiguo antes de recuperar; réplica no reemplaza backup. Logs, métricas y trazas correlacionan operación e intento.'}],
+  country:[{title:'ACK local, resultado externo separado',body:'country-api confirma inbox, efecto/proyección y outbox en una transacción antes del ACK. El trabajo ERP es durable; su aceptación, ejecución y conciliación conservan estados propios. El ACK de país no acredita el registro en el ERP.'},{title:'Caché opcional y reconstruible',body:'Redis sirve lecturas de country-api; PostgreSQL conserva la autoridad. Claves por país, entidad, versión y alcance de acceso; TTL e invalidación explícitos. Ante fallos, timeout corto y fallback limitado evitan saturar la base. Ventas, saldos y mensajes pendientes no dependen de esta caché.'},{title:'Responsabilidad de publicación',body:'country-api ofrece publicaciones versionadas y consulta de cursores. El proceso que importa y construye snapshots/deltas de maestros sigue por asignar; no es una séptima app existente. La base actual no implementa persistencia, caché ni estos protocolos.'}],
+  erp:[{title:'Trabajo durable y destino estable',body:'erp-worker solicita trabajo a country-api mediante conexión saliente. El claim con lease, los intentos y el destino persistido impiden reasignaciones silenciosas. Un lease vencido no demuestra que un efecto externo haya fallado.'},{title:'Fachada, ACL y adaptador',body:'Son componentes dentro de apps/erp-worker y libs/backend/erp. La fachada expresa capacidades POS; la ACL traduce identidades, unidades, estados y errores; cada adaptador resuelve el protocolo AX, custom o Gira que se homologue.'},{title:'Resultado incierto y conciliación',body:'Persistir identidad de operación y evidencia antes de reintentar. Si el ERP pudo aplicar, consultar o conciliar; no repetir a ciegas ni prometer exactly-once. country-api conserva trabajo y resultados; el worker no abre SQL hacia la base de país.'}],
 };
 
 function nativeGraph(svgSource,view,model){
@@ -79,32 +82,13 @@ function nativeGraph(svgSource,view,model){
     labelSk.push({...box('label-bg-'+id,lr.x-5,lr.y-5,lr.width+10,h+10,'#fff','#fff'),strokeWidth:0,roundness:null,groupIds:['relation-'+id]});
     labelSk.push({...text('label-'+id,lr.x,lr.y,value,fontSize,lr.width+20,C.muted),lineHeight,groupIds:['relation-'+id],customData:{relationshipIndex:i}});
   }
-  // Deliberate routing lanes for long cross-boundary relations. Their positions
-  // derive from the participating shapes so labels and connectors move together.
-  const shapes=new Map(sk.map(e=>[e.id,e]));
-  function route(id,absolute,labelX,labelY){const a=shapes.get(id),[origin]=absolute;a.x=origin[0];a.y=origin[1];a.points=absolute.map(p=>[p[0]-origin[0],p[1]-origin[1]]);const label=labelSk.find(e=>e.id==='label-'+id),bg=labelSk.find(e=>e.id==='label-bg-'+id);const dx=labelX-label.x,dy=labelY-label.y;for(const e of [label,bg]){e.x+=dx;e.y+=dy;}}
-  if(view.id==='containers'){
-    const a=shapes.get('countryWorker'),b=shapes.get('masters'),cx=b.x+b.width/2,y=a.y+a.height/2;
-    route('countryWorker_masters',[[a.x,y],[cx,y],[cx,b.y]],(a.x+cx)/2-106,y-128);
-    // Reserve the gap between desktop and branch API for their shared contract.
-    // Adding a parallel mobile client must not place this label over the API box.
-    const desktop=shapes.get('client'),api=shapes.get('branchApi'),sx=desktop.x+desktop.width/2,sy=desktop.y+desktop.height,tx=api.x+api.width/2,lane=(sy+api.y)/2;
-    const label=labelSk.find(e=>e.id==='label-bg-client_branchApi');
-    route('client_branchApi',[[sx,sy],[sx,lane],[tx,lane],[tx,api.y]],(sx+tx-label.width+10)/2,lane-label.height-8);
-  }
-  if(view.id==='deployment'){
-    const a=shapes.get('client'),b=shapes.get('branchApi'),mobile=shapes.get('mobileClient'),cx=b.x+b.width/2,startY=a.y+a.height/2,bendX=a.x+a.width+40,laneY=(Math.max(a.y+a.height,mobile.y+mobile.height)+b.y)/2;
-    route('client_branchApi',[[a.x+a.width,startY],[bendX,startY],[bendX,laneY],[cx,laneY],[cx,b.y]],(bendX+cx)/2-68,laneY-100);
-    const s=shapes.get('syncWorker'),p=shapes.get('countryApi'),lane=s.y+s.height+114,sx=s.x+s.width/2,px=p.x+p.width/2;
-    route('syncWorker_countryApi',[[sx,s.y+s.height],[sx,lane],[px,lane],[px,p.y]],s.x-158,lane-102);
-  }
-  host.remove();return normalized([...sk,...labelSk]);
+  host.remove();return routeAroundObstacles(normalized([...sk,...labelSk]));
 }
 async function structure({view,model,svg,number}){
   let elements=nativeGraph(svg,view,model);
   const b=bounds(elements),width=Math.max(1900,b[2]-b[0]+128);shift(elements,64-b[0],430-b[1]);
   const decor=[];header(decor,width,number,view.level,view.title,view.scope);
-  let y=bounds(elements)[3]+80;
+  let y=bounds(elements)[3]+160;
   decor.push(text('reading-title',64,y,'Contratos que gobiernan esta vista',32,width-128));y+=64;
   y=cards(decor,decisionNotes[view.id],64,y,width-128,3);
   decor.push(text('details-title',64,y+35,'Responsabilidades, propiedad y comportamiento ante fallos',32,width-128));y+=110;

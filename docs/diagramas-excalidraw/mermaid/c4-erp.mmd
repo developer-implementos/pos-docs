@@ -1,0 +1,33 @@
+flowchart TB
+    accTitle: C3 · erp-worker — Contrato POS, ACL y recuperación ERP
+    accDescr: Un proceso apps/erp-worker en la red autorizada del ERP. Fachada, ACL, protocolo y conciliación son componentes internos de libs/backend/erp. El worker inicia HTTPS hacia country-api. Lease, destino, versión e intento permanecen identificados; un timeout no autoriza duplicar efectos ni cambiar de ERP.
+    subgraph erpScope["apps/erp-worker · UN proceso supervisado"]
+        direction TB
+        erpExecution["Planificador y ejecutor<br/>«Componente»<br/>libs/backend/erp + worker<br/>Admite trabajo con límites por destino."]:::pos
+        erpClient["Cliente de country-api<br/>«Componente»<br/>HTTPS autenticado · contrato POS<br/>Reclama trabajo y registra resultados."]:::pos
+        erpFacade["Fachada de integración POS<br/>«Componente»<br/>libs/backend/erp · TypeScript<br/>Expone casos de uso con lenguaje POS."]:::pos
+        erpAcl["ACL por país y contrato<br/>«Componente»<br/>libs/backend/erp · TypeScript<br/>Traduce identidades, estados e importes."]:::pos
+        erpProtocol["Adaptadores AX / custom / Gira<br/>«Componente»<br/>Protocolo de cada ERP por homologar<br/>Ejecuta envío y consulta autorizados."]:::pos
+        erpRecovery["Resultado y conciliación<br/>«Componente»<br/>libs/backend/erp · TypeScript<br/>Distingue éxito, rechazo e incertidumbre."]:::pos
+        technicalBase["Base técnica compartida<br/>«Componente»<br/>shared/backend · composición objetivo<br/>Configuración, salud, Pino y Sentry opt-in."]:::pos
+    end
+    countryApi["country-api<br/>«Contenedor»<br/>NestJS + Fastify / Node.js<br/>Recibe operaciones y sirve trabajo y versiones."]:::pos
+    erp["ERP del país<br/>«Sistema externo»<br/>CL: AX · ES: Gira · PE: custom<br/>Recibe y concilia documentos financieros."]:::external
+    legend["Leyenda · notación C4<br/>Azul: POS · Violeta: datos<br/>Gris: externo · Ámbar: infraestructura<br/>Borde: sistema, proceso o nodo indicado<br/>Flecha: iniciador, propósito y protocolo<br/>Opcional / por asignar: condición explícita<br/>Contenedor no equivale a Docker"]:::key
+    erpExecution -->|"Solicita trabajo / renueva lease · TypeScript"| erpClient
+    erpClient -->|"Claim y resultados · HTTPS saliente"| countryApi
+    erpExecution -->|"Ejecuta con destino e intento fijos · TypeScript"| erpFacade
+    erpExecution -->|"Configura y correlaciona · TypeScript"| technicalBase
+    erpFacade -->|"Contrato POS y contexto · TypeScript"| erpAcl
+    erpAcl -->|"Modelo traducido por país · TypeScript"| erpProtocol
+    erpProtocol -->|"Envía o consulta · protocolo homologado"| erp
+    erpProtocol -->|"Respuesta, error o incertidumbre · TypeScript"| erpRecovery
+    erpRecovery -->|"Consulta/conciliación según capacidad · TypeScript"| erpFacade
+    erpRecovery -->|"Registra resultado con misma identidad · TypeScript"| erpClient
+    classDef pos fill:#EDF3FF,stroke:#0545BA,color:#25364D,stroke-width:2px
+    classDef store fill:#F2EFFF,stroke:#6551A8,color:#25364D,stroke-width:2px
+    classDef external fill:#F4F6F8,stroke:#6B788A,color:#25364D
+    classDef person fill:#18336D,stroke:#18336D,color:#FFFFFF
+    classDef infra fill:#FFF3E0,stroke:#A86516,color:#25364D
+    classDef key fill:#FFFFFF,stroke:#BCC9DB,color:#53657F,font-size:14px
+    style erpScope fill:#FFFFFF,stroke:#BCC9DB,stroke-dasharray:6 4

@@ -1,56 +1,65 @@
 flowchart TB
-    accTitle: Complemento · Despliegue — Dónde corre cada pieza
-    accDescr: Entorno objetivo de referencia: una tienda y una plataforma por país. No describe servidores o proveedores cloud ya contratados. Varias cajas comparten servidor y PostgreSQL de sucursal. Sin WAN puede continuar la operación autorizada; sin LAN o escritor, no se crea otra autoridad en cada puesto.
-    subgraph terminalNode["Puestos POS x N · Nodo<br/>Windows por homologar"]
+    accTitle: Complemento · Despliegue — Sucursal, país y red autorizada del ERP
+    accDescr: Perfil WAN: puestos y móviles usan el servidor de sucursal por LAN. País y red del ERP son entornos independientes, conectados mediante contratos autenticados. erp-worker inicia la conexión hacia country-api; no accede por SQL WAN a su base. Redis sólo aparece como caché opcional de país. Infraestructura, recuperación y capacidad deben homologarse.
+    subgraph terminalNode["Puestos POS x N · Windows por homologar"]
         direction TB
-        client["Cliente de escritorio<br/>«Instancia de contenedor»<br/>Angular + Tauri<br/>Presenta caja y comandos del operador."]:::pos
-        device["Puente de periféricos<br/>«Instancia de contenedor condicional»<br/>Proceso nativo según SDK<br/>Ejecuta capacidades del puesto."]:::pos
+        client["pos-desktop<br/>«Contenedor · instancia»<br/>Angular + Tauri<br/>Presenta caja y comandos del operador."]:::pos
+        device["Puente de periféricos<br/>«Contenedor condicional · instancia»<br/>Proceso nativo según SDK<br/>Ejecuta capacidades del puesto."]:::pos
     end
-    subgraph mobileNode["Dispositivos móviles · Nodo<br/>Android/iOS por homologar"]
-        mobileClient["Cliente móvil<br/>«Instancia de contenedor»<br/>Angular + Capacitor<br/>Presenta operaciones en Android/iOS."]:::pos
-    end
-    subgraph serverNode["Servidor de sucursal · Nodo<br/>Entorno de ejecución por homologar"]
+    subgraph mobileNode["Dispositivos móviles · Android/iOS por homologar"]
         direction TB
-        branchApi["Backend de sucursal<br/>«Instancia de contenedor»<br/>NestJS + Fastify / Node.js<br/>Valida y confirma la operación local."]:::pos
-        syncWorker["Sincronizador de sucursal<br/>«Instancia de contenedor»<br/>Worker TypeScript / Node.js<br/>Entrega eventos y actualiza espejos."]:::pos
-        branchDb[("Datos de sucursal<br/>«Instancia de contenedor de datos»<br/>PostgreSQL<br/>Guarda negocio, outbox y espejo local.")]:::store
+        mobileClient["pos-mobile<br/>«Contenedor · instancia»<br/>Angular + Capacitor<br/>Presenta operaciones en Android/iOS."]:::pos
     end
-    subgraph countryNode["Plataforma de país · Nodo<br/>Alojamiento por decidir"]
+    subgraph serverNode["Servidor de sucursal · entorno por homologar"]
         direction TB
-        countryApi["API de país<br/>«Instancia de contenedor»<br/>NestJS + Fastify / Node.js<br/>Aplica lotes y sirve publicaciones."]:::pos
-        countryWorker["Workers de país<br/>«Instancia de contenedor»<br/>Workers NestJS / Node.js<br/>Publica versiones e integra pendientes."]:::pos
-        erpAdapter["Adaptador ERP / ACL<br/>«Instancia de contenedor»<br/>Proceso TypeScript / Node.js<br/>Traduce contratos y concilia resultados."]:::pos
-        countryDb[("Datos operativos de país<br/>«Instancia de contenedor de datos»<br/>PostgreSQL<br/>Consolida y conserva entrega durable.")]:::store
+        branchApi["branch-api<br/>«Contenedor · instancia»<br/>NestJS + Fastify / Node.js<br/>Valida y confirma la operación local."]:::pos
+        syncWorker["branch-sync-worker<br/>«Contenedor · instancia»<br/>NestJS / Node.js · sin servidor HTTP<br/>Entrega eventos y actualiza espejos."]:::pos
+        branchDb[("Datos de sucursal<br/>«Contenedor de datos · instancia»<br/>PostgreSQL<br/>Guarda negocio, outbox y espejo local.")]:::store
     end
-    erp["ERP del país<br/>«Sistema externo»<br/>CL: AX · ES: Gira · PE: custom<br/>Recibe y concilia documentos financieros."]:::external
+    subgraph countryNode["Plataforma de país · alojamiento por decidir"]
+        direction TB
+        countryApi["country-api<br/>«Contenedor · instancia»<br/>NestJS + Fastify / Node.js<br/>Recibe operaciones y sirve trabajo y versiones."]:::pos
+        countryWorker["Publicador de maestros · proceso por asignar<br/>«Contenedor · instancia»<br/>Proceso de publicación · composición pendiente<br/>Prepara publicaciones comerciales versionadas."]:::pos
+        countryDb[("Datos operativos de país<br/>«Contenedor de datos · instancia»<br/>PostgreSQL<br/>Consolida y conserva entrega durable.")]:::store
+        countryCache[("Redis · caché de país (opcional)<br/>«Contenedor de datos · instancia»<br/>Redis · datos reconstruibles<br/>Acelera consultas; no confirma operaciones.")]:::store
+    end
+    subgraph erpNode["Red autorizada del ERP · entorno por país"]
+        direction TB
+        erpAdapter["erp-worker<br/>«Contenedor · instancia»<br/>NestJS / Node.js · libs/backend/erp<br/>Consume trabajo; traduce y concilia con ERP."]:::pos
+        erp["ERP del país<br/>«Sistema externo»<br/>CL: AX · ES: Gira · PE: custom<br/>Recibe y concilia documentos financieros."]:::external
+    end
     payments["Proveedor de pagos<br/>«Sistema externo»<br/>API / SDK según proveedor<br/>Autoriza o informa el resultado del pago."]:::external
     fiscal["Proveedor fiscal<br/>«Sistema externo»<br/>Contrato por país y modalidad<br/>Emite o transmite documentos fiscales."]:::external
     backup["Respaldo y recuperación<br/>«Infraestructura»<br/>Backups PostgreSQL / herramienta por definir<br/>Conserva y ensaya restauraciones."]:::infra
-    legend["Leyenda · notación C4<br/>Verde: POS · Azul/cilindro: datos<br/>Gris: externo · Persona: rol humano<br/>Borde discontinuo: límite indicado<br/>Flecha: propósito y protocolo<br/>Contenedor: aplicación o almacén<br/>Componente: módulo de UN proceso"]:::key
+    observability["Observabilidad operativa (opcional)<br/>«Sistema externo»<br/>Recolector de logs / Sentry opt-in<br/>Recibe diagnóstico y correlación técnica."]:::external
+    legend["Leyenda · notación C4<br/>Azul: POS · Violeta: datos<br/>Gris: externo · Ámbar: infraestructura<br/>Borde: sistema, proceso o nodo indicado<br/>Flecha: iniciador, propósito y protocolo<br/>Opcional / por asignar: condición explícita<br/>Contenedor no equivale a Docker"]:::key
     client -->|"Comandos autenticados · HTTPS/LAN"| branchApi
     mobileClient -->|"Comandos autenticados · HTTPS/LAN"| branchApi
-    client -->|"Comando autorizado por backend · IPC/loopback por homologar"| device
-    branchApi -->|"Negocio + outbox · SQL local"| branchDb
+    client -->|"Comando autorizado · IPC/loopback"| device
+    branchApi -->|"Negocio + auditoría + outbox · SQL local"| branchDb
     syncWorker -->|"Pendientes, cursores y espejo · SQL local"| branchDb
-    syncWorker -->|"Lotes, deltas y snapshots · HTTPS/WAN"| countryApi
-    countryApi -->|"Commit inbox + efecto + outbox antes de ACK · SQL"| countryDb
-    countryWorker -->|"Outbox confirmada / publicaciones · SQL"| countryDb
-    countryWorker -->|"Contrato canónico · HTTPS interno"| erpAdapter
-    erpAdapter -->|"Traducción por país · interfaz ERP por validar"| erp
-    erpAdapter -->|"Resultados y referencias · SQL"| countryDb
-    device -->|"Terminal/pago · SDK o API homologado"| payments
-    branchApi -->|"Emisión/transmisión · modalidad por homologar"| fiscal
-    branchDb -->|"Copia y evidencia de restore · mecanismo por definir"| backup
-    countryDb -->|"Copia y retención por país · mecanismo por definir"| backup
-    %% Keep the reading key outside the deployment nodes; this is a layout constraint.
+    syncWorker -->|"Lotes y publicaciones · HTTPS/WAN"| countryApi
+    countryApi -->|"Recepción, trabajo y resultados · SQL"| countryDb
+    countryWorker -->|"Publicaciones completas · SQL"| countryDb
+    countryApi -->|"Consultas reconstruibles · Redis opcional"| countryCache
+    erpAdapter -->|"Trabajo / resultados · HTTPS saliente"| countryApi
+    erpAdapter -->|"Envío y consulta · interfaz homologada"| erp
+    device -->|"Terminal local · SDK/API homologado"| payments
+    branchApi -->|"Emisión/transmisión · contrato fiscal"| fiscal
+    branchDb -->|"Respaldo y restore · mecanismo por definir"| backup
+    countryDb -->|"Respaldo aislado por país · mecanismo por definir"| backup
+    branchApi -->|"Logs correlacionados / errores opt-in · canal aprobado"| observability
+    countryApi -->|"Logs correlacionados / errores opt-in · canal aprobado"| observability
+    erpAdapter -->|"Intentos técnicos / errores opt-in · canal aprobado"| observability
     backup ~~~ legend
-    classDef pos fill:#e8f4ef,stroke:#087f70,color:#17302d,stroke-width:2px
-    classDef store fill:#edf3f9,stroke:#365f87,color:#17302d,stroke-width:2px
-    classDef external fill:#f4f6f5,stroke:#74827d,color:#17302d
-    classDef person fill:#152d2b,stroke:#152d2b,color:#ffffff
-    classDef infra fill:#fbf1e2,stroke:#a86516,color:#17302d
-    classDef key fill:#ffffff,stroke:#b9cbc3,color:#566762,font-size:14px
-    style terminalNode fill:#ffffff,stroke:#b9cbc3,stroke-dasharray:6 4
-    style mobileNode fill:#ffffff,stroke:#b9cbc3,stroke-dasharray:6 4
-    style serverNode fill:#ffffff,stroke:#b9cbc3,stroke-dasharray:6 4
-    style countryNode fill:#ffffff,stroke:#b9cbc3,stroke-dasharray:6 4
+    classDef pos fill:#EDF3FF,stroke:#0545BA,color:#25364D,stroke-width:2px
+    classDef store fill:#F2EFFF,stroke:#6551A8,color:#25364D,stroke-width:2px
+    classDef external fill:#F4F6F8,stroke:#6B788A,color:#25364D
+    classDef person fill:#18336D,stroke:#18336D,color:#FFFFFF
+    classDef infra fill:#FFF3E0,stroke:#A86516,color:#25364D
+    classDef key fill:#FFFFFF,stroke:#BCC9DB,color:#53657F,font-size:14px
+    style terminalNode fill:#FFFFFF,stroke:#BCC9DB,stroke-dasharray:6 4
+    style mobileNode fill:#FFFFFF,stroke:#BCC9DB,stroke-dasharray:6 4
+    style serverNode fill:#FFFFFF,stroke:#BCC9DB,stroke-dasharray:6 4
+    style countryNode fill:#FFFFFF,stroke:#BCC9DB,stroke-dasharray:6 4
+    style erpNode fill:#FFFFFF,stroke:#BCC9DB,stroke-dasharray:6 4

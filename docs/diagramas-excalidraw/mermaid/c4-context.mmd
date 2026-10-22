@@ -9,7 +9,7 @@ flowchart TB
     masters["Fuentes de maestros y precios<br/>«Sistema externo»<br/>Interfaces por confirmar<br/>Publica datos y reglas autorizados."]:::external
     payments["Proveedor de pagos<br/>«Sistema externo»<br/>API / SDK según proveedor<br/>Autoriza o informa el resultado del pago."]:::external
     fiscal["Proveedor fiscal<br/>«Sistema externo»<br/>Contrato por país y modalidad<br/>Emite o transmite documentos fiscales."]:::external
-    legend["Leyenda · notación C4<br/>Verde: POS · Azul/cilindro: datos<br/>Gris: externo · Persona: rol humano<br/>Borde discontinuo: límite indicado<br/>Flecha: propósito y protocolo<br/>Contenedor: aplicación o almacén<br/>Componente: módulo de UN proceso"]:::key
+    legend["Leyenda · notación C4<br/>Azul: POS · Violeta: datos<br/>Gris: externo · Ámbar: infraestructura<br/>Borde: sistema, proceso o nodo indicado<br/>Flecha: iniciador, propósito y protocolo<br/>Opcional / por asignar: condición explícita<br/>Contenedor no equivale a Docker"]:::key
     cashier -->|"Opera ventas y turnos · interfaz de caja"| pos
     supervisor -->|"Autoriza y revisa · interfaz de operación"| pos
     support -->|"Supervisa y recupera · herramientas autorizadas"| pos
@@ -17,9 +17,9 @@ flowchart TB
     pos -->|"Integra y concilia documentos · adaptador por país"| erp
     pos -->|"Solicita pago y consulta resultado · API/SDK por validar"| payments
     pos -->|"Solicita emisión/transmisión · contrato fiscal por validar"| fiscal
-    classDef pos fill:#e8f4ef,stroke:#087f70,color:#17302d,stroke-width:2px
-    classDef store fill:#edf3f9,stroke:#365f87,color:#17302d,stroke-width:2px
-    classDef external fill:#f4f6f5,stroke:#74827d,color:#17302d
-    classDef person fill:#152d2b,stroke:#152d2b,color:#ffffff
-    classDef infra fill:#fbf1e2,stroke:#a86516,color:#17302d
-    classDef key fill:#ffffff,stroke:#b9cbc3,color:#566762,font-size:14px
+    classDef pos fill:#EDF3FF,stroke:#0545BA,color:#25364D,stroke-width:2px
+    classDef store fill:#F2EFFF,stroke:#6551A8,color:#25364D,stroke-width:2px
+    classDef external fill:#F4F6F8,stroke:#6B788A,color:#25364D
+    classDef person fill:#18336D,stroke:#18336D,color:#FFFFFF
+    classDef infra fill:#FFF3E0,stroke:#A86516,color:#25364D
+    classDef key fill:#FFFFFF,stroke:#BCC9DB,color:#53657F,font-size:14px

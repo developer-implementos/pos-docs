@@ -94,41 +94,47 @@ El [inventario corporativo histórico](analisis-repositorios/aportes-plataforma-
 ```mermaid
 flowchart TB
     subgraph Tienda["Tienda de un país · LAN disponible"]
-        UI["Cliente POS · Angular + Tauri"]
-        Local["Backend de sucursal · NestJS + Fastify\nMonolito modular · escritor compartido"]
+        UI["pos-desktop · Angular + Tauri"]
+        Mobile["pos-mobile · Angular + Capacitor"]
+        Local["branch-api · NestJS + Fastify\nMonolito modular · escritor compartido"]
         DB[("PostgreSQL de sucursal\nnegocio + outbox en un commit")]
         FiscalLocal["Componente fiscal local según régimen"]
         Pay["Terminal y SDK de pagos"]
-        Edge["Publicador y consumidor de lotes"]
+        Edge["branch-sync-worker\nEntrega y recepción de lotes"]
         UI -->|"HTTPS por LAN · API autenticada"| Local
-        Local --> DB
+        Mobile -->|"HTTPS por LAN · API autenticada"| Local
+        Local -->|"Negocio + outbox · transacción local"| DB
         Local --> FiscalLocal
-        Local --> Pay
-        DB <--> Edge
+        Local -->|"Comando autorizado · puente homologado si requiere SDK"| Pay
+        Edge -->|"Outbox/inbox, cursores y versiones · SQL local"| DB
     end
     subgraph Pais["Plataforma del país en cloud autorizado o centro de datos"]
-        Sync["API de sincronización · NestJS + Fastify"]
-        Core["Backend de país · NestJS + Fastify\nConsolidación, maestros y conciliación"]
-        Store[("PostgreSQL operativo por país\ninbox, estados y outbox")]
-        Queue["Workers y trabajo durable por destino\nbroker adicional si se justifica"]
-        Fiscal["Envío y seguimiento fiscal del país"]
-        Adapter["Puertos y ACL del ERP\nlegado WSO2 delimitado en transición"]
-        Sync --> Store
-        Store <--> Core
-        Store --> Queue
-        Queue --> Fiscal
-        Queue --> Adapter
+        Country["country-api · NestJS + Fastify\nRecepción, consultas, trabajo y resultados"]
+        Store[("PostgreSQL operativo por país\ninbox, efecto local y outbox")]
+        Publisher["Publicación de maestros\nProceso por asignar"]
+        Cache[("Redis · caché de país opcional\nLecturas reconstruibles")]
+        Fiscal["Transmisión y seguimiento fiscal según régimen\nEjecución por definir"]
+        Country -->|"Commit antes de ACK · SQL"| Store
+        Country -.->|"Consulta derivada · fallback a PostgreSQL"| Cache
+        Publisher -->|"Versiones completas y validadas"| Store
+        Country -->|"Trabajo fiscal autorizado según contrato"| Fiscal
     end
-    Edge <-->|"HTTPS por lotes y acuses durables"| Sync
+    subgraph RedERP["Red autorizada del ERP · entorno por homologar"]
+        Adapter["erp-worker\nFachadas, ACL y adaptadores"]
+        System["Sistema vigente por país y fase\nAX, Gira, custom o ERP futuro"]
+        Adapter -->|"Interfaz ERP por validar"| System
+    end
+    Edge -->|"Lotes, acuses y versiones · HTTPS saliente"| Country
+    Adapter -->|"Solicita trabajo / entrega resultados · HTTPS saliente"| Country
+    Publisher -->|"Obtiene cambios o carga completa · contrato por validar"| Masters["Fuentes autorizadas de maestros y precios"]
     Fiscal --> Authority["SII, SUNAT o autoridad española aplicable"]
-    Adapter --> System["Sistema vigente por país y fase<br/>AX, Gira, custom o ERP futuro"]
-    Control["Gobierno común de versiones y configuración"] -.-> Core
-    Core -.-> Analytics["Analítica con datos minimizados"]
+    Control["Gobierno común de versiones y configuración"] -.-> Country
+    Country -.->|"Publicación asíncrona"| Analytics["Analítica con datos minimizados"]
 ```
 
-El diagrama representa una tienda y su plataforma de país; se repite para Chile, Perú y España. No existe un único servicio remoto obligatorio para que todas las tiendas vendan. El componente fiscal puede producir registros locales y delegar su transmisión, únicamente cuando el régimen aplicable lo permite.
+El diagrama representa una tienda, su plataforma de país y la red autorizada del ERP; se aplica por país. Las seis aplicaciones tienen nombre explícito. La publicación de maestros y la transmisión fiscal describen responsabilidades cuya ejecución debe asignarse, no apps adicionales ya creadas. Redis es opcional; PostgreSQL conserva la autoridad. Las flechas HTTPS indican quién inicia la conexión: la respuesta forma parte del mismo contrato. `erp-worker` solicita trabajo y entrega resultados a `country-api`, sin SQL remoto a su base ni entrada pública obligatoria a la red ERP. El componente fiscal puede producir registros locales y delegar su transmisión únicamente cuando el régimen aplicable lo permite.
 
-**Cliente y backend de sucursal.** Angular + Tauri presenta la operación y accede a capacidades nativas autorizadas. Por una API autenticada sobre la LAN llama al backend NestJS/Fastify, que valida permisos, calcula precios/ofertas con datos locales, controla turnos y persiste negocio y outbox en PostgreSQL. Varias cajas comparten este backend y un escritor autorizado de datos de sucursal; la base de ventas pertenece a la sucursal. El cliente no recibe credenciales SQL. Impresión y terminal bancario se validan en hardware real; otros periféricos se incorporan según el alcance.
+**Clientes y backend de sucursal.** `pos-desktop` usa Angular + Tauri y `pos-mobile`, Angular + Capacitor; sus capacidades nativas deben estar autorizadas y homologadas. Ambos llaman a `branch-api` mediante API autenticada sobre la LAN. El backend NestJS/Fastify valida permisos, calcula precios/ofertas con datos locales, controla turnos y persiste negocio y outbox en PostgreSQL. Varias cajas comparten este backend y un escritor autorizado de datos de sucursal; la base de ventas pertenece a la sucursal. Los clientes no reciben credenciales SQL. Impresión y terminal bancario se validan en hardware real; otros periféricos se incorporan según el alcance.
 
 **Servidor de sucursal, perfil WAN.** Es el escritor autorizado y su pérdida puede detener las cajas. Se acuerdan redundancia, backups, repuesto, RTO/RPO y aislamiento del escritor anterior antes de failover. Ninguna caja activa un escritor alternativo por su cuenta.
 
@@ -136,7 +142,7 @@ El diagrama representa una tienda y su plataforma de país; se repite para Chile
 
 **Plataforma de país.** Mantiene el registro operativo consolidado, distribuye configuración y concilia con pagos, fiscalidad y sistema financiero. Separa bases, colas, credenciales y límites de recursos por país y entidad legal. Una interrupción de AX no debe llenar la cola de España ni detener Perú. La analítica corporativa recibe datos asíncronamente.
 
-**Integración.** Una capa de traducción evita que campos, estados y particularidades de un sistema externo invadan el modelo del POS. Los servicios fiscales y de pagos también tienen contratos propios y resultados persistidos.
+**Integración.** `erp-worker` compone las fachadas, ACL y adaptadores en la red autorizada del ERP. La traducción evita que campos, estados y particularidades externas invadan el modelo del POS. `country-api` expone los contratos y casos de uso de trabajo/resultados; una confirmación local no demuestra registro ERP. Los servicios fiscales y de pagos también tienen contratos propios y resultados persistidos.
 
 ### Contratos de contenedores y propiedad de datos
 
@@ -144,11 +150,15 @@ Esta descomposición orienta las vistas C4: cliente, API y worker son unidades d
 
 | Contenedor propuesto | Persistencia y propietario | Contrato de comunicación |
 | --- | --- | --- |
-| Cliente POS Angular + Tauri, por puesto | Preferencias y estado de presentación; los registros técnicos de un agente de dispositivos no son otro libro de ventas | API HTTPS autenticada por LAN al backend de sucursal; comandos acotados al agente local de dispositivos |
-| Backend de sucursal NestJS + Fastify | PostgreSQL de sucursal; módulos de ventas, caja, pagos y fiscalidad controlan sus datos. Precios/maestros son espejos de lectura autorizados | Confirma cada cambio local junto con su outbox; no llama al ERP ni a una API remota de precios como condición de las ventas habilitadas offline |
-| Worker de sucursal supervisado | Pendientes, inbox, cursores y metadatos de entrega en la misma base de sucursal; no cambia ventas saltándose el módulo dueño | Envía eventos y recibe datos por HTTPS; reintenta con identidad estable y confirma recepción después de persistir |
-| Backend y workers de país | PostgreSQL operativo separado por país; módulos responsables de recepción, proyecciones, distribución y conciliación | Inbox, efecto y siguiente outbox en una transacción de país; adapta contratos ERP/proveedores y conserva sus estados por separado |
+| `pos-desktop` · Angular + Tauri | Preferencias y estado de presentación; los registros técnicos de un agente de dispositivos no son otro libro de ventas | API HTTPS autenticada por LAN a `branch-api`; comandos acotados al agente local de dispositivos |
+| `pos-mobile` · Angular + Capacitor | Estado de interfaz compartida y capacidades del host; sin autoridad SQL | Mismo contrato autenticado de `branch-api`; no habilita autonomía sin LAN por empaquetar la UI |
+| `branch-api` · NestJS + Fastify | PostgreSQL de sucursal; cada contexto controla sus datos. Precios/maestros son espejos de lectura autorizados | Confirma cada cambio local junto con su outbox; no llama al ERP ni a una API remota de precios como condición de las ventas habilitadas offline |
+| `branch-sync-worker` · proceso supervisado | Pendientes, inbox, cursores y metadatos de entrega en la misma base de sucursal; no cambia ventas saltándose el módulo dueño | Envía eventos y recibe datos por HTTPS; reintenta con identidad estable y conserva por separado recibido y aplicado |
+| `country-api` · NestJS + Fastify | PostgreSQL operativo por país; contextos dueños de recepción, proyecciones, publicaciones y trabajo/resultados ERP | Inbox, efecto y siguiente outbox en una transacción antes del ACK; ofrece trabajo y recibe resultados sin ejecutar el protocolo ERP dentro de la recepción |
+| `erp-worker` · proceso supervisado en red ERP | El contexto `erp` conserva destinos, referencias e intentos mediante la API de país; el proveedor conserva su efecto financiero | Inicia HTTPS a `country-api`; ejecuta fachada, ACL y adaptadores homologados; consulta o concilia resultados inciertos sin SQL remoto a país |
 | ERP y fuentes de maestros vigentes | Conservan las autoridades pactadas por dato; una copia POS no transfiere su propiedad | APIs/eventos o adaptadores de transición; las tablas internas no son el contrato entre productos |
+
+El publicador de maestros mantiene su ejecución por asignar. Redis de país y el puente de periféricos son capacidades condicionales con contratos propios; el [C2 y sus ampliaciones](c4-arquitectura-propuesta.md#c2-procesos-persistencia-y-propiedad) detallan consumidores, fallos y correspondencia con bibliotecas.
 
 «Misma base» permite una transacción entre tablas de una sucursal; no significa compartir esa transacción con país o ERP. Los nombres de schemas propuestos son ilustrativos: `sales`, `cash`, `payments`, `fiscal`, `pricing` y `sync`. Cada módulo controla sus tablas mediante interfaces y migraciones propias; `sync` controla entrega/deduplicación, no puede reescribir los importes de `sales`. Una unidad de trabajo coordina venta y outbox usando la misma conexión/transacción. En país, la clave de inbox combina origen, consumidor e ID de evento; un duplicado se reconoce y un ID reutilizado con contenido distinto se rechaza. El acuse sigue al commit; no certifica pago, aceptación fiscal ni contabilización. PostgreSQL permite agrupar cambios de varias tablas en una operación atómica; la corrección del protocolo debe probarse aparte. [Transacciones PostgreSQL](https://www.postgresql.org/docs/current/tutorial-transactions.html).
 
@@ -512,6 +522,7 @@ La revisión de [Core, DevOps e Integration Platform](analisis-repositorios/apor
 | Backend de sucursal y país | NestJS con Fastify, módulos claros y runtime soportado; workers supervisados según responsabilidad. Definir transición desde AdonisJS/Express. Conservar .NET donde lo exijan adaptadores o SDK y cumpla sus contratos |
 | Observabilidad | Evaluar `nestjs-pino` para logs estructurados y Sentry para diagnóstico/trazas; incluir métricas operativas, correlación de workers, retención local acotada y tolerancia a caída de telemetría |
 | Datos de país | PostgreSQL operativo por país, con réplica, backups y recuperación según objetivos acordados. Consolidación y estados propios; no segunda autoridad que edita ventas originadas en sucursal |
+| Caché de país (opcional) | Redis para lecturas reconstruibles de `country-api`, sujeto a necesidad medida. Claves con ámbito y versión, TTL e invalidación, y fallback acotado a PostgreSQL. No sustituye el espejo local durable ni almacena la única copia de ventas, saldos o mensajes pendientes. Ver [contrato y límites en C4](c4-arquitectura-propuesta.md#caché-de-país-opcional) |
 | MongoDB existente | Mantener donde el inventario confirme un propietario y consumidores vigentes; integrar por contrato. No copiar automáticamente su modelo ni añadir MongoDB a cada sucursal por disponer de precios/reglas en documentos |
 | Mensajería | Base propuesta: outbox/inbox y HTTPS durable; workers centrales sobre registro persistido. RabbitMQ central o servicio gestionado corporativo si justifican transporte/enrutamiento/aislamiento. BullMQ para trabajos delimitados. WSO2 conserva solo capacidades heredadas necesarias mientras se migran; ver comparación y criterios de retirada en la revisión corporativa |
 | Workers | Sincronización, conectores y transmisión fiscal desplegables de forma independiente |

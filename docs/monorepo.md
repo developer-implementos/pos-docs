@@ -192,6 +192,8 @@ Esta tabla fija la responsabilidad propuesta para implementar los módulos. No d
 
 PostgreSQL de sucursal es la persistencia recomendada para negocio y mensajes durables del perfil sin WAN. PostgreSQL operativo por país mantiene sus propias recepciones y proyecciones. Los clientes no acceden a SQL directamente. Esos motores y migraciones están pendientes; no se instala una base por caja como consecuencia de crear el monorepo.
 
+En la composición objetivo, `country-api` expone trabajo y resultados de integración mediante contratos y casos de uso públicos del contexto `erp`; ese contexto conserva la propiedad de destinos, referencias y estados ERP en PostgreSQL de país. `sync` gobierna el transporte, los acuses y la deduplicación técnica. La ACL y los adaptadores de proveedor se ejecutan dentro de `erp-worker`, que inicia HTTPS autenticado hacia `country-api` desde la red autorizada del ERP. Estos casos de uso y su persistencia están pendientes; el scaffold actual no implementa ese circuito. El [C3 de país y de ERP](c4-arquitectura-propuesta.md#c3-de-país-recepción-consulta-y-entrega-de-trabajo) detalla los límites.
+
 ```mermaid
 flowchart LR
     Client["pos-desktop / pos-mobile"] -->|"API propuesta"| Branch["branch-api"]
@@ -199,7 +201,7 @@ flowchart LR
     Sync["branch-sync-worker"] -->|"Entrega / recepción propuesta"| Country["country-api"]
     Sync -->|"Inbox / outbox"| Local
     Country --> Central[("PostgreSQL país")]
-    ERP["erp-worker"] -->|"Trabajo autorizado"| Central
+    ERP["erp-worker"] -->|"Trabajo y resultados · HTTPS saliente"| Country
     ERP -->|"ACL + adaptador"| External["ERP externo"]
 ```
 

@@ -1,18 +1,18 @@
 # Modelo C4 de la arquitectura propuesta del POS
 
-Fecha de revisión: 5 de octubre de 2026. Alcance: arquitectura de referencia para Chile, Perú y España; no certifica software, topología ni integraciones desplegadas.
+Fecha de revisión: 22 de octubre de 2026. Alcance: arquitectura de referencia para Chile, Perú y España; no certifica software, topología ni integraciones desplegadas.
 
-La [propuesta y sus decisiones](propuesta-arquitectura.md) gobiernan la recomendación. Estas vistas explican sus límites, procesos y responsabilidades. **Angular + Tauri es la dirección de cliente aceptada**. NestJS + Fastify, PostgreSQL, procesos de sincronización y organización de despliegue son recomendaciones para implementar y validar, no afirmaciones sobre la solución actual. La evidencia de hoy se conserva en el [catálogo de integraciones](catalogo-integraciones-actuales.md).
+La [propuesta y sus decisiones](propuesta-arquitectura.md) gobiernan la recomendación. Estas vistas explican sus límites, procesos y responsabilidades. **Los clientes son Angular + Tauri para escritorio y Angular + Capacitor para móvil**. La base técnica NestJS/Fastify y los scaffolds no acreditan los contratos comerciales, persistencia o integraciones aquí propuestos. El [estado del monorepo](monorepo.md#estado-de-implementación) delimita lo implementado; el [catálogo de integraciones](catalogo-integraciones-actuales.md) conserva la evidencia del legado.
 
 ## Niveles y alcance
 
 Los nombres funcionales de los diagramas se corresponden con los proyectos del [monorepo](monorepo.md#nombres-de-las-aplicaciones-backend): **Backend de sucursal** es `branch-api`, **Sincronizador de sucursal** es `branch-sync-worker`, **API de país** es `country-api` y el proceso de integración ERP es `erp-worker`. La existencia de estos proyectos no acredita las capacidades de negocio futuras representadas en las vistas.
 
-También está disponible la [colección editable para draw.io](diagramas-drawio/README.md), con un [atlas de siete pestañas](diagramas-drawio/00-atlas-completo.drawio), archivos individuales y un [paquete ZIP](diagramas-drawio/diagramas-c4-drawio.zip).
+También está disponible la [colección editable para draw.io](diagramas-drawio/README.md), con un [atlas de nueve pestañas](diagramas-drawio/00-atlas-completo.drawio), archivos individuales y un [paquete ZIP](diagramas-drawio/diagramas-c4-drawio.zip).
 
-La [galería de Excalidraw](diagramas-excalidraw/index.html) ofrece estas cinco vistas y dos dinámicas complementarias, con diagramas nativos editables, leyendas, responsabilidades, condiciones de fallo y fuentes. Incluye un [atlas completo](diagramas-excalidraw/00-atlas-completo.excalidraw) y un [paquete descargable](diagramas-excalidraw/diagramas-c4-excalidraw.zip). La [guía de edición](diagramas-excalidraw/README.md) explica cómo abrir y mantener la colección.
+La [galería de Excalidraw](diagramas-excalidraw/index.html) ofrece siete vistas estructurales y dos dinámicas complementarias, con diagramas nativos editables, leyendas, responsabilidades, condiciones de fallo y fuentes. Incluye un [atlas completo](diagramas-excalidraw/00-atlas-completo.excalidraw) y un [paquete descargable](diagramas-excalidraw/diagramas-c4-excalidraw.zip). La [guía de edición](diagramas-excalidraw/README.md) explica cómo abrir y mantener la colección.
 
-C4 distingue contexto, contenedores, componentes y código. No exige producir los cuatro niveles: deben aportar valor al diseño. En esta propuesta se desarrollan C1, C2 y dos ampliaciones C3. No hay suficiente diseño de implementación para dibujar clases como si ya estuvieran aprobadas. [Definición oficial de las vistas](https://c4model.com/diagrams).
+C4 distingue contexto, contenedores, componentes y código. Esta propuesta desarrolla C1, C2, cuatro ampliaciones C3 y despliegue. No hay suficiente diseño de implementación para dibujar clases como si ya estuvieran aprobadas. [Definición oficial de las vistas](https://c4model.com/diagrams).
 
 | Vista | Pregunta | Alcance | Fuente editable |
 | --- | --- | --- | --- |
@@ -20,11 +20,13 @@ C4 distingue contexto, contenedores, componentes y código. No exige producir lo
 | C2 · Contenedores | ¿Qué aplicaciones, procesos y datos lo componen? | Interior del POS corporativo, con colaboradores externos | [c4-containers.mmd](diagramas-excalidraw/mermaid/c4-containers.mmd) |
 | C3 · Backend | ¿Cómo se organiza el backend local? | **Un proceso** NestJS + Fastify de sucursal | [c4-backend.mmd](diagramas-excalidraw/mermaid/c4-backend.mmd) |
 | C3 · Sincronización | ¿Cómo entrega eventos y activa precios? | **Un proceso** de sincronización de sucursal | [c4-sync.mmd](diagramas-excalidraw/mermaid/c4-sync.mmd) |
+| C3 · API de país | ¿Cómo recibe operaciones y entrega trabajo e información? | **Un proceso** `country-api` | [c4-country.mmd](diagramas-excalidraw/mermaid/c4-country.mmd) |
+| C3 · Integración ERP | ¿Cómo traduce y concilia sin exponer el ERP? | **Un proceso** `erp-worker` dentro de su red autorizada | [c4-erp.mmd](diagramas-excalidraw/mermaid/c4-erp.mmd) |
 | Complemento · Despliegue | ¿Dónde se ejecutan las instancias? | Una tienda y su plataforma de país, como referencia | [c4-deployment.mmd](diagramas-excalidraw/mermaid/c4-deployment.mmd) |
 
 Un **contenedor C4** es una aplicación o un almacén de datos. No equivale necesariamente a un contenedor Docker. C2 muestra tecnología, comunicación y reparto de responsabilidades; clustering, failover y servidores pertenecen al despliegue. [Definición oficial de C2](https://c4model.com/diagrams/container).
 
-C3 amplía un solo contenedor. Los componentes interiores del backend no son microservicios: llaman código TypeScript del mismo proceso. Los componentes interiores del sincronizador siguen la misma regla. Los colaboradores fuera del borde conservan su tipo de contenedor o sistema externo. [Definición oficial de C3](https://c4model.com/diagrams/component).
+C3 amplía un solo contenedor. Los componentes interiores de `branch-api`, `branch-sync-worker`, `country-api` y `erp-worker` llaman código del mismo proceso; no son microservicios. Los colaboradores fuera del borde conservan su tipo de contenedor o sistema externo. [Definición oficial de C3](https://c4model.com/diagrams/component).
 
 **Despliegue es un diagrama complementario, no “C4 nivel 4”.** Representa instancias en nodos de ejecución. En este caso la infraestructura definitiva, sistema operativo, alojamiento de país y alta disponibilidad siguen pendientes de validación. El nivel cuatro de C4 sería código. [Definición oficial de despliegue](https://c4model.com/diagrams/deployment).
 
@@ -32,14 +34,14 @@ C3 amplía un solo contenedor. Los componentes interiores del backend no son mic
 
 Se usa Mermaid como notación para el modelo C4. Cada bloque arquitectónico lleva nombre, tipo, tecnología y responsabilidad. Las flechas dirigidas identifican al iniciador de la relación y nombran propósito/protocolo; una respuesta pertenece a ese mismo contrato. Los bordes discontinuos delimitan sistema, proceso o nodo según su título. Esta elección sigue el carácter independiente de notación de C4. [Guía oficial de notación](https://c4model.com/diagrams/notation).
 
-- Verde: software del POS. Azul y cilindro: almacén de datos. Gris: sistema externo. Persona: rol humano. Ocre: infraestructura de recuperación.
+- Azul `#0545BA`: software del POS. Violeta: almacén de datos. Gris: sistema externo. Azul oscuro: rol humano. Ámbar: infraestructura o condiciones. Los nombres y tipos mantienen el significado sin depender del color o de la forma.
 - En C3, estar dentro de un borde significa compartir proceso, no estar en un clúster de microservicios.
 - En despliegue, los bordes son equipos o entornos de ejecución; `x N` representa varios puestos, sin inventar una cantidad de cajas productivas.
-- C1 identifica el alcance por el propio bloque POS, sin un segundo rectángulo envolvente. C2 conserva una sola frontera del sistema; la propiedad de puesto, sucursal y país se explicita en nombres, fichas y contratos. Despliegue usa tres nodos al mismo nivel —puestos, servidor de sucursal y plataforma de país— para evitar fronteras anidadas que oculten relaciones.
+- C1 identifica al producto y sus colaboradores, sin aplicaciones internas. C2 conserva la frontera del sistema y explicita las seis aplicaciones, los almacenes y las responsabilidades pendientes de asignación. Despliegue distingue puestos, móviles, servidor de sucursal, plataforma de país y red autorizada del ERP.
 - LAN: red de sucursal. WAN: conexión a la plataforma de país. ACL: capa anticorrupción que traduce un contrato externo. ACK: acuse de aplicación tras el commit local requerido.
 - “Por confirmar”, “condicional” y “por homologar” son límites del diseño. No declaran proveedor, contrato o SDK aprobado.
 
-El visor local muestra C2 inicialmente a 100 %, permite desplazar y ampliar el mapa, y ofrece “Ajustar” para obtener una vista de conjunto. Cada bloque tiene una ficha de responsabilidad, propiedad de datos, continuidad y fuentes. Una lista alternativa incluye los mismos elementos y relaciones. No ejecuta solicitudes a servicios corporativos.
+La galería presenta SVG con enlaces al archivo completo y a su fuente editable. Los diagramas incluyen fichas de responsabilidad, propiedad de datos, continuidad y fuentes. Son documentos de consulta; no ejecutan solicitudes a servicios corporativos.
 
 ## C1: límites del sistema
 
@@ -55,21 +57,38 @@ En la propuesta, el POS permite al cajero operar, al supervisor autorizar/revisa
 
 | Contenedor | Tecnología recomendada | Responsabilidad y autoridad |
 | --- | --- | --- |
-| Cliente de caja | Angular + Tauri | Presentación y comandos del operador. No recibe credenciales SQL ni mantiene otra base de ventas por defecto. |
+| `pos-desktop` | Angular + Tauri | Presentación y comandos del puesto. No recibe credenciales SQL ni mantiene otra base de ventas por defecto. |
+| `pos-mobile` | Angular + Capacitor | Operaciones móviles habilitadas y misma autoridad de sucursal. Empaquetar la UI no habilita autonomía sin LAN. |
 | Puente de periféricos, cuando el SDK lo exige | Proceso nativo a homologar; runtime depende del proveedor | Ejecuta comandos autorizados por backend y conserva evidencia técnica. El cliente transporta identidad y autorización; no inventa otro intento de pago. |
-| Backend de sucursal | NestJS + Fastify / Node.js | Monolito modular, escritor de negocio de la tienda. Confirma operación, auditoría y outbox en una transacción. |
+| `branch-api` | NestJS + Fastify / Node.js | Monolito modular, escritor de negocio de la tienda. Confirma operación, auditoría y outbox en una transacción. |
 | Datos de sucursal | PostgreSQL | Negocio local y estado técnico de sincronización; espejo autorizado de catálogo/precios/promociones. Un primario autorizado compartido por los puestos. |
-| Sincronizador de sucursal | Worker TypeScript / Node.js supervisado | Entrega outbox, aplica inbox/cursor y prepara publicaciones locales. Permisos acotados a datos técnicos y espejos; no reescritura libre de ventas. |
-| API de país | NestJS + Fastify / Node.js | Recepción autenticada; confirma **inbox + efecto/proyección local + outbox** en un commit antes del ACK de aplicación. Sirve acuses, deltas y versiones publicadas. |
-| Workers de país | Workers NestJS / Node.js supervisados | Consume outbox ya confirmada para integración/conciliación, mantiene proyecciones derivadas y publica maestros. No difiere el efecto local exigido antes del ACK. |
+| `branch-sync-worker` | Worker TypeScript / Node.js supervisado | Entrega outbox, aplica inbox/cursor y prepara publicaciones locales. Permisos acotados a datos técnicos y espejos; no reescritura libre de ventas. |
+| `country-api` | NestJS + Fastify / Node.js | Recepción autenticada; confirma **inbox + efecto/proyección local + outbox** en un commit antes del ACK de aplicación. Sirve trabajo, resultados, deltas y versiones publicadas. |
+| Publicación de maestros · proceso por asignar | Composición y ejecución pendientes | Obtiene datos autorizados, construye candidatas y publica versiones completas. La responsabilidad no implica una séptima app ya seleccionada ni un publicador productivo. |
 | Datos operativos de país | PostgreSQL | Inbox/outbox, proyección, publicaciones versionadas y referencias de integración. No otra autoridad simultánea para editar ventas originadas en tienda. |
-| Adaptador ERP / ACL | Proceso TypeScript / Node.js, por contrato de integración | Traducción y conciliación con el sistema del país. Preserva referencias, destino e incertidumbre; capacidades del ERP por confirmar. |
+| `erp-worker` | Worker NestJS / Node.js y adaptadores por contrato | En la red autorizada del ERP, solicita trabajo y entrega resultados mediante HTTPS saliente a `country-api`. Compone la ACL; no accede por SQL a la base de país. |
+| Caché de país · opcional | Redis, candidato sujeto a medición | Acelera lecturas derivadas de `country-api`. Se reconstruye desde PostgreSQL; no conserva la única copia de dinero, pendientes ni autorizaciones financieras. |
 
 “Un escritor” combina dos reglas: **un primario autorizado de la base por sucursal** y **una autoridad de negocio para cada dato**. No significa una única conexión SQL. El backend escribe negocio; el worker puede escribir su inbox/outbox, cursores, staging y publicaciones bajo un contrato acotado. Si una recepción requiere cambiar negocio local, debe pasar por su caso de uso autorizado; un job genérico no puede modificar dinero arbitrariamente.
 
 El canal sucursal–país parte de **lotes HTTPS durables con identidades, versión de contrato y cursores**. El emisor conserva outbox. Para aceptar una operación en país, el receptor confirma **inbox, efecto local pactado y outbox en la misma transacción antes del ACK de aplicación**; guardar únicamente una recepción para aplicarla después no acredita ese hito. El efecto pactado es el registro operativo/proyección del evento, no la llamada al ERP ni toda proyección futura. La recepción por partes de maestros y de comandos de periféricos tiene otros acuses, definidos en el [contrato de sincronización](propuesta-arquitectura.md#sincronización-y-consistencia). RabbitMQ/Kafka no son requisitos iniciales ni sustituyen la atomicidad y deduplicación.
 
 Las flechas hacia proveedores son contratos lógicos: una integración con API remota puede ejecutarse desde backend; una que exige SDK del puesto pasa por el puente homologado. Los mapas no autorizan un salto directo de la UI al proveedor con un importe o permiso nuevo. La devolución de evidencia al backend mantiene la identidad original. [Contratos de periféricos y proveedores](extensibilidad-proveedores-dispositivos.md).
+
+### Aplicaciones, bibliotecas y estado
+
+Las rutas siguientes expresan la composición objetivo del [monorepo](monorepo.md), incluidas capacidades pendientes; no describen todos los imports del scaffold actual. Las aplicaciones componen bibliotecas y fijan el arranque. Las bibliotecas no añaden procesos ni bases por existir en Nx.
+
+| App | Rol y datos bajo su contrato | Composición objetivo | Estado verificable y objetivo |
+| --- | --- | --- | --- |
+| `pos-desktop` | Interfaz del puesto; estado de UI, sin autoridad SQL | `libs/client-shell`, `libs/features`, `libs/shared/frontend/ui` y adaptadores de cliente | UI demostrativa y host Tauri; backend real y hardware por integrar/homologar |
+| `pos-mobile` | Interfaz móvil; mismo contrato de sucursal | Composición compartida de cliente y host Capacitor | UI demostrativa; capacidades Android/iOS por validar |
+| `branch-api` | Casos de uso y negocio en PostgreSQL de sucursal | Contextos de `libs/backend/`, `libs/country-policies` y `libs/shared/backend/` | Arranque, configuración, logs y sondas; persistencia y operaciones comerciales pendientes |
+| `branch-sync-worker` | Entrega, inbox, cursores y candidatas locales; negocio mediante su módulo dueño | `libs/backend/sync`, contratos de `catalog`/`pricing`, `libs/shared/backend/worker` | Scaffold de proceso; entrega durable, programación y activación pendientes |
+| `country-api` | Recepción durable, registro operativo, publicaciones y resultados en PostgreSQL de país | `libs/backend/sync`, `catalog`, `pricing`, `reporting`, `administration`; contratos y casos de uso públicos de `erp`; base técnica compartida | Scaffold; composición ampliada, autenticación, recepción transaccional y APIs comerciales pendientes |
+| `erp-worker` | Traducción, intentos y conciliación; estado del POS mediante API de país | `libs/backend/erp`, contratos de sincronización y `libs/shared/backend/worker` | Scaffold sin conexión ERP; contratos, adaptación y recuperación por implementar |
+
+`libs/shared/backend/` agrupa arranque, configuración validada, adaptación HTTP, observabilidad, sondas y ciclo de vida de workers. Pino y la integración **opt-in** de Sentry pertenecen a esa base técnica; no son aplicaciones comerciales. `libs/shared/contracts` delimita sobres técnicos y `libs/shared/kernel` el modelo mínimo compartido, sin absorber todos los DTO o reglas de los contextos. La organización completa de esas bibliotecas y las capacidades objetivo conservan el estado indicado en el monorepo.
 
 ## C3 del backend: módulos de un único proceso
 
@@ -81,6 +100,8 @@ Las flechas hacia proveedores son contratos lógicos: una integración con API r
 6. **Persistencia transaccional** confirma cambios locales, auditoría y outbox juntos. Las llamadas externas no quedan dentro de una transacción SQL abierta.
 
 La separación es de responsabilidades y contratos de código. No se despliega un proceso HTTP por cada bloque. El backend no consulta obligatoriamente el ERP ni un precio remoto al confirmar una venta habilitada para operar sin WAN.
+
+La vista agrupa `sales`, `returns`, `collections` y `cash` para operación; `catalog` y `pricing` para consulta y cálculo comercial; `payments`, `fiscal` y `devices` para efectos y capacidades externas; `administration` y `reporting` para configuración y consulta. `sync` aporta el contrato de outbox dentro de la transacción de negocio; el transporte lo ejecuta `branch-sync-worker`. Son contextos de `libs/backend/`, con propiedad propia de datos. La base de `libs/shared/backend/` aporta configuración, logs Pino, Sentry opt-in y sondas sin asumir esas reglas de negocio.
 
 El diseño de acceso incorpora los usuarios, perfiles y accesos vigentes del legacy; el [análisis de Mountain](analisis-repositorios/mountain-implementos.md#login-perfiles-y-alcance-de-los-permisos) documenta login/JWT, controles de menú y autenticación de rutas, además de una autorización de devolución solicitada por correo. La autorización granular de las operaciones propuestas requiere implementación y validación; el diagrama no acredita que ya exista.
 
@@ -96,9 +117,56 @@ Una venta iniciada conserva la versión que explica su cálculo, pero fijarla no
 
 La entrega puede ser al menos una vez; el efecto local se protege mediante restricciones e inbox transaccional. No se promete exactamente una vez para efectos financieros o fiscales externos. Un restore puede retroceder negocio y deduplicación: retención, replay y conciliación deben ensayarse. [Casos adversos de recuperación](revision-resiliencia-datos-pos.md).
 
+El proceso compone `libs/backend/sync` con los contratos de `catalog` y `pricing`. Su base técnica compartida aporta configuración, logs, correlación y cierre supervisado. No necesita un listener HTTP de negocio para ejecutar tareas y no escribe operaciones financieras evitando sus casos de uso.
+
+## C3 de país: recepción, consulta y entrega de trabajo
+
+`country-api` es un único proceso NestJS/Fastify. Sus módulos agrupan acceso por país/entidad, sincronización, consultas, publicaciones comerciales y seguimiento de integración:
+
+1. **Entrada y autorización** valida identidad, contrato, país, entidad y límites del lote. La identidad autenticada determina el ámbito; no basta confiar en un campo del payload.
+2. **Recepción transaccional** confirma inbox, efecto operativo requerido y siguiente outbox juntos en PostgreSQL antes del ACK. Los resultados por evento permiten reanudar entregas parciales sin duplicar efectos.
+3. **Trabajo y resultados ERP** expone los contratos y casos de uso públicos de `libs/backend/erp`, propietario de destinos, referencias y estados ERP en PostgreSQL de país. Entrega operaciones con identidad, destino, versión y claim acotado; recibe los resultados del worker mediante cambios de estado condicionales. La expiración de un claim no cancela un efecto externo ya iniciado.
+4. **Consultas y publicaciones** sirve proyecciones, acuses y versiones completas de maestros. Preparar/publicar esas versiones es una responsabilidad cuyo proceso sigue por asignar; no se asume un cron productivo dentro de esta API.
+5. **Acceso a datos y caché opcional** mantiene PostgreSQL como autoridad. Redis, si se adopta para lecturas medidas, sigue el contrato de caché siguiente.
+
+La composición objetivo usa `libs/backend/sync`, `catalog`, `pricing`, `reporting` y `administration`, los contratos y casos de uso públicos de `erp`, y `libs/shared/backend/`. `sync` conserva transporte, acuses y deduplicación técnica; `erp` mantiene el trabajo y los resultados de integración. La ACL y los adaptadores se ejecutan solo en `erp-worker`, sin incorporarse a `country-api`. Esta ampliación y su persistencia están pendientes; no se atribuyen al scaffold actual. Configuración, Pino, Sentry opt-in, validación HTTP y sondas son soporte transversal. Una sonda saludable no acredita una integración ERP correcta ni ausencia de backlog.
+
+## C3 de integración ERP: ejecución dentro de la red autorizada
+
+`erp-worker` inicia una conexión HTTPS autenticada hacia `country-api` para solicitar trabajo y entregar resultados. Corre en la red autorizada del ERP; no necesita exponer AX a Internet ni conectarse por SQL a PostgreSQL de país. La respuesta a esa solicitud forma parte del mismo contrato saliente.
+
+El proceso compone **admisión y límites por destino**, **cliente de trabajo/resultados**, **fachadas de integración**, **ACL y adaptadores**, y **consulta/conciliación de resultados inciertos**. `libs/backend/erp` conserva referencias, traducción de estados, moneda, impuestos y destino; los contratos técnicos y el ciclo de vida usan `libs/shared/`. La ACL es código dentro del worker, no otro servicio HTTP obligatorio.
+
+Cada intento conserva la identidad de negocio y el destino asignado. Ante un timeout, consulta o concilia según el contrato externo antes de repetir un efecto monetario. Reintentos, ventanas y concurrencia protegen al ERP; un lock local no demuestra que el remoto no haya ejecutado. La persistencia de resultados en país se confirma por API. Si se necesita una custodia técnica local adicional para un adaptador, debe diseñarse y validarse; el diagrama no inventa otra base de ventas.
+
+Las interfaces de AX, Gira y el sistema peruano siguen por verificar. Los adaptadores legacy aportan evidencia y candidatos de compatibilidad, no acreditan el conector objetivo. [Contratos y adaptación por país](propuesta-arquitectura.md#integración-de-los-sistemas-actuales).
+
+## Caché de país opcional
+
+**Redis es un candidato opcional para caché de país, no una dependencia del perfil inicial.** Su consumidor propuesto es `country-api`, para lecturas derivadas y repetidas que toleren una frescura acordada. Antes de adoptarlo se identifica una consulta, carga, ahorro medido y dueño operativo. La base propuesta conserva PostgreSQL + HTTPS + workers; el [ADR de transporte](propuesta-arquitectura.md#decisiones-de-arquitectura) y los [gates de mensajería](investigacion-mensajeria-pos.md#5-matriz-de-decisión-provisional-por-carga-de-trabajo) gobiernan la incorporación de infraestructura.
+
+| Contrato de caché propuesto | Regla |
+| --- | --- |
+| Autoridad y reconstrucción | PostgreSQL conserva el dato. Un fallo o vaciado de Redis no pierde operaciones; la API puede volver al origen con carga limitada. |
+| Ámbito de claves | Incluir país, entidad legal, versión del dato/contrato y alcance de permisos cuando cambie el resultado. La autorización se comprueba antes de leer; un prefijo no constituye aislamiento de seguridad. |
+| Frescura | Definir TTL por consulta e invalidación tras el commit. Los datos versionados usan claves de versión; una entrada obsoleta no autoriza una operación financiera. |
+| Capacidad y concurrencia | Limitar memoria, tiempo de espera y accesos al origen. Coordinar llenados concurrentes, distribuir expiraciones y probar un arranque en frío para evitar saturar PostgreSQL. |
+| Exclusiones | No conservar como única copia ventas, inbox/outbox, deduplicación monetaria, reservas o saldos autorizantes, ni resultados inciertos de pago. No usar una respuesta cacheada como aprobación de crédito, cupón o devolución. |
+| Aislamiento y operación | Credenciales y ámbitos propios; medir latencia, aciertos, fallos, memoria y carga de recuperación. La separación lógica no protege de la caída de una instancia física compartida. |
+
+La lectura con caché consulta el origen ante ausencia y reconstruye la entrada. Este patrón admite obsolescencia: se utiliza solo donde el contrato tolere esa ventana; no promete consistencia inmediata por añadir TTL. [Cache-aside, Microsoft](https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside).
+
+El **espejo comercial de sucursal permanece en PostgreSQL**, completo, versionado y con activación atómica. Debe estar disponible durante la caída WAN; una caché remota o descartable no reemplaza ese contrato. Los cambios de precios no alteran el importe de un pago ya iniciado o incierto.
+
+**BullMQ y RabbitMQ resuelven trabajo o transporte, no la caché comercial.** BullMQ es candidato para tareas delimitadas, con backend seleccionado y recuperación probada; hoy documenta Redis y PostgreSQL, siendo Redis la opción predeterminada y más probada. Compartir PostgreSQL no demuestra que el alta de un job participe en el commit de venta. La outbox se conserva salvo evidencia de atomicidad equivalente. [Backends de BullMQ](https://docs.bullmq.io/guide/postgresql).
+
+Si se elige BullMQ con Redis, su almacén requiere persistencia, capacidad y política `noeviction`. Debe separarse de la instancia que descarta entradas de caché por capacidad; otra base lógica en el mismo proceso no aísla memoria ni fallos. Redis recomienda considerar instancias separadas para caché y claves persistentes. [BullMQ en producción](https://docs.bullmq.io/guide/going-to-production), [políticas de Redis](https://redis.io/docs/latest/develop/reference/eviction/).
+
+RabbitMQ central se evalúa cuando haya consumidores independientes, routing o aislamiento que lo justifiquen. No se instala por sucursal ni se añade junto a BullMQ para duplicar la misma responsabilidad. Si se adopta, las vistas identificarán las colas, propietarios, productores y consumidores; un bloque genérico de broker no explica sus contratos. [Colas y topics en C4](https://c4model.com/abstractions/queues-and-topics).
+
 ## Despliegue complementario y continuidad
 
-Cada puesto ejecuta el cliente y, cuando corresponda, un puente de periféricos. Las cajas comparten por LAN un servidor de sucursal con backend, sincronizador supervisado y PostgreSQL. La plataforma de país contiene API, workers, adaptador ERP y datos aislados por país/entidad legal. El esquema no impone cloud, proveedor, orquestador ni contenedores Docker.
+Cada puesto ejecuta el cliente y, cuando corresponda, un puente de periféricos. Los clientes de escritorio y móvil consumen por LAN el backend de sucursal; este comparte el servidor con sincronización y PostgreSQL. La plataforma de país contiene `country-api`, datos aislados por país/entidad legal y las capacidades de publicación por asignar. `erp-worker` se ejecuta en la red autorizada del ERP e inicia HTTPS hacia país. Redis aparece únicamente como caché opcional de esa plataforma. El esquema no impone cloud, proveedor, orquestador ni contenedores Docker.
 
 | Situación | Comportamiento objetivo |
 | --- | --- |
@@ -110,11 +178,19 @@ Cada puesto ejecuta el cliente y, cuando corresponda, un puente de periféricos.
 
 La autonomía ante pérdida de LAN es **otro perfil** que requiere resolver exclusión, permisos, datos, compensaciones y dispositivos. No forma parte del perfil WAN inicial. La propuesta tampoco acredita RPO/RTO ni alta disponibilidad sin pruebas de recuperación y dimensionamiento.
 
+### Responsabilidades transversales y límites pendientes
+
+- **Identidad y configuración:** autorización de usuario y dispositivo, enrolamiento, rotación y configuración validada deben tener contratos. No se ha seleccionado una nueva app de identidad ni un proveedor corporativo por el hecho de dibujar autenticación.
+- **Observabilidad:** los procesos emiten logs correlacionados y métricas operativas; Sentry se habilita expresamente. Telemetría y alertas no son el registro financiero, y su indisponibilidad no debe bloquear commits locales.
+- **Recuperación:** PostgreSQL de sucursal y país requieren copias independientes, retención de reconstrucción y ensayos. Las relaciones de backup no implican otro escritor activo; un failover exige excluir al anterior.
+- **Publicación de maestros:** fijar propietario de origen, contrato de snapshot/deltas, proceso ejecutor y almacenamiento de artefactos. Redis no resuelve esas decisiones ni acredita que el legado ya exponga versiones consistentes.
+- **Operación de país:** definir aislamiento físico, capacidad, supervisión y presupuesto por destino. Los nodos de despliegue representan fronteras propuestas, no servidores contratados o servicios ya operativos.
+
 <span id="mantenimiento-del-modelo-y-del-visor"></span>
 
 ## Mantenimiento de los diagramas
 
-Los cinco `.mmd` enlazados, ubicados en `docs/diagramas-excalidraw/mermaid/`, son las fuentes de render. No se duplican como bloques Mermaid en este documento. `tools/diagrams/models/c4-data.js` conserva el catálogo canónico de fichas, vistas, límites, IDs y relaciones; cada actualización debe mantener correspondencia con las fuentes. Las escenas editables, los SVG y sus recortes se mantienen en `docs/diagramas-excalidraw/`. El [manual de autoría](../tools/diagrams/README.md) describe los modelos, la generación y sus comprobaciones.
+Los siete `.mmd` enlazados, ubicados en `docs/diagramas-excalidraw/mermaid/`, son las fuentes de render estructural. No se duplican como bloques Mermaid en este documento. `tools/diagrams/models/c4-data.js` conserva el catálogo canónico de fichas, vistas, límites, IDs y relaciones; `dynamic-data.cjs` define los dos recorridos dinámicos. Cada actualización debe mantener correspondencia con las fuentes. Las escenas editables, los SVG y sus recortes se mantienen en `docs/diagramas-excalidraw/`. El [manual de autoría](../tools/diagrams/README.md) describe los modelos, la generación y sus comprobaciones.
 
 La [presentación de arquitectura y roadmap](editorial/presentation.md) utiliza diagramas resumidos de la misma propuesta, con fuentes y generación propias. Las vistas detalladas de esta página se mantienen en el modelo C4 canónico.
 

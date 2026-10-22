@@ -48,7 +48,7 @@ pos-flow-player { display: block; margin-block: 1.5rem; }
 .pos-diagram__zoom output { min-width: 3.5rem; font-variant-numeric: tabular-nums; }
 .pos-diagram__zoom > span { color: var(--sl-color-gray-2); }
 .pos-diagram__canvas { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; background: #fff; padding: 1rem; }
-.pos-diagram__canvas img { width: calc(1400px * var(--diagram-scale, 1)); max-width: none; height: auto; margin: 0; display: block; }
+.pos-diagram__canvas img { width: calc(var(--diagram-image-width, 1400px) * var(--diagram-scale, 1)); max-width: none; height: auto; margin: 0; display: block; }
 .pos-diagram__canvas > svg { width: calc(1400px * var(--diagram-scale, 1)) !important; max-width: none !important; height: auto !important; margin: 0 !important; display: block; }
 .pos-diagram__dialog-links { padding: .65rem 1rem; font-size: .875rem; border-top: 1px solid var(--sl-color-hairline-light); }
 .mermaid-viewer-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1.2rem; margin-top: .8rem; }

@@ -133,13 +133,18 @@ async function run() {
     const preview = page.locator('[data-diagram-open]').first();
     await preview.click();
     assert.equal(await page.locator('dialog[open]').count(), 1);
+    await page.waitForFunction(() => {
+      const image = document.querySelector('dialog[open] .pos-diagram__canvas img');
+      return image?.complete && image.naturalWidth > 0 && Math.abs(image.getBoundingClientRect().width - image.naturalWidth) < 1;
+    });
     const zoom = page.locator('dialog[open] [data-diagram-scale]');
     await zoom.fill('150'); await zoom.dispatchEvent('input');
     assert.match(await page.locator('dialog[open] [data-diagram-scale-label]').innerText(), /150/);
+    assert.equal(await page.locator('dialog[open] .pos-diagram__canvas img').evaluate(image => Math.abs(image.getBoundingClientRect().width - image.naturalWidth * 1.5) < 1), true, 'Diagram zoom must preserve its native SVG scale');
     await page.keyboard.press('Escape');
     assert.equal(await page.locator('dialog[open]').count(), 0);
     assert.equal(await preview.evaluate(e => e === document.activeElement), true);
-    report.checks.push('Diagram expands, zooms, closes with Escape and restores keyboard focus');
+    report.checks.push('Diagram opens at native SVG scale, zooms to 150%, closes with Escape and restores keyboard focus');
     for (const route of ['proposal/continuity/', 'proposal/pricing-promotions/']) {
       await page.goto(origin + '/guide/' + route);
       const player = page.locator('pos-flow-player');

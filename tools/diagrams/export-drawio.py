@@ -1,4 +1,4 @@
-"""Convert the seven existing C4 boards into native, editable draw.io XML.
+"""Convert the published C4 collection into native, editable draw.io XML.
 
 Uses only the Python standard library. Keeps source coordinates and text;
 node labels follow nodes and relationship labels follow their connectors.
@@ -13,8 +13,8 @@ from zipfile import ZipFile, ZIP_DEFLATED
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / "docs/diagramas-excalidraw"
 OUTPUT = ROOT / "docs/diagramas-drawio"
-NAMES = ["C1 · Contexto", "C2 · Contenedores", "C3 · Backend de sucursal",
-         "C3 · Sincronizador", "Despliegue", "Flujo de precios", "Flujo de venta"]
+COLLECTION = json.loads((ROOT / "tools/diagrams/collection.json").read_text(encoding="utf-8"))
+assert COLLECTION["schemaVersion"] == 1
 
 
 def num(value):
@@ -155,21 +155,27 @@ def write_file(path, pages):
 
 def main():
     OUTPUT.mkdir(parents=True, exist_ok=True)
-    sources = sorted(p for p in SOURCE.glob("*.excalidraw") if not p.name.startswith("00-"))
-    assert len(sources) == len(NAMES)
+    boards = COLLECTION["boards"]
+    assert {path.stem for path in SOURCE.glob("*.excalidraw")} == {COLLECTION["atlas"], *(board["file"] for board in boards)}, "Native sources differ from the collection"
     pages = []
-    for path, name in zip(sources, NAMES):
+    for board in boards:
+        path, name = SOURCE / (board["file"] + ".excalidraw"), board["title"]
         scene = json.loads(path.read_text(encoding="utf-8"))
         model = convert(scene)
         pages.append((name, model))
         write_file(OUTPUT / (path.stem + ".drawio"), [(name, model)])
         print(f"{path.stem}.drawio: {len(scene['elements'])} elementos conservados")
-    write_file(OUTPUT / "00-atlas-completo.drawio", pages)
+    write_file(OUTPUT / (COLLECTION["atlas"] + ".drawio"), pages)
+    expected_files = {COLLECTION["atlas"] + ".drawio", *(board["file"] + ".drawio" for board in boards)}
+    assert {path.name for path in OUTPUT.glob("*.drawio")} == expected_files, "draw.io inventory differs from the collection"
     with ZipFile(OUTPUT / "diagramas-c4-drawio.zip", "w", ZIP_DEFLATED) as archive:
         for path in sorted(OUTPUT.iterdir()):
             if path.suffix == ".drawio" or path.name == "README.md":
                 archive.write(path, path.name)
-    print("Atlas de 7 páginas y ZIP guardados en", OUTPUT)
+    with ZipFile(OUTPUT / "diagramas-c4-drawio.zip") as archive:
+        assert archive.testzip() is None
+        assert {name for name in archive.namelist() if name.endswith(".drawio")} == expected_files
+    print(f"Atlas de {len(pages)} páginas y ZIP guardados en", OUTPUT)
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 flowchart TB
-    accTitle: C3 · Sincronizador — Entrega durable y precios locales
-    accDescr: Un solo contenedor: worker de sincronización de sucursal. La API/DB de país y PostgreSQL local son colaboradores externos al proceso. Deltas y cargas completas comparten validación. Snapshot + watermark + staging + checksum + activación atómica; las ventas abiertas mantienen su versión.
-    subgraph syncScope["Sincronizador · UN proceso<br/>Contenedor worker Node.js"]
+    accTitle: C3 · branch-sync-worker — Entrega durable y activación local
+    accDescr: apps/branch-sync-worker compone sync con las reglas de catálogo/precios. PostgreSQL de sucursal y country-api están fuera del proceso. Deltas y cargas completas comparten validación. Snapshot + watermark + staging + checksum + activación atómica; las ventas abiertas mantienen su versión.
+    subgraph syncScope["apps/branch-sync-worker · UN proceso supervisado"]
         direction TB
         schedule["Planificador y supervisor<br/>«Componente»<br/>Worker TypeScript<br/>Admite trabajos con límites y ventanas."]:::pos
         sender["Emisor de outbox<br/>«Componente»<br/>Worker TypeScript / HTTPS<br/>Envía lotes con identidad estable."]:::pos
@@ -12,8 +12,8 @@ flowchart TB
         activation["Activación de versión<br/>«Componente»<br/>Transacción SQL / TypeScript<br/>Cambia atómicamente la versión activa."]:::pos
     end
     branchDb[("Datos de sucursal<br/>«Contenedor de datos»<br/>PostgreSQL<br/>Guarda negocio, outbox y espejo local.")]:::store
-    countryApi["API de país<br/>«Contenedor»<br/>NestJS + Fastify / Node.js<br/>Aplica lotes y sirve publicaciones."]:::pos
-    legend["Leyenda · notación C4<br/>Verde: POS · Azul/cilindro: datos<br/>Gris: externo · Persona: rol humano<br/>Borde discontinuo: límite indicado<br/>Flecha: propósito y protocolo<br/>Contenedor: aplicación o almacén<br/>Componente: módulo de UN proceso"]:::key
+    countryApi["country-api<br/>«Contenedor»<br/>NestJS + Fastify / Node.js<br/>Recibe operaciones y sirve trabajo y versiones."]:::pos
+    legend["Leyenda · notación C4<br/>Azul: POS · Violeta: datos<br/>Gris: externo · Ámbar: infraestructura<br/>Borde: sistema, proceso o nodo indicado<br/>Flecha: iniciador, propósito y protocolo<br/>Opcional / por asignar: condición explícita<br/>Contenedor no equivale a Docker"]:::key
     schedule -->|"Admite lote / reintento acotado · TypeScript"| sender
     sender -->|"Claim y lectura de outbox · SQL"| branchDb
     sender -->|"Envía lote con eventId/contrato · HTTPS"| countryApi
@@ -29,10 +29,10 @@ flowchart TB
     validation -->|"Autoriza versión y watermark válidos · TypeScript"| activation
     dedup -->|"Entrega candidata completa desde deltas · TypeScript"| validation
     activation -->|"Commit corto: inbox aplicada + versión + cursor aplicado · SQL"| branchDb
-    classDef pos fill:#e8f4ef,stroke:#087f70,color:#17302d,stroke-width:2px
-    classDef store fill:#edf3f9,stroke:#365f87,color:#17302d,stroke-width:2px
-    classDef external fill:#f4f6f5,stroke:#74827d,color:#17302d
-    classDef person fill:#152d2b,stroke:#152d2b,color:#ffffff
-    classDef infra fill:#fbf1e2,stroke:#a86516,color:#17302d
-    classDef key fill:#ffffff,stroke:#b9cbc3,color:#566762,font-size:14px
-    style syncScope fill:#ffffff,stroke:#b9cbc3,stroke-dasharray:6 4
+    classDef pos fill:#EDF3FF,stroke:#0545BA,color:#25364D,stroke-width:2px
+    classDef store fill:#F2EFFF,stroke:#6551A8,color:#25364D,stroke-width:2px
+    classDef external fill:#F4F6F8,stroke:#6B788A,color:#25364D
+    classDef person fill:#18336D,stroke:#18336D,color:#FFFFFF
+    classDef infra fill:#FFF3E0,stroke:#A86516,color:#25364D
+    classDef key fill:#FFFFFF,stroke:#BCC9DB,color:#53657F,font-size:14px
+    style syncScope fill:#FFFFFF,stroke:#BCC9DB,stroke-dasharray:6 4
