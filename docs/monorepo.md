@@ -275,7 +275,7 @@ En esta revisión también se contrastó el checkout `desarrollo` del sincroniza
 | Scaffold     | Aplicaciones y librerías por responsabilidad, puntos de composición, contratos y perfiles iniciales sin operación comercial real                           |
 | Pendiente    | Identidad y permisos de servidor, PostgreSQL/migraciones, transacciones, reglas completas de país, protocolos, jobs durables, integraciones y homologación |
 
-El [plan de implementación](implementation-plan.md#organización-y-criterios-de-aceptación) define los criterios de aceptación para la estructura y sus dependencias.
+Los [criterios técnicos de la base](implementation-plan.md#organización-y-criterios-de-aceptación) definen las comprobaciones para la estructura y sus dependencias.
 
 La implementación comercial avanza por recorridos comprobables:
 

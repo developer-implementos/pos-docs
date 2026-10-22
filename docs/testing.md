@@ -52,4 +52,4 @@ npm run backend:smoke
 npm run structure:check
 ```
 
-Para la documentación se ejecutan `validate`, `typecheck`, `build` y `check` desde `apps/starlight` en **pos-docs**. El build documental usa una revisión identificada del producto y no requiere instalar sus dependencias. Los [criterios de implementación](implementation-plan.md) incluyen imports, empaquetado, comportamiento de los clientes y correspondencia entre catálogo y código verificado.
+Para la documentación se ejecutan `validate`, `typecheck`, `build` y `check` desde `apps/starlight` en **pos-docs**. El build documental usa una revisión identificada del producto y no requiere instalar sus dependencias. Los [criterios técnicos de la base](implementation-plan.md) incluyen imports, empaquetado, comportamiento de los clientes y correspondencia entre catálogo y código verificado.

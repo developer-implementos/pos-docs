@@ -5,7 +5,7 @@ import { validateRoadmap } from '../../tools/roadmap.mjs';
 const roadmap = validateRoadmap(roadmapSource);
 export { docsOrigin, repositoryOrigin, presentationOrigin, presentationRepository } from './site-config.mjs';
 export const siteBase = '/guide/';
-export const generatedDirectories = ['proposal', 'architecture', 'operations', 'evidence', 'reference', 'implementation'];
+export const generatedDirectories = ['proposal', 'roadmap', 'architecture', 'operations', 'evidence', 'reference', 'implementation'];
 export const sourceRouteAliases = {
   'README.md': 'implementation/repository',
   'apps/pos-docs/README.md': 'reference/maintenance',
@@ -42,7 +42,7 @@ export const readingPath = [
   { route: 'proposal/access-operations', title: 'Acceso, permisos y operación' },
   { route: 'proposal/fiscal-compliance', title: 'Fiscalidad y documentos' },
   { route: 'proposal/decisions', title: 'Registro de decisiones' },
-  { route: 'proposal/roadmap', title: 'Roadmap del producto' },
+  { route: 'proposal/roadmap', title: 'Roadmap de entrega' },
   { route: 'operations/validation', title: 'Validación y criterios del piloto' },
 ];
 
@@ -52,9 +52,15 @@ const proposal = (route, title, description, from, to, extra = {}) => ({
   range: { from, to }, kind: 'proposal', ...extra,
 });
 const reference = (route, source, title, description, kind = 'reference') => ({ route, source, title, description, kind });
+const phaseHeading = phase => `F${String(phase.number).padStart(2, '0')} · ${phase.title}`;
 
 export const generatedPages = [
-  { ...reference('proposal/roadmap', 'docs/roadmap.md', roadmap.title, 'Seis fases propuestas, con operación demostrable, construcción y criterios de aceptación compartidos con Reveal.', 'proposal'), roadmap: true },
+  { ...reference('proposal/roadmap', 'docs/roadmap.md', roadmap.title, 'Punto de partida, secuencia de seis fases y acceso a sus entregables, aplicaciones y pruebas de aceptación.', 'proposal'), range: { from: null, to: phaseHeading(roadmap.phases[0]) }, roadmap: true },
+  ...roadmap.phases.map((phase, index) => ({
+    ...reference(`roadmap/${phase.id}`, 'docs/roadmap.md', phaseHeading(phase), phase.summary, 'proposal'),
+    range: { from: phaseHeading(phase), to: roadmap.phases[index + 1] ? phaseHeading(roadmap.phases[index + 1]) : null },
+    roadmapPhase: phase.id,
+  })),
   proposal('product', 'Producto, alcance y países', 'Objetivo corporativo, módulos compartidos, variantes por país y alcance de la propuesta.', null, 'Evolución desde la arquitectura actual de Chile'),
   proposal('evolution', 'Evolución desde Chile', 'Punto de partida, continuidad por sucursal y límites de la migración desde Mountain.', 'Evolución desde la arquitectura actual de Chile', 'Independencia del POS y referencias de organización'),
   proposal('corporate-reuse', 'POS independiente y referencias', 'Organización propia con shared; Core como referencia y alternativas históricas de plataforma.', 'Independencia del POS y referencias de organización', 'Arquitectura de referencia: perfil WAN preferente'),
@@ -126,7 +132,7 @@ export const generatedPages = [
   reference('implementation/security', 'docs/security.md', 'Seguridad y límites actuales', 'Alcance de seguridad del prototipo y condiciones que requiere una operación real.', 'implementation'),
   reference('implementation/iconography', 'docs/iconography.md', 'Iconografía y controles', 'Fuentes de iconos, tamaños, accesibilidad y generación de activos del producto.', 'implementation'),
   reference('implementation/product-review', 'docs/audit-chile-for-product.md', 'Contraste de Chile con el producto', 'Relación entre evidencia de la operación chilena y capacidades de la demostración.', 'implementation'),
-  reference('implementation/plan', 'docs/implementation-plan.md', 'Plan de implementación', 'Etapas, alcance y verificaciones del desarrollo del producto.', 'implementation'),
+  reference('implementation/plan', 'docs/implementation-plan.md', 'Base técnica y recorridos de demostración', 'Aplicaciones de la base actual, recorridos con datos sintéticos y controles técnicos; la entrega funcional se define en el roadmap.', 'implementation'),
   reference('implementation/quality-review', 'docs/quality-review.md', 'Revisión de la demostración', 'Hallazgos y comprobaciones de calidad de la maqueta, con su fecha y límites.', 'implementation'),
   reference('implementation/deployment', 'docs/vercel.md', 'Publicación de la documentación', 'Starlight en Vercel: configuración y verificación; clientes nativos y backend con entregas separadas.', 'reference'),
 ];
@@ -145,7 +151,7 @@ const item = (route, label) => ({ label: label || generatedPages.find(page => pa
 export const sidebar = [
   { label: 'Inicio', link: '/' },
   { label: 'Visión general de la solución', link: '/overview/' },
-  item('proposal/roadmap', 'Roadmap del producto'),
+  { label: 'Roadmap de entrega', collapsed: false, items: [item('proposal/roadmap', 'Visión general'), ...roadmap.phases.map(phase => item(`roadmap/${phase.id}`))] },
   { label: 'Mapa de contenidos', link: '/contents/' },
   { label: 'Glosario del POS', link: '/glossary/' },
   { label: 'Producto y alcance', collapsed: true, items: ['product', 'evolution', 'corporate-reuse'].map(route => item(`proposal/${route}`)) },

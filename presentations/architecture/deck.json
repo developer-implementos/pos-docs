@@ -7718,7 +7718,7 @@
       "notes": "La UI actual ofrece una demostración con datos sintéticos. La base NestJS/Fastify no equivale a persistencia ni operaciones de negocio. Se propone sustituir adaptadores mock por recorridos verticales verificables. Primera fase usa efectivo en laboratorio; los documentos son de prueba y no habilitan venta legal/productiva. Autorización básica y aislamiento se implementan desde el primer incremento. Chile/escritorio es una hipótesis de priorización basada en el prototipo existente, sujeta a confirmación. No se asignan plazos ni recursos sin información de capacidad y dependencias. Roadmap propuesto para revisión con desarrollo y producto. El orden y los criterios son una propuesta editorial para esta presentación, no un calendario aprobado.",
       "sources": [
         {
-          "label": "plan",
+          "label": "Base técnica y demostración",
           "href": "/guide/implementation/plan/"
         }
       ],
@@ -8162,7 +8162,7 @@
           "href": "/guide/proposal/roadmap/"
         },
         {
-          "label": "plan",
+          "label": "Base técnica y demostración",
           "href": "/guide/implementation/plan/"
         },
         {
@@ -8830,8 +8830,8 @@
       "notes": "Backlog inicial propuesto para descomponer la F1 en historias pequeñas. Las filas son un orden de dependencias, no asignaciones por persona ni sprints. Los contratos y ejemplos permiten trabajar UI/API en paralelo; la aceptación final exige integración real del recorrido. El incremento incluye las bibliotecas, las pruebas y las dependencias necesarias para confirmar y recuperar una venta. Las demos usan un guion de negocio y explicitan simulaciones. Arquitectura revisa decisiones y límites sin monopolizar ejecución; desarrollo y QA presentan evidencia, y producto acuerda el siguiente objetivo con el cliente. La estimación necesita equipo disponible, accesos, hardware, proveedores y alcance. Roadmap propuesto para revisión con desarrollo y producto. El orden y los criterios son una propuesta editorial para esta presentación, no un calendario aprobado.",
       "sources": [
         {
-          "label": "plan",
-          "href": "/guide/implementation/plan/"
+          "label": "F01: entregables y pruebas de aceptación",
+          "href": "/guide/roadmap/phase-01/"
         }
       ],
       "elements": [

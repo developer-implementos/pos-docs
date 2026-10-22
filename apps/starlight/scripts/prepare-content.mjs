@@ -4,7 +4,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { generatedPages, generatedDirectories, labLinks, siteBase, sourceRouteAliases, documentKinds, readingPath, docsOrigin, presentationOrigin, repositoryOrigin, presentationRepository } from '../content-map.mjs';
 import { productEvidence, productReferences } from './product-evidence.mjs';
 import { loadCatalog } from '../../../portal/catalog.mjs';
-import { loadRoadmap, renderRoadmapDocs } from '../../../tools/roadmap.mjs';
+import { loadRoadmap, renderRoadmapDocs, renderRoadmapPhase } from '../../../tools/roadmap.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const output = path.join(root, 'apps/starlight/src/content/docs');
@@ -220,9 +220,10 @@ function pagination(page) {
   return `prev: ${JSON.stringify(target(-1))}\nnext: ${JSON.stringify(target(1))}\n`;
 }
 
-function roadmapContent(body) {
-  const marker = '<!-- roadmap:board -->';
-  if (body.split(marker).length !== 2) throw new Error('The roadmap document must contain exactly one roadmap:board marker.');
+function roadmapContent(body, phaseId) {
+  const markerName = phaseId || 'board';
+  const marker = `<!-- roadmap:${markerName} -->`;
+  if (body.split(marker).length !== 2) throw new Error(`The roadmap page must contain exactly one roadmap:${markerName} marker.`);
   const roadmap = loadRoadmap(root);
   for (const phase of roadmap.phases) {
     for (const link of phase.links) {
@@ -233,7 +234,7 @@ function roadmapContent(body) {
       if (!guideExists && !publishedPages.has(pathname)) throw new Error(`Roadmap supporting link has no published page: ${link.href}`);
     }
   }
-  return body.replace(marker, renderRoadmapDocs(roadmap));
+  return body.replace(marker, phaseId ? renderRoadmapPhase(roadmap, phaseId) : renderRoadmapDocs(roadmap));
 }
 
 export function prepareContent() {
@@ -246,7 +247,7 @@ export function prepareContent() {
     const firstHeading = source.headings.find(heading => heading.index === start);
     if (firstHeading) body = body.replace(/^#{1,6}\s+[^\n]+\n?/, `<span id="${firstHeading.id}"></span>\n`);
     body = normalizeHeadings(rewriteLinks(body, page.linkSource || page.source));
-    if (page.roadmap) body = roadmapContent(body);
+    if (page.roadmap || page.roadmapPhase) body = roadmapContent(body, page.roadmapPhase);
     const extension = page.flow ? '.mdx' : '.md';
     const sourceLabel = page.kind === 'evidence' ? 'Evidencia y alcance de la revisión' : page.kind === 'research' ? 'Análisis que sustenta la propuesta' : 'Fuente del contenido';
     let imports = '';

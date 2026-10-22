@@ -19,6 +19,9 @@ const slidesUrl = origin + '/presentations/architecture/';
 const browser = await chromium.launch({ headless: true });
 const errors = [];
 const lanes = ['operation', 'construction', 'acceptance'];
+const normalize = value => value.replace(/\s+/g, ' ').trim();
+const phaseUrl = phase => `${origin}/guide/roadmap/${phase.id}/`;
+const checkedDocuments = new Map();
 function observe(page) {
   page.on('pageerror', error => errors.push(error.message));
   page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
@@ -51,6 +54,73 @@ async function assertMatrix(page, selector, phases) {
     assert.equal((await cell.locator('.roadmap-cell-summary').textContent()).trim(), phase[lane].summary);
   }
 }
+async function assertPhasePlan(page, phase) {
+  const plan = page.locator(`[data-roadmap-phase-plan="${phase.id}"]`);
+  assert.equal(await page.locator('[data-roadmap-phase-plan]').count(), 1, `${phase.id}: exactly one delivery plan`);
+  assert.ok((await page.locator('h1').textContent()).includes(phase.title), `${phase.id}: page identifies its phase`);
+  for (const anchor of ['entry-conditions', 'work-packages', 'acceptance-evidence']) assert.equal(await page.locator(`#${anchor}`).count(), 1, `${phase.id}: missing or duplicated ${anchor}`);
+  const text = normalize(await plan.textContent());
+  for (const field of ['entry', 'parallel', 'deferred', 'evidence', 'reviewers']) {
+    for (const value of phase.delivery[field]) assert.ok(text.includes(normalize(value)), `${phase.id}: missing ${field}: ${value}`);
+  }
+  assert.equal(await plan.locator('[data-work-package]').count(), phase.delivery.work.length);
+  for (const work of phase.delivery.work) {
+    const packageElement = plan.locator(`[data-work-package="${work.id}"]`);
+    assert.equal(await packageElement.count(), 1, `${phase.id}: one identifiable package ${work.id}`);
+    const packageText = normalize(await packageElement.textContent());
+    for (const value of [work.title, work.deliverable, ...work.apps, ...work.modules, ...work.tasks]) assert.ok(packageText.includes(normalize(value)), `${work.id}: missing ${value}`);
+  }
+  assert.equal(await plan.locator('[data-roadmap-scenario]').count(), phase.delivery.validation.length);
+  for (const [index, validation] of phase.delivery.validation.entries()) {
+    const scenario = plan.locator(`[data-roadmap-scenario="${index}"]`);
+    assert.equal(await scenario.count(), 1, `${phase.id}: missing scenario ${index}`);
+    const scenarioText = normalize(await scenario.textContent());
+    assert.ok(scenarioText.includes(normalize(validation.scenario)), `${phase.id}: scenario lost`);
+    assert.ok(scenarioText.includes(normalize(validation.expected)), `${phase.id}: acceptance result lost`);
+  }
+  for (const dependency of phase.requires) assert.ok(await plan.locator(`a[href="/guide/roadmap/${dependency}/"]`).count(), `${phase.id}: dependency must open its plan`);
+  assert.ok(await plan.locator(`a[href="/guide/proposal/roadmap/#${phase.id}"]`).count(), `${phase.id}: return to the correct roadmap phase`);
+}
+async function assertPlanFits(page, phase, label) {
+  await assertNoPageOverflow(page, label);
+  const clipped = await page.locator(`[data-roadmap-phase-plan="${phase.id}"]`).evaluate(root => {
+    const issues = [], bounds = root.getBoundingClientRect();
+    for (const element of root.querySelectorAll('[data-work-package],[data-roadmap-scenario],p,li,dt,dd,h2,h3')) {
+      if (!element.getClientRects().length || !element.clientWidth) continue;
+      const style = getComputedStyle(element);
+      if (element.scrollWidth > element.clientWidth + 2 && !['auto', 'scroll'].includes(style.overflowX)) issues.push({ reason: 'horizontal clipping', text: element.textContent.slice(0, 120) });
+      if (['hidden', 'clip'].includes(style.overflowY) && element.scrollHeight > element.clientHeight + 2) issues.push({ reason: 'vertical clipping', text: element.textContent.slice(0, 120) });
+    }
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      if (!node.textContent.trim()) continue;
+      const range = document.createRange(); range.selectNodeContents(node);
+      for (const rect of range.getClientRects()) {
+        if (rect.width && (rect.right > bounds.right + 2 || rect.left < bounds.left - 2)) issues.push({ reason: 'text outside plan', text: node.textContent.slice(0, 120) });
+      }
+    }
+    return issues;
+  });
+  assert.deepEqual(clipped, [], label);
+}
+async function assertPlanLinks(page, phase) {
+  const hrefs = await page.locator(`[data-roadmap-phase-plan="${phase.id}"] a[href]`).evaluateAll(links => links.map(link => link.getAttribute('href')));
+  for (const href of new Set(hrefs)) {
+    const target = new URL(href, page.url());
+    if (target.origin !== origin) continue;
+    const documentUrl = target.origin + target.pathname + target.search;
+    if (!checkedDocuments.has(documentUrl)) {
+      const response = await page.request.get(documentUrl);
+      assert.equal(response.status(), 200, `${phase.id}: broken local reference ${href}`);
+      checkedDocuments.set(documentUrl, await response.text());
+    }
+    if (target.hash) {
+      const id = decodeURIComponent(target.hash.slice(1));
+      const exists = await page.evaluate(({ html, id }) => !!new DOMParser().parseFromString(html, 'text/html').getElementById(id), { html: checkedDocuments.get(documentUrl), id });
+      assert.ok(exists, `${phase.id}: reference points to missing section ${href}`);
+    }
+  }
+}
 async function assertSlideFits(page, selector) {
   const issues = await page.locator(selector).evaluate(root => {
     const scale = window.posPresentation.getScale();
@@ -79,6 +149,9 @@ try {
     assert.equal(await page.locator(`#${phase.id}`).count(), 1);
     const detail = page.locator(`[data-phase-detail="${phase.id}"]`);
     for (const lane of lanes) assert.equal((await detail.locator(`[data-row="${lane}"] dd`).textContent()).trim(), phase[lane].detail);
+    const planLink = page.locator(`[data-phase-plan-link="${phase.id}"]`);
+    assert.equal(await planLink.count(), 1, `${phase.id}: full plan is discoverable from roadmap`);
+    assert.equal(await planLink.getAttribute('href'), `/guide/roadmap/${phase.id}/`);
   }
   await assertMatrix(page, '.roadmap-docs', roadmap.phases);
   assert.ok(await page.locator('nav a[href="/guide/proposal/roadmap/"]').count(), 'Roadmap is discoverable in navigation');
@@ -89,6 +162,36 @@ try {
       await assertNoPageOverflow(page, `Guide ${width}px ${theme}`);
       if (width === 1440 || width === 375) await page.screenshot({ path: path.join(result, `guide-${width}-${theme}.png`), fullPage: false });
     }
+  }
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.locator('[data-phase-plan-link="phase-01"]').focus();
+  await page.keyboard.press('Enter');
+  await page.waitForURL(phaseUrl(roadmap.phases[0]));
+  assert.ok(await page.locator('nav').filter({ hasText: 'Roadmap de entrega' }).count(), 'Phase pages belong to a discoverable navigation group');
+  for (const phase of roadmap.phases) {
+    assert.equal((await page.goto(phaseUrl(phase))).status(), 200);
+    await page.evaluate(() => document.fonts.ready);
+    await assertPhasePlan(page, phase);
+    await assertPlanLinks(page, phase);
+    assert.ok(await page.locator(`nav a[href="/guide/roadmap/${phase.id}/"]`).count(), `${phase.id}: sidebar link missing`);
+    for (const width of [1440, 768, 375, 320]) {
+      await page.setViewportSize({ width, height: 1000 });
+      for (const theme of ['light', 'dark']) {
+        await page.evaluate(theme => document.documentElement.dataset.theme = theme, theme);
+        await assertPlanFits(page, phase, `${phase.id} ${width}px ${theme}`);
+        if ([1440, 375].includes(width) && [1, 6].includes(phase.number)) {
+          await page.screenshot({ path: path.join(result, `${phase.id}-${width}-${theme}.png`), fullPage: false });
+        }
+      }
+    }
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    const gateLink = page.getByRole('link', { name: 'Evidencia y decisión de cierre', exact: true }).first();
+    assert.ok(await gateLink.count(), `${phase.id}: acceptance gate needs a keyboard-accessible link`);
+    const gateUrl = new URL(await gateLink.getAttribute('href'), page.url());
+    await gateLink.focus();
+    await page.keyboard.press('Enter');
+    await page.waitForURL(gateUrl.href);
+    assert.ok(await page.locator(`[id="${decodeURIComponent(gateUrl.hash.slice(1))}"]`).isVisible());
   }
   await page.setViewportSize({ width: 1600, height: 954 });
   await page.goto(slidesUrl + '#/slide-12');
@@ -146,6 +249,13 @@ try {
   await staticPage.goto(guideUrl);
   assert.equal(await staticPage.locator('[data-phase-detail]').count(), 6);
   await assertNoPageOverflow(staticPage, 'Guide without JavaScript');
+  for (const phase of roadmap.phases) {
+    assert.equal((await staticPage.goto(phaseUrl(phase))).status(), 200);
+    await assertPhasePlan(staticPage, phase);
+    await assertPlanFits(staticPage, phase, `${phase.id} without JavaScript`);
+    assert.ok(await staticPage.locator('[data-work-package]').first().isVisible(), `${phase.id}: tasks do not require JavaScript`);
+    assert.ok(await staticPage.locator('[data-roadmap-scenario]').first().isVisible(), `${phase.id}: acceptance does not require JavaScript`);
+  }
   await staticPage.goto(slidesUrl + 'reading.html');
   for (const phase of roadmap.phases) {
     const detail = staticPage.locator(`#roadmap-reading-${phase.id}`);
@@ -153,7 +263,7 @@ try {
   }
   await assertNoPageOverflow(staticPage, 'Reading without JavaScript');
   assert.deepEqual(errors, [], 'No runtime, network or CSP errors');
-  console.log('Roadmap checked: shared content, six phases, responsive guide, two Reveal views, history, keyboard, detail slides, 21-page print including chapter covers, no-JS reading.');
+  console.log('Roadmap checked: shared content, six complete phase plans, dependency/source links, responsive guide and plans, keyboard and no-JS access, two Reveal views, history, detail slides, and 21-page print including chapter covers.');
 } finally {
   await browser.close();
   await new Promise(resolve => server.close(resolve));

@@ -5,6 +5,7 @@ editUrl: false
 ---
 
 import ReadingPath from '../../components/ReadingPath.astro';
+import { generatedPages, siteBase } from '../../../content-map.mjs';
 
 La navegación separa **el diseño objetivo**, **la implementación del monorepo**, **las condiciones para validarlo** y **la evidencia del sistema actual**. Cada decisión tiene una página de referencia; los ejemplos y diagramas enlazan ese detalle.
 
@@ -13,6 +14,16 @@ La navegación separa **el diseño objetivo**, **la implementación del monorepo
 Esta secuencia conecta el objetivo del producto con las aplicaciones, los flujos y la validación. El detalle del legacy y las extensiones opcionales se consultan por tema, sin interrumpir ese recorrido.
 
 <ReadingPath />
+
+## Roadmap de entrega
+
+La [visión general](/guide/proposal/roadmap/) muestra el punto de partida, la secuencia de entrega y las dependencias. Cada plan desarrolla los entregables por aplicación, las tareas, las pruebas y la evidencia que permiten aceptar la fase:
+
+<ol>
+  {generatedPages.filter(page => page.roadmapPhase).map(page => (
+    <li><a href={`${siteBase}${page.route}/`}>{page.title}</a>: {page.description}</li>
+  ))}
+</ol>
 
 ## Producto y arquitectura
 
@@ -46,7 +57,7 @@ Estas páginas se generan desde los documentos del producto. Explican el código
 | Backend | [API NestJS](/guide/implementation/api/) · [API simulada de desarrollo](/guide/implementation/mock-api/) |
 | Cliente | [Escritorio](/guide/implementation/desktop/) · [Iconografía](/guide/implementation/iconography/) |
 | Controles técnicos | [Seguridad](/guide/implementation/security/) · [Revisión de calidad](/guide/implementation/quality-review/) |
-| Entrega y estado | [Publicación](/guide/implementation/deployment/) · [Plan de implementación](/guide/implementation/plan/) · [Revisión funcional de Chile](/guide/implementation/product-review/) |
+| Base técnica y estado | [Publicación](/guide/implementation/deployment/) · [Base técnica y recorridos de demostración](/guide/implementation/plan/) · [Revisión funcional de Chile](/guide/implementation/product-review/) |
 
 ## Países y extensiones
 

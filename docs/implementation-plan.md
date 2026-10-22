@@ -1,10 +1,33 @@
-# Caja corporativa — plan de entrega
+# Base técnica y recorridos de demostración
 
-El [roadmap de POS Platform](roadmap.md) define la secuencia funcional compartida por Starlight y Reveal. Este documento describe el alcance de la demostración y los criterios técnicos del producto. La organización del código y el scaffolding no representan fases funcionales completadas; cada entrega requiere la aceptación del recorrido correspondiente.
+<span id="caja-corporativa--plan-de-entrega"></span>
 
-## Producto
+El monorepo dispone de clientes con datos sintéticos y bases técnicas de APIs y workers. Esta página describe ese punto de partida, los recorridos de la interfaz y los controles para trabajar en el código. La [evidencia del producto](product-repository.md) identifica la revisión y los límites de lo disponible.
 
-Demostración de una caja corporativa para Chile, con recorridos conectados y datos sintéticos. Reutiliza la identidad visual de prime-showcase y separa operación, gestión comercial y administración técnica. La cobertura y las variantes del sistema anterior están detalladas en [el inventario de Chile](audit-chile-for-product.md).
+El [roadmap de POS Platform](roadmap.md) define la secuencia de entrega funcional, con un plan detallado por fase. Sus entregables, dependencias y pruebas de aceptación son la referencia para desarrollar el producto; la organización del código y los controles técnicos de esta página no acreditan esos resultados.
+
+<span id="producto"></span>
+
+## Alcance de la demostración
+
+La interfaz permite recorrer una caja corporativa para Chile con datos sintéticos, separando operación, gestión comercial y administración técnica. Las políticas, los pagos, la fiscalidad, la persistencia local y las integraciones representadas por adaptadores mock sirven para desarrollar y revisar esos flujos. No prueban autenticación de servidor, durabilidad transaccional de sucursal ni integración con proveedores reales. La cobertura y las variantes del sistema anterior están detalladas en [el inventario de Chile](audit-chile-for-product.md).
+
+<span id="base"></span>
+
+## Aplicaciones y estado actual
+
+El producto tiene seis puntos de entrada. Sus nombres delimitan responsabilidades; disponer de un proyecto compilable no implica tener su comportamiento operativo implementado.
+
+| Aplicación | Base disponible | Capacidad que requiere implementación y aceptación |
+| --- | --- | --- |
+| `pos-desktop` | Cliente Angular/PrimeNG con arranque propio y host Tauri | Conexión con las APIs reales, identidad y permisos efectivos, periféricos y distribución nativa verificados para el alcance elegido |
+| `pos-mobile` | Cliente Angular/PrimeNG con arranque propio y host Capacitor | Integración real y verificación del recorrido, dispositivos y entrega en Android/iOS |
+| `branch-api` | Base HTTP NestJS/Fastify, configuración, sondas y OpenAPI de desarrollo | Casos de uso de sucursal, autorización de servidor y persistencia transaccional de negocio |
+| `branch-sync-worker` | Composición técnica de un proceso independiente | Entrega y recepción durables, reintentos y recuperación con los datos reales de sucursal |
+| `country-api` | Composición técnica de la API de país | Recepción durable, consolidación y contratos de trabajo y resultados de integración |
+| `erp-worker` | Composición técnica del proceso de integración | Traducción, comunicación y conciliación con el ERP mediante contratos comprobados |
+
+Los dos clientes comparten bibliotecas de presentación y flujos. Las cuatro aplicaciones backend reutilizan mecanismos técnicos y delimitan sus contextos de negocio. La [arquitectura de la implementación](architecture.md), la [base de API](api.md) y los [contratos mock](mock-api.md) detallan sus alcances. El [catálogo del monorepo](monorepo.md) distingue la estructura objetivo de la evidencia del código.
 
 <span id="reorganización-del-monorepo-acordada"></span>
 
@@ -23,11 +46,15 @@ POS Platform es un producto independiente, con Core solo como referencia. La [es
 
 Las reglas de ventas, caja y pagos pertenecen a sus contextos; las variantes nacionales pertenecen al contexto que las evalúa. Compartir consumidores no convierte una regla comercial en infraestructura genérica. Las pruebas de fronteras deben rechazar dependencias de servidor desde navegador, frameworks desde dominio, producción hacia testing e imports privados entre contextos.
 
-La aceptación utiliza `npm run icons:check` cuando afecte UI, `npm run lint`, `npm test`, `npm run build`, `npm run test:e2e` y los checks backend/estructura correspondientes. La [guía de pruebas](testing.md) diferencia los alcances y las capacidades aún pendientes de verificación.
+La verificación técnica utiliza `npm run icons:check` cuando afecte UI, `npm run lint`, `npm test`, `npm run build`, `npm run test:e2e` y los checks backend/estructura correspondientes. La [guía de pruebas](testing.md) diferencia los alcances y las capacidades aún pendientes de verificación.
 
 Persistencia, identidad e integraciones se desarrollan por recorridos verificables. Una carpeta, un endpoint vacío o una prueba que devuelve éxito fijo no acreditan una capacidad comercial.
 
-## Recorridos
+<span id="recorridos"></span>
+
+## Recorridos de la interfaz
+
+Estos recorridos describen la demostración con datos sintéticos. Su presencia en la UI no equivale a una integración comercial aceptada:
 
 1. Inicio: métricas, gráficos, actividad, alertas y accesos por rol.
 2. Venta: cliente, productos, precios, descuentos, retiro/despacho, boleta/factura, pagos mixtos, cheque/Orsan, crédito, vuelto/anticipo, pausar/retomar y resultado local/fiscal/ERP.
@@ -39,10 +66,8 @@ Persistencia, identidad e integraciones se desarrollan por recorridos verificabl
 8. Administración: módulos/capacidades, perfiles/roles, usuarios, tiendas/cajas, política offline, dispositivos, integraciones y versiones.
 9. Observabilidad: logs estructurados, auditoría, correlación y diagnósticos simulados.
 
-## Base
+<span id="comprobación"></span>
 
-Nx + Angular CSR + PrimeNG y tema derivado de prime-showcase. Tauri 2 como shell. Tipos/contratos, repositorio mock versionado, comandos auditados y políticas independientes de la UI. Sin patch-package ni integraciones heredadas.
+## Comprobación técnica
 
-## Comprobación
-
-Compilar y comprobar límites Nx; probar importes, permisos, flags, idempotencia, pago incierto, programación y persistencia; recorrer UI en escritorio y móvil y verificar accesibilidad. Cada artefacto debe tener una revisión identificada e instrucciones reproducibles de construcción y ejecución.
+Los controles del monorepo deben comprobar tipos, dependencias, builds, importes, políticas y recorridos de UI, además de accesibilidad en escritorio y móvil. Las pruebas sobre adaptadores mock verifican su comportamiento; la aceptación de persistencia, permisos, pagos y sincronización reales corresponde a los escenarios de cada fase del [roadmap](roadmap.md). Cada artefacto debe tener una revisión identificada e instrucciones reproducibles de construcción y ejecución.

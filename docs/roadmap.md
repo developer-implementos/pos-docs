@@ -1,6 +1,8 @@
 # Roadmap de POS Platform
 
-La entrega avanza por recorridos completos del negocio: una venta persistida, un cobro con documento, una sucursal integrada y una jornada conciliada, hasta probar la operación en tienda y su adaptación a otros países. Cada incremento reúne interfaz, reglas, datos, integración, pruebas y diagnóstico.
+POS Platform parte de una demostración de interfaz y una base técnica de APIs y workers. El trabajo de entrega consiste en convertir esa base en recorridos completos y comprobables: persistir una venta, cobrar y emitir su documento, integrar una sucursal y conciliar una jornada, hasta probar la operación en tienda y su adaptación a otros países.
+
+Cada fase tiene una página con **condiciones de entrada, entregables por aplicación y módulo, tareas, pruebas de aceptación y evidencia de cierre**. Esta visión general conecta esos planes y sus dependencias. El avance se decide por resultados verificados; las fechas y la capacidad del equipo deben acordarse antes de estimar el calendario.
 
 <!-- roadmap:board -->
 
@@ -8,9 +10,9 @@ La entrega avanza por recorridos completos del negocio: una venta persistida, un
 
 Esta secuencia es la referencia compartida por Starlight y [la presentación de arquitectura](/presentations/architecture/). Los títulos, resultados y criterios de las seis fases proceden de `docs/roadmap.json`; las dos vistas se generan desde ese archivo. La fecha de revisión identifica esta propuesta editorial y no una entrega de producto.
 
-El [plan técnico de implementación](implementation-plan.md) define la estructura, los contratos, la UI y las pruebas que habilitan estos recorridos. Cada fase se acepta por sus capacidades operativas verificadas, además de los controles técnicos del monorepo.
+La [base técnica y los recorridos de demostración](implementation-plan.md) describen las aplicaciones disponibles, la interfaz con datos sintéticos y los controles del monorepo. El roadmap define el trabajo pendiente y la aceptación funcional; disponer de esa base no completa ninguna fase.
 
-La [correspondencia con las etapas anteriores](validacion-y-decisiones.md#etapas-de-entrega) conserva el vínculo con descubrimiento, prueba vertical, piloto y despliegue. La [migración al ERP común](propuesta-arquitectura.md#coexistencia-y-corte-de-erp) mantiene su propio programa: el piloto POS no acredita que un nuevo ERP esté listo ni requiere automáticamente sustituir el actual.
+La [validación de la entrega](validacion-y-decisiones.md#etapas-de-entrega) agrupa las condiciones de descubrimiento, prueba vertical, piloto y despliegue. La [migración al ERP común](propuesta-arquitectura.md#coexistencia-y-corte-de-erp) mantiene su propio programa: el piloto POS no acredita que un nuevo ERP esté listo ni requiere automáticamente sustituir el actual.
 
 Las dependencias de las fases expresan el orden de aceptación del recorrido. La preparación de contratos, accesos, datos de prueba y dispositivos puede avanzar en paralelo desde el primer incremento. El alcance inicial de Chile y escritorio sigue siendo una hipótesis de priorización; producto y operaciones deben confirmar país, tienda, canal y proveedores.
 
@@ -40,3 +42,27 @@ Las reuniones y cuestionarios aportan escenarios para delimitar y probar las fas
 | **España: GIRA, efectivo mediante CashKeeper y pagos con proveedores locales.** Las fuentes señalan incidencias del servidor y del equipo de efectivo; el cuestionario amplía los medios de pago descritos en las reuniones. | Confirmar contratos, dispositivos y consulta del resultado después de fallos; distinguir la confirmación del software del movimiento físico de efectivo. Delimitar documentos, permisos y conciliación para cada medio habilitado. Verificar por separado los escenarios de pérdida de conectividad y de indisponibilidad del ERP. | [F2](#phase-02), [F3](#phase-03), [F4](#phase-04), [F6](#phase-06) | [Primera reunión](../materials/meetings/spain/first-meeting-alberto.docx), [segunda reunión](../materials/meetings/spain/second-meeting-alberto.docx) y [cuestionario](../materials/meetings/spain/requirements-questionnaire.docx). |
 
 Los casos de Perú y España informan el diseño de contratos y las pruebas desde el inicio, aunque su habilitación comercial ocurra después del primer piloto. El orden de países y la selección de proveedores se acuerdan con los equipos responsables. Las tasas, umbrales y referencias fiscales recibidas se contrastan en la [validación fiscal por país](propuesta-arquitectura.md#fiscalidad-y-documentos-por-país).
+
+## F01 · Venta persistida
+
+<!-- roadmap:phase-01 -->
+
+## F02 · Cobro y documento
+
+<!-- roadmap:phase-02 -->
+
+## F03 · Sucursal conectada
+
+<!-- roadmap:phase-03 -->
+
+## F04 · Jornada de tienda
+
+<!-- roadmap:phase-04 -->
+
+## F05 · Piloto controlado
+
+<!-- roadmap:phase-05 -->
+
+## F06 · Expansión validada
+
+<!-- roadmap:phase-06 -->
