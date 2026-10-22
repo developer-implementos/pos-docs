@@ -103,6 +103,92 @@ async function assertNoPageOverflow(page, label) {
   assert.ok(extra <= 1, `${label}: page overflows horizontally by ${extra}px`);
 }
 
+async function assertCompactLayout(page, label, minimumReadingRatio) {
+  await assertNoPageOverflow(page, label);
+  const layout = await page.evaluate(() => {
+    const rect = node => {
+      const box = node.getBoundingClientRect();
+      return { left: box.left, top: box.top, right: box.right, bottom: box.bottom, width: box.width, height: box.height };
+    };
+    const controls = [...document.querySelectorAll('.viewer-back,#document-info-open,#original-download,.viewer-control-group button,.viewer-control-group input')]
+      .filter(node => node.getClientRects().length).map(node => ({ id: node.id || node.className, ...rect(node) }));
+    return {
+      width: innerWidth, height: innerHeight, viewport: rect(document.querySelector('#pdf-viewport')),
+      header: rect(document.querySelector('.viewer-header')), toolbar: rect(document.querySelector('.viewer-toolbar')),
+      title: rect(document.querySelector('#document-title')), controls,
+    };
+  });
+  const overlaps = (a, b) => Math.min(a.right, b.right) - Math.max(a.left, b.left) > 1 && Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 1;
+  assert.ok(layout.viewport.height / layout.height >= minimumReadingRatio, `${label}: the document receives at least ${minimumReadingRatio * 100}% of screen height`);
+  assert.ok(layout.viewport.top >= 0 && layout.viewport.bottom <= layout.height + 1, `${label}: the reading surface fits the screen`);
+  assert.ok(!overlaps(layout.viewport, layout.header) && !overlaps(layout.viewport, layout.toolbar), `${label}: controls do not cover the document`);
+  for (const [index, control] of layout.controls.entries()) {
+    assert.ok(control.width >= 44 && control.height >= 44, `${label}: ${control.id} retains a 44px interaction target`);
+    assert.ok(control.left >= 0 && control.right <= layout.width + 1 && control.top >= 0 && control.bottom <= layout.height + 1, `${label}: ${control.id} is fully on screen`);
+    assert.ok(!overlaps(control, layout.title), `${label}: the full title does not displace or cover ${control.id}`);
+    for (const other of layout.controls.slice(index + 1)) assert.ok(!overlaps(control, other), `${label}: ${control.id} and ${other.id} do not overlap`);
+  }
+}
+
+async function assertInformationOverlay(page, item, label, screenshot) {
+  const trigger = page.locator('#document-info-open');
+  const panel = page.locator('#document-info');
+  const currentPage = Number(await page.locator('#pdf-page').inputValue());
+  assert.equal(await trigger.getAttribute('aria-label'), 'Información del documento');
+  assert.equal(await trigger.getAttribute('popovertarget'), 'document-info');
+  assert.equal(await panel.getAttribute('popover'), 'auto');
+  assert.equal(await panel.getAttribute('aria-labelledby'), 'document-info-title');
+  await page.evaluate(() => {
+    const viewport = document.querySelector('#pdf-viewport'), root = document.querySelector('#material-viewer');
+    viewport.scrollTop = Math.max(0, (viewport.scrollHeight - viewport.clientHeight) / 2);
+    const frame = viewport.getBoundingClientRect();
+    window.__viewerInfoSnapshot = {
+      canvas: viewport.querySelector('canvas'), scale: root.dataset.renderScale, page: root.dataset.renderedPage,
+      hash: location.hash, top: viewport.scrollTop, left: viewport.scrollLeft,
+      rect: [frame.left, frame.top, frame.width, frame.height],
+    };
+  });
+  await trigger.focus();
+  await trigger.press('Space');
+  await page.waitForFunction(() => document.querySelector('#document-info').matches(':popover-open'));
+  assert.equal(await page.locator('#document-info-title').textContent(), item.title, `${label}: information exposes the untruncated title`);
+  assert.ok((await panel.textContent()).includes(item.description), `${label}: information includes the document description`);
+  const geometry = await panel.evaluate(panel => {
+    const box = panel.getBoundingClientRect();
+    return { left: box.left, right: box.right, top: box.top, bottom: box.bottom, width: innerWidth, height: innerHeight, extra: panel.scrollWidth - panel.clientWidth };
+  });
+  assert.ok(geometry.left >= 0 && geometry.right <= geometry.width + 1 && geometry.top >= 0 && geometry.bottom <= geometry.height + 1 && geometry.extra <= 1, `${label}: information fits within the screen`);
+  await page.locator('#document-info-close').scrollIntoViewIfNeeded();
+  assert.ok(await page.locator('#document-info-close').isVisible(), `${label}: information has a visible close action`);
+  if (screenshot) {
+    await page.screenshot({ path: path.join(results, screenshot), fullPage: false });
+    report.screenshots.push(screenshot);
+  }
+  await page.locator('#document-info-close').focus();
+  await page.keyboard.press('Escape');
+  await page.waitForFunction(() => !document.querySelector('#document-info').matches(':popover-open'));
+  assert.equal(await trigger.evaluate(node => node === document.activeElement), true, `${label}: Escape restores focus to the information button`);
+  await trigger.click();
+  await page.waitForFunction(() => document.querySelector('#document-info').matches(':popover-open'));
+  const frame = await page.locator('#pdf-viewport').boundingBox();
+  await page.mouse.click(frame.x + 3, frame.y + frame.height - 3);
+  await page.waitForFunction(() => !document.querySelector('#document-info').matches(':popover-open'));
+  assert.equal(await panel.evaluate(panel => panel.contains(document.activeElement)), false, `${label}: outside dismissal does not leave focus in hidden information`);
+  await waitForRender(page, currentPage);
+  const unchanged = await page.evaluate(() => {
+    const viewport = document.querySelector('#pdf-viewport'), root = document.querySelector('#material-viewer');
+    const frame = viewport.getBoundingClientRect(), prior = window.__viewerInfoSnapshot;
+    delete window.__viewerInfoSnapshot;
+    return {
+      sameCanvas: prior.canvas === viewport.querySelector('canvas'), sameScale: prior.scale === root.dataset.renderScale,
+      samePage: prior.page === root.dataset.renderedPage, sameHash: prior.hash === location.hash,
+      scrollDifference: Math.max(Math.abs(prior.top - viewport.scrollTop), Math.abs(prior.left - viewport.scrollLeft)),
+      geometryDifference: Math.max(...[frame.left, frame.top, frame.width, frame.height].map((value, index) => Math.abs(value - prior.rect[index]))),
+    };
+  });
+  assert.deepEqual(unchanged, { sameCanvas: true, sameScale: true, samePage: true, sameHash: true, scrollDifference: 0, geometryDifference: 0 }, `${label}: information does not rerender, resize or move the document`);
+}
+
 async function assertDownloadedOriginal(context, item, preview) {
   const response = await context.request.get(origin + item.href);
   assert.equal(response.status(), 200, `${item.id}: original download resolves`);
@@ -154,8 +240,8 @@ try {
   }
   report.checks.push('Every preview renders nonblank content and selectable text; original and PDF downloads preserve their hashes and MIME types.');
 
-  const representative = catalog.materials.find(item => previews.get(item.id).pages >= 2);
-  assert.ok(representative, 'Navigation coverage requires at least one multipage original');
+  const representative = catalog.materials.find(item => item.id === 'architecture-roadmap-pptx');
+  assert.ok(representative && previews.get(representative.id).pages >= 2, 'Navigation and layout coverage use the architecture PowerPoint');
   const preview = previews.get(representative.id);
   const url = `${origin}/materials/view/${representative.id}/`;
   await page.goto(url + '#page=2');
@@ -185,13 +271,22 @@ try {
   await page.locator('#pdf-zoom-out').click();
   await waitForRender(page, 1, enlarged);
   assert.ok(Number(await page.locator('#material-viewer').getAttribute('data-render-scale')) < enlarged, 'Zoom out changes the PDF rendering scale');
+  await assertInformationOverlay(page, representative, 'Information after manual zoom');
   report.checks.push('Next/previous, explicit page entry, disabled bounds, deep links, reload, and actual PDF zoom work.');
 
-  for (const width of [320, 375, 768, 1440]) {
-    await page.setViewportSize({ width, height: 950 });
+  const layouts = [
+    { width: 320, height: 568, ratio: 0.6 },
+    { width: 375, height: 667, ratio: 0.6 },
+    { width: 768, height: 950, ratio: 0.8 },
+    { width: 844, height: 390, ratio: 0.6 },
+    { width: 1280, height: 800, ratio: 0.8 },
+    { width: 1440, height: 900, ratio: 0.8 },
+  ];
+  for (const { width, height, ratio } of layouts) {
+    await page.setViewportSize({ width, height });
     await page.locator('#pdf-fit').click();
     await waitForRender(page, 1);
-    await assertNoPageOverflow(page, `Viewer ${width}px`);
+    await assertCompactLayout(page, `Viewer ${width}x${height}`, ratio);
     const fit = await page.locator('#pdf-viewport').evaluate(viewport => {
       const box = viewport.getBoundingClientRect();
       const canvas = viewport.querySelector('canvas').getBoundingClientRect();
@@ -199,13 +294,34 @@ try {
     });
     assert.ok(fit.rendered <= fit.available + 1, `${width}px: fit keeps the PDF within the viewport width`);
     assert.ok(fit.viewportWidth <= width, `${width}px: the viewing region stays inside the page`);
-    const filename = `viewer-${width}.png`;
+    const filename = `viewer-${representative.id}-${width}x${height}.png`;
     await page.screenshot({ path: path.join(results, filename), fullPage: false });
     report.screenshots.push(filename);
+    await assertInformationOverlay(page, representative, `Information ${width}x${height}`, [375, 1280, 1440].includes(width) ? `viewer-info-${representative.id}-${width}x${height}.png` : undefined);
   }
   await page.locator('#pdf-viewport').focus();
   assert.equal(await page.locator('#pdf-viewport').evaluate(node => node === document.activeElement), true, 'The native scrolling region is keyboard accessible');
-  report.checks.push('Fit and keyboard access remain usable at 320, 375, 768 and 1440px without horizontal page overflow.');
+  report.checks.push('Compact controls preserve at least 80% reading height on desktop and 60% on small screens, including landscape, with 44px targets and no overlaps.');
+
+  const longTitleItem = catalog.materials.find(item => item.id === 'peru-cash-questionnaire');
+  assert.ok(longTitleItem, 'The long-title DOCX fixture is available');
+  const longTitlePage = await context.newPage();
+  observe(longTitlePage);
+  await longTitlePage.goto(`${origin}/materials/view/${longTitleItem.id}/`);
+  await waitForRender(longTitlePage, 1);
+  assert.equal(await longTitlePage.locator('#document-title').textContent(), longTitleItem.title, 'The compact title retains its complete accessible text');
+  for (const { width, height, ratio } of layouts.filter(layout => [375, 1280, 1440].includes(layout.width))) {
+    await longTitlePage.setViewportSize({ width, height });
+    await longTitlePage.locator('#pdf-fit').click();
+    await waitForRender(longTitlePage, 1);
+    await assertCompactLayout(longTitlePage, `Long title ${width}x${height}`, ratio);
+    const filename = `viewer-${longTitleItem.id}-${width}x${height}.png`;
+    await longTitlePage.screenshot({ path: path.join(results, filename), fullPage: false });
+    report.screenshots.push(filename);
+    await assertInformationOverlay(longTitlePage, longTitleItem, `Long title information ${width}x${height}`, `viewer-info-${longTitleItem.id}-${width}x${height}.png`);
+  }
+  await longTitlePage.close();
+  report.checks.push('Information exposes full titles and descriptions without resizing, rerendering or moving the document; keyboard and outside dismissal preserve usable focus.');
 
   // Register after the application observer, so this callback zooms immediately
   // after the fit-mode resize callback schedules its 100ms redraw.
@@ -269,7 +385,7 @@ try {
   await page.locator('#original-download').click();
   const downloaded = await originalDownload;
   assert.equal(sha256(fs.readFileSync(await downloaded.path())), preview.sourceSha256, 'Explicit original download preserves exact bytes');
-  await page.locator('.viewer-document-details summary').click();
+  await page.locator('#document-info-open').click();
   const previewDownload = page.waitForEvent('download');
   await page.locator('#preview-download').click();
   const downloadedPdf = await previewDownload;
@@ -301,6 +417,10 @@ try {
   assert.equal((await staticPage.goto(url)).status(), 200);
   assert.equal(await staticPage.locator('#original-download').getAttribute('href'), representative.href);
   assert.equal(await staticPage.locator('#preview-download').getAttribute('href'), preview.href);
+  await staticPage.locator('#document-info-open').click();
+  assert.equal(await staticPage.locator('#preview-download').isVisible(), true, 'The native information popover exposes the PDF download without JavaScript');
+  await staticPage.locator('#document-info-close').click();
+  assert.equal(await staticPage.locator('#preview-download').isVisible(), false, 'The native close action works without JavaScript');
   await assertNoPageOverflow(staticPage, 'Viewer without JavaScript');
   report.checks.push('Download links remain available without JavaScript; loading a viewer never starts an automatic download.');
   assert.deepEqual(report.unexpectedDownloads, []);
