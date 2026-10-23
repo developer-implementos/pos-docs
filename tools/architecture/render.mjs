@@ -1,6 +1,6 @@
 /** Portable SVG renderer. Geometry and routes are derived without mutating the model. */
 const COLORS = { sync: '#0545BA', async: '#087B72', data: '#6B4CB4', local: '#64748B' };
-const KINDS = { app: 'APLICACIÓN', data: 'DATOS', infra: 'INFRAESTRUCTURA', external: 'SISTEMA EXTERNO', component: 'COMPONENTE' };
+const KINDS = { app: 'APLICACIÓN', data: 'DATOS', infra: 'INFRAESTRUCTURA', external: 'SISTEMA EXTERNO', component: 'COMPONENTE INTERNO', process: 'PROCESO NATIVO', responsibility: 'RESPONSABILIDAD' };
 const STATUS = { proposed: 'Propuesto', conditional: 'Condicional', unresolved: 'Por definir' };
 const MODES = { sync: 'Petición / respuesta', async: 'Entrega diferida', data: 'Acceso a datos', local: 'Dentro del proceso o puesto' };
 const escape = value => String(value ?? '').replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' })[character]);
@@ -37,7 +37,11 @@ function wrap(text, width, size, maximum = Infinity) {
   return result;
 }
 
-function card(node, x, y, width) {
+function card(node, x, y, width, compact = false) {
+  if (compact) {
+    const title = wrap(node.title, width - 44, 26, 2);
+    return { ...node, x, y, width, height: 78 + title.length * 30, text: { title, technology: [], summary: [], titleY: 65, technologyY: 0, summaryY: 0 } };
+  }
   const title = wrap(node.title, width - 44, 24, 2);
   const technology = wrap(node.technology, width - 44, 18, 2);
   const summary = wrap(node.summary, width - 44, 19, 3);
@@ -155,11 +159,11 @@ function outside(point, side, distance = 30) {
   return [point[0] + (side === 'right' ? distance : side === 'left' ? -distance : 0), point[1] + (side === 'bottom' ? distance : side === 'top' ? -distance : 0)];
 }
 
-function labelFor(edge, points, occupied, width, height, otherSegments) {
-  const title = wrap(edge.title, 168, 17, 2);
+function labelFor(edge, points, occupied, width, height, otherSegments, compact = false) {
+  const title = compact ? [] : wrap(edge.title, 168, 17, 2);
   const protocol = String(edge.protocolLabel ?? edge.protocol ?? '').trim();
   if (!protocol || textWidth(protocol, 15) > 168) throw new Error(`Architecture edge ${edge.id} requires a concise protocol label`);
-  const box = { width: 220, height: title.length > 1 ? 82 : 60 };
+  const box = { width: compact ? 220 : 220, height: compact ? 48 : title.length > 1 ? 82 : 60 };
   const candidates = [];
   for (let index = 1; index < points.length; index++) {
     const a = points[index - 1], b = points[index], length = Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]);
@@ -180,9 +184,58 @@ function labelFor(edge, points, occupied, width, height, otherSegments) {
   return candidates[0];
 }
 
+/** A guided step is a small graph, not a tall excerpt of the complete deployment. */
+function layoutFlow(model) {
+  const columns = Math.min(3, model.nodes.length), margin = 70, cardWidth = 330, gapX = 270;
+  const rowHeight = model.layoutGap ?? 260, top = 278;
+  const width = margin * 2 + columns * cardWidth + Math.max(0, columns - 1) * gapX;
+  const nodes = model.nodes.map((node, index) => {
+    const column = index % columns, row = Math.floor(index / columns);
+    const element = card(node, margin + column * (cardWidth + gapX), top + row * rowHeight, cardWidth, true);
+    return { ...element, height: 140, column, row, text: { ...element.text, titleY: 77 } };
+  });
+  const rows = Math.ceil(nodes.length / columns), legendColumns = Math.max(1, Math.floor((width - 140) / 570)), legendRows = Math.ceil(4 / legendColumns);
+  const height = top + (rows - 1) * rowHeight + 140 + 100;
+  const byId = new Map(nodes.map(node => [node.id, node])), ports = new Map();
+  const edges = model.edges.map((edge, index) => {
+    const from = byId.get(edge.from), to = byId.get(edge.to);
+    if (!from || !to || from === to) throw new Error(`Invalid flow endpoints: ${edge.id}`);
+    const horizontal = from.row === to.row;
+    const fromSide = horizontal ? (to.column > from.column ? 'right' : 'left') : (to.row > from.row ? 'bottom' : 'top');
+    const toSide = horizontal ? (to.column > from.column ? 'left' : 'right') : (to.row > from.row ? 'top' : 'bottom');
+    const result = { ...edge, number: edge.number ?? index + 1, fromSide, toSide };
+    for (const [node, side, endpoint] of [[from, fromSide, 'start'], [to, toSide, 'end']]) {
+      const key = `${node.id}:${side}`; if (!ports.has(key)) ports.set(key, []);
+      ports.get(key).push({ edge: result, endpoint, node, side });
+    }
+    return result;
+  });
+  for (const attachments of ports.values()) attachments.forEach((entry, index) => { entry.edge[entry.endpoint] = port(entry.node, entry.side, index, attachments.length); });
+  const channels = { x: [24, width - 24], y: [246, height - 142] };
+  for (const node of nodes) { channels.x.push(node.x - 32, node.x + node.width + 32); channels.y.push(node.y - 32, node.y + node.height + 32); }
+  const obstacles = nodes.map(node => inflate(node, 20)), used = [];
+  for (const edge of edges) {
+    edge.points = compact([edge.start, ...route(outside(edge.start, edge.fromSide), outside(edge.end, edge.toSide), obstacles, channels, used), edge.end]);
+    for (let index = 1; index < edge.points.length; index++) {
+      if (nodes.some(node => node.id !== edge.from && node.id !== edge.to && segmentEnters(edge.points[index - 1], edge.points[index], node))) throw new Error(`Flow ${edge.id} crosses a node`);
+      used.push([edge.points[index - 1], edge.points[index]]);
+    }
+    edge.path = edge.points.map(([x, y], index) => `${index ? 'L' : 'M'} ${round(x)} ${round(y)}`).join(' ');
+  }
+  const occupied = [...nodes];
+  for (const edge of [...edges].sort((a, b) => a.points.length - b.points.length || a.number - b.number)) {
+    try { edge.label = labelFor(edge, edge.points, occupied, width, height, edges.filter(other => other !== edge).flatMap(other => other.points.slice(1).map((point, index) => [other.points[index], point])), true); }
+    catch (error) { if (!error.message.startsWith('No readable label position') || rowHeight >= 380) throw error; return layoutFlow({ ...model, layoutGap: rowHeight + 40 }); }
+    occupied.push(edge.label);
+  }
+  return { width, height, nodes, edges, groups: [], scopes: [], legendColumns, legendRows };
+}
+
 /** Coordinates are SVG user units. `nodes` and `edges` retain the original model fields. */
 export function layoutArchitecture(model) {
-  const margin = 70, columnWidth = 570, gutter = 230, top = 278, gap = 116;
+  if (model.flow) return layoutFlow(model);
+  const isCompact = model.compact === true;
+  const margin = 70, columnWidth = isCompact ? 250 : 570, gutter = 230, top = 278, gap = model.layoutGap ?? (isCompact ? 104 : 156);
   if (!Array.isArray(model.groups) || !Array.isArray(model.nodes) || !Array.isArray(model.edges)) throw new Error('Architecture requires groups, nodes and edges');
   const ids = new Set();
   for (const item of [...model.groups, ...model.nodes, ...model.edges]) {
@@ -204,24 +257,26 @@ export function layoutArchitecture(model) {
       if (children.length) {
         const start = y;
         y += 42;
-        const parent = card(node, x + 16, y, columnWidth - 32); nodes.push({ ...parent, column });
+        const parent = card(node, x + 16, y, columnWidth - 32, isCompact); nodes.push({ ...parent, column });
         y += parent.height + gap;
         for (const child of children) {
-          const element = card(child, x + 42, y, columnWidth - 84); nodes.push({ ...element, column });
+          const element = card(child, x + 42, y, columnWidth - 84, isCompact); nodes.push({ ...element, column });
           y += element.height + gap;
         }
         y -= gap - 24;
         scopes.push({ id: `scope-${node.id}`, owner: node.id, title: `Dentro de ${node.title} · mismo proceso`, x, y: start, width: columnWidth, height: y - start });
         y += gap;
       } else {
-        const element = card(node, x + 16, y, columnWidth - 32); nodes.push({ ...element, column });
+        const element = card(node, x + 16, y, columnWidth - 32, isCompact); nodes.push({ ...element, column });
         y += element.height + gap;
       }
     }
     return { ...group, column, x: x - 16, y: 176, width: columnWidth + 32, height: y - 176 - gap + 28 };
   });
   const width = margin * 2 + model.groups.length * columnWidth + (model.groups.length - 1) * gutter;
-  const height = Math.max(...groups.map(group => group.y + group.height)) + 170;
+  const legendColumns = Math.max(1, Math.floor((width - 140) / 570));
+  const legendRows = Math.ceil(4 / legendColumns);
+  const height = Math.max(...groups.map(group => group.y + group.height)) + 170 + (legendRows - 1) * 42;
   const byId = new Map(nodes.map(node => [node.id, node]));
   const ports = new Map();
   const edges = model.edges.map((edge, index) => {
@@ -235,7 +290,7 @@ export function layoutArchitecture(model) {
       if (!between) { fromSide = to.y > from.y ? 'bottom' : 'top'; toSide = to.y > from.y ? 'top' : 'bottom'; }
       else { fromSide = index % 2 ? 'left' : 'right'; toSide = fromSide; }
     }
-    const result = { ...edge, number: index + 1, fromSide, toSide };
+    const result = { ...edge, number: edge.number ?? index + 1, fromSide, toSide };
     for (const [node, side, endpoint] of [[from, fromSide, 'start'], [to, toSide, 'end']]) {
       const key = `${node.id}:${side}`;
       if (!ports.has(key)) ports.set(key, []);
@@ -264,10 +319,16 @@ export function layoutArchitecture(model) {
   const occupied = [...nodes, ...headings];
   for (const edge of [...edges].sort((a, b) => a.points.length - b.points.length || a.number - b.number)) {
     const otherSegments = edges.filter(other => other.id !== edge.id).flatMap(other => other.points.slice(1).map((point, index) => [other.points[index], point]));
-    edge.label = labelFor(edge, edge.points, occupied, width, height, otherSegments);
+    try {
+      edge.label = labelFor(edge, edge.points, occupied, width, height, otherSegments, isCompact);
+    } catch (error) {
+      if (!error.message.startsWith('No readable label position') || gap >= 316) throw error;
+      // Reflow the whole projection deterministically; never relax collision checks.
+      return layoutArchitecture({ ...model, layoutGap: gap + 40 });
+    }
     occupied.push(edge.label);
   }
-  return { width, height, groups, scopes, nodes, edges };
+  return { width, height, groups, scopes, nodes, edges, legendColumns, legendRows };
 }
 
 function textLines(lines, x, y, size, lineHeight, className) {
@@ -305,14 +366,15 @@ export function renderArchitecture(model, { interactive = false } = {}) {
     .architecture-node:is(.is-highlighted,.is-related) .architecture-node-box{stroke-width:4;stroke:#0545BA}.architecture-edge:is(.is-highlighted,.is-related) .architecture-edge-line{stroke-width:4}
     [data-item-id].is-muted{opacity:.2}
   </style>${masks}${Object.entries(COLORS).map(([mode, color]) => `<marker id="architecture-arrow-${mode}" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M 1 1 L 11 6 L 1 11 Z" fill="${color}"/></marker>`).join('')}</defs>`;
-  const groups = layout.groups.map(group => `<g class="architecture-group"><rect x="${group.x}" y="${group.y}" width="${group.width}" height="${group.height}" rx="18" fill="#F8FAFE" stroke="#DCE5F3" stroke-width="2"/>${textLines([group.title], group.x + 22, group.y + 34, 25, 30, 'architecture-group-title')}${textLines(wrap(group.subtitle, group.width - 44, 18, 2), group.x + 22, group.y + 61, 18, 23, 'architecture-summary')}</g>`).join('');
+  const groups = layout.groups.map(group => `<g class="architecture-group"><rect x="${group.x}" y="${group.y}" width="${group.width}" height="${group.height}" rx="18" fill="#F8FAFE" stroke="#DCE5F3" stroke-width="2"/>${textLines(wrap(group.title, group.width - 44, model.compact ? 22 : 25, 2), group.x + 22, group.y + 34, model.compact ? 22 : 25, 27, 'architecture-group-title')}${model.compact ? '' : textLines(wrap(group.subtitle, group.width - 44, 18, 2), group.x + 22, group.y + 61, 18, 23, 'architecture-summary')}</g>`).join('');
   const scopes = layout.scopes.map(scope => `<g class="architecture-scope"><rect x="${scope.x}" y="${scope.y}" width="${scope.width}" height="${scope.height}" rx="12" fill="#F0F5FF" stroke="#ADC3EB" stroke-width="2"/>${textLines(wrap(scope.title, scope.width - 24, 16, 1), scope.x + 12, scope.y + 26, 16, 22, 'architecture-kind')}</g>`).join('');
-  const nodes = layout.nodes.map(node => `<g class="architecture-node" data-node-kind="${escape(node.kind)}" data-status="${escape(node.status)}"${node.owner ? ` data-owner="${escape(node.owner)}"` : ''} ${accessibility(node, 'node', interactive)}<rect class="architecture-node-box" x="${node.x}" y="${node.y}" width="${node.width}" height="${node.height}" rx="12"/>${textLines([KINDS[node.kind] ?? node.kind], node.x + 22, node.y + 27, 13, 18, 'architecture-kind')}<text class="architecture-status" x="${node.x + node.width - 22}" y="${node.y + 27}" font-size="14" text-anchor="end">${escape(STATUS[node.status] ?? node.status)}</text>${textLines(node.text.title, node.x + 22, node.y + node.text.titleY, 24, 30, 'architecture-node-title')}${textLines(node.text.technology, node.x + 22, node.y + node.text.technologyY, 18, 23, 'architecture-tech')}${textLines(node.text.summary, node.x + 22, node.y + node.text.summaryY, 19, 25, 'architecture-summary')}</g>`).join('');
+  const nodes = layout.nodes.map(node => `<g class="architecture-node" data-node-kind="${escape(node.kind)}" data-status="${escape(node.status)}"${node.owner ? ` data-owner="${escape(node.owner)}"` : ''} ${accessibility(node, 'node', interactive)}<rect class="architecture-node-box" x="${node.x}" y="${node.y}" width="${node.width}" height="${node.height}" rx="12"/>${textLines([model.compact && node.kind === 'external' ? 'EXTERNO' : KINDS[node.kind] ?? node.kind], node.x + 22, node.y + 27, 13, 18, 'architecture-kind')}<text class="architecture-status" x="${node.x + node.width - 22}" y="${node.y + 27}" font-size="14" text-anchor="end">${escape(STATUS[node.status] ?? node.status)}</text>${model.flow ? textLines([node.owner ? `Dentro de ${node.owner}` : model.groups.find(group => group.id === node.group)?.title ?? ''], node.x + 22, node.y + 48, 13, 18, 'architecture-tech') : ''}${textLines(node.text.title, node.x + 22, node.y + node.text.titleY, model.compact ? 26 : 24, 30, 'architecture-node-title')}${textLines(node.text.technology, node.x + 22, node.y + node.text.technologyY, 18, 23, 'architecture-tech')}${textLines(node.text.summary, node.x + 22, node.y + node.text.summaryY, 19, 25, 'architecture-summary')}</g>`).join('');
   const edges = layout.edges.map(edge => {
     const label = edge.label, color = COLORS[edge.mode] ?? COLORS.sync;
-    return `<g class="architecture-edge" data-mode="${escape(edge.mode)}" data-status="${escape(edge.status)}" ${accessibility(edge, 'edge', interactive)}<path class="architecture-edge-hit" d="${edge.path}" clip-path="url(#architecture-route-hit-area)"/><path class="architecture-edge-line" d="${edge.path}" stroke="${color}"${edge.mode === 'async' || edge.status !== 'proposed' ? ' stroke-dasharray="9 6"' : ''} marker-end="url(#architecture-arrow-${edge.mode in COLORS ? edge.mode : 'sync'})" mask="url(#architecture-label-clearance)" pointer-events="none"/><rect class="architecture-edge-label" x="${label.x}" y="${label.y}" width="${label.width}" height="${label.height}" rx="9"/><rect x="${label.x + 7}" y="${label.y + (label.height - 26) / 2}" width="29" height="26" rx="6" fill="${color}"/><text class="architecture-label-number" x="${label.x + 21.5}" y="${label.y + label.height / 2 + 5.5}" text-anchor="middle" font-size="14">${edge.number}</text>${textLines(label.title, label.x + 44, label.y + 22, 17, 22, 'architecture-label-text')}${textLines([label.protocol], label.x + 44, label.y + 43 + (label.title.length - 1) * 22, 15, 20, 'architecture-label-protocol')}</g>`;
+    return `<g class="architecture-edge" data-from="${escape(edge.from)}" data-to="${escape(edge.to)}" data-relation="${escape(edge.relation ?? 'communication')}" data-mode="${escape(edge.mode)}" data-status="${escape(edge.status)}" ${accessibility(edge, 'edge', interactive)}<path class="architecture-edge-hit" d="${edge.path}" clip-path="url(#architecture-route-hit-area)"/><path class="architecture-edge-line" d="${edge.path}" stroke="${color}"${edge.mode === 'async' || edge.status !== 'proposed' ? ' stroke-dasharray="9 6"' : ''} ${edge.relation === 'evaluation' ? '' : `marker-end="url(#architecture-arrow-${edge.mode in COLORS ? edge.mode : 'sync'})"`} mask="url(#architecture-label-clearance)" pointer-events="none"/><rect class="architecture-edge-label" x="${label.x}" y="${label.y}" width="${label.width}" height="${label.height}" rx="9"/><rect x="${label.x + 7}" y="${label.y + (label.height - 26) / 2}" width="29" height="26" rx="6" fill="${color}"/><text class="architecture-label-number" x="${label.x + 21.5}" y="${label.y + label.height / 2 + 5.5}" text-anchor="middle" font-size="14">${edge.number}</text>${textLines(label.title, label.x + 44, label.y + 22, 17, 22, 'architecture-label-text')}${textLines([label.protocol], label.x + 44, model.compact ? label.y + 29 : label.y + 43 + (label.title.length - 1) * 22, model.compact ? 16 : 15, 20, 'architecture-label-protocol')}</g>`;
   }).join('');
-  const legendY = height - 116;
-  const legend = `<g aria-label="Leyenda"><path d="M 70 ${legendY - 25} H ${width - 70}" stroke="#DCE5F3" stroke-width="2"/>${Object.entries(MODES).map(([mode, title], index) => { const x = 70 + index * 570; return `<path d="M ${x} ${legendY} h 48" stroke="${COLORS[mode]}" stroke-width="3"${mode === 'async' ? ' stroke-dasharray="9 6"' : ''} marker-end="url(#architecture-arrow-${mode})"/><text x="${x + 64}" y="${legendY + 6}" font-size="19" fill="#435771">${escape(title)}</text>`; }).join('')}<text x="70" y="${legendY + 48}" font-size="18" fill="#435771">Borde discontinuo: capacidad condicional o por definir. Las fronteras internas agrupan componentes del mismo proceso.</text><text x="70" y="${legendY + 78}" font-size="18" fill="#435771">Las flechas indican el sentido del contrato. Las respuestas y garantías se describen en cada relación.</text></g>`;
-  return `<svg xmlns="http://www.w3.org/2000/svg" class="architecture-svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}"${interactive ? ' data-interactive="true" role="group"' : ' role="img"'} aria-labelledby="architecture-title architecture-description"><title id="architecture-title">${escape(model.title)}</title><desc id="architecture-description">${escape(model.subtitle)}. ${layout.nodes.length} elementos y ${layout.edges.length} relaciones. ${interactive ? 'Selecciona un elemento o una relación para consultar sus responsabilidades, datos y fallos.' : 'Diagrama vectorial de la arquitectura propuesta; los componentes y capacidades condicionales se identifican en cada tarjeta.'}</desc>${definitions}<rect width="${width}" height="${height}" fill="#fff"/>${textLines([model.title], 70, 72, 40, 48, 'architecture-title')}${textLines(wrap(model.subtitle, width - 140, 22, 2), 70, 111, 22, 30, 'architecture-summary')}${groups}${scopes}${nodes}${edges}${legend}</svg>`;
+  const legendY = height - 116 - (layout.legendRows - 1) * 42;
+  const legend = `<g aria-label="Leyenda"><path d="M 70 ${legendY - 25} H ${width - 70}" stroke="#DCE5F3" stroke-width="2"/>${Object.entries(MODES).map(([mode, title], index) => { const x = 70 + index % layout.legendColumns * 570, y = legendY + Math.floor(index / layout.legendColumns) * 42; return `<path d="M ${x} ${y} h 48" stroke="${COLORS[mode]}" stroke-width="3"${mode === 'async' ? ' stroke-dasharray="9 6"' : ''} marker-end="url(#architecture-arrow-${mode})"/><text x="${x + 64}" y="${y + 6}" font-size="19" fill="#435771">${escape(title)}</text>`; }).join('')}${textLines(wrap('Borde discontinuo: condicional o por definir. Asociación sin flecha: evaluación; no asigna emisor.', width - 140, 18, 2), 70, height - 68, 18, 22, 'architecture-summary')}${textLines(wrap(model.flow ? 'Cada componente indica su aplicación. La ficha conserva responsabilidades y contratos completos.' : model.compact ? 'Vista base: componentes agregados a su aplicación. Selecciona una conexión para consultar su propósito y contrato.' : 'Las fronteras internas agrupan componentes del mismo proceso. Las flechas indican quién inicia el contrato.', width - 140, 18, 2), 70, height - 30, 18, 22, 'architecture-summary')}</g>`;
+  const flowLegend = `<g aria-label="Leyenda del recorrido"><path d="M 70 ${height - 78} H ${width - 70}" stroke="#DCE5F3"/>${textLines(wrap('Flecha: iniciador del contrato. Sin flecha: evaluación. Los componentes indican su aplicación.', width - 140, 18, 2), 70, height - 47, 18, 22, 'architecture-summary')}${textLines(wrap('Propuesta: cada capacidad conserva sus condiciones de autorización, homologación y recuperación.', width - 140, 16, 2), 70, height - 20, 16, 20, 'architecture-summary')}</g>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" class="architecture-svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}"${interactive ? ' data-interactive="true" role="group"' : ' role="img"'} aria-labelledby="architecture-title architecture-description"><title id="architecture-title">${escape(model.title)}</title><desc id="architecture-description">${escape(model.subtitle)}. ${layout.nodes.length} elementos y ${layout.edges.length} relaciones. ${interactive ? 'Selecciona un elemento o una relación para consultar sus responsabilidades, datos y fallos.' : 'Diagrama vectorial de la arquitectura propuesta; los componentes y capacidades condicionales se identifican en cada tarjeta.'}</desc>${definitions}<rect width="${width}" height="${height}" fill="#fff"/>${textLines([model.title], 70, 72, 40, 48, 'architecture-title')}${textLines(wrap(model.subtitle, width - 140, 22, 2), 70, 111, 22, 30, 'architecture-summary')}${groups}${scopes}${nodes}${edges}${model.flow ? flowLegend : legend}</svg>`;
 }

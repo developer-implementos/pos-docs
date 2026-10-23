@@ -38,11 +38,11 @@ test('keeps permanent leaf IDs and canonical order while assigning native chapte
   assert.deepEqual(input, before, 'Navigation derivation does not rewrite slide content or source order');
 });
 
-test('the published deck contains five coherent chapters and the same sixteen permanent IDs', () => {
+test('the published deck contains five coherent chapters and the sixteen existing permanent IDs plus the container overview', () => {
   const deck = JSON.parse(fs.readFileSync(new URL('../architecture/deck.json', import.meta.url), 'utf8'));
   const navigation = buildNavigation(deck);
   assert.deepEqual(navigation.chapters.map(chapter => [chapter.id, chapter.slides.map(slide => slide.id)]), [
-    ['proposal', ['slide-2', 'slide-3']],
+    ['proposal', ['slide-2', 'slide-3', 'slide-17']],
     ['structure', ['slide-4', 'slide-5']],
     ['deployment', ['slide-6', 'slide-7']],
     ['erp-integration', ['slide-8', 'slide-9', 'slide-10']],
@@ -52,8 +52,8 @@ test('the published deck contains five coherent chapters and the same sixteen pe
   assert.equal(navigation.opening.id, deck.cover);
   assert.equal(navigation.opening.h, 0);
   assert.equal(navigation.opening.v, 0);
-  assert.equal(navigation.chapters.flatMap(chapter => chapter.slides).length, 15, 'The opening has no vertical children');
-  assert.deepEqual(navigation.slides.map(slide => slide.id), Array.from({ length: 16 }, (_, index) => `slide-${index + 1}`));
+  assert.equal(navigation.chapters.flatMap(chapter => chapter.slides).length, 16, 'The opening has no vertical children');
+  assert.deepEqual(navigation.slides.map(slide => slide.id), ['slide-1', 'slide-2', 'slide-3', 'slide-17', ...Array.from({ length: 13 }, (_, index) => `slide-${index + 4}`)]);
   assert.equal(new Set(navigation.chapters.map(chapter => chapter.cover.id)).size, 5);
   for (const [index, chapter] of navigation.chapters.entries()) {
     assert.equal(chapter.number, index + 1, 'Editorial chapter numbering excludes the opening');

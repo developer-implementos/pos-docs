@@ -1,3 +1,4 @@
+import { prepareDeck, containerOverview } from './architecture.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -104,7 +105,7 @@ test('requires semantic typography and rejects per-node size or weight overrides
   for (const override of [{ fontSize: 19 }, { bold: true }]) {
     assert.throws(() => diagramTextStyle({ typographyRole: 'body', ...override }, 'Body'), /per-element overrides/u);
   }
-  const deck = JSON.parse(fs.readFileSync(new URL('../architecture/deck.json', import.meta.url), 'utf8'));
+  const deck=prepareDeck(JSON.parse(fs.readFileSync(new URL('../architecture/deck.json', import.meta.url), 'utf8')));
   for (const source of deck.slides.filter(item => item.diagram)) {
     const elements = source.elements.filter(item => item.type === 'text' && item.position.top >= 220 && item.position.top < 630);
     for (const element of elements) {
@@ -141,9 +142,9 @@ test('rejects unsupported elements and layouts instead of silently omitting them
   assert.throws(() => createDiagram(slide(), { root }), /empty diagram region/u);
 });
 
-test('generates all six source diagrams deterministically with every label intact', () => {
-  const deck = JSON.parse(fs.readFileSync(new URL('../architecture/deck.json', import.meta.url), 'utf8'));
-  const selected = ['slide-3', 'slide-6', 'slide-7', 'slide-8', 'slide-9', 'slide-10'];
+test('generates all source diagrams deterministically with every label intact', () => {
+  const deck=prepareDeck(JSON.parse(fs.readFileSync(new URL('../architecture/deck.json', import.meta.url), 'utf8')));
+  const selected = deck.slides.filter(slide => slide.diagram).map(slide => slide.id);
   for (const id of selected) {
     const source = deck.slides.find(item => item.id === id);
     const original = structuredClone(source);
@@ -156,4 +157,15 @@ test('generates all six source diagrams deterministically with every label intac
     assert.doesNotMatch(result.svg, /NaN|Infinity|<text\b|<image\b|<foreignObject\b/iu);
     assert.ok(result.width > 0 && result.height > 0);
   }
+});
+
+test('the overview reuses six application identities and projects the transaction to its owner', () => {
+  assert.deepEqual(containerOverview.nodes.filter(node => node.kind === 'app').map(node => node.title).sort(),
+    ['branch-api', 'branch-sync-worker', 'country-api', 'erp-worker', 'pos-desktop', 'pos-mobile']);
+  assert.deepEqual(containerOverview.nodes.filter(node => node.kind === 'data').map(node => node.id).sort(), ['branch-db', 'country-db']);
+  const commit = containerOverview.edges.find(edge => edge.id === 'commit-local');
+  assert.equal(commit.from, 'branch-api'); assert.equal(commit.sourceFrom, 'transaction'); assert.equal(commit.to, 'branch-db');
+  const erp = containerOverview.edges.find(edge => edge.id === 'claim-report');
+  assert.equal(erp.from, 'erp-worker'); assert.equal(erp.to, 'country-api');
+  assert.ok(containerOverview.edges.every(edge => !(['desktop', 'mobile', 'erp-worker'].includes(edge.from) && edge.to.endsWith('-db'))), 'The summary must not invent client or WAN SQL access');
 });

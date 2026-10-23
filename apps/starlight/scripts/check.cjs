@@ -80,6 +80,35 @@ async function run() {
     assert.match(await page.locator('.pagefind-ui__results').innerText(), /permiso|acceso/i);
     await page.keyboard.press('Escape');
     report.checks.push('Pagefind returns Spanish access/permissions results under the deployed CSP');
+    const searchChecks = await page.evaluate(async () => {
+      const search = await import('/guide/pagefind/pagefind.js');
+      const filters = await search.filters();
+      const queries = {};
+      for (const term of ['sincronización', 'precios', 'identidad', 'roadmap']) {
+        const result = await search.search(term, { filters: { Tipo: 'Propuesta' } });
+        queries[term] = await Promise.all(result.results.slice(0, 5).map(item => item.data()));
+      }
+      const ranked = await search.search('sincronización');
+      const top = await Promise.all(ranked.results.slice(0, 3).map(item => item.data()));
+      return { filters, queries, top };
+    });
+    for (const label of ['Propuesta', 'Implementación', 'Fuentes y legado', 'Antecedentes']) {
+      assert.ok(searchChecks.filters.Tipo[label] > 0, `Missing editorial search filter: ${label}`);
+    }
+    for (const [term, results] of Object.entries(searchChecks.queries)) {
+      assert.ok(results.length > 0, `No proposal results for ${term}`);
+      assert.ok(results.every(result => result.meta.Tipo === 'Propuesta'), `Filter leaked another document kind: ${term}`);
+    }
+    assert.ok(searchChecks.top.every(result => result.meta.Tipo !== 'Antecedentes'), 'Historical narration must not displace current synchronization contracts');
+    await page.locator('site-search button[data-open-modal]').click();
+    await page.locator('.pagefind-ui__search-input').fill('sincronización');
+    await page.getByRole('checkbox', { name: /Propuesta/ }).check();
+    await page.waitForFunction(() => {
+      const labels = [...document.querySelectorAll('.pagefind-ui__result [data-pagefind-ui-meta="Tipo"]')];
+      return labels.length > 0 && labels.every(label => label.textContent.includes('Propuesta'));
+    });
+    await page.keyboard.press('Escape');
+    report.checks.push('Search exposes editorial labels and filters; proposal queries and historical demotion are verified with the real index');
     for (const [route, count, query] of [['mountain', 253, '/cajas-usuario/cerrar-caja/'], ['mountain-concentrator', 20, '/concentrador/reintentar/reintento-manual']]) {
       await page.goto(`${origin}/guide/api/${route}/`);
       const catalog = page.locator('pos-endpoint-catalog');
@@ -130,13 +159,19 @@ async function run() {
     }
     report.checks.push('Heading hierarchy, unique anchors, proposal reading path and page status are consistent');
     await page.goto(origin + '/guide/diagrams/');
+    const explorer = page.locator('[data-diagram-explore]');
+    assert.equal(await explorer.getAttribute('href'), '/architecture/');
+    assert.equal(await explorer.locator('img').getAttribute('src'), '/docs/architecture/pos-platform-base.svg');
     const preview = page.locator('[data-diagram-open]').first();
     await preview.click();
     assert.equal(await page.locator('dialog[open]').count(), 1);
     await page.waitForFunction(() => {
       const image = document.querySelector('dialog[open] .pos-diagram__canvas img');
-      return image?.complete && image.naturalWidth > 0 && Math.abs(image.getBoundingClientRect().width - image.naturalWidth) < 1;
+      const canvas = image?.closest('.pos-diagram__canvas');
+      return image?.complete && image.naturalWidth > 0 && canvas.scrollWidth <= canvas.clientWidth + 1 && canvas.scrollHeight <= canvas.clientHeight + 1;
     });
+    await page.locator('dialog[open] [data-diagram-actual]').click();
+    assert.equal(await page.locator('dialog[open] .pos-diagram__canvas img').evaluate(image => Math.abs(image.getBoundingClientRect().width - image.naturalWidth) < 1), true);
     const zoom = page.locator('dialog[open] [data-diagram-scale]');
     await zoom.fill('150'); await zoom.dispatchEvent('input');
     assert.match(await page.locator('dialog[open] [data-diagram-scale-label]').innerText(), /150/);
@@ -144,7 +179,23 @@ async function run() {
     await page.keyboard.press('Escape');
     assert.equal(await page.locator('dialog[open]').count(), 0);
     assert.equal(await preview.evaluate(e => e === document.activeElement), true);
-    report.checks.push('Diagram opens at native SVG scale, zooms to 150%, closes with Escape and restores keyboard focus');
+    for (const viewport of [{ width: 870, height: 612 }, { width: 375, height: 667 }]) {
+      await page.setViewportSize(viewport);
+      await preview.click();
+      await page.waitForFunction(() => {
+        const canvas = document.querySelector('dialog[open] .pos-diagram__canvas');
+        return canvas && canvas.scrollWidth <= canvas.clientWidth + 1 && canvas.scrollHeight <= canvas.clientHeight + 1;
+      });
+      const canvas = page.locator('dialog[open] .pos-diagram__canvas');
+      await canvas.focus(); await page.keyboard.press('1');
+      assert.match(await page.locator('dialog[open] output').innerText(), /100/);
+      await page.keyboard.press('0');
+      assert.equal(await page.locator('dialog[open] [data-diagram-fit]').getAttribute('aria-pressed'), 'true');
+      await page.screenshot({path: path.join(qa, `diagram-fit-${viewport.width}.png`)});
+      await page.keyboard.press('Escape');
+    }
+    await page.setViewportSize({width: 1440, height: 1000});
+    report.checks.push('General map opens the explorer; static diagrams fit compact/mobile screens, preserve native zoom and restore keyboard focus');
     for (const route of ['proposal/continuity/', 'proposal/pricing-promotions/']) {
       await page.goto(origin + '/guide/' + route);
       const player = page.locator('pos-flow-player');

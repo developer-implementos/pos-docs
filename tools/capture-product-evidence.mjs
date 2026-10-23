@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { generatedPages, sourceRouteAliases } from '../apps/starlight/content-map.mjs';
+import { productRepositoryOrigin } from '../apps/starlight/site-config.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const args = process.argv.slice(2);
@@ -12,8 +13,8 @@ if (args.length !== 2 || args[0] !== '--workspace') {
 }
 const workspace = fs.realpathSync(path.resolve(args[1]));
 const git = (...command) => execFileSync('git', command, { cwd: workspace, encoding: 'utf8' }).trim();
-const repository = 'https://github.com/floxcristian/pos-platform';
-if (!['https://github.com/floxcristian/pos-platform.git', repository, 'git@github.com:floxcristian/pos-platform.git'].includes(git('remote', 'get-url', 'origin'))) {
+const repository = productRepositoryOrigin;
+if (![`${repository}.git`, repository, 'git@github.com:developer-implementos/pos-platform.git'].includes(git('remote', 'get-url', 'origin'))) {
   throw new Error('The evidence workspace must be the POS Platform product repository.');
 }
 if (git('status', '--porcelain')) throw new Error('Commit or resolve product changes before capturing evidence; a dirty checkout is not a revision.');

@@ -257,7 +257,11 @@ export function prepareContent() {
       const title = page.flow === 'sale' ? 'Venta confirmada en sucursal' : 'Publicación y activación de precios';
       enhanced = `<FlowPlayer scenario="${page.flow}" title="${title}" />\n\n`;
     }
-    const labs = page.labs?.length ? '\n\n## Escenarios interactivos\n\n' + page.labs.map(id => `- [${labLinks[id]}](${presentationOrigin}/presentation/pos-corporativo-reveal.html?lectura=0#/${id})`).join('\n') + '\n\nLas simulaciones ilustran el diseño propuesto; no ejecutan operaciones ni demuestran garantías del producto.\n' : '';
+    const labs = page.labs?.length ? '\n\n## Explorar este contrato\n\n' + page.labs.map(id => {
+      const lab = labLinks[id];
+      if (!lab) throw new Error(`Missing architecture scenario: ${id}`);
+      return `- [${lab.title}](${lab.href})`;
+    }).join('\n') + '\n\nLos recorridos ilustran el diseño propuesto; no ejecutan operaciones ni demuestran garantías del producto.\n' : '';
     const frontmatter = `---\ntitle: ${JSON.stringify(page.title)}\ndescription: ${JSON.stringify(page.description)}\neditUrl: false\n${pagination(page)}---\n\n`;
     const sourceReference = page.sourceDownload === false ? `\`${page.source}\`` : `[${page.source}](${page.source.startsWith('docs/') ? '/' + page.source : `${repositoryOrigin}/blob/main/${page.source}`})`;
     const footer = `\n\n---\n\n${sourceLabel}: ${sourceReference}${page.range?.from ? ` · sección «${page.range.from}»` : ''}.\n`;

@@ -1,6 +1,6 @@
-# Narrador: audio y sincronización
+# Narrador de la presentación histórica
 
-El guion, las pistas de audio y las herramientas del narrador pertenecen a la presentación. Su procedimiento canónico está en [pos-architecture · Audio del modo narrador](https://github.com/floxcristian/pos-architecture/blob/main/presentation/tools/narration-pipeline.md).
+El guion, las pistas de audio y las herramientas del narrador pertenecen al material histórico de pos-architecture, con revisión propia. La presentación vigente de POS Docs se documenta en [Presentación y publicación](/guide/reference/presentation/). Su procedimiento canónico está en [pos-architecture · Audio del modo narrador](https://github.com/floxcristian/pos-architecture/blob/main/presentation/tools/narration-pipeline.md).
 
 <span id="audio-del-modo-narrador"></span>
 <span id="fuente-y-sincronización"></span>

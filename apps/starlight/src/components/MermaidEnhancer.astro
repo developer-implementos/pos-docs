@@ -1,4 +1,5 @@
 <script>
+  import { bindDiagramViewport } from '../scripts/diagram-viewport';
   function addDiagramViewer(figure: HTMLElement, output: HTMLElement, index: number) {
     const drawing = output.querySelector('svg');
     if (!drawing) return;
@@ -26,41 +27,20 @@
     dialog.id = id;
     dialog.className = 'pos-diagram__dialog';
     dialog.setAttribute('aria-labelledby', `${id}-title`);
-    dialog.innerHTML = '<div class="pos-diagram__toolbar"><strong></strong><button type="button" class="pos-visual-button" autofocus>Cerrar</button></div><div class="pos-diagram__zoom"><label>Escala <input type="range" min="40" max="200" step="10" value="100"></label><output>100 %</output><span>Desplázate para recorrer el diagrama.</span></div><div class="pos-diagram__canvas" tabindex="0" role="region" aria-label="Diagrama ampliado; utiliza las flechas para desplazarte"></div>';
+    dialog.innerHTML = '<div class="pos-diagram__toolbar"><strong></strong><button type="button" class="pos-visual-button" data-diagram-close autofocus>Cerrar</button></div><div class="pos-diagram__zoom"><button type="button" class="pos-visual-button" data-diagram-fit aria-pressed="true">Ajustar</button><button type="button" class="pos-visual-button" data-diagram-actual aria-pressed="false">Tamaño real</button><label><span class="sr-only">Escala del diagrama</span><input type="range" data-diagram-scale min="1" max="200" step="1" value="100"></label><output data-diagram-scale-label>100 %</output></div><div class="pos-diagram__canvas" tabindex="0" role="region" aria-label="Diagrama ampliado. Flechas para desplazarse, más y menos para ampliar, cero para ajustar."></div>';
     const titleElement = dialog.querySelector<HTMLElement>('strong')!;
     titleElement.id = `${id}-title`;
     titleElement.textContent = title;
     const canvas = dialog.querySelector<HTMLElement>('.pos-diagram__canvas')!;
-    const zoom = dialog.querySelector<HTMLInputElement>('input')!;
-    const zoomLabel = dialog.querySelector<HTMLOutputElement>('output')!;
-    const close = dialog.querySelector<HTMLButtonElement>('button')!;
     figure.append(dialog);
-
-    open.addEventListener('click', () => {
+    bindDiagramViewport({ dialog, openButton: open, drawing, beforeOpen: () => {
       // Keep only one copy: Mermaid markers and accessible IDs remain unique.
       output.style.minHeight = `${output.getBoundingClientRect().height}px`;
       canvas.append(drawing);
-      zoom.value = '100';
-      zoomLabel.textContent = '100 %';
-      canvas.style.setProperty('--diagram-scale', '1');
-      dialog.showModal();
-      canvas.scrollTo({ top: 0, left: 0 });
-    });
-    zoom.addEventListener('input', () => {
-      canvas.style.setProperty('--diagram-scale', String(Number(zoom.value) / 100));
-      zoomLabel.textContent = `${zoom.value} %`;
-    });
-    close.addEventListener('click', () => dialog.close());
-    dialog.addEventListener('close', () => {
+    }, afterClose: () => {
       output.append(drawing);
       output.style.removeProperty('min-height');
-      open.focus({ preventScroll: true });
-    });
-    dialog.addEventListener('click', event => {
-      if (event.target !== dialog) return;
-      const rect = dialog.getBoundingClientRect();
-      if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close();
-    });
+    } });
   }
 
   const figures = [...document.querySelectorAll<HTMLElement>('[data-mermaid-figure]')];

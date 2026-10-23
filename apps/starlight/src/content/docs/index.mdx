@@ -6,8 +6,9 @@ tableOfContents: false
 ---
 
 import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { productRepositoryOrigin } from '../../../site-config.mjs';
 
-Una plataforma POS corporativa para **Chile, Perú y España**, con módulos de negocio compartidos y adaptadores para las diferencias de cada país. Esta guía reúne la arquitectura propuesta, la implementación del monorepo y la evidencia del sistema actual. Las fuentes técnicas se mantienen en [POS Docs](https://github.com/developer-implementos/pos-docs); el software operativo pertenece a [POS Platform](https://github.com/floxcristian/pos-platform). La documentación distingue la revisión editorial de la revisión del código que describe.
+Una plataforma POS corporativa para **Chile, Perú y España**, con módulos de negocio compartidos y adaptadores para las diferencias de cada país. Esta guía reúne la arquitectura propuesta, la implementación del monorepo y la evidencia del sistema actual. Las fuentes técnicas se mantienen en [POS Docs](https://github.com/developer-implementos/pos-docs); el código del producto pertenece a <a href={productRepositoryOrigin}>POS Platform</a>. La documentación distingue la revisión editorial de la revisión del código que describe.
 
 <CardGrid>
   <LinkCard title="Visión general de la solución" description="Producto compartido, responsabilidades por zona y recorrido completo de una venta." href="/guide/overview/" />

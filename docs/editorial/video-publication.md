@@ -1,6 +1,6 @@
 # Video: producción y publicación
 
-El video y sus recursos de producción se conservan en el repositorio de presentación. Se pueden consultar el [video público](https://presentation-gamma-rust.vercel.app/video) y su [manual de producción y publicación](https://github.com/floxcristian/pos-architecture/blob/main/video/README.md).
+El video y sus recursos de producción se conservan como material histórico en pos-architecture. La presentación vigente de POS Docs está en [arquitectura y roadmap](/presentations/architecture/). Se pueden consultar el [video público](https://presentation-gamma-rust.vercel.app/video) y su [manual de producción y publicación](https://github.com/floxcristian/pos-architecture/blob/main/video/README.md).
 
 <span id="propuesta-pos-narrada-en-español"></span>
 <span id="entrega"></span>

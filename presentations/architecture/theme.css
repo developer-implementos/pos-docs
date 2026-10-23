@@ -154,3 +154,7 @@ html.print-pdf .monorepo-tour{display:none!important}html.print-pdf .monorepo-st
 html.print-pdf .roadmap-tour{display:none!important}html.print-pdf .roadmap-print{display:grid!important}
 @media print{.roadmap-tour{display:none!important}.roadmap-print{display:grid!important}.roadmap-reading-phase{break-inside:avoid}}
 @media print{.toolbar,.skip,dialog,#resources-panel{display:none!important}.reader{max-width:none;padding:0}.reader article{break-inside:avoid}.reader details{display:block}}
+.slide-explore{position:absolute;left:64px;top:181px;display:inline-flex;align-items:center;min-height:32px;color:var(--primary);font:700 16px/1.25 Inter,Arial,sans-serif;text-decoration:underline;text-underline-offset:4px}
+.slide-explore:hover,.phase-plan-link:hover{color:var(--primary-hover)}
+.roadmap-pair-phase>h3 .phase-plan-link{flex:none;margin-left:auto;padding:8px 0;color:var(--primary);font:700 15px/1.25 Inter,Arial,sans-serif;text-decoration:underline;text-underline-offset:4px}
+.roadmap-tour .roadmap-phase-title a{color:inherit;text-decoration:underline;text-underline-offset:4px}.roadmap-tour .roadmap-phase-title a:hover{color:#fff}.roadmap-tour .roadmap-phase-title a:focus-visible{outline:2px solid white;outline-offset:3px}

@@ -7,15 +7,16 @@ flowchart TB
         countryInbox["Recepción de operaciones<br/>«Componente»<br/>libs/backend/sync<br/>Deduplica y aplica el efecto local pactado."]:::pos
         countryJobs["Trabajo y resultados ERP<br/>«Componente»<br/>sync + erp · contratos públicos propuestos<br/>Asigna trabajo y registra su resultado."]:::pos
         countryPublications["Publicaciones y consultas<br/>«Componente»<br/>catalog + pricing + reporting<br/>Sirve versiones y estado operativo."]:::pos
+        countryWorker["Publicación de maestros<br/>«Componente»<br/>catalog / pricing / sync · TypeScript<br/>Valida y publica versiones comerciales."]:::pos
         countryCachePort["Puerto de caché opcional<br/>«Componente»<br/>Adaptador TypeScript / cache-aside<br/>Acelera lecturas reconstruibles."]:::pos
         countryUow["Persistencia de país<br/>«Componente»<br/>Repositorios TypeScript / SQL<br/>Confirma estado y trabajo en PostgreSQL."]:::pos
         technicalBase["Base técnica compartida<br/>«Componente»<br/>shared/backend · composición objetivo<br/>Configuración, salud, Pino y Sentry opt-in."]:::pos
     end
-    syncWorker["branch-sync-worker<br/>«Contenedor»<br/>NestJS / Node.js · sin servidor HTTP<br/>Entrega eventos y actualiza espejos."]:::pos
-    erpAdapter["erp-worker<br/>«Contenedor»<br/>NestJS / Node.js · libs/backend/erp<br/>Consume trabajo; traduce y concilia con ERP."]:::pos
-    countryDb[("Datos operativos de país<br/>«Contenedor de datos»<br/>PostgreSQL<br/>Consolida y conserva entrega durable.")]:::store
-    countryCache[("Redis · caché de país (opcional)<br/>«Contenedor de datos»<br/>Redis · datos reconstruibles<br/>Acelera consultas; no confirma operaciones.")]:::store
-    legend["Leyenda · notación C4<br/>Azul: POS · Violeta: datos<br/>Gris: externo · Ámbar: infraestructura<br/>Borde: sistema, proceso o nodo indicado<br/>Flecha: iniciador, propósito y protocolo<br/>Opcional / por asignar: condición explícita<br/>Contenedor no equivale a Docker"]:::key
+        syncWorker["branch-sync-worker<br/>«Contenedor»<br/>NestJS / Node.js · sin servidor HTTP<br/>Entrega eventos y actualiza espejos."]:::pos
+        erpAdapter["erp-worker<br/>«Contenedor»<br/>NestJS / Node.js · libs/backend/erp<br/>Integra ERP y prepara maestros por contrato."]:::pos
+        countryDb["Datos operativos de país<br/>«Contenedor de datos»<br/>PostgreSQL<br/>Consolida y conserva entrega durable."]:::store
+        countryCache["Redis · caché de país (opcional)<br/>«Contenedor de datos»<br/>Redis · datos reconstruibles<br/>Acelera consultas; no confirma operaciones."]:::store
+        legend["Leyenda<br/>«Clave de lectura»<br/>Notación C4<br/>Azul: POS. Violeta: datos. Gris: externo."]:::key
     syncWorker -->|"Lotes, acuses y publicaciones · HTTPS"| countryEntry
     erpAdapter -->|"Claim, consulta y resultado · HTTPS saliente"| countryEntry
     countryEntry -->|"Recibe evento identificado · TypeScript"| countryInbox
@@ -28,10 +29,11 @@ flowchart TB
     countryCachePort -->|"Cache-aside · Redis opcional"| countryCache
     countryCachePort -->|"Miss o fallo: lectura durable · TypeScript"| countryUow
     countryUow -->|"Persistencia y lectura autorizada · SQL"| countryDb
+    countryEntry -->|"Claim, porciones y finalización · TypeScript"| countryWorker
+    countryWorker -->|"Versión, manifiesto y evento · una transacción"| countryUow
     classDef pos fill:#EDF3FF,stroke:#0545BA,color:#25364D,stroke-width:2px
     classDef store fill:#F2EFFF,stroke:#6551A8,color:#25364D,stroke-width:2px
     classDef external fill:#F4F6F8,stroke:#6B788A,color:#25364D
     classDef person fill:#18336D,stroke:#18336D,color:#FFFFFF
-    classDef infra fill:#FFF3E0,stroke:#A86516,color:#25364D
     classDef key fill:#FFFFFF,stroke:#BCC9DB,color:#53657F,font-size:14px
     style countryScope fill:#FFFFFF,stroke:#BCC9DB,stroke-dasharray:6 4

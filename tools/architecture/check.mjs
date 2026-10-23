@@ -5,6 +5,7 @@ import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { architecture } from './model.mjs';
 import { renderArchitecture } from './render.mjs';
+import { architectureViews, scenarioView, validateArchitecture } from './views.mjs';
 import { docsOrigin } from '../../apps/starlight/site-config.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
@@ -13,7 +14,7 @@ const { chromium } = require('playwright');
 const { servePublic } = require(path.join(root, 'apps/starlight/scripts/serve.cjs'));
 const results = path.join(root, 'test-results-architecture');
 fs.mkdirSync(results, { recursive: true });
-const report = { checks: [], links: [], screenshots: [], browserErrors: [], failedRequests: [], externalRequests: [], unexpectedMethods: [] };
+const report = { checks: [], links: [], screenshots: [], sourceErrors: [], browserErrors: [], failedRequests: [], externalRequests: [], unexpectedMethods: [] };
 const sorted = values => [...values].sort();
 const normalize = value => value.normalize('NFD').replace(/[\u0300-\u036f]/gu, '').toLowerCase();
 const statuses = { proposed: 'Propuesto', conditional: 'Condicional', unresolved: 'Por definir' };
@@ -27,6 +28,7 @@ let server;
 let origin;
 
 function validateStructure() {
+  validateArchitecture();
   assert.equal(itemById.size, allItems.length, 'Architecture item IDs are unique');
   const apps = architecture.nodes.filter(node => node.kind === 'app');
   assert.deepEqual(sorted(apps.map(node => node.title)), sorted(['pos-desktop', 'pos-mobile', 'branch-api', 'branch-sync-worker', 'country-api', 'erp-worker']), 'The map declares exactly the six agreed applications');
@@ -65,8 +67,8 @@ function validateStructure() {
   const before = JSON.stringify(architecture);
   const generated = renderArchitecture(architecture);
   assert.equal(JSON.stringify(architecture), before, 'Rendering routes does not rewrite the source model');
-  assert.equal(fs.readFileSync(sourceSvgPath, 'utf8'), generated, 'The versioned SVG matches the current model and renderer');
-  assert.equal(fs.readFileSync(path.join(root, 'dist/docs/architecture/pos-platform.svg'), 'utf8'), generated, 'The published download matches the versioned SVG');
+  assert.ok(fs.readFileSync(sourceSvgPath, 'utf8') === generated, 'The versioned SVG matches the current model and renderer');
+  assert.ok(fs.readFileSync(path.join(root, 'dist/docs/architecture/pos-platform.svg'), 'utf8') === generated, 'The published download matches the versioned SVG');
   assert.doesNotMatch(generated, /<(?:image|foreignObject|script)\b/iu, 'The download is vector SVG without raster payloads or scripts');
   assert.doesNotMatch(generated, /(?:href|src)=["'](?:https?:|data:)/iu, 'The SVG does not load remote or embedded bitmap resources');
   for (const status of ['conditional', 'unresolved']) {
@@ -113,7 +115,8 @@ async function assertSelection(page, item) {
   assert.equal(await page.locator(`#detail-${item.id} h2`).textContent(), item.title, `Detail title matches ${item.id}`);
   assert.deepEqual(await page.locator('#drawing .is-selected').evaluateAll(items => items.map(item => item.dataset.itemId).sort()), [item.id], `Selection is exact: ${item.id}`);
   const related = edgeIds.has(item.id) ? [item.from, item.to] : architecture.edges.filter(edge => edge.from === item.id || edge.to === item.id).flatMap(edge => [edge.id, edge.from, edge.to]);
-  assert.deepEqual(await page.locator('#drawing .is-related').evaluateAll(items => items.map(item => item.dataset.itemId).sort()), sorted(new Set(related)), `Related contracts are exact: ${item.id}`);
+  const mounted=new Set(await page.locator('#drawing [data-item-id]').evaluateAll(items=>items.map(item=>item.dataset.itemId)));
+  assert.deepEqual(await page.locator('#drawing .is-related').evaluateAll(items => items.filter(item=>!item.classList.contains('is-selected')).map(item => item.dataset.itemId).sort()), sorted(new Set(related.filter(id=>mounted.has(id)&&id!==item.id))), `Related contracts visible in this projection are exact: ${item.id}`);
 }
 
 async function assertNoHorizontalOverflow(page, label) {
@@ -122,23 +125,42 @@ async function assertNoHorizontalOverflow(page, label) {
 }
 
 async function assertCamera(page, ids, label) {
-  const clipped = await page.evaluate(ids => {
+  const geometry = await page.evaluate(ids => {
     const viewport = document.querySelector('#viewport');
     const outer = viewport.getBoundingClientRect();
     const visible = { left: outer.left + viewport.clientLeft, top: outer.top + viewport.clientTop };
     visible.right = visible.left + viewport.clientWidth;
     visible.bottom = visible.top + viewport.clientHeight;
-    return ids.filter(id => {
+    const clipped=ids.filter(id => {
       const box = document.querySelector(`#drawing [data-item-id="${id}"] .architecture-node-box`).getBoundingClientRect();
       return box.left < visible.left - 2 || box.top < visible.top - 2 || box.right > visible.right + 2 || box.bottom > visible.bottom + 2;
     });
+    const svg=document.querySelector('#drawing svg');
+    const scale=svg.getBoundingClientRect().width/svg.viewBox.baseVal.width;
+    const titles=ids.map(id=>{
+      const title=document.querySelector(`#drawing [data-item-id="${id}"] .architecture-node-title`);
+      return {id,size:parseFloat(getComputedStyle(title).fontSize)*scale};
+    });
+    return {clipped,titles,desktop:innerWidth>=1000};
   }, ids);
-  assert.deepEqual(clipped, [], `${label}: the camera includes every node in the current step`);
+  assert.deepEqual(geometry.clipped, [], `${label}: the camera includes every node in the current step`);
+  if(geometry.desktop)assert.deepEqual(geometry.titles.filter(title=>title.size<14),[],`${label}: the projected step has readable node titles, not only geometric fit`);
 }
 
 async function capture(page, name) {
   await page.screenshot({ path: path.join(results, name), fullPage: true });
   report.screenshots.push(name);
+}
+
+async function assertActiveStepVisible(page,label) {
+  const geometry=await page.locator('[data-scenario-panel]:visible [aria-current="step"]').evaluate(node=>{
+    const panel=document.querySelector('#inspector');
+    const box=node.getBoundingClientRect(),outer=panel.getBoundingClientRect();
+    const toolbar=document.querySelector('.inspector-tools').getBoundingClientRect();
+    return {top:box.top,bottom:box.bottom,visibleTop:Math.max(outer.top,toolbar.bottom),visibleBottom:outer.bottom,scrollY};
+  });
+  assert.ok(geometry.top>=geometry.visibleTop-2&&geometry.bottom<=geometry.visibleBottom+2,`${label}: the active step is visible in its inspector`);
+  assert.equal(geometry.scrollY,0,`${label}: revealing a step does not scroll the desktop document`);
 }
 
 async function checkSources(context, page) {
@@ -153,14 +175,14 @@ async function checkSources(context, page) {
   }
   for (const [href, anchors] of locals) {
     const response = await context.request.get(origin + href, { maxRedirects: 0 });
-    assert.equal(response.status(), 200, `Local source/resource returns 200: ${href}`);
+    if(response.status()!==200){report.sourceErrors.push(`${response.status()}: ${href}`);await response.dispose();continue;}
     if (anchors.size) {
       const text = await response.text();
       const missing = await page.evaluate(({ text, anchors }) => {
         const document = new DOMParser().parseFromString(text, 'text/html');
         return anchors.filter(anchor => !document.getElementById(anchor));
       }, { text, anchors: [...anchors] });
-      assert.deepEqual(missing, [], `Document anchors resolve: ${href}`);
+      for(const anchor of missing)report.sourceErrors.push(`Missing anchor: ${href}#${anchor}`);
     }
     report.links.push(href);
     await response.dispose();
@@ -176,6 +198,10 @@ try {
   const page = await context.newPage();
   observe(page);
   const response = await ready(page);
+  await page.evaluate(()=>document.fonts.ready);
+  assert.deepEqual(await page.locator('img').evaluateAll(images=>images.filter(image=>!image.complete||image.naturalWidth===0).map(image=>image.currentSrc)),[],'Brand images load before visual geometry is checked');
+  const fonts=await page.evaluate(()=>[...document.fonts].filter(font=>font.family.replaceAll('"','')==='Inter').map(font=>({weight:font.weight,status:font.status})));
+  assert.ok(fonts.length>=2&&fonts.every(font=>font.status==='loaded'),'Regular and bold Inter load; visual checks must not silently use fallback fonts');
   const scriptPolicy = (response.headers()['content-security-policy'] || '').split(';').find(value => value.trim().startsWith('script-src ')) || '';
   assert.match(scriptPolicy, /'self'/u, 'Scripts are local under CSP');
   assert.doesNotMatch(scriptPolicy, /unsafe-inline|unsafe-eval|wasm-unsafe-eval/u, 'Explorer has no permissive script exception');
@@ -184,15 +210,65 @@ try {
   assert.equal(await page.locator('script:not([src])').count(), 0);
   assert.equal(await page.getByRole('heading', { level: 1 }).count(), 1);
   assert.equal(await page.getByRole('main').count(), 1);
-  assert.deepEqual(await page.locator('#drawing [data-item-id]').evaluateAll(items => items.map(item => item.dataset.itemId).sort()), sorted(itemById.keys()));
+  const base=architectureViews.find(view=>view.id==='base');
+  assert.equal(await page.locator('#drawing').getAttribute('data-view'),'base');
+  assert.ok(await page.locator('#inspector').isHidden(),'The first view gives its width to the proposal');
+  assert.deepEqual(await page.locator('#drawing [data-item-id]').evaluateAll(items=>items.map(item=>item.dataset.itemId).sort()),sorted([...base.model.nodes,...base.model.edges].map(item=>item.id)));
+  assert.equal(await page.locator('#drawing svg').count(),1,'Only the selected projection is mounted');
   assert.deepEqual(await page.locator('[data-detail]').evaluateAll(items => items.map(item => item.dataset.detail).sort()), sorted(itemById.keys()));
+  await page.locator('#view').selectOption('full');
   for (const edge of architecture.edges) {
     assert.ok((await page.locator(`#drawing [data-item-id="${edge.id}"] text`).allTextContents()).join(' ').includes(edge.protocolLabel), `Relationship protocol appears visibly in the SVG: ${edge.id}`);
   }
   await checkSources(context, page);
+  await page.locator('#view').selectOption('base');
   await assertNoHorizontalOverflow(page, 'Desktop overview');
   await capture(page, 'desktop.png');
+  await page.emulateMedia({colorScheme:'dark'});
+  await capture(page,'desktop-dark.png');
+  await page.emulateMedia({colorScheme:'light'});
   report.checks.push('Security headers, canonical URL, landmarks, complete SVG/detail inventory and all internal sources');
+
+  for(const view of architectureViews){
+    await page.locator('#view').selectOption(view.id);
+    assert.equal(await page.locator('#drawing').getAttribute('data-view'),view.id);
+    assert.deepEqual(await page.locator('#drawing [data-item-id]').evaluateAll(items=>items.map(item=>item.dataset.itemId).sort()),sorted([...view.model.nodes,...view.model.edges].map(item=>item.id)),`${view.id}: only its proposed scope is mounted`);
+    const before=new URL(page.url());
+    await page.reload({waitUntil:'networkidle'});
+    await page.waitForFunction(()=>document.documentElement.dataset.architectureReady==='true');
+    assert.equal(await page.locator('#drawing').getAttribute('data-view'),view.id,`${view.id}: view survives reload`);
+    assert.equal(new URL(page.url()).search,before.search);
+  }
+  await ready(page,'?view=not-a-view&scenario=unknown&step=99');
+  assert.equal(await page.locator('#drawing').getAttribute('data-view'),'base','Invalid selectors fall back to the base proposal');
+  assert.equal(await page.locator('#scenario').inputValue(),'');
+  await ready(page,'?scenario=country-erp&step=-3');
+  assert.equal(await page.locator('#drawing').getAttribute('data-view'),'scenario-country-erp-1','Negative steps are clamped to the beginning');
+  await ready(page,'?scenario=country-erp&step=999');
+  const erpScenario=architecture.scenarios.find(scenario=>scenario.id==='country-erp');
+  assert.equal(await page.locator('#drawing').getAttribute('data-view'),`scenario-country-erp-${erpScenario.steps.length}`,'Out-of-range steps are clamped to the end');
+  await ready(page,'?scenario=country-erp&step=3');
+  const erpPanel=page.locator('[data-scenario-panel="country-erp"]');
+  assert.equal(await erpPanel.locator('[aria-current="step"]').getAttribute('data-step'),'2','Shared step numbers are one-based');
+  await context.grantPermissions(['clipboard-read','clipboard-write'],{origin});
+  await page.locator('#copy-view').click();
+  assert.equal(await page.evaluate(()=>navigator.clipboard.readText()),page.url(),'Copy includes the selected scenario and step');
+  await erpPanel.locator('[data-next-step]').click();
+  assert.equal(new URL(page.url()).searchParams.get('step'),'4');
+  await page.goBack();
+  assert.equal(await erpPanel.locator('[aria-current="step"]').getAttribute('data-step'),'2');
+  await page.goForward();
+  assert.equal(await erpPanel.locator('[aria-current="step"]').getAttribute('data-step'),'3');
+  await page.reload({waitUntil:'networkidle'});
+  await page.waitForFunction(()=>document.documentElement.dataset.architectureReady==='true');
+  assert.equal(await page.locator('#drawing').getAttribute('data-view'),'scenario-country-erp-4');
+  await assertActiveStepVisible(page,'ERP step4 deep link');
+  await capture(page,'scenario-erp.png');
+  await page.locator('#clear-selection').click();
+  assert.equal(await page.locator('#drawing').getAttribute('data-view'),'base');
+  assert.equal(new URL(page.url()).search,'');
+  assert.ok(await page.locator('#inspector').isHidden());
+  report.checks.push('All projected views, valid/invalid deep links, step clamping, copy, reload and scenario back/forward');
 
   const native = await page.locator('#drawing svg').evaluate(svg => ({ width: svg.viewBox.baseVal.width, viewBox: svg.getAttribute('viewBox'), text: svg.textContent }));
   await page.locator('#actual').click();
@@ -203,14 +279,40 @@ try {
   assert.equal(await page.locator('#drawing svg').getAttribute('viewBox'), native.viewBox, 'Zoom preserves vector coordinates');
   assert.equal(await page.locator('#drawing svg').textContent(), native.text, 'Zoom preserves SVG labels');
   assert.equal(await page.locator('#drawing svg image, #drawing canvas').count(), 0, 'Zoom never swaps the diagram for a raster');
+  await page.locator('#view').selectOption('full');
   await page.locator('#actual').click();
+  const viewport=page.locator('#viewport');
+  await viewport.focus();
+  const fullNativeWidth=await page.locator('#drawing').evaluate(node=>node.getBoundingClientRect().width);
+  await viewport.press('+');
+  assert.ok(await page.locator('#drawing').evaluate(node=>node.getBoundingClientRect().width)>fullNativeWidth,'Viewport keyboard zoom enlarges the vector');
+  await viewport.press('1');
+  assert.ok(Math.abs(await page.locator('#drawing').evaluate(node=>node.getBoundingClientRect().width)-fullNativeWidth)<1,'Viewport 1 restores actual vector dimensions');
+  const panStart=await viewport.evaluate(node=>{
+    node.scrollLeft=200;node.scrollTop=200;
+    const box=node.getBoundingClientRect();
+    for(let y=box.top+40;y<box.bottom-80;y+=24)for(let x=box.left+40;x<box.right-80;x+=24){
+      const target=document.elementFromPoint(x,y);
+      if(node.contains(target)&&!target.closest('[data-item-id]'))return {x,y,left:node.scrollLeft,top:node.scrollTop};
+    }
+    return null;
+  });
+  assert.ok(panStart,'The map has background where users can drag without selecting a node');
+  await page.mouse.move(panStart.x,panStart.y);
+  await page.mouse.down();
+  await page.mouse.move(panStart.x+50,panStart.y+40,{steps:5});
+  await page.mouse.up();
+  const panEnd=await viewport.evaluate(node=>({left:node.scrollLeft,top:node.scrollTop}));
+  assert.ok(panEnd.left<panStart.left||panEnd.top<panStart.top,'Dragging the background scrolls the map');
+  assert.equal(await page.locator('#drawing .is-selected').count(),0,'Dragging the background does not select an unrelated component');
+  assert.equal(await viewport.evaluate(node=>node.classList.contains('is-panning')),false,'Pointer release ends panning');
   for (const item of allItems) {
     const shape = page.locator(`#drawing [data-item-id="${item.id}"] ${edgeIds.has(item.id) ? '.architecture-edge-label' : '.architecture-node-box'}`);
     await shape.click();
     await assertSelection(page, item);
   }
   await assertNoHorizontalOverflow(page, 'Desktop at native SVG size');
-  report.checks.push(`Real SVG clicks select every one of ${architecture.nodes.length} nodes and ${architecture.edges.length} relationships`);
+  report.checks.push(`Background panning and keyboard zoom preserve selection; real SVG clicks select every one of ${architecture.nodes.length} nodes and ${architecture.edges.length} relationships`);
 
   for (const [item, key] of [[architecture.nodes[0], 'Enter'], [architecture.edges[0], 'Space']]) {
     const control = page.locator(`#drawing [data-item-id="${item.id}"]`);
@@ -234,12 +336,10 @@ try {
   await page.locator(`#index-panel [data-select="${second.id}"]`).click();
   await assertSelection(page, second);
   await page.goBack();
-  await page.locator('#index-panel').waitFor({ state: 'visible' });
   assert.equal(await page.locator('#inspector').getAttribute('data-active'), 'index');
   await page.goBack();
   await assertSelection(page, first);
   await page.goForward();
-  await page.locator('#index-panel').waitFor({ state: 'visible' });
   assert.equal(await page.locator('#inspector').getAttribute('data-active'), 'index');
   await page.goForward();
   await assertSelection(page, second);
@@ -249,6 +349,7 @@ try {
   assert.equal(new URL(page.url()).pathname, '/architecture/', 'An unknown item does not reroute to an invented source');
   report.checks.push('Enter/Space, inspector focus, deep links, reload, back/forward and unknown-target handling');
 
+  if(await page.locator('#inspector').isHidden())await page.locator('#toggle-inspector').click();
   await page.locator('[data-kind-filter="node"]').click();
   await page.locator('#search').fill('zzzz-no-architecture-result');
   assert.equal(await page.locator('[data-index-item]:visible').count(), 0);
@@ -275,11 +376,17 @@ try {
     for (const [index, step] of scenario.steps.entries()) {
       await panel.locator(`[data-step="${index}"]`).click();
       assert.equal(await panel.locator('[aria-current="step"]').getAttribute('data-step'), String(index));
-      assert.deepEqual(await page.locator('#drawing .is-selected').evaluateAll(items => items.map(item => item.dataset.itemId).sort()), sorted(new Set([...step.nodes, ...step.edges])), `Scenario highlight matches its exact contract: ${scenario.id}/${index}`);
+      const projection=scenarioView(scenario,index);
+      assert.equal(await page.locator('#drawing').getAttribute('data-view'),`scenario-${scenario.id}-${index+1}`);
+      assert.deepEqual(await page.locator('#drawing [data-item-id]').evaluateAll(items=>items.map(item=>item.dataset.itemId).sort()),sorted([...projection.nodes,...projection.edges].map(item=>item.id)),`Only the declared step and its process owners are drawn: ${scenario.id}/${index}`);
+      assert.equal(new URL(page.url()).searchParams.get('scenario'),scenario.id);
+      assert.equal(new URL(page.url()).searchParams.get('step'),String(index+1));
       assert.equal(await page.locator('#drawing .is-related').count(), 0, 'Scenario highlights do not leak prior selection');
       assert.equal(await panel.locator('[data-previous-step]').isDisabled(), index === 0);
       assert.equal(await panel.locator('[data-next-step]').isDisabled(), index === scenario.steps.length - 1);
-      await assertCamera(page, step.nodes, `Desktop ${scenario.id}/${index}`);
+      await assertCamera(page, projection.nodes.map(node=>node.id), `Desktop ${scenario.id}/${index}`);
+      await assertActiveStepVisible(page,`${scenario.id}/${index+1}`);
+      if(scenario.id==='recovery'&&index===3)await capture(page,'scenario-recovery.png');
     }
     if (scenario.steps.length > 1) {
       await panel.locator('[data-previous-step]').click();
@@ -291,7 +398,11 @@ try {
   await page.locator('#clear-selection').click();
   assert.equal(await page.locator('#drawing .is-selected, #drawing .is-related').count(), 0);
   assert.equal(await page.locator('#scenario').inputValue(), '');
-  report.checks.push(`All ${architecture.scenarios.length} guided scenarios select their exact declared nodes and connections`);
+  await page.locator('.skip-link').focus();
+  await page.locator('.skip-link').press('Enter');
+  assert.ok(await page.locator('#inspector').isVisible(),'Skip link reveals the details panel');
+  assert.ok(await page.locator('#search').evaluate(node=>document.activeElement===node),'Skip link focuses the search field');
+  report.checks.push(`All ${architecture.scenarios.length} guided scenarios mount exact step projections with readable desktop titles, all nodes framed, visible active steps, shareable URLs and usable skip link`);
 
   const downloadPromise = page.waitForEvent('download');
   await page.locator('a[download][href="/docs/architecture/pos-platform.svg"]').click();
@@ -313,7 +424,10 @@ try {
   observe(mobile);
   await ready(mobile);
   await assertNoHorizontalOverflow(mobile, 'Mobile overview');
+  const smallControls=await mobile.locator('.toolbar button,.toolbar select').evaluateAll(nodes=>nodes.filter(node=>node.getClientRects().length&&node.getBoundingClientRect().height<44).map(node=>node.textContent.trim()));
+  assert.deepEqual(smallControls,[],'Mobile view, scenario and zoom controls retain 44px targets');
   await capture(mobile, 'mobile.png');
+  await mobile.locator('#toggle-inspector').click();
   await mobile.locator(`#index-panel [data-select="${first.id}"]`).click();
   await assertSelection(mobile, first);
   await assertNoHorizontalOverflow(mobile, 'Mobile detail');
@@ -325,7 +439,7 @@ try {
     const panel = mobile.locator(`[data-scenario-panel="${scenario.id}"]`);
     for (const [index, step] of scenario.steps.entries()) {
       await panel.locator(`[data-step="${index}"]`).click();
-      await assertCamera(mobile, step.nodes, `Mobile ${scenario.id}/${index}`);
+      await assertCamera(mobile, scenarioView(scenario,index).nodes.map(node=>node.id), `Mobile ${scenario.id}/${index}`);
     }
   }
   await mobileContext.close();
@@ -343,11 +457,15 @@ try {
     const rect = await fallback.locator(`#detail-${item.id}`).boundingBox();
     assert.ok(rect && rect.y >= -1 && rect.y < 812, `Native anchor scrolls to ${item.id} without JavaScript`);
   }
-  assert.ok(await fallback.locator('a[download]').isVisible());
+  assert.ok(await fallback.locator('a[download][href="/docs/architecture/pos-platform.svg"]').isVisible(),'The complete vector is downloadable without JavaScript on mobile');
+  await fallback.setViewportSize({width:1440,height:1000});
+  for(const href of ['/docs/architecture/pos-platform-base.svg','/docs/architecture/pos-platform.svg'])
+    assert.ok(await fallback.locator(`a[download][href="${href}"]`).isVisible(),`The ${href} vector is downloadable without JavaScript on desktop`);
   await noJs.close();
   report.checks.push('375px responsive layout and usable native anchors/details without JavaScript');
 
   assert.deepEqual(report.browserErrors, [], 'No browser errors or CSP violations');
+  assert.deepEqual(report.sourceErrors, [], 'Every document source and resource resolves');
   assert.deepEqual(report.failedRequests, [], 'No failed browser resources');
   assert.deepEqual(report.externalRequests, [], 'No requests to external or corporate services');
   assert.deepEqual(report.unexpectedMethods, [], 'No business mutations are requested');

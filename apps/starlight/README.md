@@ -2,7 +2,7 @@
 
 <span id="documentación-pos-platform"></span>
 
-Starlight vive en el repositorio editorial público [POS Docs](https://github.com/developer-implementos/pos-docs). Las decisiones, contratos, evidencias del legacy y guías de implementación están en `docs/`; la navegación, componentes y catálogos están en `apps/starlight/`. El software operativo se desarrolla en [POS Platform](https://github.com/floxcristian/pos-platform), con seis aplicaciones y sus bibliotecas.
+Starlight vive en el repositorio editorial público [POS Docs](https://github.com/developer-implementos/pos-docs). Las decisiones, contratos, evidencias del legacy y guías de implementación están en `docs/`; la navegación, componentes y catálogos están en `apps/starlight/`. El software operativo se desarrolla en [POS Platform](https://github.com/developer-implementos/pos-platform), con seis aplicaciones y sus bibliotecas.
 
 <span id="comandos"></span>
 
@@ -41,6 +41,8 @@ El build usa este repositorio y sus dependencias fijadas. No importa bibliotecas
 - `product-evidence.json` identifica el repositorio y la revisión del producto usados como evidencia. Al actualizar el catálogo, contrastar esa revisión con `node apps/starlight/scripts/sync-monorepo-catalog.mjs --check --workspace <ruta-al-checkout-pos-platform>`; esta comprobación es deliberada y no participa en el build público. Las rutas futuras de `shared/` y E2E no se presentan como ya creadas.
 - `docs/diagramas-excalidraw/` conserva las escenas editables y sus derivados. Los modelos y generadores canónicos están en `tools/diagrams/`.
 - Las carpetas generadas de `src/content/docs/` no se editan ni se versionan. Los componentes Astro, estilos y páginas de entrada se mantienen a mano.
+- La búsqueda usa `search-profile.mjs`, derivado de los tipos de `content-map.mjs`: cada resultado expone su alcance y permite filtrar propuesta, implementación, fuentes/legado, evaluación, referencias y antecedentes. Los antecedentes conservan acceso, con menor ponderación; las pruebas consultan el índice real de Pagefind.
+- El mapa general abre `/architecture/`, con vistas por zona y enlaces a recorridos/pasos. Los SVG estáticos y Mermaid comparten `src/scripts/diagram-viewport.ts`: ajuste al espacio disponible, tamaño real, zoom, teclado y desplazamiento, sin duplicar el controlador.
 
 Actualizar fuentes y sus síntesis en el mismo cambio editorial. Cuando un cambio de código afecte la documentación, enlazar las revisiones de ambos repositorios y actualizar la evidencia del producto; no convertir el estado de `main` en una dependencia del build. Conservar la distinción entre propuesta, implementación, evidencia e historia. Una prueba de enlaces no acredita funcionamiento productivo ni comprensión por parte del equipo. La [auditoría documental](../../docs/auditoria-documentacion.md) describe esos límites.
 

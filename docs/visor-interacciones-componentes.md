@@ -1,6 +1,6 @@
 # Visor de interacciones entre aplicaciones y datos
 
-**Guía canónica de uso del visor.** La [entrada a la presentación](../presentation/README.md) enlaza esta guía; la [matriz de cobertura](cobertura-documentacion-presentacion.md) registra evidencia y alcance sin mantener otro manual. Las decisiones objetivo se gobiernan en la [propuesta y sus ADR](propuesta-arquitectura.md#decisiones-de-arquitectura).
+**Antecedente editorial: visor de pos-architecture.** Esta guía describe las pestañas, rutas y controles de ese material histórico. El [explorador general vigente de POS Docs](/architecture/) y la [presentación de arquitectura y roadmap](/presentations/architecture/) tienen sus propias vistas. La [matriz de cobertura](cobertura-documentacion-presentacion.md) conserva la revisión y el alcance del antecedente. Las decisiones objetivo se gobiernan en la [propuesta y sus ADR](propuesta-arquitectura.md#decisiones-de-arquitectura).
 
 El visor explica **qué aplicación pide una operación, quién la procesa, qué tablas lee o escribe y qué confirma cada respuesta**. El diagrama muestra aplicaciones, sistemas externos y datos; controladores, clases y servicios internos se consultan al seleccionar una aplicación o conexión. Complementa los recorridos de tablas y el catálogo de endpoints; no reemplaza su evidencia.
 

@@ -9,12 +9,13 @@ import {loadRoadmap} from '../../tools/roadmap.mjs';
 import {roadmapView,roadmapPairView} from './roadmap.mjs';
 import {buildNavigation} from './navigation.mjs';
 import {presentationColor,renderPaletteCss} from './palette.mjs';
+import {prepareDeck} from './architecture.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const source = path.join(root, 'presentations/architecture');
 const output = path.join(root, 'dist');
 const target = path.join(output, 'presentations/architecture');
-const deck = JSON.parse(fs.readFileSync(path.join(source, 'deck.json'), 'utf8'));
+const deck = prepareDeck(JSON.parse(fs.readFileSync(path.join(source, 'deck.json'), 'utf8')));
 const navigation = buildNavigation(deck);
 const sources = JSON.parse(fs.readFileSync(path.join(source, 'sources.json'), 'utf8'));
 const hash = file => createHash('sha256').update(fs.readFileSync(file)).digest('hex');
@@ -28,7 +29,7 @@ function roadmapPair(slide) {
   return roadmapPairView(phases);
 }
 assert.equal(deck.schemaVersion, 1);
-assert.equal(deck.slides.length, 16);
+assert.equal(deck.slides.length, 17);
 assert.equal(new Set(deck.slides.map(s => s.id)).size, deck.slides.length);
 for (const input of sources.inputs) assert.equal(hash(path.join(root,input.path)), input.sha256, `Review the deck and refresh sources.json after editing ${input.path}`);
 const vendorRoot = path.join(root,'presentations/vendor/reveal');
@@ -96,7 +97,8 @@ function renderSlide(slide,index,chapterId) {
   const attributes=diagram?` data-diagram-src="${escape(diagram.src)}" data-diagram-width="${diagram.width}" data-diagram-height="${diagram.height}"`:'';
   const background=escape(presentationColor(slide.background));
   const grouping=chapterId?` data-chapter-id="${chapterId}"`:' data-presentation-cover';
-  return `<section id="${slide.id}" data-leaf data-slide-index="${index}"${grouping} aria-label="${escape(slide.title)}" data-title="${escape(slide.title)}" data-background-color="${background}"${attributes}><div class="canvas" style="background:${background}">${slideElements(slide,index)}</div><aside class="notes"><p>${escape(slide.notes)}</p><h3>Fuentes de la guía</h3>${refs(slide)}</aside></section>`;
+  const explore=slide.sources.find(source=>source.href.startsWith('/architecture/?'));
+  return `<section id="${slide.id}" data-leaf data-slide-index="${index}"${grouping} aria-label="${escape(slide.title)}" data-title="${escape(slide.title)}" data-background-color="${background}"${attributes}><div class="canvas" style="background:${background}">${slideElements(slide,index)}${explore?`<a class="slide-explore" href="${escape(explore.href)}" target="_blank" rel="noopener">Explorar este recorrido</a>`:''}</div><aside class="notes"><p>${escape(slide.notes)}</p><h3>Fuentes de la guía</h3>${refs(slide)}</aside></section>`;
 }
 function renderChapterCover(chapter) {
   const number=String(chapter.number).padStart(2,'0');

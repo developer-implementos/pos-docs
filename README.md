@@ -80,6 +80,6 @@ Este repositorio es público: los catálogos de configuración describen nombres
 
 ## Presentación de arquitectura y roadmap
 
-`presentations/architecture/` mantiene la presentación Reveal.js de Implementos y sus fuentes editables: una portada general, cinco portadas de capítulo y 15 láminas de detalle. `npm run build` la incluye en `/presentations/architecture/` junto al portal; `npm run presentations:check` comprueba recursos, navegación, notas, impresión y lectura accesible. Tras el build, `npm run preview` permite abrir `http://127.0.0.1:4207/presentations/architecture/`.
+`presentations/architecture/` mantiene la presentación Reveal.js de Implementos y sus fuentes editables: una portada general independiente y capítulos con sus portadas y láminas de detalle. `npm run build` la incluye en `/presentations/architecture/` junto al portal; `npm run presentations:check` comprueba recursos, navegación, notas, impresión y lectura accesible. Tras el build, `npm run preview` permite abrir `http://127.0.0.1:4207/presentations/architecture/`.
 
 El [manual de la presentación](presentations/architecture/README.md) explica la edición, las fuentes fijadas, la lectura continua y la impresión. La presentación anterior con laboratorios, video y narrador permanece en pos-architecture.

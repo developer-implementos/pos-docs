@@ -20,6 +20,16 @@ function validateModelSemantics(){
   assert.equal(node.projectPath,`apps/${node.appId}`,`Application path must identify its project: ${node.id}`);
   assert.ok(containers.nodeIds.includes(node.id),`Application absent from C2: ${node.appId}`);
  }
+ const country=model.views.find(view=>view.id==='country'),erp=model.views.find(view=>view.id==='erp');
+ assert.ok(country.boundaries[0].nodes.includes('countryWorker'),'Publication authority must be a country-api component');
+ assert.ok(erp.boundaries[0].nodes.includes('erpMasterSource'),'Master-data preparation must be an erp-worker component');
+ assert.ok(!containers.nodeIds.includes('countryWorker'),'C2 must not invent a separate publisher application');
+ assert.ok(containers.relationships.some(edge=>edge.from==='erpAdapter'&&edge.to==='masters'),'C2 must show the authorized source contract');
+ for(const view of model.views)assert.ok(!view.relationships.some(edge=>['erpAdapter','erpMasterSource','client','mobileClient','device'].includes(edge.from)&&edge.to==='countryDb'),`No remote SQL authority in ${view.id}`);
+ const prices=dynamicViews.find(view=>view.id==='prices');
+ assert.ok(prices.steps.some(step=>step.from==='erpAdapter'&&step.to==='countryApi'),'Prepared publications must cross the HTTPS API boundary');
+ assert.ok(!prices.steps.some(step=>step.from==='erpAdapter'&&step.to==='countryDb'),'Preparation must not write country SQL directly');
+ assert.ok(prices.steps.some(step=>step.from==='countryApi'&&step.to==='countryDb'),'Country API owns the publication commit');
  for(const view of model.views){
   const nodes=new Set(view.nodeIds);
   assert.equal(nodes.size,view.nodeIds.length,`Duplicate node in ${view.id}`);

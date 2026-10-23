@@ -1,0 +1,7 @@
+---
+import Head from '@astrojs/starlight/components/Head.astro';
+import { searchProfile } from '../../search-profile.mjs';
+const profile = searchProfile(Astro.locals.starlightRoute.entry.id);
+---
+<Head />
+<meta data-pagefind-filter="Tipo[content]" data-pagefind-meta="Tipo[content]" content={profile.label} />

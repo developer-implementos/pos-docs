@@ -37,7 +37,7 @@
     transition:reduced?'none':'slide',transitionSpeed:'fast',backgroundTransition:'none',
     slideNumber:'h.v',showSlideNumber:'all',autoSlide:0,autoPlayMedia:false,disableLayout:false,
     view:'slide',scrollActivationWidth:0,pdfMaxPagesPerSlide:1,pdfSeparateFragments:false,
-    keyboardCondition:event=>!dialogs.some(d=>d.open)&&!resources.matches(':popover-open')&&!(event.key===' '&&event.target instanceof Element&&event.target.closest('button')),
+    keyboardCondition:event=>!dialogs.some(d=>d.open)&&!resources.matches(':popover-open')&&!(event.target instanceof Element&&(event.target.closest('a,input,textarea,select')||(event.key===' '&&event.target.closest('button')))),
     keyboard:{73:()=>openIndex(),78:()=>openNotes(),68:()=>openDiagram(document.activeElement)}
   });
   motionPreference.addEventListener('change',event=>{

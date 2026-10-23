@@ -13,5 +13,7 @@ if (process.env.VERCEL === '1' && (site.hostname === 'invalid' || site.hostname.
 
 export const docsOrigin = site.origin;
 export const repositoryOrigin = 'https://github.com/developer-implementos/pos-docs';
+export const productRepositoryOrigin = 'https://github.com/developer-implementos/pos-platform';
+export const productEvidenceOrigins = [productRepositoryOrigin, 'https://github.com/floxcristian/pos-platform'];
 export const presentationOrigin = 'https://presentation-gamma-rust.vercel.app';
 export const presentationRepository = 'https://github.com/floxcristian/pos-architecture';

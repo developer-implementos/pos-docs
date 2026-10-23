@@ -22,7 +22,10 @@ export default defineConfig({
     locales: { root: { label: 'Español', lang: 'es' } },
     sidebar,
     customCss: ['./src/styles/custom.css'],
-    components: { Footer: './src/components/DocsFooter.astro' },
+    components: {
+      Footer: './src/components/DocsFooter.astro', Head: './src/components/DocsHead.astro',
+      MarkdownContent: './src/components/DocsMarkdown.astro', PageTitle: './src/components/DocsTitle.astro',
+    },
     social: [{ icon: 'github', label: 'Repositorio de documentación', href: repositoryOrigin }],
     tableOfContents: { minHeadingLevel: 2, maxHeadingLevel: 3 },
     expressiveCode: { themes: ['github-light', 'github-dark'] },

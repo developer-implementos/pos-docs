@@ -5,19 +5,16 @@ editUrl: false
 ---
 
 import Diagram from '../../components/Diagram.astro';
-import { LinkButton } from '@astrojs/starlight/components';
 
 El mapa general, las siete vistas estructurales y los dos recorridos representan **el diseño propuesto**. El [modelo C4](/guide/architecture/c4-model/) conserva los contratos y el alcance; las [decisiones](/guide/proposal/decisions/) gobiernan la recomendación. El [monorepo](/guide/implementation/monorepo/#estado-de-implementación) distingue la base técnica de las capacidades pendientes.
 
 ## Mapa general de arquitectura
 
-La propuesta completa reúne las seis aplicaciones, sus componentes, PostgreSQL de sucursal y país, proveedores y conexiones. Cada relación indica su propósito y protocolo. Redis, BullMQ y RabbitMQ conservan su estado condicional.
+La vista inicial reúne las seis aplicaciones, PostgreSQL de sucursal y país y las relaciones principales. El explorador permite profundizar por zona y seleccionar elementos o conexiones para consultar responsabilidades, contratos y recuperación ante fallos. Redis, BullMQ y RabbitMQ se consultan en la vista de opciones y conservan sus condiciones de adopción.
 
-<LinkButton href="/architecture/">Explorar aplicaciones y conexiones</LinkButton>
+<Diagram src="/docs/architecture/pos-platform-base.svg" alt="Arquitectura base: clientes de escritorio y móvil, branch-api, branch-sync-worker, country-api, erp-worker, PostgreSQL de sucursal y país y sistemas externos." title="Mapa general de arquitectura" caption="Arquitectura base · Explora las zonas, las conexiones y los recorridos desde el mismo modelo." interactiveHref="/architecture/" downloadHref="/docs/architecture/pos-platform.svg" width={1830} height={1322} />
 
-El explorador permite seleccionar cada elemento o flecha para consultar sus responsabilidades, datos, garantías y recuperación ante fallos; también incluye recorridos paso a paso.
-
-<Diagram src="/docs/architecture/pos-platform.svg" alt="Mapa general de POS Platform: clientes de escritorio y móvil, branch-api, branch-sync-worker, country-api, erp-worker, persistencia, proveedores y tecnologías condicionales con sus conexiones." caption="Vista general de arquitectura y despliegue · El mismo modelo del explorador interactivo." width={3110} height={2750} />
+[Recorrido de una venta](/architecture/?scenario=local-sale&step=1) · [Restauración y conciliación](/architecture/?scenario=recovery&step=1) · [Mapa completo](/architecture/?view=full)
 
 ## Contexto del producto
 
@@ -29,9 +26,9 @@ Actores, POS corporativo y sistemas externos. La operación supervisada represen
 
 ## Aplicaciones y persistencia
 
-Las seis aplicaciones son `pos-desktop`, `pos-mobile`, `branch-api`, `branch-sync-worker`, `country-api` y `erp-worker`. La vista separa los almacenes, la publicación de maestros por asignar y la caché opcional de país; la venta habilitada conserva su persistencia local.
+Las seis aplicaciones son `pos-desktop`, `pos-mobile`, `branch-api`, `branch-sync-worker`, `country-api` y `erp-worker`. La vista separa aplicaciones, almacenes y caché opcional de país; la venta habilitada conserva su persistencia local. El [contrato de publicación](/guide/architecture/master-data-publication/) asigna preparación a `erp-worker` y publicación a `country-api`.
 
-<Diagram src="/docs/diagramas-excalidraw/previews/02-contenedores.svg" alt="C2: seis aplicaciones, PostgreSQL de sucursal y país, publicación de maestros por asignar y caché Redis opcional; ERP mediante conexión saliente de su worker." caption="C2 · Aplicaciones, almacenes y contratos; cada bloque declara su alcance." sourceHref="/docs/diagramas-excalidraw/02-contenedores.excalidraw" />
+<Diagram src="/docs/diagramas-excalidraw/previews/02-contenedores.svg" alt="C2: seis aplicaciones, PostgreSQL de sucursal y país, publicación comercial y caché Redis opcional; ERP mediante conexión saliente de su worker." caption="C2 · Aplicaciones, almacenes y contratos; cada bloque declara su alcance." sourceHref="/docs/diagramas-excalidraw/02-contenedores.excalidraw" />
 
 [Contratos de contenedores](/guide/proposal/architecture/#contratos-de-contenedores-y-propiedad-de-datos)
 
@@ -49,7 +46,7 @@ Las seis aplicaciones son `pos-desktop`, `pos-mobile`, `branch-api`, `branch-syn
 
 <Diagram src="/docs/diagramas-excalidraw/previews/04-sincronizador.svg" alt="C3 de branch-sync-worker: emisor, receptor, validación, activación y soporte técnico con outbox, inbox y comunicación con país." caption="C3 · branch-sync-worker: entrega recuperable y activación de datos." sourceHref="/docs/diagramas-excalidraw/04-sincronizador.excalidraw" />
 
-[Sincronización y propiedad de datos](/guide/proposal/synchronization/) · [Simulación de entrega durable](https://presentation-gamma-rust.vercel.app/presentation/pos-corporativo-reveal.html?lectura=0#/laboratorio-entrega)
+[Sincronización y propiedad de datos](/guide/proposal/synchronization/) · [Entrega y acuse durable](/architecture/?scenario=country-erp&step=2)
 
 ## API de país
 
@@ -81,7 +78,7 @@ Distribución por eventos y carga masiva, preparación de datos y activación co
 
 <Diagram src="/docs/diagramas-excalidraw/06-flujo-precios.svg" alt="Vista dinámica de publicación, transporte, validación y activación de una versión de precios y ofertas." caption="Flujo de precios · El ticket conserva la versión aplicada." sourceHref="/docs/diagramas-excalidraw/06-flujo-precios.excalidraw" />
 
-[Diseño y animación de precios](/guide/proposal/pricing-promotions/) · [Eventos](https://presentation-gamma-rust.vercel.app/presentation/pos-corporativo-reveal.html?lectura=0#/laboratorio-eventos-precios) · [Carga masiva](https://presentation-gamma-rust.vercel.app/presentation/pos-corporativo-reveal.html?lectura=0#/laboratorio-snapshot-precios)
+[Precios y ofertas locales](/guide/proposal/pricing-promotions/) · [Contrato de publicación](/guide/architecture/master-data-publication/) · [Preparación y activación](/architecture/?scenario=commercial-version&step=1)
 
 ## Venta e integración
 

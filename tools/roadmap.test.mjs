@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
-import { loadRoadmap, renderRoadmapDocs, renderRoadmapMatrix, renderRoadmapPhase, validateRoadmap } from './roadmap.mjs';
+import { loadRoadmap, renderRoadmapDocs, renderRoadmapMatrix, renderRoadmapPhase, validateRoadmap, validateRoadmapReferences } from './roadmap.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const fixture = () => structuredClone(loadRoadmap(root));
@@ -9,7 +9,7 @@ const escape = value => value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').r
 
 test('the shared source preserves six ordered proposed phases and their reviewed scope', () => {
   const roadmap = fixture();
-  assert.equal(roadmap.schemaVersion, 2);
+  assert.equal(roadmap.schemaVersion, 3);
   assert.equal(roadmap.status, 'proposed');
   assert.equal(roadmap.phases.length, 6);
   const html = renderRoadmapDocs(roadmap);
@@ -48,7 +48,7 @@ test('both surfaces use the same matrix copy with real table associations', () =
 test('unknown fields, fabricated progress, malformed dates and incomplete phases fail closed', () => {
   const mutations = [
     roadmap => { roadmap.schemaVersion = 1; },
-    roadmap => { roadmap.schemaVersion = 3; },
+    roadmap => { roadmap.schemaVersion = 4; },
     roadmap => { roadmap.status = 'completed'; },
     roadmap => { roadmap.reviewedOn = '2026-02-30'; },
     roadmap => { roadmap.phases[0].progress = 80; },
@@ -188,4 +188,50 @@ test('every new free-text field is escaped in phase plans rather than becoming e
     assert.ok(html.includes(escape(payload)));
     assert.ok(!/<script\b|<iframe\b/i.test(html));
   }
+});
+
+test('traceability connects existing observations, decisions, work and stable acceptance IDs', () => {
+  const roadmap = fixture();
+  const overview = renderRoadmapDocs(roadmap);
+  for (const trace of roadmap.traceability) {
+    assert.ok(overview.includes(`href="${trace.observationHref}"`));
+    assert.ok(overview.includes(escape(trace.evidence)));
+    for (const id of trace.decisionIds) assert.ok(overview.includes(`href="/guide/proposal/decisions/#${id.toLowerCase()}"`));
+    for (const id of trace.workPackageIds) {
+      const phase = roadmap.phases[Number(id.slice(1, 3)) - 1];
+      assert.ok(renderRoadmapPhase(roadmap, phase.id).includes(`data-traceability="${trace.id}"`));
+      assert.ok(overview.includes(`#work-${id.toLowerCase()}"`));
+    }
+    for (const id of trace.validationIds) {
+      const phase = roadmap.phases[Number(id.slice(1, 3)) - 1];
+      assert.ok(renderRoadmapPhase(roadmap, phase.id).includes(`id="${id.toLowerCase()}"`));
+    }
+  }
+  const reordered = fixture();
+  reordered.phases[0].delivery.validation.reverse();
+  validateRoadmap(reordered);
+  for (const validation of roadmap.phases[0].delivery.validation) assert.ok(renderRoadmapPhase(reordered, 'phase-01').includes(`id="${validation.id.toLowerCase()}"`), 'Reordering must not change the acceptance permalink');
+});
+
+test('dangling traceability, duplicate IDs and fabricated source references fail validation', () => {
+  const mutations = [
+    roadmap => { roadmap.traceability = []; },
+    roadmap => { roadmap.traceability[1].id = roadmap.traceability[0].id; },
+    roadmap => { roadmap.traceability[0].workPackageIds = ['F01-99']; },
+    roadmap => { roadmap.traceability[0].validationIds = ['F01-V99']; },
+    roadmap => { roadmap.traceability[0].validationIds = ['F06-V01']; },
+    roadmap => { roadmap.traceability[0].observationHref = 'https://example.com/'; },
+    roadmap => { roadmap.traceability[0].decisionIds = ['javascript:alert(1)']; },
+    roadmap => { roadmap.traceability[0].evidence = ''; },
+    roadmap => { roadmap.phases[0].delivery.validation[0].id = 'F02-V01'; },
+    roadmap => { roadmap.phases[0].delivery.validation[1].id = roadmap.phases[0].delivery.validation[0].id; },
+  ];
+  for (const mutate of mutations) {
+    const roadmap = fixture(); mutate(roadmap);
+    assert.throws(() => validateRoadmap(roadmap));
+  }
+  const missingDecision = fixture(); missingDecision.traceability[0].decisionIds = ['ADR-99'];
+  assert.throws(() => validateRoadmapReferences(root, missingDecision), /Missing decision source/);
+  const missingObservation = fixture(); missingObservation.traceability[0].observationHref = '/guide/evidence/country-comparison/#obs-cl-99';
+  assert.throws(() => validateRoadmapReferences(root, missingObservation), /Missing observation source/);
 });

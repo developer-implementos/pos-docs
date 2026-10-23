@@ -1,9 +1,10 @@
 import fs from 'node:fs';
+import { productEvidenceOrigins } from '../site-config.mjs';
 
 const file = new URL('../src/data/product-evidence.json', import.meta.url);
 export const productEvidence = JSON.parse(fs.readFileSync(file, 'utf8'));
 if (productEvidence.schemaVersion !== 1 ||
-    productEvidence.repository !== 'https://github.com/floxcristian/pos-platform' ||
+    !productEvidenceOrigins.includes(productEvidence.repository) ||
     !/^[a-f0-9]{40}$/.test(productEvidence.revision) ||
     !/^\d{4}-\d{2}-\d{2}$/.test(productEvidence.reviewedOn) ||
     productEvidence.productGuide?.source !== 'docs/product-repository.md' ||

@@ -8,16 +8,30 @@ Este directorio mantiene el mapa compuesto de arquitectura y despliegue de POS P
 | --- | --- |
 | `model.mjs` | Modelo editable del mapa general: elementos, relaciones, alcance y referencias |
 | `render.mjs` | Representación SVG derivada del modelo |
+| `views.mjs` | Proyecciones base, por zona y por paso; invariantes de autoridad y proceso |
 | `build.mjs` | Generación del SVG versionado y publicación del explorador en el artefacto del sitio |
 | `check.mjs` | Comprobaciones del explorador |
 | `../../portal/architecture.js` y `architecture.css` | Interacción y presentación del explorador |
 | `../../docs/architecture/pos-platform.svg` | SVG completo generado y versionado para consulta y descarga |
+| `../../docs/architecture/pos-platform-base.svg` | Resumen derivado con las seis aplicaciones, bases e interfaces externas |
 | `../../dist/architecture/` | Página pública generada; no se versiona ni se edita |
 | `/docs/architecture/pos-platform.svg` | Ruta pública del mismo SVG completo |
 
 Los cambios de contenido y relaciones se hacen en `model.mjs`; los ajustes de representación, en `render.mjs`. El SVG se regenera desde esas fuentes. No mantener una copia editada a mano: el archivo versionado y la descarga deben corresponder al mismo modelo revisado.
 
 El mapa explicita las seis aplicaciones acordadas. Las bibliotecas y mecanismos transversales se describen dentro de su responsabilidad; no se convierten en aplicaciones adicionales. Las capacidades condicionales y los procesos cuya ejecución está por asignar deben conservar esa identificación tanto en el SVG como en el explorador.
+
+La entrada muestra la **arquitectura base** con componentes agregados a su aplicación. El índice se abre mediante **Explorar elementos**; al seleccionar un nodo o conexión aparece su ficha. Las vistas de clientes, sucursal, país, integraciones y opciones amplían el mismo modelo; el mapa completo conserva todos los detalles. Una proyección mantiene IDs y contratos de origen, sin inventar otra relación ni copiar decisiones. El puente nativo es un proceso condicional con ciclo de vida propio. RabbitMQ conserva una asociación de evaluación sin flecha: no asigna un productor o consumidor.
+
+Las URL conservan la vista, el recorrido y el paso (numeración desde uno). Recargar, Atrás/Adelante y **Copiar enlace** restauran ese contexto:
+
+- `/architecture/?view=country`: zona de país.
+- `/architecture/?scenario=country-erp&step=2`: commit de recepción anterior al ACK.
+- `/architecture/?scenario=commercial-version&step=2`: entrega y finalización de una publicación.
+- `/architecture/?scenario=recovery&step=3`: reconstrucción de custodia y detección de huecos.
+- `/architecture/?view=options#detail-bullmq`: ficha de la alternativa de jobs.
+
+Los enlaces existentes `#detail-ID` siguen funcionando. Parámetros desconocidos vuelven a una vista válida, y un paso fuera de rango queda acotado al recorrido. Sin JavaScript se mantienen el SVG base, las descargas y las fichas; las vistas interactivas requieren la mejora JavaScript.
 
 ## Fuentes que gobiernan el contenido
 
@@ -36,9 +50,12 @@ Desde la raíz de `pos-docs`, con las dependencias instaladas, ejecutar primero 
 ```sh
 npm run architecture:build
 npm run architecture:check
+node --test tools/architecture/model.test.mjs
 ```
 
 El build genera `docs/architecture/pos-platform.svg`, la página `/architecture/` y su descarga dentro de `dist/`. El build completo del sitio debe generar el mapa antes de preparar el contenido Starlight, porque la documentación enlaza el SVG. Después de un cambio, revisar el diff del modelo y del SVG juntos; `dist/` es un artefacto publicable generado.
+
+La publicación de maestros es una responsabilidad propuesta compartida: `erp-worker` prepara mediante `MasterDataSourcePort` en la red del origen homologado, con identidad, claims y presupuesto aislados de la ejecución financiera; `country-api` recibe porciones y valida/finaliza la versión. El modelo enlaza el contrato correspondiente y no atribuye esa capacidad al scaffold. El recorrido de restauración conserva escritor único, copia independiente, replay identificado y conciliación antes de reabrir; no dibuja un mecanismo de alta disponibilidad aprobado ni promete RPO cero.
 
 Para verificar su integración con documentación, portal y presentaciones:
 

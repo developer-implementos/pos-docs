@@ -1,0 +1,6 @@
+---
+import MarkdownContent from '@astrojs/starlight/components/MarkdownContent.astro';
+import { searchProfile } from '../../search-profile.mjs';
+const profile = searchProfile(Astro.locals.starlightRoute.entry.id);
+---
+<div data-pagefind-weight={profile.weight}><MarkdownContent><slot /></MarkdownContent></div>

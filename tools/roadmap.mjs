@@ -50,17 +50,19 @@ function validateDelivery(delivery, phase) {
   }
   assert.ok(Array.isArray(delivery.validation) && delivery.validation.length >= 4 && delivery.validation.length <= 8, `${label} requires 4–8 acceptance scenarios`);
   for (const validation of delivery.validation) {
-    shape(validation, ['scenario', 'expected'], `${label} validation`);
+    shape(validation, ['id', 'scenario', 'expected'], `${label} validation`);
+    assert.match(validation.id, new RegExp(`^${phaseCode(phase)}-V[0-9]{2}$`), `${label} validation must have a stable phase ID`);
     text(validation.scenario, `${label} scenario`);
     text(validation.expected, `${label} expected`);
   }
   assert.equal(new Set(delivery.validation.map(item => item.scenario)).size, delivery.validation.length, `${label} repeats acceptance scenarios`);
+  assert.equal(new Set(delivery.validation.map(item => item.id)).size, delivery.validation.length, `${label} repeats acceptance IDs`);
 }
 
 /** Validate the editorial plan, independently of either presentation framework. */
 export function validateRoadmap(roadmap) {
-  shape(roadmap, ['schemaVersion', 'title', 'reviewedOn', 'status', 'statusLabel', 'notice', 'baseline', 'phases'], 'Roadmap');
-  assert.equal(roadmap.schemaVersion, 2, 'Unsupported roadmap schema');
+  shape(roadmap, ['schemaVersion', 'title', 'reviewedOn', 'status', 'statusLabel', 'notice', 'baseline', 'phases', 'traceability'], 'Roadmap');
+  assert.equal(roadmap.schemaVersion, 3, 'Unsupported roadmap schema');
   assert.equal(roadmap.status, 'proposed', 'Roadmap must identify these phases as a proposal');
   for (const field of ['title', 'statusLabel', 'notice', 'baseline']) text(roadmap[field], `Roadmap ${field}`);
   assert.match(roadmap.reviewedOn, /^\d{4}-\d{2}-\d{2}$/, 'Roadmap reviewedOn must be an ISO date');
@@ -97,11 +99,47 @@ export function validateRoadmap(roadmap) {
     validateDelivery(phase.delivery, phase);
     previousIds.add(phase.id);
   }
+  const workIds = new Set(roadmap.phases.flatMap(phase => phase.delivery.work.map(work => work.id)));
+  const validationIds = new Set(roadmap.phases.flatMap(phase => phase.delivery.validation.map(validation => validation.id)));
+  assert.ok(Array.isArray(roadmap.traceability) && roadmap.traceability.length > 0, 'Roadmap requires observation traceability');
+  const traceIds = new Set();
+  for (const trace of roadmap.traceability) {
+    shape(trace, ['id', 'observationHref', 'decisionIds', 'workPackageIds', 'validationIds', 'evidence'], 'Traceability');
+    assert.match(trace.id, /^TRACE-(?:CL|PE|ES)-[0-9]{2}$/, 'Traceability requires a stable observation ID');
+    assert.ok(!traceIds.has(trace.id), `Duplicate traceability: ${trace.id}`);
+    traceIds.add(trace.id);
+    assert.equal(trace.observationHref, `/guide/evidence/country-comparison/#${trace.id.replace('TRACE-', 'OBS-').toLowerCase()}`, `${trace.id} must link its source observation`);
+    for (const field of ['decisionIds', 'workPackageIds', 'validationIds']) textList(trace[field], `${trace.id} ${field}`, 1, 12);
+    for (const id of trace.decisionIds) assert.match(id, /^ADR-[0-9]{2}$/, `${trace.id} requires decision IDs`);
+    for (const id of trace.workPackageIds) assert.ok(workIds.has(id), `${trace.id} references an unknown work package: ${id}`);
+    for (const id of trace.validationIds) {
+      assert.ok(validationIds.has(id), `${trace.id} references an unknown validation: ${id}`);
+      assert.ok(trace.workPackageIds.some(work => work.slice(0, 3) === id.slice(0, 3)), `${trace.id} validation has no related work phase: ${id}`);
+    }
+    text(trace.evidence, `${trace.id} evidence`);
+  }
+  return roadmap;
+}
+
+export function validateRoadmapReferences(root, roadmap) {
+  const decisions = fs.readFileSync(path.join(root, 'docs/propuesta-arquitectura.md'), 'utf8');
+  const observations = fs.readFileSync(path.join(root, 'docs/meeting-sources/country-comparison.md'), 'utf8');
+  for (const trace of roadmap.traceability) {
+    assert.ok(observations.includes(`id="${trace.observationHref.split('#')[1]}"`), `Missing observation source: ${trace.id}`);
+    for (const id of trace.decisionIds) assert.ok(decisions.includes(`id="${id.toLowerCase()}"`), `Missing decision source: ${id}`);
+  }
   return roadmap;
 }
 
 export function loadRoadmap(root) {
-  return validateRoadmap(JSON.parse(fs.readFileSync(path.join(root, 'docs/roadmap.json'), 'utf8')));
+  return validateRoadmapReferences(root, validateRoadmap(JSON.parse(fs.readFileSync(path.join(root, 'docs/roadmap.json'), 'utf8'))));
+}
+
+function renderTraceability(roadmap, phase) {
+  const code = phase && phaseCode(phase);
+  const traces = roadmap.traceability.filter(trace => !code || trace.workPackageIds.some(id => id.startsWith(code + '-')));
+  const phaseHref = id => phasePlanHref(roadmap.phases[Number(id.slice(1, 3)) - 1]);
+  return traces.map(trace => `<article class="roadmap-work-package" data-traceability="${trace.id}" id="${trace.id.toLowerCase()}"><h3>${trace.id}</h3><p><strong>Observación:</strong> <a href="${trace.observationHref}">${trace.id.replace('TRACE-', 'OBS-')}</a> · afirmación recibida, no requisito aprobado.</p><p><strong>Decisiones:</strong> ${trace.decisionIds.map(id => `<a href="/guide/proposal/decisions/#${id.toLowerCase()}">${id}</a>`).join(', ')}</p><p><strong>Paquetes:</strong> ${trace.workPackageIds.map(id => `<a href="${phaseHref(id)}#work-${id.toLowerCase()}">${id}</a>`).join(', ')}</p><p><strong>Pruebas propuestas:</strong> ${trace.validationIds.map(id => `<a href="${phaseHref(id)}#${id.toLowerCase()}">${id}</a>`).join(', ')}</p><p><strong>Evidencia que debe obtenerse:</strong> ${escape(trace.evidence)}</p></article>`).join('\n');
 }
 
 /** Same three-column, three-lane matrix for Starlight and Reveal. No client script. */
@@ -110,7 +148,7 @@ export function renderRoadmapMatrix(phases, { id, mode = 'docs' } = {}) {
   assert.ok(mode === 'docs' || mode === 'slide', 'Unsupported roadmap rendering mode');
   assert.ok(Array.isArray(phases) && phases.length === 3, 'A roadmap matrix contains exactly three phases');
   const caption = `Fases ${String(phases[0].number).padStart(2, '0')}–${String(phases.at(-1).number).padStart(2, '0')}`;
-  const header = phases.map(phase => `<th id="${id}-${phase.id}" class="roadmap-phase" scope="col" data-phase="${phase.id}"><span class="roadmap-phase-number">${phaseCode(phase)}</span><span class="roadmap-phase-title">${escape(phase.title)}</span>${mode === 'docs' ? `<a class="roadmap-phase-link" href="#${phase.id}" aria-label="Ver detalle de ${phaseCode(phase)}: ${escape(phase.title)}">Ver detalle</a>` : ''}</th>`).join('');
+  const header = phases.map(phase => `<th id="${id}-${phase.id}" class="roadmap-phase" scope="col" data-phase="${phase.id}"><span class="roadmap-phase-number">${phaseCode(phase)}</span><span class="roadmap-phase-title">${mode === 'slide' ? `<a href="${phasePlanHref(phase)}" target="_blank" rel="noopener" aria-label="Plan detallado de ${phaseCode(phase)}">${escape(phase.title)}</a>` : escape(phase.title)}</span>${mode === 'docs' ? `<a class="roadmap-phase-link" href="#${phase.id}" aria-label="Ver detalle de ${phaseCode(phase)}: ${escape(phase.title)}">Ver detalle</a>` : ''}</th>`).join('');
   const rows = lanes.map(lane => `<tr data-row="${lane.key}"><th id="${id}-${lane.key}" scope="row" class="roadmap-row-label">${lane.label}</th>${phases.map(phase => `<td class="roadmap-cell" data-row="${lane.key}" data-phase="${phase.id}" headers="${id}-${lane.key} ${id}-${phase.id}"><div class="roadmap-card"><p class="roadmap-cell-title">${escape(phase[lane.key].title)}</p><p class="roadmap-cell-summary">${escape(phase[lane.key].summary)}</p></div></td>`).join('')}</tr>`).join('');
   return `<div class="roadmap-matrix-scroll"${mode === 'docs' ? ' tabindex="0"' : ''} role="region" aria-labelledby="${id}-caption"><table id="${id}" class="roadmap-matrix" data-mode="${mode}"><caption id="${id}-caption">${caption}</caption><thead><tr><th scope="col" class="roadmap-lane-heading">Frente</th>${header}</tr></thead><tbody>${rows}</tbody></table></div>`;
 }
@@ -127,7 +165,7 @@ export function renderRoadmapDocs(roadmap) {
     return `<article class="roadmap-phase-detail" aria-label="${phaseCode(phase)} · ${escape(phase.title)}" data-phase-detail="${phase.id}">\n\n### <span class="roadmap-phase-number" id="${phase.id}">${phaseCode(phase)}</span> ${escapeMarkdown(phase.title)}\n\n<p class="roadmap-phase-outcome">${escape(phase.summary)}</p><p><a data-phase-plan-link="${phase.id}" href="${phasePlanHref(phase)}">Plan de ${phaseCode(phase)}: entregables, aplicaciones y pruebas</a></p><dl class="roadmap-detail-lanes">${lanes.map(lane => `<div data-row="${lane.key}"><dt>${lane.label} · ${escape(phase[lane.key].title)}</dt><dd>${escape(phase[lane.key].detail)}</dd></div>`).join('')}</dl><p class="roadmap-dependencies"><strong>Dependencias de aceptación:</strong> ${dependencies}</p><ul class="roadmap-source-links" aria-label="Referencias de ${phaseCode(phase)}">${phase.links.map(link => `<li><a href="${escape(link.href)}">${escape(link.label)}</a></li>`).join('')}</ul></article>`;
   }).join('\n\n');
   const phaseIndex = `<nav class="roadmap-phase-index" aria-label="Planes detallados del roadmap"><ol>${roadmap.phases.map(phase => `<li><a href="${phasePlanHref(phase)}"><span>${phaseCode(phase)}</span><strong>${escape(phase.title)}</strong><small>${phase.delivery.work.length} entregables · ${phase.delivery.validation.length} pruebas de aceptación</small></a></li>`).join('')}</ol></nav>`;
-  return `<div class="roadmap-docs" data-roadmap-status="${roadmap.status}"><p class="roadmap-status-line"><span class="roadmap-status">${escape(roadmap.statusLabel)}</span><span class="roadmap-review">Revisión editorial: <time datetime="${roadmap.reviewedOn}">${roadmap.reviewedOn}</time></span></p>${phaseIndex}<aside class="roadmap-plan-context" aria-label="Estado del roadmap"><p>${escape(roadmap.notice)}</p><p><strong>Punto de partida:</strong> ${escape(roadmap.baseline)}</p></aside>${matrices}<section class="roadmap-details" aria-label="Detalle por fase">\n\n<span id="detalle-por-fase"></span>\n\n## Resumen por fase\n\n${details}\n\n</section></div>`;
+  return `<div class="roadmap-docs" data-roadmap-status="${roadmap.status}"><p class="roadmap-status-line"><span class="roadmap-status">${escape(roadmap.statusLabel)}</span><span class="roadmap-review">Revisión editorial: <time datetime="${roadmap.reviewedOn}">${roadmap.reviewedOn}</time></span></p>${phaseIndex}<aside class="roadmap-plan-context" aria-label="Estado del roadmap"><p>${escape(roadmap.notice)}</p><p><strong>Punto de partida:</strong> ${escape(roadmap.baseline)}</p></aside>${matrices}<section class="roadmap-details" aria-label="Detalle por fase">\n\n<span id="detalle-por-fase"></span>\n\n## Resumen por fase\n\n${details}\n\n</section>\n\n## Trazabilidad de las fuentes\n\nLos enlaces relacionan las observaciones recibidas con decisiones, trabajo y pruebas propuestas. La evidencia de ejecución y las aprobaciones siguen pendientes. La relación se mantiene en una sola fuente, junto con el roadmap.\n\n${renderTraceability(roadmap)}\n\n</div>`;
 }
 
 /** Per-phase delivery plans are generated from the same source as the overview and Reveal. */
@@ -142,7 +180,7 @@ export function renderRoadmapPhase(roadmap, phaseId) {
     return `<a href="${phasePlanHref(target)}">${phaseCode(target)} · ${escape(target.title)}</a>`;
   }).join(', ') || 'No requiere una fase anterior.';
   const work = delivery.work.map(item => `<article class="roadmap-work-package" data-work-package="${item.id}" aria-labelledby="work-${item.id.toLowerCase()}"><h3 id="work-${item.id.toLowerCase()}"><span>${item.id}</span> ${escape(item.title)}</h3><dl class="roadmap-work-scope"><div><dt>Aplicaciones</dt><dd>${item.apps.map(app => `<code>apps/${app}</code>`).join(' ')}</dd></div><div><dt>Módulos del diseño objetivo</dt><dd>${item.modules.map(module => `<code>${escape(module)}</code>`).join(' ')}</dd></div></dl><p class="roadmap-deliverable"><strong>Entregable:</strong> ${escape(item.deliverable)}</p>${list(item.tasks)}</article>`).join('\n');
-  const validation = `<dl class="roadmap-validation">${delivery.validation.map((item, index) => `<div data-roadmap-scenario="${index}"><dt><span>${phaseCode(phase)}-V${String(index + 1).padStart(2, '0')}</span> ${escape(item.scenario)}</dt><dd>${escape(item.expected)}</dd></div>`).join('')}</dl>`;
+  const validation = `<dl class="roadmap-validation">${delivery.validation.map((item, index) => `<div data-roadmap-scenario="${index}" id="${item.id.toLowerCase()}"><dt><span>${item.id}</span> ${escape(item.scenario)}</dt><dd>${escape(item.expected)}</dd></div>`).join('')}</dl>`;
   const adjacent = [roadmap.phases[phase.number - 2], roadmap.phases[phase.number]].filter(Boolean);
   return `<div class="roadmap-docs roadmap-phase-plan" data-roadmap-phase-plan="${phase.id}">
 
@@ -191,6 +229,10 @@ La fase se acepta para una configuración identificada cuando se cumplen los cri
 ## Referencias del diseño
 
 <ul class="roadmap-source-links">${phase.links.map(link => `<li><a href="${escape(link.href)}">${escape(link.label)}</a></li>`).join('')}</ul>
+
+## Fuentes, decisiones y evidencia de esta fase
+
+${renderTraceability(roadmap, phase)}
 
 <nav class="roadmap-plan-navigation" aria-label="Continuar en el roadmap"><a href="/guide/proposal/roadmap/#${phase.id}">Visión general del roadmap</a>${adjacent.map(target => `<a href="${phasePlanHref(target)}">${phaseCode(target)} · ${escape(target.title)}</a>`).join('')}</nav>
 

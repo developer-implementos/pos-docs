@@ -1,48 +1,47 @@
 flowchart TB
     accTitle: Complemento · Despliegue — Sucursal, país y red autorizada del ERP
-    accDescr: Perfil WAN: puestos y móviles usan el servidor de sucursal por LAN. País y red del ERP son entornos independientes, conectados mediante contratos autenticados. erp-worker inicia la conexión hacia country-api; no accede por SQL WAN a su base. Redis sólo aparece como caché opcional de país. Infraestructura, recuperación y capacidad deben homologarse.
+    accDescr: Perfil WAN: puestos y móviles usan el servidor de sucursal por LAN. País y red del ERP son entornos independientes, conectados mediante contratos autenticados. PostgreSQL conserva negocio y entrega durable. Country-api publica versiones; erp-worker prepara maestros mediante un contrato de origen y presupuesto aislados. Redis es caché opcional. Sin SQL WAN ni aplicación adicional.
     subgraph terminalNode["Puestos POS x N · Windows por homologar"]
         direction TB
-        client["pos-desktop<br/>«Contenedor · instancia»<br/>Angular + Tauri<br/>Presenta caja y comandos del operador."]:::pos
-        device["Puente de periféricos<br/>«Contenedor condicional · instancia»<br/>Proceso nativo según SDK<br/>Ejecuta capacidades del puesto."]:::pos
+        client["pos-desktop<br/>«Contenedor»<br/>Angular + Tauri<br/>Presenta caja y comandos del operador."]:::pos
+        device["Puente de periféricos<br/>«Contenedor condicional»<br/>Proceso nativo según SDK<br/>Ejecuta capacidades del puesto."]:::pos
     end
     subgraph mobileNode["Dispositivos móviles · Android/iOS por homologar"]
         direction TB
-        mobileClient["pos-mobile<br/>«Contenedor · instancia»<br/>Angular + Capacitor<br/>Presenta operaciones en Android/iOS."]:::pos
+        mobileClient["pos-mobile<br/>«Contenedor»<br/>Angular + Capacitor<br/>Presenta operaciones en Android/iOS."]:::pos
     end
     subgraph serverNode["Servidor de sucursal · entorno por homologar"]
         direction TB
-        branchApi["branch-api<br/>«Contenedor · instancia»<br/>NestJS + Fastify / Node.js<br/>Valida y confirma la operación local."]:::pos
-        syncWorker["branch-sync-worker<br/>«Contenedor · instancia»<br/>NestJS / Node.js · sin servidor HTTP<br/>Entrega eventos y actualiza espejos."]:::pos
-        branchDb[("Datos de sucursal<br/>«Contenedor de datos · instancia»<br/>PostgreSQL<br/>Guarda negocio, outbox y espejo local.")]:::store
+        branchApi["branch-api<br/>«Contenedor»<br/>NestJS + Fastify / Node.js<br/>Valida y confirma la operación local."]:::pos
+        syncWorker["branch-sync-worker<br/>«Contenedor»<br/>NestJS / Node.js · sin servidor HTTP<br/>Entrega eventos y actualiza espejos."]:::pos
+        branchDb["Datos de sucursal<br/>«Contenedor de datos»<br/>PostgreSQL<br/>Guarda negocio, outbox y espejo local."]:::store
     end
     subgraph countryNode["Plataforma de país · alojamiento por decidir"]
         direction TB
-        countryApi["country-api<br/>«Contenedor · instancia»<br/>NestJS + Fastify / Node.js<br/>Recibe operaciones y sirve trabajo y versiones."]:::pos
-        countryWorker["Publicador de maestros · proceso por asignar<br/>«Contenedor · instancia»<br/>Proceso de publicación · composición pendiente<br/>Prepara publicaciones comerciales versionadas."]:::pos
-        countryDb[("Datos operativos de país<br/>«Contenedor de datos · instancia»<br/>PostgreSQL<br/>Consolida y conserva entrega durable.")]:::store
-        countryCache[("Redis · caché de país (opcional)<br/>«Contenedor de datos · instancia»<br/>Redis · datos reconstruibles<br/>Acelera consultas; no confirma operaciones.")]:::store
+        countryApi["country-api<br/>«Contenedor»<br/>NestJS + Fastify / Node.js<br/>Recibe operaciones y sirve trabajo y versiones."]:::pos
+        countryDb["Datos operativos de país<br/>«Contenedor de datos»<br/>PostgreSQL<br/>Consolida y conserva entrega durable."]:::store
+        countryCache["Redis · caché de país (opcional)<br/>«Contenedor de datos»<br/>Redis · datos reconstruibles<br/>Acelera consultas; no confirma operaciones."]:::store
     end
     subgraph erpNode["Red autorizada del ERP · entorno por país"]
         direction TB
-        erpAdapter["erp-worker<br/>«Contenedor · instancia»<br/>NestJS / Node.js · libs/backend/erp<br/>Consume trabajo; traduce y concilia con ERP."]:::pos
+        erpAdapter["erp-worker<br/>«Contenedor»<br/>NestJS / Node.js · libs/backend/erp<br/>Integra ERP y prepara maestros por contrato."]:::pos
         erp["ERP del país<br/>«Sistema externo»<br/>CL: AX · ES: Gira · PE: custom<br/>Recibe y concilia documentos financieros."]:::external
     end
-    payments["Proveedor de pagos<br/>«Sistema externo»<br/>API / SDK según proveedor<br/>Autoriza o informa el resultado del pago."]:::external
-    fiscal["Proveedor fiscal<br/>«Sistema externo»<br/>Contrato por país y modalidad<br/>Emite o transmite documentos fiscales."]:::external
-    backup["Respaldo y recuperación<br/>«Infraestructura»<br/>Backups PostgreSQL / herramienta por definir<br/>Conserva y ensaya restauraciones."]:::infra
-    observability["Observabilidad operativa (opcional)<br/>«Sistema externo»<br/>Recolector de logs / Sentry opt-in<br/>Recibe diagnóstico y correlación técnica."]:::external
-    legend["Leyenda · notación C4<br/>Azul: POS · Violeta: datos<br/>Gris: externo · Ámbar: infraestructura<br/>Borde: sistema, proceso o nodo indicado<br/>Flecha: iniciador, propósito y protocolo<br/>Opcional / por asignar: condición explícita<br/>Contenedor no equivale a Docker"]:::key
+        payments["Proveedor de pagos<br/>«Sistema externo»<br/>API / SDK según proveedor<br/>Autoriza o informa el resultado del pago."]:::external
+        fiscal["Proveedor fiscal<br/>«Sistema externo»<br/>Contrato por país y modalidad<br/>Emite o transmite documentos fiscales."]:::external
+        backup["Respaldo y recuperación<br/>«Infraestructura»<br/>Backups PostgreSQL / herramienta por definir<br/>Conserva y ensaya restauraciones."]:::pos
+        observability["Observabilidad operativa (opcional)<br/>«Sistema externo»<br/>Recolector de logs / Sentry opt-in<br/>Recibe diagnóstico y correlación técnica."]:::external
+        masters["Fuentes de maestros y precios<br/>«Sistema externo»<br/>Interfaces por confirmar<br/>Publica datos y reglas autorizados."]:::external
+        legend["Leyenda<br/>«Clave de lectura»<br/>Notación C4<br/>Azul: POS. Violeta: datos. Gris: externo."]:::key
     client -->|"Comandos autenticados · HTTPS/LAN"| branchApi
     mobileClient -->|"Comandos autenticados · HTTPS/LAN"| branchApi
     client -->|"Comando autorizado · IPC/loopback"| device
     branchApi -->|"Negocio + auditoría + outbox · SQL local"| branchDb
     syncWorker -->|"Pendientes, cursores y espejo · SQL local"| branchDb
     syncWorker -->|"Lotes y publicaciones · HTTPS/WAN"| countryApi
-    countryApi -->|"Recepción, trabajo y resultados · SQL"| countryDb
-    countryWorker -->|"Publicaciones completas · SQL"| countryDb
+    countryApi -->|"Recepción, publicaciones, trabajo y resultados · SQL"| countryDb
     countryApi -->|"Consultas reconstruibles · Redis opcional"| countryCache
-    erpAdapter -->|"Trabajo / resultados · HTTPS saliente"| countryApi
+    erpAdapter -->|"Trabajo, resultados y porciones de maestros · HTTPS saliente"| countryApi
     erpAdapter -->|"Envío y consulta · interfaz homologada"| erp
     device -->|"Terminal local · SDK/API homologado"| payments
     branchApi -->|"Emisión/transmisión · contrato fiscal"| fiscal
@@ -51,12 +50,11 @@ flowchart TB
     branchApi -->|"Logs correlacionados / errores opt-in · canal aprobado"| observability
     countryApi -->|"Logs correlacionados / errores opt-in · canal aprobado"| observability
     erpAdapter -->|"Intentos técnicos / errores opt-in · canal aprobado"| observability
-    backup ~~~ legend
+    erpAdapter -->|"Obtiene carga o deltas · contrato de fuente homologado"| masters
     classDef pos fill:#EDF3FF,stroke:#0545BA,color:#25364D,stroke-width:2px
     classDef store fill:#F2EFFF,stroke:#6551A8,color:#25364D,stroke-width:2px
     classDef external fill:#F4F6F8,stroke:#6B788A,color:#25364D
     classDef person fill:#18336D,stroke:#18336D,color:#FFFFFF
-    classDef infra fill:#FFF3E0,stroke:#A86516,color:#25364D
     classDef key fill:#FFFFFF,stroke:#BCC9DB,color:#53657F,font-size:14px
     style terminalNode fill:#FFFFFF,stroke:#BCC9DB,stroke-dasharray:6 4
     style mobileNode fill:#FFFFFF,stroke:#BCC9DB,stroke-dasharray:6 4

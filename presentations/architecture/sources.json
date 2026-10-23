@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "reviewedOn": "2026-10-22",
+  "reviewedOn": "2026-10-23",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "c8b99b54af05d1688f2178b5437a95e7de6d60ea",
+  "revision": "9b158afd00da09b646061bccdcd276703cc25288",
   "sourceStatus": "Fuentes documentales verificadas en la revisión indicada.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "inputs": [
@@ -12,7 +12,7 @@
     },
     {
       "path": "docs/propuesta-arquitectura.md",
-      "sha256": "fee993f4481fd5461aeab90ee53b729dd0c3cdd7e6d9f16d6d6bd717eb500a45"
+      "sha256": "209e90a0b83e257b583df8e945c043f76ff63701b3420651ed74789a95f8812e"
     },
     {
       "path": "docs/implementation-plan.md",
@@ -24,15 +24,39 @@
     },
     {
       "path": "apps/starlight/src/data/product-evidence.json",
-      "sha256": "0a058bc4c31b9a8a37ea28a32a52a1a87587b4f4a3e68810b9be94461168def3"
+      "sha256": "43241d7a74babdefdf386e505635aadc7baf3aeed6b38215a78352798ec7cbd3"
     },
     {
       "path": "docs/roadmap.md",
-      "sha256": "f243962da5e263d644c7da0270cfcb8a4958caf8ac92458d614e2697ce73c6f7"
+      "sha256": "7c74986e7fa1673710616ddfa8139f343316ab6c9ace6a5609689ac007d32ab7"
     },
     {
       "path": "docs/roadmap.json",
-      "sha256": "b13012e846bed5021d8212827cd2de9c89c668a7834c4e19c8980425b5d2493c"
+      "sha256": "524fde334942d7bf4d3bb4baf2a17ca5b2b88bde376fdfd74b89f3cd9d4fe393"
+    },
+    {
+      "path": "docs/c4-arquitectura-propuesta.md",
+      "sha256": "969f62c8a7fc4cbaed9f49a61c74ec9312e9626d6e7c3055f0d26a840b9b810f"
+    },
+    {
+      "path": "docs/contracts/master-data-publication.md",
+      "sha256": "f62a8e7fd0a800b7b9e7fcdbee6e06735501dad100c5b4db9fc5ba80081608f1"
+    },
+    {
+      "path": "docs/contracts/identity-and-trust.md",
+      "sha256": "1ede3162dcf7abfa76608d0a8f8f2ce1b63ab2dccf942ebbb38ea3c87156ea22"
+    },
+    {
+      "path": "tools/architecture/model.mjs",
+      "sha256": "d87d89616d009358e56c7a9f66573735ed459d21cce0fcd5294117b1ebd77e18"
+    },
+    {
+      "path": "tools/architecture/views.mjs",
+      "sha256": "d0f28828843908a22613abe217cd7bbc7f54e229cfd49196c44c693f37ee93a9"
+    },
+    {
+      "path": "tools/diagrams/models/c4-data.js",
+      "sha256": "4f8961e9684caad56195fb60b7bfdf174c4e953f740f7a4a443be597beffbd56"
     }
   ]
 }

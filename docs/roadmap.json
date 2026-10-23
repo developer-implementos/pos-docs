@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "title": "Roadmap de POS Platform",
-  "reviewedOn": "2026-10-22",
+  "reviewedOn": "2026-10-23",
   "status": "proposed",
   "statusLabel": "Secuencia propuesta",
   "notice": "Propuesta para acordar con producto, operaciones y desarrollo. No hay fechas, recursos ni habilitaciones productivas aprobadas. Los criterios de aceptación determinan el avance.",
@@ -38,7 +38,8 @@
             "tasks": [
               "Implementar el mecanismo de identidad acordado para laboratorio y comprobar usuario, puesto, país, entidad y sucursal en cada comando.",
               "Aplicar permisos y condiciones del turno en servidor; ocultar un botón no sustituye el rechazo de un comando no autorizado.",
-              "Devolver errores de negocio y autorización identificables para que la interfaz pueda explicar el rechazo sin crear movimientos."
+              "Devolver errores de negocio y autorización identificables para que la interfaz pueda explicar el rechazo sin crear movimientos.",
+              "Delimitar operador, puesto e instalación; probar el contrato de ámbito sin presentar identidades de laboratorio como federación corporativa."
             ]
           },
           {
@@ -105,26 +106,32 @@
         ],
         "validation": [
           {
+            "id": "F01-V01",
             "scenario": "La respuesta se pierde después del commit y el operador reintenta el mismo comando.",
             "expected": "Se recuperan la misma venta y su resultado; pago, caja y outbox no se duplican."
           },
           {
+            "id": "F01-V02",
             "scenario": "El proceso falla entre dos escrituras de la confirmación local.",
             "expected": "La transacción conserva todos los efectos acordados o ninguno; no quedan una venta, un pago o un evento parcial."
           },
           {
+            "id": "F01-V03",
             "scenario": "Un usuario invoca directamente un comando sin permiso o con otra sucursal.",
             "expected": "El servidor rechaza el comando y no modifica negocio, aunque la interfaz o el token suministren un ámbito distinto."
           },
           {
+            "id": "F01-V04",
             "scenario": "Dos puestos operan sobre la misma sucursal y se reutiliza un identificador con contenido diferente.",
             "expected": "Las restricciones de turno y ámbito se respetan; la identidad conflictiva se rechaza sin sobrescribir una operación previa."
           },
           {
+            "id": "F01-V05",
             "scenario": "La cotización vence antes de comenzar el pago en efectivo.",
             "expected": "Se aplica la política acordada: recálculo y confirmación o rechazo. Fijar una versión no extiende su vigencia."
           },
           {
+            "id": "F01-V06",
             "scenario": "Se reinician cliente y API después de una venta confirmada.",
             "expected": "La consulta recupera importes, reglas, operador, turno y trazabilidad desde PostgreSQL; el documento sigue identificado como prueba."
           }
@@ -172,9 +179,22 @@
       },
       "requires": [],
       "links": [
-        { "label": "Estado actual del producto", "href": "/guide/implementation/repository/" },
-        { "label": "Confirmación local de la venta", "href": "/guide/proposal/continuity/" },
-        { "label": "Base técnica y demostración", "href": "/guide/implementation/plan/" }
+        {
+          "label": "Estado actual del producto",
+          "href": "/guide/implementation/repository/"
+        },
+        {
+          "label": "Confirmación local de la venta",
+          "href": "/guide/proposal/continuity/"
+        },
+        {
+          "label": "Base técnica y demostración",
+          "href": "/guide/implementation/plan/"
+        },
+        {
+          "label": "Contrato de identidad y confianza",
+          "href": "/guide/architecture/identity/"
+        }
       ]
     },
     {
@@ -275,26 +295,32 @@
         ],
         "validation": [
           {
+            "id": "F02-V01",
             "scenario": "El proveedor cobra, pero la respuesta no llega al POS.",
             "expected": "El intento permanece identificado y se consulta o concilia; no se genera un segundo cobro por el timeout."
           },
           {
+            "id": "F02-V02",
             "scenario": "Se recibe dos veces una respuesta o llega después de una consulta de recuperación.",
             "expected": "El estado avanza según transiciones permitidas y conserva la referencia original, sin duplicar pago ni confirmar un resultado incompatible."
           },
           {
+            "id": "F02-V03",
             "scenario": "El proceso cae después del efecto externo y antes de registrar el resultado local.",
             "expected": "Se recuperan intención y evidencia; la limitación del proveedor queda explícita si no permite conocer el resultado, sin reintento ciego."
           },
           {
+            "id": "F02-V04",
             "scenario": "El emisor rechaza el documento o se pierde su respuesta.",
             "expected": "Venta y documento mantienen estados distintos. El rechazo se muestra y la consulta conserva la identidad fiscal; no se borra la venta ni se declara aceptación."
           },
           {
+            "id": "F02-V05",
             "scenario": "El dispositivo ejecuta un comando y después cae la LAN, o la impresora no produce papel.",
             "expected": "Se recupera la evidencia disponible con el mismo comando; la confirmación del software no se presenta como prueba de efecto físico."
           },
           {
+            "id": "F02-V06",
             "scenario": "El operador solicita reimprimir la operación.",
             "expected": "Se reproduce el documento identificado sin volver a cobrar, emitir otro documento fiscal ni generar otra venta."
           }
@@ -341,11 +367,22 @@
         "slideDetail": "Probar timeout, rechazo y recuperación sin otro cobro. Mantener trazabilidad fiscal y de impresión; una confirmación del software no prueba que el papel se haya impreso.",
         "detail": "Probar respuestas inciertas, rechazos, reintentos y recuperación con el alcance acordado. Un timeout no provoca un segundo cobro; la consulta conserva la referencia original. Los rechazos fiscales y los intentos de impresión son visibles y trazables. La aceptación por software de una impresión no demuestra su efecto físico. La homologación y la autorización de uso productivo de la modalidad elegida son requisitos anteriores al piloto."
       },
-      "requires": ["phase-01"],
+      "requires": [
+        "phase-01"
+      ],
       "links": [
-        { "label": "Proveedores y dispositivos", "href": "/guide/architecture/providers/" },
-        { "label": "Fiscalidad por país", "href": "/guide/proposal/fiscal-compliance/" },
-        { "label": "Escenarios de aceptación", "href": "/guide/operations/validation/" }
+        {
+          "label": "Proveedores y dispositivos",
+          "href": "/guide/architecture/providers/"
+        },
+        {
+          "label": "Fiscalidad por país",
+          "href": "/guide/proposal/fiscal-compliance/"
+        },
+        {
+          "label": "Escenarios de aceptación",
+          "href": "/guide/operations/validation/"
+        }
       ]
     },
     {
@@ -386,11 +423,13 @@
             "id": "F03-02",
             "title": "Publicación y espejo comercial de sucursal",
             "apps": [
-              "branch-sync-worker",
+              "erp-worker",
               "country-api",
+              "branch-sync-worker",
               "branch-api"
             ],
             "modules": [
+              "libs/backend/erp",
               "libs/backend/catalog",
               "libs/backend/pricing",
               "libs/backend/sync",
@@ -398,10 +437,11 @@
             ],
             "deliverable": "Versiones comerciales completas que pueden distribuirse por deltas, carga programada o recuperación manual y activarse atómicamente en sucursal.",
             "tasks": [
-              "Asignar el proceso responsable de preparar publicaciones y su contrato con el origen; country-api sirve versiones y no construye cargas pesadas dentro de una petición.",
+              "Implementar MasterDataSourcePort en erp-worker para extracción y preparación desde un origen autorizado; country-api conserva autoridad de versiones y publicación, sin construir cargas pesadas dentro de una petición.",
               "Persistir porciones, progreso recibido y candidatas aisladas; comprobar cobertura, referencias, bajas, versión, checksum y punto de corte.",
               "Aplicar el mismo validador a deltas y cargas completas; confirmar inbox aplicada, puntero activo y cursor aplicado en un commit corto.",
-              "Retener versiones referenciadas y revalidar vigencia antes del pago; la publicación no modifica un intento de pago iniciado o incierto."
+              "Retener versiones referenciadas y revalidar vigencia antes del pago; la publicación no modifica un intento de pago iniciado o incierto.",
+              "Separar identidad, claims y concurrencia de publicación respecto al trabajo financiero; aplicar fencing, paquetes inmutables y recuperación por publicationId."
             ]
           },
           {
@@ -452,32 +492,44 @@
         ],
         "validation": [
           {
+            "id": "F03-V01",
             "scenario": "Se pierde Internet con LAN y servidor de sucursal sanos y después se restablece.",
             "expected": "Sólo se admiten operaciones permitidas por datos, permisos, pago y fiscalidad. Los pendientes durables se entregan al reconectar con la misma identidad."
           },
           {
+            "id": "F03-V02",
             "scenario": "País confirma el commit, se pierde el acuse y la sucursal repite el evento.",
             "expected": "El evento equivalente recupera su resultado sin aplicar dos veces el efecto; el mismo ID con contenido distinto se rechaza."
           },
           {
+            "id": "F03-V03",
             "scenario": "Una carga comercial se corta, recibe deltas repetidos o tiene un hueco de secuencia.",
             "expected": "No cambia la versión activa ni el cursor aplicado. Se recupera la candidata y sólo se activa completa y validada, sin mezclar precios de versiones."
           },
           {
+            "id": "F03-V04",
             "scenario": "ERP ejecuta una operación, pierde la respuesta y vence el lease del intento.",
             "expected": "Se conserva destino e identidad y se consulta o concilia antes de repetir efectos. La falta de capacidad para conocer el resultado queda como limitación bloqueante del alcance."
           },
           {
+            "id": "F03-V05",
             "scenario": "Se restaura país a un punto anterior a un acuse ya recibido por la sucursal.",
             "expected": "La retención de origen o archivo permite reconstruir y deduplicar; se concilian los efectos externos que ya existan sin crear nuevos documentos por replay."
           },
           {
+            "id": "F03-V06",
             "scenario": "El backlog crece mientras llegan operaciones nuevas o falla una caché opcional de país.",
             "expected": "El drenaje respeta límites y objetivos acordados. Si existe Redis, su ausencia deriva lecturas autorizadas al origen con carga acotada; no pierde negocio ni convierte datos cacheados en autorización financiera."
           },
           {
+            "id": "F03-V07",
             "scenario": "Se pierde la LAN o el escritor de sucursal durante la prueba de continuidad.",
             "expected": "Se detienen los nuevos comandos dependientes; ningún cliente inicia otra base o autoridad de ventas por su cuenta."
+          },
+          {
+            "id": "F03-V08",
+            "scenario": "Vence el claim de un publicador, otro termina el trabajo y el primero reintenta; un worker de maestros intenta ejecutar un comando financiero.",
+            "expected": "El fencing rechaza la finalización antigua y la autorización impide cruzar capacidades; se conserva una publicación completa y el trabajo financiero mantiene su presupuesto de recursos."
           }
         ],
         "parallel": [
@@ -522,11 +574,30 @@
         "slideDetail": "Probar pérdida de acuse, repetición y reinicio sin duplicados. Medir el drenaje y conciliar el resultado; perder LAN o escritor detiene nuevas ventas en el perfil base.",
         "detail": "Probar corte de Internet, repetición de eventos, pérdida de acuse y reinicio con almacenamiento sano. La operación conserva su identidad y su resultado ERP es comprobable sin registros duplicados. Conciliar el backlog y medir su drenaje frente a objetivos acordados. El perfil base detiene nuevas ventas cuando se pierde la LAN o el escritor de sucursal: esta fase no acredita autonomía de una caja aislada ni corrige por sí sola los defectos del ERP."
       },
-      "requires": ["phase-02"],
+      "requires": [
+        "phase-02"
+      ],
       "links": [
-        { "label": "Sincronización durable", "href": "/guide/proposal/synchronization/" },
-        { "label": "Integración y ACL", "href": "/guide/proposal/integration/" },
-        { "label": "Precios y promociones locales", "href": "/guide/proposal/pricing-promotions/" }
+        {
+          "label": "Sincronización durable",
+          "href": "/guide/proposal/synchronization/"
+        },
+        {
+          "label": "Integración y ACL",
+          "href": "/guide/proposal/integration/"
+        },
+        {
+          "label": "Precios y promociones locales",
+          "href": "/guide/proposal/pricing-promotions/"
+        },
+        {
+          "label": "Contrato de publicación de maestros",
+          "href": "/guide/architecture/master-data-publication/"
+        },
+        {
+          "label": "Identidad entre fronteras",
+          "href": "/guide/architecture/identity/"
+        }
       ]
     },
     {
@@ -635,26 +706,32 @@
         ],
         "validation": [
           {
+            "id": "F04-V01",
             "scenario": "Dos operadores intentan devolver simultáneamente las mismas líneas o repetir una devolución.",
             "expected": "La cantidad e importe disponibles no se exceden; el reintento recupera la misma operación y conserva aprobaciones."
           },
           {
+            "id": "F04-V02",
             "scenario": "Dos tiendas intentan consumir el mismo saldo y una pierde la respuesta de reserva.",
             "expected": "La autoridad acordada concede sólo el consumo permitido; consulta y reintento conservan propietario, operación y saldo, sin duplicarlo."
           },
           {
+            "id": "F04-V03",
             "scenario": "Una sucursal aislada intenta consumir un crédito o cupón sin capacidad exclusiva asignada.",
             "expected": "Se aplica conexión o bloqueo conforme a la política; una copia local o proyección de lectura no habilita el gasto."
           },
           {
+            "id": "F04-V04",
             "scenario": "La devolución comercial se confirma, pero el documento fiscal o el reintegro quedan inciertos.",
             "expected": "Cada efecto conserva su identidad y estado; se consulta o concilia sin borrar la devolución ni repetir dinero o documento."
           },
           {
+            "id": "F04-V05",
             "scenario": "El arqueo declarado difiere de los movimientos y quedan pendientes externos.",
             "expected": "El cierre explica diferencia, motivo, referencias y tratamiento aprobado de pendientes; no modifica importes para hacer coincidir los totales."
           },
           {
+            "id": "F04-V06",
             "scenario": "Un operador intenta aprobar su propia excepción sin la facultad requerida.",
             "expected": "El servidor rechaza la acción y registra la evidencia correspondiente; la resolución permitida conserva actor, aprobación y contexto."
           }
@@ -701,11 +778,22 @@
         "slideDetail": "Probar concurrencia y reintentos sin exceder ni duplicar saldos autorizados. El cierre explica diferencias; aprobaciones, referencias y restricciones quedan auditadas.",
         "detail": "Comprobar que devoluciones y consumos concurrentes no exceden el saldo autorizado ni se repiten. Las referencias originales y aprobaciones quedan auditadas. El cierre explica diferencias y pendientes entre caja, pagos, documentos y ERP; su tratamiento está acordado con los responsables del negocio. Las restricciones offline de las operaciones sensibles se respetan y se prueban."
       },
-      "requires": ["phase-03"],
+      "requires": [
+        "phase-03"
+      ],
       "links": [
-        { "label": "Operación y accesos", "href": "/guide/proposal/access-operations/" },
-        { "label": "Contratos y autoridad de datos", "href": "/guide/proposal/contracts/" },
-        { "label": "Escenarios de aceptación", "href": "/guide/operations/validation/" }
+        {
+          "label": "Operación y accesos",
+          "href": "/guide/proposal/access-operations/"
+        },
+        {
+          "label": "Contratos y autoridad de datos",
+          "href": "/guide/proposal/contracts/"
+        },
+        {
+          "label": "Escenarios de aceptación",
+          "href": "/guide/operations/validation/"
+        }
       ]
     },
     {
@@ -787,7 +875,8 @@
             "tasks": [
               "Preparar formación y procedimientos de venta, excepción, cierre y recuperación, con responsables y escalamiento acordados.",
               "Configurar diagnósticos y alertas sobre pendientes, errores y capacidad; separar logs técnicos de auditoría y filtrar datos sensibles.",
-              "Ensayar carga representativa y horarios operativos con soporte disponible; comprobar los criterios medidos antes de ampliar el alcance."
+              "Ensayar carga representativa y horarios operativos con soporte disponible; comprobar los criterios medidos antes de ampliar el alcance.",
+              "Homologar alta, rotación, revocación y recuperación de identidades; probar autorización offline acotada, reloj y nueva admisión al reconectar."
             ]
           },
           {
@@ -817,32 +906,44 @@
         ],
         "validation": [
           {
+            "id": "F05-V01",
             "scenario": "Se instala el artefacto en un equipo que no tiene el workspace de desarrollo.",
             "expected": "Arranca con sus dependencias y configuración declaradas; identidad de versión, integridad y firma requerida se verifican."
           },
           {
+            "id": "F05-V02",
             "scenario": "Se actualiza mientras existen operaciones pendientes y versiones soportadas aún activas.",
             "expected": "Los contratos y datos siguen siendo compatibles; los pendientes conservan identidad y no se pierden por sustituir el binario."
           },
           {
+            "id": "F05-V03",
             "scenario": "Se pierde el servidor de sucursal y se recupera desde una copia independiente.",
             "expected": "El escritor anterior queda excluido; se miden pérdida de datos y tiempo por el escenario aprobado, y se concilian operaciones antes de reanudar."
           },
           {
+            "id": "F05-V04",
             "scenario": "Se restaura país mientras ERP o proveedores conservan efectos posteriores al backup.",
             "expected": "El replay utiliza la evidencia retenida y consulta o concilia esos efectos; no los repite indiscriminadamente."
           },
           {
+            "id": "F05-V05",
             "scenario": "El piloto alcanza carga representativa y aparece una incidencia fuera del horario de desarrollo.",
             "expected": "Se verifica el objetivo acordado y el soporte ejecuta el procedimiento y escalamiento previsto con diagnóstico suficiente y sin datos sensibles."
           },
           {
+            "id": "F05-V06",
             "scenario": "Se decide detener el piloto o volver temporalmente al sistema anterior.",
             "expected": "Se suspende la habilitación de forma controlada, se preservan operaciones nuevas y se concilian pendientes antes del cambio de autoridad."
           },
           {
+            "id": "F05-V07",
             "scenario": "La revisión encuentra una diferencia sin explicar o un defecto crítico abierto.",
             "expected": "No se acredita éxito del piloto; se registra la condición pendiente y la decisión de corregir o detener para ese alcance."
+          },
+          {
+            "id": "F05-V08",
+            "scenario": "Se revoca una identidad mientras la tienda está aislada, vence su autorización de continuidad y después vuelve la conexión.",
+            "expected": "La admisión local respeta vigencia, permisos y reloj confiable; al reconectar aplica revocaciones antes de renovar acceso. Los pendientes conservan evidencia e identidad y se recuperan mediante el workload autorizado."
           }
         ],
         "parallel": [
@@ -887,11 +988,26 @@
         "slideDetail": "Producto y operaciones revisan conciliación, recuperación y métricas del piloto. Sin defectos críticos abiertos; la aceptación aplica a esa configuración y revisión.",
         "detail": "Registrar evidencia de conciliación, recuperación y cumplimiento de los criterios operativos acordados. No declarar exitoso el piloto sin una revisión del alcance por producto y operaciones, sin soporte habilitado o con defectos críticos abiertos. La aceptación corresponde a esa tienda, configuración y revisión; no acredita automáticamente otros países, proveedores o dispositivos."
       },
-      "requires": ["phase-04"],
+      "requires": [
+        "phase-04"
+      ],
       "links": [
-        { "label": "Validación y criterios del piloto", "href": "/guide/operations/validation/" },
-        { "label": "Seguridad y límites actuales", "href": "/guide/implementation/security/" },
-        { "label": "Operación y accesos", "href": "/guide/proposal/access-operations/" }
+        {
+          "label": "Validación y criterios del piloto",
+          "href": "/guide/operations/validation/"
+        },
+        {
+          "label": "Seguridad y límites actuales",
+          "href": "/guide/implementation/security/"
+        },
+        {
+          "label": "Operación y accesos",
+          "href": "/guide/proposal/access-operations/"
+        },
+        {
+          "label": "Ciclo de vida de identidades",
+          "href": "/guide/architecture/identity/"
+        }
       ]
     },
     {
@@ -1001,30 +1117,37 @@
         ],
         "validation": [
           {
+            "id": "F06-V01",
             "scenario": "El mismo caso común se ejecuta en dos perfiles nacionales con sus datos autorizados.",
             "expected": "Se identifica el comportamiento compartido y las variaciones aprobadas; los resultados monetarios y fiscales coinciden con los casos locales, sin un fork del producto."
           },
           {
+            "id": "F06-V02",
             "scenario": "Una integración del país siguiente carece de consulta fiable después de una respuesta perdida.",
             "expected": "Se registra la limitación y se restringe el alcance afectado; la aceptación del primer país no se usa para prometer recuperación inexistente."
           },
           {
+            "id": "F06-V03",
             "scenario": "La app móvil cambia de estado, pierde LAN o vuelve después de una interrupción.",
             "expected": "Recupera el contexto permitido y consulta el resultado con la misma identidad; los comandos dependientes de sucursal no se convierten en ventas autónomas."
           },
           {
+            "id": "F06-V04",
             "scenario": "Un dispositivo móvil usa una capacidad nativa o solicita un permiso restringido.",
             "expected": "El contrato se verifica en el host y hardware seleccionados; la denegación de permiso se maneja sin ampliar facultades ni considerar suficiente el navegador."
           },
           {
+            "id": "F06-V05",
             "scenario": "Un cliente atrasado vuelve a conectarse durante el despliegue de otro anillo.",
             "expected": "Se aplica la compatibilidad acordada o una actualización controlada; pendientes, referencias y contratos anteriores siguen recuperables."
           },
           {
+            "id": "F06-V06",
             "scenario": "Cambia el destino ERP mientras existen operaciones pendientes.",
             "expected": "Cada pendiente conserva destino y versión originales; el corte requiere conciliación y no reenvía silenciosamente a otro ERP."
           },
           {
+            "id": "F06-V07",
             "scenario": "Un anillo presenta diferencias o fallos de recuperación.",
             "expected": "Se detiene su ampliación y se conserva el negocio ya registrado; la revisión y aceptación se realizan para ese país, canal y configuración."
           }
@@ -1071,12 +1194,129 @@
         "slideDetail": "Cada país y canal demuestra reutilización del núcleo y supera su aceptación propia. Ampliar anillos con conciliación, soporte y recuperación verificados por escenario.",
         "detail": "Demostrar con escenarios verificables qué comportamiento del núcleo se reutiliza y qué adaptación corresponde al país. Cada país, canal y configuración supera su propia aceptación antes de habilitarse. Los anillos se amplían con conciliación, observabilidad, soporte y recuperación comprobados. IA, RFID y omnicanal permanecen como extensiones posteriores sujetas a priorización."
       },
-      "requires": ["phase-05"],
+      "requires": [
+        "phase-05"
+      ],
       "links": [
-        { "label": "Adaptación del producto por país", "href": "/guide/proposal/product/" },
-        { "label": "Clientes de escritorio y móvil", "href": "/guide/architecture/native-clients/" },
-        { "label": "Coexistencia y migración ERP", "href": "/guide/proposal/erp-migration/" }
+        {
+          "label": "Adaptación del producto por país",
+          "href": "/guide/proposal/product/"
+        },
+        {
+          "label": "Clientes de escritorio y móvil",
+          "href": "/guide/architecture/native-clients/"
+        },
+        {
+          "label": "Coexistencia y migración ERP",
+          "href": "/guide/proposal/erp-migration/"
+        }
       ]
+    }
+  ],
+  "traceability": [
+    {
+      "id": "TRACE-CL-01",
+      "observationHref": "/guide/evidence/country-comparison/#obs-cl-01",
+      "decisionIds": [
+        "ADR-01",
+        "ADR-02",
+        "ADR-03",
+        "ADR-16"
+      ],
+      "workPackageIds": [
+        "F03-01",
+        "F05-02",
+        "F05-03"
+      ],
+      "validationIds": [
+        "F03-V01",
+        "F03-V02",
+        "F05-V03",
+        "F05-V08"
+      ],
+      "evidence": "Registro de corte/reconexión y restore con IDs, épocas de instalación, grants y resultados; contrastar el alcance con la operación de Chile, sin inferir capacidades por disponer de Internet de respaldo."
+    },
+    {
+      "id": "TRACE-PE-01",
+      "observationHref": "/guide/evidence/country-comparison/#obs-pe-01",
+      "decisionIds": [
+        "ADR-04",
+        "ADR-11",
+        "ADR-15"
+      ],
+      "workPackageIds": [
+        "F01-02",
+        "F03-02",
+        "F06-01"
+      ],
+      "validationIds": [
+        "F01-V05",
+        "F03-V03",
+        "F03-V08",
+        "F06-V01"
+      ],
+      "evidence": "Contrato del origen confirmado, datos de prueba por moneda, corte y hashes del paquete; prueba de carga interrumpida/claim vencido y cálculo reproducible con versión y vigencia."
+    },
+    {
+      "id": "TRACE-PE-02",
+      "observationHref": "/guide/evidence/country-comparison/#obs-pe-02",
+      "decisionIds": [
+        "ADR-03",
+        "ADR-05"
+      ],
+      "workPackageIds": [
+        "F03-01",
+        "F03-03",
+        "F06-04"
+      ],
+      "validationIds": [
+        "F03-V02",
+        "F03-V04",
+        "F06-V02"
+      ],
+      "evidence": "Caso reproducido con TI de Perú, identidad externa y consulta del destino; demostrar unicidad y conciliación tras respuesta perdida, o registrar la limitación que impide habilitar el adaptador."
+    },
+    {
+      "id": "TRACE-PE-03",
+      "observationHref": "/guide/evidence/country-comparison/#obs-pe-03",
+      "decisionIds": [
+        "ADR-04",
+        "ADR-16"
+      ],
+      "workPackageIds": [
+        "F04-01",
+        "F04-02",
+        "F04-04"
+      ],
+      "validationIds": [
+        "F04-V01",
+        "F04-V02",
+        "F04-V04",
+        "F04-V06"
+      ],
+      "evidence": "Casos autorizados de devolución, saldo y aprobación; estados y referencias separados, identidad del aprobador, resultado fiscal/monetario y prueba de concurrencia sin doble aplicación."
+    },
+    {
+      "id": "TRACE-ES-01",
+      "observationHref": "/guide/evidence/country-comparison/#obs-es-01",
+      "decisionIds": [
+        "ADR-04",
+        "ADR-05",
+        "ADR-16"
+      ],
+      "workPackageIds": [
+        "F02-01",
+        "F02-03",
+        "F02-04",
+        "F06-04"
+      ],
+      "validationIds": [
+        "F02-V01",
+        "F02-V03",
+        "F02-V05",
+        "F06-V02"
+      ],
+      "evidence": "Ensayo con combinación homologada Gira/proveedor/equipo, consulta de resultado físico y contable tras fallo; matriz de capacidades y recuperación que no dependa de repetir a ciegas."
     }
   ]
 }

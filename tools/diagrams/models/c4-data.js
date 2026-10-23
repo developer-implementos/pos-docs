@@ -29,6 +29,10 @@
   "c4": {
     "label": "Guía de estas vistas C4",
     "url": "../docs/c4-arquitectura-propuesta.md"
+  },
+  "publication": {
+    "label": "Contrato de publicación de maestros",
+    "url": "../docs/contracts/master-data-publication.md"
   }
 };
   const nodes = {
@@ -306,9 +310,9 @@
     "type": "Contenedor",
     "technology": "NestJS + Fastify / Node.js",
     "summary": "Recibe operaciones y sirve trabajo y versiones.",
-    "ownership": "Autentica sucursal y país; confirma inbox, efecto local y outbox juntos antes del ACK de aplicación.",
+    "ownership": "Autentica sucursal y país; confirma inbox, efecto local y outbox juntos antes del ACK de aplicación. Conserva autoridad de versiones, manifiestos y publicación de maestros.",
     "offline": "No participa en la transacción local de sucursal. Su caída genera atraso de sincronización.",
-    "detail": "apps/country-api autentica el ámbito país/entidad/sucursal. Confirma inbox, proyección operativa y outbox en un único commit antes del ACK de aplicación. Expone trabajo y resultados al erp-worker mediante HTTPS saliente iniciado por ese worker. Sirve publicaciones preparadas por un publicador separado; no ejecuta la ACL ni carga masiva pesada en un endpoint. La caché opcional acelera lecturas reconstruibles, con PostgreSQL como fuente durable.",
+    "detail": "apps/country-api autentica el ámbito país/entidad/sucursal. Confirma inbox, proyección operativa y outbox en un único commit antes del ACK de aplicación. Expone trabajo y resultados al erp-worker mediante HTTPS saliente iniciado por ese worker. Valida, publica y sirve versiones preparadas mediante MasterDataSourcePort en erp-worker; no ejecuta la ACL ni carga masiva pesada en un endpoint. La caché opcional acelera lecturas reconstruibles, con PostgreSQL como fuente durable.",
     "sources": [
       {
         "label": "Propuesta y decisiones de arquitectura",
@@ -324,22 +328,27 @@
   },
   "countryWorker": {
     "id": "countryWorker",
-    "name": "Publicador de maestros · proceso por asignar",
-    "type": "Contenedor",
-    "technology": "Proceso de publicación · composición pendiente",
-    "summary": "Prepara publicaciones comerciales versionadas.",
-    "ownership": "Escritor de versiones, manifiestos y feed de maestros autorizados. Aplicación ejecutable y operación por asignar; no es el ejecutor ERP.",
+    "name": "Publicación de maestros",
+    "type": "Componente",
+    "technology": "catalog / pricing / sync · TypeScript",
+    "summary": "Valida y publica versiones comerciales.",
+    "ownership": "country-api conserva la autoridad de candidata, versión, manifiesto, paquetes y publicación en país.",
     "offline": "Una carga incompleta no sustituye la publicación vigente. Las sucursales continúan según vigencia y políticas.",
-    "detail": "Obtiene datos de la fuente autorizada por país, prepara candidatas aisladas, valida cobertura y publica versión, manifiesto y evento en PostgreSQL de país. Es una capacidad propuesta pendiente de asignación a una aplicación; no se crea implícitamente una séptima app ni se introduce este trabajo pesado dentro de country-api. No recibe ventas para delegarlas al ERP.",
+    "detail": "Componente propuesto dentro de country-api. Recibe porciones idempotentes y finalización desde erp-worker por HTTPS, valida cobertura, corte e integridad y confirma versión, manifiesto y evento. La preparación pesada permanece en el adaptador de fuente del worker; no ocurre dentro de una petición.",
     "sources": [
+      {
+        "label": "Contrato de publicación de maestros",
+        "url": "../docs/contracts/master-data-publication.md"
+      },
       {
         "label": "Propuesta y decisiones de arquitectura",
         "url": "../docs/propuesta-arquitectura.md"
-      },
-      {
-        "label": "Opciones tecnológicas y límites",
-        "url": "../docs/opciones-tecnologicas.md"
       }
+    ],
+    "codePaths": [
+      "libs/backend/catalog",
+      "libs/backend/pricing",
+      "libs/backend/sync"
     ]
   },
   "countryDb": {
@@ -367,10 +376,10 @@
     "name": "erp-worker",
     "type": "Contenedor",
     "technology": "NestJS / Node.js · libs/backend/erp",
-    "summary": "Consume trabajo; traduce y concilia con ERP.",
-    "ownership": "Proceso ejecutable con fachada, ACL y adaptadores internos. Country-api conserva trabajo, destinos, intentos y resultados durables.",
+    "summary": "Integra ERP y prepara maestros por contrato.",
+    "ownership": "Proceso con fachada, ACL y adaptadores internos. Prepara maestros por MasterDataSourcePort con identidad y presupuesto aislados; country-api conserva publicaciones y resultados durables.",
     "offline": "Si país o ERP no responde, conserva identidad y resultado incierto. Consulta o concilia antes de repetir un efecto.",
-    "detail": "apps/erp-worker se ejecuta en la red autorizada del ERP e inicia HTTPS autenticado hacia country-api para reclamar trabajo, renovar su lease y registrar resultados. Mantiene destino, versión de contrato e identidad de intento. Fachada, ACL y adaptadores son componentes de libs/backend/erp, no servicios HTTP separados obligatorios. Chile: AX; Perú: custom; España: Gira, con interfaces por homologar. No accede por SQL remoto a PostgreSQL de país.",
+    "detail": "apps/erp-worker se ejecuta en la red autorizada del ERP e inicia HTTPS autenticado hacia country-api para reclamar trabajo, renovar su lease y registrar resultados. Mantiene destino, versión de contrato e identidad de intento. Fachada, ACL y adaptadores son componentes de libs/backend/erp, no servicios HTTP separados obligatorios. Chile: AX; Perú: custom; España: Gira, con interfaces por homologar. No accede por SQL remoto a PostgreSQL de país. La preparación de maestros usa una identidad y presupuesto propios, conexión saliente a country-api y contrato de fuente homologado; no ejecuta SQL WAN.",
     "sources": [
       {
         "label": "Propuesta y decisiones de arquitectura",
@@ -799,7 +808,7 @@
     "summary": "Azul: POS. Violeta: datos. Gris: externo.",
     "ownership": "Borde discontinuo: sistema, proceso o nodo según título. Opcional/por asignar se indica expresamente.",
     "offline": "Flecha: iniciador, propósito y protocolo. Respuesta por el mismo contrato.",
-    "detail": "Persona: rol. Contenedor: aplicación o almacén. Componente: módulo de un proceso. Las apps usan su nombre de monorepo. Redis de país y observabilidad son condicionales; un publicador por asignar no acredita una aplicación existente.",
+    "detail": "Persona: rol. Contenedor: aplicación o almacén. Componente: módulo de un proceso. Las apps usan su nombre de monorepo. Redis de país y observabilidad son condicionales; publicación y extracción son responsabilidades internas de las aplicaciones indicadas.",
     "sources": [
       {
         "label": "Guía de estas vistas C4",
@@ -977,7 +986,7 @@
     "type": "Componente",
     "technology": "catalog + pricing + reporting",
     "summary": "Sirve versiones y estado operativo.",
-    "ownership": "Lee publicaciones completas y autorizadas; el publicador pesado vive fuera de este proceso.",
+    "ownership": "Lee publicaciones completas y autorizadas; la extracción y preparación pesada se ejecutan en erp-worker.",
     "offline": "Sólo sirve versiones compatibles y vigentes; una caché no cambia su autoridad.",
     "detail": "Expone manifiestos, deltas, chunks y consultas de estado por ámbito. PostgreSQL identifica la versión autorizada y su watermark. Catalog/pricing/reporting conservan sus contratos; country-api no construye cargas masivas dentro de la solicitud HTTP.",
     "sources": [
@@ -1184,6 +1193,32 @@
     "codePaths": [
       "libs/backend/erp"
     ]
+  },
+  "erpMasterSource": {
+    "id": "erpMasterSource",
+    "name": "Extracción de maestros",
+    "type": "Componente",
+    "technology": "MasterDataSourcePort · TypeScript",
+    "summary": "Prepara cargas en la red del origen.",
+    "ownership": "erp-worker compone un adaptador de fuente con identidad, claims y presupuesto aislados de las operaciones financieras.",
+    "offline": "Sin origen homologado, claim válido o corte íntegro no finaliza la publicación. Reintenta porciones identificadas sin SQL WAN.",
+    "detail": "Obtiene snapshot o deltas con corte consistente desde la fuente autorizada del país, prepara porciones y solicita claim, upload y finalize a country-api mediante el cliente HTTPS. La autoridad de publicación permanece en país. Acceso de red y capacidades de la fuente deben homologarse.",
+    "codePaths": [
+      "libs/backend/erp",
+      "libs/backend/catalog",
+      "libs/backend/pricing",
+      "libs/backend/sync"
+    ],
+    "sources": [
+      {
+        "label": "Contrato de publicación de maestros",
+        "url": "../docs/contracts/master-data-publication.md"
+      },
+      {
+        "label": "Propuesta y decisiones de arquitectura",
+        "url": "../docs/propuesta-arquitectura.md"
+      }
+    ]
   }
 };
   const views = [
@@ -1250,7 +1285,7 @@
     "level": "C2 · Contenedores",
     "title": "Aplicaciones, procesos y datos",
     "scope": "Aplicaciones de POS Platform, persistencia de sucursal y servicios de país. Cada nombre de app corresponde al monorepo; las capacidades son propuesta por implementar.",
-    "note": "PostgreSQL conserva negocio y entrega durable. Redis de país es caché opcional reconstruible; el publicador de maestros es un proceso por asignar. ACL/fachada/adaptador están dentro de erp-worker.",
+    "note": "PostgreSQL conserva negocio y entrega durable. Country-api publica versiones; erp-worker prepara maestros mediante un contrato de origen y presupuesto aislados. Redis es caché opcional. Sin SQL WAN ni aplicación adicional.",
     "nodeIds": [
       "cashier",
       "client",
@@ -1260,7 +1295,6 @@
       "branchDb",
       "syncWorker",
       "countryApi",
-      "countryWorker",
       "countryDb",
       "countryCache",
       "erpAdapter",
@@ -1282,7 +1316,6 @@
           "branchDb",
           "syncWorker",
           "countryApi",
-          "countryWorker",
           "countryDb",
           "countryCache",
           "erpAdapter"
@@ -1348,7 +1381,7 @@
       {
         "from": "countryApi",
         "to": "countryDb",
-        "label": "Inbox + efecto + outbox; trabajo y resultados · SQL"
+        "label": "Recepción, publicaciones, trabajo y resultados · SQL"
       },
       {
         "from": "countryApi",
@@ -1356,24 +1389,19 @@
         "label": "Lecturas versionadas · Redis opcional"
       },
       {
-        "from": "countryWorker",
-        "to": "masters",
-        "label": "Obtiene cambios o carga completa · contrato de origen"
-      },
-      {
-        "from": "countryWorker",
-        "to": "countryDb",
-        "label": "Publica versión, manifiesto y evento · SQL"
-      },
-      {
         "from": "erpAdapter",
         "to": "countryApi",
-        "label": "Solicita trabajo / reporta resultado · HTTPS saliente"
+        "label": "Trabajo, resultados y porciones de maestros · HTTPS saliente"
       },
       {
         "from": "erpAdapter",
         "to": "erp",
         "label": "Envía, consulta y concilia · contrato ERP"
+      },
+      {
+        "from": "erpAdapter",
+        "to": "masters",
+        "label": "Obtiene carga o deltas · contrato de fuente homologado"
       }
     ]
   },
@@ -1643,7 +1671,7 @@
     "level": "Complemento · Despliegue",
     "title": "Sucursal, país y red autorizada del ERP",
     "scope": "Perfil WAN: puestos y móviles usan el servidor de sucursal por LAN. País y red del ERP son entornos independientes, conectados mediante contratos autenticados.",
-    "note": "erp-worker inicia la conexión hacia country-api; no accede por SQL WAN a su base. Redis sólo aparece como caché opcional de país. Infraestructura, recuperación y capacidad deben homologarse.",
+    "note": "PostgreSQL conserva negocio y entrega durable. Country-api publica versiones; erp-worker prepara maestros mediante un contrato de origen y presupuesto aislados. Redis es caché opcional. Sin SQL WAN ni aplicación adicional.",
     "nodeIds": [
       "client",
       "mobileClient",
@@ -1652,7 +1680,6 @@
       "branchDb",
       "syncWorker",
       "countryApi",
-      "countryWorker",
       "countryDb",
       "countryCache",
       "erpAdapter",
@@ -1661,6 +1688,7 @@
       "fiscal",
       "backup",
       "observability",
+      "masters",
       "legend"
     ],
     "boundaries": [
@@ -1693,7 +1721,6 @@
         "label": "Plataforma de país · alojamiento por decidir",
         "nodes": [
           "countryApi",
-          "countryWorker",
           "countryDb",
           "countryCache"
         ]
@@ -1741,12 +1768,7 @@
       {
         "from": "countryApi",
         "to": "countryDb",
-        "label": "Recepción, trabajo y resultados · SQL"
-      },
-      {
-        "from": "countryWorker",
-        "to": "countryDb",
-        "label": "Publicaciones completas · SQL"
+        "label": "Recepción, publicaciones, trabajo y resultados · SQL"
       },
       {
         "from": "countryApi",
@@ -1756,7 +1778,7 @@
       {
         "from": "erpAdapter",
         "to": "countryApi",
-        "label": "Trabajo / resultados · HTTPS saliente"
+        "label": "Trabajo, resultados y porciones de maestros · HTTPS saliente"
       },
       {
         "from": "erpAdapter",
@@ -1797,6 +1819,11 @@
         "from": "erpAdapter",
         "to": "observability",
         "label": "Intentos técnicos / errores opt-in · canal aprobado"
+      },
+      {
+        "from": "erpAdapter",
+        "to": "masters",
+        "label": "Obtiene carga o deltas · contrato de fuente homologado"
       }
     ]
   },
@@ -1815,6 +1842,7 @@
       "countryInbox",
       "countryJobs",
       "countryPublications",
+      "countryWorker",
       "countryCachePort",
       "countryUow",
       "technicalBase",
@@ -1831,6 +1859,7 @@
           "countryInbox",
           "countryJobs",
           "countryPublications",
+          "countryWorker",
           "countryCachePort",
           "countryUow",
           "technicalBase"
@@ -1897,6 +1926,16 @@
         "from": "countryUow",
         "to": "countryDb",
         "label": "Persistencia y lectura autorizada · SQL"
+      },
+      {
+        "from": "countryEntry",
+        "to": "countryWorker",
+        "label": "Claim, porciones y finalización · TypeScript"
+      },
+      {
+        "from": "countryWorker",
+        "to": "countryUow",
+        "label": "Versión, manifiesto y evento · una transacción"
       }
     ]
   },
@@ -1906,18 +1945,20 @@
     "level": "C3 · erp-worker",
     "title": "Contrato POS, ACL y recuperación ERP",
     "containerId": "erpAdapter",
-    "scope": "Un proceso apps/erp-worker en la red autorizada del ERP. Fachada, ACL, protocolo y conciliación son componentes internos de libs/backend/erp.",
+    "scope": "Un proceso apps/erp-worker en la red autorizada del ERP. Fachada, ACL, protocolo y conciliación son componentes internos de libs/backend/erp. MasterDataSourcePort prepara publicaciones con claims, identidad y presupuesto propios.",
     "note": "El worker inicia HTTPS hacia country-api. Lease, destino, versión e intento permanecen identificados; un timeout no autoriza duplicar efectos ni cambiar de ERP.",
     "nodeIds": [
       "countryApi",
       "erpExecution",
       "erpClient",
+      "erpMasterSource",
       "erpFacade",
       "erpAcl",
       "erpProtocol",
       "erpRecovery",
       "technicalBase",
       "erp",
+      "masters",
       "legend"
     ],
     "boundaries": [
@@ -1927,6 +1968,7 @@
         "nodes": [
           "erpExecution",
           "erpClient",
+          "erpMasterSource",
           "erpFacade",
           "erpAcl",
           "erpProtocol",
@@ -1985,6 +2027,21 @@
         "from": "erpRecovery",
         "to": "erpClient",
         "label": "Registra resultado con misma identidad · TypeScript"
+      },
+      {
+        "from": "erpExecution",
+        "to": "erpMasterSource",
+        "label": "Preparación con presupuesto aislado · TypeScript"
+      },
+      {
+        "from": "erpMasterSource",
+        "to": "masters",
+        "label": "Snapshot o deltas · contrato de fuente homologado"
+      },
+      {
+        "from": "erpMasterSource",
+        "to": "erpClient",
+        "label": "Claim, upload y finalize · TypeScript"
       }
     ]
   }

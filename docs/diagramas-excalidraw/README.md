@@ -36,7 +36,7 @@ La galería no necesita conexión. Para usar el editor, utiliza tu instalación 
 La colección usa **#0545BA** como color primario. Azul identifica software POS, azul oscuro a personas, violeta a almacenes de datos, gris a sistemas externos y ámbar a infraestructura o condiciones. Los nombres y estereotipos también identifican cada tipo; el significado no depende solo del color.
 
 - **Contexto** identifica actores, el POS y los sistemas externos.
-- **Contenedores** explica las seis apps, los almacenes, la publicación de maestros por asignar y la caché opcional de país. Un contenedor C4 no implica Docker.
+- **Contenedores** explica las seis apps, los almacenes, la preparación/publicación de maestros en `erp-worker`/`country-api` y la caché opcional de país. Son capacidades propuestas con homologación pendiente; un contenedor C4 no implica Docker.
 - **Componentes** amplía cuatro procesos: `branch-api`, `branch-sync-worker`, `country-api` y `erp-worker`. Muestra grupos de bibliotecas y soporte técnico dentro de cada aplicación; no microservicios por módulo.
 - **Despliegue** distribuye instancias entre puestos, móviles, sucursal, plataforma de país y red autorizada del ERP. Es una vista complementaria; el cuarto nivel de C4 sería código.
 - **Dinámicas** numeran interacciones de precios y venta, con condiciones, fallos y recuperación. Complementan las vistas estructurales.

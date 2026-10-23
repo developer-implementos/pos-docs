@@ -2,7 +2,7 @@
 
 Revisión: **1 de octubre de 2026**. Estos recorridos amplían el [catálogo de endpoints](catalogo-integraciones-actuales.md) y las [vistas de arquitectura](vistas-arquitectura-y-flujos.md). Se reconstruyen desde los commits de Chile ya revisados. **No son trazas de producción ni un modelo completo de todas las tablas.**
 
-La [presentación, capítulo Datos](../presentation/index.html#datos), permite elegir un recorrido, avanzar paso a paso y pulsar sus aplicaciones o tablas. Cada paso explica la lectura, escritura o llamada involucrada. Las fichas muestran campos de estado, límites de transacción y fuentes. Los cinco dibujos Mermaid de este documento son la fuente de los diagramas web.
+El [capítulo Datos del antecedente editorial](../presentation/index.html#datos) conserva los recorridos del sistema analizado: aplicaciones, tablas, campos de estado, límites de transacción y fuentes. Los cinco dibujos Mermaid de este documento sustentan esas vistas del legado. El [explorador general de POS Docs](/architecture/) muestra por separado las aplicaciones y contratos de la propuesta vigente.
 
 ## Cómo leer los recorridos
 

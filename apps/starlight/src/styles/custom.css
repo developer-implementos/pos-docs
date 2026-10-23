@@ -130,6 +130,12 @@ h1 { letter-spacing: -.035em; line-height: 1.14; text-wrap: balance; }
   .sl-markdown-content .roadmap-work-package { padding: 1rem; }
   .roadmap-work-scope > div { grid-template-columns: minmax(0, 1fr); }
 }
+/* Keep editorial filters visible without displacing the search results. */
+#starlight__search .pagefind-ui__filter-block { padding: .5rem 0; }
+#starlight__search .pagefind-ui__filter-group { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 .75rem; padding-top: .25rem; }
+#starlight__search .pagefind-ui__filter-label { padding-block: .65rem; line-height: 1.3; font-size: .8rem; }
+#starlight__search .pagefind-ui__filter-name { min-height: 2.75rem; }
+@media (max-width: 24rem) { #starlight__search .pagefind-ui__filter-group { grid-template-columns: minmax(0, 1fr); } }
 :focus-visible { outline: 3px solid var(--sl-color-accent); outline-offset: 4px; }
 @media (max-width: 50rem) { :root { --sl-text-5xl: 2.1rem; } .sl-markdown-content { line-height: 1.65; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }

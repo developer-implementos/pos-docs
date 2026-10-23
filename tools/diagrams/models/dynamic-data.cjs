@@ -18,12 +18,12 @@ module.exports = [
         "summary": "Entrega catálogo, impuestos, precios y promociones aprobados por su propietario."
       },
       {
-        "id": "countryWorker",
-        "nodeId": "countryWorker",
-        "name": "Publicador de maestros · proceso por asignar",
+        "id": "erpAdapter",
+        "nodeId": "erpAdapter",
+        "name": "erp-worker",
         "type": "Contenedor",
-        "technology": "Proceso de publicación · composición pendiente",
-        "summary": "Proceso propuesto por asignar: prepara y publica versiones; no ejecuta la integración ERP."
+        "technology": "NestJS / Node.js · libs/backend/erp",
+        "summary": "Prepara datos autorizados y sube porciones mediante HTTPS saliente; no activa versiones ni usa SQL WAN."
       },
       {
         "id": "countryDb",
@@ -76,22 +76,28 @@ module.exports = [
     ],
     "steps": [
       {
-        "from": "countryWorker",
+        "from": "erpAdapter",
         "to": "masters",
         "label": "Obtiene cambios o carga completa autorizada",
         "note": "Interfaz por confirmar; el contrato identifica origen, cobertura, versión y vigencia. La secuencia no presupone CDC ni un broker."
       },
       {
-        "from": "countryWorker",
-        "to": "countryWorker",
-        "label": "Construye y valida una publicación inmutable",
-        "note": "Combina datos autorizados y verifica integridad y compatibilidad. Un cambio parcial no se declara publicación completa."
+        "from": "erpAdapter",
+        "to": "erpAdapter",
+        "label": "Prepara porciones con corte consistente",
+        "note": "MasterDataSourcePort valida el contrato de fuente y prepara una candidata. Claims, identidad y presupuesto separados de los comandos financieros. La publicación en país pertenece a country-api."
       },
       {
-        "from": "countryWorker",
+        "from": "erpAdapter",
+        "to": "countryApi",
+        "label": "Claim, upload y finalize · HTTPS saliente",
+        "note": "Entrega porciones idempotentes y pide finalización; una respuesta perdida conserva identidad. No abre SQL remoto ni decide la publicación en país."
+      },
+      {
+        "from": "countryApi",
         "to": "countryDb",
-        "label": "Publica versión, manifiesto y outbox · transacción SQL",
-        "note": "La publicación y su evento se confirman juntos; el feed conserva los deltas. El manifiesto registra un watermark: corte consistente de origen desde el que recuperarlos. Una hora arbitraria del proceso no sustituye este corte."
+        "label": "Versión, manifiesto y outbox · commit SQL",
+        "note": "Tras validar corte, cobertura e integridad, country-api confirma publicación y evento. Los paquetes siguen inmutables y una carga parcial nunca sustituye la versión activa."
       },
       {
         "from": "syncWorker",
@@ -180,8 +186,8 @@ module.exports = [
         "body": "La entrega puede repetirse y se deduplica. Tombstones, versiones referenciadas y evidencia se retienen durante el horizonte de replay y recuperación para no resucitar bajas. Un restore puede retroceder datos y cursores: se concilia con origen antes de declarar convergencia."
       },
       {
-        "title": "Publicador por asignar",
-        "body": "La preparación pesada de maestros requiere composición y operación por definir. Se representa como capacidad separada, sin inventar una aplicación del monorepo ni introducir el trabajo dentro de country-api. erp-worker conserva su responsabilidad de integración ERP."
+        "title": "Responsabilidades de publicación",
+        "body": "erp-worker prepara mediante MasterDataSourcePort en la red autorizada del origen; country-api conserva versiones y confirma su publicación en país. Fuente, interfaz y acceso se homologan por país; la preparación tiene identidad, claims y presupuesto aislados del trabajo financiero."
       }
     ]
   },

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { renderRoadmapMatrix } from '../../tools/roadmap.mjs';
+import { renderRoadmapMatrix, phasePlanHref } from '../../tools/roadmap.mjs';
 
 const escape = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
 const phaseCode = phase => `F${String(phase.number).padStart(2, '0')}`;
@@ -30,7 +30,7 @@ export function roadmapView(roadmap) {
 /** Two phases per detail slide; prose comes from the same source as Starlight. */
 export function roadmapPairView(phases) {
   assert.equal(phases.length, 2, 'A roadmap detail slide requires two phases');
-  const markup = `<div class="roadmap-pair">${phases.map(phase => `<div class="roadmap-pair-phase" data-roadmap-phase="${phase.id}" role="group" aria-labelledby="roadmap-pair-${phase.id}"><h3 id="roadmap-pair-${phase.id}"><span class="roadmap-phase-code">${phaseCode(phase)}</span>${escape(phase.title)}</h3>${lanes.map(lane => `<div class="roadmap-pair-lane" data-row="${lane.key}"><h4>${lane.label} <span>· ${escape(phase[lane.key].title)}</span></h4><p>${escape(phase[lane.key].slideDetail)}</p></div>`).join('')}</div>`).join('')}</div>`;
-  const reading = `<div class="roadmap-reading-pair">${phases.map(phase => `<section id="roadmap-reading-${phase.id}" class="roadmap-reading-phase"><h3>${phaseCode(phase)} · ${escape(phase.title)}</h3><p>${escape(phase.summary)}</p><dl>${lanes.map(lane => `<div><dt>${lane.label} · ${escape(phase[lane.key].title)}</dt><dd>${escape(phase[lane.key].detail)}</dd></div>`).join('')}</dl><p><a href="/guide/proposal/roadmap/#${phase.id}">Dependencias y criterios de ${phaseCode(phase)}</a></p><ul aria-label="Fuentes de ${phaseCode(phase)}">${phase.links.map(link => `<li><a href="${escape(link.href)}">${escape(link.label)}</a></li>`).join('')}</ul></section>`).join('')}</div>`;
+  const markup = `<div class="roadmap-pair">${phases.map(phase => `<div class="roadmap-pair-phase" data-roadmap-phase="${phase.id}" role="group" aria-labelledby="roadmap-pair-${phase.id}"><h3 id="roadmap-pair-${phase.id}"><span class="roadmap-phase-code">${phaseCode(phase)}</span>${escape(phase.title)}<a class="phase-plan-link" href="${phasePlanHref(phase)}" target="_blank" rel="noopener" aria-label="Entregables y aceptación de ${phaseCode(phase)}">Ver plan</a></h3>${lanes.map(lane => `<div class="roadmap-pair-lane" data-row="${lane.key}"><h4>${lane.label} <span>· ${escape(phase[lane.key].title)}</span></h4><p>${escape(phase[lane.key].slideDetail)}</p></div>`).join('')}</div>`).join('')}</div>`;
+  const reading = `<div class="roadmap-reading-pair">${phases.map(phase => `<section id="roadmap-reading-${phase.id}" class="roadmap-reading-phase"><h3>${phaseCode(phase)} · ${escape(phase.title)}</h3><p>${escape(phase.summary)}</p><dl>${lanes.map(lane => `<div><dt>${lane.label} · ${escape(phase[lane.key].title)}</dt><dd>${escape(phase[lane.key].detail)}</dd></div>`).join('')}</dl><p><a href="${phasePlanHref(phase)}">Entregables y aceptación de ${phaseCode(phase)}</a></p><ul aria-label="Fuentes de ${phaseCode(phase)}">${phase.links.map(link => `<li><a href="${escape(link.href)}">${escape(link.label)}</a></li>`).join('')}</ul></section>`).join('')}</div>`;
   return { markup, reading };
 }

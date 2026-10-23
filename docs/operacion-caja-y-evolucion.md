@@ -2,7 +2,7 @@
 
 Revisión del **1 de octubre de 2026**. Esta ampliación releyó las 15 láminas y notas del [PowerPoint original](<referencias/Ecosistema de Caja Mountain 4.pptx>), y volvió a contrastar fragmentos concretos de los repositorios ya fijados. Añade operación cotidiana, límites de impresión, contexto del precio y entrega de versiones a los recorridos D01–D05. No es una nueva auditoría completa ni valida el despliegue productivo.
 
-En la [presentación web](../presentation/index.html), **Venta** incorpora O01/O03 y las distinciones de operación; **Propuesta**, O02; **Evolución**, O04. Cada caso alterna código actual y contrato propuesto, con un escenario de excepción. Se conservan ocho capítulos. Los ocho Mermaid de este documento alimentan esos diagramas; las comparaciones son explicaciones, no ejecutan caja, ERP, hardware ni pipelines.
+En el [antecedente editorial de ocho capítulos](../presentation/index.html), **Venta** incorpora O01/O03 y las distinciones de operación; **Propuesta**, O02; **Evolución**, O04. Cada caso alterna código analizado y contrato propuesto, con un escenario de excepción. Los ocho Mermaid de este documento sustentan esas vistas. La [presentación vigente de POS Docs](/presentations/architecture/) y el [explorador general](/architecture/) conservan su propio alcance; estas comparaciones no ejecutan caja, ERP, hardware ni pipelines.
 
 ## Fuentes y criterio de selección
 

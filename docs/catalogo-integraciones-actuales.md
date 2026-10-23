@@ -697,7 +697,7 @@ Antes de declarar validado un recorrido productivo se necesita una matriz saniti
 5. Verificar impresión con periférico desconectado, papel agotado, respuesta perdida y reimpresión; distinguir aceptación HTTP, aceptación del spooler y confirmación física cuando el hardware la ofrezca.
 6. Registrar los contratos por capacidad y proveedor antes de sustituir WSO2, ERP o dispositivo, incluyendo identidad lógica estable, resultado incierto y reconciliación. Esto complementa la [propuesta de arquitectura](propuesta-arquitectura.md) y la [extensibilidad de proveedores](extensibilidad-proveedores-dispositivos.md).
 
-La [presentación técnica](../presentation/index.html) consume el mismo inventario mediante [datos estáticos](../presentation/technical-data.js). Los enlaces de código son permalinks por SHA y no dependen de tener la carpeta `repos/` para navegar el ZIP.
+El [antecedente editorial del ecosistema](../presentation/index.html) consume este inventario del legado mediante [datos estáticos](../presentation/technical-data.js). La [presentación vigente de POS Docs](/presentations/architecture/) resume la propuesta, con un alcance diferente. Los enlaces de código son permalinks por SHA y no dependen de tener la carpeta `repos/` para consultar la evidencia.
 
 ### Administración central adicional
 

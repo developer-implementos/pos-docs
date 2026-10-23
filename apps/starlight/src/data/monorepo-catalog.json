@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "product": "POS Platform",
   "reviewedOn": "2026-10-21",
-  "repository": "https://github.com/floxcristian/pos-platform",
+  "repository": "https://github.com/developer-implementos/pos-platform",
   "evidence": "Seis aplicaciones de POS Platform: clientes Angular separados para escritorio (Tauri) y móvil (Capacitor Android/iOS), con shell compartido, y cuatro entradas backend. La documentación Starlight se mantiene en developer-implementos/pos-docs. El estado distingue adaptadores mock, base técnica y scaffolding; no acredita operación productiva, periféricos homologados ni validación funcional en dispositivos físicos.",
   "applications": [
     {

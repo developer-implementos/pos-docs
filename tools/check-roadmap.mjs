@@ -205,7 +205,7 @@ try {
   await page.goto(slidesUrl + '#/slide-12');
   await waitForSlide(page, 11, -1);
   const slide = page.locator('#slide-12');
-  assert.equal(await page.locator('.slides section[data-leaf]').count(), 21);
+  assert.equal(await page.locator('.slides section[data-leaf]').count(), 22);
   assert.equal(await page.locator('.slides section[data-chapter-cover]').count(), 5);
   for (const [index, phases] of [roadmap.phases.slice(0, 3), roadmap.phases.slice(3)].entries()) {
     if (index) await page.keyboard.press('ArrowDown');
@@ -246,7 +246,7 @@ try {
     await page.screenshot({ path: path.join(result, `slide-${index + 1}.png`) });
   }
   await page.goto(slidesUrl + '?print-pdf#/slide-12');
-  await page.waitForFunction(() => document.querySelectorAll('.pdf-page').length === 21);
+  await page.waitForFunction(() => document.querySelectorAll('.pdf-page').length === 22);
   assert.equal(await page.locator('#slide-12 .roadmap-print-phase').count(), 6);
   assert.equal(await page.locator('#slide-12 .roadmap-tour').isVisible(), false);
   await assertSlideFits(page, '#slide-12 .roadmap-print');
@@ -271,7 +271,7 @@ try {
   }
   await assertNoPageOverflow(staticPage, 'Reading without JavaScript');
   assert.deepEqual(errors, [], 'No runtime, network or CSP errors');
-  console.log('Roadmap checked: shared content, six complete phase plans, dependency/source links, responsive guide and plans, keyboard and no-JS access, two Reveal views, history, detail slides, and 21-page print including chapter covers.');
+  console.log('Roadmap checked: shared content, six complete phase plans, dependency/source links, responsive guide and plans, keyboard and no-JS access, two Reveal views, history, detail slides, and 22-page print including chapter covers.');
 } finally {
   await browser.close();
   await new Promise(resolve => server.close(resolve));

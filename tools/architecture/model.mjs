@@ -25,6 +25,8 @@ const source = {
   resilience: { label: 'Resiliencia y recuperación', href: '/guide/operations/resilience/' },
   technology: { label: 'Evaluación tecnológica', href: '/guide/architecture/technologies/' },
   meetings: { label: 'Fuentes de reuniones por país', href: '/guide/evidence/country-comparison/' },
+  publication: { label: 'Contrato de publicación de maestros', href: '/guide/architecture/master-data-publication/' },
+  identity: { label: 'Identidad y fronteras de confianza', href: '/guide/architecture/identity/' },
 };
 const sources = (...keys) => keys.map(key => source[key]);
 
@@ -65,6 +67,9 @@ const protocolLabels = {
   'country-diagnostic': 'Telemetría',
   'erp-diagnostic': 'Telemetría',
   'bridge-evidence': 'IPC / loopback',
+  'prepare-masters': 'TypeScript',
+  'submit-publication': 'HTTPS saliente',
+  'finalize-publication': 'TypeScript',
 };
 
 function node(id, group, reference, options) {
@@ -74,6 +79,7 @@ function node(id, group, reference, options) {
     id, group, title: options.title ?? base?.name,
     kind: options.kind, status: options.status ?? 'proposed',
     ...(options.owner ? { owner: options.owner } : {}),
+    ...(reference ? { c4Ref: reference } : {}),
     technology: options.technology ?? base?.technology,
     summary: options.summary ?? base?.summary,
     description: options.description ?? base?.detail,
@@ -89,6 +95,7 @@ function edge(id, from, to, title, protocol, mode, options) {
   if (!protocolLabel || [...protocolLabel].length > 30) throw new Error(`Missing or overlong short protocol: ${id}`);
   return {
     id, from, to, title, protocol, protocolLabel, mode, status: options.status ?? 'proposed',
+    relation: options.relation ?? 'communication',
     summary: options.summary, description: options.description,
     payload: options.payload, guarantees: options.guarantees, failure: options.failure,
     sources: sources(...(options.sources ?? ['c4'])),
@@ -107,7 +114,7 @@ export const architecture = {
   nodes: [
     node('desktop', 'clients', 'client', { kind: 'app', data: ['Estado de interfaz y referencias de operaciones; sin credenciales SQL.', 'Comandos autorizados hacia backend y, si corresponde, puente del puesto.'], sources: ['native', 'monorepo', 'providers'] }),
     node('mobile', 'clients', 'mobileClient', { kind: 'app', data: ['Estado de UI y capacidades móviles habilitadas.', 'Mismo ámbito y autoridad de sucursal que el cliente de escritorio.'], sources: ['native', 'monorepo'] }),
-    node('bridge', 'clients', 'device', { kind: 'component', status: 'conditional', data: ['Identidad de comando, autorización original y evidencia técnica.', 'No crea una base de ventas ni un nuevo intento de pago.'], sources: ['providers', 'resilience'] }),
+    node('bridge', 'clients', 'device', { kind: 'process', status: 'conditional', data: ['Identidad de comando, autorización original y evidencia técnica.', 'No crea una base de ventas ni un nuevo intento de pago.'], sources: ['providers', 'resilience', 'identity'] }),
     node('devices', 'clients', null, {
       title: 'Periféricos del puesto', kind: 'external', status: 'unresolved', technology: 'Impresora · lector · terminal según contrato',
       summary: 'Capacidades físicas que requieren homologación.',
@@ -127,7 +134,7 @@ export const architecture = {
     node('country-db', 'country', 'countryDb', { kind: 'data', title: 'PostgreSQL de país', data: ['Recepción, proyecciones operativas, outbox, publicaciones y trabajo ERP.', 'Identidades y resultados durables aislados por país y entidad legal.'], sources: ['c4', 'sync', 'resilience'] }),
     node('cache-port', 'country', 'countryCachePort', { kind: 'component', status: 'conditional', owner: 'country-api', title: 'Lecturas con caché', data: ['Consultas derivadas autorizadas; no decisiones monetarias exclusivas.', 'Clave con ámbito, versión y permisos cuando cambien el resultado.'], sources: ['c4', 'technology'] }),
     node('redis-cache', 'country', 'countryCache', { kind: 'data', status: 'conditional', title: 'Redis · caché', data: ['Entradas descartables reconstruibles desde PostgreSQL.', 'TTL técnico y vigencia comercial independientes; capacidad limitada.'], sources: ['c4', 'messaging'] }),
-    node('publisher', 'country', 'countryWorker', { kind: 'component', status: 'unresolved', title: 'Publicación de maestros', data: ['Candidata, manifiesto, versión, cobertura, punto de corte y feed.', 'Aplicación ejecutora, operación y almacenamiento de artefactos por asignar.'], sources: ['c4', 'pricing'] }),
+    node('publisher', 'country', null, { kind: 'component', owner: 'country-api', title: 'Publicación de maestros', technology: 'Contrato interno · catalog / pricing / sync', summary: 'Valida y publica versiones completas.', description: 'Country-api conserva la autoridad de publicaciones: admite porciones, valida una candidata completa y confirma versión, manifiesto y evento. La extracción y preparación pesada se ejecutan en erp-worker mediante un contrato de fuente homologado.', responsibilities: ['Autorizar claims de publicación y recibir porciones idempotentes.', 'Validar cobertura, integridad y corte antes de publicar una versión en país.'], data: ['Candidata, manifiesto, versión, cobertura, punto de corte y feed.', 'Paquetes inmutables; conservación y almacenamiento según contrato.'], failure: ['Una carga incompleta nunca sustituye la versión activa.'], sources: ['publication', 'pricing'] }),
     node('masters', 'country', 'masters', { kind: 'external', status: 'unresolved', data: ['Maestros, precios y promociones cuya autoridad se acuerda por dato y país.', 'No se atribuye automáticamente toda la autoría al ERP.'], sources: ['pricing', 'c4', 'meetings'] }),
     node('rabbitmq', 'country', null, {
       title: 'RabbitMQ · transporte', kind: 'infra', status: 'conditional', technology: 'AMQP · alternativa central',
@@ -138,6 +145,7 @@ export const architecture = {
       failure: ['Publisher confirm no equivale a commit del consumidor ni resultado ERP.', 'Redelivery exige identidad estable y deduplicación; no promete exactamente una vez.'], sources: ['messaging', 'c4', 'resilience'],
     }),
     node('erp-worker', 'integrations', 'erpAdapter', { kind: 'app', data: ['Trabajo obtenido por API con destino y versión fijos.', 'Resultados y referencias se confirman en país mediante HTTPS; sin SQL WAN.'], sources: ['c4', 'integration', 'migration'] }),
+    node('master-source', 'integrations', null, { kind: 'component', owner: 'erp-worker', title: 'Extracción de maestros', technology: 'MasterDataSourcePort · adaptador de origen', summary: 'Prepara cargas en la red del origen.', description: 'Responsabilidad propuesta dentro de erp-worker. El adaptador obtiene una carga o deltas con corte consistente, prepara porciones y las sube a country-api mediante HTTPS saliente. Red, interfaz y capacidades del origen necesitan homologación; no presupone que todos los maestros pertenezcan al ERP.', responsibilities: ['Extraer y preparar mediante un contrato de fuente por país.', 'Aislar identidad, claims y presupuesto de concurrencia de la ejecución financiera.'], data: ['Referencia de publicación, corte, porciones y progreso técnico.', 'La versión publicada permanece bajo autoridad de country-api.'], failure: ['Si el origen no acredita integridad o acceso, no finaliza la publicación.', 'Reintentar porciones conserva claim, versión e identidad; nunca usa SQL WAN.'], sources: ['publication', 'identity'] }),
     node('erp-acl', 'integrations', 'erpAcl', { kind: 'component', owner: 'erp-worker', title: 'Fachada, ACL y adaptador', description: `${c4.erpFacade.detail} ${c4.erpAcl.detail} ${c4.erpProtocol.detail}`, data: ['Contrato POS y traducción semántica a la instancia ERP elegida.', 'Referencias externas e historial de mapeo; detalles del proveedor no invaden ventas.'], responsibilities: ['Fachada: capacidades con vocabulario POS.', 'ACL (capa anticorrupción): traduce identidades, estados, monedas, impuestos y errores.', 'Adaptador: protocolo de envío y consulta homologado.'], sources: ['contracts', 'integration', 'migration'] }),
     node('erp', 'integrations', 'erp', {
       kind: 'external', title: 'ERP por país', technology: 'AX · ICS custom · Gira',
@@ -214,14 +222,17 @@ export const architecture = {
       summary: 'PostgreSQL conserva el historial de integración.', description: 'La asignación temporal de trabajo identifica propietario y vencimiento. Las transiciones condicionales preservan destino, versión e intento, incluso durante cambio de ERP.',
       payload: ['Lease, propietario, destino y versión.', 'Resultado, referencia externa e incertidumbre.'], guarantees: ['Expirar un lease no cancela un efecto externo en ejecución.'], failure: ['Un resultado no registrado se consulta o reentrega; no autoriza reenviar ciegamente el efecto.'], sources: ['c4', 'migration', 'resilience'],
     }),
-    edge('fetch-source', 'publisher', 'masters', 'Obtener datos autorizados', 'Interfaz de origen por confirmar', 'sync', {
+    edge('fetch-source', 'master-source', 'masters', 'Obtener datos autorizados', 'Interfaz de origen por confirmar', 'sync', {
       status: 'unresolved', summary: 'La autoridad se acuerda por dato y país.', description: 'Debe validarse qué origen produce cada maestro/precio y cómo entrega cambios o cargas completas. No se presupone CDC, eventos ni que el ERP sea dueño de todos los datos.',
       payload: ['Datos comerciales, cobertura y bajas.', 'Versión, vigencias y punto de corte consistente.'], guarantees: ['La copia POS no transfiere la autoría a sucursales.'], failure: ['Sin contrato verificable de integridad no se publica una candidata completa.'], sources: ['pricing', 'c4', 'meetings'],
     }),
     edge('publish-version', 'publisher', 'country-db', 'Publicar versión completa', 'SQL · publicación atómica propuesta', 'data', {
-      status: 'unresolved', summary: 'Una candidata validada se vuelve publicación distribuible.', description: 'El proceso ejecutor y el almacenamiento de artefactos siguen por asignar. La publicación lógica conserva manifiesto, versión, punto de corte y evento; no se fabrica una séptima app.',
-      payload: ['Versión y manifiesto con cobertura.', 'Feed de cambios y referencias de artefactos.'], guarantees: ['No expone una mezcla parcial como versión vigente.'], failure: ['La carga fallida conserva la publicación anterior dentro de su vigencia y política.'], sources: ['pricing', 'c4'],
+      summary: 'Una candidata validada se vuelve publicación distribuible.', description: 'El contexto de publicación de country-api finaliza la candidata completa y conserva manifiesto, versión, corte y evento. El protocolo de carga no mantiene una transacción SQL abierta durante extracción o transferencia.',
+      payload: ['Versión y manifiesto con cobertura.', 'Feed de cambios y referencias de artefactos.'], guarantees: ['No expone una mezcla parcial como versión vigente.'], failure: ['La carga fallida conserva la publicación anterior dentro de su vigencia y política.'], sources: ['pricing', 'publication'],
     }),
+    edge('prepare-masters', 'erp-worker', 'master-source', 'Preparar publicación', 'Contrato interno de fuente', 'local', { summary: 'Extracción aislada del trabajo financiero.', description: 'El worker compone el adaptador de fuente con presupuesto, identidad y claims de publicación propios.', payload: ['Referencia de publicación, ámbito y corte requerido.'], guarantees: ['No bloquea ni reutiliza claims de comandos financieros.'], failure: ['Un origen no homologado mantiene la publicación pendiente.'], sources: ['publication'] }),
+    edge('submit-publication', 'master-source', 'country-api', 'Claim, porciones y finalizar', 'HTTPS saliente autenticado · contrato de publicación', 'async', { summary: 'La preparación entrega datos; país decide su publicación.', description: 'Solicita claim, entrega porciones idempotentes y pide finalización. Country-api valida integridad, cobertura y corte antes del commit de publicación.', payload: ['Claim de publicación, manifiesto, porciones y hashes.'], guarantees: ['Sin SQL remoto ni autoridad del worker para publicar versiones en país.'], failure: ['Una respuesta perdida se consulta con la misma identidad; una candidata incompleta no se publica en país.'], sources: ['publication', 'identity'] }),
+    edge('finalize-publication', 'country-api', 'publisher', 'Validar candidata completa', 'Contrato interno de publicación', 'local', { summary: 'La API delega en el contexto dueño de las versiones.', description: 'La finalización valida manifiesto y porciones antes de solicitar el commit de la publicación; no prepara una carga pesada dentro de la petición.', payload: ['Referencia de candidata, claim y manifiesto.'], guarantees: ['La versión publicada cambia sólo después de validación completa.'], failure: ['Claim vencido o contenido incompatible se rechaza sin cambiar la versión publicada.'], sources: ['publication'] }),
     edge('cache-policy', 'country-api', 'cache-port', 'Consulta derivada autorizada', 'Llamada interna · opcional', 'local', {
       status: 'conditional', summary: 'Sólo consultas con frescura tolerada y necesidad medida.', description: 'Se verifica identidad, ámbito y permisos antes de buscar datos. Se selecciona una consulta concreta y su política; no se convierte una respuesta cacheada en aprobación financiera.',
       payload: ['Consulta, país, entidad y alcance de permiso.', 'Versión de dato o contrato.'], guarantees: ['La autorización precede a la lectura.'], failure: ['Falta de autorización se rechaza aunque exista una entrada en Redis.'], sources: ['c4'],
@@ -279,6 +290,7 @@ export const architecture = {
       payload: ['Referencia del trabajo confirmado y contexto original.'], guarantees: ['El callback no obtiene autoridad para cambiar destino o repetir un efecto desconocido.'], failure: ['Reintentar un job requiere distinguir reentrega de resultado de reejecución del efecto externo.'], sources: ['messaging', 'resilience'],
     }),
     edge('broker-candidate', 'country-work', 'rabbitmq', 'Transporte por definir', 'AMQP · contrato pendiente', 'async', {
+      relation: 'evaluation',
       status: 'unresolved', summary: 'Relación de evaluación, no un flujo AMQP seleccionado.', description: 'Marca dónde evaluar distribución independiente de trabajo de país si aparece esa necesidad. No asigna a country-api el publicador ni a erp-worker un consumidor: productores, colas, consumidores y propietarios necesitan una decisión posterior.',
       payload: ['Contrato de mensaje y topología todavía por definir.'], guarantees: ['La ruta base sigue siendo PostgreSQL + HTTPS.', 'RabbitMQ no se añade junto a BullMQ para duplicar la misma tarea.'], failure: ['Confirmaciones de broker no sustituyen commit de consumidor, deduplicación ni conciliación ERP.'], sources: ['c4', 'messaging'],
     }),
@@ -309,8 +321,8 @@ export const architecture = {
       { title: 'Registrar o conciliar resultado', description: 'Respuesta perdida o lease vencido no autorizan repetir efectos. El worker consulta o concilia y reporta mediante la API.', nodes: ['erp', 'erp-acl', 'erp-worker', 'country-api', 'country-work', 'country-db'], edges: ['send-erp', 'claim-report', 'manage-work', 'persist-work'] },
     ] },
     { id: 'commercial-version', title: 'Precios: origen, publicación y activación', description: 'Deltas, carga programada y recuperación manual usan el mismo contrato de validación.', steps: [
-      { title: 'Acordar el origen y preparar', description: 'El responsable de publicación obtiene datos autorizados y un corte consistente. Su proceso ejecutor sigue por asignar.', nodes: ['masters', 'publisher'], edges: ['fetch-source'] },
-      { title: 'Publicar una versión completa', description: 'La candidata validada conserva manifiesto, cobertura, vigencias y evento; no se publica una mezcla incompleta.', nodes: ['publisher', 'country-db'], edges: ['publish-version'] },
+      { title: 'Preparar desde el origen autorizado', description: 'El adaptador de maestros en erp-worker obtiene un corte consistente. Identidad, claims y presupuesto de publicación se aíslan de los comandos financieros.', nodes: ['masters', 'master-source', 'erp-worker'], edges: ['fetch-source', 'prepare-masters'] },
+      { title: 'Publicar una versión completa', description: 'El worker entrega porciones por HTTPS. Country-api valida cobertura, integridad y vigencia antes de confirmar manifiesto, versión y evento; ninguna descarga parcial activa una versión.', nodes: ['master-source', 'country-api', 'publisher', 'country-db'], edges: ['submit-publication', 'finalize-publication', 'publish-version'] },
       { title: 'Descargar sin alterar la activa', description: 'La sucursal consulta versiones y persiste staging/cursor recibido. Recibir bytes no implica aplicación.', nodes: ['branch-sync', 'country-api', 'country-db', 'branch-db'], edges: ['sync-country', 'accept-country', 'sync-local'] },
       { title: 'Activar y cotizar', description: 'Tras validar, un commit corto cambia puntero, inbox aplicada y cursor aplicado. Las cotizaciones se revalidan; un pago iniciado conserva importe e identidad.', nodes: ['branch-sync', 'branch-db', 'pricing', 'branch-api'], edges: ['sync-local', 'read-prices', 'quote-pricing'] },
     ] },
@@ -330,6 +342,13 @@ export const architecture = {
       { title: 'Evaluar tareas internas con BullMQ', description: 'Si se asigna una tarea a la librería dentro del worker, el backend definitivo debe validarse. Aquí se ilustra Redis separado de caché, con persistencia y noeviction.', nodes: ['erp-worker', 'bullmq', 'redis-jobs'], edges: ['worker-library', 'queue-store'] },
       { title: 'Ejecutar sin duplicar el efecto', description: 'El callback usa la misma capacidad e identidad. Reintentar un job no elimina la incertidumbre del ERP ni autoriza otro cargo.', nodes: ['bullmq', 'erp-acl', 'erp'], edges: ['queue-execution', 'send-erp'] },
       { title: 'Evaluar transporte independiente', description: 'RabbitMQ se considera sólo para routing o consumidores independientes. Productores, colas y consumidores no están seleccionados; no se agrega para duplicar la tarea de BullMQ.', nodes: ['country-work', 'rabbitmq'], edges: ['broker-candidate'] },
+    ] },
+    { id: 'recovery', title: 'Restauración y retorno controlado', description: 'Procedimiento propuesto: requiere copia independiente, retención, objetivos aprobados y ensayo. No acredita alta disponibilidad ni RPO cero.', steps: [
+      { title: 'Detener y excluir al escritor anterior', description: 'Ante pérdida del servidor de sucursal se detienen comandos dependientes. Antes de habilitar un reemplazo se excluye al escritor anterior; una caja no crea otra base por su cuenta.', nodes: ['desktop', 'mobile', 'branch-api', 'branch-db'], edges: ['desktop-api', 'mobile-api'] },
+      { title: 'Restaurar y comprobar integridad', description: 'Operación y DBA restauran desde una copia independiente y verifican esquema, identidad de instalación, secuencias, referencias y resultado de comandos. Una copia en el mismo disco no cubre su pérdida. La retención y RPO se contrastan con evidencia, no se deducen del commit.', nodes: ['branch-api', 'transaction', 'branch-db', 'branch-sync'], edges: ['commit-operation', 'commit-local', 'sync-local'] },
+      { title: 'Reconstruir custodia sin repetir negocio', description: 'Se comparan acuses y cursores con país. Si país retrocedió respecto de un ACK, se reconstruye desde eventos de origen o archivo retenidos; se conservan IDs y se detectan huecos. No se purga la única copia recuperable.', nodes: ['branch-sync', 'branch-db', 'country-api', 'country-db'], edges: ['sync-local', 'sync-country', 'accept-country'] },
+      { title: 'Conciliar efectos externos inciertos', description: 'ERP, pago o documento pueden haber avanzado más que la copia restaurada. Se consultan referencias originales o se aplica resolución controlada; perder un registro local no autoriza cobrar, emitir o contabilizar otra vez.', nodes: ['erp-worker', 'erp-acl', 'erp', 'country-api', 'branch-api', 'payments', 'fiscal'], edges: ['claim-report', 'execute-adapter', 'send-erp', 'payment-api', 'fiscal-api'] },
+      { title: 'Reabrir por alcance con evidencia', description: 'Sólo después de verificar escritor único, datos, permisos y conciliación se habilitan las capacidades válidas. Se prueba un caudal limitado y se mide recuperación con tráfico nuevo; las capacidades aún inciertas siguen restringidas.', nodes: ['desktop', 'branch-api', 'access', 'branch-sync', 'country-api'], edges: ['desktop-api', 'command-access', 'sync-country'] },
     ] },
   ],
 };

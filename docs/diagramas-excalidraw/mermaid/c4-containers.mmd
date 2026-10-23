@@ -1,26 +1,25 @@
 flowchart TB
     accTitle: C2 · Contenedores — Aplicaciones, procesos y datos
-    accDescr: Aplicaciones de POS Platform, persistencia de sucursal y servicios de país. Cada nombre de app corresponde al monorepo; las capacidades son propuesta por implementar. PostgreSQL conserva negocio y entrega durable. Redis de país es caché opcional reconstruible; el publicador de maestros es un proceso por asignar. ACL/fachada/adaptador están dentro de erp-worker.
+    accDescr: Aplicaciones de POS Platform, persistencia de sucursal y servicios de país. Cada nombre de app corresponde al monorepo; las capacidades son propuesta por implementar. PostgreSQL conserva negocio y entrega durable. Country-api publica versiones; erp-worker prepara maestros mediante un contrato de origen y presupuesto aislados. Redis es caché opcional. Sin SQL WAN ni aplicación adicional.
     subgraph systemScope["POS Platform · aplicaciones y datos propuestos"]
         direction TB
         client["pos-desktop<br/>«Contenedor»<br/>Angular + Tauri<br/>Presenta caja y comandos del operador."]:::pos
         mobileClient["pos-mobile<br/>«Contenedor»<br/>Angular + Capacitor<br/>Presenta operaciones en Android/iOS."]:::pos
         device["Puente de periféricos<br/>«Contenedor condicional»<br/>Proceso nativo según SDK<br/>Ejecuta capacidades del puesto."]:::pos
         branchApi["branch-api<br/>«Contenedor»<br/>NestJS + Fastify / Node.js<br/>Valida y confirma la operación local."]:::pos
-        branchDb[("Datos de sucursal<br/>«Contenedor de datos»<br/>PostgreSQL<br/>Guarda negocio, outbox y espejo local.")]:::store
+        branchDb["Datos de sucursal<br/>«Contenedor de datos»<br/>PostgreSQL<br/>Guarda negocio, outbox y espejo local."]:::store
         syncWorker["branch-sync-worker<br/>«Contenedor»<br/>NestJS / Node.js · sin servidor HTTP<br/>Entrega eventos y actualiza espejos."]:::pos
         countryApi["country-api<br/>«Contenedor»<br/>NestJS + Fastify / Node.js<br/>Recibe operaciones y sirve trabajo y versiones."]:::pos
-        countryWorker["Publicador de maestros · proceso por asignar<br/>«Contenedor»<br/>Proceso de publicación · composición pendiente<br/>Prepara publicaciones comerciales versionadas."]:::pos
-        countryDb[("Datos operativos de país<br/>«Contenedor de datos»<br/>PostgreSQL<br/>Consolida y conserva entrega durable.")]:::store
-        countryCache[("Redis · caché de país (opcional)<br/>«Contenedor de datos»<br/>Redis · datos reconstruibles<br/>Acelera consultas; no confirma operaciones.")]:::store
-        erpAdapter["erp-worker<br/>«Contenedor»<br/>NestJS / Node.js · libs/backend/erp<br/>Consume trabajo; traduce y concilia con ERP."]:::pos
+        countryDb["Datos operativos de país<br/>«Contenedor de datos»<br/>PostgreSQL<br/>Consolida y conserva entrega durable."]:::store
+        countryCache["Redis · caché de país (opcional)<br/>«Contenedor de datos»<br/>Redis · datos reconstruibles<br/>Acelera consultas; no confirma operaciones."]:::store
+        erpAdapter["erp-worker<br/>«Contenedor»<br/>NestJS / Node.js · libs/backend/erp<br/>Integra ERP y prepara maestros por contrato."]:::pos
     end
-    cashier(["Cajero<br/>«Persona»<br/>Operación humana<br/>Vende, cobra y gestiona su turno."]):::person
-    erp["ERP del país<br/>«Sistema externo»<br/>CL: AX · ES: Gira · PE: custom<br/>Recibe y concilia documentos financieros."]:::external
-    masters["Fuentes de maestros y precios<br/>«Sistema externo»<br/>Interfaces por confirmar<br/>Publica datos y reglas autorizados."]:::external
-    payments["Proveedor de pagos<br/>«Sistema externo»<br/>API / SDK según proveedor<br/>Autoriza o informa el resultado del pago."]:::external
-    fiscal["Proveedor fiscal<br/>«Sistema externo»<br/>Contrato por país y modalidad<br/>Emite o transmite documentos fiscales."]:::external
-    legend["Leyenda · notación C4<br/>Azul: POS · Violeta: datos<br/>Gris: externo · Ámbar: infraestructura<br/>Borde: sistema, proceso o nodo indicado<br/>Flecha: iniciador, propósito y protocolo<br/>Opcional / por asignar: condición explícita<br/>Contenedor no equivale a Docker"]:::key
+        cashier["Cajero<br/>«Persona»<br/>Operación humana<br/>Vende, cobra y gestiona su turno."]:::person
+        erp["ERP del país<br/>«Sistema externo»<br/>CL: AX · ES: Gira · PE: custom<br/>Recibe y concilia documentos financieros."]:::external
+        masters["Fuentes de maestros y precios<br/>«Sistema externo»<br/>Interfaces por confirmar<br/>Publica datos y reglas autorizados."]:::external
+        payments["Proveedor de pagos<br/>«Sistema externo»<br/>API / SDK según proveedor<br/>Autoriza o informa el resultado del pago."]:::external
+        fiscal["Proveedor fiscal<br/>«Sistema externo»<br/>Contrato por país y modalidad<br/>Emite o transmite documentos fiscales."]:::external
+        legend["Leyenda<br/>«Clave de lectura»<br/>Notación C4<br/>Azul: POS. Violeta: datos. Gris: externo."]:::key
     cashier -->|"Opera caja · interfaz de escritorio"| client
     cashier -->|"Funciones habilitadas · interfaz móvil"| mobileClient
     client -->|"Comandos y consultas · HTTPS/LAN"| branchApi
@@ -32,16 +31,14 @@ flowchart TB
     branchApi -->|"Emisión y consulta fiscal · contrato por país"| fiscal
     syncWorker -->|"Outbox, inbox, cursores y espejo · SQL"| branchDb
     syncWorker -->|"Lotes, deltas y acuses · HTTPS"| countryApi
-    countryApi -->|"Inbox + efecto + outbox; trabajo y resultados · SQL"| countryDb
+    countryApi -->|"Recepción, publicaciones, trabajo y resultados · SQL"| countryDb
     countryApi -->|"Lecturas versionadas · Redis opcional"| countryCache
-    countryWorker -->|"Obtiene cambios o carga completa · contrato de origen"| masters
-    countryWorker -->|"Publica versión, manifiesto y evento · SQL"| countryDb
-    erpAdapter -->|"Solicita trabajo / reporta resultado · HTTPS saliente"| countryApi
+    erpAdapter -->|"Trabajo, resultados y porciones de maestros · HTTPS saliente"| countryApi
     erpAdapter -->|"Envía, consulta y concilia · contrato ERP"| erp
+    erpAdapter -->|"Obtiene carga o deltas · contrato de fuente homologado"| masters
     classDef pos fill:#EDF3FF,stroke:#0545BA,color:#25364D,stroke-width:2px
     classDef store fill:#F2EFFF,stroke:#6551A8,color:#25364D,stroke-width:2px
     classDef external fill:#F4F6F8,stroke:#6B788A,color:#25364D
     classDef person fill:#18336D,stroke:#18336D,color:#FFFFFF
-    classDef infra fill:#FFF3E0,stroke:#A86516,color:#25364D
     classDef key fill:#FFFFFF,stroke:#BCC9DB,color:#53657F,font-size:14px
     style systemScope fill:#FFFFFF,stroke:#BCC9DB,stroke-dasharray:6 4

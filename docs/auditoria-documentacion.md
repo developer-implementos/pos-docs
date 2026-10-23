@@ -55,6 +55,8 @@ La entrada principal explica primero el producto, qué corre en caja/sucursal/pa
 
 No se realizaron sesiones de comprensión con integrantes junior del equipo. La revisión editorial reduce barreras concretas, pero **no permite garantizar que cualquier lector entenderá todo**. La validación de comprensión pendiente consiste en que integrantes del equipo puedan explicar dónde se confirma una venta, qué confirma central, qué se adapta por país, dónde vive cada responsabilidad en el código y qué falta implementar, sin resolver contradicciones entre fuentes.
 
+El [protocolo de comprensión](editorial/comprehension-validation.md) define tareas observables, registro de revisión y resultados por participante, criterios de bloqueo y repetición después de correcciones. Sus sesiones siguen pendientes; no se sustituyen por una revisión automatizada.
+
 ## Pendientes que necesitan decisiones o evidencia externa
 
 | Pendiente | Responsable funcional por asignar | Evidencia necesaria |

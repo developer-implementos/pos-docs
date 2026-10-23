@@ -11,7 +11,8 @@
       "summary": "Una plataforma corporativa para varios países, con capacidades compartidas e integraciones propias de cada operación.",
       "slides": [
         "slide-2",
-        "slide-3"
+        "slide-3",
+        "slide-17"
       ]
     },
     {
@@ -332,7 +333,7 @@
         },
         {
           "type": "text",
-          "text": "02 / 16",
+          "text": "02 / 17",
           "position": {
             "left": 1135,
             "top": 682,
@@ -908,7 +909,7 @@
         },
         {
           "type": "text",
-          "text": "03 / 16",
+          "text": "03 / 17",
           "position": {
             "left": 1135,
             "top": 682,
@@ -1618,6 +1619,171 @@
       ]
     },
     {
+      "id": "slide-17",
+      "diagram": true,
+      "title": "Aplicaciones y datos de la propuesta",
+      "background": "#FFFFFF",
+      "notes": "Vista C2 resumida derivada del modelo de arquitectura: seis aplicaciones con arranque propio y dos almacenes PostgreSQL. Los clientes llaman a branch-api por la red autorizada; branch-sync-worker intercambia por HTTPS con country-api; erp-worker inicia conexiones HTTPS para solicitar trabajo y reportar resultados desde la red autorizada. Los clientes y erp-worker no acceden por SQL a país. Las reglas y componentes internos pertenecen a sus aplicaciones. Los conectores a sistemas externos se detallan en el capítulo de integración.",
+      "sources": [
+        {
+          "label": "Contenedores y límites C4",
+          "href": "/guide/architecture/c4-model/"
+        },
+        {
+          "label": "Mapa interactivo · vista base",
+          "href": "/architecture/?view=base"
+        },
+        {
+          "label": "Recorrido: recepción y resultado ERP",
+          "href": "/architecture/?scenario=country-erp&step=1"
+        }
+      ],
+      "elements": [
+        {
+          "type": "image",
+          "src": "assets/logo.svg",
+          "alt": "Implementos",
+          "position": {
+            "left": 1002,
+            "top": 30,
+            "width": 214,
+            "height": 72.37400530503979
+          }
+        },
+        {
+          "type": "text",
+          "text": "C4 / CONTENEDORES · VISTA RESUMIDA",
+          "position": {
+            "left": 64,
+            "top": 42,
+            "width": 850,
+            "height": 25
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 15,
+            "color": "#636569",
+            "bold": true,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
+        },
+        {
+          "type": "text",
+          "text": "Aplicaciones y datos de la propuesta",
+          "position": {
+            "left": 64,
+            "top": 105,
+            "width": 1152,
+            "height": 98
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 42,
+            "color": "#006DB6",
+            "bold": true,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
+        },
+        {
+          "type": "shape",
+          "geometry": "rect",
+          "position": {
+            "left": 64,
+            "top": 202,
+            "width": 62,
+            "height": 5
+          },
+          "fill": "#00937F",
+          "line": {
+            "fill": "none",
+            "width": 0
+          }
+        },
+        {
+          "type": "text",
+          "text": "IMPLEMENTOS / POS PLATFORM / PROPUESTA DE ARQUITECTURA",
+          "position": {
+            "left": 64,
+            "top": 682,
+            "width": 1000,
+            "height": 19
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 12,
+            "color": "#636569",
+            "bold": false,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
+        },
+        {
+          "type": "text",
+          "text": "04 / 17",
+          "position": {
+            "left": 1135,
+            "top": 682,
+            "width": 83,
+            "height": 19
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 12,
+            "color": "#636569",
+            "bold": false,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
+        },
+        {
+          "type": "shape",
+          "geometry": "rect",
+          "position": {
+            "left": 64,
+            "top": 630,
+            "width": 1152,
+            "height": 3
+          },
+          "fill": "#00937F",
+          "line": {
+            "fill": "none",
+            "width": 0
+          }
+        },
+        {
+          "type": "text",
+          "text": "Base propuesta: PostgreSQL + HTTPS. Caché y brokers son opciones sujetas a validación.",
+          "position": {
+            "left": 64,
+            "top": 644,
+            "width": 1152,
+            "height": 30
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 17,
+            "color": "#636569",
+            "bold": false,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
+        }
+      ],
+      "architectureView": "containers"
+    },
+    {
       "id": "slide-4",
       "title": "Estructura objetivo del monorepo",
       "background": "#FFFFFF",
@@ -1717,7 +1883,7 @@
         },
         {
           "type": "text",
-          "text": "04 / 16",
+          "text": "05 / 17",
           "position": {
             "left": 1135,
             "top": 682,
@@ -2742,7 +2908,7 @@
         },
         {
           "type": "text",
-          "text": "05 / 16",
+          "text": "06 / 17",
           "position": {
             "left": 1135,
             "top": 682,
@@ -3573,7 +3739,7 @@
         },
         {
           "type": "text",
-          "text": "06 / 16",
+          "text": "07 / 17",
           "position": {
             "left": 1135,
             "top": 682,
@@ -4590,7 +4756,7 @@
         },
         {
           "type": "text",
-          "text": "07 / 16",
+          "text": "08 / 17",
           "position": {
             "left": 1135,
             "top": 682,
@@ -5282,7 +5448,7 @@
       "diagram": true,
       "title": "Desacoplamiento del ERP",
       "background": "#FFFFFF",
-      "notes": "Diagrama lógico de la integración ERP de POS Platform. El commit local confirma únicamente las operaciones habilitadas por la matriz offline y las políticas vigentes. La entrega agrupa branch-sync-worker y country-api sin fusionarlos en un único proceso. Negocio/outbox local y recepción durable de país requieren implementación transaccional. La fachada ofrece contratos del POS; la ACL traduce identidades, unidades, importes, estados y errores; el adaptador implementa el protocolo. No se obliga a tres servicios distintos. Pagos/fiscalidad tienen protocolos propios. No se afirma que todo el legacy escriba directamente en AX ni se incorporan VTEX u otros canales como consumidores existentes del POS.",
+      "notes": "Diagrama lógico de la integración ERP de POS Platform. El commit local confirma únicamente las operaciones habilitadas por la matriz offline y las políticas vigentes. La entrega agrupa branch-sync-worker y country-api sin fusionarlos en un único proceso. Negocio/outbox local y recepción durable de país requieren implementación transaccional. La fachada ofrece contratos del POS; la ACL traduce identidades, unidades, importes, estados y errores; el adaptador implementa el protocolo. No se obliga a tres servicios distintos. Pagos/fiscalidad tienen protocolos propios. No se afirma que todo el legacy escriba directamente en AX ni se incorporan VTEX u otros canales como consumidores existentes del POS. Ejemplo ilustrativo: el POS solicita registrar una venta con una identidad estable; la ACL traduce esa identidad al identificador externo del cliente y el resultado del proveedor al estado ERP del POS. La respuesta conserva la referencia del documento; un timeout conserva resultado incierto y exige consulta o conciliación. Los campos y estados definitivos se pactan con cada proveedor.",
       "sources": [
         {
           "label": "contracts",
@@ -5291,6 +5457,10 @@
         {
           "label": "continuity",
           "href": "/guide/proposal/continuity/"
+        },
+        {
+          "label": "Ejemplo de registro y recuperación ERP",
+          "href": "/architecture/?scenario=country-erp&step=4"
         }
       ],
       "elements": [
@@ -5382,7 +5552,7 @@
         },
         {
           "type": "text",
-          "text": "08 / 16",
+          "text": "09 / 17",
           "position": {
             "left": 1135,
             "top": 682,
@@ -5663,11 +5833,11 @@
         },
         {
           "type": "text",
-          "text": "Worker de sucursal\nRecepción de país",
+          "text": "branch-sync-worker\ncountry-api",
           "position": {
-            "left": 548,
+            "left": 540,
             "top": 345,
-            "width": 184,
+            "width": 200,
             "height": 93
           },
           "style": {
@@ -5731,7 +5901,7 @@
         },
         {
           "type": "text",
-          "text": "Fachada y ACL",
+          "text": "erp-worker",
           "position": {
             "left": 784,
             "top": 298,
@@ -5750,7 +5920,7 @@
         },
         {
           "type": "text",
-          "text": "Contrato del POS\nTraducción al ERP",
+          "text": "Fachada y ACL internas\nAdaptador al proveedor",
           "position": {
             "left": 784,
             "top": 345,
@@ -5924,7 +6094,7 @@
         },
         {
           "type": "text",
-          "text": "Modelo propio",
+          "text": "1 · Contrato POS",
           "position": {
             "left": 78,
             "top": 522,
@@ -5943,7 +6113,7 @@
         },
         {
           "type": "text",
-          "text": "IDs, estados y reglas del POS independientes del modelo de AX.",
+          "text": "Venta V-1042 → registrar una vez.\nDestino ERP fijado.",
           "position": {
             "left": 78,
             "top": 569,
@@ -5992,7 +6162,7 @@
         },
         {
           "type": "text",
-          "text": "Continuidad",
+          "text": "2 · Traducción al ERP",
           "position": {
             "left": 470,
             "top": 522,
@@ -6011,7 +6181,7 @@
         },
         {
           "type": "text",
-          "text": "La venta permitida offline no espera la disponibilidad del ERP.",
+          "text": "Cliente C-82 → código del ERP.\nConservar importe y moneda.",
           "position": {
             "left": 470,
             "top": 569,
@@ -6060,7 +6230,7 @@
         },
         {
           "type": "text",
-          "text": "Evolución",
+          "text": "3 · Resultado POS",
           "position": {
             "left": 862,
             "top": 522,
@@ -6079,7 +6249,7 @@
         },
         {
           "type": "text",
-          "text": "El cambio de ERP concentra trabajo en contratos, mapeos y conectores.",
+          "text": "Referencia ERP D-431.\nTimeout → resultado incierto.",
           "position": {
             "left": 862,
             "top": 569,
@@ -6113,7 +6283,7 @@
         },
         {
           "type": "text",
-          "text": "La ACL traduce significados; el adaptador resuelve el acceso técnico. Pueden convivir en el mismo módulo.",
+          "text": "Ejemplo ilustrativo dentro de erp-worker: fachada, ACL y adaptador. Campos definitivos por homologar.",
           "position": {
             "left": 64,
             "top": 644,
@@ -6143,6 +6313,10 @@
         {
           "label": "integration",
           "href": "/guide/proposal/integration/"
+        },
+        {
+          "label": "Trabajo ERP paso a paso",
+          "href": "/architecture/?scenario=country-erp&step=3"
         }
       ],
       "elements": [
@@ -6234,7 +6408,7 @@
         },
         {
           "type": "text",
-          "text": "09 / 16",
+          "text": "10 / 17",
           "position": {
             "left": 1135,
             "top": 682,
@@ -6250,805 +6424,6 @@
             "autoFit": "none",
             "wrap": "square",
             "insets": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "Plataforma de país",
-          "position": {
-            "left": 64,
-            "top": 228,
-            "width": 310,
-            "height": 31
-          },
-          "style": {
-            "typeface": "Inter",
-            "color": "#006DB6",
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0,
-            "typographyRole": "group"
-          }
-        },
-        {
-          "type": "text",
-          "text": "Red autorizada del ERP",
-          "position": {
-            "left": 520,
-            "top": 228,
-            "width": 696,
-            "height": 31
-          },
-          "style": {
-            "typeface": "Inter",
-            "color": "#006DB6",
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0,
-            "typographyRole": "group"
-          }
-        },
-        {
-          "type": "shape",
-          "geometry": "rect",
-          "position": {
-            "left": 64,
-            "top": 274,
-            "width": 278,
-            "height": 331
-          },
-          "fill": "#EDF4F8",
-          "line": {
-            "fill": "none",
-            "width": 0
-          }
-        },
-        {
-          "type": "shape",
-          "geometry": "rect",
-          "position": {
-            "left": 64,
-            "top": 274,
-            "width": 278,
-            "height": 46
-          },
-          "fill": "#006DB6",
-          "line": {
-            "fill": "none",
-            "width": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "country-api",
-          "position": {
-            "left": 78,
-            "top": 281,
-            "width": 250,
-            "height": 38
-          },
-          "style": {
-            "typeface": "Inter",
-            "color": "#FFFFFF",
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0,
-            "typographyRole": "title"
-          }
-        },
-        {
-          "type": "text",
-          "text": "Recepción durable\n\nPostgreSQL de país\nTrabajo y resultados\n\nContrato común POS\nConsulta y conciliación",
-          "position": {
-            "left": 78,
-            "top": 328,
-            "width": 250,
-            "height": 273
-          },
-          "style": {
-            "typeface": "Inter",
-            "color": "#34383E",
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0,
-            "typographyRole": "body"
-          }
-        },
-        {
-          "type": "shape",
-          "geometry": "rect",
-          "position": {
-            "left": 520,
-            "top": 274,
-            "width": 358,
-            "height": 103
-          },
-          "fill": "#EDF4F8",
-          "line": {
-            "fill": "none",
-            "width": 0
-          }
-        },
-        {
-          "type": "shape",
-          "geometry": "rect",
-          "position": {
-            "left": 520,
-            "top": 274,
-            "width": 358,
-            "height": 46
-          },
-          "fill": "#006DB6",
-          "line": {
-            "fill": "none",
-            "width": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "CL / erp-worker + ACL",
-          "position": {
-            "left": 534,
-            "top": 281,
-            "width": 330,
-            "height": 38
-          },
-          "style": {
-            "typeface": "Inter",
-            "color": "#FFFFFF",
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0,
-            "typographyRole": "title"
-          }
-        },
-        {
-          "type": "text",
-          "text": "Identidades y estados AX\nInterfaz por homologar",
-          "position": {
-            "left": 534,
-            "top": 328,
-            "width": 330,
-            "height": 45
-          },
-          "style": {
-            "typeface": "Inter",
-            "color": "#34383E",
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0,
-            "typographyRole": "body"
-          }
-        },
-        {
-          "type": "shape",
-          "geometry": "rect",
-          "position": {
-            "left": 1010,
-            "top": 274,
-            "width": 206,
-            "height": 103
-          },
-          "fill": "#EDF4F8",
-          "line": {
-            "fill": "none",
-            "width": 0
-          }
-        },
-        {
-          "type": "shape",
-          "geometry": "rect",
-          "position": {
-            "left": 1010,
-            "top": 274,
-            "width": 206,
-            "height": 46
-          },
-          "fill": "#006DB6",
-          "line": {
-            "fill": "none",
-            "width": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "Dynamics AX",
-          "position": {
-            "left": 1024,
-            "top": 281,
-            "width": 178,
-            "height": 38
-          },
-          "style": {
-            "typeface": "Inter",
-            "color": "#FFFFFF",
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0,
-            "typographyRole": "title"
-          }
-        },
-        {
-          "type": "text",
-          "text": "On-premise",
-          "position": {
-            "left": 1024,
-            "top": 328,
-            "width": 178,
-            "height": 45
-          },
-          "style": {
-            "typeface": "Inter",
-            "color": "#34383E",
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0,
-            "typographyRole": "body"
-          }
-        },
-        {
-          "type": "connector",
-          "geometry": "connector",
-          "position": {
-            "left": 342,
-            "top": 337,
-            "width": 178,
-            "height": 0
-          },
-          "line": {
-            "fill": "#00937F",
-            "width": 2
-          },
-          "head": {
-            "type": "triangle",
-            "width": "sm",
-            "length": "sm"
-          }
-        },
-        {
-          "type": "text",
-          "text": "Conexión saliente",
-          "position": {
-            "left": 353,
-            "top": 288,
-            "width": 158,
-            "height": 25
-          },
-          "style": {
-            "typeface": "Inter",
-            "color": "#636569",
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0,
-            "typographyRole": "label"
-          }
-        },
-        {
-          "type": "text",
-          "text": "Trabajo y resultados",
-          "position": {
-            "left": 353,
-            "top": 350,
-            "width": 162,
-            "height": 25
-          },
-          "style": {
-            "typeface": "Inter",
-            "color": "#636569",
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0,
-            "typographyRole": "label"
-          }
-        },
-        {
-          "type": "connector",
-          "geometry": "connector",
-          "position": {
-            "left": 878,
-            "top": 337,
-            "width": 132,
-            "height": 0
-          },
-          "line": {
-            "fill": "#00937F",
-            "width": 2
-          },
-          "tail": {
-            "type": "triangle",
-            "width": "sm",
-            "length": "sm"
-          }
-        },
-        {
-          "type": "text",
-          "text": "Interfaz a validar",
-          "position": {
-            "left": 888,
-            "top": 297,
-            "width": 120,
-            "height": 40
-          },
-          "style": {
-            "typeface": "Inter",
-            "color": "#636569",
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0,
-            "typographyRole": "label"
-          }
-        },
-        {
-          "type": "shape",
-          "geometry": "rect",
-          "position": {
-            "left": 520,
-            "top": 388,
-            "width": 358,
-            "height": 103
-          },
-          "fill": "#EDF4F8",
-          "line": {
-            "fill": "none",
-            "width": 0
-          }
-        },
-        {
-          "type": "shape",
-          "geometry": "rect",
-          "position": {
-            "left": 520,
-            "top": 388,
-            "width": 358,
-            "height": 46
-          },
-          "fill": "#006DB6",
-          "line": {
-            "fill": "none",
-            "width": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "PE / erp-worker + ACL",
-          "position": {
-            "left": 534,
-            "top": 395,
-            "width": 330,
-            "height": 38
-          },
-          "style": {
-            "typeface": "Inter",
-            "color": "#FFFFFF",
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0,
-            "typographyRole": "title"
-          }
-        },
-        {
-          "type": "text",
-          "text": "Traducción al sistema custom\nInterfaz por confirmar",
-          "position": {
-            "left": 534,
-            "top": 442,
-            "width": 330,
-            "height": 45
-          },
-          "style": {
-            "typeface": "Inter",
-            "color": "#34383E",
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0,
-            "typographyRole": "body"
-          }
-        },
-        {
-          "type": "shape",
-          "geometry": "rect",
-          "position": {
-            "left": 1010,
-            "top": 388,
-            "width": 206,
-            "height": 103
-          },
-          "fill": "#EDF4F8",
-          "line": {
-            "fill": "none",
-            "width": 0
-          }
-        },
-        {
-          "type": "shape",
-          "geometry": "rect",
-          "position": {
-            "left": 1010,
-            "top": 388,
-            "width": 206,
-            "height": 46
-          },
-          "fill": "#006DB6",
-          "line": {
-            "fill": "none",
-            "width": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "ERP custom",
-          "position": {
-            "left": 1024,
-            "top": 395,
-            "width": 178,
-            "height": 38
-          },
-          "style": {
-            "typeface": "Inter",
-            "color": "#FFFFFF",
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0,
-            "typographyRole": "title"
-          }
-        },
-        {
-          "type": "text",
-          "text": "Entorno por confirmar",
-          "position": {
-            "left": 1024,
-            "top": 442,
-            "width": 178,
-            "height": 45
-          },
-          "style": {
-            "typeface": "Inter",
-            "color": "#34383E",
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0,
-            "typographyRole": "body"
-          }
-        },
-        {
-          "type": "connector",
-          "geometry": "connector",
-          "position": {
-            "left": 342,
-            "top": 451,
-            "width": 178,
-            "height": 0
-          },
-          "line": {
-            "fill": "#00937F",
-            "width": 2
-          },
-          "head": {
-            "type": "triangle",
-            "width": "sm",
-            "length": "sm"
-          }
-        },
-        {
-          "type": "text",
-          "text": "Conexión saliente",
-          "position": {
-            "left": 353,
-            "top": 402,
-            "width": 158,
-            "height": 25
-          },
-          "style": {
-            "typeface": "Inter",
-            "color": "#636569",
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0,
-            "typographyRole": "label"
-          }
-        },
-        {
-          "type": "text",
-          "text": "Trabajo y resultados",
-          "position": {
-            "left": 353,
-            "top": 464,
-            "width": 162,
-            "height": 25
-          },
-          "style": {
-            "typeface": "Inter",
-            "color": "#636569",
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0,
-            "typographyRole": "label"
-          }
-        },
-        {
-          "type": "connector",
-          "geometry": "connector",
-          "position": {
-            "left": 878,
-            "top": 451,
-            "width": 132,
-            "height": 0
-          },
-          "line": {
-            "fill": "#00937F",
-            "width": 2
-          },
-          "tail": {
-            "type": "triangle",
-            "width": "sm",
-            "length": "sm"
-          }
-        },
-        {
-          "type": "text",
-          "text": "Interfaz a validar",
-          "position": {
-            "left": 888,
-            "top": 411,
-            "width": 120,
-            "height": 40
-          },
-          "style": {
-            "typeface": "Inter",
-            "color": "#636569",
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0,
-            "typographyRole": "label"
-          }
-        },
-        {
-          "type": "shape",
-          "geometry": "rect",
-          "position": {
-            "left": 520,
-            "top": 502,
-            "width": 358,
-            "height": 103
-          },
-          "fill": "#EDF4F8",
-          "line": {
-            "fill": "none",
-            "width": 0
-          }
-        },
-        {
-          "type": "shape",
-          "geometry": "rect",
-          "position": {
-            "left": 520,
-            "top": 502,
-            "width": 358,
-            "height": 46
-          },
-          "fill": "#006DB6",
-          "line": {
-            "fill": "none",
-            "width": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "ES / erp-worker + ACL",
-          "position": {
-            "left": 534,
-            "top": 509,
-            "width": 330,
-            "height": 38
-          },
-          "style": {
-            "typeface": "Inter",
-            "color": "#FFFFFF",
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0,
-            "typographyRole": "title"
-          }
-        },
-        {
-          "type": "text",
-          "text": "Traducción al modelo Gira\nInterfaz por confirmar",
-          "position": {
-            "left": 534,
-            "top": 556,
-            "width": 330,
-            "height": 45
-          },
-          "style": {
-            "typeface": "Inter",
-            "color": "#34383E",
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0,
-            "typographyRole": "body"
-          }
-        },
-        {
-          "type": "shape",
-          "geometry": "rect",
-          "position": {
-            "left": 1010,
-            "top": 502,
-            "width": 206,
-            "height": 103
-          },
-          "fill": "#EDF4F8",
-          "line": {
-            "fill": "none",
-            "width": 0
-          }
-        },
-        {
-          "type": "shape",
-          "geometry": "rect",
-          "position": {
-            "left": 1010,
-            "top": 502,
-            "width": 206,
-            "height": 46
-          },
-          "fill": "#006DB6",
-          "line": {
-            "fill": "none",
-            "width": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "Gira",
-          "position": {
-            "left": 1024,
-            "top": 509,
-            "width": 178,
-            "height": 38
-          },
-          "style": {
-            "typeface": "Inter",
-            "color": "#FFFFFF",
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0,
-            "typographyRole": "title"
-          }
-        },
-        {
-          "type": "text",
-          "text": "Entorno por confirmar",
-          "position": {
-            "left": 1024,
-            "top": 556,
-            "width": 178,
-            "height": 45
-          },
-          "style": {
-            "typeface": "Inter",
-            "color": "#34383E",
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0,
-            "typographyRole": "body"
-          }
-        },
-        {
-          "type": "connector",
-          "geometry": "connector",
-          "position": {
-            "left": 342,
-            "top": 565,
-            "width": 178,
-            "height": 0
-          },
-          "line": {
-            "fill": "#00937F",
-            "width": 2
-          },
-          "head": {
-            "type": "triangle",
-            "width": "sm",
-            "length": "sm"
-          }
-        },
-        {
-          "type": "text",
-          "text": "Conexión saliente",
-          "position": {
-            "left": 353,
-            "top": 516,
-            "width": 158,
-            "height": 25
-          },
-          "style": {
-            "typeface": "Inter",
-            "color": "#636569",
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0,
-            "typographyRole": "label"
-          }
-        },
-        {
-          "type": "text",
-          "text": "Trabajo y resultados",
-          "position": {
-            "left": 353,
-            "top": 578,
-            "width": 162,
-            "height": 25
-          },
-          "style": {
-            "typeface": "Inter",
-            "color": "#636569",
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0,
-            "typographyRole": "label"
-          }
-        },
-        {
-          "type": "connector",
-          "geometry": "connector",
-          "position": {
-            "left": 878,
-            "top": 565,
-            "width": 132,
-            "height": 0
-          },
-          "line": {
-            "fill": "#00937F",
-            "width": 2
-          },
-          "tail": {
-            "type": "triangle",
-            "width": "sm",
-            "length": "sm"
-          }
-        },
-        {
-          "type": "text",
-          "text": "Interfaz a validar",
-          "position": {
-            "left": 888,
-            "top": 525,
-            "width": 120,
-            "height": 40
-          },
-          "style": {
-            "typeface": "Inter",
-            "color": "#636569",
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0,
-            "typographyRole": "label"
           }
         },
         {
@@ -7086,7 +6461,8 @@
             "insets": 0
           }
         }
-      ]
+      ],
+      "architectureView": "erp-topology"
     },
     {
       "id": "slide-10",
@@ -7189,7 +6565,7 @@
         },
         {
           "type": "text",
-          "text": "10 / 16",
+          "text": "11 / 17",
           "position": {
             "left": 1135,
             "top": 682,
@@ -7720,6 +7096,10 @@
         {
           "label": "Base técnica y demostración",
           "href": "/guide/implementation/plan/"
+        },
+        {
+          "label": "Venta local autorizada",
+          "href": "/architecture/?scenario=local-sale&step=1"
         }
       ],
       "elements": [
@@ -7811,7 +7191,7 @@
         },
         {
           "type": "text",
-          "text": "11 / 16",
+          "text": "12 / 17",
           "position": {
             "left": 1135,
             "top": 682,
@@ -7931,7 +7311,7 @@
         },
         {
           "type": "text",
-          "text": "Primera entrega útil",
+          "text": "Entrega en laboratorio",
           "position": {
             "left": 470,
             "top": 242,
@@ -7951,7 +7331,7 @@
         },
         {
           "type": "text",
-          "text": "Abrir caja y vender en efectivo\nConfirmar en PostgreSQL\nConsultar el comprobante\nReiniciar y recuperar la venta",
+          "text": "Abrir caja y vender en efectivo\nConfirmar en PostgreSQL\nDocumento de prueba\nSin validez fiscal\nReiniciar y recuperar la venta",
           "position": {
             "left": 470,
             "top": 296,
@@ -8056,12 +7436,12 @@
         },
         {
           "type": "text",
-          "text": "Un incremento funcional",
+          "text": "Sin habilitación\nproductiva",
           "position": {
             "left": 80,
             "top": 505,
             "width": 330,
-            "height": 42
+            "height": 88
           },
           "style": {
             "typeface": "Inter",
@@ -8259,7 +7639,7 @@
         },
         {
           "type": "text",
-          "text": "12 / 16",
+          "text": "13 / 17",
           "position": {
             "left": 1135,
             "top": 682,
@@ -8334,6 +7714,10 @@
         {
           "label": "validation",
           "href": "/guide/operations/validation/"
+        },
+        {
+          "label": "Pago con resultado incierto",
+          "href": "/architecture/?scenario=uncertain-payment&step=3"
         }
       ],
       "elements": [
@@ -8425,7 +7809,7 @@
         },
         {
           "type": "text",
-          "text": "13 / 16",
+          "text": "14 / 17",
           "position": {
             "left": 1135,
             "top": 682,
@@ -8504,6 +7888,10 @@
         {
           "label": "validation",
           "href": "/guide/operations/validation/"
+        },
+        {
+          "label": "Activación de precios",
+          "href": "/architecture/?scenario=commercial-version&step=3"
         }
       ],
       "elements": [
@@ -8595,7 +7983,7 @@
         },
         {
           "type": "text",
-          "text": "14 / 16",
+          "text": "15 / 17",
           "position": {
             "left": 1135,
             "top": 682,
@@ -8761,7 +8149,7 @@
         },
         {
           "type": "text",
-          "text": "15 / 16",
+          "text": "16 / 17",
           "position": {
             "left": 1135,
             "top": 682,
@@ -8923,7 +8311,7 @@
         },
         {
           "type": "text",
-          "text": "16 / 16",
+          "text": "17 / 17",
           "position": {
             "left": 1135,
             "top": 682,
@@ -9258,7 +8646,7 @@
         },
         {
           "type": "text",
-          "text": "Confirmar venta y outbox en un commit.",
+          "text": "Venta, auditoría y outbox en un commit.",
           "position": {
             "left": 337,
             "top": 453,

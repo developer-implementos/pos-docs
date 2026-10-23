@@ -109,30 +109,28 @@ flowchart TB
         Edge -->|"Outbox/inbox, cursores y versiones · SQL local"| DB
     end
     subgraph Pais["Plataforma del país en cloud autorizado o centro de datos"]
-        Country["country-api · NestJS + Fastify\nRecepción, consultas, trabajo y resultados"]
+        Country["country-api · NestJS + Fastify\nRecepción, trabajo, resultados y publicación"]
         Store[("PostgreSQL operativo por país\ninbox, efecto local y outbox")]
-        Publisher["Publicación de maestros\nProceso por asignar"]
         Cache[("Redis · caché de país opcional\nLecturas reconstruibles")]
         Fiscal["Transmisión y seguimiento fiscal según régimen\nEjecución por definir"]
         Country -->|"Commit antes de ACK · SQL"| Store
         Country -.->|"Consulta derivada · fallback a PostgreSQL"| Cache
-        Publisher -->|"Versiones completas y validadas"| Store
         Country -->|"Trabajo fiscal autorizado según contrato"| Fiscal
     end
-    subgraph RedERP["Red autorizada del ERP · entorno por homologar"]
-        Adapter["erp-worker\nFachadas, ACL y adaptadores"]
+    subgraph RedERP["Red autorizada del ERP/origen · entorno por homologar"]
+        Adapter["erp-worker\nFachadas, ACL y preparación de maestros"]
         System["Sistema vigente por país y fase\nAX, Gira, custom o ERP futuro"]
         Adapter -->|"Interfaz ERP por validar"| System
+        Adapter -->|"MasterDataSourcePort · corte por validar"| Masters["Origen autorizado de maestros y precios"]
     end
     Edge -->|"Lotes, acuses y versiones · HTTPS saliente"| Country
-    Adapter -->|"Solicita trabajo / entrega resultados · HTTPS saliente"| Country
-    Publisher -->|"Obtiene cambios o carga completa · contrato por validar"| Masters["Fuentes autorizadas de maestros y precios"]
+    Adapter -->|"Trabajo, resultados y paquetes · HTTPS saliente"| Country
     Fiscal --> Authority["SII, SUNAT o autoridad española aplicable"]
     Control["Gobierno común de versiones y configuración"] -.-> Country
     Country -.->|"Publicación asíncrona"| Analytics["Analítica con datos minimizados"]
 ```
 
-El diagrama representa una tienda, su plataforma de país y la red autorizada del ERP; se aplica por país. Las seis aplicaciones tienen nombre explícito. La publicación de maestros y la transmisión fiscal describen responsabilidades cuya ejecución debe asignarse, no apps adicionales ya creadas. Redis es opcional; PostgreSQL conserva la autoridad. Las flechas HTTPS indican quién inicia la conexión: la respuesta forma parte del mismo contrato. `erp-worker` solicita trabajo y entrega resultados a `country-api`, sin SQL remoto a su base ni entrada pública obligatoria a la red ERP. El componente fiscal puede producir registros locales y delegar su transmisión únicamente cuando el régimen aplicable lo permite.
+El diagrama representa una tienda, su plataforma de país y la red autorizada del ERP u origen de maestros; se aplica por país. Las seis aplicaciones tienen nombre explícito. Preparación de maestros y publicación son capacidades propuestas de `erp-worker` y `country-api`; la transmisión fiscal mantiene su ejecución por homologar. Redis es opcional; PostgreSQL conserva la autoridad. Las flechas HTTPS indican quién inicia la conexión: la respuesta forma parte del mismo contrato. `erp-worker` solicita trabajo y entrega resultados/paquetes a `country-api`, sin SQL remoto a su base ni entrada pública obligatoria a la red ERP. El componente fiscal puede producir registros locales y delegar su transmisión únicamente cuando el régimen aplicable lo permite.
 
 **Clientes y backend de sucursal.** `pos-desktop` usa Angular + Tauri y `pos-mobile`, Angular + Capacitor; sus capacidades nativas deben estar autorizadas y homologadas. Ambos llaman a `branch-api` mediante API autenticada sobre la LAN. El backend NestJS/Fastify valida permisos, calcula precios/ofertas con datos locales, controla turnos y persiste negocio y outbox en PostgreSQL. Varias cajas comparten este backend y un escritor autorizado de datos de sucursal; la base de ventas pertenece a la sucursal. Los clientes no reciben credenciales SQL. Impresión y terminal bancario se validan en hardware real; otros periféricos se incorporan según el alcance.
 
@@ -158,7 +156,7 @@ Esta descomposición orienta las vistas C4: cliente, API y worker son unidades d
 | `erp-worker` · proceso supervisado en red ERP | El contexto `erp` conserva destinos, referencias e intentos mediante la API de país; el proveedor conserva su efecto financiero | Inicia HTTPS a `country-api`; ejecuta fachada, ACL y adaptadores homologados; consulta o concilia resultados inciertos sin SQL remoto a país |
 | ERP y fuentes de maestros vigentes | Conservan las autoridades pactadas por dato; una copia POS no transfiere su propiedad | APIs/eventos o adaptadores de transición; las tablas internas no son el contrato entre productos |
 
-El publicador de maestros mantiene su ejecución por asignar. Redis de país y el puente de periféricos son capacidades condicionales con contratos propios; el [C2 y sus ampliaciones](c4-arquitectura-propuesta.md#c2-procesos-persistencia-y-propiedad) detallan consumidores, fallos y correspondencia con bibliotecas.
+La publicación de maestros propone extracción y preparación en `erp-worker`, con `MasterDataSourcePort` en la red autorizada del origen, y autoridad de versiones/publicación en `country-api`. El origen puede ser ERP u otro sistema maestro; su acceso y contrato requieren validación. La capacidad de publicación tiene identidad, claims y recursos separados del trabajo financiero. El [contrato de publicación](contracts/master-data-publication.md) concreta ejecución, paquetes y recuperación. Redis de país y el puente de periféricos son capacidades condicionales con contratos propios; el [C2 y sus ampliaciones](c4-arquitectura-propuesta.md#c2-procesos-persistencia-y-propiedad) detallan consumidores, fallos y correspondencia con bibliotecas.
 
 «Misma base» permite una transacción entre tablas de una sucursal; no significa compartir esa transacción con país o ERP. Los nombres de schemas propuestos son ilustrativos: `sales`, `cash`, `payments`, `fiscal`, `pricing` y `sync`. Cada módulo controla sus tablas mediante interfaces y migraciones propias; `sync` controla entrega/deduplicación, no puede reescribir los importes de `sales`. Una unidad de trabajo coordina venta y outbox usando la misma conexión/transacción. En país, la clave de inbox combina origen, consumidor e ID de evento; un duplicado se reconoce y un ID reutilizado con contenido distinto se rechaza. El acuse sigue al commit; no certifica pago, aceptación fiscal ni contabilización. PostgreSQL permite agrupar cambios de varias tablas en una operación atómica; la corrección del protocolo debe probarse aparte. [Transacciones PostgreSQL](https://www.postgresql.org/docs/current/tutorial-transactions.html).
 
@@ -311,6 +309,8 @@ El código de Mountain ya contiene alta/edición de ofertas, aunque su habilitac
 #### Publicación y activación de versiones comerciales
 
 El contrato propuesto combina **eventos incrementales**, **carga masiva programada** y **recuperación manual controlada** sobre el mismo proceso de validación. La fuente comercial publica una versión y un punto de corte consistente (*watermark*); ese punto identifica qué cambios contiene la carga. Su disponibilidad en las fuentes actuales sigue pendiente de verificar. Una fecha del reloj de la caja no sustituye este contrato.
+
+El [contrato del productor y la publicación](contracts/master-data-publication.md) asigna preparación a `erp-worker` y autoridad de publicación a `country-api`; concreta `MasterDataSourcePort`, manifiesto, claims, fencing, carga reanudable y pruebas de F03-02. Las etapas siguientes describen la recepción y activación de esa publicación en sucursal.
 
 | Etapa | Comportamiento propuesto | Si se interrumpe |
 | --- | --- | --- |
@@ -469,6 +469,8 @@ Las referencias fiscales se revisaron el 1 de octubre de 2026. Orientan las rest
 
 Se propone que cada dispositivo tenga identidad propia, credenciales rotables y permisos limitados a sus tiendas y entidades. El enrolamiento requiere conexión y control administrativo. Para acceso offline se propone una autorización firmada, vinculada al dispositivo y al operador, con funciones, importe y vigencia limitados; su diseño y validación están pendientes. No se resuelve ampliando indefinidamente la duración de un token de acceso central.
 
+El [contrato de identidad entre fronteras](contracts/identity-and-trust.md) distingue operador, puesto, instalación de sucursal y workload; precisa autenticación, prueba de posesión, alta, rotación, revocación, recuperación y admisión tras una caída de WAN. Sus perfiles son propuestas para homologar, no integraciones corporativas existentes ni permisos productivos ya aprobados.
+
 La revocación remota no llega a una caja aislada: se acepta una ventana acotada y se restringen funciones sensibles. Se controla retroceso de reloj mediante la última referencia confiable y tiempo monotónico cuando esté disponible; reinicios sin tiempo verificable activan una política conservadora. Un PIN local requiere protección contra fuerza bruta y bloqueo según política.
 
 Aplicar cifrado de disco, protección de claves en el almacén seguro del equipo, cifrado en tránsito, privilegio mínimo y separación de funciones de cajero, supervisor, soporte y auditor. Los certificados fiscales requieren custodia y renovación específicas; no se distribuye indiscriminadamente una clave privada corporativa a todas las cajas.
@@ -544,9 +546,30 @@ La plataforma de cada país requiere redundancia, backups inmutables según pol�
 
 ## Decisiones de arquitectura
 
-Los identificadores siguientes relacionan cada decisión con su motivo y las condiciones necesarias para validarla. **Las decisiones de backend, datos y operación siguen propuestas; el cliente Angular + Tauri y el uso de Nx son decisiones de producto, con homologación y límites de implementación pendientes.** Cada aprobación requiere fecha, responsables, alcance, evidencias y condición de revisión. Los responsables indicados son roles por asignar, no personas ya comprometidas.
+Los identificadores siguientes relacionan cada decisión con su motivo y las condiciones necesarias para validarla. **Aceptar una dirección de producto no acredita implementación ni homologación.** Cada aprobación operativa debe registrar fecha, responsables, alcance, evidencias y condición de revisión. Los responsables indicados son roles por asignar, no personas ya comprometidas. El estado se declara por decisión para distinguir acuerdos de organización de recomendaciones todavía por validar.
 
-| ID y decisión candidata | Motivo y coste | Evidencia necesaria para cerrarla | Responsable sugerido |
+| Decisión | Estado y alcance vigentes | Condición de revisión o aceptación |
+| --- | --- | --- |
+| <span id="adr-01"></span>ADR-01 | Propuesta: escritor por sucursal para el perfil WAN | Aprobar matriz offline y coste/recuperación; no acredita autonomía de puesto |
+| <span id="adr-02"></span>ADR-02 | Propuesta: recuperación y exclusión del escritor anterior | Ensayar pérdida de nodo y restauración con el alcance aprobado |
+| <span id="adr-03"></span>ADR-03 | Propuesta: custodia e idempotencia por frontera | Demostrar transacciones, respuesta perdida, duplicados y restore |
+| <span id="adr-04"></span>ADR-04 | Propuesta: contratos comunes y capacidades nacionales | Homologar cada combinación de regla, proveedor y dispositivo |
+| <span id="adr-05"></span>ADR-05 | Propuesta: fachada y ACL ERP por capacidad | Verificar unicidad, consulta, equivalencia y conciliación en el destino |
+| <span id="adr-06"></span>ADR-06 | Propuesta: vocabulario y propiedad de escritura | Contrastar consumidores y compatibilidad de contratos/datos |
+| <span id="adr-07"></span>ADR-07 | Propuesta: aislamiento lógico por país/entidad; topología física pendiente | Aprobar seguridad, operación, capacidad y residencia aplicable |
+| <span id="adr-08"></span>ADR-08 | Nx indicado para organizar el producto; monolito modular recomendado | La elección de Nx no aprueba una topología; comprobar fronteras y carga |
+| <span id="adr-09"></span>ADR-09 | Organización POS independiente con `shared` acordada por el usuario | Conservar límites DDD; verificar su implementación contra la revisión del producto |
+| <span id="adr-10"></span>ADR-10 | Propuesta: PostgreSQL + HTTPS inicial; broker/job engine condicional | Medir carga, recuperación y capacidad operativa antes de incorporar componentes |
+| <span id="adr-11"></span>ADR-11 | Propuesta: evaluación local de precios/ofertas | Aprobar autoridad, paridad de reglas, vigencia y activación completa |
+| <span id="adr-12"></span>ADR-12 | Extensiones opcionales: IA y RFID | Exigen caso, evaluación y aceptación propios; no bloquean el primer recorrido |
+| <span id="adr-13"></span>ADR-13 | Propuesta: NestJS/Fastify y PostgreSQL de sucursal/país | El scaffold no aprueba persistencia productiva; validar transacciones, carga y restore |
+| <span id="adr-14"></span>ADR-14 | Clientes Angular + Tauri y Angular + Capacitor aceptados el 21-10-2026 | Alcance y límites en la [decisión de clientes](decisions/native-clients.md); homologación pendiente |
+| <span id="adr-15"></span>ADR-15 | Propuesta editorial del 23-10-2026: publicación compartida entre `erp-worker` y `country-api` | Verificar origen/corte, autorización, aislamiento de trabajo y recuperación de paquetes |
+| <span id="adr-16"></span>ADR-16 | Propuesta editorial del 23-10-2026: identidad por actor/frontera y continuidad acotada | Seleccionar y homologar emisor, PKI, perfiles nativos, revocación y política offline |
+
+Las fechas editoriales de ADR-15/16 no son fechas de aprobación. Para las direcciones indicadas sin acta fechada se conserva ese alcance, sin atribuir una aprobación formal inexistente.
+
+| ID y decisión | Motivo y coste | Evidencia necesaria para cerrarla | Responsable sugerido |
 | --- | --- | --- | --- |
 | ADR-01 · Escritor local por sucursal para perfil WAN | Aprovecha distribución actual; el servidor/LAN siguen siendo dependencia. Autonomía por terminal agrega persistencia, coordinación y recuperación. | Q01/Q07: matriz offline, caída de servidor, RPO/RTO y coste comparado de ambos perfiles. | Producto + operaciones + plataforma |
 | ADR-02 · Recuperación del nodo de tienda | Copia independiente y escritor único reducen pérdida/split-brain; no prometen RPO cero durante destrucción de tienda aislada. | Ensayo de pérdida de disco, restore, aislamiento del escritor anterior y recuperación de pagos pendientes. | Plataforma + DBA + soporte |
@@ -561,6 +584,8 @@ Los identificadores siguientes relacionan cada decisión con su motivo y las con
 | ADR-11 · Precio y ofertas evaluados localmente | Resuelve bloqueo online; distribuir datos no basta: hay que portar reglas, vigencias y autoridad. | Casos de paridad aprobados, promociones solapadas, redondeo, datos vencidos y actualización atómica. Precisar creación/edición local. | Comercial + dueño de precios + ingeniería POS |
 | ADR-12 · IA y RFID como extensiones opcionales | Añaden asistencia/captura sin tomar autoridad de pagos, fiscalidad o inventario. Tienen coste, fallos y pilotos propios. | Métricas frente al proceso actual, evidencia de calidad, fallback, hardware/etiquetado y criterios de retirada. | Producto + operaciones + dueños de datos |
 | ADR-13 · NestJS/Fastify y PostgreSQL en sucursal y país | Backend explícito, persistencia relacional y JSONB donde corresponda; conserva un escritor de sucursal en perfil WAN. MongoDB no se instala por defecto en tiendas ni se elimina del legado sin transición. | Piloto de carga, transacción venta/outbox e inbox/efecto, restore, compatibilidad de adaptadores, reglas/precios y plan de migración. Versión soportada y operación por DBA/plataforma. | Ingeniería POS + arquitectura + DBA |
+| ADR-15 · Productor y autoridad de publicación de maestros | Preparación mediante `MasterDataSourcePort` en `erp-worker`, con publicación durable en `country-api`; requiere recursos y permisos separados de comandos financieros. | [Contrato y pruebas de publicación](contracts/master-data-publication.md), F03-02, F03-V03/F03-V08; corte y autoridad del origen comprobados. | Dueño comercial/origen + integración + plataforma |
+| ADR-16 · Identidad y confianza entre fronteras | Separa persona, puesto, instalación y workload; la continuidad offline admite una ventana de revocación residual explícita. | [Contrato de identidad](contracts/identity-and-trust.md), F01-V03 y F05-V08; alta, prueba de posesión, rotación, revocación y recuperación homologadas. | Seguridad + plataforma + operaciones + ingeniería POS |
 
 Referencias de cierre: [preguntas y evidencias](solicitud-informacion-equipo.md), [pruebas de aceptación](validacion-y-decisiones.md), [gates de mensajería](investigacion-mensajeria-pos.md#5-matriz-de-decisión-provisional-por-carga-de-trabajo), [opciones tecnológicas](opciones-tecnologicas.md). Un resultado del piloto puede modificar una candidata; la existencia de este registro no la convierte en una tecnología adoptada.
 
