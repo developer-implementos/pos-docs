@@ -107,6 +107,63 @@ async function ready(page, suffix = '') {
   return response;
 }
 
+async function openOptions(page) {
+  const options = page.locator('#map-options');
+  if (!await options.isVisible()) await page.locator('#options-toggle').click();
+  await options.waitFor({ state: 'visible' });
+  assert.ok(await options.evaluate(node => node.matches(':popover-open')), 'Secondary actions use the native popover');
+}
+
+async function chooseScenario(page, id) {
+  await openOptions(page);
+  await page.locator('#scenario').selectOption(id);
+  await page.locator('#map-options').waitFor({ state: 'hidden' });
+}
+
+async function clickOption(page, selector) {
+  await openOptions(page);
+  await page.locator(selector).click();
+  await page.locator('#map-options').waitFor({ state: 'hidden' });
+}
+
+async function assertMapSpace(page, minimumRatio, label) {
+  const geometry = await page.evaluate(() => {
+    const header = document.querySelector('.site-header').getBoundingClientRect();
+    const map = document.querySelector('#viewport').getBoundingClientRect();
+    const controls = [...document.querySelectorAll('.site-header #view,.site-header #toggle-inspector,.site-header #options-toggle')].map(node => {
+      const rect = node.getBoundingClientRect();
+      return { id: node.id, top: rect.top, bottom: rect.bottom, center: (rect.top + rect.bottom) / 2, height: rect.height };
+    });
+    const zoom = document.querySelector('.zoom-controls').getBoundingClientRect();
+    return {
+      height: innerHeight, map: { top: map.top, bottom: map.bottom, height: map.height },
+      header: { top: header.top, bottom: header.bottom, height: header.height }, controls,
+      scrollHeight: Math.max(document.documentElement.scrollHeight, document.body.scrollHeight), scrollY,
+      zoom: { top: zoom.top, bottom: zoom.bottom, left: zoom.left, right: zoom.right }, width: innerWidth,
+    };
+  });
+  assert.ok(geometry.map.height / geometry.height >= minimumRatio, `${label}: map retains at least ${minimumRatio * 100}% of viewport height (${JSON.stringify(geometry)})`);
+  assert.ok(geometry.header.height <= 72, `${label}: header remains a compact single row`);
+  assert.equal(geometry.controls.length, 3, `${label}: view, explorer and options remain available in the header`);
+  assert.ok(Math.max(...geometry.controls.map(control => control.center)) - Math.min(...geometry.controls.map(control => control.center)) <= 8, `${label}: header controls never wrap into another row`);
+  assert.deepEqual(geometry.controls.filter(control => control.height < 44), [], `${label}: primary controls keep 44px hit targets`);
+  assert.ok(geometry.scrollHeight <= geometry.height + 1 && geometry.scrollY === 0, `${label}: the document does not add a second vertical scrollbar`);
+  assert.ok(geometry.zoom.top >= geometry.map.top && geometry.zoom.bottom <= geometry.map.bottom + 1 && geometry.zoom.left >= 0 && geometry.zoom.right <= geometry.width, `${label}: zoom stays inside the map without consuming a separate row`);
+  await assertNoHorizontalOverflow(page, label);
+}
+
+async function assertWholeMapFit(page, label) {
+  await page.waitForFunction(() => {
+    const viewport = document.querySelector('#viewport');
+    const svg = document.querySelector('#drawing svg');
+    const style = getComputedStyle(viewport);
+    const width = viewport.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+    const height = viewport.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+    const expected = Math.min(1, width / svg.viewBox.baseVal.width, height / svg.viewBox.baseVal.height);
+    return Math.abs(svg.getBoundingClientRect().width / svg.viewBox.baseVal.width - expected) < .001;
+  }, undefined, { timeout: 3000 }).catch(error => { throw new Error(`${label}: whole-map fit must survive the inspector resizing its viewport`, { cause: error }); });
+}
+
 async function assertSelection(page, item) {
   await page.locator(`#inspector[data-active="${item.id}"]`).waitFor({ state: 'attached' });
   assert.equal(await page.locator('#inspector').getAttribute('data-active'), item.id, `Inspector selected ${item.id}`);
@@ -131,6 +188,11 @@ async function assertCamera(page, ids, label) {
     const visible = { left: outer.left + viewport.clientLeft, top: outer.top + viewport.clientTop };
     visible.right = visible.left + viewport.clientWidth;
     visible.bottom = visible.top + viewport.clientHeight;
+    const inspector = document.querySelector('#inspector');
+    if (!inspector.hidden) {
+      const panel = inspector.getBoundingClientRect();
+      if (panel.left <= visible.left && panel.right >= visible.right && panel.top < visible.bottom && panel.bottom > visible.top) visible.bottom = Math.max(visible.top, panel.top);
+    }
     const clipped=ids.filter(id => {
       const box = document.querySelector(`#drawing [data-item-id="${id}"] .architecture-node-box`).getBoundingClientRect();
       return box.left < visible.left - 2 || box.top < visible.top - 2 || box.right > visible.right + 2 || box.bottom > visible.bottom + 2;
@@ -229,6 +291,40 @@ try {
   await page.emulateMedia({colorScheme:'light'});
   report.checks.push('Security headers, canonical URL, landmarks, complete SVG/detail inventory and all internal sources');
 
+  for (const [width, height, minimum] of [[1366, 768, .85], [1024, 768, .85], [375, 812, .8], [320, 568, .8]]) {
+    await page.setViewportSize({ width, height });
+    await ready(page, '?view=full');
+    await assertMapSpace(page, minimum, `${width}×${height} complete map`);
+    await openOptions(page);
+    const optionsBox = await page.locator('#map-options').boundingBox();
+    assert.ok(optionsBox && optionsBox.x >= 0 && optionsBox.y >= 0 && optionsBox.x + optionsBox.width <= width + 1 && optionsBox.y + optionsBox.height <= height + 1, `${width}×${height}: options are bounded by the viewport`);
+    await page.locator('#scenario').focus();
+    await page.keyboard.press('Escape');
+    assert.ok(await page.locator('#map-options').isHidden(), 'Escape closes secondary options');
+    assert.ok(await page.locator('#options-toggle').evaluate(node => document.activeElement === node), 'Escape returns focus to the options trigger');
+    await openOptions(page);
+    const mapBox = await page.locator('#viewport').boundingBox();
+    await page.mouse.click(mapBox.x + 3, mapBox.y + mapBox.height - 3);
+    assert.ok(await page.locator('#map-options').isHidden(), 'An outside click dismisses options');
+    await page.locator('#toggle-inspector').click();
+    await page.locator('#search').fill('country-api');
+    await page.locator('#close-inspector').click();
+    assert.ok(await page.locator('#inspector').isHidden(), 'Inspector close returns map space');
+    assert.ok(await page.locator('#toggle-inspector').evaluate(node => document.activeElement === node), 'Closing the inspector returns focus to its trigger');
+    await assertMapSpace(page, minimum, `${width}×${height} after closing inspector`);
+    await capture(page, `compact-map-${width}.png`);
+  }
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await ready(page);
+  await page.locator('#fit').click();
+  await assertWholeMapFit(page, 'Base after fit');
+  await page.locator('#toggle-inspector').click();
+  await assertWholeMapFit(page, 'Base after opening inspector');
+  await page.locator('#close-inspector').click();
+  await assertWholeMapFit(page, 'Base after closing inspector');
+  report.checks.push('Complete map uses ≥85% desktop and ≥80% mobile height; one-row header, bounded native options, Escape/outside dismissal and inspector focus restoration at 1366, 1024, 375 and 320px');
+  report.checks.push('Whole-map fit in the base view persists through opening and closing the inspector');
+
   for(const view of architectureViews){
     await page.locator('#view').selectOption(view.id);
     assert.equal(await page.locator('#drawing').getAttribute('data-view'),view.id);
@@ -251,7 +347,7 @@ try {
   const erpPanel=page.locator('[data-scenario-panel="country-erp"]');
   assert.equal(await erpPanel.locator('[aria-current="step"]').getAttribute('data-step'),'2','Shared step numbers are one-based');
   await context.grantPermissions(['clipboard-read','clipboard-write'],{origin});
-  await page.locator('#copy-view').click();
+  await clickOption(page, '#copy-view');
   assert.equal(await page.evaluate(()=>navigator.clipboard.readText()),page.url(),'Copy includes the selected scenario and step');
   await erpPanel.locator('[data-next-step]').click();
   assert.equal(new URL(page.url()).searchParams.get('step'),'4');
@@ -264,7 +360,7 @@ try {
   assert.equal(await page.locator('#drawing').getAttribute('data-view'),'scenario-country-erp-4');
   await assertActiveStepVisible(page,'ERP step4 deep link');
   await capture(page,'scenario-erp.png');
-  await page.locator('#clear-selection').click();
+  await clickOption(page, '#clear-selection');
   assert.equal(await page.locator('#drawing').getAttribute('data-view'),'base');
   assert.equal(new URL(page.url()).search,'');
   assert.ok(await page.locator('#inspector').isHidden());
@@ -370,7 +466,7 @@ try {
   report.checks.push('Search without accents, empty results, exact node/connection filters');
 
   for (const scenario of architecture.scenarios) {
-    await page.locator('#scenario').selectOption(scenario.id);
+    await chooseScenario(page, scenario.id);
     const panel = page.locator(`[data-scenario-panel="${scenario.id}"]`);
     assert.ok(await panel.isVisible());
     for (const [index, step] of scenario.steps.entries()) {
@@ -395,7 +491,7 @@ try {
       assert.equal(await panel.locator('[aria-current="step"]').getAttribute('data-step'), String(scenario.steps.length - 1));
     }
   }
-  await page.locator('#clear-selection').click();
+  await clickOption(page, '#clear-selection');
   assert.equal(await page.locator('#drawing .is-selected, #drawing .is-related').count(), 0);
   assert.equal(await page.locator('#scenario').inputValue(), '');
   await page.locator('.skip-link').focus();
@@ -404,6 +500,7 @@ try {
   assert.ok(await page.locator('#search').evaluate(node=>document.activeElement===node),'Skip link focuses the search field');
   report.checks.push(`All ${architecture.scenarios.length} guided scenarios mount exact step projections with readable desktop titles, all nodes framed, visible active steps, shareable URLs and usable skip link`);
 
+  await openOptions(page);
   const downloadPromise = page.waitForEvent('download');
   await page.locator('a[download][href="/docs/architecture/pos-platform.svg"]').click();
   const download = await downloadPromise;
@@ -424,7 +521,7 @@ try {
   observe(mobile);
   await ready(mobile);
   await assertNoHorizontalOverflow(mobile, 'Mobile overview');
-  const smallControls=await mobile.locator('.toolbar button,.toolbar select').evaluateAll(nodes=>nodes.filter(node=>node.getClientRects().length&&node.getBoundingClientRect().height<44).map(node=>node.textContent.trim()));
+  const smallControls=await mobile.locator('.site-header button,.site-header select,.zoom-controls button').evaluateAll(nodes=>nodes.filter(node=>node.getClientRects().length&&node.getBoundingClientRect().height<44).map(node=>node.textContent.trim()));
   assert.deepEqual(smallControls,[],'Mobile view, scenario and zoom controls retain 44px targets');
   await capture(mobile, 'mobile.png');
   await mobile.locator('#toggle-inspector').click();
@@ -435,7 +532,7 @@ try {
   await mobile.locator('#back-index').click();
   assert.ok(await mobile.locator('#search').evaluate(node => document.activeElement === node), 'Mobile back returns focus to search');
   for (const scenario of architecture.scenarios) {
-    await mobile.locator('#scenario').selectOption(scenario.id);
+    await chooseScenario(mobile, scenario.id);
     const panel = mobile.locator(`[data-scenario-panel="${scenario.id}"]`);
     for (const [index, step] of scenario.steps.entries()) {
       await panel.locator(`[data-step="${index}"]`).click();
@@ -457,7 +554,8 @@ try {
     const rect = await fallback.locator(`#detail-${item.id}`).boundingBox();
     assert.ok(rect && rect.y >= -1 && rect.y < 812, `Native anchor scrolls to ${item.id} without JavaScript`);
   }
-  assert.ok(await fallback.locator('a[download][href="/docs/architecture/pos-platform.svg"]').isVisible(),'The complete vector is downloadable without JavaScript on mobile');
+  await openOptions(fallback);
+  assert.ok(await fallback.locator('a[download][href="/docs/architecture/pos-platform.svg"]').isVisible(),'The complete vector is downloadable from native options without JavaScript on mobile');
   await fallback.setViewportSize({width:1440,height:1000});
   for(const href of ['/docs/architecture/pos-platform-base.svg','/docs/architecture/pos-platform.svg'])
     assert.ok(await fallback.locator(`a[download][href="${href}"]`).isVisible(),`The ${href} vector is downloadable without JavaScript on desktop`);

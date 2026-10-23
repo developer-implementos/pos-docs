@@ -5,11 +5,21 @@ const details = new Map($$('[data-detail]').map(card => [card.dataset.detail, ca
 const scenarios = new Map($$('[data-scenario-panel]').map(panel => [panel.dataset.scenarioPanel, panel]));
 const templates = new Map($$('template[data-map-view]').map(template => [template.dataset.mapView, template]));
 const viewSelect = $('#view'), scenarioSelect = $('#scenario'), search = $('#search');
+const options = $('#map-options'), optionsToggle = $('#options-toggle'), inspectorToggle = $('#toggle-inspector');
 const viewIds = new Set([...viewSelect.options].map(option => option.value));
 const normalize = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-let items = new Map(), nativeWidth = 1, nativeHeight = 1, mapKey = '', scale = 1, fitting = true;
-let state = { view: 'base', scenario: null, step: 1, detail: null }, filter = 'node', resizeFrame, appliedUrl;
+let items = new Map(), nativeWidth = 1, nativeHeight = 1, mapKey = '', scale = 1, fitting = true, fitWhole = false;
+let state = { view: 'base', scenario: null, step: 1, detail: null }, filter = 'node', resizeFrame, appliedUrl, feedbackTimer;
 const announce = text => { $('#announcement').textContent = text; };
+function feedback(text) {
+  announce(text);
+  const toast = $('#feedback'); toast.textContent = text; toast.hidden = false;
+  clearTimeout(feedbackTimer); feedbackTimer = setTimeout(() => { toast.hidden = true; }, 5000);
+}
+function closeOptions({ returnFocus = true } = {}) {
+  if (options.matches(':popover-open')) options.hidePopover();
+  if (returnFocus) optionsToggle.focus({ preventScroll: true });
+}
 
 function readLocation() {
   const url = new URL(location.href), view = viewIds.has(url.searchParams.get('view')) ? url.searchParams.get('view') : 'base';
@@ -30,10 +40,14 @@ function writeLocation(replace = false) {
   appliedUrl = location.href;
 }
 function openInspector(open) {
+  const restoreFocus = !open && inspector.contains(document.activeElement);
   $('.explorer').classList.toggle('has-inspector', open);
   inspector.hidden = !open;
-  $('#toggle-inspector').setAttribute('aria-expanded', String(open));
-  $('#toggle-inspector').textContent = open ? 'Ocultar detalles' : 'Explorar elementos';
+  inspectorToggle.setAttribute('aria-expanded', String(open));
+  inspectorToggle.setAttribute('aria-label', open ? 'Ocultar detalles' : 'Explorar elementos');
+  inspectorToggle.title = open ? 'Ocultar detalles' : 'Explorar elementos';
+  $('#toggle-inspector-label').textContent = open ? 'Detalles' : 'Explorar';
+  if (restoreFocus) inspectorToggle.focus({ preventScroll: true });
 }
 function mount(key) {
   if (mapKey === key) return false;
@@ -42,7 +56,7 @@ function mount(key) {
   drawing.dataset.view = key;
   items = new Map([...drawing.querySelectorAll('[data-item-id]')].map(item => [item.dataset.itemId, item]));
   const box = drawing.querySelector('svg').viewBox.baseVal; nativeWidth = box.width; nativeHeight = box.height;
-  fitting = true; return true;
+  fitting = true; fitWhole = false; return true;
 }
 function scaleTo(value, keepCenter = true) {
   const center = { x: (viewport.scrollLeft + viewport.clientWidth / 2) / scale, y: (viewport.scrollTop + viewport.clientHeight / 2) / scale };
@@ -52,8 +66,8 @@ function scaleTo(value, keepCenter = true) {
   $('#zoom-out').disabled = scale <= .08; $('#zoom-in').disabled = scale >= 1.8;
   if (keepCenter) viewport.scrollTo({ left: center.x * scale - viewport.clientWidth / 2, top: center.y * scale - viewport.clientHeight / 2 });
 }
-function fit({ whole = false } = {}) {
-  fitting = true;
+function fit({ whole = fitWhole } = {}) {
+  fitting = true; fitWhole = whole;
   const style = getComputedStyle(viewport);
   const width = viewport.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
   const height = viewport.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
@@ -90,8 +104,9 @@ function revealActiveStep() {
   if (!state.scenario || state.detail || !['auto', 'scroll'].includes(getComputedStyle(inspector).overflowY)) return;
   const active = scenarios.get(state.scenario).querySelector('[data-step][aria-current="step"]');
   const panel = inspector.getBoundingClientRect(), step = active.getBoundingClientRect(), padding = 16;
+  const topPadding = $('.inspector-tools').getBoundingClientRect().height + padding;
   // Scroll only the detail panel; the graph camera and mobile document position stay stable.
-  if (step.top < panel.top + padding) inspector.scrollTop += step.top - panel.top - padding;
+  if (step.top < panel.top + topPadding) inspector.scrollTop += step.top - panel.top - topPadding;
   else if (step.bottom > panel.bottom - padding) inspector.scrollTop += step.bottom - panel.bottom + padding;
 }
 function renderState({ focus = false, center = false, fromHistory = false } = {}) {
@@ -146,26 +161,37 @@ drawing.addEventListener('keydown', event => { if (!['Enter', ' '].includes(even
 for (const button of $$('[data-kind-filter]')) button.addEventListener('click', () => { filter = button.dataset.kindFilter; for (const item of $$('[data-kind-filter]')) item.setAttribute('aria-pressed', String(item === button)); filterIndex(); });
 search.addEventListener('input', filterIndex);
 $('#toggle-inspector').addEventListener('click', () => { const opening = inspector.hidden; openInspector(opening); if (opening && !state.detail && !state.scenario) search.focus({ preventScroll: true }); if (fitting) requestAnimationFrame(() => fit()); });
+$('#close-inspector').addEventListener('click', () => { openInspector(false); inspectorToggle.focus({ preventScroll: true }); if (fitting) requestAnimationFrame(() => fit()); });
+options.addEventListener('toggle', event => {
+  optionsToggle.setAttribute('aria-expanded', String(event.newState === 'open'));
+  // Light dismissal should not steal focus from a control the user just clicked.
+  if (event.newState === 'closed' && options.contains(document.activeElement)) optionsToggle.focus({ preventScroll: true });
+});
+document.addEventListener('keydown', event => {
+  if (event.key !== 'Escape' || options.matches(':popover-open') || inspector.hidden) return;
+  event.preventDefault(); openInspector(false); inspectorToggle.focus({ preventScroll: true });
+  if (fitting) requestAnimationFrame(() => fit());
+});
 $('.skip-link').addEventListener('click', event => {
   event.preventDefault(); openInspector(true);
   const target = state.detail ? details.get(state.detail).querySelector('h2') : state.scenario ? scenarios.get(state.scenario).querySelector('[data-step][aria-current="step"]') : search;
   target.focus({ preventScroll: false });
 });
 $('#back-index').addEventListener('click', () => { if (state.detail && state.scenario) navigate({ detail: null }); else { navigate({ detail: null, scenario: null, step: 1 }); openInspector(true); search.focus({ preventScroll: true }); } });
-$('#clear-selection').addEventListener('click', () => { navigate({ view: 'base', scenario: null, step: 1, detail: null }); openInspector(false); fit(); });
+$('#clear-selection').addEventListener('click', () => { closeOptions(); navigate({ view: 'base', scenario: null, step: 1, detail: null }); openInspector(false); fit(); });
 $('#fit').addEventListener('click', () => fit({ whole: true }));
 $('#actual').addEventListener('click', () => { fitting = false; scaleTo(1); });
 $('#zoom-in').addEventListener('click', () => { fitting = false; scaleTo(scale * 1.3); });
 $('#zoom-out').addEventListener('click', () => { fitting = false; scaleTo(scale / 1.3); });
-$('#focus-item').addEventListener('click', () => { if (state.detail) centerIds([state.detail], true); });
+$('#focus-item').addEventListener('click', () => { closeOptions({ returnFocus: false }); if (state.detail) centerIds([state.detail], true); viewport.focus({ preventScroll: true }); });
 viewSelect.addEventListener('change', () => navigate({ view: viewSelect.value, scenario: null, step: 1, detail: null }));
-scenarioSelect.addEventListener('change', () => navigate({ scenario: scenarioSelect.value || null, step: 1, detail: null }));
+scenarioSelect.addEventListener('change', () => { closeOptions(); navigate({ scenario: scenarioSelect.value || null, step: 1, detail: null }); if (state.scenario) scenarios.get(state.scenario).querySelector('[data-step][aria-current="step"]').focus({ preventScroll: true }); });
 for (const step of $$('[data-step]')) step.addEventListener('click', () => changeStep(Number(step.dataset.step) + 1));
 for (const button of $$('[data-previous-step]')) button.addEventListener('click', () => changeStep(state.step - 1));
 for (const button of $$('[data-next-step]')) button.addEventListener('click', () => changeStep(state.step + 1));
-for (const button of [$('#copy-link'), $('#copy-view')]) button.addEventListener('click', async () => { try { await navigator.clipboard.writeText(location.href); announce('Enlace a esta vista copiado.'); } catch { announce(`Enlace a esta vista: ${location.href}`); } });
-$('#fullscreen').addEventListener('click', async () => { try { if (document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); } catch { announce('Este navegador no permite pantalla completa; el zoom del mapa sigue disponible.'); } });
-document.addEventListener('fullscreenchange', () => { $('#fullscreen').textContent = document.fullscreenElement ? 'Salir de pantalla completa' : 'Pantalla completa'; });
+for (const button of [$('#copy-link'), $('#copy-view')]) button.addEventListener('click', async () => { if (button.id === 'copy-view') closeOptions(); try { await navigator.clipboard.writeText(location.href); feedback('Enlace a esta vista copiado.'); } catch { feedback(`Enlace a esta vista: ${location.href}`); } });
+$('#fullscreen').addEventListener('click', async () => { closeOptions(); try { if (document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); } catch { feedback('Este navegador no permite pantalla completa; el zoom del mapa sigue disponible.'); } });
+document.addEventListener('fullscreenchange', () => { $('#fullscreen-label').textContent = document.fullscreenElement ? 'Salir de pantalla completa' : 'Pantalla completa'; });
 function restoreLocation() { if (appliedUrl === location.href) return; state = readLocation(); renderState({ fromHistory: true }); appliedUrl = location.href; }
 window.addEventListener('popstate', restoreLocation); window.addEventListener('hashchange', restoreLocation);
 new ResizeObserver(() => { cancelAnimationFrame(resizeFrame); resizeFrame = requestAnimationFrame(() => { if (fitting) fit(); }); }).observe(viewport);
