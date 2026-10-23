@@ -151,11 +151,12 @@ const item = (route, label) => ({ label: label || generatedPages.find(page => pa
 export const sidebar = [
   { label: 'Inicio', link: '/' },
   { label: 'Visión general de la solución', link: '/overview/' },
+  { label: 'Mapa general y diagramas C4', link: '/diagrams/' },
   { label: 'Roadmap de entrega', collapsed: false, items: [item('proposal/roadmap', 'Visión general'), ...roadmap.phases.map(phase => item(`roadmap/${phase.id}`))] },
   { label: 'Mapa de contenidos', link: '/contents/' },
   { label: 'Glosario del POS', link: '/glossary/' },
   { label: 'Producto y alcance', collapsed: true, items: ['product', 'evolution', 'corporate-reuse'].map(route => item(`proposal/${route}`)) },
-  { label: 'Arquitectura y estructura', collapsed: true, items: [item('proposal/architecture'), item('architecture/monorepo'), { label: 'Diagramas C4', link: '/diagrams/' }, item('architecture/c4-model'), item('architecture/native-clients'), item('architecture/drawio'), item('proposal/contracts'), item('proposal/technology'), item('architecture/technologies'), item('architecture/providers'), item('architecture/messaging')] },
+  { label: 'Arquitectura y estructura', collapsed: true, items: [item('proposal/architecture'), item('architecture/monorepo'), item('architecture/c4-model'), item('architecture/native-clients'), item('architecture/drawio'), item('proposal/contracts'), item('proposal/technology'), item('architecture/technologies'), item('architecture/providers'), item('architecture/messaging')] },
   { label: 'Flujos del producto', collapsed: true, items: ['continuity', 'pricing-promotions', 'synchronization', 'integration', 'erp-migration', 'fiscal-compliance', 'access-operations'].map(route => item(`proposal/${route}`)).concat([item('operations/cash-management')]) },
   { label: 'Decisiones y validación', collapsed: true, items: [item('proposal/decisions'), ...['validation', 'resilience', 'open-items'].map(route => item(`operations/${route}`))] },
   { label: 'Implementación y desarrollo', collapsed: true, items: generatedPages.filter(page => page.route.startsWith('implementation/')).map(page => item(page.route)) },

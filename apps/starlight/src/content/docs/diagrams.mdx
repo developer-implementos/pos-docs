@@ -1,12 +1,23 @@
 ---
 title: Diagramas de arquitectura
-description: Siete vistas estructurales C4 y dos recorridos de venta y precios, con aplicaciones, bibliotecas y archivos editables en Excalidraw.
+description: Mapa general de la propuesta con aplicaciones, tecnologías y conexiones, acompañado de las vistas C4 y los recorridos de venta y precios.
 editUrl: false
 ---
 
 import Diagram from '../../components/Diagram.astro';
+import { LinkButton } from '@astrojs/starlight/components';
 
-Estas siete vistas estructurales y dos dinámicas representan **el diseño propuesto**. El [modelo C4](/guide/architecture/c4-model/) conserva los contratos y el alcance; las [decisiones](/guide/proposal/decisions/) gobiernan la recomendación. El [monorepo](/guide/implementation/monorepo/#estado-de-implementación) distingue la base técnica de las capacidades pendientes; la [evidencia del legado](/guide/evidence/audit/) se consulta por separado.
+El mapa general, las siete vistas estructurales y los dos recorridos representan **el diseño propuesto**. El [modelo C4](/guide/architecture/c4-model/) conserva los contratos y el alcance; las [decisiones](/guide/proposal/decisions/) gobiernan la recomendación. El [monorepo](/guide/implementation/monorepo/#estado-de-implementación) distingue la base técnica de las capacidades pendientes.
+
+## Mapa general de arquitectura
+
+La propuesta completa reúne las seis aplicaciones, sus componentes, PostgreSQL de sucursal y país, proveedores y conexiones. Cada relación indica su propósito y protocolo. Redis, BullMQ y RabbitMQ conservan su estado condicional.
+
+<LinkButton href="/architecture/">Explorar aplicaciones y conexiones</LinkButton>
+
+El explorador permite seleccionar cada elemento o flecha para consultar sus responsabilidades, datos, garantías y recuperación ante fallos; también incluye recorridos paso a paso.
+
+<Diagram src="/docs/architecture/pos-platform.svg" alt="Mapa general de POS Platform: clientes de escritorio y móvil, branch-api, branch-sync-worker, country-api, erp-worker, persistencia, proveedores y tecnologías condicionales con sus conexiones." caption="Vista general de arquitectura y despliegue · El mismo modelo del explorador interactivo." width={3110} height={2750} />
 
 ## Contexto del producto
 
