@@ -15,7 +15,7 @@ Al incorporar una presentación aquí:
 
 ## Arquitectura y roadmap de Implementos
 
-La [presentación de arquitectura y roadmap](architecture/README.md) vive en `architecture/`. Abre con la portada «POS Platform» y continúa con cinco capítulos, cada uno con su portada de título y alcance. Los capítulos reúnen 17 láminas de detalle sobre capacidades, contexto C4, monorepo, despliegue, infraestructura, periféricos con device-agent, frontera ERP y roadmap por funcionalidades. La presentación Reveal.js y su impresión tienen 23 páginas.
+La [presentación de arquitectura y roadmap](architecture/README.md) vive en `architecture/`. Abre con la portada «POS Platform» y continúa con cinco capítulos, cada uno con su portada de título y alcance. Los capítulos reúnen 17 láminas de detalle sobre capacidades, contexto C4, monorepo, despliegue, infraestructura, periféricos por puesto con device-agent y su evolución posterior al piloto, frontera ERP y roadmap por funcionalidades. La presentación Reveal.js y su impresión tienen 23 páginas.
 
 ```sh
 npm run build

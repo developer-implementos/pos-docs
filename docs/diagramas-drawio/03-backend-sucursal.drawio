@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <mxfile host="app.diagrams.net" agent="POS C4 local export" type="device" pages="1">
   <diagram id="c4-1" name="C3 · Backend de sucursal">
-    <mxGraphModel grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="5015" pageHeight="5403" math="0" shadow="0" background="#ffffff">
+    <mxGraphModel grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="5015" pageHeight="5486" math="0" shadow="0" background="#ffffff">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -15,52 +15,52 @@
           <mxGeometry x="3295.250781" y="2867.535645" width="1591.625391" height="164.25" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-3166-0" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="64" y="3165.785645" width="1187.719043" height="494.25" as="geometry" />
+          <mxGeometry x="64" y="3165.785645" width="1187.719043" height="549.25" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-3166-1" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="1275.719043" y="3165.785645" width="1187.719043" height="494.25" as="geometry" />
+          <mxGeometry x="1275.719043" y="3165.785645" width="1187.719043" height="549.25" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-3166-2" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="2487.438086" y="3165.785645" width="1187.719043" height="494.25" as="geometry" />
+          <mxGeometry x="2487.438086" y="3165.785645" width="1187.719043" height="549.25" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-3166-3" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="3699.157129" y="3165.785645" width="1187.719043" height="494.25" as="geometry" />
+          <mxGeometry x="3699.157129" y="3165.785645" width="1187.719043" height="549.25" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-3166-4" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="64" y="3684.035645" width="1187.719043" height="384.25" as="geometry" />
+          <mxGeometry x="64" y="3739.035645" width="1187.719043" height="384.25" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-3166-5" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="1275.719043" y="3684.035645" width="1187.719043" height="384.25" as="geometry" />
+          <mxGeometry x="1275.719043" y="3739.035645" width="1187.719043" height="384.25" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-3166-6" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="2487.438086" y="3684.035645" width="1187.719043" height="384.25" as="geometry" />
+          <mxGeometry x="2487.438086" y="3739.035645" width="1187.719043" height="384.25" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-3166-7" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="3699.157129" y="3684.035645" width="1187.719043" height="384.25" as="geometry" />
+          <mxGeometry x="3699.157129" y="3739.035645" width="1187.719043" height="384.25" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-3166-8" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="64" y="4092.285645" width="1187.719043" height="439.25" as="geometry" />
+          <mxGeometry x="64" y="4147.285645" width="1187.719043" height="466.75" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-3166-9" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="1275.719043" y="4092.285645" width="1187.719043" height="439.25" as="geometry" />
+          <mxGeometry x="1275.719043" y="4147.285645" width="1187.719043" height="466.75" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-3166-10" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="2487.438086" y="4092.285645" width="1187.719043" height="439.25" as="geometry" />
+          <mxGeometry x="2487.438086" y="4147.285645" width="1187.719043" height="466.75" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-3166-11" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="3699.157129" y="4092.285645" width="1187.719043" height="439.25" as="geometry" />
+          <mxGeometry x="3699.157129" y="4147.285645" width="1187.719043" height="466.75" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-3166-12" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="64" y="4555.535645" width="1187.719043" height="521.75" as="geometry" />
+          <mxGeometry x="64" y="4638.035645" width="1187.719043" height="521.75" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-3166-13" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="1275.719043" y="4555.535645" width="1187.719043" height="521.75" as="geometry" />
+          <mxGeometry x="1275.719043" y="4638.035645" width="1187.719043" height="521.75" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-3166-14" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="2487.438086" y="4555.535645" width="1187.719043" height="521.75" as="geometry" />
+          <mxGeometry x="2487.438086" y="4638.035645" width="1187.719043" height="521.75" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-3166-15" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="3699.157129" y="4555.535645" width="1187.719043" height="521.75" as="geometry" />
+          <mxGeometry x="3699.157129" y="4638.035645" width="1187.719043" height="521.75" as="geometry" />
         </mxCell>
         <mxCell id="sheet" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=1.5;fillColor=#fff;rounded=1;arcSize=8;">
           <mxGeometry x="0" y="0" width="4950.876172" height="350" as="geometry" />
@@ -107,8 +107,8 @@
         <mxCell id="key-text-4" value="Infraestructura / condición" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=20;align=left;verticalAlign=top;">
           <mxGeometry x="980.816406" y="285" width="230.117188" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="legend-desc" value="Flecha: iniciador → destino; texto: propósito y protocolo. Borde discontinuo: límite nombrado. Todo el contenido es editable." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=19;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="330" width="1039.266602" height="23.75" as="geometry" />
+        <mxCell id="legend-desc" value="Flecha: iniciador → destino; texto: propósito y protocolo. Conector discontinuo: expansión F06. Borde discontinuo: límite o condición indicada." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=19;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="330" width="1193.456055" height="23.75" as="geometry" />
         </mxCell>
         <mxCell id="reading-title" value="Contratos que gobiernan esta vista" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=32;align=left;verticalAlign=top;">
           <mxGeometry x="64" y="2803.535645" width="496.3125" height="40" as="geometry" />
@@ -144,34 +144,34 @@
           <mxGeometry x="64" y="3090.785645" width="848.515625" height="40" as="geometry" />
         </mxCell>
         <mxCell id="notes-3166-0-bg" value="" parent="group-notes-3166-0" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1187.719043" height="494.25" as="geometry" />
+          <mxGeometry x="0" y="0" width="1187.719043" height="549.25" as="geometry" />
         </mxCell>
         <mxCell id="notes-3166-0-title" value="pos-desktop" parent="group-notes-3166-0" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="22" width="136.193848" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-3166-0-body" value="Contenedor · Angular (frontend) · Tauri (shell nativa)&#10;&#10;apps/pos-desktop entrega la aplicación completa: la shell nativa Tauri aloja el frontend Angular. Tiene arranque,&#10;configuración nativa y build propios. Comparte con pos-mobile libs/client-shell: raíz, configuración, rutas, guards y&#10;layout Angular; esta biblioteca no es la shell nativa ni un proceso adicional. Solicita capacidades de dispositivos a&#10;branch-api; no transporta trabajos a device-agent ni necesita mantenerse abierto para que éste opere. Distribución e&#10;integración nativa requieren homologación; no posee autoridad de ventas.&#10;&#10;AUTORIDAD · No posee otra base de ventas ni credenciales SQL.&#10;&#10;CONTINUIDAD · Sin WAN usa la API por LAN. Sin LAN o backend, se detienen nuevos comandos dependientes." parent="group-notes-3166-0" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="74.25" width="1136.125977" height="302.5" as="geometry" />
+        <mxCell id="notes-3166-0-body" value="Contenedor · Angular (frontend) · Tauri (shell nativa)&#10;&#10;apps/pos-desktop entrega la aplicación completa: la shell nativa Tauri aloja el frontend Angular. Tiene arranque,&#10;configuración nativa y build propios. Comparte con pos-mobile libs/client-shell: raíz, configuración, rutas, guards y&#10;layout Angular; esta biblioteca no es la shell nativa ni un proceso adicional. Solicita capacidades de dispositivos a&#10;branch-api; no transporta trabajos a device-agent ni necesita mantenerse abierto para que éste opere. Distribución e&#10;integración nativa requieren homologación; no posee autoridad de ventas. F02 instala device-agent y su journal en el&#10;mismo puesto Windows; son procesos independientes. El perfil dedicado sólo recibe trabajos asignados a ese&#10;puesto.&#10;&#10;AUTORIDAD · No posee otra base de ventas ni credenciales SQL.&#10;&#10;CONTINUIDAD · Sin WAN usa la API por LAN. Sin LAN o backend, se detienen nuevos comandos dependientes." parent="group-notes-3166-0" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="74.25" width="1141.078125" height="357.5" as="geometry" />
         </mxCell>
         <mxCell id="notes-3166-1-bg" value="" parent="group-notes-3166-1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1187.719043" height="494.25" as="geometry" />
+          <mxGeometry x="0" y="0" width="1187.719043" height="549.25" as="geometry" />
         </mxCell>
         <mxCell id="notes-3166-1-title" value="pos-mobile" parent="group-notes-3166-1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="22" width="122.277832" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-3166-1-body" value="Contenedor · Angular (frontend) · Capacitor (shell nativa)&#10;&#10;apps/pos-mobile entrega la aplicación completa: la shell nativa Capacitor aloja el frontend Angular. Tiene arranque,&#10;configuración nativa y build propios. Comparte con pos-desktop libs/client-shell: raíz, configuración, rutas, guards y&#10;layout Angular; esta biblioteca no es la shell nativa ni un proceso adicional. Los adaptadores actuales son mock.&#10;Instalación, ciclo de vida, almacenamiento y capacidades nativas requieren pruebas Android/iOS; no hay acceso&#10;SQL ni permisos implícitos por empaquetar la interfaz. Solicita impresión y capacidades autorizadas a branch-api;&#10;device-agent las ejecuta en el equipo conectado al hardware, sin depender de pos-desktop.&#10;&#10;AUTORIDAD · Comparte interfaz y contratos; no otra autoridad de ventas.&#10;&#10;CONTINUIDAD · Requiere conexión autorizada al backend de sucursal. El móvil no incorpora autonomía sin LAN." parent="group-notes-3166-1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="74.25" width="1120.635742" height="330" as="geometry" />
+        <mxCell id="notes-3166-1-body" value="Contenedor · Angular (frontend) · Capacitor (shell nativa)&#10;&#10;apps/pos-mobile entrega la aplicación completa: la shell nativa Capacitor aloja el frontend Angular. Tiene arranque,&#10;configuración nativa y build propios. Comparte con pos-desktop libs/client-shell: raíz, configuración, rutas, guards y&#10;layout Angular; esta biblioteca no es la shell nativa ni un proceso adicional. Los adaptadores actuales son mock.&#10;Instalación, ciclo de vida, almacenamiento y capacidades nativas requieren pruebas Android/iOS; no hay acceso&#10;SQL ni permisos implícitos por empaquetar la interfaz. El acceso móvil a periféricos compartidos se habilita en F06&#10;tras homologación y asignación explícita. Solicita capacidades a branch-api; no usa por defecto el agente dedicado a&#10;otro puesto ni depende de pos-desktop como relé.&#10;&#10;AUTORIDAD · Comparte interfaz y contratos; no otra autoridad de ventas.&#10;&#10;CONTINUIDAD · Requiere conexión autorizada al backend de sucursal. El móvil no incorpora autonomía sin LAN." parent="group-notes-3166-1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="74.25" width="1141.067383" height="357.5" as="geometry" />
         </mxCell>
         <mxCell id="notes-3166-2-bg" value="" parent="group-notes-3166-2" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1187.719043" height="494.25" as="geometry" />
+          <mxGeometry x="0" y="0" width="1187.719043" height="549.25" as="geometry" />
         </mxCell>
         <mxCell id="notes-3166-2-title" value="device-agent" parent="group-notes-3166-2" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="22" width="143.151855" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-3166-2-body" value="Contenedor · C# / .NET · Windows&#10;&#10;Aplicación objetivo apps/device-agent, aún no implementada. Servicio autónomo en el equipo Windows conectado al&#10;hardware; funciona sin pos-desktop abierto. Inicia HTTPS LAN autenticado hacia branch-api para obtener trabajos y&#10;reportar evidencia. Cada trabajo conserva jobId, hash del contenido, destino y autorización. SQLite registra&#10;deduplicación e intentos técnicos; una aceptación del spooler no acredita impresión física. SDK, drivers y hardware&#10;requieren homologación. Pagos por SDK local son una capacidad futura independiente: migrar impresión no acredita&#10;cobros.&#10;&#10;AUTORIDAD · Un único agente autorizado por equipo físico; branch-api conserva permisos, documentos y estado&#10;de negocio. El agente no cobra ni emite documentos por decisión propia.&#10;&#10;CONTINUIDAD · Sin LAN no obtiene trabajos nuevos. Conserva evidencia del trabajo en curso para reanudar su&#10;reporte; un resultado incierto no autoriza repetir el efecto." parent="group-notes-3166-2" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="74.25" width="1139.810547" height="385" as="geometry" />
+        <mxCell id="notes-3166-2-body" value="Contenedor · C# / .NET · Windows&#10;&#10;Aplicación objetivo apps/device-agent, aún no implementada. Primera entrega F02: proceso autónomo instalado en&#10;el mismo puesto Windows que pos-desktop; controla periféricos USB/serie mediante drivers o SDK homologados y&#10;conserva allí su journal SQLite. El piloto F05 valida ese perfil dedicado. Opera sin la ventana de pos-desktop abierta&#10;e inicia HTTPS LAN autenticado hacia branch-api para obtener trabajos del puesto y reportar evidencia. Cada&#10;trabajo conserva jobId, hash, destino y autorización; spool aceptado no acredita impresión física. F06 incorpora&#10;impresoras de recibos y etiquetas en red y una estación compartida certificada, con la misma aplicación y contratos&#10;de propiedad; no habilita automáticamente MICR, cajón, pagos ni acceso móvil a cualquier caja. El servidor de&#10;sucursal no aloja el agente por defecto.&#10;&#10;AUTORIDAD · F02: agente dedicado al puesto y sus dispositivos; branch-api autoriza sólo trabajos del puesto&#10;asignado. F06 amplía a una estación compartida homologada con un único controlador por dispositivo físico.&#10;&#10;CONTINUIDAD · Sin LAN no obtiene trabajos nuevos. Conserva evidencia del trabajo en curso para reanudar su&#10;reporte; un resultado incierto no autoriza repetir el efecto." parent="group-notes-3166-2" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="74.25" width="1132.441406" height="440" as="geometry" />
         </mxCell>
         <mxCell id="notes-3166-3-bg" value="" parent="group-notes-3166-3" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1187.719043" height="494.25" as="geometry" />
+          <mxGeometry x="0" y="0" width="1187.719043" height="549.25" as="geometry" />
         </mxCell>
         <mxCell id="notes-3166-3-title" value="API de comandos" parent="group-notes-3166-3" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="22" width="197.338867" height="31.25" as="geometry" />
@@ -216,16 +216,16 @@
           <mxGeometry x="22" y="74.25" width="1134.063477" height="275" as="geometry" />
         </mxCell>
         <mxCell id="notes-3166-8-bg" value="" parent="group-notes-3166-8" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1187.719043" height="439.25" as="geometry" />
+          <mxGeometry x="0" y="0" width="1187.719043" height="466.75" as="geometry" />
         </mxCell>
         <mxCell id="notes-3166-8-title" value="Pagos y dispositivos" parent="group-notes-3166-8" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="22" width="226.501465" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-3166-8-body" value="Componente · libs/backend/payments + devices&#10;&#10;Payments conserva intentos y estados financieros; devices autoriza trabajos por capacidad, equipo y agente, con&#10;jobId y hash del contenido, y procesa evidencia técnica. device-agent inicia HTTPS autenticado para obtener&#10;trabajos y reportar resultados; escritorio y móvil sólo solicitan la operación a branch-api. No mantiene una&#10;transacción PostgreSQL abierta al esperar al hardware o proveedor. Pagos por SDK local son una capacidad futura&#10;por homologar, independiente de la impresión; API remota y SDK no se ejecutan simultáneamente para un mismo&#10;intento.&#10;&#10;AUTORIDAD · Conserva identidad de intento y referencia del proveedor; no inventa resultado.&#10;&#10;CONTINUIDAD · Si el proveedor no responde: pendiente/desconocido, consulta o resolución operativa." parent="group-notes-3166-8" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="74.25" width="1127.553711" height="330" as="geometry" />
+        <mxCell id="notes-3166-8-body" value="Componente · libs/backend/payments + devices&#10;&#10;Payments conserva intentos y estados financieros; devices autoriza trabajos por capacidad, equipo y agente, con&#10;jobId y hash del contenido, y procesa evidencia técnica. device-agent inicia HTTPS autenticado para obtener&#10;trabajos y reportar resultados. F02/F05: pos-desktop solicita a branch-api operaciones para su puesto dedicado. La&#10;estación compartida y el acceso móvil a periféricos son expansión F06 sujeta a homologación. No mantiene una&#10;transacción PostgreSQL abierta al esperar al hardware o proveedor. Pagos por SDK local son una capacidad futura&#10;por homologar, independiente de la impresión; API remota y SDK no se ejecutan simultáneamente para un mismo&#10;intento.&#10;&#10;AUTORIDAD · Conserva identidad de intento y referencia del proveedor; no inventa resultado.&#10;&#10;CONTINUIDAD · Si el proveedor no responde: pendiente/desconocido, consulta o resolución operativa." parent="group-notes-3166-8" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="74.25" width="1127.553711" height="357.5" as="geometry" />
         </mxCell>
         <mxCell id="notes-3166-9-bg" value="" parent="group-notes-3166-9" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1187.719043" height="439.25" as="geometry" />
+          <mxGeometry x="0" y="0" width="1187.719043" height="466.75" as="geometry" />
         </mxCell>
         <mxCell id="notes-3166-9-title" value="Fiscalidad y adaptadores" parent="group-notes-3166-9" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="22" width="277.941895" height="31.25" as="geometry" />
@@ -234,7 +234,7 @@
           <mxGeometry x="22" y="74.25" width="1109.109375" height="220" as="geometry" />
         </mxCell>
         <mxCell id="notes-3166-10-bg" value="" parent="group-notes-3166-10" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1187.719043" height="439.25" as="geometry" />
+          <mxGeometry x="0" y="0" width="1187.719043" height="466.75" as="geometry" />
         </mxCell>
         <mxCell id="notes-3166-10-title" value="Reportes operativos" parent="group-notes-3166-10" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="22" width="223.730469" height="31.25" as="geometry" />
@@ -243,7 +243,7 @@
           <mxGeometry x="22" y="74.25" width="1065.173828" height="220" as="geometry" />
         </mxCell>
         <mxCell id="notes-3166-11-bg" value="" parent="group-notes-3166-11" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1187.719043" height="439.25" as="geometry" />
+          <mxGeometry x="0" y="0" width="1187.719043" height="466.75" as="geometry" />
         </mxCell>
         <mxCell id="notes-3166-11-title" value="Persistencia transaccional" parent="group-notes-3166-11" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="22" width="290.41748" height="31.25" as="geometry" />
@@ -288,13 +288,13 @@
           <mxGeometry x="22" y="74.25" width="1139.713867" height="357.5" as="geometry" />
         </mxCell>
         <mxCell id="footer" value="C4: contenedor = aplicación o almacén; componente = módulo dentro de un proceso. Despliegue y dinámicas son vistas complementarias, no el nivel de código." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="5136.285645" width="1424.169922" height="25" as="geometry" />
+          <mxGeometry x="64" y="5218.785645" width="1424.169922" height="25" as="geometry" />
         </mxCell>
         <mxCell id="glossary" value="LAN: red de tienda · WAN: enlace a país · ACK: acuse de aplicación durable · ACL: capa anticorrupción · outbox/inbox: registros de envío/recepción · watermark: corte consistente del origen" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="5202.285645" width="1681.240234" height="25" as="geometry" />
+          <mxGeometry x="64" y="5284.785645" width="1681.240234" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="sources" value="FUENTES DEL REPOSITORIO&#10;docs/c4-arquitectura-propuesta.md  ·  docs/propuesta-arquitectura.md  ·  docs/opciones-tecnologicas.md  ·  docs/operacion-caja-y-evolucion.md  ·  docs/revision-resiliencia-datos-pos.md&#10;Aplicaciones completas: frontend Angular alojado por las shells nativas Tauri (escritorio) y Capacitor (móvil). libs/client-shell compone Angular: raíz, configuración, rutas, guards y layout. device-agent: C#/.NET Windows propuesto, aún no implementado; journal técnico SQLite, sin autoridad de ventas. Backend, datos e integración: diseño por implementar. Nx organiza código y CI." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=18;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="5271.285645" width="3033.553711" height="67.5" as="geometry" />
+        <mxCell id="sources" value="FUENTES DEL REPOSITORIO&#10;docs/c4-arquitectura-propuesta.md  ·  docs/propuesta-arquitectura.md  ·  docs/opciones-tecnologicas.md  ·  docs/operacion-caja-y-evolucion.md  ·  docs/revision-resiliencia-datos-pos.md&#10;Aplicaciones completas: frontend Angular alojado por las shells nativas Tauri (escritorio) y Capacitor (móvil). libs/client-shell compone Angular: raíz, configuración, rutas, guards y layout. device-agent: C#/.NET Windows propuesto, aún no implementado. F02/F05: puesto dedicado con SQLite técnico. F06: red y estación compartida homologada; sin autoridad de ventas. Backend, datos e integración: diseño por implementar. Nx organiza código y CI." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=18;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="5353.785645" width="3583.889648" height="67.5" as="geometry" />
         </mxCell>
         <mxCell id="backendScope" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;dashed=1;dashPattern=6 4;fillColor=#ffffff;rounded=0;arcSize=8;">
           <mxGeometry x="157.103125" y="641.2" width="3737.302734" height="1641.6" as="geometry" />
@@ -309,7 +309,7 @@
           <mxGeometry x="1034.986328" y="430" width="326.98125" height="187.2" as="geometry" />
         </mxCell>
         <mxCell id="device" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=1.5;fillColor=#EDF3FF;rounded=0;arcSize=8;">
-          <mxGeometry x="1789.30293" y="443.2" width="369.825" height="160.8" as="geometry" />
+          <mxGeometry x="1775.629492" y="443.2" width="424.51875" height="160.8" as="geometry" />
         </mxCell>
         <mxCell id="entry" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=1.5;fillColor=#EDF3FF;rounded=0;arcSize=8;">
           <mxGeometry x="1311.559375" y="899.2" width="374.64375" height="160.8" as="geometry" />
@@ -424,29 +424,30 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="device_entry" value="" parent="1" edge="1" source="device" target="entry" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.498647;exitY=1.003109;exitPerimeter=0;entryX=1.01358;entryY=0.129308;entryPerimeter=0;">
+        <mxCell id="device_entry" value="" parent="1" edge="1" source="device" target="entry" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.498823;exitY=1.003109;exitPerimeter=0;entryX=1.013609;entryY=0.13957;entryPerimeter=0;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1973.715137" y="604.5" as="sourcePoint" />
-            <mxPoint x="1691.290869" y="919.992786" as="targetPoint" />
+            <mxPoint x="1987.38916" y="604.5" as="sourcePoint" />
+            <mxPoint x="1691.301563" y="921.642786" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="1974.215137" y="630.101978" />
-              <mxPoint x="1974.215137" y="656.203992" />
-              <mxPoint x="1974.215137" y="682.305969" />
-              <mxPoint x="1974.215137" y="708.407947" />
-              <mxPoint x="1974.165479" y="734.509741" />
-              <mxPoint x="1972.448389" y="760.536133" />
-              <mxPoint x="1965.597021" y="785.643298" />
-              <mxPoint x="1951.84873" y="807.718164" />
-              <mxPoint x="1932.829492" y="825.517297" />
-              <mxPoint x="1910.943848" y="839.705188" />
-              <mxPoint x="1887.747607" y="851.661316" />
-              <mxPoint x="1863.893359" y="862.252136" />
-              <mxPoint x="1839.645508" y="871.910583" />
-              <mxPoint x="1815.133691" y="880.879968" />
-              <mxPoint x="1790.434668" y="889.321021" />
-              <mxPoint x="1765.602344" y="897.362024" />
-              <mxPoint x="1740.681689" y="905.125293" />
-              <mxPoint x="1715.736426" y="912.809607" />
+              <mxPoint x="1987.88916" y="629.431482" />
+              <mxPoint x="1987.88916" y="654.862964" />
+              <mxPoint x="1987.88916" y="680.294446" />
+              <mxPoint x="1987.88916" y="705.725928" />
+              <mxPoint x="1987.87041" y="731.157373" />
+              <mxPoint x="1986.578125" y="756.542236" />
+              <mxPoint x="1980.717139" y="781.221338" />
+              <mxPoint x="1968.23374" y="803.271008" />
+              <mxPoint x="1950.34668" y="821.270203" />
+              <mxPoint x="1929.388721" y="835.634351" />
+              <mxPoint x="1906.950684" y="847.590222" />
+              <mxPoint x="1883.796924" y="858.103186" />
+              <mxPoint x="1860.225098" y="867.645911" />
+              <mxPoint x="1836.379199" y="876.483459" />
+              <mxPoint x="1812.340674" y="884.783191" />
+              <mxPoint x="1788.159912" y="892.659326" />
+              <mxPoint x="1763.876465" y="900.213818" />
+              <mxPoint x="1739.527832" y="907.555176" />
+              <mxPoint x="1715.164697" y="914.848999" />
             </Array>
           </mxGeometry>
         </mxCell>
@@ -1107,12 +1108,12 @@
         </mxCell>
         <mxCell id="label-bg-device_entry" value="" parent="device_entry" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;fillColor=#fff;rounded=0;arcSize=8;">
           <mxGeometry x="0" y="0" width="209.182037" height="89.2" as="geometry" relative="1">
-            <mxPoint x="-65.74533" y="-152.040268" as="offset" />
+            <mxPoint x="-59.567962" y="-155.061407" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-device_entry" value="Obtiene trabajos y&#10;reporta evidencia ·&#10;HTTPS/LAN saliente" parent="device_entry" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=21.6;align=left;verticalAlign=top;">
           <mxGeometry x="0" y="0" width="199.272507" height="79.2" as="geometry" relative="1">
-            <mxPoint x="-60.74533" y="-147.040268" as="offset" />
+            <mxPoint x="-54.567962" y="-150.061407" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-bg-entry_access" value="" parent="entry_access" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;fillColor=#fff;rounded=0;arcSize=8;">
@@ -1305,52 +1306,52 @@
             <mxPoint x="-208.4935" y="12" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="l-75ws8bV88awg95Iz8ZR" value="pos-desktop&#10;«Contenedor»&#10;Angular (frontend) ·&#10;Tauri (shell nativa)&#10;Aplicación completa para caja y&#10;comandos." parent="client" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="6szXj-AjAbcLMfYoj6BSK" value="pos-desktop&#10;«Contenedor»&#10;Angular (frontend) ·&#10;Tauri (shell nativa)&#10;Aplicación completa para caja y&#10;comandos." parent="client" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="30.01875" y="14.4" width="337.511719" height="158.4" as="geometry" />
         </mxCell>
-        <mxCell id="qpFqr5-_e3-b7XlNPnVd_" value="pos-mobile&#10;«Contenedor»&#10;Angular (frontend) ·&#10;Capacitor (shell nativa)&#10;Aplicación completa para&#10;Android/iOS." parent="mobileClient" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="LD8zBnJTxPzC43Cyzq3tr" value="pos-mobile&#10;«Contenedor»&#10;Angular (frontend) ·&#10;Capacitor (shell nativa)&#10;Aplicación completa para&#10;Android/iOS." parent="mobileClient" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="29.416406" y="14.4" width="268.148438" height="158.4" as="geometry" />
         </mxCell>
-        <mxCell id="ySO7vT_9GnMRYYrKtpQMh" value="device-agent&#10;«Contenedor»&#10;C# / .NET · Windows&#10;Ejecuta trabajos de hardware&#10;autorizados." parent="device" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
-          <mxGeometry x="28.81875" y="14.4" width="312.1875" height="132" as="geometry" />
+        <mxCell id="-XcSsw6m5Y-JfufdrTBR5" value="device-agent&#10;«Contenedor»&#10;C# / .NET · Windows&#10;F02: ejecuta periféricos del puesto&#10;Windows." parent="device" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+          <mxGeometry x="28.819922" y="14.4" width="366.878906" height="132" as="geometry" />
         </mxCell>
-        <mxCell id="uXSIcb0kooaaA620PG3yW" value="API de comandos&#10;«Componente»&#10;Controllers NestJS / Fastify&#10;Valida entrada e identidad del&#10;comando." parent="entry" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="OnGvd4ZaQLNdmWI6W7KFC" value="API de comandos&#10;«Componente»&#10;Controllers NestJS / Fastify&#10;Valida entrada e identidad del&#10;comando." parent="entry" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="29.423438" y="14.4" width="315.796875" height="132" as="geometry" />
         </mxCell>
-        <mxCell id="D1VcciEjikJrgYWYWw3BZ" value="Acceso y administración&#10;«Componente»&#10;libs/backend/administration&#10;Autoriza usuario, puesto y ámbito&#10;operativo." parent="access" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="MIIv2m7PIepHVGWrIZ88f" value="Acceso y administración&#10;«Componente»&#10;libs/backend/administration&#10;Autoriza usuario, puesto y ámbito&#10;operativo." parent="access" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="29.419922" y="14.4" width="356.191406" height="132" as="geometry" />
         </mxCell>
-        <mxCell id="aL9bX5kwC16hk0ikpRF-3" value="Ventas y devoluciones&#10;«Componente»&#10;libs/backend/sales + returns&#10;Coordina el ciclo de la operación." parent="sales" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="nqCce3w2y6Eg1Xiy1OeEA" value="Ventas y devoluciones&#10;«Componente»&#10;libs/backend/sales + returns&#10;Coordina el ciclo de la operación." parent="sales" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="28.829297" y="14.4" width="354.878906" height="105.6" as="geometry" />
         </mxCell>
-        <mxCell id="2u-Gd7F4lXnugkIinGkPO" value="Catálogo, precios y ofertas&#10;«Componente»&#10;libs/backend/pricing + catalog&#10;Cotiza sobre una versión vigente." parent="pricing" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="japGJX64-jRy_UDCB9-5v" value="Catálogo, precios y ofertas&#10;«Componente»&#10;libs/backend/pricing + catalog&#10;Cotiza sobre una versión vigente." parent="pricing" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="28.823437" y="14.4" width="356.203125" height="105.6" as="geometry" />
         </mxCell>
-        <mxCell id="hsMU5okaAYzViTu4Nw4vW" value="Caja, cobranzas y anticipos&#10;«Componente»&#10;libs/backend/cash + collections&#10;Coordina turnos, movimientos y&#10;cobranzas." parent="cash" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="UqwI7YRmFMVGciY7_xPuj" value="Caja, cobranzas y anticipos&#10;«Componente»&#10;libs/backend/cash + collections&#10;Coordina turnos, movimientos y&#10;cobranzas." parent="cash" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="29.408203" y="14.4" width="337.476562" height="132" as="geometry" />
         </mxCell>
-        <mxCell id="AsPMBFgL7pj1KoDb5Px0V" value="Pagos y dispositivos&#10;«Componente»&#10;libs/backend/payments + devices&#10;Gestiona intentos, trabajos y&#10;evidencia." parent="payPort" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="giCLM7snAQgfeKwCI-rav" value="Pagos y dispositivos&#10;«Componente»&#10;libs/backend/payments + devices&#10;Gestiona intentos, trabajos y&#10;evidencia." parent="payPort" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="28.815234" y="14.4" width="352.863281" height="132" as="geometry" />
         </mxCell>
-        <mxCell id="I1ttYMkO_10-b8_2cVHmj" value="Fiscalidad y adaptadores&#10;«Componente»&#10;libs/backend/fiscal&#10;Aplica modalidad fiscal por país." parent="fiscalPort" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="jETLyt_KNl3ut1VrAyySl" value="Fiscalidad y adaptadores&#10;«Componente»&#10;libs/backend/fiscal&#10;Aplica modalidad fiscal por país." parent="fiscalPort" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="29.416406" y="14.4" width="344.179688" height="105.6" as="geometry" />
         </mxCell>
-        <mxCell id="o6rw_zrctPeK3aiu0dJNE" value="Reportes operativos&#10;«Componente»&#10;libs/backend/reporting&#10;Consulta operaciones y estados&#10;locales." parent="reporting" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="mjLjeS-PAkNUkeNYaa9uk" value="Reportes operativos&#10;«Componente»&#10;libs/backend/reporting&#10;Consulta operaciones y estados&#10;locales." parent="reporting" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="28.812891" y="14.4" width="341.542969" height="132" as="geometry" />
         </mxCell>
-        <mxCell id="a-jF-Ip2GA21bs8W6TGwZ" value="Persistencia transaccional&#10;«Componente»&#10;Repositorios + contrato outbox&#10;(sync)&#10;Confirma negocio, auditoría y&#10;outbox." parent="unitOfWork" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="mT6jt7U2FSbEk98wiWhu4" value="Persistencia transaccional&#10;«Componente»&#10;Repositorios + contrato outbox&#10;(sync)&#10;Confirma negocio, auditoría y&#10;outbox." parent="unitOfWork" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="29.417578" y="14.4" width="326.191406" height="158.4" as="geometry" />
         </mxCell>
-        <mxCell id="ZlXjesUCv_LDatBF9pfp9" value="Base técnica compartida&#10;«Componente»&#10;shared/backend · composición&#10;objetivo&#10;Configuración, salud, Pino y Sentry&#10;opt-in." parent="technicalBase" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="0Jl2V0_Ga3NwsVFDHlSzK" value="Base técnica compartida&#10;«Componente»&#10;shared/backend · composición&#10;objetivo&#10;Configuración, salud, Pino y Sentry&#10;opt-in." parent="technicalBase" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="29.417578" y="14.4" width="374.871094" height="158.4" as="geometry" />
         </mxCell>
-        <mxCell id="87HwautwZTyw9PW38km1p" value="Datos de sucursal&#10;«Contenedor de datos»&#10;PostgreSQL&#10;Guarda negocio, outbox y espejo&#10;local." parent="branchDb" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="mMqn7D6P6bIiE_rSSNvDt" value="Datos de sucursal&#10;«Contenedor de datos»&#10;PostgreSQL&#10;Guarda negocio, outbox y espejo&#10;local." parent="branchDb" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="7.216406" y="39.13569" width="352.242188" height="132" as="geometry" />
         </mxCell>
-        <mxCell id="xk1yjCyv3te_JIN4eaOe5" value="Proveedor de pagos&#10;«Sistema externo»&#10;API / SDK según proveedor&#10;Ej.: Transbank POS · Niubiz ·&#10;Mercado Pago Point." parent="payments" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="2Qbmr8mvGr7ZX-ANdfdbe" value="Proveedor de pagos&#10;«Sistema externo»&#10;API / SDK según proveedor&#10;Ej.: Transbank POS · Niubiz ·&#10;Mercado Pago Point." parent="payments" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="28.603125" y="14.4" width="313.875" height="132" as="geometry" />
         </mxCell>
-        <mxCell id="4Vlc7dvEzc-X3jYtyg8n4" value="Proveedor de facturación&#10;«Sistema externo»&#10;Contrato por país y modalidad&#10;Ej.: Acepta / Ingydev (CL) · EFACT&#10;(PE)." parent="fiscal" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="N9hHpCoa5lOg4cc6UICBM" value="Proveedor de facturación&#10;«Sistema externo»&#10;Contrato por país y modalidad&#10;Ej.: Acepta / Ingydev (CL) · EFACT&#10;(PE)." parent="fiscal" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="28.630078" y="14.4" width="372.128906" height="132" as="geometry" />
         </mxCell>
       </root>

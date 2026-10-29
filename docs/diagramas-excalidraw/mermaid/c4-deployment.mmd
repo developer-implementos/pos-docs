@@ -1,17 +1,14 @@
 flowchart TB
     accTitle: Complemento · Despliegue — Sucursal, país y red autorizada del ERP
-    accDescr: Perfil WAN: puestos y móviles usan el servidor de sucursal por LAN. País y red del ERP son entornos independientes, conectados mediante contratos autenticados. Siete aplicaciones objetivo; seis tienen base técnica o scaffold. device-agent y su journal SQLite son propuesta por implementar. PostgreSQL conserva el negocio; country-api publica versiones y erp-worker prepara maestros. Redis es caché opcional.
-    subgraph terminalNode["Puestos POS x N · Windows por homologar"]
+    accDescr: F02/F05: pos-desktop, device-agent, journal SQLite y hardware local comparten el puesto Windows. Backend y PostgreSQL viven en el servidor de sucursal. Red, estación compartida y acceso móvil a periféricos son expansión F06. Siete apps objetivo; seis tienen base técnica. device-agent y SQLite: propuesta pendiente. F02: puesto Windows dedicado; F05: piloto del mismo perfil. F06: red y estación compartida por homologar; no agrega otra app. PostgreSQL conserva el negocio.
+    subgraph terminalNode["Puesto Windows x N · perfil dedicado F02 / piloto F05"]
         direction TB
         client["pos-desktop<br/>«Contenedor»<br/>Angular (frontend) ·<br/>Tauri (shell nativa)<br/>Aplicación completa para caja y comandos."]:::pos
-    end
-    subgraph deviceHost["Equipo Windows conectado al hardware · agente autónomo"]
-        direction TB
-        device["device-agent<br/>«Contenedor»<br/>C# / .NET · Windows<br/>Ejecuta trabajos de hardware autorizados."]:::pos
+        device["device-agent<br/>«Contenedor»<br/>C# / .NET · Windows<br/>F02: ejecuta periféricos del puesto Windows."]:::pos
         deviceJournal["Journal técnico de dispositivos<br/>«Contenedor de datos»<br/>SQLite<br/>Guarda trabajos, deduplicación y evidencia."]:::store
-        peripherals["Periféricos físicos<br/>«Hardware externo»<br/>Driver / SDK homologado<br/>Impresoras, lectores y otros dispositivos."]:::external
+        peripherals["Periféricos del puesto<br/>«Hardware externo»<br/>USB / serie · driver / SDK<br/>F02: impresoras y lectores locales del puesto."]:::external
     end
-    subgraph mobileNode["Dispositivos móviles · Android/iOS por homologar"]
+    subgraph mobileNode["F06 · dispositivos móviles · Android/iOS por homologar"]
         direction TB
         mobileClient["pos-mobile<br/>«Contenedor»<br/>Angular (frontend) ·<br/>Capacitor (shell nativa)<br/>Aplicación completa para Android/iOS."]:::pos
     end
@@ -37,9 +34,10 @@ flowchart TB
         backup["Respaldo y recuperación<br/>«Infraestructura»<br/>Backups PostgreSQL / herramienta por definir<br/>Conserva y ensaya restauraciones."]:::pos
         observability["Observabilidad operativa (opcional)<br/>«Sistema externo»<br/>Recolector de logs / Sentry opt-in<br/>Recibe diagnóstico y correlación técnica."]:::external
         masters["Fuentes de maestros y precios<br/>«Sistema externo»<br/>Interfaces por confirmar<br/>Publica datos y reglas autorizados."]:::external
+    networkPeripherals["Periféricos de red · F06<br/>«Hardware externo»<br/>TCP/IP · driver / SDK homologado<br/>Expansión: impresoras de recibos y etiquetas."]:::external
         legend["Leyenda<br/>«Clave de lectura»<br/>Notación C4<br/>Azul: POS. Violeta: datos. Gris: externo."]:::key
     client -->|"Comandos autenticados · HTTPS/LAN"| branchApi
-    mobileClient -->|"Comandos autenticados · HTTPS/LAN"| branchApi
+    mobileClient -.->|"F06 · comandos habilitados · HTTPS/LAN"| branchApi
     device -->|"Obtiene trabajos y reporta evidencia · HTTPS/LAN saliente"| branchApi
     branchApi -->|"Negocio + auditoría + outbox · PostgreSQL"| branchDb
     syncWorker -->|"Outbox, inbox, cursores y espejo · PostgreSQL"| branchDb
@@ -57,7 +55,8 @@ flowchart TB
     erpAdapter -->|"Intentos técnicos / errores opt-in · canal aprobado"| observability
     erpAdapter -->|"Obtiene carga o deltas · contrato de fuente homologado"| masters
     device -->|"Deduplicación y evidencia técnica · SQLite"| deviceJournal
-    device -->|"Ejecuta trabajo autorizado · driver/SDK homologado"| peripherals
+    device -->|"F02 · ejecuta en el puesto · USB/serie/SDK"| peripherals
+    device -.->|"F06 · ejecución en red · protocolo homologado"| networkPeripherals
     classDef pos fill:#EDF3FF,stroke:#0545BA,color:#25364D,stroke-width:2px
     classDef store fill:#F2EFFF,stroke:#6551A8,color:#25364D,stroke-width:2px
     classDef external fill:#F4F6F8,stroke:#6B788A,color:#25364D
@@ -68,4 +67,3 @@ flowchart TB
     style serverNode fill:#FFFFFF,stroke:#BCC9DB,stroke-dasharray:6 4
     style countryNode fill:#FFFFFF,stroke:#BCC9DB,stroke-dasharray:6 4
     style erpNode fill:#FFFFFF,stroke:#BCC9DB,stroke-dasharray:6 4
-    style deviceHost fill:#FFFFFF,stroke:#BCC9DB,stroke-dasharray:6 4

@@ -81,21 +81,21 @@ La base central propuesta es un **registro operativo de integración**: inbox, i
 
 ## 6. Arquitectura preferente: perfil WAN con sucursal autónoma
 
-La topología preferente conserva la autoridad transaccional en sucursal. El perfil ampliado por terminal exige una decisión y garantías adicionales. Los componentes de pagos/fiscalidad aplican solo capacidades autorizadas y homologadas. El [agente de periféricos](decisions/device-agent.md) ejecuta trabajos autorizados con independencia de las ventanas cliente.
+La topología preferente conserva la autoridad transaccional en sucursal. El perfil ampliado por terminal exige una decisión y garantías adicionales. Los componentes de pagos/fiscalidad aplican solo capacidades autorizadas y homologadas. El [agente de periféricos](decisions/device-agent.md) ejecuta trabajos autorizados desde el puesto Windows en F02/F05, con independencia de la ventana. El perfil de red/estación compartida y el acceso móvil a periféricos se aceptan después, en F06.
 
 ```mermaid
 flowchart TB
   subgraph Tienda["Sucursal · una autoridad transaccional"]
     UI["pos-desktop · Angular + Tauri"]
-    Mobile["pos-mobile · Angular + Capacitor"]
+    Mobile["pos-mobile · F06<br/>Angular + Capacitor"]
     Local["branch-api · NestJS/Fastify\nnegocio y trabajos de devices"]
     DB[("PostgreSQL local\nnegocio + outbox en un commit")]
     Pub["branch-sync-worker · TypeScript/Node.js\nlotes, acuses y recuperación"]
-    Agent["device-agent · C#/.NET · Windows\nadaptadores homologados"]
+    Agent["device-agent · C#/.NET\nPuesto Windows · F02/F05"]
     Journal[("SQLite técnico\nrecepción, intentos y evidencia")]
     Dispositivos["Periféricos físicos\nimpresora, Zebra, cheque/MICR"]
     UI -->|"HTTPS LAN: solicitar y consultar"| Local
-    Mobile -->|"HTTPS LAN: solicitar y consultar"| Local
+    Mobile -.->|"HTTPS LAN: solicitar y consultar"| Local
     Local -->|"PostgreSQL: operación, auditoría y trabajos"| DB
     Agent -->|"HTTPS LAN: obtener trabajos y reportar"| Local
     Agent -->|"SQLite: registrar y recuperar intentos"| Journal

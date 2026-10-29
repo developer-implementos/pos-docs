@@ -104,7 +104,7 @@
     "summary": "Opera sucursales e integra cada país.",
     "ownership": "La venta nace en sucursal; país mantiene la proyección consolidada.",
     "offline": "Perfil inicial: WAN caída con LAN y escritor de sucursal disponibles.",
-    "detail": "Sistema objetivo común para Chile, Perú y España. Aplicaciones completas con frontend Angular alojado por las shells nativas Tauri (escritorio) y Capacitor (móvil), aceptadas como dirección; backend, datos y topología son recomendaciones por validar. device-agent es la aplicación autónoma propuesta para operar periféricos desde un equipo Windows, bajo autorización del backend; su journal técnico no sustituye PostgreSQL.",
+    "detail": "Sistema objetivo común para Chile, Perú y España. Aplicaciones completas con frontend Angular alojado por las shells nativas Tauri (escritorio) y Capacitor (móvil), aceptadas como dirección; backend, datos y topología son recomendaciones por validar. device-agent es la aplicación autónoma propuesta para operar periféricos desde un equipo Windows, bajo autorización del backend; su journal técnico no sustituye PostgreSQL. Primera entrega F02: agente dedicado en el puesto Windows con periféricos locales; piloto F05. Periféricos de red y estación compartida son expansión F06 condicionada a homologación.",
     "sources": [
       {
         "label": "Propuesta y decisiones de arquitectura",
@@ -204,7 +204,7 @@
     "summary": "Aplicación completa para caja y comandos.",
     "ownership": "No posee otra base de ventas ni credenciales SQL.",
     "offline": "Sin WAN usa la API por LAN. Sin LAN o backend, se detienen nuevos comandos dependientes.",
-    "detail": "apps/pos-desktop entrega la aplicación completa: la shell nativa Tauri aloja el frontend Angular. Tiene arranque, configuración nativa y build propios. Comparte con pos-mobile libs/client-shell: raíz, configuración, rutas, guards y layout Angular; esta biblioteca no es la shell nativa ni un proceso adicional. Solicita capacidades de dispositivos a branch-api; no transporta trabajos a device-agent ni necesita mantenerse abierto para que éste opere. Distribución e integración nativa requieren homologación; no posee autoridad de ventas.",
+    "detail": "apps/pos-desktop entrega la aplicación completa: la shell nativa Tauri aloja el frontend Angular. Tiene arranque, configuración nativa y build propios. Comparte con pos-mobile libs/client-shell: raíz, configuración, rutas, guards y layout Angular; esta biblioteca no es la shell nativa ni un proceso adicional. Solicita capacidades de dispositivos a branch-api; no transporta trabajos a device-agent ni necesita mantenerse abierto para que éste opere. Distribución e integración nativa requieren homologación; no posee autoridad de ventas. F02 instala device-agent y su journal en el mismo puesto Windows; son procesos independientes. El perfil dedicado sólo recibe trabajos asignados a ese puesto.",
     "sources": [
       {
         "label": "Opciones tecnológicas y límites",
@@ -226,7 +226,7 @@
     "summary": "Aplicación completa para Android/iOS.",
     "ownership": "Comparte interfaz y contratos; no otra autoridad de ventas.",
     "offline": "Requiere conexión autorizada al backend de sucursal. El móvil no incorpora autonomía sin LAN.",
-    "detail": "apps/pos-mobile entrega la aplicación completa: la shell nativa Capacitor aloja el frontend Angular. Tiene arranque, configuración nativa y build propios. Comparte con pos-desktop libs/client-shell: raíz, configuración, rutas, guards y layout Angular; esta biblioteca no es la shell nativa ni un proceso adicional. Los adaptadores actuales son mock. Instalación, ciclo de vida, almacenamiento y capacidades nativas requieren pruebas Android/iOS; no hay acceso SQL ni permisos implícitos por empaquetar la interfaz. Solicita impresión y capacidades autorizadas a branch-api; device-agent las ejecuta en el equipo conectado al hardware, sin depender de pos-desktop.",
+    "detail": "apps/pos-mobile entrega la aplicación completa: la shell nativa Capacitor aloja el frontend Angular. Tiene arranque, configuración nativa y build propios. Comparte con pos-desktop libs/client-shell: raíz, configuración, rutas, guards y layout Angular; esta biblioteca no es la shell nativa ni un proceso adicional. Los adaptadores actuales son mock. Instalación, ciclo de vida, almacenamiento y capacidades nativas requieren pruebas Android/iOS; no hay acceso SQL ni permisos implícitos por empaquetar la interfaz. El acceso móvil a periféricos compartidos se habilita en F06 tras homologación y asignación explícita. Solicita capacidades a branch-api; no usa por defecto el agente dedicado a otro puesto ni depende de pos-desktop como relé.",
     "sources": [
       {
         "label": "Opciones tecnológicas y límites",
@@ -523,7 +523,7 @@
     "summary": "Gestiona intentos, trabajos y evidencia.",
     "ownership": "Conserva identidad de intento y referencia del proveedor; no inventa resultado.",
     "offline": "Si el proveedor no responde: pendiente/desconocido, consulta o resolución operativa.",
-    "detail": "Payments conserva intentos y estados financieros; devices autoriza trabajos por capacidad, equipo y agente, con jobId y hash del contenido, y procesa evidencia técnica. device-agent inicia HTTPS autenticado para obtener trabajos y reportar resultados; escritorio y móvil sólo solicitan la operación a branch-api. No mantiene una transacción PostgreSQL abierta al esperar al hardware o proveedor. Pagos por SDK local son una capacidad futura por homologar, independiente de la impresión; API remota y SDK no se ejecutan simultáneamente para un mismo intento.",
+    "detail": "Payments conserva intentos y estados financieros; devices autoriza trabajos por capacidad, equipo y agente, con jobId y hash del contenido, y procesa evidencia técnica. device-agent inicia HTTPS autenticado para obtener trabajos y reportar resultados. F02/F05: pos-desktop solicita a branch-api operaciones para su puesto dedicado. La estación compartida y el acceso móvil a periféricos son expansión F06 sujeta a homologación. No mantiene una transacción PostgreSQL abierta al esperar al hardware o proveedor. Pagos por SDK local son una capacidad futura por homologar, independiente de la impresión; API remota y SDK no se ejecutan simultáneamente para un mismo intento.",
     "sources": [
       {
         "label": "Proveedores, periféricos y homologación",
@@ -764,10 +764,10 @@
     "name": "device-agent",
     "type": "Contenedor",
     "technology": "C# / .NET · Windows",
-    "summary": "Ejecuta trabajos de hardware autorizados.",
-    "ownership": "Un único agente autorizado por equipo físico; branch-api conserva permisos, documentos y estado de negocio. El agente no cobra ni emite documentos por decisión propia.",
+    "summary": "F02: ejecuta periféricos del puesto Windows.",
+    "ownership": "F02: agente dedicado al puesto y sus dispositivos; branch-api autoriza sólo trabajos del puesto asignado. F06 amplía a una estación compartida homologada con un único controlador por dispositivo físico.",
     "offline": "Sin LAN no obtiene trabajos nuevos. Conserva evidencia del trabajo en curso para reanudar su reporte; un resultado incierto no autoriza repetir el efecto.",
-    "detail": "Aplicación objetivo apps/device-agent, aún no implementada. Servicio autónomo en el equipo Windows conectado al hardware; funciona sin pos-desktop abierto. Inicia HTTPS LAN autenticado hacia branch-api para obtener trabajos y reportar evidencia. Cada trabajo conserva jobId, hash del contenido, destino y autorización. SQLite registra deduplicación e intentos técnicos; una aceptación del spooler no acredita impresión física. SDK, drivers y hardware requieren homologación. Pagos por SDK local son una capacidad futura independiente: migrar impresión no acredita cobros.",
+    "detail": "Aplicación objetivo apps/device-agent, aún no implementada. Primera entrega F02: proceso autónomo instalado en el mismo puesto Windows que pos-desktop; controla periféricos USB/serie mediante drivers o SDK homologados y conserva allí su journal SQLite. El piloto F05 valida ese perfil dedicado. Opera sin la ventana de pos-desktop abierta e inicia HTTPS LAN autenticado hacia branch-api para obtener trabajos del puesto y reportar evidencia. Cada trabajo conserva jobId, hash, destino y autorización; spool aceptado no acredita impresión física. F06 incorpora impresoras de recibos y etiquetas en red y una estación compartida certificada, con la misma aplicación y contratos de propiedad; no habilita automáticamente MICR, cajón, pagos ni acceso móvil a cualquier caja. El servidor de sucursal no aloja el agente por defecto.",
     "sources": [
       {
         "label": "Agente autónomo de dispositivos",
@@ -780,6 +780,10 @@
       {
         "label": "Opciones tecnológicas y límites",
         "url": "../docs/opciones-tecnologicas.md"
+      },
+      {
+        "label": "F06: periféricos de red y estación compartida",
+        "url": "../docs/decisions/device-agent.md#network-expansion"
       }
     ],
     "appId": "device-agent",
@@ -1233,9 +1237,9 @@
     "type": "Contenedor de datos",
     "technology": "SQLite",
     "summary": "Guarda trabajos, deduplicación y evidencia.",
-    "ownership": "Privado de device-agent en su equipo. No contiene ventas, caja, precios ni autoridad financiera.",
+    "ownership": "Privado de device-agent en el puesto Windows inicial. No contiene ventas, caja, precios ni autoridad financiera.",
     "offline": "Conserva jobId, hash y estados técnicos durante cortes de LAN; al reconectar reporta con la misma identidad.",
-    "detail": "Persistencia técnica propuesta. Registra recepción durable, identidad de agente y equipo, hash del contenido, intento y evidencia del driver/spooler. Mismo jobId con distinto hash es conflicto. Guarda evidencia antes de reportarla; no interpreta spool accepted como impresión física. Restore o pérdida del journal exige reconciliar antes de repetir efectos; un lease vencido no prueba que el hardware no actuó.",
+    "detail": "F02/F05: diario técnico local del puesto; F06: diario propio de cada instancia certificada, nunca una SQLite compartida por red. Persistencia técnica propuesta. Registra recepción durable, identidad de agente y equipo, hash del contenido, intento y evidencia del driver/spooler. Mismo jobId con distinto hash es conflicto. Guarda evidencia antes de reportarla; no interpreta spool accepted como impresión física. Restore o pérdida del journal exige reconciliar antes de repetir efectos; un lease vencido no prueba que el hardware no actuó.",
     "sources": [
       {
         "label": "Agente autónomo de dispositivos",
@@ -1245,17 +1249,34 @@
   },
   "peripherals": {
     "id": "peripherals",
-    "name": "Periféricos físicos",
+    "name": "Periféricos del puesto",
     "type": "Hardware externo",
-    "technology": "Driver / SDK homologado",
-    "summary": "Impresoras, lectores y otros dispositivos.",
+    "technology": "USB / serie · driver / SDK",
+    "summary": "F02: impresoras y lectores locales del puesto.",
     "ownership": "Un único device-agent autorizado opera cada equipo físico. La aplicación solicita capacidades a branch-api.",
     "offline": "La capacidad depende del equipo, driver y estado físico. Un timeout puede dejar resultado incierto.",
-    "detail": "Hardware de sucursal conectado al equipo que ejecuta device-agent. La impresión conserva referencia de documento y trabajo; el spooler sólo informa recepción técnica. Reimpresión es una operación autorizada explícita. Lectores y demás capacidades requieren contratos y homologación propios. El SDK de un terminal de pago no se presume habilitado por migrar impresión.",
+    "detail": "Perfil inicial F02 y piloto F05: impresora de recibos, etiquetas o lector MICR conectado al puesto Windows mediante USB/serie y driver o SDK homologado. No se ofrece a otros puestos o móviles por defecto. La impresión conserva referencia de documento y trabajo; el spooler sólo informa recepción técnica. La reimpresión requiere autorización explícita. Compartir dispositivos por red es una expansión F06 con homologación por modelo; cajón, MICR y terminales de pago no heredan esa capacidad.",
     "sources": [
       {
         "label": "Agente autónomo de dispositivos",
         "url": "../docs/decisions/device-agent.md"
+      }
+    ]
+  },
+  "networkPeripherals": {
+    "id": "networkPeripherals",
+    "name": "Periféricos de red · F06",
+    "type": "Hardware externo",
+    "technology": "TCP/IP · driver / SDK homologado",
+    "summary": "Expansión: impresoras de recibos y etiquetas.",
+    "conditional": true,
+    "ownership": "Un controlador activo por dispositivo físico, asignado a una instancia certificada de la misma apps/device-agent. No es otra aplicación del monorepo.",
+    "offline": "Sin LAN no se aceptan trabajos nuevos. Cortes, reconexión o cambio de controlador no autorizan repetir un efecto incierto.",
+    "detail": "Expansión F06 posterior al piloto F05 del puesto dedicado. Homologar impresoras de recibos y etiquetas accesibles por red y, cuando se requiera, una estación compartida Windows que ejecute la misma apps/device-agent. La línea discontinua representa una capacidad futura; no instala otro agente en el servidor por defecto. Mantener protocolo HTTPS con branch-api, propiedad exclusiva, configuración, diagnóstico, journal local y control de concurrencia. Homologar el acceso de móviles por permisos y destino explícitos. MICR, cajón y pagos requieren evaluación propia; una impresora de red no los habilita.",
+    "sources": [
+      {
+        "label": "F06: periféricos de red y estación compartida",
+        "url": "../docs/decisions/device-agent.md#network-expansion"
       }
     ]
   }
@@ -1278,6 +1299,7 @@
       "payments",
       "fiscal",
       "peripherals",
+      "networkPeripherals",
       "legend"
     ],
     "boundaries": [],
@@ -1320,7 +1342,13 @@
       {
         "from": "pos",
         "to": "peripherals",
-        "label": "Opera capacidades autorizadas · driver/SDK homologado"
+        "label": "F02 · operación local · USB/serie/SDK"
+      },
+      {
+        "from": "pos",
+        "to": "networkPeripherals",
+        "label": "F06 · ejecución en red · protocolo homologado",
+        "conditional": true
       }
     ]
   },
@@ -1330,7 +1358,7 @@
     "level": "C2 · Contenedores",
     "title": "Aplicaciones, procesos y datos",
     "scope": "Siete aplicaciones objetivo de POS Platform, sus datos y sistemas externos. Seis apps tienen base técnica o scaffold; device-agent se incorpora como propuesta, aún no implementada.",
-    "note": "Siete aplicaciones objetivo; seis tienen base técnica o scaffold. device-agent y su journal SQLite son propuesta por implementar. PostgreSQL conserva el negocio; country-api publica versiones y erp-worker prepara maestros. Redis es caché opcional.",
+    "note": "Siete apps objetivo; seis tienen base técnica. device-agent y SQLite: propuesta pendiente. F02: puesto Windows dedicado; F05: piloto del mismo perfil. F06: red y estación compartida por homologar; no agrega otra app. PostgreSQL conserva el negocio.",
     "nodeIds": [
       "cashier",
       "client",
@@ -1349,6 +1377,7 @@
       "payments",
       "fiscal",
       "peripherals",
+      "networkPeripherals",
       "legend"
     ],
     "boundaries": [
@@ -1389,7 +1418,8 @@
       {
         "from": "mobileClient",
         "to": "branchApi",
-        "label": "Comandos y consultas · HTTPS/LAN"
+        "label": "F06 · comandos habilitados · HTTPS/LAN",
+        "conditional": true
       },
       {
         "from": "device",
@@ -1459,7 +1489,13 @@
       {
         "from": "device",
         "to": "peripherals",
-        "label": "Ejecuta trabajo autorizado · driver/SDK homologado"
+        "label": "F02 · ejecuta en el puesto · USB/serie/SDK"
+      },
+      {
+        "from": "device",
+        "to": "networkPeripherals",
+        "label": "F06 · ejecución en red · protocolo homologado",
+        "conditional": true
       }
     ]
   },
@@ -1739,8 +1775,8 @@
     "key": "c4-deployment",
     "level": "Complemento · Despliegue",
     "title": "Sucursal, país y red autorizada del ERP",
-    "scope": "Perfil WAN: puestos y móviles usan el servidor de sucursal por LAN. País y red del ERP son entornos independientes, conectados mediante contratos autenticados.",
-    "note": "Siete aplicaciones objetivo; seis tienen base técnica o scaffold. device-agent y su journal SQLite son propuesta por implementar. PostgreSQL conserva el negocio; country-api publica versiones y erp-worker prepara maestros. Redis es caché opcional.",
+    "scope": "F02/F05: pos-desktop, device-agent, journal SQLite y hardware local comparten el puesto Windows. Backend y PostgreSQL viven en el servidor de sucursal. Red, estación compartida y acceso móvil a periféricos son expansión F06.",
+    "note": "Siete apps objetivo; seis tienen base técnica. device-agent y SQLite: propuesta pendiente. F02: puesto Windows dedicado; F05: piloto del mismo perfil. F06: red y estación compartida por homologar; no agrega otra app. PostgreSQL conserva el negocio.",
     "nodeIds": [
       "client",
       "mobileClient",
@@ -1760,20 +1796,15 @@
       "observability",
       "masters",
       "peripherals",
+      "networkPeripherals",
       "legend"
     ],
     "boundaries": [
       {
         "id": "terminalNode",
-        "label": "Puestos POS x N · Windows por homologar",
+        "label": "Puesto Windows x N · perfil dedicado F02 / piloto F05",
         "nodes": [
-          "client"
-        ]
-      },
-      {
-        "id": "deviceHost",
-        "label": "Equipo Windows conectado al hardware · agente autónomo",
-        "nodes": [
+          "client",
           "device",
           "deviceJournal",
           "peripherals"
@@ -1781,7 +1812,7 @@
       },
       {
         "id": "mobileNode",
-        "label": "Dispositivos móviles · Android/iOS por homologar",
+        "label": "F06 · dispositivos móviles · Android/iOS por homologar",
         "nodes": [
           "mobileClient"
         ]
@@ -1822,7 +1853,8 @@
       {
         "from": "mobileClient",
         "to": "branchApi",
-        "label": "Comandos autenticados · HTTPS/LAN"
+        "label": "F06 · comandos habilitados · HTTPS/LAN",
+        "conditional": true
       },
       {
         "from": "device",
@@ -1912,7 +1944,13 @@
       {
         "from": "device",
         "to": "peripherals",
-        "label": "Ejecuta trabajo autorizado · driver/SDK homologado"
+        "label": "F02 · ejecuta en el puesto · USB/serie/SDK"
+      },
+      {
+        "from": "device",
+        "to": "networkPeripherals",
+        "label": "F06 · ejecución en red · protocolo homologado",
+        "conditional": true
       }
     ]
   },
@@ -2140,7 +2178,7 @@
   "Contenedor: aplicación/proceso o almacén de datos. Componente: módulo de un proceso.",
   "Azul: software POS. Violeta: datos. Gris: externo. Ámbar: infraestructura; borde discontinuo: límite indicado.",
   "Las apps muestran su nombre de monorepo. Una biblioteca no equivale a un proceso desplegable.",
-  "Opcional o por asignar indica una capacidad condicionada, no una instalación confirmada.",
+  "Opcional o F06 indica una capacidad condicionada. Conector discontinuo: expansión futura; no instalación inicial.",
   "Flecha: iniciador, propósito y protocolo. LAN: sucursal. WAN: enlace a país. ACL: capa anticorrupción.",
   "ACK de aplicación: commit durable local, distinto de resultado ERP, pago o fiscalidad. Despliegue no es el nivel C4 de código."
 ] };

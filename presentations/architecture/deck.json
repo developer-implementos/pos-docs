@@ -1624,7 +1624,7 @@
       "diagram": true,
       "title": "Aplicaciones y datos de la propuesta",
       "background": "#FFFFFF",
-      "notes": "Vista C2 resumida derivada del modelo de arquitectura: siete aplicaciones objetivo, dos PostgreSQL de negocio y un registro SQLite técnico del agente, mostrado en la lámina de periféricos. pos-desktop y pos-mobile son aplicaciones completas: sus shells Tauri y Capacitor alojan Angular. Ambos solicitan operaciones autorizadas a branch-api por LAN. device-agent es una app independiente en .NET/C# para Windows: inicia HTTPS hacia branch-api para obtener trabajos y reportar evidencia. No recibe comandos comerciales directos del móvil ni depende de la ventana POS. branch-sync-worker intercambia por HTTPS con country-api; erp-worker inicia HTTPS desde su red autorizada. Clientes, agente y erp-worker no acceden por SQL a país. branch-api confirma negocio, auditoría y outbox en PostgreSQL; devices coordina allí los trabajos de periféricos. branch-sync-worker gestiona pendientes y versiones; country-api conserva recepción y trabajo. Ninguna transacción SQL incluye llamadas a hardware, proveedores o ERP. El objetivo comprende siete apps; seis tienen base técnica en el producto revisado y device-agent está pendiente de implementación y homologación.",
+      "notes": "Vista C2 resumida derivada del modelo de arquitectura: siete aplicaciones objetivo, dos PostgreSQL de negocio y un registro SQLite técnico del agente, mostrado en la lámina de periféricos. pos-desktop y pos-mobile son aplicaciones completas: sus shells Tauri y Capacitor alojan Angular. Ambos solicitan operaciones autorizadas a branch-api por LAN. device-agent es una app independiente en .NET/C# instalada por puesto Windows desde F02, para periféricos locales USB, serie o SDK: inicia HTTPS hacia branch-api para obtener trabajos y reportar evidencia. No depende de la ventana POS. Las estaciones o dispositivos de red compartidos y el uso de sus periféricos desde móvil corresponden a F06, después del piloto F05; no forman parte de la primera entrega por puesto. branch-sync-worker intercambia por HTTPS con country-api; erp-worker inicia HTTPS desde su red autorizada. Clientes, agente y erp-worker no acceden por SQL a país. branch-api confirma negocio, auditoría y outbox en PostgreSQL; devices coordina allí los trabajos de periféricos. branch-sync-worker gestiona pendientes y versiones; country-api conserva recepción y trabajo. Ninguna transacción SQL incluye llamadas a hardware, proveedores o ERP. El objetivo comprende siete apps; seis tienen base técnica en el producto revisado y device-agent está pendiente de implementación y homologación.",
       "sources": [
         {
           "label": "Contenedores y límites C4",
@@ -1767,7 +1767,7 @@
         },
         {
           "type": "text",
-          "text": "Clientes y agente: HTTPS / LAN. SQLite técnico del agente se detalla en la lámina de periféricos.",
+          "text": "device-agent: F02 por puesto. Periféricos de red y uso móvil compartido: F06, después del piloto F05.",
           "position": {
             "left": 64,
             "top": 644,
@@ -1792,7 +1792,7 @@
       "id": "slide-4",
       "title": "Estructura objetivo del monorepo",
       "background": "#FFFFFF",
-      "notes": "Estructura objetivo de POS Platform: siete aplicaciones objetivo con arranque propio. pos-desktop y pos-mobile son aplicaciones completas: Tauri y Capacitor son sus shells nativas y alojan el frontend Angular compartido; branch-api atiende la operación de sucursal, branch-sync-worker intercambia información con país, country-api recibe operaciones y ofrece capacidades nacionales, erp-worker integra el ERP, y device-agent ejecuta trabajos autorizados de periféricos desde un host Windows .NET/C#. libs/backend organiza trece contextos de negocio; libs/shared reúne mecanismos técnicos y conceptos mínimos. libs/client-shell compone el frontend Angular: componente raíz, configuración, rutas, guards y layout. Cada biblioteca ofrece una entrada pública y dependencias explícitas. pos-clients-e2e es el proyecto de pruebas de los clientes y shared/testing el soporte técnico de pruebas previsto. device-agent es una aplicación propuesta pendiente de implementación; el producto revisado contiene seis aplicaciones con base técnica. Nx coordina tareas del agente, pero su compilación, pruebas Windows y firma corresponden a .NET. La base actual incluye una UI demostrativa y estructura técnica de APIs, workers y contextos; persistencia, sincronización y operaciones comerciales forman parte del roadmap. POS Docs tiene repositorio y entrega independientes. Core es una referencia de organización y convenciones.",
+      "notes": "Estructura objetivo de POS Platform: siete aplicaciones objetivo con arranque propio. pos-desktop y pos-mobile son aplicaciones completas: Tauri y Capacitor son sus shells nativas y alojan el frontend Angular compartido; branch-api atiende la operación de sucursal, branch-sync-worker intercambia información con país, country-api recibe operaciones y ofrece capacidades nacionales, erp-worker integra el ERP, y device-agent ejecuta trabajos autorizados desde cada puesto Windows .NET/C#: periféricos locales en F02 y modalidad compartida de red/móvil en F06, después del piloto F05. libs/backend organiza trece contextos de negocio; libs/shared reúne mecanismos técnicos y conceptos mínimos. libs/client-shell compone el frontend Angular: componente raíz, configuración, rutas, guards y layout. Cada biblioteca ofrece una entrada pública y dependencias explícitas. pos-clients-e2e es el proyecto de pruebas de los clientes y shared/testing el soporte técnico de pruebas previsto. device-agent es una aplicación propuesta pendiente de implementación; el producto revisado contiene seis aplicaciones con base técnica. Nx coordina tareas del agente, pero su compilación, pruebas Windows y firma corresponden a .NET. La base actual incluye una UI demostrativa y estructura técnica de APIs, workers y contextos; persistencia, sincronización y operaciones comerciales forman parte del roadmap. POS Docs tiene repositorio y entrega independientes. Core es una referencia de organización y convenciones.",
       "sources": [
         {
           "label": "monorepo",
@@ -2797,7 +2797,7 @@
         },
         {
           "type": "text",
-          "text": ".NET / Windows · periféricos",
+          "text": ".NET / Windows · agente por puesto",
           "position": {
             "left": 78,
             "top": 550,
@@ -2861,7 +2861,7 @@
       "id": "slide-5",
       "title": "Responsabilidad de las bibliotecas",
       "background": "#FFFFFF",
-      "notes": "Shared agrupa mecanismos técnicos y conceptos mínimos. libs/client-shell compone el frontend Angular: componente raíz, configuración, rutas, guards y layout. Tauri y Capacitor son las shells nativas que alojan ese frontend en pos-desktop y pos-mobile. Country-policies define perfiles y selección de políticas por país; domain contiene reglas puras del prototipo y data-access su estado y adaptadores mock. Las reglas comerciales definitivas pertenecen a los contextos de negocio. Las carpetas de shared/backend describen responsabilidades; el número de bibliotecas Nx se determina por sus límites y consumidores. Los contratos de negocio pertenecen a su contexto, por ejemplo SaleConfirmedV1 en ventas; shared/contracts contiene sobres y metadatos técnicos. Shared/testing es soporte exclusivo de pruebas. Los clientes ofrecen puertos de acceso a capacidades nativas para las features. Los periféricos compartidos se solicitan a branch-api y los ejecuta device-agent; las features no llaman directamente a drivers de la caja. El host .NET conserva código y adaptadores privados propios: comparte esquemas de red y fixtures con el contexto devices, no importa bibliotecas NestJS ni Pino de Node.",
+      "notes": "Shared agrupa mecanismos técnicos y conceptos mínimos. libs/client-shell compone el frontend Angular: componente raíz, configuración, rutas, guards y layout. Tauri y Capacitor son las shells nativas que alojan ese frontend en pos-desktop y pos-mobile. Country-policies define perfiles y selección de políticas por país; domain contiene reglas puras del prototipo y data-access su estado y adaptadores mock. Las reglas comerciales definitivas pertenecen a los contextos de negocio. Las carpetas de shared/backend describen responsabilidades; el número de bibliotecas Nx se determina por sus límites y consumidores. Los contratos de negocio pertenecen a su contexto, por ejemplo SaleConfirmedV1 en ventas; shared/contracts contiene sobres y metadatos técnicos. Shared/testing es soporte exclusivo de pruebas. Los clientes ofrecen puertos de acceso a capacidades nativas para las features. Los trabajos de periféricos del puesto se solicitan a branch-api y los ejecuta su device-agent; la modalidad compartida de red/móvil queda para F06 después del piloto F05; las features no llaman directamente a drivers de la caja. El host .NET conserva código y adaptadores privados propios: comparte esquemas de red y fixtures con el contexto devices, no importa bibliotecas NestJS ni Pino de Node.",
       "sources": [
         {
           "label": "monorepo",
@@ -3696,7 +3696,7 @@
       "diagram": true,
       "title": "Flujo de deployment por país",
       "background": "#FFFFFF",
-      "notes": "Flujo objetivo, no pipeline productivo existente. GitHub Actions se alinea con el precedente de devops-platform y Nx coordina tareas. Compilaciones y firma nativas dependen de runners/herramientas de cada plataforma. Cada país promueve artefactos inmutables después de validación y aprobación. Credenciales/entornos aislados. La distribución por anillos incluye validación de dispositivos. Revertir binarios requiere esquema compatible: no restaurar una base antigua sobre ventas nuevas. pos-docs tiene entrega estática separada; no forma parte del runtime comercial. device-agent tiene artefacto e instalación firmados independientes de los clientes. Se valida el host Windows y cada driver/SDK: las clases GDI/PrintDocument del legacy no se trasladan automáticamente a un servicio. Las actualizaciones conservan el registro técnico local y los trabajos pendientes; un ejecutor interactivo sólo se incorpora cuando lo exige el SDK homologado.",
+      "notes": "Flujo objetivo, no pipeline productivo existente. GitHub Actions se alinea con el precedente de devops-platform y Nx coordina tareas. Compilaciones y firma nativas dependen de runners/herramientas de cada plataforma. Cada país promueve artefactos inmutables después de validación y aprobación. Credenciales/entornos aislados. La distribución por anillos incluye validación de dispositivos. Revertir binarios requiere esquema compatible: no restaurar una base antigua sobre ventas nuevas. pos-docs tiene entrega estática separada; no forma parte del runtime comercial. device-agent tiene artefacto e instalación firmados independientes de los clientes. Se valida el host Windows y cada driver/SDK: las clases GDI/PrintDocument del legacy no se trasladan automáticamente a un servicio. Las actualizaciones conservan el registro técnico local y los trabajos pendientes; un ejecutor interactivo sólo se incorpora cuando lo exige el SDK homologado. La primera entrega F02 instala device-agent por puesto, para equipos locales USB/serie/SDK; el piloto F05 valida esa modalidad. Una estación o dispositivo de red compartido y el acceso móvil a esos equipos son evolución F06 después del piloto, con homologación de asignación y concurrencia.",
       "sources": [
         {
           "label": "technology",
@@ -4717,7 +4717,7 @@
       "diagram": true,
       "title": "Stack de infraestructura propuesto",
       "background": "#FFFFFF",
-      "notes": "pos-desktop y pos-mobile son aplicaciones completas con frontend Angular alojado por las shells nativas Tauri y Capacitor, respectivamente. La base recomendada es PostgreSQL en sucursal y país, NestJS/Fastify y workers. Ningún motor/broker confirma por sí solo la durabilidad: se implementan transacciones, outbox/inbox, deduplicación y recuperación. GCP/Cloud Run, Pub/Sub, RabbitMQ, Redis/BullMQ y Kubernetes no se presentan como servicios elegidos. Cloud autorizado o VM privada requiere decisión operativa. El móvil no habilita por sí solo venta sin LAN ni acceso remoto público. LAN/escritor disponibles son requisito del perfil WAN. El OS, dimensionamiento, HA, RPO/RTO y distribución se homologan en piloto. device-agent se despliega en el equipo con acceso al hardware, con .NET/C# sobre Windows y SQLite para recepción, intentos y evidencia técnica. No mantiene el registro comercial de ventas ni comparte autoridad de negocio; conserva únicamente el contenido mínimo y la evidencia de cada trabajo autorizado. libs/backend/devices en branch-api autoriza, asigna trabajos y conserva auditoría en PostgreSQL. La conexión de trabajos y resultados la inicia el agente hacia branch-api por HTTPS autenticado. Un equipo puede atender distintos clientes, incluido el móvil, con un único dueño activo por periférico físico. Se homologa driver, arquitectura y requisitos de sesión; PrintDocument no es una vía soportada para un servicio Windows.",
+      "notes": "pos-desktop y pos-mobile son aplicaciones completas con frontend Angular alojado por las shells nativas Tauri y Capacitor, respectivamente. La base recomendada es PostgreSQL en sucursal y país, NestJS/Fastify y workers. Ningún motor/broker confirma por sí solo la durabilidad: se implementan transacciones, outbox/inbox, deduplicación y recuperación. GCP/Cloud Run, Pub/Sub, RabbitMQ, Redis/BullMQ y Kubernetes no se presentan como servicios elegidos. Cloud autorizado o VM privada requiere decisión operativa. El móvil no habilita por sí solo venta sin LAN ni acceso remoto público. LAN/escritor disponibles son requisito del perfil WAN. El OS, dimensionamiento, HA, RPO/RTO y distribución se homologan en piloto. En la primera entrega F02, device-agent se instala por puesto y utiliza sus dispositivos locales USB/serie/SDK, con .NET/C# sobre Windows y SQLite para recepción, intentos y evidencia técnica. No mantiene el registro comercial de ventas ni comparte autoridad de negocio; conserva únicamente el contenido mínimo y la evidencia de cada trabajo autorizado. libs/backend/devices en branch-api autoriza, asigna trabajos y conserva auditoría en PostgreSQL. La conexión de trabajos y resultados la inicia el agente hacia branch-api por HTTPS autenticado. La primera entrega asocia cada trabajo al agente del puesto autorizado. Los periféricos de red o la estación compartida, incluido el acceso móvil, se implementan como evolución F06 después del piloto F05, con asignación y concurrencia homologadas y un único dueño activo por periférico físico. Se homologa driver, arquitectura y requisitos de sesión; PrintDocument no es una vía soportada para un servicio Windows.",
       "sources": [
         {
           "label": "technology",
@@ -4939,7 +4939,7 @@
         },
         {
           "type": "text",
-          "text": "device-agent",
+          "text": "device-agent · por puesto",
           "position": {
             "left": 76,
             "top": 392,
@@ -4958,7 +4958,7 @@
         },
         {
           "type": "text",
-          "text": ".NET / C# · Windows\nSQLite técnico + driver / SDK",
+          "text": ".NET / C# · Windows\nSQLite técnico · USB / serie / SDK",
           "position": {
             "left": 76,
             "top": 418,
@@ -5507,9 +5507,9 @@
     {
       "id": "slide-18",
       "diagram": true,
-      "title": "Periféricos para escritorio y móvil",
+      "title": "Periféricos locales por puesto",
       "background": "#FFFFFF",
-      "notes": "device-agent es la aplicación propuesta en apps/device-agent: .NET/C# sobre Windows, con ciclo de vida independiente del POS. pos-desktop y pos-mobile solicitan imprimir o leer a branch-api; libs/backend/devices valida identidad, sucursal, destino y capacidad y persiste el trabajo y su auditoría en PostgreSQL. El agente inicia HTTPS autenticado hacia branch-api, obtiene el trabajo y registra su recepción en SQLite antes de ejecutar. Reporta el resultado por ese mismo límite de confianza. SQLite conserva jobId, hash, intentos, contenido mínimo del trabajo y evidencia técnica; no mantiene un registro comercial de ventas ni autoridad de negocio. Un mismo jobId y contenido recupera el resultado, mientras contenido distinto se rechaza. Los adaptadores acceden al driver/spooler o SDK homologado; sólo un agente controla cada dispositivo físico y serializa capacidades incompatibles. El spooler puede aceptar un trabajo sin acreditar papel impreso. Un resultado incierto se reconcilia; una reimpresión es una nueva acción autorizada vinculada a la anterior. Un móvil en la LAN puede imprimir en el PC sin acceder a localhost ni a SQL. Un periférico conectado directamente por Bluetooth al teléfono requiere un plugin Capacitor homologado y es otro despliegue. El agente no emite DTE ni trae pagos Transbank implementados. Las APIs de impresión del legacy deben sustituirse o aislarse según compatibilidad: System.Drawing.Printing no está soportado dentro de servicios Windows. Hardware, SDK y runtime se homologan antes de habilitar el piloto. Decisión aprobada de arquitectura; aplicación pendiente de implementación.",
+      "notes": "La primera entrega de device-agent corresponde a F02 y se instala en cada PC de caja, con .NET/C# sobre Windows y ciclo de vida independiente de la ventana POS. Atiende dispositivos locales USB, serie o SDK homologados, incluida la impresión o lectura MICR según alcance acordado. pos-desktop solicita el trabajo a branch-api; libs/backend/devices valida identidad, sucursal, puesto, destino y capacidad y persiste el trabajo y su auditoría en PostgreSQL. El agente del puesto inicia HTTPS autenticado hacia branch-api, obtiene únicamente los trabajos asignados y registra su recepción en SQLite antes de ejecutar. Reporta la evidencia por ese mismo límite de confianza. Compartir equipo con el cliente no implica reintroducir una API localhost anónima ni acceso del cliente a SQL. SQLite conserva jobId, hash, intentos, contenido mínimo del trabajo y evidencia técnica; no mantiene un registro comercial de ventas ni autoridad de negocio. Un mismo jobId y contenido recupera el resultado; contenido distinto se rechaza. Sólo un agente controla cada dispositivo físico y serializa capacidades incompatibles. El spooler puede aceptar un trabajo sin acreditar papel impreso. Un resultado incierto se reconcilia; una reimpresión es una nueva acción autorizada vinculada a la anterior. F05 valida esta modalidad por puesto en el piloto. Después del piloto, F06 incorpora la evolución a dispositivos de red o una estación compartida y al uso móvil de esos periféricos, con asignación, permisos y concurrencia homologados. Un periférico Bluetooth conectado directamente al teléfono también requiere homologación específica y no pertenece a la primera entrega. El agente no emite DTE ni trae pagos Transbank implementados. Las APIs de impresión del legacy deben sustituirse o aislarse según compatibilidad: System.Drawing.Printing no está soportado dentro de servicios Windows. Arquitectura acordada; aplicación pendiente de implementación.",
       "sources": [
         {
           "label": "Agente de periféricos · decisión y contrato",
@@ -5520,8 +5520,16 @@
           "href": "/guide/architecture/providers/"
         },
         {
-          "label": "Mapa interactivo · dispositivos",
+          "label": "F02 · impresión local por puesto",
+          "href": "/architecture/?scenario=local-printing&step=1"
+        },
+        {
+          "label": "F06 · periféricos compartidos después del piloto",
           "href": "/architecture/?scenario=shared-printing&step=1"
+        },
+        {
+          "label": "Expansión de red y acceso móvil · alcance F06",
+          "href": "/guide/architecture/device-agent/#network-expansion"
         }
       ],
       "elements": [
@@ -5538,7 +5546,7 @@
         },
         {
           "type": "text",
-          "text": "DEVICE-AGENT / .NET · WINDOWS · SQLITE",
+          "text": "F02 / DEVICE-AGENT · .NET · WINDOWS · SQLITE",
           "position": {
             "left": 64,
             "top": 42,
@@ -5558,7 +5566,7 @@
         },
         {
           "type": "text",
-          "text": "Periféricos para escritorio y móvil",
+          "text": "Periféricos locales por puesto",
           "position": {
             "left": 64,
             "top": 105,
@@ -5648,7 +5656,7 @@
         },
         {
           "type": "text",
-          "text": "App propuesta: autorización en sucursal y ejecución en el equipo. Driver y SDK se homologan por dispositivo.",
+          "text": "F02: agente por puesto y periféricos locales. F05: piloto. F06: red y móvil compartido con homologación propia.",
           "position": {
             "left": 64,
             "top": 644,
@@ -7927,7 +7935,7 @@
       "id": "slide-13",
       "title": "Primeras funcionalidades reales",
       "background": "#FFFFFF",
-      "notes": "F1: usar datos comerciales versionados de prueba, UI existente y efectivo. Confirmación local, control de turno, ámbito autorizado, autenticación/autorización de prueba verificable y persistencia real. El outbox se diseña desde esta primera transacción aunque su entrega se active en F3. F2 limita proveedores a una combinación inicial de país, medio y dispositivo acordada. La demo identifica explícitamente qué se simula y qué usa sandbox/hardware real. Impresión aceptada por software no prueba efecto físico. Pago autorizado, venta confirmada y documento fiscal aceptado tienen estados distintos. La habilitación de uso productivo exige homologación y autorización para la modalidad elegida, antes de F5. Roadmap propuesto para revisión con desarrollo y producto. El orden y los criterios son una propuesta editorial para esta presentación, no un calendario aprobado. El recorrido de impresión usa branch-api, device-agent y un dispositivo homologado. El backend registra un jobId y el agente deduplica en SQLite antes de ejecutar. Se prueban papel agotado, desconexión, reinicio y resultado incierto. Un trabajo aceptado por el spooler no se declara automáticamente impreso; una reimpresión exige autorización y referencia al trabajo original.",
+      "notes": "F1: usar datos comerciales versionados de prueba, UI existente y efectivo. Confirmación local, control de turno, ámbito autorizado, autenticación/autorización de prueba verificable y persistencia real. El outbox se diseña desde esta primera transacción aunque su entrega se active en F3. F2 limita proveedores a una combinación inicial de país, medio y dispositivo acordada. La demo identifica explícitamente qué se simula y qué usa sandbox/hardware real. Impresión aceptada por software no prueba efecto físico. Pago autorizado, venta confirmada y documento fiscal aceptado tienen estados distintos. La habilitación de uso productivo exige homologación y autorización para la modalidad elegida, antes de F5. Roadmap propuesto para revisión con desarrollo y producto. El orden y los criterios son una propuesta editorial para esta presentación, no un calendario aprobado. F02 implementa el recorrido pos-desktop → branch-api → trabajo obtenido por device-agent del puesto → dispositivo local USB/serie/SDK homologado. La modalidad compartida de red/móvil pertenece a F06 después del piloto F05. El backend registra un jobId y el agente deduplica en SQLite antes de ejecutar. Se prueban papel agotado, desconexión, reinicio y resultado incierto. Un trabajo aceptado por el spooler no se declara automáticamente impreso; una reimpresión exige autorización y referencia al trabajo original.",
       "sources": [
         {
           "label": "Roadmap de producto y criterios de avance",
@@ -8279,7 +8287,7 @@
       "id": "slide-15",
       "title": "Del piloto a la expansión",
       "background": "#FFFFFF",
-      "notes": "Antes de habilitar el piloto se requiere aceptación de F1–F4 para el alcance elegido, fiscalidad y pagos homologados, identidad y permisos reales, protección de datos, carga representativa, procedimientos de contingencia, soporte responsable y objetivos operativos acordados. No se declara un piloto exitoso sin evidencia. F5 fija local, cajas, medios, proveedores y operaciones autorizados; prueba instalación, monitoreo, restore y actualización compatible sin borrar ventas nuevas. F6 es una hipótesis de expansión que se reprioriza con producto: segundo país antes de generalizar a todos. El móvil comparte interfaz pero necesita pruebas de host, dispositivo y permisos; no implica venta sin LAN o acceso remoto público. La migración de ERP se coordina con ese programa; no es requisito automático para el primer piloto. Roadmap propuesto para revisión con desarrollo y producto. El orden y los criterios son una propuesta editorial para esta presentación, no un calendario aprobado. El piloto valida instalación y actualización firmadas de device-agent, recuperación de trabajos sin repetir efectos físicos y acceso móvil al mismo dispositivo mediante branch-api. Homologación de impresoras y MICR no acredita un adaptador de pago Transbank.",
+      "notes": "Antes de habilitar el piloto se requiere aceptación de F1–F4 para el alcance elegido, fiscalidad y pagos homologados, identidad y permisos reales, protección de datos, carga representativa, procedimientos de contingencia, soporte responsable y objetivos operativos acordados. No se declara un piloto exitoso sin evidencia. F5 fija local, cajas, medios, proveedores y operaciones autorizados; prueba instalación, monitoreo, restore y actualización compatible sin borrar ventas nuevas. F6 es una hipótesis de expansión que se reprioriza con producto: segundo país antes de generalizar a todos. El móvil comparte interfaz pero necesita pruebas de host, dispositivo y permisos; no implica venta sin LAN o acceso remoto público. La migración de ERP se coordina con ese programa; no es requisito automático para el primer piloto. Roadmap propuesto para revisión con desarrollo y producto. El orden y los criterios son una propuesta editorial para esta presentación, no un calendario aprobado. F05 valida device-agent instalado por puesto: instalación y actualización firmadas, periféricos locales USB/serie/SDK y recuperación de trabajos sin repetir efectos físicos. Después de ese piloto, F06 incorpora dispositivos de red o estación compartida y acceso móvil mediante branch-api; exige validar asignación de destino, permisos, concurrencia y un único dueño por dispositivo físico. Homologación de impresoras y MICR no acredita un adaptador de pago Transbank.",
       "sources": [
         {
           "label": "Roadmap de producto y criterios de avance",

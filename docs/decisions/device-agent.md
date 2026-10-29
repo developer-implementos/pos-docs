@@ -4,20 +4,22 @@
 
 ## Responsabilidad y ubicación
 
-`device-agent` ejecuta trabajos autorizados de impresión térmica, etiquetas y lectura/impresión de cheques. Se instala en el equipo con acceso al periférico: PC de caja para USB/SDK local o equipo autorizado para un dispositivo de red. Una instancia puede servir a varios clientes y dispositivos. Cada equipo físico tiene un único agente controlador activo; sus colas lógicas de recibos, cheques, endoso o MICR pueden compartir mecanismos y requerir exclusión mutua.
+**El primer perfil es por puesto de caja.** En F02, `device-agent` se instala en el mismo PC Windows que `pos-desktop` y controla los periféricos locales asignados a ese puesto: impresión térmica, etiquetas y lectura/impresión de cheques según el hardware homologado. Esta ubicación sigue el modelo local del legacy; el protocolo nuevo conserva autorización, identidad y auditoría en `branch-api`. El agente no se instala por defecto en el servidor de sucursal.
+
+F05 valida este perfil en el piloto. **Los dispositivos de red y la estación compartida se incorporan después, en F06**, mediante la misma aplicación y contratos, con homologación propia. Cada dispositivo físico conserva un único agente controlador activo; sus capacidades de recibos, cheques, endoso o MICR pueden requerir exclusión mutua aunque tengan colas lógicas diferentes.
 
 El agente recibe trabajo de `branch-api`, conserva recepción e intentos, ejecuta adaptadores y entrega evidencia. El backend conserva permisos, documentos y autoridad de negocio. Imprimir un documento existente no emite otro DTE, no confirma una venta ni vuelve a cobrar. La migración de `api-impresion-caja` no acredita integración con Transbank u otro terminal de pago. Un futuro adaptador de pagos requiere su contrato y homologación propios.
 
 | Pieza | Tecnología y ubicación | Propiedad |
 | --- | --- | --- |
 | `pos-desktop` | Angular/PrimeNG dentro de Tauri; puesto | Presentación, solicitud y consulta del trabajo |
-| `pos-mobile` | Angular/PrimeNG dentro de Capacitor; Android/iOS | Mismo contrato autorizado de sucursal, con destinos permitidos |
+| `pos-mobile` | Angular/PrimeNG dentro de Capacitor; Android/iOS | Acceso a periféricos compartidos previsto para F06, con destinos permitidos y aceptación propia |
 | `branch-api` / `libs/backend/devices` | NestJS/Fastify; servidor de sucursal | Autorización, registro de dispositivos, asignación, trabajo y auditoría en PostgreSQL |
-| `device-agent` | C#/.NET; equipo Windows conectado al hardware | Recepción durable, ejecución exclusiva, adaptadores y evidencia |
+| `device-agent` | C#/.NET; PC Windows de cada puesto en F02/F05 | Recepción durable, ejecución exclusiva, adaptadores locales y evidencia; estación compartida como perfil posterior en F06 |
 | Diario técnico del agente | SQLite local, privado del agente | Identidades, hashes, intentos y resultados pendientes; sin tablas de ventas, precios o credenciales SQL de sucursal |
 | Periférico | Driver/SDK/protocolo del modelo homologado | Efecto físico y capacidades de consulta realmente disponibles |
 
-El backend usa su módulo `devices` para coordinar. Ese módulo no es otro proceso ni contiene los drivers Windows. La aplicación C# conserva sus adaptadores privados; se extraen bibliotecas cuando exista reutilización comprobada. Los contratos públicos de `devices` usan esquemas versionados y fixtures para validar TypeScript y C#; compartir repositorio no permite importar tipos TypeScript desde .NET. Los sobres técnicos comunes pertenecen a `shared/contracts` en la estructura objetivo.
+El backend usa su módulo `devices` para coordinar. Ese módulo no es otro proceso ni contiene los drivers Windows. La aplicación C# conserva sus adaptadores privados; se extraen bibliotecas cuando exista reutilización comprobada. Los contratos públicos de `devices` usan esquemas versionados y fixtures para validar TypeScript y C#; compartir repositorio no permite importar tipos TypeScript desde .NET. Los sobres técnicos comunes pertenecen a `shared/contracts` en la estructura objetivo. Cambiar de perfil o instalar varias instancias no crea otra aplicación del monorepo.
 
 ## Tecnología y ejecución nativa
 
@@ -27,36 +29,65 @@ El legacy depende de .NET Framework 4.7.2, Microsoft POS for .NET, APIs Win32 y 
 
 Se selecciona una API/SDK compatible con servicio para cada adaptador. Si un fabricante exige otro runtime, arquitectura o sesión interactiva, se aísla en un ejecutor supervisado con IPC privado y permisos restringidos. Su presencia depende de esa evidencia; no constituye otra aplicación de negocio por defecto. La indisponibilidad de la sesión o driver se informa como capacidad no disponible.
 
-NestJS permanece en la coordinación de `branch-api`. El agente .NET evita añadir un segundo host Node para envolver los mismos SDK Windows. Tauri y Capacitor siguen siendo las shells de los clientes; no son el dueño del ciclo de vida del agente compartido.
+NestJS permanece en la coordinación de `branch-api`. El agente .NET evita añadir un segundo host Node para envolver los mismos SDK Windows. Tauri y Capacitor siguen siendo las shells de los clientes; no son el dueño del ciclo de vida del agente. Cerrar la ventana del puesto no detiene los trabajos admitidos cuya ejecución siga autorizada.
 
 ## Conexiones y recorrido de un trabajo
 
 ```mermaid
 flowchart TB
-    Desktop["pos-desktop · Angular + Tauri"] -->|"Solicitar / consultar trabajo · HTTPS LAN"| API
-    Mobile["pos-mobile · Angular + Capacitor"] -->|"Solicitar / consultar trabajo · HTTPS LAN"| API
+    subgraph Puesto["F02 / F05 · mismo puesto Windows"]
+        Desktop["pos-desktop · Angular + Tauri"]
+        Agent["device-agent · C#/.NET<br/>Instancia asignada al puesto"]
+        Journal[("Diario técnico SQLite local")]
+        Hardware["Periféricos locales del puesto<br/>Impresora · Zebra · lector MICR"]
+        Agent -->|"SQLite: recepción e intentos durables"| Journal
+        Agent -->|"USB / serie / driver / SDK homologado"| Hardware
+    end
+    Desktop -->|"Solicitar / consultar trabajo del puesto<br/>HTTPS LAN"| API
     API["branch-api · NestJS/Fastify<br/>devices: permisos, asignación y auditoría"] -->|"Trabajos autorizados y evidencia · PostgreSQL"| DB[("PostgreSQL de sucursal")]
-    Agent["device-agent · C#/.NET · Windows"] -->|"Obtener trabajos y reportar evidencia<br/>HTTPS LAN iniciado por agente"| API
-    Agent -->|"Recepción e intentos durables · SQLite"| Journal[("Diario técnico local")]
-    Agent -->|"Driver / SDK homologado"| Hardware["Impresora · Zebra · lector MICR"]
+    Agent -->|"Obtener trabajos y reportar evidencia<br/>HTTPS LAN iniciado por agente"| API
 ```
 
 | Iniciador → destino | Propósito | Transporte y garantía |
 | --- | --- | --- |
-| Cliente → `branch-api` | Solicitar impresión/lectura y consultar estado | HTTPS autenticado por LAN; backend valida operador, puesto, ámbito, destino y capacidad |
+| `pos-desktop` → `branch-api` | Solicitar impresión/lectura del puesto y consultar estado | HTTPS autenticado por LAN; backend valida operador, puesto, ámbito, destino y capacidad; F02 no habilita uso compartido entre puestos |
 | `branch-api` → PostgreSQL de sucursal | Guardar trabajo, autorización y auditoría | SQL/PostgreSQL; commit anterior a declarar aceptada la solicitud |
 | `device-agent` → `branch-api` | Obtener trabajos asignados | HTTPS LAN saliente, inicialmente consulta prolongada; respuesta contiene el comando autorizado, no una nueva conexión entrante al puesto |
 | `device-agent` → SQLite | Guardar recepción, intento y evidencia | Transacción local antes del acuse durable; no hay transacción distribuida con PostgreSQL o hardware |
 | `device-agent` → periférico | Ejecutar capacidad física | Driver/SDK del modelo; serialización por dispositivo físico y grupos excluyentes |
 | `device-agent` → `branch-api` | Reportar recepción y resultado identificado | HTTPS LAN autenticado; agente conserva evidencia hasta acuse posterior a persistencia del backend |
 
-1. El cliente solicita imprimir un documento existente en un destino permitido. El backend deriva identidad y ámbito de la sesión autenticada.
+1. El cliente solicita imprimir un documento existente en un destino asignado a su puesto. El backend deriva identidad y ámbito de la sesión autenticada; F02 rechaza destinos de otro puesto, aunque su agente esté conectado a la misma LAN.
 2. `branch-api` guarda `jobId`, documento/versión, hash, capacidad, agente/dispositivo asignados y autorización. Una copia intencional requiere permiso y motivo propios.
 3. El agente solicita trabajo con su identidad de instalación. Guarda recepción y hash antes de acusar; un duplicado idéntico obtiene el estado existente, un contenido distinto con el mismo ID se rechaza.
 4. El agente registra el intento antes de ejecutar el adaptador. Conserva identificador del spooler, bytes/resultado y evidencia que ofrezca el dispositivo, sin inferir salida física por aceptación de software.
 5. El backend persiste el resultado y confirma su recepción. El cliente consulta ese estado aunque se haya cerrado la ventana que originó el trabajo.
 
-El móvil utiliza la red de sucursal y el mismo contrato; no llama al `localhost` del PC. Su acceso requiere enrolamiento, permisos nativos de red y confianza TLS homologados. Una impresora conectada directamente por Bluetooth/USB al móvil requiere un plugin Capacitor y SDK móvil específicos, con autorización e identidad equivalentes; no es una capacidad acreditada por el agente Windows.
+<span id="network-expansion"></span>
+
+## F06 · Dispositivos de red y estación compartida
+
+Esta evolución se habilita **después de aceptar el piloto F05**. El primer alcance candidato son impresoras de recibos o etiquetas accesibles por Ethernet/Wi-Fi mediante un protocolo o SDK comprobado. Que un equipo tenga dirección IP no acredita su compatibilidad ni que admita uso compartido. Lectores MICR, cajones y terminales de pago requieren aceptación específica; no quedan incluidos por homologar una impresora.
+
+```mermaid
+flowchart TB
+    Desktop["pos-desktop · puestos autorizados"] -.->|"Solicitar / consultar · HTTPS LAN"| API
+    Mobile["pos-mobile · Capacitor<br/>Uso compartido habilitado en F06"] -.->|"Solicitar / consultar · HTTPS LAN"| API
+    API["branch-api · devices<br/>Asignación y permisos por destino"] -->|"Trabajo y auditoría · PostgreSQL"| DB[("PostgreSQL de sucursal")]
+    subgraph Estacion["F06 · estación Windows compartida por homologar"]
+        Agent["device-agent · misma aplicación .NET<br/>Instancia con dispositivos asignados"]
+        Journal[("Diario técnico SQLite")]
+        Agent -->|"Recepción y evidencia · SQLite"| Journal
+    end
+    Agent -.->|"Obtener trabajos / reportar · HTTPS LAN"| API
+    Agent -.->|"Red local · protocolo / SDK homologado"| Hardware["Impresoras de red seleccionadas<br/>Sin activación automática de otros dispositivos"]
+```
+
+La estación puede ser un equipo Windows dedicado o, si es compatible y se acepta compartir su riesgo de falla/mantenimiento, el servidor de sucursal. La primera entrega por puesto no depende de esta decisión. Agentes locales y compartidos pueden coexistir con dispositivos distintos; ningún dispositivo tiene dos dueños activos. Dirección de red y configuración del adaptador se resuelven desde un registro autorizado, no desde una URL arbitraria enviada por el cliente.
+
+El móvil utilizará la LAN y el contrato de `branch-api`, con enrolamiento, permisos nativos de red, confianza TLS y selección de destino homologados; no llama al `localhost` del PC. Si el dispositivo exige interacción humana exclusiva, se debe identificar el operador/sesión y evitar que una solicitud remota capture la interacción de otro puesto. Bluetooth/USB conectado directamente al móvil requiere plugin Capacitor y SDK específicos y sigue fuera de este perfil de red.
+
+F06 exige comprobar concurrencia entre puestos, orden y exclusión por dispositivo, pérdida de conexión después del envío, recuperación del agente, cambio de dirección, permisos cruzados y actualización compatible. Cambiar de controlador no repite un efecto incierto. La habilitación se hace por sucursal/modelo mediante configuración aprobada, con métricas y un procedimiento para suspender nuevas solicitudes sin perder pendientes. El entregable detallado es [F06-05](/guide/roadmap/phase-06/#work-f06-05).
 
 ## Estados, duplicados e incertidumbre
 
@@ -90,15 +121,16 @@ BullMQ y RabbitMQ no son dependencias de este recorrido inicial. Una futura inco
 
 ## Entrega y aceptación
 
-La entrega se integra en [F02: pagos, fiscalidad y dispositivos](/guide/roadmap/phase-02/), con acceso móvil comprobado en [F06](/guide/roadmap/phase-06/). No se crea un scaffold que declare operaciones físicas exitosas sin un adaptador real.
+La primera entrega corresponde a [F02: agente por puesto](/guide/roadmap/phase-02/#work-f02-03) y se prueba en [F05: piloto controlado](/guide/roadmap/phase-05/). [F06-05: dispositivos de red y estación compartida](/guide/roadmap/phase-06/#work-f06-05) amplía ese perfil después del piloto, junto al acceso móvil de F06-02. No se crea un scaffold que declare operaciones físicas exitosas sin un adaptador real.
 
 | Validación | Evidencia requerida |
 | --- | --- |
 | Compatibilidad | Modelo/firmware, conexión, SDK, licencia, runtime, x86/x64, cuenta y sesión compatibles |
-| Trabajo completo | Documento autorizado → recepción durable → adaptador → estado visible en escritorio y móvil |
+| Trabajo completo · F02/F05 | Documento autorizado del puesto → recepción durable → adaptador local → estado visible en escritorio |
 | Recuperación | ACK perdido, reinicio de agente/spooler, pérdida de LAN y mismo ID con contenido distinto |
 | Hardware | Sin papel, tapa abierta, desconexión USB, escritura parcial y resultado no consultable |
-| Exclusión | Solicitudes simultáneas desde móvil/escritorio y capacidades del mismo equipo físico |
+| Exclusión · F02/F05 | Comandos concurrentes del puesto y capacidades del mismo equipo físico; destino de otro puesto rechazado |
+| Red y uso compartido · F06 | Modelo/protocolo homologado, solicitudes de puestos/móvil autorizados, aislamiento entre sucursales, fallos de red y recuperación sin duplicados |
 | MICR | Timeout real, cancelación, formato por país, lectura inválida y liberación de recursos |
 | Entrega | Instalador firmado, privilegios mínimos, actualización/rollback con pendientes y rotación de credencial |
 

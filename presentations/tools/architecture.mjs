@@ -8,8 +8,8 @@ export const containerOverview = projectArchitecture(architecture,
   ['desktop', 'mobile', 'bridge', 'branch-api', 'branch-db', 'branch-sync', 'country-api', 'country-db', 'erp-worker'],
   { id: 'presentation-containers', edgeIds: ['desktop-api', 'mobile-api', 'device-command', 'commit-local', 'sync-local', 'sync-country', 'accept-country', 'claim-report'] });
 export const deviceOverview = projectArchitecture(architecture,
-  ['desktop', 'mobile', 'branch-api', 'branch-db', 'bridge', 'device-journal', 'devices'],
-  { id: 'presentation-devices', edgeIds: ['desktop-api', 'mobile-api', 'device-jobs-local', 'device-command', 'bridge-evidence', 'agent-journal', 'hardware-command'] });
+  ['desktop', 'branch-api', 'branch-db', 'bridge', 'device-journal', 'devices'],
+  { id: 'presentation-devices', edgeIds: ['desktop-api', 'device-jobs-local', 'device-command', 'bridge-evidence', 'agent-journal', 'hardware-command'] });
 const blue = '#0545BA', ink = '#24334B', pale = '#EFF4FF', green = '#007B6D';
 const box = (left, top, width, height) => ({ left, top, width, height });
 const shape = (left, top, width, height, fill = pale) => ({ type: 'shape', geometry: 'rect', position: box(left, top, width, height), fill, line: { fill, width: 0 } });
@@ -46,7 +46,7 @@ export function architectureSlide(slide) {
       text('País', 686, 224, 240, 32, 'group', blue), text('Red autorizada', 996, 224, 220, 32, 'group', blue),
       ...node('desktop', 64, 270, 212, 98, 'Shell Tauri\nFrontend Angular'),
       ...node('mobile', 64, 390, 212, 98, 'Shell Capacitor\nFrontend Angular'),
-      ...node('bridge', 64, 510, 212, 98, '.NET / Windows\nPeriféricos'),
+      ...node('bridge', 64, 510, 212, 98, '.NET / Windows\nF02 · por puesto'),
       ...node('branch-api', 352, 280, 262, 94, 'Reglas y permisos'),
       ...node('branch-db', 352, 420, 262, 94, 'Negocio + outbox'),
       ...node('branch-sync', 352, 550, 262, 74, 'Intercambio durable'),
@@ -65,24 +65,24 @@ export function architectureSlide(slide) {
     ];
   } else if (slide.architectureView === 'devices') {
     body = [
-      text('Clientes', 64, 224, 220, 32, 'group', blue), text('Servidor de sucursal', 352, 224, 310, 32, 'group', blue),
-      text('Equipo con hardware', 754, 224, 360, 32, 'group', blue),
+      text('F02 · Escritorio', 64, 224, 258, 32, 'group', blue), text('Servidor de sucursal', 352, 224, 310, 32, 'group', blue),
+      text('Mismo PC de caja', 754, 224, 360, 32, 'group', blue),
       ...node('desktop', 64, 280, 212, 98, 'Tauri + Angular'),
-      ...node('mobile', 64, 430, 212, 98, 'Capacitor + Angular'),
       ...node('branch-api', 352, 280, 262, 118, 'NestJS · devices\nAutoriza y coordina'),
       ...node('branch-db', 352, 478, 262, 98, 'Trabajos y auditoría'),
       ...node('bridge', 754, 280, 232, 118, '.NET / C# · Windows\nEjecuta y recupera'),
       ...node('device-journal', 754, 478, 248, 98, 'Intentos y evidencia\nSin autoridad de ventas', 'SQLite'),
-      ...node('devices', 1060, 280, 156, 118, 'Impresión\nLectura MICR', 'Periféricos'),
+      ...node('devices', 1060, 280, 156, 118, 'USB / serie\nSDK local', 'Periféricos'),
       ...connection('desktop-api', [[276, 326], [352, 326]], 'HTTPS', [282, 300, 68, 22]),
-      ...connection('mobile-api', [[276, 476], [314, 476], [314, 364], [352, 364]], 'HTTPS', [280, 490, 68, 22]),
       ...connection('device-command', [[754, 328], [614, 328]], 'Obtener trabajo', [624, 300, 128, 24]),
       ...connection('bridge-evidence', [[754, 372], [614, 372]], 'Reportar estado', [624, 348, 128, 24]),
       text('HTTPS / LAN\niniciado por agente', 624, 402, 128, 64, 'label'),
       ...connection('agent-journal', [[870, 398], [870, 478]], 'SQLite', [882, 430, 96, 24]),
       ...connection('hardware-command', [[986, 338], [1060, 338]], 'Driver /\nSDK', [992, 292, 68, 44]),
       ...connection('device-jobs-local', [[483, 398], [483, 478]], 'PostgreSQL', [495, 430, 120, 24]),
-      text('Solicitud y resultado\npor branch-api.\nSin acceso SQL.', 64, 558, 230, 66, 'label'),
+      shape(64, 440, 258, 178),
+      text('F06 · Evolución', 78, 454, 230, 32, 'title', blue),
+      text('Después del piloto F05.\nRed y móvil compartido:\nasignación y permisos\npor homologar.', 78, 496, 230, 100),
       text('Mismo jobId · un dueño por equipo físico · enviado al spooler ≠ papel impreso.', 352, 594, 864, 32, 'label'),
     ];
   } else if (slide.architectureView === 'erp-topology') {

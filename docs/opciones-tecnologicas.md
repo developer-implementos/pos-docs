@@ -131,7 +131,7 @@ Se propone empaquetar los recursos necesarios de la interfaz para que pueda arra
 flowchart LR
     subgraph Caja["Puesto de caja"]
         UI["pos-desktop<br/>Frontend Angular/PrimeNG<br/>Shell nativa Tauri"]
-        Agent["device-agent<br/>C#/.NET · Windows<br/>Adaptadores homologados"]
+        Agent["device-agent<br/>C#/.NET · puesto Windows<br/>F02/F05 · adaptadores locales"]
         Journal[("SQLite técnico<br/>Recepción, intentos y evidencia")]
         Hardware["Impresora, Zebra o lector MICR"]
         Agent -->|"SQLite: registrar y recuperar intentos"| Journal
@@ -145,7 +145,7 @@ flowchart LR
         Worker -->|"PostgreSQL: entrega y activación de versiones"| DB
     end
     UI -->|"HTTPS LAN: solicitar operación y consultar estado"| API
-    Mobile["pos-mobile<br/>Angular/PrimeNG + Capacitor"] -->|"HTTPS LAN: solicitar operación y consultar estado"| API
+    Mobile["pos-mobile · F06<br/>Angular/PrimeNG + Capacitor"] -->|"HTTPS LAN: solicitar operación y consultar estado"| API
     Agent -->|"HTTPS LAN: obtener trabajos y reportar evidencia"| API
     Worker -->|"HTTPS: entrega, consulta y acuses"| Central["country-api<br/>Recepción y trabajo durable"]
     ERPWorker["erp-worker en la red autorizada del ERP<br/>Fachada, ACL y adaptadores"] -->|"HTTPS saliente: solicitar trabajo y reportar"| Central
@@ -155,7 +155,7 @@ El diagrama corresponde al perfil WAN. Empaquetar el frontend en la shell nativa
 
 ### Relación con NestJS y los dispositivos
 
-`branch-api` ejecuta NestJS/Fastify en el servidor de sucursal, fuera del WebView. Su contexto `devices` autoriza, asigna y audita los trabajos. La ejecución física pertenece a **`apps/device-agent`, C#/.NET en Windows**, con ciclo de vida independiente de Tauri y Capacitor. El agente inicia HTTPS LAN hacia `branch-api`; ambos clientes solicitan operaciones al backend. El [contrato y despliegue del agente](decisions/device-agent.md) fija estas responsabilidades y las validaciones pendientes.
+`branch-api` ejecuta NestJS/Fastify en el servidor de sucursal, fuera del WebView. Su contexto `devices` autoriza, asigna y audita los trabajos. La ejecución física pertenece a **`apps/device-agent`, C#/.NET instalado por puesto Windows en F02/F05**, con ciclo de vida independiente de Tauri y Capacitor. La estación compartida y los dispositivos de red pertenecen a F06, después del piloto. El agente inicia HTTPS LAN hacia `branch-api`; el escritorio solicita trabajos del puesto al backend y el móvil accede a periféricos compartidos sólo al aceptar F06. El [contrato y despliegue del agente](decisions/device-agent.md) fija estas responsabilidades y las validaciones pendientes.
 
 Migrar impresión, Zebra y cheque/MICR mediante adaptadores homologados. El legado revisado no implementa Transbank; cualquier SDK de pago constituye una capacidad futura por validar. SQLite conserva el diario técnico del agente, sin autoridad de ventas. La compatibilidad de drivers, arquitectura de proceso, sesión de Windows y modo de ejecución debe comprobarse antes de elegir el runtime y empaquetado de producción.
 
@@ -190,7 +190,7 @@ Nx tiene integraciones para Angular y NestJS. Para Rust/Tauri y otros componente
 apps/
   pos-desktop/                  # Aplicación completa: shell Tauri + frontend Angular
   pos-mobile/                   # Aplicación completa: shell Capacitor + frontend Angular
-  device-agent/                 # Agente C#/.NET Windows de periféricos; implementación pendiente
+  device-agent/                 # Agente C#/.NET Windows por puesto; red compartida en F06; implementación pendiente
   branch-api/                   # API y composición de negocio de sucursal
   branch-sync-worker/           # Proceso de entrega y recepción de sucursal
   country-api/                  # API de recepción y capacidades de país
@@ -249,7 +249,7 @@ El prototipo utiliza `libs/domain` y `libs/data-access` para reglas y adaptadore
 | --- | --- | --- | --- |
 | `pos-desktop` | Puesto Windows | Aplicación completa: shell nativa Tauri y frontend Angular | Frontend con adaptadores mock; integración nativa real pendiente |
 | `pos-mobile` | Dispositivo Android/iOS | Aplicación completa: shell nativa Capacitor y frontend Angular | Frontend con adaptadores mock; ejecución y distribución nativas por verificar |
-| `device-agent` | Equipo Windows con acceso al periférico | Agente C#/.NET autónomo; trabajos y evidencia por HTTPS con branch-api; diario técnico SQLite | Decisión acordada; app, protocolo y adaptadores pendientes de implementación y homologación |
+| `device-agent` | PC Windows de cada puesto (F02/F05); estación de red compartida posterior (F06) | Agente C#/.NET por puesto; trabajos HTTPS con branch-api y diario SQLite; perfil de red compartido en F06 | Decisión acordada; app, protocolo y adaptadores pendientes de implementación y homologación |
 | `branch-api` | Sucursal | API y composición de negocio de sucursal | Base HTTP local; sin persistencia ni operaciones comerciales |
 | `branch-sync-worker` | Sucursal | Proceso de entrega y recepción de sucursal | Esqueleto local; sin jobs ni sincronización real |
 | `country-api` | País | API de recepción y capacidades de país | Base HTTP local; sin recepción de ventas ni consolidación |

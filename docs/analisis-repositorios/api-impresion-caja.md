@@ -143,7 +143,7 @@ Se volvió a consultar `main`, que conserva el SHA identificado en este informe.
 - **Identidad del spooler:** los helpers RAW declaran `StartDocPrinter` como `bool`; Windows devuelve un identificador de trabajo `DWORD`. Se pierde esa referencia y tampoco se conserva/comprueba `dwWritten`. La nueva integración debe registrar identificador, resultado y bytes, manteniendo que aceptación no prueba papel impreso. [Contrato Windows](https://learn.microsoft.com/en-us/windows/win32/printdocs/startdocprinter), [I06], [I08].
 - **Equipo físico y compatibilidad:** la inicialización envía comandos a la cola de cheque frontal incluso antes de otras impresiones. Recibos, endoso y MICR pueden compartir mecanismos físicos; se requiere exclusión por equipo y grupos de capacidades, no sólo por nombre de cola. El proyecto referencia POS for .NET y un componente x86: arquitectura, runtime y sesión deben validarse con el fabricante. [I03], [I05].
 
-El destino acordado es [`apps/device-agent`, C#/.NET Windows](../decisions/device-agent.md), con coordinación en `branch-api`, diario técnico SQLite y acceso desde clientes de escritorio/móvil mediante la API de sucursal. Esta decisión no acredita migración ni homologación productiva.
+El destino acordado es [`apps/device-agent`, C#/.NET Windows](../decisions/device-agent.md), inicialmente instalado por puesto en F02/F05, con coordinación en `branch-api` y diario SQLite. El perfil de red/estación compartida y el acceso móvil se incorporan después, en F06. Se conserva la ubicación local como referencia; el nuevo protocolo no hereda las llamadas anónimas del legacy. Esta decisión no acredita migración ni homologación productiva.
 
 ## 4. Contraste con la presentación
 

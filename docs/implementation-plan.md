@@ -26,7 +26,7 @@ El producto revisado tiene seis puntos de entrada. La estructura objetivo añade
 | `branch-sync-worker` | Composición técnica de un proceso independiente | Entrega y recepción durables, reintentos y recuperación con los datos reales de sucursal |
 | `country-api` | Composición técnica de la API de país | Recepción durable, consolidación y contratos de trabajo y resultados de integración |
 | `erp-worker` | Composición técnica del proceso de integración | Traducción, comunicación y conciliación con el ERP mediante contratos comprobados |
-| `device-agent` | Decisión acordada; proyecto aún no incorporado | Host C#/.NET en Windows, diario SQLite, protocolo HTTPS LAN con `branch-api`, adaptadores homologados y ejecución independiente de las ventanas cliente |
+| `device-agent` | Decisión acordada; proyecto aún no incorporado | Host C#/.NET en cada puesto Windows (F02/F05), diario SQLite y protocolo HTTPS LAN con `branch-api`; red compartida y móvil en F06 tras homologación |
 
 Los dos clientes comparten bibliotecas de presentación y flujos. Las cuatro aplicaciones backend reutilizan mecanismos técnicos y delimitan sus contextos de negocio. La [arquitectura de la implementación](architecture.md), la [base de API](api.md) y los [contratos mock](mock-api.md) detallan sus alcances. El [catálogo del monorepo](monorepo.md) distingue la estructura objetivo de la evidencia del código.
 

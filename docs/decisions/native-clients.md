@@ -82,6 +82,8 @@ Esta separación permite evolucionar permisos, integración nativa, empaquetado 
 
 La composición Angular compartida centraliza las pantallas y permite mantener reglas de interfaz, accesibilidad y experiencia comunes. Cada shell nativa conserva sus permisos, integración con la plataforma y ciclo de entrega.
 
-## Periféricos compartidos
+<span id="periféricos-compartidos"></span>
 
-`device-agent` es una aplicación C#/.NET Windows autónoma, separada de ambas shells. Escritorio y móvil solicitan/consultan trabajos autorizados en `branch-api`; el agente obtiene trabajo y reporta evidencia directamente por HTTPS LAN. Cerrar una ventana no pierde su diario técnico SQLite. El [ADR-17](device-agent.md) define el recorrido y la homologación. Una capacidad conectada directamente al móvil requiere plugin Capacitor y SDK específicos; no se acredita por disponer del agente Windows.
+## Periféricos por puesto y evolución compartida
+
+`device-agent` es una aplicación C#/.NET Windows autónoma, separada de ambas shells. F02 instala el agente en el mismo PC Windows que `pos-desktop`, con dispositivos locales asignados al puesto; F05 valida este perfil. F06 incorpora después dispositivos de red, estación compartida y acceso móvil homologado. Los clientes solicitan/consultan trabajos autorizados en `branch-api`; el agente obtiene trabajo y reporta evidencia directamente por HTTPS LAN. Cerrar una ventana no pierde su diario técnico SQLite. El [ADR-17](device-agent.md) define el recorrido y la homologación. Una capacidad conectada directamente al móvil requiere plugin Capacitor y SDK específicos; no se acredita por disponer del agente Windows.

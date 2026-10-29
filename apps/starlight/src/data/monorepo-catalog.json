@@ -21,8 +21,8 @@
     },
     {
       "name": "device-agent",
-      "location": "Equipo Windows con acceso al periférico",
-      "description": "Agente C#/.NET autónomo; trabajos y evidencia por HTTPS con branch-api; diario técnico SQLite",
+      "location": "PC Windows de cada puesto (F02/F05); estación de red compartida posterior (F06)",
+      "description": "Agente C#/.NET por puesto; trabajos HTTPS con branch-api y diario SQLite; perfil de red compartido en F06",
       "state": "Decisión acordada; app, protocolo y adaptadores pendientes de implementación y homologación",
       "inReviewedWorkspace": false
     },
@@ -189,7 +189,7 @@
       },
       {
         "path": "apps/device-agent",
-        "description": "Agente C#/.NET Windows de periféricos; implementación pendiente",
+        "description": "Agente C#/.NET Windows por puesto; red compartida en F06; implementación pendiente",
         "state": "por incorporar"
       },
       {

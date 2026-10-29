@@ -23,7 +23,7 @@ La estructura define siete aplicaciones objetivo y el proyecto de pruebas `pos-c
 apps/
   pos-desktop/                  # Aplicación completa: shell Tauri + frontend Angular
   pos-mobile/                   # Aplicación completa: shell Capacitor + frontend Angular
-  device-agent/                 # Agente C#/.NET Windows de periféricos; implementación pendiente
+  device-agent/                 # Agente C#/.NET Windows por puesto; red compartida en F06; implementación pendiente
   branch-api/                   # API y composición de negocio de sucursal
   branch-sync-worker/           # Proceso de entrega y recepción de sucursal
   country-api/                  # API de recepción y capacidades de país
@@ -138,7 +138,7 @@ Una suite `pos-system-e2e` requerirá un recorrido real sucursal–persistencia�
 | --- | --- | --- | --- |
 | `pos-desktop` | Puesto Windows | Aplicación completa: shell nativa Tauri y frontend Angular | Frontend con adaptadores mock; integración nativa real pendiente |
 | `pos-mobile` | Dispositivo Android/iOS | Aplicación completa: shell nativa Capacitor y frontend Angular | Frontend con adaptadores mock; ejecución y distribución nativas por verificar |
-| `device-agent` | Equipo Windows con acceso al periférico | Agente C#/.NET autónomo; trabajos y evidencia por HTTPS con branch-api; diario técnico SQLite | Decisión acordada; app, protocolo y adaptadores pendientes de implementación y homologación |
+| `device-agent` | PC Windows de cada puesto (F02/F05); estación de red compartida posterior (F06) | Agente C#/.NET por puesto; trabajos HTTPS con branch-api y diario SQLite; perfil de red compartido en F06 | Decisión acordada; app, protocolo y adaptadores pendientes de implementación y homologación |
 | `branch-api` | Sucursal | API y composición de negocio de sucursal | Base HTTP local; sin persistencia ni operaciones comerciales |
 | `branch-sync-worker` | Sucursal | Proceso de entrega y recepción de sucursal | Esqueleto local; sin jobs ni sincronización real |
 | `country-api` | País | API de recepción y capacidades de país | Base HTTP local; sin recepción de ventas ni consolidación |
@@ -304,4 +304,4 @@ Las claves de almacenamiento de la demostración son `corporate-pos:demo:v1` y `
 
 ## Aplicación nativa de periféricos
 
-`apps/device-agent` compone el host C#/.NET Windows, su diario técnico SQLite y adaptadores privados de impresión/MICR. `libs/backend/devices` coordina autorización, trabajos y auditoría en `branch-api`; sus contratos de red se validan con esquemas y fixtures comunes a TypeScript y C#. Los sobres técnicos reutilizables corresponden a `shared/contracts`, sin mover los contratos de negocio fuera de su contexto. Nx orquesta build/test/package .NET en Windows; ESLint y las utilidades Pino de Node no se importan en C#. La telemetría conserva los mismos identificadores y restricciones de datos mediante herramientas propias del runtime. Tecnología, instalación y recuperación se definen en [ADR-17](decisions/device-agent.md).
+`apps/device-agent` compone el host C#/.NET Windows, su diario técnico SQLite y adaptadores privados de impresión/MICR. Se instala inicialmente por puesto (F02/F05); el perfil de red y estación compartida se incorpora después en F06, con la misma aplicación y contratos. `libs/backend/devices` coordina autorización, trabajos y auditoría en `branch-api`; sus contratos de red se validan con esquemas y fixtures comunes a TypeScript y C#. Los sobres técnicos reutilizables corresponden a `shared/contracts`, sin mover los contratos de negocio fuera de su contexto. Nx orquesta build/test/package .NET en Windows; ESLint y las utilidades Pino de Node no se importan en C#. La telemetría conserva los mismos identificadores y restricciones de datos mediante herramientas propias del runtime. Tecnología, instalación y recuperación se definen en [ADR-17](decisions/device-agent.md).

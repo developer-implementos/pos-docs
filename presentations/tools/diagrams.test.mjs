@@ -172,6 +172,8 @@ test('the overview reuses seven target application identities and projects the t
 
 test('the device view preserves backend authorization and agent-initiated execution boundaries', () => {
   const relationships = new Map(deviceOverview.edges.map(edge => [edge.id, edge]));
+  assert.ok(!deviceOverview.nodes.some(node => node.id === 'mobile'), 'F02 describes the agent installed per workstation; shared mobile peripherals belong to F06');
+  assert.ok(!relationships.has('mobile-api'), 'The first delivery must not imply shared mobile access');
   for (const id of ['device-command', 'bridge-evidence']) {
     assert.equal(relationships.get(id)?.from, 'bridge', `${id}: the agent initiates HTTPS`);
     assert.equal(relationships.get(id)?.to, 'branch-api');

@@ -207,7 +207,8 @@
           "Aceptar F01 para el recorrido elegido y conservar sus evidencias de transacción, permisos e identidad estable.",
           "Seleccionar una combinación de país, medio, proveedor, modalidad fiscal y dispositivo; la selección y sus capacidades requieren acuerdo, no están fijadas por este plan.",
           "Disponer de contratos, acceso autorizado a sandbox y hardware cuando corresponda, con responsables de pago, fiscalidad y soporte del dispositivo.",
-          "Acordar consulta de resultado, referencias externas, tratamiento de incertidumbre y condiciones para autorizar una operación nueva."
+          "Acordar consulta de resultado, referencias externas, tratamiento de incertidumbre y condiciones para autorizar una operación nueva.",
+          "Fijar el perfil por puesto: mismo PC Windows para cliente y agente, dispositivos locales asignados y sin habilitación compartida o móvil en esta entrega."
         ],
         "work": [
           {
@@ -252,7 +253,7 @@
           },
           {
             "id": "F02-03",
-            "title": "Agente autónomo y evidencia de periféricos",
+            "title": "Agente por puesto y periféricos locales",
             "apps": [
               "pos-desktop",
               "branch-api",
@@ -264,10 +265,10 @@
               "libs/backend/payments",
               "libs/backend/fiscal"
             ],
-            "deliverable": "device-agent C#/.NET Windows con trabajo autorizado en branch-api, diario técnico SQLite y primera impresión homologada, recuperable con la ventana POS cerrada.",
+            "deliverable": "device-agent C#/.NET instalado en cada puesto Windows del alcance inicial, con periféricos locales asignados, autorización en branch-api y diario SQLite recuperable con la ventana POS cerrada.",
             "tasks": [
-              "Inventariar modelo, driver, SDK, runtime, x86/x64 y sesión; seleccionar vía soportada de impresión. System.Drawing.Printing no se traslada a un servicio Windows sin revisar esa incompatibilidad.",
-              "Implementar host supervisado y HTTPS LAN iniciado por device-agent para obtener trabajos y reportar evidencia, con identidad de instalación y permisos acotados.",
+              "Homologar la combinación inicial de puesto Windows, periférico USB/serie, driver/SDK, runtime, x86/x64 y sesión. Elegir una vía de impresión soportada; no trasladar System.Drawing.Printing a un servicio Windows sin resolver su incompatibilidad.",
+              "Instalar el agente en el mismo PC que pos-desktop, con identidad de puesto y dispositivo. Iniciar HTTPS LAN hacia branch-api para obtener trabajos y reportar evidencia; rechazar destinos de otros puestos y comandos sin autorización.",
               "Guardar recepción e intentos en SQLite antes del acuse; deduplicar jobId y hash, conservar referencia de spooler y resultados pendientes de comunicar.",
               "Serializar por dispositivo físico y capacidades excluyentes; MICR requiere espera asíncrona, timeout, cancelación y liberación del dispositivo.",
               "Separar spooler de salida física, conservar incertidumbre tras cortes y exigir autorización/motivo para una nueva copia del mismo documento."
@@ -335,8 +336,8 @@
           },
           {
             "id": "F02-V08",
-            "scenario": "Dos clientes solicitan impresión y lectura MICR del mismo equipo, se cancela la lectura y se cierra pos-desktop.",
-            "expected": "Un agente controla el equipo físico, respeta exclusión/timeout y libera recursos; los trabajos autorizados mantienen estado recuperable independientemente de la ventana."
+            "scenario": "En el mismo puesto coinciden impresión y lectura MICR, se cancela la lectura y se cierra pos-desktop; otra caja intenta usar ese dispositivo.",
+            "expected": "El agente respeta exclusión y timeout, libera recursos y conserva los trabajos autorizados aunque cierre la ventana. La solicitud de otra caja se rechaza: F02 sólo habilita el destino asignado al puesto."
           }
         ],
         "parallel": [
@@ -347,7 +348,8 @@
         "deferred": [
           "La homologación y habilitación productiva se comprueban antes del piloto; el éxito del sandbox no las sustituye.",
           "Otros proveedores, medios y dispositivos requieren aceptación propia; el primer adaptador no acredita compatibilidad universal.",
-          "La integración ERP y la operación sin Internet sólo se aceptan con las políticas y recorridos de F03."
+          "La integración ERP y la operación sin Internet sólo se aceptan con las políticas y recorridos de F03.",
+          "Dispositivos de red, estación compartida y acceso móvil a periféricos se aceptan en F06 después del piloto F05; la primera entrega es por puesto, sin compartir hardware entre cajas."
         ],
         "evidence": [
           "Matriz de capacidades del proveedor y dispositivo, con contratos, limitaciones y entorno de prueba identificados.",
@@ -371,9 +373,9 @@
       },
       "construction": {
         "title": "Contratos de proveedores",
-        "summary": "Implementar contratos de pagos, fiscalidad y dispositivos con referencias estables.",
-        "slideDetail": "Implementar adaptadores de pago, fiscalidad y dispositivos con referencias estables. Consultar y conciliar resultados inciertos antes de intentar una nueva operación.",
-        "detail": "Implementar contratos, adaptadores y consultas para el primer proveedor de pago, la modalidad fiscal y los dispositivos seleccionados. Mantener referencias estables y estados independientes de pago, venta, documento e impresión. Recuperar resultados inciertos mediante consulta o conciliación, sin interpretar un timeout como rechazo definitivo."
+        "summary": "Implementar pagos, fiscalidad y device-agent por puesto con referencias estables.",
+        "slideDetail": "Integrar pagos y fiscalidad; instalar device-agent en el puesto Windows con periféricos locales. Conservar evidencia e impedir reintentos de efectos inciertos.",
+        "detail": "Implementar contratos y adaptadores del primer pago y modalidad fiscal. Instalar device-agent en cada puesto Windows del alcance y homologar sus periféricos locales, conservando trabajo autorizado, SQLite y evidencia. Dispositivos de red y uso compartido quedan para F06 después del piloto F05; mantener estados independientes de pago, venta, documento e impresión."
       },
       "acceptance": {
         "title": "Recuperación del cobro",
@@ -824,7 +826,8 @@
           "Aceptar F01 a F04 para una tienda, operadores, cajas, proveedores y operaciones explícitamente delimitados.",
           "Contar con identidad y permisos reales, modalidades fiscales y de pago autorizadas, protección de datos y equipos homologados para ese alcance.",
           "Acordar criterios de capacidad, disponibilidad, recuperación, soporte y detención con responsables; sus valores no se fijan en este roadmap.",
-          "Definir qué sistema será activo durante el corte y la comparación con el legacy, evitando doble cobro, doble emisión y dos escritores."
+          "Definir qué sistema será activo durante el corte y la comparación con el legacy, evitando doble cobro, doble emisión y dos escritores.",
+          "El piloto utiliza el perfil por puesto aceptado en F02, con modelos y drivers identificados. No habilita todavía estación compartida, dispositivos de red ni acceso móvil a periféricos."
         ],
         "work": [
           {
@@ -849,7 +852,7 @@
               "Construir artefactos reproducibles que arranquen fuera del workspace y declarar configuración, dependencias y versiones admitidas.",
               "Preparar firma y verificación de los paquetes que la distribución requiera, con custodia y rotación de las claves correspondientes.",
               "Ensayar actualización y detención controlada de admisión, conservando pendientes y compatibilidad de datos y contratos entre versiones.",
-              "Firmar e instalar device-agent con privilegios mínimos; validar protocolo y esquema SQLite al actualizar/volver de versión, sin borrar trabajos pendientes."
+              "Firmar e instalar device-agent en cada puesto Windows del piloto con privilegios mínimos, conservando binding del puesto/dispositivo; validar protocolo y esquema SQLite al actualizar o volver de versión sin borrar pendientes."
             ]
           },
           {
@@ -984,7 +987,8 @@
           "Expediente de release con revisión, artefactos, configuración admisible, integridad, firma requerida y procedimiento de instalación.",
           "Resultados de carga, actualización y restauración con entorno, datos, tiempos, pérdida observada y conciliación.",
           "Registro de jornadas, incidencias, pendientes y decisiones de soporte y negocio durante el alcance piloto.",
-          "Aceptación o condiciones pendientes de producto, operaciones, finanzas y responsables técnicos, vinculadas a esa configuración."
+          "Aceptación o condiciones pendientes de producto, operaciones, finanzas y responsables técnicos, vinculadas a esa configuración.",
+          "Inventario de agentes por puesto, periféricos locales y versiones homologadas, con pruebas de aislamiento de destinos y cierre/reinicio del cliente y agente."
         ],
         "reviewers": [
           "Producto y operaciones de tienda",
@@ -1048,7 +1052,8 @@
           "Disponer de evidencia del piloto y acordar el siguiente alcance; no se fija aquí orden entre Perú y España.",
           "Confirmar contratos, políticas, proveedores, dispositivos y soporte del país siguiente con sus responsables.",
           "Delimitar el uso móvil y sus capacidades nativas; disponer de dispositivos y distribución autorizados para probarlo.",
-          "Acordar anillos, compatibilidad admitida y condiciones para ampliar o detener habilitación, manteniendo independiente el calendario del programa ERP."
+          "Acordar anillos, compatibilidad admitida y condiciones para ampliar o detener habilitación, manteniendo independiente el calendario del programa ERP.",
+          "Aceptar el piloto F05 del perfil local antes de ampliar periféricos. Seleccionar impresoras de red, protocolo/SDK y host Windows de la futura estación; disponer de hardware y responsable de soporte."
         ],
         "work": [
           {
@@ -1096,7 +1101,7 @@
               "Componer la interfaz compartida y los adaptadores de plataforma para el recorrido móvil, manteniendo autorización de servidor.",
               "Probar ciclo de vida, permisos, almacenamiento permitido y capacidades de dispositivo dentro del host nativo; una prueba de navegador no sustituye esta comprobación.",
               "Validar pérdida de LAN, retorno de la app y distribución nativa; no introducir una base de ventas autónoma ni exponer públicamente branch-api por incorporar móvil.",
-              "Probar móvil→branch-api→device-agent con destino autorizado, permisos de LAN/TLS y escritorio cerrado. Bluetooth/USB directo requiere plugin/SDK móvil homologado por separado."
+              "Para impresión compartida, aceptar primero el perfil de red de F06-05; probar móvil → branch-api → device-agent con destino autorizado, permisos LAN/TLS y sin ventana de escritorio abierta. Bluetooth/USB directo exige otro plugin/SDK y no forma parte de este perfil."
             ]
           },
           {
@@ -1145,6 +1150,32 @@
               "Fijar destino y versión por operación; mantener referencias y consultas durante cambios de contrato y cortes autorizados.",
               "Revisar resultados y excepciones con responsables locales y documentar qué reutiliza el núcleo y qué adaptación fue necesaria."
             ]
+          },
+          {
+            "id": "F06-05",
+            "title": "Dispositivos de red y estación compartida",
+            "apps": [
+              "pos-desktop",
+              "pos-mobile",
+              "branch-api",
+              "device-agent"
+            ],
+            "modules": [
+              "libs/features",
+              "libs/backend/devices",
+              "libs/backend/administration",
+              "libs/shared/contracts",
+              "libs/shared/backend/observability"
+            ],
+            "deliverable": "Perfil de red homologado para impresoras de recibos o etiquetas seleccionadas, atendidas por una instancia compartida de device-agent, con acceso autorizado desde puestos y móvil tras el piloto F05.",
+            "tasks": [
+              "Homologar modelo, firmware, protocolo/SDK de red y ejecución Windows. Elegir equipo dedicado o servidor compatible según el alcance de falla y mantenimiento aceptado; tener dirección IP no acredita compatibilidad.",
+              "Registrar destinos y capacidades aprobadas por empresa/sucursal, separar identidad física de dirección de red y configurar el perfil por instalación. La UI selecciona destinos permitidos, no envía URLs o comandos RAW arbitrarios.",
+              "Mantener un único agente controlador activo por dispositivo y serializar capacidades excluyentes entre clientes. Una reasignación requiere excluir al anterior y conciliar intentos; un lease vencido no prueba que dejó de imprimir.",
+              "Probar solicitudes concurrentes, pérdida de red tras envío, reinicio, cambio de dirección y equipo sin papel. Recuperar evidencia con el mismo jobId; preservar incertidumbre y exigir autorización para una copia nueva.",
+              "Validar permisos entre puestos, móviles y sucursales, enrolamiento/TLS y sesión operativa. MICR, cajones y pagos requieren aceptación propia y no se habilitan por homologar una impresora de red.",
+              "Permitir coexistencia con agentes locales sobre dispositivos distintos, versiones compatibles, diagnóstico y habilitación por anillos. Suspender nuevas solicitudes del perfil compartido sin perder trabajos ni reasignarlos ciegamente."
+            ]
           }
         ],
         "validation": [
@@ -1185,8 +1216,18 @@
           },
           {
             "id": "F06-V08",
-            "scenario": "Móvil y escritorio comparten impresora mediante device-agent; se corta WAN y después LAN.",
-            "expected": "Con WAN caída conserva el perfil autorizado si sucursal sigue disponible; sin LAN bloquea nuevas solicitudes dependientes, conserva evidencia y recupera sin duplicar la impresión."
+            "scenario": "Puestos y móvil utilizan una impresora de red homologada mediante el agente compartido; cae WAN y luego la red del periférico después de enviar un trabajo.",
+            "expected": "Sin WAN conserva el perfil autorizado si la sucursal está disponible. La pérdida de red no se interpreta como ausencia de efecto: consulta o conserva incertidumbre, sin otra copia automática; no afecta a dispositivos locales con dueño diferente."
+          },
+          {
+            "id": "F06-V09",
+            "scenario": "Dos clientes solicitan la misma impresora de red y se intenta reasignar a otro agente mientras el primero conserva un trabajo en curso.",
+            "expected": "Se serializa por dispositivo físico y se bloquea la activación del nuevo dueño hasta excluir al anterior y resolver el intento. Cada jobId conserva su evidencia y no se ejecuta desde dos agentes."
+          },
+          {
+            "id": "F06-V10",
+            "scenario": "Un móvil o puesto solicita un dispositivo sin permiso o de otra sucursal; cambia la IP del destino y luego se suspende el perfil compartido.",
+            "expected": "El backend rechaza destinos ajenos; sólo una actualización autorizada cambia la configuración conservando identidad física. La suspensión bloquea admisión nueva y preserva trabajos, auditoría y evidencia para recuperación."
           }
         ],
         "parallel": [
@@ -1197,13 +1238,15 @@
         "deferred": [
           "IA, RFID, autoservicio y capacidades omnicanal permanecen como extensiones sujetas a priorización y aceptación propia.",
           "No se presupone habilitación simultánea de todos los países, canales, medios o dispositivos.",
-          "La autonomía de una caja o móvil sin LAN y servidor sigue fuera del perfil base; requiere autoridad, persistencia y recuperación adicionales aprobadas."
+          "La autonomía de una caja o móvil sin LAN y servidor sigue fuera del perfil base; requiere autoridad, persistencia y recuperación adicionales aprobadas.",
+          "Bluetooth/USB directo al móvil y compartir MICR, cajones o terminales de pago no quedan aceptados por el perfil inicial de impresoras de red; requieren una ampliación de alcance y homologación específicas."
         ],
         "evidence": [
           "Matriz de comportamiento común y variantes por país, con casos aprobados y resultados comparables.",
           "Evidencias de sandbox, hardware y host nativo que identifican exactamente las capacidades y configuraciones aceptadas.",
           "Registro por anillo de versiones, conciliación, métricas, incidentes y decisión de avance o detención.",
-          "Contratos y pruebas de transición ERP con identidades, destinos y referencias preservados, más aceptación de responsables locales."
+          "Contratos y pruebas de transición ERP con identidades, destinos y referencias preservados, más aceptación de responsables locales.",
+          "Matriz de impresoras de red, protocolos, host y versiones; resultados de concurrencia, aislamiento de destinos, cambio de controlador, cortes, actualización y suspensión del perfil compartido."
         ],
         "reviewers": [
           "Producto y operaciones de cada país",
@@ -1221,15 +1264,15 @@
       },
       "construction": {
         "title": "Adaptación y anillos",
-        "summary": "Añadir políticas y adaptadores del país; distribuir por anillos compatibles.",
-        "slideDetail": "Incorporar políticas y adaptadores locales; validar host móvil, permisos y dispositivos. Distribuir por anillos compatibles y coordinar conectores con el programa ERP.",
-        "detail": "Incorporar políticas, contratos y adaptadores del país siguiente; comprobar fiscalidad, pagos, operación y soporte locales. Validar el host móvil, los permisos, dispositivos y distribución nativa. Preparar despliegue por anillos y compatibilidad de versiones. Coordinar la evolución de conectores con el programa ERP, cuyo calendario es independiente; móvil no implica venta sin LAN ni exposición pública del backend."
+        "summary": "Adaptar país y móvil; homologar red compartida y distribuir por anillos.",
+        "slideDetail": "Tras F05, homologar impresoras de red y estación compartida; validar acceso móvil. Añadir políticas del país y desplegar sólo combinaciones aceptadas por anillos.",
+        "detail": "Ampliar después del piloto el perfil por puesto con impresoras de red y una estación compartida homologada (F06-05), sin duplicar apps ni permitir dos controladores físicos. Aceptar ese perfil antes del uso móvil compartido de F06-02. Incorporar políticas y adaptadores nacionales, probar fiscalidad/pagos y ampliar por anillos con versiones compatibles y soporte local."
       },
       "acceptance": {
         "title": "Validación por alcance",
         "summary": "Probar reutilización del núcleo y aceptación propia de cada país y canal.",
         "slideDetail": "Cada país y canal demuestra reutilización del núcleo y supera su aceptación propia. Ampliar anillos con conciliación, soporte y recuperación verificados por escenario.",
-        "detail": "Demostrar con escenarios verificables qué comportamiento del núcleo se reutiliza y qué adaptación corresponde al país. Cada país, canal y configuración supera su propia aceptación antes de habilitarse. Los anillos se amplían con conciliación, observabilidad, soporte y recuperación comprobados. IA, RFID y omnicanal permanecen como extensiones posteriores sujetas a priorización."
+        "detail": "Demostrar con escenarios verificables qué comportamiento del núcleo se reutiliza y qué adaptación corresponde al país. Cada país, canal y configuración supera su propia aceptación antes de habilitarse. Los anillos se amplían con conciliación, observabilidad, soporte y recuperación comprobados. IA, RFID y omnicanal permanecen como extensiones posteriores sujetas a priorización. El perfil de red demuestra exclusión física, aislamiento por destino y recuperación de resultados inciertos; su aceptación no certifica otros tipos de periféricos."
       },
       "requires": [
         "phase-05"
@@ -1248,8 +1291,8 @@
           "href": "/guide/proposal/erp-migration/"
         },
         {
-          "label": "Acceso móvil a periféricos compartidos",
-          "href": "/guide/architecture/device-agent/"
+          "label": "Fases y perfiles del agente de periféricos",
+          "href": "/guide/architecture/device-agent/#network-expansion"
         }
       ]
     }

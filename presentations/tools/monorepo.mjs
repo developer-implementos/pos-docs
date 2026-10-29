@@ -20,7 +20,7 @@ export function monorepoView(source, escape) {
     'apps/branch-sync-worker':'Entrega y recepción en sucursal',
     'apps/country-api':'API y capacidades de país',
     'apps/erp-worker':'Integración y conciliación ERP',
-    'apps/device-agent':'.NET / Windows · trabajos de periféricos',
+    'apps/device-agent':'.NET / Windows · agente por puesto',
     'apps/pos-clients-e2e':'Pruebas UI; sin despliegue comercial',
     'apps/pos-clients-e2e/mobile':'Suite Angular; sin probar shell nativa',
     'libs/backend/returns':'Devoluciones y documento de origen',
@@ -40,7 +40,7 @@ export function monorepoView(source, escape) {
     'tools':'Build, lint y pruebas del producto'
   };
   const zones=[
-    {id:'apps',label:'Aplicaciones',title:'Entradas del producto',detail:'Siete aplicaciones objetivo. device-agent ejecuta periféricos en Windows con .NET, independiente de los clientes.',status:'Seis apps con base técnica; device-agent pendiente. E2E es el proyecto de pruebas.',paths:['apps']},
+    {id:'apps',label:'Aplicaciones',title:'Entradas del producto',detail:'Siete aplicaciones objetivo. device-agent usa .NET en cada puesto Windows; F02 cubre periféricos locales.',status:'Seis apps con base técnica; agente pendiente. Red y móvil compartido: F06, tras el piloto.',paths:['apps']},
     {id:'business',label:'Negocio',title:'Contextos de negocio',detail:'Trece contextos con responsabilidad propia. Las aplicaciones componen sus casos de uso.',status:'Base estructural disponible; lógica comercial pendiente.',paths:['libs/backend']},
     {id:'frontend',label:'Interfaz',title:'Composición y pantallas',detail:'libs/client-shell compone la interfaz Angular compartida. Cada aplicación conserva su arranque y aloja el frontend en su shell nativa Tauri o Capacitor.',status:'UI demostrativa con datos sintéticos. Operaciones reales pendientes.',paths:['libs/client-shell','libs/features']},
     {id:'backend',label:'Shared / backend',title:'Mecanismos del servidor',detail:'Arranque, configuración, HTTP, observabilidad, sondas y ciclo de vida de los workers.',status:'La organización en shared/backend es el objetivo arquitectónico.',paths:['libs/shared/backend']},

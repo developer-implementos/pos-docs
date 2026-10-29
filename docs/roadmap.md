@@ -2,7 +2,7 @@
 
 POS Platform parte de una demostración de interfaz y una base técnica de APIs y workers. El trabajo de entrega consiste en convertir esa base en recorridos completos y comprobables: persistir una venta, cobrar y emitir su documento, integrar una sucursal y conciliar una jornada, hasta probar la operación en tienda y su adaptación a otros países.
 
-La arquitectura objetivo incluye `device-agent` en C#/.NET Windows, todavía sin implementación. F02 incorpora host, protocolo con `branch-api`, SQLite técnico y la primera impresión homologada; F05 comprueba entrega/recuperación y F06 el acceso móvil. El [ADR-17](decisions/device-agent.md) fija responsabilidades y criterios.
+La arquitectura objetivo incluye `device-agent` en C#/.NET Windows, todavía sin implementación. F02 incorpora el agente en cada puesto Windows y sus periféricos locales, con protocolo `branch-api` y SQLite técnico; F05 valida ese perfil en el piloto. Después, F06-05 homologa dispositivos de red y estación compartida, requisito para el acceso móvil compartido de F06-02. El [ADR-17](decisions/device-agent.md) fija responsabilidades y criterios.
 
 Cada fase tiene una página con **condiciones de entrada, entregables por aplicación y módulo, tareas, pruebas de aceptación y evidencia de cierre**. Esta visión general conecta esos planes y sus dependencias. El avance se decide por resultados verificados; las fechas y la capacidad del equipo deben acordarse antes de estimar el calendario.
 

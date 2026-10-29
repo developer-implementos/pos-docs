@@ -26,6 +26,12 @@ function validateModelSemantics(){
  assert.equal(model.nodes.deviceJournal.technology,'SQLite','The technical journal must remain separate from business PostgreSQL');
  assert.ok(containers.relationships.some(edge=>edge.from==='device'&&edge.to==='branchApi'&&edge.label.includes('HTTPS/LAN saliente')),'Device agent must initiate the authenticated LAN connection');
  assert.ok(containers.relationships.some(edge=>edge.from==='device'&&edge.to==='deviceJournal'),'Device agent must own its technical journal');
+ const deployment=model.views.find(view=>view.id==='deployment');
+ const terminal=deployment.boundaries.find(boundary=>boundary.id==='terminalNode');
+ for(const id of ['client','device','deviceJournal','peripherals'])assert.ok(terminal.nodes.includes(id),`Initial deployment must place ${id} in the same dedicated workstation`);
+ assert.ok(!deployment.boundaries.find(boundary=>boundary.id==='serverNode').nodes.includes('device'),'The branch server must not be the default device-agent host');
+ assert.equal(model.nodes.networkPeripherals.conditional,true,'Network hardware is a later homologated profile');
+ assert.ok(deployment.relationships.some(edge=>edge.from==='device'&&edge.to==='networkPeripherals'&&edge.conditional&&edge.label.includes('F06')),'Network deployment must be explicitly deferred to F06');
  for(const view of model.views){
   assert.ok(!view.relationships.some(edge=>['client','mobileClient'].includes(edge.from)&&edge.to==='device'),`Clients must not relay hardware commands in ${view.id}`);
   assert.ok(!view.relationships.some(edge=>edge.from==='device'&&['branchDb','countryDb'].includes(edge.to)),`Device agent must not access business PostgreSQL in ${view.id}`);
@@ -89,7 +95,7 @@ function segmentEnters(a,b,r){let low=0,high=1;for(let axis=0;axis<2;axis++){con
    if(board.kind==='structural'){const view=model.views.find(view=>view.id===board.id),byId=new Map(scene.elements.map(e=>[e.id,e]));
      for(const id of view.nodeIds.filter(id=>id!=='legend')){assert(byId.get(id)?.customData?.c4NodeId===id);assertVisibleNode(scene,id,model.nodes[id],file);}
      const edges=scene.elements.filter(e=>e.type==='arrow');assert.equal(edges.length,view.relationships.length);
-     for(const r of view.relationships){const e=byId.get(`${r.from}_${r.to}`);assert.equal(e.startBinding?.elementId,r.from);assert.equal(e.endBinding?.elementId,r.to);assert.equal(e.customData.label,r.label);assert.equal(norm(byId.get('label-'+e.id).text),norm(r.label));}
+     for(const r of view.relationships){const e=byId.get(`${r.from}_${r.to}`);assert.equal(e.startBinding?.elementId,r.from);assert.equal(e.endBinding?.elementId,r.to);assert.equal(e.customData.label,r.label);assert.equal(norm(byId.get('label-'+e.id).text),norm(r.label));assert.equal(e.strokeStyle,r.conditional?'dashed':'solid',`${file}: conditional relationship must preserve its visual distinction`);}
      const nodes=view.nodeIds.filter(id=>id!=='legend').map(id=>byId.get(id));
      const labels=scene.elements.filter(e=>e.id.startsWith('label-')&&!e.id.startsWith('label-bg-'));
      const collisions=[];for(let n=0;n<nodes.length;n++)for(let m=n+1;m<nodes.length;m++)if(overlap(nodes[n],nodes[m]))collisions.push([nodes[n].id,nodes[m].id]);

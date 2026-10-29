@@ -51,23 +51,23 @@ La ACL se justifica por diferencias semánticas; no debe absorber el negocio ni 
 
 ## 3. Ubicación de componentes y perfil offline
 
-La referencia sigue siendo **perfil WAN**: el servidor de sucursal es el escritor autorizado de las ventas y sus intentos; las cajas lo consumen por LAN. La aplicación local de periféricos corre en el PC que controla el dispositivo. Su registro durable de trabajos no la convierte en un segundo escritor del negocio.
+La referencia sigue siendo **perfil WAN**: el servidor de sucursal es el escritor autorizado de las ventas y sus intentos; las cajas lo consumen por LAN. En F02/F05 la aplicación de periféricos corre en el mismo PC Windows que el cliente de caja, con dispositivos locales asignados al puesto. La estación compartida y dispositivos de red se incorporan después, en F06, según [ADR-17](decisions/device-agent.md#network-expansion). Su registro durable de trabajos no la convierte en un segundo escritor del negocio.
 
 ```mermaid
 flowchart TB
     subgraph Sucursal["Sucursal · perfil WAN, LAN disponible"]
         UI["pos-desktop · Angular + Tauri"]
-        Mobile["pos-mobile · Angular + Capacitor"]
+        Mobile["pos-mobile · F06<br/>Angular + Capacitor"]
         POS["branch-api · NestJS/Fastify<br/>Fachadas y autorización de negocio"]
         DB[("PostgreSQL de sucursal<br/>Operaciones, trabajos y auditoría")]
         Config["Manifiestos y políticas aprobados<br/>Copia local versionada"]
-        Agent["device-agent · C#/.NET · Windows<br/>Host autónomo y adaptadores"]
+        Agent["device-agent · C#/.NET · Windows<br/>F02/F05 · puesto y adaptadores locales"]
         Journal[("SQLite técnico<br/>Recepción, intentos y evidencia")]
         Printer["Impresora / lector MICR<br/>Driver y SDK homologados"]
         Terminal["Terminal de pago asignado<br/>SDK pendiente de homologación propia"]
         FiscalLocal["Componente fiscal local<br/>Modalidad homologada"]
         UI -->|"Solicitar y consultar · HTTPS LAN"| POS
-        Mobile -->|"Solicitar y consultar · HTTPS LAN"| POS
+        Mobile -.->|"Solicitar y consultar · HTTPS LAN"| POS
         POS -->|"Negocio, trabajos y auditoría · PostgreSQL"| DB
         Config --> POS
         Config --> Agent
@@ -166,7 +166,7 @@ Estas reglas amplían los controles descritos en la [propuesta](propuesta-arquit
 
 Los frontends Angular/PrimeNG de `pos-desktop` y `pos-mobile`, alojados en Tauri/Capacitor, solicitan operaciones a `branch-api` y no reciben secretos de proveedor ni credenciales del agente. `device-agent` (C#/.NET Windows) obtiene trabajos autorizados y reporta evidencia directamente por HTTPS LAN. Verifica identidad, integridad, ámbito, capacidad y vigencia; conserva SQLite técnico y serializa acceso por equipo físico. [ADR-17: contrato del agente](decisions/device-agent.md).
 
-Si varias cajas o móviles comparten un periférico, una única instancia de `device-agent` controla el equipo físico y sus capacidades mutuamente excluyentes. La asignación incluye `physicalDeviceId`; varias colas Windows pueden pertenecer a un mismo mecanismo. El cambio de dueño exige resolver intentos y excluir al anterior; un lease vencido no prueba que dejó de ejecutar.
+En la evolución F06, si puestos o móviles comparten un periférico homologado, una única instancia de `device-agent` controla el equipo físico y sus capacidades mutuamente excluyentes. La asignación incluye `physicalDeviceId`; varias colas Windows pueden pertenecer a un mismo mecanismo. El cambio de dueño exige resolver intentos y excluir al anterior; un lease vencido no prueba que dejó de ejecutar.
 
 Las credenciales se aprovisionan y rotan mediante mecanismos administrativos protegidos; el manifiesto contiene referencias, no valores secretos. El control de acceso local debe funcionar durante la desconexión autorizada, con vigencia y límites. La aplicación local usa los privilegios mínimos compatibles con su driver/SDK.
 

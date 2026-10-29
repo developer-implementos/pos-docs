@@ -6,12 +6,12 @@ config:
 ---
 flowchart TB
     accTitle: C2 · Contenedores — Aplicaciones, procesos y datos
-    accDescr: Siete aplicaciones objetivo de POS Platform, sus datos y sistemas externos. Seis apps tienen base técnica o scaffold; device-agent se incorpora como propuesta, aún no implementada. Siete aplicaciones objetivo; seis tienen base técnica o scaffold. device-agent y su journal SQLite son propuesta por implementar. PostgreSQL conserva el negocio; country-api publica versiones y erp-worker prepara maestros. Redis es caché opcional.
+    accDescr: Siete aplicaciones objetivo de POS Platform, sus datos y sistemas externos. Seis apps tienen base técnica o scaffold; device-agent se incorpora como propuesta, aún no implementada. Siete apps objetivo; seis tienen base técnica. device-agent y SQLite: propuesta pendiente. F02: puesto Windows dedicado; F05: piloto del mismo perfil. F06: red y estación compartida por homologar; no agrega otra app. PostgreSQL conserva el negocio.
     subgraph systemScope["POS Platform · aplicaciones y datos propuestos"]
         direction TB
         client["pos-desktop<br/>«Contenedor»<br/>Angular (frontend) ·<br/>Tauri (shell nativa)<br/>Aplicación completa para caja y comandos."]:::pos
         mobileClient["pos-mobile<br/>«Contenedor»<br/>Angular (frontend) ·<br/>Capacitor (shell nativa)<br/>Aplicación completa para Android/iOS."]:::pos
-        device["device-agent<br/>«Contenedor»<br/>C# / .NET · Windows<br/>Ejecuta trabajos de hardware autorizados."]:::pos
+        device["device-agent<br/>«Contenedor»<br/>C# / .NET · Windows<br/>F02: ejecuta periféricos del puesto Windows."]:::pos
         deviceJournal["Journal técnico de dispositivos<br/>«Contenedor de datos»<br/>SQLite<br/>Guarda trabajos, deduplicación y evidencia."]:::store
         branchApi["branch-api<br/>«Contenedor»<br/>NestJS + Fastify / Node.js<br/>Valida y confirma la operación local."]:::pos
         branchDb["Datos de sucursal<br/>«Contenedor de datos»<br/>PostgreSQL<br/>Guarda negocio, outbox y espejo local."]:::store
@@ -26,12 +26,13 @@ flowchart TB
         masters["Fuentes de maestros y precios<br/>«Sistema externo»<br/>Interfaces por confirmar<br/>Publica datos y reglas autorizados."]:::external
         payments["Proveedor de pagos<br/>«Sistema externo»<br/>API / SDK según proveedor<br/>Ej.: Transbank POS · Niubiz · Mercado Pago Point."]:::external
         fiscal["Proveedor de facturación<br/>«Sistema externo»<br/>Contrato por país y modalidad<br/>Ej.: Acepta / Ingydev (CL) · EFACT (PE)."]:::external
-        peripherals["Periféricos físicos<br/>«Hardware externo»<br/>Driver / SDK homologado<br/>Impresoras, lectores y otros dispositivos."]:::external
+        peripherals["Periféricos del puesto<br/>«Hardware externo»<br/>USB / serie · driver / SDK<br/>F02: impresoras y lectores locales del puesto."]:::external
+    networkPeripherals["Periféricos de red · F06<br/>«Hardware externo»<br/>TCP/IP · driver / SDK homologado<br/>Expansión: impresoras de recibos y etiquetas."]:::external
         legend["Leyenda<br/>«Clave de lectura»<br/>Notación C4<br/>Azul: POS. Violeta: datos. Gris: externo."]:::key
     cashier -->|"Opera caja · interfaz de escritorio"| client
     cashier -->|"Funciones habilitadas · interfaz móvil"| mobileClient
     client -->|"Comandos y consultas · HTTPS/LAN"| branchApi
-    mobileClient -->|"Comandos y consultas · HTTPS/LAN"| branchApi
+    mobileClient -.->|"F06 · comandos habilitados · HTTPS/LAN"| branchApi
     device -->|"Obtiene trabajos y reporta evidencia · HTTPS/LAN saliente"| branchApi
     device -->|"Pago local futuro · SDK por homologar"| payments
     branchApi -->|"Negocio + auditoría + outbox · PostgreSQL"| branchDb
@@ -45,7 +46,8 @@ flowchart TB
     erpAdapter -->|"Envía, consulta y concilia · contrato ERP"| erp
     erpAdapter -->|"Obtiene carga o deltas · contrato de fuente homologado"| masters
     device -->|"Deduplicación y evidencia técnica · SQLite"| deviceJournal
-    device -->|"Ejecuta trabajo autorizado · driver/SDK homologado"| peripherals
+    device -->|"F02 · ejecuta en el puesto · USB/serie/SDK"| peripherals
+    device -.->|"F06 · ejecución en red · protocolo homologado"| networkPeripherals
     classDef pos fill:#EDF3FF,stroke:#0545BA,color:#25364D,stroke-width:2px
     classDef store fill:#F2EFFF,stroke:#6551A8,color:#25364D,stroke-width:2px
     classDef external fill:#F4F6F8,stroke:#6B788A,color:#25364D

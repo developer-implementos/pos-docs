@@ -49,7 +49,7 @@ function validateDelivery(delivery, phase) {
     for (const module of work.modules) assert.match(module, /^libs\/(?:[a-z][a-z0-9-]*\/)*[a-z][a-z0-9-]*\/?$/, `${workLabel} requires repository library paths`);
     textList(work.tasks, `${workLabel} tasks`, 2, 6);
   }
-  assert.ok(Array.isArray(delivery.validation) && delivery.validation.length >= 4 && delivery.validation.length <= 8, `${label} requires 4–8 acceptance scenarios`);
+  assert.ok(Array.isArray(delivery.validation) && delivery.validation.length >= 4 && delivery.validation.length <= 10, `${label} requires 4–10 acceptance scenarios`);
   for (const validation of delivery.validation) {
     shape(validation, ['id', 'scenario', 'expected'], `${label} validation`);
     assert.match(validation.id, new RegExp(`^${phaseCode(phase)}-V[0-9]{2}$`), `${label} validation must have a stable phase ID`);

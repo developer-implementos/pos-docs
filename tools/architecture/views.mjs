@@ -10,10 +10,10 @@ export function projectArchitecture(model, nodeIds, { id = 'projection', title =
   return { ...model, id, title, compact, groups: model.groups.filter(group => nodes.some(node => node.group === group.id)), nodes, edges };
 }
 
-const baseNodes = architecture.nodes.filter(node => node.kind === 'app' || (node.kind === 'data' && node.status === 'proposed') || node.kind === 'external').map(node => node.id);
+const baseNodes = architecture.nodes.filter(node => node.kind === 'app' || (node.kind === 'data' && node.status === 'proposed') || (node.kind === 'external' && node.status !== 'conditional')).map(node => node.id);
 const baseEdges = ['desktop-api', 'mobile-api', 'commit-local', 'sync-local', 'sync-country', 'accept-country', 'claim-report', 'send-erp', 'fetch-source', 'payment-api', 'fiscal-api', 'device-command', 'device-jobs-local', 'bridge-evidence', 'agent-journal', 'hardware-command'];
 export const architectureViews = [
-  { id: 'base', title: 'Arquitectura base', description: 'Siete aplicaciones propuestas, sus datos e interfaces externas. Seis tienen base o scaffolding; device-agent está por implementar. Selecciona una zona para ampliar sus componentes.', model: projectArchitecture(architecture, baseNodes, { id: 'base', title: 'POS Platform · arquitectura base', edgeIds: baseEdges }) },
+  { id: 'base', title: 'Arquitectura base', description: 'Siete aplicaciones propuestas. Device-agent: F02 por puesto Windows y piloto F05; red, estación compartida y móvil se homologan en F06. Seis apps tienen base o scaffolding; el agente está por implementar.', model: projectArchitecture(architecture, baseNodes, { id: 'base', title: 'POS Platform · arquitectura base', edgeIds: baseEdges }) },
   ...architecture.groups.map(group => {
     const local = architecture.nodes.filter(node => node.group === group.id).map(node => node.id);
     const related = architecture.edges.filter(edge => local.includes(edge.from) || local.includes(edge.to));
@@ -63,6 +63,13 @@ export function validateArchitecture(model = architecture) {
   if (!journal || journal.from !== 'bridge' || journal.to !== 'device-journal' || !journal.protocol.includes('SQLite')) fail('Agent journal must retain its local SQLite contract');
   const deviceJobs = model.edges.find(edge => edge.id === 'device-jobs-local');
   if (!deviceJobs || deviceJobs.from !== 'branch-api' || deviceJobs.to !== 'branch-db' || !deviceJobs.protocol.includes('PostgreSQL')) fail('Device work and observations must retain their branch PostgreSQL contract');
+  if (nodes.get('network-devices')?.status !== 'conditional') fail('Network peripherals must remain a later conditional capability');
+  const networkHardware = model.edges.find(edge => edge.id === 'network-hardware-command');
+  if (!networkHardware || networkHardware.from !== 'bridge' || networkHardware.to !== 'network-devices' || networkHardware.status !== 'conditional') fail('Network hardware must retain the assigned device-agent contract');
+  const initialPrinting = model.scenarios.find(scenario => scenario.id === 'local-printing');
+  if (!initialPrinting || initialPrinting.steps.some(step => step.nodes.includes('mobile') || step.nodes.includes('network-devices'))) fail('Initial dedicated printing cannot imply shared mobile or network support');
+  const sharedPrinting = model.scenarios.find(scenario => scenario.id === 'shared-printing');
+  if (!sharedPrinting?.steps.some(step => step.edges.includes('network-hardware-command'))) fail('Later shared printing must show its separate network contract');
   for (const scenario of model.scenarios) for (const step of scenario.steps) {
     for (const id of [...step.nodes, ...step.edges]) if (!ids.has(id)) fail(`Unknown scenario item: ${id}`);
     for (const id of step.edges) { const edge = model.edges.find(edge => edge.id === id); if (!step.nodes.includes(edge.from) || !step.nodes.includes(edge.to)) fail(`Scenario omits relationship endpoint: ${scenario.id}/${id}`); }

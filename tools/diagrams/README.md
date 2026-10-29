@@ -20,6 +20,8 @@ Este directorio pertenece al repositorio editorial **POS Docs**. Sus modelos, es
 
 `collection.json` es el inventario compartido por generación, validación, previews y exportación. Registra siete vistas estructurales —contexto, contenedores, sucursal, sincronización, despliegue, país y ERP— y dos dinámicas. Cada entrada vincula el ID del modelo con su nombre de archivo permanente; no se determina el tipo de vista a partir de su posición. Los nombres `01` a `09` y `00-atlas-completo` conservan los enlaces públicos.
 
+El despliegue inicial F02 y su piloto F05 agrupan `pos-desktop`, `device-agent`, SQLite técnico y periféricos locales dentro del mismo puesto Windows. Los periféricos de red y el acceso móvil se distinguen como expansión F06: relaciones con `conditional: true` se dibujan discontinuas y conservan esa condición al exportar. Una instancia compartida certificada utiliza la misma aplicación `apps/device-agent`; no agrega otro proyecto ni convierte el servidor de sucursal en su ubicación predeterminada.
+
 `c4-layouts.json` contiene las geometrías de las vistas estructurales registradas. Las geometrías son una salida revisada, no un lugar alternativo para editar contratos. Las vistas dinámicas se generan desde sus participantes y pasos.
 
 Las escenas individuales y el atlas `.excalidraw` son editables. Una regeneración reemplaza esas escenas y los SVG: conservar y trasladar al modelo los cambios manuales que deban persistir antes de ejecutarla. Los cambios semánticos requieren actualizar coherentemente C4, Mermaid, flujos y notas; los controles geométricos no validan por sí solos la propuesta.

@@ -48,7 +48,7 @@ test('device-agent owns its SQLite journal and cannot require a desktop or mobil
 test('base is a projection, with optional infrastructure excluded and contract identities preserved', () => {
   const before = JSON.stringify(architecture), base = architectureViews.find(view => view.id === 'base').model;
   assert.deepEqual(base.nodes.filter(node => node.kind === 'app').map(node => node.id).sort(), architecture.nodes.filter(node => node.kind === 'app').map(node => node.id).sort());
-  for (const id of ['redis-cache', 'redis-jobs', 'bullmq', 'rabbitmq']) assert.ok(!base.nodes.some(node => node.id === id), `${id} is not an initial dependency`);
+  for (const id of ['redis-cache', 'redis-jobs', 'bullmq', 'rabbitmq', 'network-devices']) assert.ok(!base.nodes.some(node => node.id === id), `${id} is not an initial dependency`);
   for (const id of ['bridge', 'device-journal', 'devices']) assert.ok(base.nodes.some(node => node.id === id), `${id} must be visible in the base device flow`);
   for (const id of ['device-command', 'device-jobs-local', 'bridge-evidence', 'agent-journal', 'hardware-command']) assert.ok(base.edges.some(edge => edge.id === id), `${id} must retain its contract in the base view`);
   const source = architecture.edges.find(edge => edge.id === 'commit-local');
@@ -58,6 +58,19 @@ test('base is a projection, with optional infrastructure excluded and contract i
   assert.equal(projected.guarantees, source.guarantees);
   projectArchitecture(architecture, ['country-api', 'country-db']);
   assert.equal(JSON.stringify(architecture), before);
+});
+
+test('initial dedicated printing and later network sharing retain different deployment scopes', () => {
+  const initial = architecture.scenarios.find(scenario => scenario.id === 'local-printing');
+  const later = architecture.scenarios.find(scenario => scenario.id === 'shared-printing');
+  assert.match(initial.title, /^F02/); assert.match(later.title, /^F06/);
+  assert.ok(initial.steps.some(step => step.edges.includes('hardware-command')));
+  assert.ok(later.steps.some(step => step.edges.includes('network-hardware-command')));
+  assert.equal(architecture.edges.find(edge => edge.id === 'network-hardware-command').status, 'conditional');
+  const mobileEarly = copy(); mobileEarly.scenarios.find(scenario => scenario.id === 'local-printing').steps[0].nodes.push('mobile');
+  assert.throws(() => validateArchitecture(mobileEarly), /Initial dedicated printing/);
+  const networkEarly = copy(); networkEarly.nodes.find(node => node.id === 'network-devices').status = 'proposed';
+  assert.throws(() => validateArchitecture(networkEarly), /later conditional capability/);
 });
 
 test('every scenario renders its actual participants and only the selected contracts', () => {

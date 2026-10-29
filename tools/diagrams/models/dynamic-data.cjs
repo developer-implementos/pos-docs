@@ -192,7 +192,7 @@ module.exports = [
     "id": "sale",
     "number": "07",
     "title": "D2 · Confirmación de venta y entrega durable",
-    "scope": "Venta con pago por API habilitada: intención durable y commit local. La impresión se solicita al backend y device-agent opera de forma autónoma. Entrega a país e integración ERP conservan estados independientes.",
+    "scope": "Venta con pago por API habilitada: intención durable y commit local. F02/F05: impresión local mediante device-agent en el mismo puesto Windows que pos-desktop. F06 amplía a red tras homologación. Entrega a país y ERP conservan estados independientes.",
     "note": "Secuencia objetivo recomendada. Cada flecha es una interacción, no una transacción distribuida. Impresión y sincronización son ramas independientes de la venta confirmada; imprimir no bloquea la entrega a país ni crea otra venta.",
     "participants": [
       {
@@ -233,7 +233,7 @@ module.exports = [
         "name": "device-agent",
         "type": "Contenedor",
         "technology": "C# / .NET · Windows",
-        "summary": "Ejecuta trabajos de hardware autorizados."
+        "summary": "F02: ejecuta periféricos del puesto Windows."
       },
       {
         "id": "deviceJournal",
@@ -246,10 +246,10 @@ module.exports = [
       {
         "id": "peripherals",
         "nodeId": "peripherals",
-        "name": "Periféricos físicos",
+        "name": "Periféricos del puesto",
         "type": "Hardware externo",
-        "technology": "Driver / SDK homologado",
-        "summary": "Impresoras, lectores y otros dispositivos."
+        "technology": "USB / serie · driver / SDK",
+        "summary": "F02: impresoras y lectores locales del puesto."
       },
       {
         "id": "syncWorker",
@@ -339,7 +339,7 @@ module.exports = [
         "from": "client",
         "to": "branchApi",
         "label": "Solicita imprimir el documento existente · HTTPS/LAN",
-        "note": "Rama de impresión independiente de sincronización. Escritorio y móvil usan el mismo contrato del backend; pos-desktop no actúa como relé ni debe permanecer abierto."
+        "note": "F02/F05: pos-desktop solicita imprimir en su puesto asignado. El agente ejecuta el trabajo sin usar el cliente como relé ni exigir su ventana abierta. La impresión compartida y el acceso móvil se incorporan en F06 tras homologación."
       },
       {
         "from": "branchApi",
@@ -351,7 +351,7 @@ module.exports = [
         "from": "device",
         "to": "branchApi",
         "label": "Obtiene trabajos de su equipo · HTTPS/LAN saliente",
-        "note": "Servicio autónomo C#/.NET Windows propuesto. Autentica agente y equipo; sólo obtiene trabajo autorizado para sus capacidades. No se exige conexión entrante al agente."
+        "note": "F02/F05: agente C#/.NET en el mismo puesto Windows que pos-desktop, con lifecycle independiente. Autentica agente y puesto; sólo obtiene sus trabajos asignados. Inicia HTTPS LAN hacia branch-api; no expone una API entrante para los clientes."
       },
       {
         "from": "branchApi",
