@@ -6,9 +6,9 @@
 
 Un producto multipaís con seis aplicaciones operativas: `pos-desktop`, `pos-mobile`, `branch-api`, `branch-sync-worker`, `country-api` y `erp-worker`. Las apps componen librerías por responsabilidad; no equivalen a seis servicios ya desplegados. La documentación Starlight pertenece al repositorio editorial [POS Docs](https://github.com/developer-implementos/pos-docs), separado del código operativo. La [guía del monorepo](monorepo.md) detalla el scaffold, su propiedad de datos y la evidencia del legado que orienta las fronteras.
 
-Los clientes de escritorio (Angular + Tauri) y móvil (Angular + Capacitor para Android/iOS) tienen entradas independientes. Comparten `client-shell`, que compone configuración, rutas y navegación, y `ui`, que concentra componentes, activos y estilos. La [decisión de clientes nativos](decisions/native-clients.md) fija sus límites. Vercel publica el portal, la documentación y las presentaciones desde POS Docs.
+Las aplicaciones cliente `pos-desktop` y `pos-mobile` tienen entradas independientes. Cada una incluye un frontend Angular/PrimeNG alojado en una shell nativa (host): Tauri en escritorio y Capacitor en Android/iOS. Comparten `libs/client-shell`, la composición Angular de raíz, configuración, rutas, guards y layout, y `ui`, que concentra componentes, activos y estilos. La [decisión de clientes nativos](decisions/native-clients.md) fija sus límites. Vercel publica el portal, la documentación y las presentaciones desde POS Docs.
 
-El frontend conserva `domain`, que no importa Angular, y `data-access`, que implementa las mutaciones mock. Las features no se importan entre sí; el shell compone sus rutas. `ui` contiene presentación y formatos, sin acceso a persistencia ni reglas de operación. El backend dispone de contextos en `libs/backend`, contratos y políticas puras en `contracts`, `shared-kernel` y `country-policies`, y reutiliza la infraestructura técnica de `platform/backend`. ESLint verifica las direcciones de importación y Nx conoce los proyectos.
+El frontend conserva `domain`, que no importa Angular, y `data-access`, que implementa las mutaciones mock. Las features no se importan entre sí; `libs/client-shell` compone sus rutas y no es el host nativo. `ui` contiene presentación y formatos, sin acceso a persistencia ni reglas de operación. El backend dispone de contextos en `libs/backend`, contratos y políticas puras en `contracts`, `shared-kernel` y `country-policies`, y reutiliza la infraestructura técnica de `platform/backend`. ESLint verifica las direcciones de importación y Nx conoce los proyectos.
 
 Las aplicaciones Node se empaquetan con Rspack/SWC y el plugin oficial de Nx para incluir las librerías fuente internas; TSC conserva la comprobación de tipos. Las dependencias externas se instalan desde el manifiesto y lockfile de cada artefacto, cuya ejecución se verifica fuera del workspace. Las bibliotecas internas se consumen desde el monorepo y no requieren publicación como paquetes independientes.
 
@@ -27,14 +27,14 @@ flowchart TB
     Context --> Technical["shared/backend"]
     Domain --> Kernel["shared/kernel"]
     Context --> Contracts["shared/contracts y contratos públicos del contexto"]
-    Clients["pos-desktop / pos-mobile"] --> Shell["client-shell: composición"]
+    Clients["pos-desktop / pos-mobile"] --> Shell["client-shell: composición Angular"]
     Shell --> Web["Features del frontend"]
     Web --> UI["shared/frontend/ui"]
     Web --> Contracts
     Tests["Suites de pruebas"] --> Support["shared/testing"]
 ```
 
-Las dependencias de servidor se limitan a adaptación/composición; el dominio permanece puro. Estos límites requieren reglas Nx/ESLint y pruebas negativas que rechacen imports prohibidos. El diseño incluye `apps/pos-clients-e2e` como proyecto de pruebas vinculado a ambos clientes Angular; no amplía las seis aplicaciones operativas. Su estado se detalla en la [guía de pruebas](testing.md).
+Las dependencias de servidor se limitan a adaptación/composición; el dominio permanece puro. Estos límites requieren reglas Nx/ESLint y pruebas negativas que rechacen imports prohibidos. El diseño incluye `apps/pos-clients-e2e` como proyecto de pruebas vinculado a ambas aplicaciones cliente; no amplía las seis aplicaciones operativas. Su estado se detalla en la [guía de pruebas](testing.md).
 
 ## 2. Estado y puertos
 
@@ -42,7 +42,7 @@ Las dependencias de servidor se limitan a adaptación/composición; el dominio p
 
 `POS_REPOSITORY` permite sustituir el adaptador local. El formato se valida al cargar y tiene una versión explícita. Cada mutación se construye sobre una copia; la aplicación solo anuncia éxito después de persistirla. El almacenamiento web es suficiente para una demostración, pero tiene límites de tamaño, concurrencia y seguridad. No tiene las garantías de una base de datos.
 
-La dirección de producto propone un backend de sucursal NestJS/Fastify compartido por las cajas y conectado a PostgreSQL de sucursal. Ambos clientes Angular consumen su API, sin acceso SQL directo ni una base transaccional por terminal en el perfil de continuidad ante caída de WAN. La LAN y el servidor de sucursal siguen siendo dependencias de ese perfil. La sincronización duradera y el planificador pasarían a procesos supervisados que no dependan de la pestaña abierta. SQLite por terminal es una alternativa del perfil adicional sin LAN/servidor, pendiente de validación; no es la persistencia seleccionada por defecto. Esta dirección sigue la [propuesta de arquitectura](propuesta-arquitectura.md) y sus [opciones tecnológicas](opciones-tecnologicas.md).
+La dirección de producto propone un backend de sucursal NestJS/Fastify compartido por las cajas y conectado a PostgreSQL de sucursal. Ambas aplicaciones cliente consumen su API, sin acceso SQL directo ni una base transaccional por terminal en el perfil de continuidad ante caída de WAN. La LAN y el servidor de sucursal siguen siendo dependencias de ese perfil. La sincronización duradera y el planificador pasarían a procesos supervisados que no dependan de la pestaña abierta. SQLite por terminal es una alternativa del perfil adicional sin LAN/servidor, pendiente de validación; no es la persistencia seleccionada por defecto. Esta dirección sigue la [propuesta de arquitectura](propuesta-arquitectura.md) y sus [opciones tecnológicas](opciones-tecnologicas.md).
 
 `apps/branch-api` incorpora la [base HTTP de ese backend](api.md): NestJS/Fastify, configuración y sondas de aplicación. Aún no tiene persistencia ni casos de uso de negocio, y no sustituye los adaptadores mock actuales del frontend. Instalar un framework no acredita las garantías transaccionales, de seguridad o continuidad de la propuesta.
 
@@ -79,7 +79,7 @@ La interfaz separa operación de caja, gestión comercial y plataforma. Los maes
 
 ## 7. Escritorio seguro
 
-Tauri aloja el mismo build estático. La navegación por hash funciona sin un servidor de rutas. La CSP limita conexiones y recursos; los assets y fuentes son locales. No se habilitan plugins de shell, filesystem o HTTP para la maqueta. Las futuras integraciones nativas necesitan comandos y capacidades específicas, cancelación y límites de tiempo, sin exponer credenciales al frontend.
+La shell nativa Tauri aloja el build estático del frontend de `pos-desktop`. La navegación por hash funciona sin un servidor de rutas. La CSP limita conexiones y recursos; los assets y fuentes son locales. No se habilitan plugins de shell, filesystem o HTTP para la maqueta. Las futuras integraciones nativas necesitan comandos y capacidades específicas, cancelación y límites de tiempo, sin exponer credenciales al frontend.
 
 La actualización del producto requiere firma de instaladores, firma de manifiestos, protección contra downgrade, canales y validación de compatibilidad de la base local. La pantalla actual ilustra el recorrido y conserva su estado mock; no instala binarios.
 

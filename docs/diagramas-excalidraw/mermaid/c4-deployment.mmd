@@ -3,12 +3,12 @@ flowchart TB
     accDescr: Perfil WAN: puestos y móviles usan el servidor de sucursal por LAN. País y red del ERP son entornos independientes, conectados mediante contratos autenticados. PostgreSQL conserva negocio y entrega durable. Country-api publica versiones; erp-worker prepara maestros mediante un contrato de origen y presupuesto aislados. Redis es caché opcional. Sin SQL WAN ni aplicación adicional.
     subgraph terminalNode["Puestos POS x N · Windows por homologar"]
         direction TB
-        client["pos-desktop<br/>«Contenedor»<br/>Angular + Tauri<br/>Presenta caja y comandos del operador."]:::pos
+        client["pos-desktop<br/>«Contenedor»<br/>Angular (frontend) ·<br/>Tauri (shell nativa)<br/>Aplicación completa para caja y comandos."]:::pos
         device["Puente de periféricos<br/>«Contenedor condicional»<br/>Proceso nativo según SDK<br/>Ejecuta capacidades del puesto."]:::pos
     end
     subgraph mobileNode["Dispositivos móviles · Android/iOS por homologar"]
         direction TB
-        mobileClient["pos-mobile<br/>«Contenedor»<br/>Angular + Capacitor<br/>Presenta operaciones en Android/iOS."]:::pos
+        mobileClient["pos-mobile<br/>«Contenedor»<br/>Angular (frontend) ·<br/>Capacitor (shell nativa)<br/>Aplicación completa para Android/iOS."]:::pos
     end
     subgraph serverNode["Servidor de sucursal · entorno por homologar"]
         direction TB

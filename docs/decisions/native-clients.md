@@ -4,18 +4,45 @@
 
 ## Decisión
 
-POS Platform tiene dos aplicaciones cliente: `apps/pos-desktop`, con Angular y Tauri para el puesto de escritorio, y `apps/pos-mobile`, con Angular y Capacitor para Android e iOS. Cada aplicación posee su arranque, configuración del host y build.
+POS Platform tiene dos **aplicaciones cliente completas**: `apps/pos-desktop` para el puesto de escritorio y `apps/pos-mobile` para Android e iOS. Cada una reúne una **shell nativa** y el **frontend Angular/PrimeNG** que se ejecuta dentro de ella. Tauri proporciona la shell nativa de escritorio; Capacitor, la móvil. Cada aplicación posee su arranque Angular, configuración nativa y build.
+
+## Shell nativa y frontend
+
+| Pieza | Responsabilidad | Ubicación |
+| --- | --- | --- |
+| Aplicación cliente completa | Componer y entregar la shell nativa con su frontend. | `apps/pos-desktop` o `apps/pos-mobile`. |
+| Shell nativa (host) | Alojar el frontend en un WebView y controlar el ciclo de vida, permisos e integración con el sistema operativo. | Tauri en escritorio; Capacitor en móvil. |
+| Frontend Angular/PrimeNG | Presentar pantallas, navegación y estado de interfaz; consumir contratos de API y capacidades autorizadas. | Bundle Angular de cada aplicación, construido a partir de código compartido. |
+| Composición de interfaz Angular | Reunir componente raíz, configuración, rutas, guards y marco de navegación. | `libs/client-shell`, biblioteca incluida en ambos bundles Angular. |
+
+```mermaid
+flowchart LR
+    subgraph Desktop["pos-desktop · aplicación completa"]
+        subgraph Tauri["Shell nativa · Tauri"]
+            DesktopUI["Frontend Angular + PrimeNG"]
+        end
+    end
+    subgraph Mobile["pos-mobile · aplicación completa"]
+        subgraph Capacitor["Shell nativa · Capacitor"]
+            MobileUI["Frontend Angular + PrimeNG"]
+        end
+    end
+```
+
+Los bordes muestran qué contiene cada aplicación. El frontend se ejecuta en el WebView de su shell nativa; compartir código Angular produce bundles para ambas plataformas, con configuraciones y adaptadores propios. Las capacidades nativas se consumen mediante puertos y adaptadores autorizados. [Tauri](https://v2.tauri.app/start/) y [Capacitor](https://capacitorjs.com/docs) proporcionan esa integración con la plataforma.
+
+En el mapa general y C2, los nodos `pos-desktop` y `pos-mobile` representan la aplicación completa. `libs/client-shell` pertenece al frontend Angular: su nombre identifica composición de interfaz, mientras que **shell nativa** identifica Tauri o Capacitor.
 
 El servidor Angular de desarrollo permite trabajar y probar la interfaz. No constituye otro cliente de producto ni una oferta PWA. El sitio Vercel se construye desde el repositorio editorial **pos-docs**: `/` publica el portal de recursos, `/guide/` contiene Starlight y `/presentations/architecture/` aloja la presentación de arquitectura y roadmap.
 
 ## Código compartido y dependencias
 
-`libs/client-shell` compone `AppComponent`, `createClientConfig(platform)`, rutas, guards y shell. Tiene tags `type:shell` y `env:browser`. Las aplicaciones eligen su plataforma y arrancan Angular desde sus propios `main.ts`; no importan otra aplicación ni copian el shell.
+`libs/client-shell` compone `AppComponent`, `createClientConfig(platform)`, rutas, guards y marco de navegación Angular. Tiene tags `type:shell` y `env:browser`: aquí `type:shell` identifica la composición de interfaz. Las aplicaciones eligen su plataforma y arrancan Angular desde sus propios `main.ts`; ambas consumen esta biblioteca compartida.
 
 ```mermaid
 flowchart TB
-    Desktop["pos-desktop · Angular + Tauri"] --> Shell["client-shell · configuración, rutas y navegación"]
-    Mobile["pos-mobile · Angular + Capacitor"] --> Shell
+    Desktop["Arranque Angular de pos-desktop"] --> Shell["client-shell · composición Angular"]
+    Mobile["Arranque Angular de pos-mobile"] --> Shell
     Shell --> Features["features · pantallas y recorridos"]
     Shell --> UI["ui · componentes, tokens, assets y estilos"]
     Features --> UI
@@ -23,7 +50,7 @@ flowchart TB
     Data --> Domain["domain · reglas actuales del prototipo"]
 ```
 
-Las flechas representan imports de código. `libs/ui/assets` y `libs/ui/src/styles.css` sirven a ambos builds. El shell reutiliza las mismas features y adaptadores; no se crean copias de ventas, pagos o permisos por sistema operativo. `libs/client-shell` no es un proceso ni un despliegue adicional. Su composición pertenece al cliente, por eso no se convierte en una biblioteca técnica genérica bajo `shared`.
+Las flechas representan imports de código. `libs/ui/assets` y `libs/ui/src/styles.css` sirven a ambos builds. La composición Angular reutiliza las mismas features y adaptadores; no se crean copias de ventas, pagos o permisos por sistema operativo. `libs/client-shell` es código del frontend incluido en cada aplicación, sin proceso ni despliegue adicional. Su composición pertenece a la interfaz del producto, fuera de la infraestructura técnica genérica de `shared`.
 
 El código nativo y sus permisos pertenecen al host correspondiente. Una integración de periféricos requiere un contrato de capacidad y un adaptador homologado; añadir Tauri o Capacitor no habilita por sí solo impresoras, lectores ni cobros. Las features compartidas no deben depender directamente de SDK de Tauri o Capacitor.
 
@@ -53,4 +80,4 @@ Las guías de [escritorio](../desktop.md) y [móvil](../mobile.md) mantienen los
 
 Esta separación permite evolucionar permisos, integración nativa, empaquetado y distribución por plataforma, conservando una sola implementación de las pantallas compartidas. Exige verificar los dos builds y probar los hosts de manera independiente; el resultado de Windows no certifica Android o iOS.
 
-El shell compartido centraliza la composición de las pantallas y permite mantener reglas, accesibilidad y experiencia comunes. Cada host conserva sus permisos, integración nativa y ciclo de entrega.
+La composición Angular compartida centraliza las pantallas y permite mantener reglas de interfaz, accesibilidad y experiencia comunes. Cada shell nativa conserva sus permisos, integración con la plataforma y ciclo de entrega.

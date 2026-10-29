@@ -1,10 +1,16 @@
+---
+config:
+    flowchart:
+        nodeSpacing: 150
+        rankSpacing: 160
+---
 flowchart TB
     accTitle: C2 · Contenedores — Aplicaciones, procesos y datos
     accDescr: Aplicaciones de POS Platform, persistencia de sucursal y servicios de país. Cada nombre de app corresponde al monorepo; las capacidades son propuesta por implementar. PostgreSQL conserva negocio y entrega durable. Country-api publica versiones; erp-worker prepara maestros mediante un contrato de origen y presupuesto aislados. Redis es caché opcional. Sin SQL WAN ni aplicación adicional.
     subgraph systemScope["POS Platform · aplicaciones y datos propuestos"]
         direction TB
-        client["pos-desktop<br/>«Contenedor»<br/>Angular + Tauri<br/>Presenta caja y comandos del operador."]:::pos
-        mobileClient["pos-mobile<br/>«Contenedor»<br/>Angular + Capacitor<br/>Presenta operaciones en Android/iOS."]:::pos
+        client["pos-desktop<br/>«Contenedor»<br/>Angular (frontend) ·<br/>Tauri (shell nativa)<br/>Aplicación completa para caja y comandos."]:::pos
+        mobileClient["pos-mobile<br/>«Contenedor»<br/>Angular (frontend) ·<br/>Capacitor (shell nativa)<br/>Aplicación completa para Android/iOS."]:::pos
         device["Puente de periféricos<br/>«Contenedor condicional»<br/>Proceso nativo según SDK<br/>Ejecuta capacidades del puesto."]:::pos
         branchApi["branch-api<br/>«Contenedor»<br/>NestJS + Fastify / Node.js<br/>Valida y confirma la operación local."]:::pos
         branchDb["Datos de sucursal<br/>«Contenedor de datos»<br/>PostgreSQL<br/>Guarda negocio, outbox y espejo local."]:::store

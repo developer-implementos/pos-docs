@@ -149,7 +149,8 @@ def write_file(path, pages):
         diagram = elem("diagram", doc, id=f"c4-{index}", name=name)
         diagram.append(copy.deepcopy(model))
     ET.indent(doc, space="  ")
-    ET.ElementTree(doc).write(path, encoding="utf-8", xml_declaration=True)
+    with path.open("wb") as stream:
+        ET.ElementTree(doc).write(stream, encoding="utf-8", xml_declaration=True)
     assert len(ET.parse(path).getroot().findall("diagram")) == len(pages)
 
 

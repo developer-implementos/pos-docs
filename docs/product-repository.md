@@ -104,8 +104,8 @@ La organización acordada agrupa lo transversal en `libs/shared/` y los contexto
 <!-- monorepo:target:start -->
 ```text
 apps/
-  pos-desktop/                  # Cliente Angular con arranque propio y host Tauri
-  pos-mobile/                   # Cliente Angular con arranque propio y host Capacitor
+  pos-desktop/                  # Aplicación completa: shell Tauri + frontend Angular
+  pos-mobile/                   # Aplicación completa: shell Capacitor + frontend Angular
   branch-api/                   # API y composición de negocio de sucursal
   branch-sync-worker/           # Proceso de entrega y recepción de sucursal
   country-api/                  # API de recepción y capacidades de país

@@ -11,7 +11,7 @@ const source = {
   c4: { label: 'Modelo C4 y contratos', href: '/guide/architecture/c4-model/' },
   product: { label: 'Producto, alcance y países', href: '/guide/proposal/product/' },
   architecture: { label: 'Aplicaciones y autoridad de datos', href: '/guide/proposal/architecture/' },
-  native: { label: 'Clientes Tauri y Capacitor', href: '/guide/architecture/native-clients/' },
+  native: { label: 'Shells nativas y frontend Angular', href: '/guide/architecture/native-clients/' },
   monorepo: { label: 'Monorepo y estado de implementación', href: '/guide/implementation/monorepo/' },
   access: { label: 'Acceso, permisos y operación', href: '/guide/proposal/access-operations/' },
   pricing: { label: 'Publicación y vigencia comercial', href: '/guide/proposal/pricing-promotions/' },
@@ -179,7 +179,7 @@ export const architecture = {
       payload: ['Identidad de comando, usuario, puesto y ámbito.', 'Datos de venta y referencia de cotización.'], guarantees: ['La UI no recibe credenciales SQL.', 'Un reintento conserva la identidad del comando.'], failure: ['Sin LAN o backend se detienen comandos dependientes; no se crea otra base en el puesto.'], sources: ['architecture', 'access'],
     }),
     edge('mobile-api', 'mobile', 'branch-api', 'Operación móvil habilitada', 'HTTPS · LAN autenticada', 'sync', {
-      summary: 'Capacitor comparte la autoridad de sucursal.', description: 'El canal móvil utiliza contratos y permisos del backend para el alcance homologado; empaquetar la interfaz no otorga autonomía comercial sin LAN.',
+      summary: 'La aplicación móvil consume la API de sucursal.', description: 'El frontend Angular alojado en la shell nativa Capacitor utiliza contratos y permisos del backend para el alcance homologado; empaquetar la interfaz no otorga autonomía comercial sin LAN.',
       payload: ['Comando identificado y capacidades habilitadas.', 'Contexto de usuario y dispositivo.'], guarantees: ['Misma autoridad de negocio que escritorio.'], failure: ['Reconectar implica consultar el resultado, no generar otra operación.'], sources: ['native', 'access'],
     }),
     edge('command-access', 'branch-api', 'access', 'Validar identidad y permiso', 'Llamada TypeScript interna', 'local', {

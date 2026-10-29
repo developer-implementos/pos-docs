@@ -20,8 +20,8 @@ El producto tiene seis puntos de entrada. Sus nombres delimitan responsabilidade
 
 | Aplicación | Base disponible | Capacidad que requiere implementación y aceptación |
 | --- | --- | --- |
-| `pos-desktop` | Cliente Angular/PrimeNG con arranque propio y host Tauri | Conexión con las APIs reales, identidad y permisos efectivos, periféricos y distribución nativa verificados para el alcance elegido |
-| `pos-mobile` | Cliente Angular/PrimeNG con arranque propio y host Capacitor | Integración real y verificación del recorrido, dispositivos y entrega en Android/iOS |
+| `pos-desktop` | Aplicación cliente de escritorio: frontend Angular/PrimeNG con arranque propio y shell nativa Tauri | Conexión con las APIs reales, identidad y permisos efectivos, periféricos y distribución nativa verificados para el alcance elegido |
+| `pos-mobile` | Aplicación cliente móvil: frontend Angular/PrimeNG con arranque propio y shell nativa Capacitor | Integración real y verificación del recorrido, dispositivos y entrega en Android/iOS |
 | `branch-api` | Base HTTP NestJS/Fastify, configuración, sondas y OpenAPI de desarrollo | Casos de uso de sucursal, autorización de servidor y persistencia transaccional de negocio |
 | `branch-sync-worker` | Composición técnica de un proceso independiente | Entrega y recepción durables, reintentos y recuperación con los datos reales de sucursal |
 | `country-api` | Composición técnica de la API de país | Recepción durable, consolidación y contratos de trabajo y resultados de integración |

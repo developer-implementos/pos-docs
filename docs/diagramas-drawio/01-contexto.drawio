@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <mxfile host="app.diagrams.net" agent="POS C4 local export" type="device" pages="1">
   <diagram id="c4-1" name="C1 · Contexto">
-    <mxGraphModel grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2344" pageHeight="3837" math="0" shadow="0" background="#ffffff">
+    <mxGraphModel grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2344" pageHeight="3887" math="0" shadow="0" background="#ffffff">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -24,19 +24,19 @@
           <mxGeometry x="1345.941406" y="1925.490033" width="616.970703" height="384.25" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-1925-3" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="64" y="2333.740033" width="616.970703" height="439.25" as="geometry" />
+          <mxGeometry x="64" y="2333.740033" width="616.970703" height="466.75" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-1925-4" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="704.970703" y="2333.740033" width="616.970703" height="439.25" as="geometry" />
+          <mxGeometry x="704.970703" y="2333.740033" width="616.970703" height="466.75" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-1925-5" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="1345.941406" y="2333.740033" width="616.970703" height="439.25" as="geometry" />
+          <mxGeometry x="1345.941406" y="2333.740033" width="616.970703" height="466.75" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-1925-6" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="64" y="2796.990033" width="616.970703" height="714.25" as="geometry" />
+          <mxGeometry x="64" y="2824.490033" width="616.970703" height="714.25" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-1925-7" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="704.970703" y="2796.990033" width="616.970703" height="714.25" as="geometry" />
+          <mxGeometry x="704.970703" y="2824.490033" width="616.970703" height="714.25" as="geometry" />
         </mxCell>
         <mxCell id="sheet" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=1.5;fillColor=#fff;rounded=1;arcSize=8;">
           <mxGeometry x="0" y="0" width="2026.912109" height="350" as="geometry" />
@@ -147,16 +147,16 @@
           <mxGeometry x="22" y="74.25" width="562.503906" height="275" as="geometry" />
         </mxCell>
         <mxCell id="notes-1925-3-bg" value="" parent="group-notes-1925-3" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="616.970703" height="439.25" as="geometry" />
+          <mxGeometry x="0" y="0" width="616.970703" height="466.75" as="geometry" />
         </mxCell>
         <mxCell id="notes-1925-3-title" value="POS corporativo" parent="group-notes-1925-3" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="22" width="183.410645" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-1925-3-body" value="Sistema de software · Plataforma de caja&#10;&#10;Sistema objetivo común para Chile, Perú y España.&#10;Clientes Angular + Tauri y Angular + Capacitor aceptados&#10;como dirección; backend, datos y topología son&#10;recomendaciones por validar.&#10;&#10;AUTORIDAD · La venta nace en sucursal; país mantiene&#10;la proyección consolidada.&#10;&#10;CONTINUIDAD · Perfil inicial: WAN caída con LAN y&#10;escritor de sucursal disponibles." parent="group-notes-1925-3" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="74.25" width="560.097656" height="330" as="geometry" />
+        <mxCell id="notes-1925-3-body" value="Sistema de software · Plataforma de caja&#10;&#10;Sistema objetivo común para Chile, Perú y España.&#10;Aplicaciones completas con frontend Angular alojado por&#10;las shells nativas Tauri (escritorio) y Capacitor (móvil),&#10;aceptadas como dirección; backend, datos y topología son&#10;recomendaciones por validar.&#10;&#10;AUTORIDAD · La venta nace en sucursal; país mantiene&#10;la proyección consolidada.&#10;&#10;CONTINUIDAD · Perfil inicial: WAN caída con LAN y&#10;escritor de sucursal disponibles." parent="group-notes-1925-3" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="74.25" width="572.365234" height="357.5" as="geometry" />
         </mxCell>
         <mxCell id="notes-1925-4-bg" value="" parent="group-notes-1925-4" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="616.970703" height="439.25" as="geometry" />
+          <mxGeometry x="0" y="0" width="616.970703" height="466.75" as="geometry" />
         </mxCell>
         <mxCell id="notes-1925-4-title" value="ERP del país" parent="group-notes-1925-4" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="22" width="145.910645" height="31.25" as="geometry" />
@@ -165,7 +165,7 @@
           <mxGeometry x="22" y="74.25" width="555.188477" height="330" as="geometry" />
         </mxCell>
         <mxCell id="notes-1925-5-bg" value="" parent="group-notes-1925-5" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="616.970703" height="439.25" as="geometry" />
+          <mxGeometry x="0" y="0" width="616.970703" height="466.75" as="geometry" />
         </mxCell>
         <mxCell id="notes-1925-5-title" value="Fuentes de maestros y precios" parent="group-notes-1925-5" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="22" width="341.821289" height="31.25" as="geometry" />
@@ -192,13 +192,13 @@
           <mxGeometry x="22" y="74.25" width="562.106445" height="605" as="geometry" />
         </mxCell>
         <mxCell id="footer" value="C4: contenedor = aplicación o almacén; componente = módulo dentro de un proceso. Despliegue y dinámicas son vistas complementarias, no el nivel de código." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="3570.240033" width="1424.169922" height="25" as="geometry" />
+          <mxGeometry x="64" y="3597.740033" width="1424.169922" height="25" as="geometry" />
         </mxCell>
         <mxCell id="glossary" value="LAN: red de tienda · WAN: enlace a país · ACK: acuse de aplicación durable · ACL: capa anticorrupción · outbox/inbox: registros de envío/recepción · watermark: corte consistente del origen" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="3636.240033" width="1681.240234" height="25" as="geometry" />
+          <mxGeometry x="64" y="3663.740033" width="1681.240234" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="sources" value="FUENTES DEL REPOSITORIO&#10;docs/c4-arquitectura-propuesta.md  ·  docs/propuesta-arquitectura.md  ·  docs/opciones-tecnologicas.md  ·  docs/operacion-caja-y-evolucion.md  ·  docs/revision-resiliencia-datos-pos.md&#10;Angular + Tauri (escritorio), Angular + Capacitor (móvil) y Nx: dirección elegida. Backend, bases, integración y topología: diseño por implementar y validar. Nx organiza código y CI; no es un proceso runtime." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=18;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="3705.240033" width="1643.80957" height="67.5" as="geometry" />
+        <mxCell id="sources" value="FUENTES DEL REPOSITORIO&#10;docs/c4-arquitectura-propuesta.md  ·  docs/propuesta-arquitectura.md  ·  docs/opciones-tecnologicas.md  ·  docs/operacion-caja-y-evolucion.md  ·  docs/revision-resiliencia-datos-pos.md&#10;Aplicaciones completas: frontend Angular alojado por las shells nativas Tauri (escritorio) y Capacitor (móvil). libs/client-shell compone Angular: raíz, configuración, rutas, guards y layout. Backend, datos e integración: diseño por&#10;implementar. Nx organiza código y CI." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=18;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="3732.740033" width="1803.902344" height="90" as="geometry" />
         </mxCell>
         <mxCell id="cashier" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#163A73;strokeWidth=1.5;fillColor=#163A73;rounded=1;arcSize=8;">
           <mxGeometry x="64" y="443.2" width="403.15708" height="120" as="geometry" />
@@ -457,28 +457,28 @@
             <mxPoint x="7.976501" y="-10.707131" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="A1Wqhx6RnoSL-kdykSX2v" value="Cajero&#10;«Persona»&#10;Operación humana&#10;Vende, cobra y gestiona su turno." parent="cashier" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#fff;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="aYXgGos_4zVKmNR2xWJAd" value="Cajero&#10;«Persona»&#10;Operación humana&#10;Vende, cobra y gestiona su turno." parent="cashier" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#fff;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="22.791431" y="7.2" width="357.574219" height="105.6" as="geometry" />
         </mxCell>
-        <mxCell id="MaUxreLfjAYwQs46C893F" value="Supervisor de sucursal&#10;«Persona»&#10;Operación humana&#10;Autoriza excepciones y revisa&#10;cierres." parent="supervisor" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#fff;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="zY49CXEY2XWm_I_6Ly6YV" value="Supervisor de sucursal&#10;«Persona»&#10;Operación humana&#10;Autoriza excepciones y revisa&#10;cierres." parent="supervisor" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#fff;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="26.076453" y="7.2" width="317.484375" height="132" as="geometry" />
         </mxCell>
-        <mxCell id="g8zIi5MO7VCKw09W6yBMh" value="Operación de plataforma&#10;«Persona»&#10;Soporte autorizado&#10;Supervisa sincronización y&#10;recuperación." parent="support" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#fff;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="Lqa5b-3TN9E8IoheY9pf4" value="Operación de plataforma&#10;«Persona»&#10;Soporte autorizado&#10;Supervisa sincronización y&#10;recuperación." parent="support" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#fff;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="26.070593" y="7.2" width="284.132812" height="132" as="geometry" />
         </mxCell>
-        <mxCell id="W2_1UUMOIooMTkqtqecUv" value="POS corporativo&#10;«Sistema de software»&#10;Plataforma de caja&#10;Opera sucursales e integra cada&#10;país." parent="pos" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="ZZeUQ17g-vzkCWaqd2aUZ" value="POS corporativo&#10;«Sistema de software»&#10;Plataforma de caja&#10;Opera sucursales e integra cada&#10;país." parent="pos" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="28.824609" y="14.4" width="346.863281" height="132" as="geometry" />
         </mxCell>
-        <mxCell id="0M51yqNMS2Bv8zbxQFfop" value="ERP del país&#10;«Sistema externo»&#10;CL: AX · ES: Gira · PE: custom&#10;Recibe y concilia documentos&#10;financieros." parent="erp" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="gz90VD2G3I5REbAFw7S_0" value="ERP del país&#10;«Sistema externo»&#10;CL: AX · ES: Gira · PE: custom&#10;Recibe y concilia documentos&#10;financieros." parent="erp" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="28.160156" y="14.4" width="332.085938" height="132" as="geometry" />
         </mxCell>
-        <mxCell id="B7x9tbhapObf-ijxn26o9" value="Fuentes de maestros y precios&#10;«Sistema externo»&#10;Interfaces por confirmar&#10;Publica datos y reglas autorizados." parent="masters" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="QIAJZCM5nyv-7vGWaZO_H" value="Fuentes de maestros y precios&#10;«Sistema externo»&#10;Interfaces por confirmar&#10;Publica datos y reglas autorizados." parent="masters" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="28.816406" y="14.4" width="372.210938" height="105.6" as="geometry" />
         </mxCell>
-        <mxCell id="2RKIPmzQ0OujaqqeTBgcu" value="Proveedor de pagos&#10;«Sistema externo»&#10;API / SDK según proveedor&#10;Ej.: Transbank POS · Niubiz ·&#10;Mercado Pago Point." parent="payments" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="4eArJTs7knvEjT5yL0DIv" value="Proveedor de pagos&#10;«Sistema externo»&#10;API / SDK según proveedor&#10;Ej.: Transbank POS · Niubiz ·&#10;Mercado Pago Point." parent="payments" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="28.603125" y="14.4" width="313.875" height="132" as="geometry" />
         </mxCell>
-        <mxCell id="Vbk68ZaEIdNvPSbmVEjz1" value="Proveedor de facturación&#10;«Sistema externo»&#10;Contrato por país y modalidad&#10;Ej.: Acepta / Ingydev (CL) · EFACT&#10;(PE)." parent="fiscal" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="RV3vHw_jfoserK4EuIEfw" value="Proveedor de facturación&#10;«Sistema externo»&#10;Contrato por país y modalidad&#10;Ej.: Acepta / Ingydev (CL) · EFACT&#10;(PE)." parent="fiscal" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="28.630078" y="14.4" width="372.128906" height="132" as="geometry" />
         </mxCell>
       </root>

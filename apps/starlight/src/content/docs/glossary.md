@@ -11,6 +11,10 @@ Estas definiciones precisan el uso de los términos **en esta propuesta**. Los e
 | Término | Significado en POS Platform | Detalle |
 | --- | --- | --- |
 | Módulos de negocio compartidos | Casos de uso y reglas reutilizables de venta, caja, precios y otras capacidades; conservan límites de responsabilidad y datos. | [Producto](/guide/proposal/product/) |
+| Aplicación cliente completa | `pos-desktop` o `pos-mobile`: reúne la shell nativa y el frontend Angular que aloja. | [Composición de clientes](/guide/architecture/native-clients/#shell-nativa-y-frontend) |
+| Shell nativa (host) | Envoltura Tauri en escritorio o Capacitor en móvil; aloja el frontend en un WebView y gestiona su integración con el sistema operativo. | [Shell y frontend](/guide/architecture/native-clients/#shell-nativa-y-frontend) |
+| Frontend Angular | Pantallas, navegación y estado de interfaz dentro de la shell nativa; reutiliza código compartido y consume contratos autorizados. | [Composición Angular](/guide/architecture/native-clients/#código-compartido-y-dependencias) |
+| `libs/client-shell` | Biblioteca de composición Angular: componente raíz, configuración, rutas, guards y marco de navegación. Forma parte del frontend de ambas aplicaciones. | [Código compartido](/guide/architecture/native-clients/#código-compartido-y-dependencias) |
 | Backend de sucursal | Servicio local que recibe operaciones de las cajas por LAN y confirma transacciones en PostgreSQL de la tienda. Su aplicación HTTP es `branch-api`. | [Aplicaciones y datos](/guide/proposal/architecture/) |
 | Plataforma de país | Aplicaciones y datos que reciben operaciones, distribuyen maestros e integran los sistemas de una jurisdicción y entidad legal. | [Arquitectura](/guide/proposal/architecture/) |
 | Perfil de país | Configuración aprobada que selecciona capacidades, reglas y adaptadores compatibles. No sustituye el código de un proveedor nuevo. | [Producto y variantes](/guide/proposal/product/#objetivo-de-producto-y-criterios-de-evolución) |

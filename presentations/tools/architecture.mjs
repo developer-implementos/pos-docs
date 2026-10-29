@@ -39,10 +39,10 @@ export function architectureSlide(slide) {
     assert.ok(apps.every(id => nodes.get(id)?.kind === 'app'), 'C2 shows the six canonical applications');
     assert.equal(containerOverview.edges.length, 7, 'Every connection must project to the applications and stores shown');
     body = [
-      text('Clientes', 64, 224, 220, 32, 'group', blue), text('Sucursal', 352, 224, 270, 32, 'group', blue),
+      text('Apps cliente', 64, 224, 220, 32, 'group', blue), text('Sucursal', 352, 224, 270, 32, 'group', blue),
       text('País', 686, 224, 240, 32, 'group', blue), text('Red autorizada', 996, 224, 220, 32, 'group', blue),
-      ...node('desktop', 64, 280, 212, 94, 'Angular + Tauri'),
-      ...node('mobile', 64, 420, 212, 94, 'Angular + Capacitor'),
+      ...node('desktop', 64, 280, 212, 98, 'Shell Tauri\nFrontend Angular'),
+      ...node('mobile', 64, 420, 212, 98, 'Shell Capacitor\nFrontend Angular'),
       ...node('branch-api', 352, 280, 262, 94, 'Reglas y permisos'),
       ...node('branch-db', 352, 420, 262, 94, 'Negocio + outbox'),
       ...node('branch-sync', 352, 550, 262, 74, 'Intercambio durable'),
@@ -57,7 +57,7 @@ export function architectureSlide(slide) {
       ...connection('accept-country', [[805, 374], [805, 500]], 'SQL', [818, 430, 65, 22]),
       ...connection('claim-report', [[996, 326], [924, 326]], 'HTTPS', [930, 300, 64, 22]),
       text('Inicia conexiones\na país; sin SQL WAN.', 996, 430, 220, 60),
-      text('Cada app tiene arranque propio. Los componentes internos se detallan en el mapa interactivo.', 64, 566, 258, 60, 'label'),
+      text('Tauri y Capacitor: shells nativas.\nCada app tiene arranque propio.', 64, 566, 258, 60, 'label'),
     ];
   } else if (slide.architectureView === 'erp-topology') {
     body = [

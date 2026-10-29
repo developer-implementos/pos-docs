@@ -3,19 +3,19 @@
   "product": "POS Platform",
   "reviewedOn": "2026-10-21",
   "repository": "https://github.com/developer-implementos/pos-platform",
-  "evidence": "Seis aplicaciones de POS Platform: clientes Angular separados para escritorio (Tauri) y móvil (Capacitor Android/iOS), con shell compartido, y cuatro entradas backend. La documentación Starlight se mantiene en developer-implementos/pos-docs. El estado distingue adaptadores mock, base técnica y scaffolding; no acredita operación productiva, periféricos homologados ni validación funcional en dispositivos físicos.",
+  "evidence": "Seis aplicaciones de POS Platform: aplicaciones cliente completas de escritorio y móvil, con shells nativas Tauri y Capacitor (Android/iOS) y composición Angular compartida, y cuatro entradas backend. La documentación Starlight se mantiene en developer-implementos/pos-docs. El estado distingue adaptadores mock, base técnica y scaffolding; no acredita operación productiva, periféricos homologados ni validación funcional en dispositivos físicos.",
   "applications": [
     {
       "name": "pos-desktop",
       "location": "Puesto Windows",
-      "description": "Cliente Angular con arranque propio y host Tauri",
-      "state": "Cliente con adaptadores mock; integración nativa real pendiente"
+      "description": "Aplicación completa: shell nativa Tauri y frontend Angular",
+      "state": "Frontend con adaptadores mock; integración nativa real pendiente"
     },
     {
       "name": "pos-mobile",
       "location": "Dispositivo Android/iOS",
-      "description": "Cliente Angular con arranque propio y host Capacitor",
-      "state": "Base móvil con adaptadores mock; ejecución y distribución nativas por verificar"
+      "description": "Aplicación completa: shell nativa Capacitor y frontend Angular",
+      "state": "Frontend con adaptadores mock; ejecución y distribución nativas por verificar"
     },
     {
       "name": "branch-api",
@@ -140,7 +140,7 @@
     },
     {
       "path": "client-shell",
-      "description": "Composición Angular compartida, configuración por plataforma, rutas y shell",
+      "description": "Composición Angular compartida: raíz, configuración, rutas, guards y navegación",
       "kind": "frontend"
     },
     {
@@ -168,12 +168,12 @@
     "entries": [
       {
         "path": "apps/pos-desktop",
-        "description": "Cliente Angular con arranque propio y host Tauri",
+        "description": "Aplicación completa: shell Tauri + frontend Angular",
         "state": "conservado"
       },
       {
         "path": "apps/pos-mobile",
-        "description": "Cliente Angular con arranque propio y host Capacitor",
+        "description": "Aplicación completa: shell Capacitor + frontend Angular",
         "state": "conservado"
       },
       {

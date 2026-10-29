@@ -6,7 +6,7 @@
 
 `apps/branch-api` es el punto de entrada HTTP del backend de sucursal propuesto. Usa NestJS 12, Fastify 5 y TypeScript dentro del monorepo Nx. Su alcance actual es una base ejecutable y verificable: arranque, configuración, información del servicio, sondas y contrato OpenAPI. La composición de `country-api`, `branch-sync-worker` y `erp-worker` reutiliza la base técnica de `libs/platform/backend`; la [guía del monorepo](monorepo.md) delimita esos procesos y los contextos de negocio.
 
-Los clientes Angular/Tauri y Angular/Capacitor conservan sus datos sintéticos y adaptadores mock. Esta API no tiene autenticación, base de datos, ventas, precios ni sincronizadores implementados. Los endpoints disponibles no habilitan operaciones de caja.
+Las aplicaciones cliente `pos-desktop` y `pos-mobile` conservan sus datos sintéticos y adaptadores mock en el frontend Angular/PrimeNG, alojado en las shells nativas Tauri y Capacitor, respectivamente. Esta API no tiene autenticación, base de datos, ventas, precios ni sincronizadores implementados. Los endpoints disponibles no habilitan operaciones de caja.
 
 ## Referencia Core
 

@@ -1623,7 +1623,7 @@
       "diagram": true,
       "title": "Aplicaciones y datos de la propuesta",
       "background": "#FFFFFF",
-      "notes": "Vista C2 resumida derivada del modelo de arquitectura: seis aplicaciones con arranque propio y dos almacenes PostgreSQL. Los clientes llaman a branch-api por la red autorizada; branch-sync-worker intercambia por HTTPS con country-api; erp-worker inicia conexiones HTTPS para solicitar trabajo y reportar resultados desde la red autorizada. Los clientes y erp-worker no acceden por SQL a país. Las reglas y componentes internos pertenecen a sus aplicaciones. Los conectores a sistemas externos se detallan en el capítulo de integración.",
+      "notes": "Vista C2 resumida derivada del modelo de arquitectura: seis aplicaciones con arranque propio y dos almacenes PostgreSQL. pos-desktop y pos-mobile son aplicaciones completas: sus shells nativas Tauri y Capacitor alojan el frontend Angular. Los clientes llaman a branch-api por la red autorizada; branch-sync-worker intercambia por HTTPS con country-api; erp-worker inicia conexiones HTTPS para solicitar trabajo y reportar resultados desde la red autorizada. Los clientes y erp-worker no acceden por SQL a país. Las reglas y componentes internos pertenecen a sus aplicaciones. Los conectores a sistemas externos se detallan en el capítulo de integración.",
       "sources": [
         {
           "label": "Contenedores y límites C4",
@@ -1787,7 +1787,7 @@
       "id": "slide-4",
       "title": "Estructura objetivo del monorepo",
       "background": "#FFFFFF",
-      "notes": "Estructura objetivo de POS Platform: seis aplicaciones con arranque propio. Los clientes de escritorio y móvil comparten la interfaz; branch-api atiende la operación de sucursal, branch-sync-worker intercambia información con país, country-api recibe operaciones y ofrece capacidades nacionales, y erp-worker integra el ERP. libs/backend organiza trece contextos de negocio; libs/shared reúne mecanismos técnicos y conceptos mínimos. El shell compone las funcionalidades de la interfaz. Cada biblioteca ofrece una entrada pública y dependencias explícitas. pos-clients-e2e es el proyecto de pruebas de los clientes y shared/testing el soporte técnico de pruebas previsto. La base actual incluye una UI demostrativa y estructura técnica de APIs, workers y contextos; persistencia, sincronización y operaciones comerciales forman parte del roadmap. POS Docs tiene repositorio y entrega independientes. Core es una referencia de organización y convenciones.",
+      "notes": "Estructura objetivo de POS Platform: seis aplicaciones con arranque propio. pos-desktop y pos-mobile son aplicaciones completas: Tauri y Capacitor son sus shells nativas y alojan el frontend Angular compartido; branch-api atiende la operación de sucursal, branch-sync-worker intercambia información con país, country-api recibe operaciones y ofrece capacidades nacionales, y erp-worker integra el ERP. libs/backend organiza trece contextos de negocio; libs/shared reúne mecanismos técnicos y conceptos mínimos. libs/client-shell compone el frontend Angular: componente raíz, configuración, rutas, guards y layout. Cada biblioteca ofrece una entrada pública y dependencias explícitas. pos-clients-e2e es el proyecto de pruebas de los clientes y shared/testing el soporte técnico de pruebas previsto. La base actual incluye una UI demostrativa y estructura técnica de APIs, workers y contextos; persistencia, sincronización y operaciones comerciales forman parte del roadmap. POS Docs tiene repositorio y entrega independientes. Core es una referencia de organización y convenciones.",
       "sources": [
         {
           "label": "monorepo",
@@ -2073,7 +2073,7 @@
         },
         {
           "type": "text",
-          "text": "Cliente Angular + Tauri",
+          "text": "Shell nativa Tauri · UI Angular",
           "position": {
             "left": 78,
             "top": 310,
@@ -2113,7 +2113,7 @@
         },
         {
           "type": "text",
-          "text": "Cliente Angular + Capacitor",
+          "text": "Shell nativa Capacitor · UI Angular",
           "position": {
             "left": 78,
             "top": 355,
@@ -2812,7 +2812,7 @@
       "id": "slide-5",
       "title": "Responsabilidad de las bibliotecas",
       "background": "#FFFFFF",
-      "notes": "Shared agrupa mecanismos técnicos y conceptos mínimos. El shell compone features y pertenece a la interfaz del producto. Country-policies define perfiles y selección de políticas por país; domain contiene reglas puras del prototipo y data-access su estado y adaptadores mock. Las reglas comerciales definitivas pertenecen a los contextos de negocio. Las carpetas de shared/backend describen responsabilidades; el número de bibliotecas Nx se determina por sus límites y consumidores. Los contratos de negocio pertenecen a su contexto, por ejemplo SaleConfirmedV1 en ventas; shared/contracts contiene sobres y metadatos técnicos. Shared/testing es soporte exclusivo de pruebas. Los clientes ofrecen puertos de acceso a capacidades nativas para las features.",
+      "notes": "Shared agrupa mecanismos técnicos y conceptos mínimos. libs/client-shell compone el frontend Angular: componente raíz, configuración, rutas, guards y layout. Tauri y Capacitor son las shells nativas que alojan ese frontend en pos-desktop y pos-mobile. Country-policies define perfiles y selección de políticas por país; domain contiene reglas puras del prototipo y data-access su estado y adaptadores mock. Las reglas comerciales definitivas pertenecen a los contextos de negocio. Las carpetas de shared/backend describen responsabilidades; el número de bibliotecas Nx se determina por sus límites y consumidores. Los contratos de negocio pertenecen a su contexto, por ejemplo SaleConfirmedV1 en ventas; shared/contracts contiene sobres y metadatos técnicos. Shared/testing es soporte exclusivo de pruebas. Los clientes ofrecen puertos de acceso a capacidades nativas para las features.",
       "sources": [
         {
           "label": "monorepo",
@@ -3333,7 +3333,7 @@
             "left": 660,
             "top": 291,
             "width": 556,
-            "height": 56
+            "height": 76
           },
           "fill": "#EDF4F8",
           "line": {
@@ -3363,12 +3363,12 @@
         },
         {
           "type": "text",
-          "text": "Composición Angular, rutas y navegación",
+          "text": "Composición Angular: raíz, configuración,\nrutas, guards y layout",
           "position": {
             "left": 674,
             "top": 322,
             "width": 528,
-            "height": 25
+            "height": 45
           },
           "style": {
             "typeface": "Inter",
@@ -3386,7 +3386,7 @@
           "geometry": "rect",
           "position": {
             "left": 660,
-            "top": 353,
+            "top": 373,
             "width": 556,
             "height": 56
           },
@@ -3401,7 +3401,7 @@
           "text": "libs/features/",
           "position": {
             "left": 674,
-            "top": 357,
+            "top": 377,
             "width": 528,
             "height": 28
           },
@@ -3421,7 +3421,7 @@
           "text": "Funcionalidades y pantallas de la interfaz",
           "position": {
             "left": 674,
-            "top": 384,
+            "top": 404,
             "width": 528,
             "height": 25
           },
@@ -3441,7 +3441,7 @@
           "geometry": "rect",
           "position": {
             "left": 660,
-            "top": 415,
+            "top": 435,
             "width": 556,
             "height": 56
           },
@@ -3456,7 +3456,7 @@
           "text": "libs/country-policies/",
           "position": {
             "left": 674,
-            "top": 419,
+            "top": 439,
             "width": 528,
             "height": 28
           },
@@ -3476,7 +3476,7 @@
           "text": "Perfiles y selección de políticas por país",
           "position": {
             "left": 674,
-            "top": 446,
+            "top": 466,
             "width": 528,
             "height": 25
           },
@@ -3496,7 +3496,7 @@
           "geometry": "rect",
           "position": {
             "left": 660,
-            "top": 477,
+            "top": 497,
             "width": 556,
             "height": 56
           },
@@ -3511,7 +3511,7 @@
           "text": "libs/domain/",
           "position": {
             "left": 674,
-            "top": 481,
+            "top": 501,
             "width": 528,
             "height": 28
           },
@@ -3531,7 +3531,7 @@
           "text": "Reglas puras del prototipo frontend",
           "position": {
             "left": 674,
-            "top": 508,
+            "top": 528,
             "width": 528,
             "height": 25
           },
@@ -3551,7 +3551,7 @@
           "geometry": "rect",
           "position": {
             "left": 660,
-            "top": 539,
+            "top": 559,
             "width": 556,
             "height": 56
           },
@@ -3566,7 +3566,7 @@
           "text": "libs/data-access/",
           "position": {
             "left": 674,
-            "top": 543,
+            "top": 563,
             "width": 528,
             "height": 28
           },
@@ -3586,7 +3586,7 @@
           "text": "Estado y adaptadores mock de la demo",
           "position": {
             "left": 674,
-            "top": 570,
+            "top": 590,
             "width": 528,
             "height": 25
           },
@@ -4660,7 +4660,7 @@
       "diagram": true,
       "title": "Stack de infraestructura propuesto",
       "background": "#FFFFFF",
-      "notes": "La base recomendada es PostgreSQL en sucursal y país, NestJS/Fastify y workers. Ningún motor/broker confirma por sí solo la durabilidad: se implementan transacciones, outbox/inbox, deduplicación y recuperación. GCP/Cloud Run, Pub/Sub, RabbitMQ, Redis/BullMQ y Kubernetes no se presentan como servicios elegidos. Cloud autorizado o VM privada requiere decisión operativa. El móvil no habilita por sí solo venta sin LAN ni acceso remoto público. LAN/escritor disponibles son requisito del perfil WAN. El OS, dimensionamiento, HA, RPO/RTO y distribución se homologan en piloto.",
+      "notes": "pos-desktop y pos-mobile son aplicaciones completas con frontend Angular alojado por las shells nativas Tauri y Capacitor, respectivamente. La base recomendada es PostgreSQL en sucursal y país, NestJS/Fastify y workers. Ningún motor/broker confirma por sí solo la durabilidad: se implementan transacciones, outbox/inbox, deduplicación y recuperación. GCP/Cloud Run, Pub/Sub, RabbitMQ, Redis/BullMQ y Kubernetes no se presentan como servicios elegidos. Cloud autorizado o VM privada requiere decisión operativa. El móvil no habilita por sí solo venta sin LAN ni acceso remoto público. LAN/escritor disponibles son requisito del perfil WAN. El OS, dimensionamiento, HA, RPO/RTO y distribución se homologan en piloto.",
       "sources": [
         {
           "label": "technology",
@@ -4825,7 +4825,7 @@
         },
         {
           "type": "text",
-          "text": "Clientes",
+          "text": "Apps cliente",
           "position": {
             "left": 76,
             "top": 298,
@@ -4844,7 +4844,7 @@
         },
         {
           "type": "text",
-          "text": "Angular + Tauri\nAngular + Capacitor",
+          "text": "Shells nativas: Tauri / Capacitor\nFrontend: Angular",
           "position": {
             "left": 76,
             "top": 324,

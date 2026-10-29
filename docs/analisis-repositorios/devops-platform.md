@@ -213,7 +213,7 @@ El índice RFC y el propio RFC-016 permiten comprobar estos matices. Ni los porc
 | Adaptadores ERP / ACL | Empaquetado y despliegue independiente de servicios | Contratos canónicos versionados, suites por ERP, replay e idempotencia; ninguna acción implementa la ACL |
 | Despliegues centrales por país | Inputs y matrices reutilizables, WIF, plantillas Cloud Run | Identidades/IAM/red por ambiente, datos y fiscalidad; CL/PE/ES en una etiqueta o tarjeta no provisiona esos límites |
 | Releases centrales | Release-please, SHA de fuente, imágenes base, metadatos | Promoción del mismo digest, secretos versionados, aprobación según riesgo y rollback completo probado |
-| Cliente Tauri en Windows | Convenciones de release, control de fuente y comunicación | Pipeline Windows/Rust/Tauri, firma de binarios y actualizaciones, inventario por terminal, pruebas con periféricos |
+| Aplicación de escritorio con shell nativa Tauri en Windows | Convenciones de release, control de fuente y comunicación | Pipeline Windows/Rust/Tauri, firma de binarios y actualizaciones, inventario por terminal, pruebas con periféricos |
 | Backend/base de sucursal | Convenciones y artefactos versionados | Instalación y servicios locales, compatibilidad de esquema, backup/restore, watchdog y recuperación tras reinicio |
 | Entrega con conectividad intermitente | Principios de artefactos inmutables y diagnóstico | Descarga reanudable, verificación local de autenticidad/integridad, instalación atómica, ventana de caja, rollback seguro y retención de versiones |
 | Operación offline | No está implementada por este catálogo | Pruebas de venta desconectada, stock/ofertas locales, cola durable, reintentos, reconciliación y recuperación después de energía/red |

@@ -104,7 +104,7 @@
     "summary": "Opera sucursales e integra cada país.",
     "ownership": "La venta nace en sucursal; país mantiene la proyección consolidada.",
     "offline": "Perfil inicial: WAN caída con LAN y escritor de sucursal disponibles.",
-    "detail": "Sistema objetivo común para Chile, Perú y España. Clientes Angular + Tauri y Angular + Capacitor aceptados como dirección; backend, datos y topología son recomendaciones por validar.",
+    "detail": "Sistema objetivo común para Chile, Perú y España. Aplicaciones completas con frontend Angular alojado por las shells nativas Tauri (escritorio) y Capacitor (móvil), aceptadas como dirección; backend, datos y topología son recomendaciones por validar.",
     "sources": [
       {
         "label": "Propuesta y decisiones de arquitectura",
@@ -200,11 +200,11 @@
     "id": "client",
     "name": "pos-desktop",
     "type": "Contenedor",
-    "technology": "Angular + Tauri",
-    "summary": "Presenta caja y comandos del operador.",
+    "technology": "Angular (frontend) · Tauri (shell nativa)",
+    "summary": "Aplicación completa para caja y comandos.",
     "ownership": "No posee otra base de ventas ni credenciales SQL.",
     "offline": "Sin WAN usa la API por LAN. Sin LAN o backend, se detienen nuevos comandos dependientes.",
-    "detail": "pos-desktop tiene arranque propio y comparte client-shell con pos-mobile. Tauri aloja el bundle de escritorio; hardware, SDK y distribución requieren homologación. Su registro técnico de periféricos no lo convierte en autoridad de ventas.",
+    "detail": "apps/pos-desktop entrega la aplicación completa: la shell nativa Tauri aloja el frontend Angular. Tiene arranque, configuración nativa y build propios. Comparte con pos-mobile libs/client-shell: raíz, configuración, rutas, guards y layout Angular; esta biblioteca no es la shell nativa ni un proceso adicional. Hardware, SDK y distribución requieren homologación. Su registro técnico de periféricos no lo convierte en autoridad de ventas.",
     "sources": [
       {
         "label": "Opciones tecnológicas y límites",
@@ -222,11 +222,11 @@
     "id": "mobileClient",
     "name": "pos-mobile",
     "type": "Contenedor",
-    "technology": "Angular + Capacitor",
-    "summary": "Presenta operaciones en Android/iOS.",
+    "technology": "Angular (frontend) · Capacitor (shell nativa)",
+    "summary": "Aplicación completa para Android/iOS.",
     "ownership": "Comparte interfaz y contratos; no otra autoridad de ventas.",
     "offline": "Requiere conexión autorizada al backend de sucursal. El móvil no incorpora autonomía sin LAN.",
-    "detail": "pos-mobile tiene arranque y bundle propios, compuestos con client-shell. Los adaptadores actuales son mock. Instalación, ciclo de vida, almacenamiento y capacidades nativas requieren pruebas Android/iOS; no hay acceso SQL ni permisos implícitos por empaquetar la interfaz.",
+    "detail": "apps/pos-mobile entrega la aplicación completa: la shell nativa Capacitor aloja el frontend Angular. Tiene arranque, configuración nativa y build propios. Comparte con pos-desktop libs/client-shell: raíz, configuración, rutas, guards y layout Angular; esta biblioteca no es la shell nativa ni un proceso adicional. Los adaptadores actuales son mock. Instalación, ciclo de vida, almacenamiento y capacidades nativas requieren pruebas Android/iOS; no hay acceso SQL ni permisos implícitos por empaquetar la interfaz.",
     "sources": [
       {
         "label": "Opciones tecnológicas y límites",

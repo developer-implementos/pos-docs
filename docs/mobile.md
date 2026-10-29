@@ -1,8 +1,8 @@
 # Cliente móvil Angular y Capacitor
 
-`apps/pos-mobile` contiene un cliente Angular con arranque propio y un host Capacitor para Android e iOS. Consume `libs/client-shell` y los componentes, estilos y activos de `libs/ui`; no depende del build de escritorio. La [decisión de clientes nativos](decisions/native-clients.md) explica la separación y sus límites.
+`apps/pos-mobile` contiene la aplicación cliente móvil: un frontend Angular/PrimeNG con arranque propio, alojado en la shell nativa (host) Capacitor para Android e iOS. Consume `libs/client-shell` y los componentes, estilos y activos de `libs/ui`; no depende del build de escritorio. La [decisión de clientes nativos](decisions/native-clients.md) explica la separación y sus límites.
 
-La estructura objetivo define `libs/shared/frontend/ui` para la presentación transversal y `client-shell` para la composición del cliente. El [catálogo del monorepo](monorepo.md) distingue esa organización del código revisado al que corresponden los comandos de esta guía.
+La estructura objetivo define `libs/shared/frontend/ui` para la presentación transversal y `libs/client-shell` para la composición Angular de raíz, configuración, rutas, guards y layout; esta librería no es el host nativo. El [catálogo del monorepo](monorepo.md) distingue esa organización del código revisado al que corresponden los comandos de esta guía.
 
 ## Comandos
 

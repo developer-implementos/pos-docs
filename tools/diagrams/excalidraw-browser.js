@@ -40,7 +40,7 @@ function cards(skeleton,items,x,y,width,cols=3){
 function footer(skeleton,width,y,sources){
   skeleton.push(text('footer',64,y,'C4: contenedor = aplicación o almacén; componente = módulo dentro de un proceso. Despliegue y dinámicas son vistas complementarias, no el nivel de código.',20,width-128,C.muted));
   skeleton.push(text('glossary',64,y+66,'LAN: red de tienda · WAN: enlace a país · ACK: acuse de aplicación durable · ACL: capa anticorrupción · outbox/inbox: registros de envío/recepción · watermark: corte consistente del origen',20,width-128,C.muted));
-  skeleton.push(text('sources',64,y+135,`FUENTES DEL REPOSITORIO\n${sources.join('  ·  ')}\nAngular + Tauri (escritorio), Angular + Capacitor (móvil) y Nx: dirección elegida. Backend, bases, integración y topología: diseño por implementar y validar. Nx organiza código y CI; no es un proceso runtime.`,18,width-128,C.muted));
+  skeleton.push(text('sources',64,y+135,`FUENTES DEL REPOSITORIO\n${sources.join('  ·  ')}\nAplicaciones completas: frontend Angular alojado por las shells nativas Tauri (escritorio) y Capacitor (móvil). libs/client-shell compone Angular: raíz, configuración, rutas, guards y layout. Backend, datos e integración: diseño por implementar. Nx organiza código y CI.`,18,width-128,C.muted));
 }
 const decisionNotes={
   context:[{title:'Límites de autoridad',body:'Sucursal conserva la venta original. País consolida una proyección. Precio, efecto financiero del pago, documento fiscal y contabilización ERP tienen autoridades y estados diferentes.'},{title:'Continuidad autorizada',body:'Perfil inicial: caída de WAN con LAN, backend y PostgreSQL de sucursal disponibles. Vigencia de precios, permisos, límites y capacidades de pago/fiscalidad determinan qué puede continuar.'},{title:'Chile y evolución multinacional',body:'Antecedentes: Chile Dynamics AX on-premise; España Gira; Perú sistema custom. Interfaces por validar. No se asigna stock al POS ni se declara un ERP futuro ya aprobado.'}],
@@ -105,7 +105,8 @@ async function dynamic(view){
   header(sk,width,view.number,'Dinámica C4 · interacción numerada',view.title,view.scope);
   const cols=view.participants.length,cw=(width-128)/cols,top=420,pHeight=210,centers={};
   view.participants.forEach((p,i)=>{const x=64+i*cw+12,w=cw-24;centers[p.id]=x+w/2;const data=/datos|PostgreSQL/i.test(p.name+' '+p.technology),ext=/externo/.test(p.type);const fill=data?C.dataSoft:ext?C.externalSoft:C.primarySoft;
-    sk.push({...box(p.id,x,top,w,pHeight,fill,data?C.data:ext?C.external:C.primary),label:{text:wrap(`${p.name}\n«${p.type}»\n${p.technology}\n${p.summary}`,w-26,21),fontFamily:2,fontSize:21,strokeColor:C.ink}});
+    const technology=p.technology.replace(' (frontend) · ',' (frontend) ·\n');
+    sk.push({...box(p.id,x,top,w,pHeight,fill,data?C.data:ext?C.external:C.primary),label:{text:wrap(`${p.name}\n«${p.type}»\n${technology}\n${p.summary}`,w-26,21),fontFamily:2,fontSize:21,strokeColor:C.ink}});
   });
   let y=top+pHeight+65;
   const stepData=[];

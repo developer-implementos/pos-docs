@@ -1,6 +1,6 @@
 # Opciones tecnológicas del POS
 
-Selección tecnológica y condiciones de adopción de la [propuesta de arquitectura](propuesta-arquitectura.md). **Angular empaquetado en Tauri y el uso de Nx son decisiones de producto. NestJS/Fastify y PostgreSQL en sucursal y país son la recomendación técnica explícita, aún pendiente de aprobación y piloto.** Aceptar cliente y Nx no aprueba automáticamente backend, datos, topología, operación ni todos los dispositivos. Este documento no acredita implementación ni despliegue del producto POS objetivo.
+Selección tecnológica y condiciones de adopción de la [propuesta de arquitectura](propuesta-arquitectura.md). **El cliente de escritorio `pos-desktop`, con frontend Angular/PrimeNG alojado en la shell nativa Tauri, y el uso de Nx son decisiones de producto. NestJS/Fastify y PostgreSQL en sucursal y país son la recomendación técnica explícita, aún pendiente de aprobación y piloto.** Aceptar cliente y Nx no aprueba automáticamente backend, datos, topología, operación ni todos los dispositivos. Este documento no acredita implementación ni despliegue del producto POS objetivo.
 
 La evaluación de **WSO2, RabbitMQ, BullMQ, workers PostgreSQL y Pub/Sub** está en [Investigación de mensajería](investigacion-mensajeria-pos.md). Incluye el backend PostgreSQL documentado actualmente por BullMQ, sin asumir que sea tan probado como Redis ni que comparta automáticamente la transacción de venta. La [revisión corporativa](revision-arquitectura-corporativa.md) reúne selección provisional, simplificación de motores, horario y condiciones de retirada. Estas decisiones son independientes de NestJS/Fastify o del monorepo.
 
@@ -16,7 +16,7 @@ La evaluación de **servicios de IA** está en [Propuestas de IA para el POS](se
 | --- | --- | --- | --- |
 | TEC-01 | NestJS con Fastify en lugar de Express | Backend recomendado de sucursal y país. Monolito modular en sucursal; workers supervisados según responsabilidad. | Aprobación técnica, compatibilidad, experiencia del equipo, recursos locales, versiones y alcance de migración. |
 | TEC-02 | Usar `nestjs-pino` y Sentry | Pino para logging estructurado; Sentry para errores y trazas, con política de captura, correlación y operación desconectada. | Retención, datos permitidos, alojamiento, presupuesto de telemetría y validación de integración. |
-| TEC-03 | Aplicación de escritorio Tauri en lugar de navegador | Dirección de cliente aceptada: Angular empaquetado en Tauri para puestos físicos de caja. Administración/reporting podrían continuar en navegador. | Homologación de periféricos, empaquetado, distribución y soporte Rust/WebView2; esta dirección no amplía el perfil offline. |
+| TEC-03 | Aplicación cliente de escritorio con shell nativa Tauri en lugar de navegador | Dirección de cliente aceptada: `pos-desktop`, con frontend Angular/PrimeNG alojado en Tauri, para puestos físicos de caja. Administración/reporting podrían continuar en navegador. | Homologación de periféricos, empaquetado, distribución y soporte Rust/WebView2; esta dirección no amplía el perfil offline. |
 | TEC-04 | Usar Nx | Dirección indicada para organizar el producto, sus contratos y tareas de construcción/validación; se recomienda un monorepo POS con releases propios. | Alcance del repositorio, límites de proyectos, toolchains, CI, propiedad y estrategia de releases. |
 | TEC-05 | Quizás usar un monolito modular | Recomendado como punto de partida del núcleo transaccional; plataforma central y workers mantienen límites operativos propios. | Módulos, autoridad de datos, transacciones y criterios para separar procesos/servicios. |
 | TEC-06 | PostgreSQL o MongoDB para los datos del POS | Recomendar PostgreSQL de sucursal y PostgreSQL operativo por país; tablas relacionales más JSONB para datos variables acotados. MongoDB se conserva donde haya un caso vigente identificado, sin desplegarlo por defecto en tiendas. | Validación del modelo, carga, recuperación, aislamiento por país, versiones soportadas y transición de consumidores heredados. |
@@ -45,7 +45,7 @@ Organización propuesta:
 
 ### PostgreSQL en sucursal y país frente a MongoDB
 
-**Recomendación:** una base PostgreSQL por sucursal en el perfil WAN y una base operativa PostgreSQL por país en la plataforma central. «Por país» fija separación de datos y autoridad; instancias, clústeres, réplicas y alojamiento se dimensionan después. No hay una base transaccional por terminal ni una conexión SQL desde Angular/Tauri. El cliente llama a la API; el backend y sus workers autorizados acceden a la persistencia.
+**Recomendación:** una base PostgreSQL por sucursal en el perfil WAN y una base operativa PostgreSQL por país en la plataforma central. «Por país» fija separación de datos y autoridad; instancias, clústeres, réplicas y alojamiento se dimensionan después. No hay una base transaccional por terminal ni una conexión SQL desde la aplicación cliente. El cliente llama a la API; el backend y sus workers autorizados acceden a la persistencia.
 
 | Criterio del POS | PostgreSQL propuesto | MongoDB como alternativa | Criterio de elección |
 | --- | --- | --- | --- |
@@ -110,11 +110,13 @@ Sentry ofrece integración con Pino para capturar logs y, opcionalmente, errores
 - Medir antigüedad del backlog, pendientes fiscales, pagos inciertos, demora de confirmación ERP y cobertura de sucursales, además de errores HTTP.
 - Confirmar si Sentry puede alojarse como servicio externo o requiere otra modalidad según las restricciones del proyecto.
 
-Con el cliente Tauri previsto, Pino cubre el proceso Node/NestJS; interfaz y proceso Rust necesitan instrumentación propia y correlación entre procesos, cuya compatibilidad debe comprobarse.
+Con el cliente `pos-desktop` previsto, Pino cubre el proceso Node/NestJS; el frontend Angular/PrimeNG y el proceso Rust de la shell nativa Tauri necesitan instrumentación propia y correlación entre procesos, cuya compatibilidad debe comprobarse.
 
-## 4. Tauri como cliente de caja
+<span id="4-tauri-como-cliente-de-caja"></span>
 
-La dirección aceptada de cliente es **Angular empaquetado en Tauri**. Tauri permite una interfaz HTML/CSS/JavaScript dentro de una aplicación de escritorio, con un proceso nativo Rust y WebView; en Windows emplea WebView2. Las reglas de negocio permanecen en el backend de sucursal y módulos de dominio, sin obligación de portarlas a Rust. La aceptación de esta dirección no acredita compatibilidad de todos los SDK o periféricos. [Modelo de procesos](https://v2.tauri.app/concept/process-model/), [configuración del frontend](https://v2.tauri.app/start/frontend/).
+## 4. Shell nativa de escritorio: Tauri
+
+La dirección aceptada para el cliente de escritorio `pos-desktop` es **frontend Angular/PrimeNG alojado en la shell nativa (host) Tauri**. Tauri aloja la interfaz HTML/CSS/JavaScript y aporta un proceso nativo Rust y WebView; en Windows emplea WebView2. La aplicación cliente completa incluye ese frontend y su host nativo. Las reglas de negocio permanecen en el backend de sucursal y módulos de dominio, sin obligación de portarlas a Rust. La aceptación de esta dirección no acredita compatibilidad de todos los SDK o periféricos. [Modelo de procesos](https://v2.tauri.app/concept/process-model/), [configuración del frontend](https://v2.tauri.app/start/frontend/).
 
 Se propone empaquetar los recursos necesarios de la interfaz para que pueda arrancar sin descargarlos de un servidor. Revisar navegación, rutas, configuración de endpoints, almacenamiento y autenticación. Angular 8 y las dependencias observadas requieren su propio plan de actualización aunque se empaqueten en Tauri.
 
@@ -122,13 +124,13 @@ Se propone empaquetar los recursos necesarios de la interfaz para que pueda arra
 
 | Requisito | Distribución candidata | Consecuencia |
 | --- | --- | --- |
-| Sin Internet, sucursal disponible | Tauri en cajas; NestJS/Fastify y PostgreSQL en sucursal. | La sucursal sigue siendo el escritor compartido; perder LAN o servidor puede detener ventas. |
-| Sin Internet y también sin LAN/servidor | Tauri, servicio transaccional y persistencia por caja; coordinación y sincronización posterior. | Requiere identidad por caja, reglas locales y políticas explícitas para stock, NC y otros recursos compartidos. |
+| Sin Internet, sucursal disponible | Cliente `pos-desktop` en cajas; NestJS/Fastify y PostgreSQL en sucursal. | La sucursal sigue siendo el escritor compartido; perder LAN o servidor puede detener ventas. |
+| Sin Internet y también sin LAN/servidor | Cliente `pos-desktop`, servicio transaccional y persistencia por caja; coordinación y sincronización posterior. | Requiere identidad por caja, reglas locales y políticas explícitas para stock, NC y otros recursos compartidos. |
 
 ```mermaid
 flowchart LR
     subgraph Caja["Puesto de caja"]
-        UI["Tauri + Angular<br/>Interfaz empaquetada"]
+        UI["pos-desktop<br/>Frontend Angular/PrimeNG<br/>Shell nativa Tauri"]
         Dispositivos["Adaptadores locales<br/>Impresión y pagos"]
         UI <--> Dispositivos
     end
@@ -144,7 +146,7 @@ flowchart LR
     ERPWorker["erp-worker en la red autorizada del ERP<br/>Fachada, ACL y adaptadores"] -->|"HTTPS saliente: solicitar trabajo y reportar"| Central
 ```
 
-El diagrama corresponde al perfil WAN. Instalar Tauri no resuelve la dependencia de precios online, contingencias fiscales ni autorización de pagos. El perfil de aislamiento por caja exige otro despliegue y garantías adicionales; no consiste en habilitar automáticamente otro escritor cuando falla la sucursal.
+El diagrama corresponde al perfil WAN. Empaquetar el frontend en la shell nativa Tauri no resuelve la dependencia de precios online, contingencias fiscales ni autorización de pagos. El perfil de aislamiento por caja exige otro despliegue y garantías adicionales; no consiste en habilitar automáticamente otro escritor cuando falla la sucursal.
 
 ### Relación con NestJS y los dispositivos
 
@@ -152,7 +154,7 @@ NestJS corre en un proceso Node separado, no dentro del WebView. Puede residir e
 
 Mantener inicialmente los adaptadores de impresión/pagos que superen validación, detrás de contratos locales. No se presupone compatibilidad Transbank porque funcione desde Chrome ni la necesidad de reescribir impresión/MICR en Rust. Corregir los resultados ambiguos y la identidad de trabajos documentados en el análisis sigue siendo necesario.
 
-El requisito de variantes por país/sucursal se desarrolla en [Extensibilidad de proveedores y dispositivos](extensibilidad-proveedores-dispositivos.md). La selección se hace con perfiles aprobados y capacidades por operación; no con una bifurcación de Angular/Tauri por modelo. Un adaptador nuevo puede entregarse como proceso separado cuando el SDK lo requiera. Núcleo, interfaz y agentes mantienen contratos compatibles y ciclos de despliegue controlados; cerrar la ventana no debe borrar ni reiniciar intentos externos pendientes.
+El requisito de variantes por país/sucursal se desarrolla en [Extensibilidad de proveedores y dispositivos](extensibilidad-proveedores-dispositivos.md). La selección se hace con perfiles aprobados y capacidades por operación; no con una bifurcación de la aplicación cliente por modelo. Un adaptador nuevo puede entregarse como proceso separado cuando el SDK lo requiera. Núcleo, interfaz y agentes mantienen contratos compatibles y ciclos de despliegue controlados; cerrar la ventana no debe borrar ni reiniciar intentos externos pendientes.
 
 ### Seguridad, distribución y soporte
 
@@ -168,7 +170,7 @@ El requisito de variantes por país/sucursal se desarrolla en [Extensibilidad de
 
 El producto y su monorepo se llaman **POS Platform**, con aliases `@pos-platform/*`. El [repositorio del producto](https://github.com/floxcristian/pos-platform) reúne el software operativo. Esta propuesta, sus evidencias, los diagramas y Starlight se mantienen en el repositorio editorial [POS Docs](https://github.com/developer-implementos/pos-docs). Cada revisión documental identifica el código que describe.
 
-**Estado revisado el 21 de octubre de 2026:** la UI Angular/PrimeNG de demostración, el contenedor Tauri, la base técnica NestJS/Fastify y los esqueletos de workers se mantienen en el mismo monorepo. El frontend continúa usando adaptadores mock; la base HTTP aporta arranque, configuración, observabilidad, sondas y OpenAPI. Una base que arranca no implica tener ventas, autenticación corporativa, PostgreSQL, sincronización o integración ERP funcionando. Los límites de negocio descritos a continuación son el objetivo de implementación; no representan un despliegue backend productivo.
+**Estado revisado el 21 de octubre de 2026:** el frontend Angular/PrimeNG de demostración, la shell nativa Tauri, la base técnica NestJS/Fastify y los esqueletos de workers se mantienen en el mismo monorepo. El frontend continúa usando adaptadores mock; la base HTTP aporta arranque, configuración, observabilidad, sondas y OpenAPI. Una base que arranca no implica tener ventas, autenticación corporativa, PostgreSQL, sincronización o integración ERP funcionando. Los límites de negocio descritos a continuación son el objetivo de implementación; no representan un despliegue backend productivo.
 
 Monorepo define cómo se organiza el código. Nx aporta un grafo de proyectos y tareas, caché y ejecución de tareas afectadas por cambios. Esto no determina cuántos procesos, bases o despliegues existen en producción. Su caché de compilación tampoco es una caché de datos del POS ni una solución offline de negocio. [Tareas Nx](https://nx.dev/docs/features/run-tasks), [caché de tareas](https://nx.dev/docs/features/cache-task-results), [tareas afectadas](https://nx.dev/docs/features/ci-features/affected).
 
@@ -181,8 +183,8 @@ Nx tiene integraciones para Angular y NestJS. Para Rust/Tauri y otros componente
 <!-- monorepo:target:start -->
 ```text
 apps/
-  pos-desktop/                  # Cliente Angular con arranque propio y host Tauri
-  pos-mobile/                   # Cliente Angular con arranque propio y host Capacitor
+  pos-desktop/                  # Aplicación completa: shell Tauri + frontend Angular
+  pos-mobile/                   # Aplicación completa: shell Capacitor + frontend Angular
   branch-api/                   # API y composición de negocio de sucursal
   branch-sync-worker/           # Proceso de entrega y recepción de sucursal
   country-api/                  # API de recepción y capacidades de país
@@ -239,8 +241,8 @@ El prototipo utiliza `libs/domain` y `libs/data-access` para reglas y adaptadore
 <!-- monorepo:applications:start -->
 | Aplicación | Lugar previsto | Responsabilidad | Estado revisado |
 | --- | --- | --- | --- |
-| `pos-desktop` | Puesto Windows | Cliente Angular con arranque propio y host Tauri | Cliente con adaptadores mock; integración nativa real pendiente |
-| `pos-mobile` | Dispositivo Android/iOS | Cliente Angular con arranque propio y host Capacitor | Base móvil con adaptadores mock; ejecución y distribución nativas por verificar |
+| `pos-desktop` | Puesto Windows | Aplicación completa: shell nativa Tauri y frontend Angular | Frontend con adaptadores mock; integración nativa real pendiente |
+| `pos-mobile` | Dispositivo Android/iOS | Aplicación completa: shell nativa Capacitor y frontend Angular | Frontend con adaptadores mock; ejecución y distribución nativas por verificar |
 | `branch-api` | Sucursal | API y composición de negocio de sucursal | Base HTTP local; sin persistencia ni operaciones comerciales |
 | `branch-sync-worker` | Sucursal | Proceso de entrega y recepción de sucursal | Esqueleto local; sin jobs ni sincronización real |
 | `country-api` | País | API de recepción y capacidades de país | Base HTTP local; sin recepción de ventas ni consolidación |
@@ -274,7 +276,7 @@ El [mapa de repositorios](mapa-repositorios-y-conexiones.md), los [informes con 
 
 | Bloque arquitectónico | Proyecto o responsabilidad de código | Estado de la correspondencia |
 | --- | --- | --- |
-| Clientes Angular | `pos-desktop` con Tauri y `pos-mobile` con Capacitor | Arranques propios y composición compartida en `client-shell`; verificación nativa independiente. |
+| Aplicaciones cliente | `pos-desktop` con shell nativa Tauri y `pos-mobile` con shell nativa Capacitor | Frontends Angular/PrimeNG con arranques propios y composición Angular compartida en `libs/client-shell`; verificación nativa independiente. |
 | Backend de sucursal | `branch-api` + contextos backend | Un proceso compone varios módulos; no existe una app por tabla o módulo. |
 | Sincronizador de sucursal | `branch-sync-worker` + `sync` | El ciclo de vida del proceso es independiente de la ventana del cliente. |
 | API de país | `country-api` + contextos que necesite cada caso de uso | Recepción, autorización y persistencia son trabajo pendiente. |
@@ -289,7 +291,7 @@ Las vistas [C4](c4-arquitectura-propuesta.md) representan responsabilidades y to
 
 Ejemplo **propuesto**, pendiente de implementar en el backend: confirmar una venta en efectivo con una versión de precios válida y una modalidad fiscal permitida.
 
-1. El cliente autorizado (`pos-desktop` o `pos-mobile`) recoge la confirmación del operador y envía un comando identificado a `branch-api`. Tauri o Capacitor aloja la interfaz; el cliente no escribe SQL ni decide otro importe.
+1. El cliente autorizado (`pos-desktop` o `pos-mobile`) recoge la confirmación del operador y envía un comando identificado a `branch-api`. Su shell nativa, Tauri o Capacitor, aloja el frontend Angular/PrimeNG; el cliente no escribe SQL ni decide otro importe.
 2. La entrada HTTP valida contrato e identidad. El caso de uso de `sales` comprueba ámbito, turno y condiciones comerciales mediante interfaces de los módulos propietarios.
 3. `pricing` aporta un resultado y una versión; `cash` controla su estado. El caso de uso coordina sus efectos locales por una unidad de trabajo: compartir una transacción no permite acceder libremente a tablas ajenas.
 4. Los adaptadores de persistencia escriben la venta, los cambios asociados, auditoría y outbox en **la misma transacción PostgreSQL**. Esa infraestructura aún no existe en el scaffold. No se llama al ERP dentro de la transacción.
@@ -322,7 +324,7 @@ La adopción se concentra en el producto objetivo. No se propone copiar sin sele
 
 | Unidad | Responsabilidad y autoridad |
 | --- | --- |
-| Tauri + Angular | Presentación y capacidades nativas acotadas. No se convierte en autoridad de la venta por compartir código. |
+| Cliente `pos-desktop`: frontend Angular/PrimeNG y shell nativa Tauri | Presentación y capacidades nativas acotadas. No se convierte en autoridad de la venta por compartir código. |
 | Backend de sucursal NestJS + Fastify | Ventas, caja, precios/ofertas, coordinación de pagos y operaciones fiscales/devoluciones habilitadas. Escritor compartido por las cajas, con PostgreSQL de sucursal, en el perfil WAN recomendado. |
 | Worker local | Entrega y recuperación de mensajes durables, con recursos acotados y supervisión independiente de la ventana. |
 | Plataforma del país | Recepción, consolidación, maestros y conciliación. Mantiene las autoridades por dato acordadas; la proyección central de una venta no crea otro editor de su historia. |
@@ -345,7 +347,7 @@ La autonomía local permanece como criterio de aceptación: extraer un servicio 
 
 ### Validación de la organización propuesta
 
-Probar que una dependencia prohibida/circular falla en CI; que un cambio de contrato ejecuta las verificaciones relevantes de productor/consumidores; que un cliente anterior funciona con la versión central candidata; y que cerrar Tauri o detener un worker no corrompe ventas persistidas. Medir builds completos y afectados, coste de mantenimiento del workspace y reproducibilidad de artefactos en las plataformas homologadas.
+Probar que una dependencia prohibida/circular falla en CI; que un cambio de contrato ejecuta las verificaciones relevantes de productor/consumidores; que un cliente anterior funciona con la versión central candidata; y que cerrar la aplicación cliente o detener un worker no corrompe ventas persistidas. Medir builds completos y afectados, coste de mantenimiento del workspace y reproducibilidad de artefactos en las plataformas homologadas.
 
 ## 7. Información adicional para decidir
 

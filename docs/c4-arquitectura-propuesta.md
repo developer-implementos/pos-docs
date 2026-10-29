@@ -2,7 +2,7 @@
 
 Fecha de revisión: 29 de octubre de 2026. Alcance: arquitectura de referencia para Chile, Perú y España; no certifica software, topología ni integraciones desplegadas.
 
-La [propuesta y sus decisiones](propuesta-arquitectura.md) gobiernan la recomendación. Estas vistas explican sus límites, procesos y responsabilidades. **Los clientes son Angular + Tauri para escritorio y Angular + Capacitor para móvil**. La base técnica NestJS/Fastify y los scaffolds no acreditan los contratos comerciales, persistencia o integraciones aquí propuestos. El [estado del monorepo](monorepo.md#estado-de-implementación) delimita lo implementado; el [catálogo de integraciones](catalogo-integraciones-actuales.md) conserva la evidencia del legado.
+La [propuesta y sus decisiones](propuesta-arquitectura.md) gobiernan la recomendación. Estas vistas explican sus límites, procesos y responsabilidades. **`pos-desktop` y `pos-mobile` representan aplicaciones completas: shell nativa Tauri o Capacitor, respectivamente, con el frontend Angular/PrimeNG dentro**. La [vista de composición](decisions/native-clients.md#shell-nativa-y-frontend) separa shell nativa, frontend y biblioteca `libs/client-shell` de composición Angular. La base técnica NestJS/Fastify y los scaffolds no acreditan los contratos comerciales, persistencia o integraciones aquí propuestos. El [estado del monorepo](monorepo.md#estado-de-implementación) delimita lo implementado; el [catálogo de integraciones](catalogo-integraciones-actuales.md) conserva la evidencia del legado.
 
 ## Explorador general de arquitectura
 
@@ -69,8 +69,8 @@ Los ejemplos dentro de los nodos concretan su significado: **Transbank POS, Niub
 
 | Contenedor | Tecnología recomendada | Responsabilidad y autoridad |
 | --- | --- | --- |
-| `pos-desktop` | Angular + Tauri | Presentación y comandos del puesto. No recibe credenciales SQL ni mantiene otra base de ventas por defecto. |
-| `pos-mobile` | Angular + Capacitor | Operaciones móviles habilitadas y misma autoridad de sucursal. Empaquetar la UI no habilita autonomía sin LAN. |
+| `pos-desktop` | Shell nativa Tauri; frontend Angular/PrimeNG | Aplicación de escritorio completa: presentación y comandos del puesto, sin credenciales SQL ni otra base de ventas por defecto. |
+| `pos-mobile` | Shell nativa Capacitor; frontend Angular/PrimeNG | Aplicación móvil completa: operaciones habilitadas bajo la autoridad de sucursal. Empaquetar la UI no habilita autonomía sin LAN. |
 | Puente de periféricos, cuando el SDK lo exige | Proceso nativo a homologar; runtime depende del proveedor | Ejecuta comandos autorizados por backend y conserva evidencia técnica. El cliente transporta identidad y autorización; no inventa otro intento de pago. |
 | `branch-api` | NestJS + Fastify / Node.js | Monolito modular, escritor de negocio de la tienda. Confirma operación, auditoría y outbox en una transacción. |
 | Datos de sucursal | PostgreSQL | Negocio local y estado técnico de sincronización; espejo autorizado de catálogo/precios/promociones. Un primario autorizado compartido por los puestos. |

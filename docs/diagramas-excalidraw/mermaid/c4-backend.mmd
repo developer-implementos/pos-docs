@@ -14,8 +14,8 @@ flowchart TB
         unitOfWork["Persistencia transaccional<br/>«Componente»<br/>Repositorios + contrato outbox (sync)<br/>Confirma negocio, auditoría y outbox."]:::pos
         technicalBase["Base técnica compartida<br/>«Componente»<br/>shared/backend · composición objetivo<br/>Configuración, salud, Pino y Sentry opt-in."]:::pos
     end
-    client["pos-desktop<br/>«Contenedor»<br/>Angular + Tauri<br/>Presenta caja y comandos del operador."]:::pos
-    mobileClient["pos-mobile<br/>«Contenedor»<br/>Angular + Capacitor<br/>Presenta operaciones en Android/iOS."]:::pos
+    client["pos-desktop<br/>«Contenedor»<br/>Angular (frontend) ·<br/>Tauri (shell nativa)<br/>Aplicación completa para caja y comandos."]:::pos
+    mobileClient["pos-mobile<br/>«Contenedor»<br/>Angular (frontend) ·<br/>Capacitor (shell nativa)<br/>Aplicación completa para Android/iOS."]:::pos
     branchDb[("Datos de sucursal<br/>«Contenedor de datos»<br/>PostgreSQL<br/>Guarda negocio, outbox y espejo local.")]:::store
     payments["Proveedor de pagos<br/>«Sistema externo»<br/>API / SDK según proveedor<br/>Ej.: Transbank POS · Niubiz · Mercado Pago Point."]:::external
     fiscal["Proveedor de facturación<br/>«Sistema externo»<br/>Contrato por país y modalidad<br/>Ej.: Acepta / Ingydev (CL) · EFACT (PE)."]:::external

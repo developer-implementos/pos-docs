@@ -70,7 +70,7 @@ module.exports = [
         "nodeId": "client",
         "name": "pos-desktop",
         "type": "Contenedor",
-        "technology": "Angular + Tauri",
+        "technology": "Angular (frontend) · Tauri (shell nativa)",
         "summary": "Solicita una cotización por LAN y presenta su versión y resultado."
       }
     ],
@@ -203,7 +203,7 @@ module.exports = [
         "nodeId": "client",
         "name": "pos-desktop",
         "type": "Contenedor",
-        "technology": "Angular + Tauri",
+        "technology": "Angular (frontend) · Tauri (shell nativa)",
         "summary": "Envía comandos identificados y presenta el resultado durable al operador."
       },
       {

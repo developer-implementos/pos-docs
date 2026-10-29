@@ -4,7 +4,7 @@ POS Platform y POS Docs tienen responsabilidades y entregas independientes. El c
 
 | Repositorio | Responsabilidad | Entrega |
 | --- | --- | --- |
-| POS Platform | Clientes Angular/Tauri y Angular/Capacitor, aplicaciones backend, workers y bibliotecas del producto | Artefactos de las aplicaciones y sus comprobaciones. La [guía del producto](../product-repository.md) describe comandos y alcance implementado. |
+| POS Platform | Aplicaciones cliente `pos-desktop` y `pos-mobile`, con frontend Angular/PrimeNG y shells nativas Tauri y Capacitor, aplicaciones backend, workers y bibliotecas del producto | Artefactos de las aplicaciones y sus comprobaciones. La [guía del producto](../product-repository.md) describe comandos y alcance implementado. |
 | POS Docs | Fuentes técnicas, documentación Starlight, diagramas, presentaciones Reveal.js y materiales de referencia | Sitio estático público: portal en `/`, guía en `/guide/` y presentaciones en `/presentations/`. |
 
 <span id="consulta-de-los-antecedentes"></span>

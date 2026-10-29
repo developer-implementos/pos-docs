@@ -21,8 +21,8 @@ La estructura define seis aplicaciones operativas y el proyecto de pruebas `pos-
 <!-- monorepo:target:start -->
 ```text
 apps/
-  pos-desktop/                  # Cliente Angular con arranque propio y host Tauri
-  pos-mobile/                   # Cliente Angular con arranque propio y host Capacitor
+  pos-desktop/                  # Aplicación completa: shell Tauri + frontend Angular
+  pos-mobile/                   # Aplicación completa: shell Capacitor + frontend Angular
   branch-api/                   # API y composición de negocio de sucursal
   branch-sync-worker/           # Proceso de entrega y recepción de sucursal
   country-api/                  # API de recepción y capacidades de país
@@ -83,9 +83,9 @@ Las bibliotecas se consumen por entradas públicas `@pos-platform/<nombre>`; las
 
 ## Composición de los clientes
 
-`pos-desktop` y `pos-mobile` tienen arranques y builds Angular propios. Tauri aloja el cliente de escritorio; Capacitor aloja el móvil. La ejecución nativa y homologación no se deducen de un build Angular.
+`pos-desktop` y `pos-mobile` son aplicaciones completas: cada una incluye una shell nativa y su frontend Angular/PrimeNG. Tauri aloja el frontend de escritorio y Capacitor el móvil. Cada frontend tiene arranque y build propios; comparten código de interfaz. La [composición de las aplicaciones](decisions/native-clients.md#shell-nativa-y-frontend) muestra qué contiene cada shell. La ejecución nativa y homologación no se deducen de un build Angular.
 
-`libs/client-shell` comparte composición de rutas, configuración y shell entre clientes; `libs/features` mantiene las funcionalidades. El shell compone features y permanece como biblioteca de composición, fuera de la infraestructura genérica de `shared/frontend`. Compartir código entre apps no convierte todas sus responsabilidades en utilidades transversales.
+`libs/client-shell` comparte componente raíz, configuración, rutas, guards y marco de navegación Angular; `libs/features` mantiene las funcionalidades. Esta biblioteca de composición de interfaz se incluye en los bundles Angular, mientras que las shells nativas se configuran en sus respectivas aplicaciones. La composición del producto permanece fuera de la infraestructura genérica de `shared/frontend`.
 
 La UI reutilizable pertenece a `shared/frontend/ui`. Los contratos puros pueden ser consumidos por ambos clientes; las implementaciones Nest, SQL y SDK de servidor permanecen fuera de sus dependencias.
 
@@ -135,8 +135,8 @@ Una suite `pos-system-e2e` requerirá un recorrido real sucursal–persistencia�
 <!-- monorepo:applications:start -->
 | Aplicación | Lugar previsto | Responsabilidad | Estado revisado |
 | --- | --- | --- | --- |
-| `pos-desktop` | Puesto Windows | Cliente Angular con arranque propio y host Tauri | Cliente con adaptadores mock; integración nativa real pendiente |
-| `pos-mobile` | Dispositivo Android/iOS | Cliente Angular con arranque propio y host Capacitor | Base móvil con adaptadores mock; ejecución y distribución nativas por verificar |
+| `pos-desktop` | Puesto Windows | Aplicación completa: shell nativa Tauri y frontend Angular | Frontend con adaptadores mock; integración nativa real pendiente |
+| `pos-mobile` | Dispositivo Android/iOS | Aplicación completa: shell nativa Capacitor y frontend Angular | Frontend con adaptadores mock; ejecución y distribución nativas por verificar |
 | `branch-api` | Sucursal | API y composición de negocio de sucursal | Base HTTP local; sin persistencia ni operaciones comerciales |
 | `branch-sync-worker` | Sucursal | Proceso de entrega y recepción de sucursal | Esqueleto local; sin jobs ni sincronización real |
 | `country-api` | País | API de recepción y capacidades de país | Base HTTP local; sin recepción de ventas ni consolidación |

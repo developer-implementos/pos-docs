@@ -1,6 +1,6 @@
 # Host de escritorio Tauri
 
-`apps/pos-desktop` contiene un arranque y build Angular propios, alojados en Tauri 2 para Windows. Comparte composición y funcionalidades con `pos-mobile` mediante `libs/client-shell`, sin depender de otra aplicación. La [decisión de clientes nativos](decisions/native-clients.md) delimita ambos clientes. El resultado histórico de un instalador no acredita el nuevo artefacto hasta comprobar su build y ejecución.
+`apps/pos-desktop` contiene la aplicación cliente de escritorio: un frontend Angular/PrimeNG con arranque y build propios, alojado en la shell nativa (host) Tauri 2 para Windows. Comparte composición y funcionalidades con `pos-mobile` mediante `libs/client-shell`, la librería de composición Angular de raíz, configuración, rutas, guards y layout; esta librería no es el host nativo. Cada aplicación conserva su arranque independiente. La [decisión de clientes nativos](decisions/native-clients.md) delimita ambos clientes. El resultado histórico de un instalador no acredita el nuevo artefacto hasta comprobar su build y ejecución.
 
 ## Prerrequisitos Windows
 
