@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import monorepoCatalog from '../apps/starlight/src/data/monorepo-catalog.json' with { type: 'json' };
 
 const lanes = [
   { key: 'operation', label: 'Operación' },
@@ -11,7 +12,7 @@ const escape = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '
 const escapeMarkdown = value => escape(value).replace(/[\\`*_\[\]~]/g, '\\$&');
 const phaseCode = phase => `F${String(phase.number).padStart(2, '0')}`;
 const localLink = /^\/(?:guide|presentations)\/(?:[a-z0-9-]+\/)*(?:#[a-z0-9][a-z0-9-]*)?$/;
-const applications = new Set(JSON.parse(fs.readFileSync(new URL('../apps/starlight/src/data/monorepo-catalog.json', import.meta.url), 'utf8')).applications.map(app => app.name));
+const applications = new Set(monorepoCatalog.applications.map(app => app.name));
 export const phasePlanHref = phase => `/guide/roadmap/${phase.id}/`;
 
 function shape(value, keys, label) {

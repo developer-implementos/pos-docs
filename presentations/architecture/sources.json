@@ -2,25 +2,25 @@
   "schemaVersion": 1,
   "reviewedOn": "2026-10-29",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "9314dfaa111fdaf52592ee37baf54db3729a4124",
+  "revision": "e4ac2171bd3bb5a4711144386b4898393ef8b316",
   "sourceStatus": "Fuentes documentales verificadas en la revisión indicada.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "inputs": [
     {
       "path": "docs/monorepo.md",
-      "sha256": "a473c1ac8b3013ec54340f1918cdc8311d64642652b18bdbda49bddeaf43e6a6"
+      "sha256": "32f79786d4eee344310ea4da2185a612c3f98aeeb4fc302ae1d1fd6e25c4f72c"
     },
     {
       "path": "docs/propuesta-arquitectura.md",
-      "sha256": "65631b49920d5e3816280518d2aa8791260c9b60cc491c3067ff699f231c4af0"
+      "sha256": "233a13820c071826266f5d58ce781c6d9f29b783532d24f13338cc8ce3833d75"
     },
     {
       "path": "docs/implementation-plan.md",
-      "sha256": "c3533fc85792d56ca6ccf218d3a2621e4f949cc2452380853a40eecef7c88569"
+      "sha256": "6e8259242047bfa7c080639047328491987ef34e69cfeb31b4ec2049d05ebbb3"
     },
     {
       "path": "docs/validacion-y-decisiones.md",
-      "sha256": "37e4a8f8712e6fe9fc47578bb61a4b478c67c206e315b98601f6a21ef978c09c"
+      "sha256": "c27fe983a3c0b9722dd5f67a8c4e064630c302fc0c4e58bf79b58c67b1198f8e"
     },
     {
       "path": "apps/starlight/src/data/product-evidence.json",
@@ -28,47 +28,51 @@
     },
     {
       "path": "docs/roadmap.md",
-      "sha256": "7c74986e7fa1673710616ddfa8139f343316ab6c9ace6a5609689ac007d32ab7"
+      "sha256": "1543bbfaf81d032fdc98fcbc8605116f06ca9190c7734d3a409d6abc939a46f7"
     },
     {
       "path": "docs/roadmap.json",
-      "sha256": "524fde334942d7bf4d3bb4baf2a17ca5b2b88bde376fdfd74b89f3cd9d4fe393"
+      "sha256": "999b622849483f861ee24fee1c4180c034fb0db3f0bff66fefd2c4854306df47"
     },
     {
       "path": "docs/c4-arquitectura-propuesta.md",
-      "sha256": "8e6e99832a0284382ea582589bcb28cd60ffa80786fee789fe7963ee9102ccff"
+      "sha256": "13d494477cb62ce187f1bce9ee083c467a20b9a526f9d7cc0401327d633e8590"
     },
     {
       "path": "docs/contracts/master-data-publication.md",
-      "sha256": "f62a8e7fd0a800b7b9e7fcdbee6e06735501dad100c5b4db9fc5ba80081608f1"
+      "sha256": "1c904566fb99c6557c486e676ffdad12ff6764ef53b61f540c3a30ccac1ceca4"
     },
     {
       "path": "docs/contracts/identity-and-trust.md",
-      "sha256": "1ede3162dcf7abfa76608d0a8f8f2ce1b63ab2dccf942ebbb38ea3c87156ea22"
+      "sha256": "15c78fb4118528c7ab4134be28856b2a211cff5d6c1393a0d7dc567f12c85e38"
     },
     {
       "path": "tools/architecture/model.mjs",
-      "sha256": "5b6b44cf82e7668598f7f4311a403fbdb1f8dc5d57b47c4ba76af066328c2cd4"
+      "sha256": "c1defb1ebc40c3b16e7e4cd26ec12ec434caafa58a07b504570fb221b85a152f"
     },
     {
       "path": "tools/architecture/views.mjs",
-      "sha256": "d0f28828843908a22613abe217cd7bbc7f54e229cfd49196c44c693f37ee93a9"
+      "sha256": "24ce5f9b47c33e127550357da0c27fcce8c83ae4413e06a4476bbc46bea48349"
     },
     {
       "path": "tools/diagrams/models/c4-data.js",
-      "sha256": "5adf816078bc1b89af02021bb492c0944ce0747b4bdae78fe852e1074cb7c8f9"
+      "sha256": "ffeb134cee87349624a92bea89b86203df547afcb46fef670da835be752e3ed9"
     },
     {
       "path": "docs/extensibilidad-proveedores-dispositivos.md",
-      "sha256": "838799e96090255d7a4ba58a2a692a498400ad2e7f3e4e491acdb07283bb5905"
+      "sha256": "a5b5fc143ca2d1b817f3b228f0d7eca8f683cf63d6323ce5def1c6e65275aeb0"
     },
     {
       "path": "docs/decisions/native-clients.md",
-      "sha256": "cd9a3002ef951525904fa0fe76129fbf691aac4cb832581a40769271b350adfa"
+      "sha256": "2bbc78bcea0aa0301daee6d9191ec0f533e27b96f88970a2deac39ad4934ef2e"
     },
     {
       "path": "apps/starlight/src/data/monorepo-catalog.json",
-      "sha256": "301d7f17c71d50e80b2d64fc5dadd70a26a8c3e846f28db5763e71ab77fe75cc"
+      "sha256": "91b35ce7428367fc4d896cc8b5efac6f2c4d91f4ddb9e058201aeca75a8a2c95"
+    },
+    {
+      "path": "docs/decisions/device-agent.md",
+      "sha256": "a99810fdc701733f6ddd7b05e41ec09a3d7e7a8c7dd0fd51fdbe2cad00dbb539"
     }
   ]
 }
