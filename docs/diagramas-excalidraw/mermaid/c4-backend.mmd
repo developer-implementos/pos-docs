@@ -37,7 +37,7 @@ flowchart TB
     reporting -->|"Lee estado local · repositorio"| unitOfWork
     payPort -->|"Intención y resultado separados · TypeScript"| unitOfWork
     fiscalPort -->|"Referencia y resultado · TypeScript"| unitOfWork
-    unitOfWork -->|"Transacción local · SQL"| branchDb
+    unitOfWork -->|"Negocio + auditoría + outbox · PostgreSQL"| branchDb
     payPort -->|"API remota cuando aplique · contrato validado"| payments
     fiscalPort -->|"Emisión/consulta · contrato validado"| fiscal
     classDef pos fill:#EDF3FF,stroke:#0545BA,color:#25364D,stroke-width:2px

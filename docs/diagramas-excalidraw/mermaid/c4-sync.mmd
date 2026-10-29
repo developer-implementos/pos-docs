@@ -15,20 +15,20 @@ flowchart TB
     countryApi["country-api<br/>«Contenedor»<br/>NestJS + Fastify / Node.js<br/>Recibe operaciones y sirve trabajo y versiones."]:::pos
     legend["Leyenda · notación C4<br/>Azul: POS · Violeta: datos<br/>Gris: externo · Ámbar: infraestructura<br/>Borde: sistema, proceso o nodo indicado<br/>Flecha: iniciador, propósito y protocolo<br/>Opcional / por asignar: condición explícita<br/>Contenedor no equivale a Docker"]:::key
     schedule -->|"Admite lote / reintento acotado · TypeScript"| sender
-    sender -->|"Claim y lectura de outbox · SQL"| branchDb
+    sender -->|"Claim y lectura de outbox · PostgreSQL"| branchDb
     sender -->|"Envía lote con eventId/contrato · HTTPS"| countryApi
     schedule -->|"Programa consulta incremental · TypeScript"| receiver
     receiver -->|"Consulta acuses y deltas con cursor · HTTPS"| countryApi
     receiver -->|"Entrega unidad validada · TypeScript"| dedup
-    dedup -->|"Guarda recibido/staging; no avanza aplicado · SQL"| branchDb
+    dedup -->|"Guarda recibido/staging; no avanza aplicado · PostgreSQL"| branchDb
     schedule -->|"Carga programada o recuperación manual · TypeScript"| snapshot
     snapshot -->|"Descarga manifiesto/chunks y watermark · HTTPS"| countryApi
-    snapshot -->|"Guarda staging aislado · SQL"| branchDb
+    snapshot -->|"Guarda staging aislado · PostgreSQL"| branchDb
     snapshot -->|"Solicita validación de versión completa · TypeScript"| validation
-    validation -->|"Verifica checksum, referencias y vigencia · SQL"| branchDb
+    validation -->|"Verifica checksum, referencias y vigencia · PostgreSQL"| branchDb
     validation -->|"Autoriza versión y watermark válidos · TypeScript"| activation
     dedup -->|"Entrega candidata completa desde deltas · TypeScript"| validation
-    activation -->|"Commit corto: inbox aplicada + versión + cursor aplicado · SQL"| branchDb
+    activation -->|"Activa versión + inbox aplicada + cursor aplicado · PostgreSQL"| branchDb
     classDef pos fill:#EDF3FF,stroke:#0545BA,color:#25364D,stroke-width:2px
     classDef store fill:#F2EFFF,stroke:#6551A8,color:#25364D,stroke-width:2px
     classDef external fill:#F4F6F8,stroke:#6B788A,color:#25364D

@@ -270,7 +270,7 @@
     "summary": "Guarda negocio, outbox y espejo local.",
     "ownership": "Base compartida por la tienda, un primario autorizado. API escribe negocio; worker escribe su esquema técnico y publica espejos por un contrato acotado.",
     "offline": "Persistencia local disponible sin WAN. No implica respaldo, alta disponibilidad ni recuperación automática.",
-    "detail": "Ventas, caja, pagos y evidencia fiscal son locales. Inbox, outbox, cursores y staging tienen restricciones y transacciones. Catálogo, precios y promociones son réplicas de lectura autorizadas, no maestros independientes.",
+    "detail": "branch-api y branch-sync-worker acceden al mismo PostgreSQL de la sucursal con responsabilidades y permisos distintos. Ventas, caja, pagos y evidencia fiscal se conservan aquí; inbox, outbox, cursores y staging tienen restricciones y transacciones según cada operación. Las llamadas de red quedan fuera de esas transacciones. Catálogo, precios y promociones son réplicas de lectura autorizadas, no maestros independientes.",
     "sources": [
       {
         "label": "Propuesta y decisiones de arquitectura",
@@ -1356,7 +1356,7 @@
       {
         "from": "branchApi",
         "to": "branchDb",
-        "label": "Negocio + auditoría + outbox · SQL"
+        "label": "Negocio + auditoría + outbox · PostgreSQL"
       },
       {
         "from": "branchApi",
@@ -1371,7 +1371,7 @@
       {
         "from": "syncWorker",
         "to": "branchDb",
-        "label": "Outbox, inbox, cursores y espejo · SQL"
+        "label": "Outbox, inbox, cursores y espejo · PostgreSQL"
       },
       {
         "from": "syncWorker",
@@ -1381,7 +1381,7 @@
       {
         "from": "countryApi",
         "to": "countryDb",
-        "label": "Recepción, publicaciones, trabajo y resultados · SQL"
+        "label": "Recepción, publicaciones, trabajo y resultados · PostgreSQL"
       },
       {
         "from": "countryApi",
@@ -1537,7 +1537,7 @@
       {
         "from": "unitOfWork",
         "to": "branchDb",
-        "label": "Transacción local · SQL"
+        "label": "Negocio + auditoría + outbox · PostgreSQL"
       },
       {
         "from": "payPort",
@@ -1595,7 +1595,7 @@
       {
         "from": "sender",
         "to": "branchDb",
-        "label": "Claim y lectura de outbox · SQL"
+        "label": "Claim y lectura de outbox · PostgreSQL"
       },
       {
         "from": "sender",
@@ -1620,7 +1620,7 @@
       {
         "from": "dedup",
         "to": "branchDb",
-        "label": "Guarda recibido/staging; no avanza aplicado · SQL"
+        "label": "Guarda recibido/staging; no avanza aplicado · PostgreSQL"
       },
       {
         "from": "schedule",
@@ -1635,7 +1635,7 @@
       {
         "from": "snapshot",
         "to": "branchDb",
-        "label": "Guarda staging aislado · SQL"
+        "label": "Guarda staging aislado · PostgreSQL"
       },
       {
         "from": "snapshot",
@@ -1645,7 +1645,7 @@
       {
         "from": "validation",
         "to": "branchDb",
-        "label": "Verifica checksum, referencias y vigencia · SQL"
+        "label": "Verifica checksum, referencias y vigencia · PostgreSQL"
       },
       {
         "from": "validation",
@@ -1660,7 +1660,7 @@
       {
         "from": "activation",
         "to": "branchDb",
-        "label": "Commit corto: inbox aplicada + versión + cursor aplicado · SQL"
+        "label": "Activa versión + inbox aplicada + cursor aplicado · PostgreSQL"
       }
     ],
     "containerId": "syncWorker"
@@ -1753,12 +1753,12 @@
       {
         "from": "branchApi",
         "to": "branchDb",
-        "label": "Negocio + auditoría + outbox · SQL local"
+        "label": "Negocio + auditoría + outbox · PostgreSQL"
       },
       {
         "from": "syncWorker",
         "to": "branchDb",
-        "label": "Pendientes, cursores y espejo · SQL local"
+        "label": "Outbox, inbox, cursores y espejo · PostgreSQL"
       },
       {
         "from": "syncWorker",
@@ -1768,7 +1768,7 @@
       {
         "from": "countryApi",
         "to": "countryDb",
-        "label": "Recepción, publicaciones, trabajo y resultados · SQL"
+        "label": "Recepción, publicaciones, trabajo y resultados · PostgreSQL"
       },
       {
         "from": "countryApi",
@@ -1925,7 +1925,7 @@
       {
         "from": "countryUow",
         "to": "countryDb",
-        "label": "Persistencia y lectura autorizada · SQL"
+        "label": "Persistencia y lectura autorizada · PostgreSQL"
       },
       {
         "from": "countryEntry",

@@ -32,12 +32,12 @@ flowchart TB
     mobileClient -->|"Comandos y consultas · HTTPS/LAN"| branchApi
     client -->|"Comando autorizado y evidencia · IPC/loopback"| device
     device -->|"Terminal local si aplica · SDK homologado"| payments
-    branchApi -->|"Negocio + auditoría + outbox · SQL"| branchDb
+    branchApi -->|"Negocio + auditoría + outbox · PostgreSQL"| branchDb
     branchApi -->|"Pago remoto si aplica · API homologada"| payments
     branchApi -->|"Emisión y consulta fiscal · contrato por país"| fiscal
-    syncWorker -->|"Outbox, inbox, cursores y espejo · SQL"| branchDb
+    syncWorker -->|"Outbox, inbox, cursores y espejo · PostgreSQL"| branchDb
     syncWorker -->|"Lotes, deltas y acuses · HTTPS"| countryApi
-    countryApi -->|"Recepción, publicaciones, trabajo y resultados · SQL"| countryDb
+    countryApi -->|"Recepción, publicaciones, trabajo y resultados · PostgreSQL"| countryDb
     countryApi -->|"Lecturas versionadas · Redis opcional"| countryCache
     erpAdapter -->|"Trabajo, resultados y porciones de maestros · HTTPS saliente"| countryApi
     erpAdapter -->|"Envía, consulta y concilia · contrato ERP"| erp

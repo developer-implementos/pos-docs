@@ -36,10 +36,10 @@ flowchart TB
     client -->|"Comandos autenticados · HTTPS/LAN"| branchApi
     mobileClient -->|"Comandos autenticados · HTTPS/LAN"| branchApi
     client -->|"Comando autorizado · IPC/loopback"| device
-    branchApi -->|"Negocio + auditoría + outbox · SQL local"| branchDb
-    syncWorker -->|"Pendientes, cursores y espejo · SQL local"| branchDb
+    branchApi -->|"Negocio + auditoría + outbox · PostgreSQL"| branchDb
+    syncWorker -->|"Outbox, inbox, cursores y espejo · PostgreSQL"| branchDb
     syncWorker -->|"Lotes y publicaciones · HTTPS/WAN"| countryApi
-    countryApi -->|"Recepción, publicaciones, trabajo y resultados · SQL"| countryDb
+    countryApi -->|"Recepción, publicaciones, trabajo y resultados · PostgreSQL"| countryDb
     countryApi -->|"Consultas reconstruibles · Redis opcional"| countryCache
     erpAdapter -->|"Trabajo, resultados y porciones de maestros · HTTPS saliente"| countryApi
     erpAdapter -->|"Envío y consulta · interfaz homologada"| erp

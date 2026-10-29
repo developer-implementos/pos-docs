@@ -38,18 +38,18 @@ const protocolLabels = {
   'command-access': 'TypeScript',
   'quote-pricing': 'TypeScript',
   'commit-operation': 'TypeScript',
-  'commit-local': 'SQL · transacción',
-  'read-prices': 'SQL',
-  'sync-local': 'SQL local',
+  'commit-local': 'PostgreSQL',
+  'read-prices': 'PostgreSQL',
+  'sync-local': 'PostgreSQL',
   'sync-country': 'HTTPS',
-  'accept-country': 'SQL · transacción',
+  'accept-country': 'PostgreSQL',
   'manage-work': 'TypeScript',
-  'persist-work': 'SQL condicional',
+  'persist-work': 'PostgreSQL',
   'fetch-source': 'Interfaz por validar',
-  'publish-version': 'SQL · propuesto',
+  'publish-version': 'PostgreSQL',
   'cache-policy': 'TypeScript',
   'cache-read': 'Redis',
-  'cache-fallback': 'SQL',
+  'cache-fallback': 'PostgreSQL',
   'claim-report': 'HTTPS saliente',
   'execute-adapter': 'TypeScript',
   'send-erp': 'Protocolo por validar',
@@ -194,31 +194,31 @@ export const architecture = {
       summary: 'Coordina negocio, auditoría y evento.', description: 'Los contextos conservan sus tablas y colaboran por interfaces públicas. La unidad de trabajo coordina las escrituras locales que deben quedar juntas, sin envolver llamadas a proveedores.',
       payload: ['Cambios comerciales y referencias de pago/documento.', 'Auditoría y evento de salida con identidad.'], guarantees: ['No se fragmenta el commit por convertir módulos internos en microservicios.'], failure: ['Un fallo del commit no se presenta como operación confirmada.'], sources: ['architecture', 'sync'],
     }),
-    edge('commit-local', 'transaction', 'branch-db', 'Negocio + auditoría + outbox', 'SQL · una conexión y transacción', 'data', {
-      summary: 'Todo el conjunto local se confirma o se revierte.', description: 'La atomicidad usa la misma transacción PostgreSQL, no dos repositorios independientes que apunten al mismo servidor. Se aplican restricciones de identidad y contenido.',
+    edge('commit-local', 'transaction', 'branch-db', 'Guardar negocio, auditoría y outbox', 'SQL · PostgreSQL', 'data', {
+      summary: 'Todo el conjunto local se confirma o se revierte.', description: 'Negocio, auditoría y outbox usan la misma conexión y transacción PostgreSQL de sucursal, no dos repositorios independientes que apunten al mismo servidor. Se aplican restricciones de identidad y contenido. Las llamadas a proveedores quedan fuera de esta transacción.',
       payload: ['Venta y cambios de sus contextos.', 'Auditoría, outbox y resultado del comando.'], guarantees: ['Mismo ID y contenido permiten recuperar el resultado.', 'Mismo ID con otro contenido es conflicto.'], failure: ['El commit no garantiza sobrevivir a la destrucción del único disco; recuperación y backups son contratos adicionales.'], sources: ['sync', 'resilience'],
     }),
-    edge('read-prices', 'pricing', 'branch-db', 'Leer versión comercial', 'SQL · repositorios autorizados', 'data', {
-      summary: 'El espejo durable está disponible sin WAN.', description: 'La lectura usa una versión completa e inmutable y conserva su referencia. Las actualizaciones construyen otra candidata; no cambian filas de la activa durante el cálculo.',
+    edge('read-prices', 'pricing', 'branch-db', 'Leer versión comercial', 'SQL · PostgreSQL', 'data', {
+      summary: 'El espejo durable está disponible sin WAN.', description: 'La lectura mediante repositorios autorizados usa una versión completa e inmutable y conserva su referencia. Las actualizaciones construyen otra candidata; no cambian filas de la activa durante el cálculo.',
       payload: ['Catálogo, reglas, cobertura y vigencias.', 'Identificador de versión activa o referenciada.'], guarantees: ['Una versión histórica permite explicar el cálculo, no prolongar su vigencia.'], failure: ['Sin conjunto válido se restringe la operación; una caché remota no reemplaza el espejo.'], sources: ['pricing', 'c4'],
     }),
-    edge('sync-local', 'branch-sync', 'branch-db', 'Pendientes y espejo', 'SQL local · permisos acotados', 'data', {
-      summary: 'Entrega outbox y prepara versiones comerciales.', description: 'El worker modifica datos técnicos, cursores y publicaciones mediante contratos de sus contextos. No recibe autoridad para reescribir dinero o saltarse casos de uso de negocio.',
+    edge('sync-local', 'branch-sync', 'branch-db', 'Gestionar pendientes y versiones', 'SQL · PostgreSQL', 'data', {
+      summary: 'Entrega outbox y prepara versiones comerciales.', description: 'El worker accede al mismo PostgreSQL de sucursal con permisos acotados. Modifica datos técnicos, cursores y publicaciones mediante contratos de sus contextos, con transacciones para los cambios que deben confirmarse juntos. La activación confirma inbox aplicada, puntero de versión y cursor aplicado en una transacción corta; la descarga queda fuera. No recibe autoridad para reescribir dinero o saltarse casos de uso de negocio.',
       payload: ['Outbox, inbox, intentos y cursores.', 'Staging, candidata validada y activación.'], guarantees: ['Recepción y aplicación conservan cursores distintos.', 'Activación confirma inbox aplicada, puntero y cursor juntos.'], failure: ['Restore, huecos o carga incompleta exigen recuperación; no se activa una mezcla parcial.'], sources: ['sync', 'pricing', 'resilience'],
     }),
     edge('sync-country', 'branch-sync', 'country-api', 'Lotes, acuses y publicaciones', 'HTTPS · contrato versionado', 'async', {
       summary: 'La sucursal inicia la entrega y consulta de país.', description: 'Los lotes conservan identidades en cada reintento. La respuesta y las consultas de publicaciones forman parte del mismo contrato autenticado; asíncrono significa fuera del commit de venta.',
       payload: ['Eventos, origen, secuencia y versión de contrato.', 'Resultados por evento, manifiestos, deltas y porciones de carga.'], guarantees: ['ACK de aplicación sólo después del commit requerido en país.', 'Al menos una vez requiere deduplicación durable.'], failure: ['Acuse perdido causa replay, no otra venta; los límites protegen al destino durante el drenaje.'], sources: ['sync', 'pricing', 'resilience'],
     }),
-    edge('accept-country', 'country-api', 'country-db', 'Recepción y consultas durables', 'SQL · contexto y transacción local', 'data', {
-      summary: 'Inbox, proyección pactada y outbox preceden al ACK.', description: 'El efecto local es el registro operativo acordado para ese evento, no el resultado ERP ni todas las proyecciones futuras. La API también consulta publicaciones completas en el almacén autoritativo.',
+    edge('accept-country', 'country-api', 'country-db', 'Recepción y consultas durables', 'SQL · PostgreSQL', 'data', {
+      summary: 'Inbox, proyección pactada y outbox preceden al ACK.', description: 'La recepción confirma inbox, efecto operativo pactado y outbox en la misma transacción PostgreSQL de país antes del ACK. El efecto local es el registro operativo acordado para ese evento, no el resultado ERP ni todas las proyecciones futuras. La API también consulta publicaciones completas en el almacén autoritativo.',
       payload: ['Inbox y efecto operativo identificado.', 'Outbox, publicaciones y resultados de consulta autorizada.'], guarantees: ['País no pasa a ser otro escritor libre de ventas de sucursal.'], failure: ['Si PostgreSQL no confirma, no hay ACK de aplicación; guardar sólo recepción no acredita aplicación.'], sources: ['sync', 'c4'],
     }),
     edge('manage-work', 'country-api', 'country-work', 'Trabajo y resultados ERP', 'Contrato público interno · erp/sync', 'local', {
       summary: 'La API expone trabajo sin incorporar la ACL del proveedor.', description: 'Composición objetivo: erp mantiene destino, referencia y estado ERP; sync mantiene transporte y deduplicación técnica. Estos casos de uso no se atribuyen al scaffold actual.',
       payload: ['Solicitud de trabajo, renovación y resultado.', 'Identidad, ámbito y versión del contrato.'], guarantees: ['ACL y adaptadores se ejecutan en erp-worker.'], failure: ['Una petición autenticada no permite reclamar trabajo de otro ámbito.'], sources: ['c4', 'monorepo'],
     }),
-    edge('persist-work', 'country-work', 'country-db', 'Claim, intento y resultado', 'SQL · cambios condicionales', 'data', {
+    edge('persist-work', 'country-work', 'country-db', 'Claim, intento y resultado', 'SQL · PostgreSQL', 'data', {
       summary: 'PostgreSQL conserva el historial de integración.', description: 'La asignación temporal de trabajo identifica propietario y vencimiento. Las transiciones condicionales preservan destino, versión e intento, incluso durante cambio de ERP.',
       payload: ['Lease, propietario, destino y versión.', 'Resultado, referencia externa e incertidumbre.'], guarantees: ['Expirar un lease no cancela un efecto externo en ejecución.'], failure: ['Un resultado no registrado se consulta o reentrega; no autoriza reenviar ciegamente el efecto.'], sources: ['c4', 'migration', 'resilience'],
     }),
@@ -226,8 +226,8 @@ export const architecture = {
       status: 'unresolved', summary: 'La autoridad se acuerda por dato y país.', description: 'Debe validarse qué origen produce cada maestro/precio y cómo entrega cambios o cargas completas. No se presupone CDC, eventos ni que el ERP sea dueño de todos los datos.',
       payload: ['Datos comerciales, cobertura y bajas.', 'Versión, vigencias y punto de corte consistente.'], guarantees: ['La copia POS no transfiere la autoría a sucursales.'], failure: ['Sin contrato verificable de integridad no se publica una candidata completa.'], sources: ['pricing', 'c4', 'meetings'],
     }),
-    edge('publish-version', 'publisher', 'country-db', 'Publicar versión completa', 'SQL · publicación atómica propuesta', 'data', {
-      summary: 'Una candidata validada se vuelve publicación distribuible.', description: 'El contexto de publicación de country-api finaliza la candidata completa y conserva manifiesto, versión, corte y evento. El protocolo de carga no mantiene una transacción SQL abierta durante extracción o transferencia.',
+    edge('publish-version', 'publisher', 'country-db', 'Publicar versión completa', 'SQL · PostgreSQL', 'data', {
+      summary: 'Una candidata validada se vuelve publicación distribuible.', description: 'El contexto de publicación de country-api finaliza la candidata completa con un commit atómico de publicación y conserva manifiesto, versión, corte y evento. El protocolo de carga no mantiene una transacción SQL abierta durante extracción o transferencia.',
       payload: ['Versión y manifiesto con cobertura.', 'Feed de cambios y referencias de artefactos.'], guarantees: ['No expone una mezcla parcial como versión vigente.'], failure: ['La carga fallida conserva la publicación anterior dentro de su vigencia y política.'], sources: ['pricing', 'publication'],
     }),
     edge('prepare-masters', 'erp-worker', 'master-source', 'Preparar publicación', 'Contrato interno de fuente', 'local', { summary: 'Extracción aislada del trabajo financiero.', description: 'El worker compone el adaptador de fuente con presupuesto, identidad y claims de publicación propios.', payload: ['Referencia de publicación, ámbito y corte requerido.'], guarantees: ['No bloquea ni reutiliza claims de comandos financieros.'], failure: ['Un origen no homologado mantiene la publicación pendiente.'], sources: ['publication'] }),
@@ -241,8 +241,8 @@ export const architecture = {
       status: 'conditional', summary: 'Caché descartable con clave y TTL explícitos.', description: 'Las entradas se derivan de PostgreSQL y se aíslan por ámbito/versión. TTL técnico, invalidación y vigencia comercial son contratos distintos; otra clave no constituye aislamiento de seguridad.',
       payload: ['Clave de consulta y valor derivado.', 'TTL y versión de origen.'], guarantees: ['No es la copia única de negocio, pendientes o permisos autorizantes.'], failure: ['Expulsión, expiración o pérdida permiten reconstrucción con límites; no confirman ni revierten dinero.'], sources: ['c4', 'messaging'],
     }),
-    edge('cache-fallback', 'cache-port', 'country-db', 'Volver al origen con límites', 'SQL · lectura autorizada', 'data', {
-      status: 'conditional', summary: 'Un fallo de caché no elimina la autoridad durable.', description: 'El acceso al origen controla concurrencia, llenados y tiempos para no saturar PostgreSQL ante una caché fría. La API conserva su camino SQL cuando la opción de caché no se adopta.',
+    edge('cache-fallback', 'cache-port', 'country-db', 'Volver al origen con límites', 'SQL · PostgreSQL', 'data', {
+      status: 'conditional', summary: 'Un fallo de caché no elimina la autoridad durable.', description: 'La lectura autorizada al origen controla concurrencia, llenados y tiempos para no saturar PostgreSQL ante una caché fría. La API conserva su camino SQL cuando la opción de caché no se adopta.',
       payload: ['Consulta autorizada y versión requerida.', 'Dato para respuesta y eventual reconstrucción.'], guarantees: ['Límites y estado de origen determinan disponibilidad real.'], failure: ['No se promete fallback ilimitado ni se sirve como válido un resultado no autorizado.'], sources: ['c4', 'resilience'],
     }),
     edge('claim-report', 'erp-worker', 'country-api', 'Solicitar trabajo y reportar', 'HTTPS saliente · autenticado', 'async', {

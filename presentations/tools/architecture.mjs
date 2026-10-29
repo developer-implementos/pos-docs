@@ -51,10 +51,10 @@ export function architectureSlide(slide) {
       ...node('erp-worker', 996, 280, 220, 118, 'ERP y fuentes\nautorizadas'),
       ...connection('desktop-api', [[276, 326], [352, 326]], 'HTTPS', [282, 300, 68, 22]),
       ...connection('mobile-api', [[276, 466], [314, 466], [314, 354], [352, 354]], '', []),
-      ...connection('commit-local', [[483, 374], [483, 420]], 'SQL', [494, 388, 70, 22]),
-      ...connection('sync-local', [[483, 550], [483, 514]], '', []),
+      ...connection('commit-local', [[483, 374], [483, 420]], 'PostgreSQL', [494, 388, 114, 22]),
+      ...connection('sync-local', [[483, 550], [483, 514]], 'PostgreSQL', [494, 520, 114, 22]),
       ...connection('sync-country', [[614, 588], [652, 588], [652, 348], [686, 348]], 'HTTPS', [620, 412, 64, 22]),
-      ...connection('accept-country', [[805, 374], [805, 500]], 'SQL', [818, 430, 65, 22]),
+      ...connection('accept-country', [[805, 374], [805, 500]], 'PostgreSQL', [818, 430, 106, 22]),
       ...connection('claim-report', [[996, 326], [924, 326]], 'HTTPS', [930, 300, 64, 22]),
       text('Inicia conexiones\na país; sin SQL WAN.', 996, 430, 220, 60),
       text('Tauri y Capacitor: shells nativas.\nCada app tiene arranque propio.', 64, 566, 258, 60, 'label'),
@@ -64,7 +64,7 @@ export function architectureSlide(slide) {
       text('Plataforma de país', 64, 226, 300, 32, 'group', blue), text('Red autorizada del ERP', 550, 226, 420, 32, 'group', blue),
       ...node('country-api', 64, 282, 296, 112, 'Trabajo y resultados\nContrato común POS'),
       ...node('country-db', 64, 482, 296, 112, 'Recepción, estados\ny referencias durables'),
-      ...connection('accept-country', [[212, 394], [212, 482]], 'SQL · transacción', [228, 426, 180, 26]),
+      ...connection('accept-country', [[212, 394], [212, 482]], 'PostgreSQL', [228, 426, 132, 26]),
     ];
     const worker = nodes.get('erp-worker');
     for (const [index, [country, erp, description]] of [['CL', 'Dynamics AX', 'Identidades y estados AX'], ['PE', 'ICS / custom', 'Modelo e interfaz por validar'], ['ES', 'Gira', 'Modelo e interfaz por validar']].entries()) {

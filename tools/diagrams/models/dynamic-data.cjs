@@ -96,8 +96,8 @@ module.exports = [
       {
         "from": "countryApi",
         "to": "countryDb",
-        "label": "Versión, manifiesto y outbox · commit SQL",
-        "note": "Tras validar corte, cobertura e integridad, country-api confirma publicación y evento. Los paquetes siguen inmutables y una carga parcial nunca sustituye la versión activa."
+        "label": "Versión, manifiesto y outbox · PostgreSQL",
+        "note": "Tras validar corte, cobertura e integridad, country-api confirma versión, manifiesto y evento outbox en una misma transacción. Los paquetes siguen inmutables y una carga parcial nunca sustituye la versión activa."
       },
       {
         "from": "syncWorker",
@@ -108,7 +108,7 @@ module.exports = [
       {
         "from": "countryApi",
         "to": "countryDb",
-        "label": "Lee la publicación y su corte consistente · SQL",
+        "label": "Lee la publicación y su corte consistente · PostgreSQL",
         "note": "Selecciona la cobertura autorizada para esa sucursal y entrega una versión identificable, con manifiesto y deltas compatibles."
       },
       {
@@ -120,8 +120,8 @@ module.exports = [
       {
         "from": "syncWorker",
         "to": "branchDb",
-        "label": "Persiste recepción y staging · transacciones SQL cortas",
-        "note": "Guarda inbox recibida, staging y cursor de recepción para reanudar. No cambia la versión activa ni el cursor aplicado."
+        "label": "Persiste recepción y staging · PostgreSQL",
+        "note": "Guarda inbox recibida, staging y cursor de recepción en transacciones cortas para reanudar. No cambia la versión activa ni el cursor aplicado."
       },
       {
         "from": "syncWorker",
@@ -138,7 +138,7 @@ module.exports = [
       {
         "from": "syncWorker",
         "to": "branchDb",
-        "label": "Activa versión + inbox aplicada + cursor aplicado · commit SQL",
+        "label": "Activa versión + inbox aplicada + cursor aplicado · PostgreSQL",
         "note": "Un commit corto revalida base y checkpoint; un snapshot atrasado no hace retroceder el puntero ni el cursor aplicado. Activa efecto y checkpoint juntos; conserva versiones todavía referenciadas."
       },
       {
@@ -150,7 +150,7 @@ module.exports = [
       {
         "from": "branchApi",
         "to": "branchDb",
-        "label": "Lee la versión vigente y fija su referencia · SQL",
+        "label": "Lee la versión vigente y fija su referencia · PostgreSQL",
         "note": "Verifica cobertura, vigencia y política. La cotización conserva versión, origen y reglas para explicar el cálculo; fijar la versión no extiende su vigencia. Antes de iniciar el pago se revalida y, si corresponde recalcular según la política acordada, se confirma el importe revisado."
       },
       {
@@ -281,14 +281,14 @@ module.exports = [
       {
         "from": "branchApi",
         "to": "branchDb",
-        "label": "Lee y valida turno, permisos, precios y capacidad · SQL",
+        "label": "Lee y valida turno, permisos, precios y capacidad · PostgreSQL",
         "note": "Antes de iniciar el pago valida importes, versión de la cotización, vigencia, política offline, espacio, reloj y recursos fiscales. Si la política exige recalcular, se confirma el importe revisado antes de crear el intento; fijar una versión no extiende su vigencia. El cliente no decide la autorización ni el importe final. Un pago iniciado o incierto conserva su importe e identidad mientras se resuelve."
       },
       {
         "from": "branchApi",
         "to": "branchDb",
-        "label": "Persiste intención de venta y pago · commit SQL",
-        "note": "Asigna identidades estables antes del efecto externo y guarda importe, moneda, destino y contexto suficiente para recuperar el intento."
+        "label": "Persiste intención de venta y pago · PostgreSQL",
+        "note": "Confirma intención e identidades estables en una transacción antes de llamar al proveedor. Guarda importe, moneda, destino y contexto suficiente para recuperar el intento; el efecto externo sólo comienza después de ese commit."
       },
       {
         "from": "branchApi",
@@ -305,8 +305,8 @@ module.exports = [
       {
         "from": "branchApi",
         "to": "branchDb",
-        "label": "Confirma venta + caja + auditoría + outbox · un commit SQL",
-        "note": "Revalida invariantes y deduplicación; persiste partidas, impuestos, referencias de pago y evidencia fiscal que deba ser simultánea. El commit no incluye al proveedor externo ni al ERP."
+        "label": "Confirma venta + caja + auditoría + outbox · PostgreSQL",
+        "note": "Revalida invariantes y deduplicación; confirma venta, caja, auditoría y outbox en una misma transacción. Incluye partidas, impuestos, referencias de pago y la evidencia fiscal que deba ser simultánea. El commit no incluye al proveedor externo ni al ERP."
       },
       {
         "from": "branchApi",
@@ -317,7 +317,7 @@ module.exports = [
       {
         "from": "syncWorker",
         "to": "branchDb",
-        "label": "Lee outbox confirmada y reclama lote acotado · SQL",
+        "label": "Lee outbox confirmada y reclama lote acotado · PostgreSQL",
         "note": "El claim o lease técnico es recuperable. No mantiene una transacción abierta durante el envío ni altera libremente las ventas."
       },
       {
@@ -335,13 +335,13 @@ module.exports = [
       {
         "from": "countryApi",
         "to": "countryDb",
-        "label": "Aplica inbox + efecto local + outbox · una transacción SQL",
-        "note": "Registra la proyección requerida y el trabajo posterior junto con la deduplicación. Un duplicado ya aplicado conserva su resultado; igual ID con contenido distinto es conflicto, no éxito."
+        "label": "Aplica inbox + efecto local + outbox · PostgreSQL",
+        "note": "Confirma inbox, efecto o proyección requerida y outbox en una misma transacción, junto con el trabajo posterior y la deduplicación. Un duplicado ya aplicado conserva su resultado; igual ID con contenido distinto es conflicto, no éxito."
       },
       {
         "from": "countryDb",
         "to": "countryApi",
-        "label": "Confirma commit y resultado durable · SQL",
+        "label": "Confirma commit y resultado durable · PostgreSQL",
         "note": "Solo este resultado permite afirmar aplicación local en país. Guardar únicamente recepción no basta para emitir el ACK de aplicación."
       },
       {
@@ -353,7 +353,7 @@ module.exports = [
       {
         "from": "syncWorker",
         "to": "branchDb",
-        "label": "Persiste acuse y avance de entrega · commit SQL",
+        "label": "Persiste acuse y avance de entrega · PostgreSQL",
         "note": "Actualiza estados técnicos y checkpoint de eventos realmente acusados. Mantiene pendientes no confirmados y evidencia durante el horizonte de retención y recuperación."
       },
       {
@@ -371,7 +371,7 @@ module.exports = [
       {
         "from": "countryApi",
         "to": "countryDb",
-        "label": "Reclama trabajo e intento con lease · commit SQL",
+        "label": "Reclama trabajo e intento con lease · PostgreSQL",
         "note": "Selecciona una operación confirmada y conserva país, destino, versión de contrato, intento y dueño/vencimiento del lease. Expirar el lease no detiene una llamada ERP ya iniciada ni autoriza repetir un efecto incierto."
       },
       {
@@ -407,7 +407,7 @@ module.exports = [
       {
         "from": "countryApi",
         "to": "countryDb",
-        "label": "Persiste resultado y estado de integración · commit SQL",
+        "label": "Persiste resultado y estado de integración · PostgreSQL",
         "note": "El resultado se registra con transiciones condicionales y deduplicación. ACK de aplicación de la venta, resultado ERP y contabilización definitiva siguen siendo hitos distintos."
       }
     ],

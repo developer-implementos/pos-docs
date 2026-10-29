@@ -28,7 +28,7 @@ flowchart TB
     countryPublications -->|"Lee por ámbito y versión · TypeScript"| countryCachePort
     countryCachePort -->|"Cache-aside · Redis opcional"| countryCache
     countryCachePort -->|"Miss o fallo: lectura durable · TypeScript"| countryUow
-    countryUow -->|"Persistencia y lectura autorizada · SQL"| countryDb
+    countryUow -->|"Persistencia y lectura autorizada · PostgreSQL"| countryDb
     countryEntry -->|"Claim, porciones y finalización · TypeScript"| countryWorker
     countryWorker -->|"Versión, manifiesto y evento · una transacción"| countryUow
     classDef pos fill:#EDF3FF,stroke:#0545BA,color:#25364D,stroke-width:2px
