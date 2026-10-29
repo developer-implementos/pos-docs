@@ -16,7 +16,7 @@ POS Platform tiene dos **aplicaciones cliente completas**: `apps/pos-desktop` pa
 | Composición de interfaz Angular | Reunir componente raíz, configuración, rutas, guards y marco de navegación. | `libs/client-shell`, biblioteca incluida en ambos bundles Angular. |
 
 ```mermaid
-flowchart LR
+flowchart TB
     subgraph Desktop["pos-desktop · aplicación completa"]
         subgraph Tauri["Shell nativa · Tauri"]
             DesktopUI["Frontend Angular + PrimeNG"]

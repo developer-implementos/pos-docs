@@ -14,14 +14,14 @@ export function monorepoView(source, escape) {
     return {depth,name,path:parents.join('/'),description:description.replace(/^\[[^\]]+\]\s*/,'').replace(/; scaffold comercial$/,'')};
   });
   const short={
-    'apps/pos-desktop':'Cliente Angular + Tauri',
-    'apps/pos-mobile':'Cliente Angular + Capacitor',
+    'apps/pos-desktop':'Shell Tauri + frontend Angular',
+    'apps/pos-mobile':'Shell Capacitor + frontend Angular',
     'apps/branch-api':'API y negocio de sucursal',
     'apps/branch-sync-worker':'Entrega y recepción en sucursal',
     'apps/country-api':'API y capacidades de país',
     'apps/erp-worker':'Integración y conciliación ERP',
     'apps/pos-clients-e2e':'Pruebas UI; sin despliegue comercial',
-    'apps/pos-clients-e2e/mobile':'Suite Angular; sin probar el host nativo',
+    'apps/pos-clients-e2e/mobile':'Suite Angular; sin probar shell nativa',
     'libs/backend/returns':'Devoluciones y documento de origen',
     'libs/backend/payments':'Intentos, resultados y conciliación de pagos',
     'libs/backend/fiscal':'Documentos y estados fiscales por país',
