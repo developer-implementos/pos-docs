@@ -2,25 +2,25 @@
   "schemaVersion": 1,
   "reviewedOn": "2026-10-29",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "e4ac2171bd3bb5a4711144386b4898393ef8b316",
+  "revision": "b2c06c0578eae46f4009037e84699484145d0a12",
   "sourceStatus": "Fuentes documentales verificadas en la revisión indicada.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "inputs": [
     {
       "path": "docs/monorepo.md",
-      "sha256": "32f79786d4eee344310ea4da2185a612c3f98aeeb4fc302ae1d1fd6e25c4f72c"
+      "sha256": "1d3cd4a58a36268faf83ba52f0de8862af88daa9d000436bd294e5f1d9a5eb23"
     },
     {
       "path": "docs/propuesta-arquitectura.md",
-      "sha256": "233a13820c071826266f5d58ce781c6d9f29b783532d24f13338cc8ce3833d75"
+      "sha256": "86c8b7233892493995cab98c58b7ca0084699e2ed714192ed46ca6b4e54f386c"
     },
     {
       "path": "docs/implementation-plan.md",
-      "sha256": "6e8259242047bfa7c080639047328491987ef34e69cfeb31b4ec2049d05ebbb3"
+      "sha256": "7a1ae08627ef2764f4f01c57fe7ae08461fcf25065ebeed2d3a786507bc2e428"
     },
     {
       "path": "docs/validacion-y-decisiones.md",
-      "sha256": "c27fe983a3c0b9722dd5f67a8c4e064630c302fc0c4e58bf79b58c67b1198f8e"
+      "sha256": "565a3140954149106a523761f99f71da99c8c38dd0152c8a8b37f526cc577a70"
     },
     {
       "path": "apps/starlight/src/data/product-evidence.json",
@@ -28,15 +28,15 @@
     },
     {
       "path": "docs/roadmap.md",
-      "sha256": "1543bbfaf81d032fdc98fcbc8605116f06ca9190c7734d3a409d6abc939a46f7"
+      "sha256": "168d70de403c19c9a682575d7e7978cce94fdbfdcfc819063748bd4b12f41ed9"
     },
     {
       "path": "docs/roadmap.json",
-      "sha256": "999b622849483f861ee24fee1c4180c034fb0db3f0bff66fefd2c4854306df47"
+      "sha256": "2f03dcfcfdffd64818dd635e10cb05b7f6200293855d5a1ae7f02287c95ae3b0"
     },
     {
       "path": "docs/c4-arquitectura-propuesta.md",
-      "sha256": "13d494477cb62ce187f1bce9ee083c467a20b9a526f9d7cc0401327d633e8590"
+      "sha256": "30cc3ba0f29e74a02badc7f414612e40e19ee38ba1683ec3c53eff413eff2374"
     },
     {
       "path": "docs/contracts/master-data-publication.md",
@@ -44,35 +44,35 @@
     },
     {
       "path": "docs/contracts/identity-and-trust.md",
-      "sha256": "15c78fb4118528c7ab4134be28856b2a211cff5d6c1393a0d7dc567f12c85e38"
+      "sha256": "b353e630e81074f2c5372e661600bd0cbc26c4379dddc3f2eecd5e2b3e3e07c6"
     },
     {
       "path": "tools/architecture/model.mjs",
-      "sha256": "c1defb1ebc40c3b16e7e4cd26ec12ec434caafa58a07b504570fb221b85a152f"
+      "sha256": "0b16bb510852d72d39deefd97f935813d21283c2a8114f2dcd3ca0df647d67dd"
     },
     {
       "path": "tools/architecture/views.mjs",
-      "sha256": "24ce5f9b47c33e127550357da0c27fcce8c83ae4413e06a4476bbc46bea48349"
+      "sha256": "89cd3065a3aa6f4df983e17a1ffa9e12d461f96ed4996e8dea3667f88e3fa998"
     },
     {
       "path": "tools/diagrams/models/c4-data.js",
-      "sha256": "ffeb134cee87349624a92bea89b86203df547afcb46fef670da835be752e3ed9"
+      "sha256": "0a5eb98805ff01feb2a4d569850da6230072597a9196da0073712647ea04726f"
     },
     {
       "path": "docs/extensibilidad-proveedores-dispositivos.md",
-      "sha256": "a5b5fc143ca2d1b817f3b228f0d7eca8f683cf63d6323ce5def1c6e65275aeb0"
+      "sha256": "bde22e49608a3e8d660baa5ac78530b76052f378f0b3d6eb0598c244829c7e83"
     },
     {
       "path": "docs/decisions/native-clients.md",
-      "sha256": "2bbc78bcea0aa0301daee6d9191ec0f533e27b96f88970a2deac39ad4934ef2e"
+      "sha256": "42942ca61de880726e6ba9c0a7f90b941a4bda0078b49de9ee6f2dda4ad5f36f"
     },
     {
       "path": "apps/starlight/src/data/monorepo-catalog.json",
-      "sha256": "91b35ce7428367fc4d896cc8b5efac6f2c4d91f4ddb9e058201aeca75a8a2c95"
+      "sha256": "eae7079f3407713e76faae072e176b0d08779ad16ab67e517c42620738a4b34a"
     },
     {
       "path": "docs/decisions/device-agent.md",
-      "sha256": "a99810fdc701733f6ddd7b05e41ec09a3d7e7a8c7dd0fd51fdbe2cad00dbb539"
+      "sha256": "a14eee4450efb259e69000d92b5b106009cc370a58e4aac22dba007883b6d74f"
     }
   ]
 }
