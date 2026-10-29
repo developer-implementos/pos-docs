@@ -2,21 +2,21 @@
   "schemaVersion": 1,
   "reviewedOn": "2026-10-29",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "dfa3329c35a61dd59f9c0b9159b0f36094c507b0",
+  "revision": "04b487743da5d5a37a8f76ee5dd22cb5f3e4ceea",
   "sourceStatus": "Fuentes documentales verificadas en la revisión indicada.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "inputs": [
     {
       "path": "docs/monorepo.md",
-      "sha256": "39ee52240b2f4050f00e41f0efdb53d134f90cc23a0fff3995b3083f9bb9371b"
+      "sha256": "a473c1ac8b3013ec54340f1918cdc8311d64642652b18bdbda49bddeaf43e6a6"
     },
     {
       "path": "docs/propuesta-arquitectura.md",
-      "sha256": "88bd1aa924d4638ca72d276fe37c066842129d381be11cf32f74011a7e289670"
+      "sha256": "65631b49920d5e3816280518d2aa8791260c9b60cc491c3067ff699f231c4af0"
     },
     {
       "path": "docs/implementation-plan.md",
-      "sha256": "9a006a91d5b5c4d14269c2eb10c825e56ac685c3c5f8aebbf00ad2dfc1e564cb"
+      "sha256": "c3533fc85792d56ca6ccf218d3a2621e4f949cc2452380853a40eecef7c88569"
     },
     {
       "path": "docs/validacion-y-decisiones.md",
@@ -36,7 +36,7 @@
     },
     {
       "path": "docs/c4-arquitectura-propuesta.md",
-      "sha256": "50512bd9b8c7418e2d1f2e8d5f1aaad900b3468a579e830c97a0b2793c1260ab"
+      "sha256": "6ec636b81ecb7739935baeac07c380af9c122ddfd2365d2ed215a0b1f9b41303"
     },
     {
       "path": "docs/contracts/master-data-publication.md",
@@ -48,7 +48,7 @@
     },
     {
       "path": "tools/architecture/model.mjs",
-      "sha256": "c81471ef090b6059b44e78b7d0b29a36141619237dd340219e060ec4d8633b4f"
+      "sha256": "288f7008df75d94ea11b839f75f9efbfea618b050e5c4716a960ccf187d27671"
     },
     {
       "path": "tools/architecture/views.mjs",
@@ -56,11 +56,19 @@
     },
     {
       "path": "tools/diagrams/models/c4-data.js",
-      "sha256": "8847d651d84c088ec30a1655db7f4d7b90360ac6bb1a9ffbf58552b46a3a6abc"
+      "sha256": "978752040690b539f1171a583a2dc8be40603d085cc32eb7fbf4e56d57a84cbc"
     },
     {
       "path": "docs/extensibilidad-proveedores-dispositivos.md",
-      "sha256": "1f73fd87e2f545fa8cf983a2f2b666673b41f3a2d0dac4523a6de0c6eda68b54"
+      "sha256": "838799e96090255d7a4ba58a2a692a498400ad2e7f3e4e491acdb07283bb5905"
+    },
+    {
+      "path": "docs/decisions/native-clients.md",
+      "sha256": "cd9a3002ef951525904fa0fe76129fbf691aac4cb832581a40769271b350adfa"
+    },
+    {
+      "path": "apps/starlight/src/data/monorepo-catalog.json",
+      "sha256": "301d7f17c71d50e80b2d64fc5dadd70a26a8c3e846f28db5763e71ab77fe75cc"
     }
   ]
 }
