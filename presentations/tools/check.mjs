@@ -177,7 +177,7 @@ try{
   assert.ok(response.headers()['content-security-policy'].includes("script-src 'self'"));
   await page.waitForFunction(()=>window.posPresentation?.isReady());
   assert.equal(await page.locator('.slides>section').count(),6,'The standalone opening precedes five horizontal chapters');
-  assert.equal(await page.locator('.slides section[data-leaf]').count(),leafIds.length,'One opening, five chapter covers and sixteen details make up the presentation');
+  assert.equal(await page.locator('.slides section[data-leaf]').count(),leafIds.length,'One opening, five chapter covers and seventeen details make up the presentation');
   assert.equal(await page.locator('.slides section[data-chapter-cover]').count(),5,'Each chapter has its own cover');
   assert.deepEqual(await page.evaluate(()=>window.posPresentation.getSlides().map(slide=>slide.id)),leafIds,'Native slide order inserts chapter covers without changing existing detail IDs or order');
   assert.equal(await page.locator(`.slides > section#${deck.cover}[data-leaf]`).count(),1,'The opening is a direct child of the slide deck');
@@ -223,7 +223,7 @@ try{
     }
   }
   await page.setViewportSize({width:1600,height:954});
-  assert.deepEqual(await page.locator('.slides section[data-diagram-src]').evaluateAll(nodes=>nodes.map(node=>node.id)),diagramSlides.map(slide=>slide.id),'Exactly the seven source diagrams expose vector detail');
+  assert.deepEqual(await page.locator('.slides section[data-diagram-src]').evaluateAll(nodes=>nodes.map(node=>node.id)),diagramSlides.map(slide=>slide.id),'Exactly the eight source diagrams expose vector detail');
   assert.equal(await page.evaluate(()=>window.posPresentation.getConfig().controls),true,'Reveal supplies the native navigation controls');
   assert.equal(await page.evaluate(()=>window.posPresentation.getConfig().navigationMode),'default','Arrows use Reveal horizontal and vertical navigation');
   assert.equal(await page.locator('#next,#previous,#status').count(),0,'There is no competing flat navigation toolbar');
@@ -290,7 +290,7 @@ try{
     }));
     overflow.push(...issues.map(x=>({slide:i+1,...x})));
   }
-  for(const id of ['slide-17','slide-8','slide-9','slide-11','slide-13','slide-14']){
+  for(const id of ['slide-17','slide-18','slide-8','slide-9','slide-11','slide-13','slide-14']){
     await goToSlide(page,slideIndex(id));
     const link=page.locator(`#${id} .slide-explore`);
     assert.ok(await link.isVisible(),`${id}: its relevant architecture view is directly discoverable`);
@@ -593,7 +593,7 @@ try{
   assert.equal(await reading.locator(`article#${deck.cover}`).evaluate(article=>!!article.closest('.reading-chapter')),false,'The opening is outside every reading chapter');
   assert.equal(await reading.locator('section.reading-chapter article').count(),deck.slides.length-1,'Only detail slides belong to reading chapters');
   assert.equal(await reading.locator(`article#${deck.cover} a[href="./#/${deck.cover}"]`).count(),1,'Reading links directly to the standalone opening');
-  assert.equal(await reading.locator('section.reading-chapter').count(),5,'Continuous reading groups the sixteen details under their five chapter headings');
+  assert.equal(await reading.locator('section.reading-chapter').count(),5,'Continuous reading groups the seventeen details under their five chapter headings');
   for(const [index,chapter] of deck.chapters.entries()){
     const section=reading.locator('section.reading-chapter').nth(index);
     assert.equal((await section.locator(':scope > header h2').textContent()).trim(),chapter.title);
@@ -637,7 +637,7 @@ try{
   }
   fs.writeFileSync(path.join(result,'report.json'),JSON.stringify({slides:leafIds.length,opening:1,details:deck.slides.length-1,covers:deck.chapters.length,errors,failedRequests,overflow,diagrams,visualChecks},null,2));
   assert.deepEqual(errors,[]);assert.deepEqual(failedRequests,[]);assert.deepEqual(overflow,[],'Text exceeds its editable box; inspect report.json');
-  console.log('Presentations: standalone opening, five chapter covers and sixteen details; opening has only a right route, four native chapter arrows, sequential Space navigation, history, all permanent links, cover and detail notes, fragments, seven source-preserving SVG diagrams, keyboard viewer, real zoom, DPR 1.25/2, mobile, downloads, 22-page print and grouped no-JS reading passed.');
+  console.log('Presentations: standalone opening, five chapter covers and seventeen details; opening has only a right route, four native chapter arrows, sequential Space navigation, history, all permanent links, cover and detail notes, fragments, eight source-preserving SVG diagrams, keyboard viewer, real zoom, DPR 1.25/2, mobile, downloads, 23-page print and grouped no-JS reading passed.');
 }finally{
   fs.writeFileSync(path.join(result,'report.json'),JSON.stringify({slides:leafIds.length,opening:1,details:deck.slides.length-1,covers:deck.chapters.length,errors,failedRequests,overflow,diagrams,visualChecks},null,2));
   await browser.close();await new Promise(resolve=>server.close(resolve));

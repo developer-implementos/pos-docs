@@ -2,7 +2,7 @@
 
 Esta carpeta organiza las presentaciones Reveal.js del producto por tema, siguiendo la separación usada en [integration-presentations](https://github.com/developer-implementos/integration-presentations).
 
-El [portal público](https://pos-docs-starlight.vercel.app/) reúne las presentaciones de este repositorio. La presentación de arquitectura y roadmap se abre en [`/presentations/architecture/`](https://pos-docs-starlight.vercel.app/presentations/architecture/). El deck anterior de pos-architecture pertenece a otro repositorio y no forma parte del catálogo del portal.
+El [portal público](https://pos-docs-starlight.vercel.app/) reúne las presentaciones de este repositorio. La presentación de arquitectura y roadmap se abre en [`/presentations/architecture/`](https://pos-docs-starlight.vercel.app/presentations/architecture/).
 
 Al incorporar una presentación aquí:
 
@@ -15,7 +15,7 @@ Al incorporar una presentación aquí:
 
 ## Arquitectura y roadmap de Implementos
 
-La [presentación de arquitectura y roadmap](architecture/README.md) vive en `architecture/`. Abre con la portada «POS Platform» y continúa con cinco capítulos, cada uno con su portada de título y alcance. Los capítulos reúnen 15 láminas de detalle sobre capacidades, contexto C4, monorepo, despliegue, infraestructura, frontera ERP y roadmap por funcionalidades. La presentación Reveal.js y su impresión tienen 21 páginas.
+La [presentación de arquitectura y roadmap](architecture/README.md) vive en `architecture/`. Abre con la portada «POS Platform» y continúa con cinco capítulos, cada uno con su portada de título y alcance. Los capítulos reúnen 17 láminas de detalle sobre capacidades, contexto C4, monorepo, despliegue, infraestructura, periféricos con device-agent, frontera ERP y roadmap por funcionalidades. La presentación Reveal.js y su impresión tienen 23 páginas.
 
 ```sh
 npm run build

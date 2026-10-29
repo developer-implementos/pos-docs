@@ -234,13 +234,15 @@ flowchart TB
 
 ### Propuesto: contrato por validar
 
-El POS conserva la identidad fiscal existente y crea un trabajo de impresión independiente. El adaptador informa solo lo que el proveedor o dispositivo permite conocer.
+El POS conserva la identidad fiscal existente. `branch-api`, mediante `devices`, autoriza y persiste un trabajo de impresión independiente en PostgreSQL de sucursal. `device-agent` (C#/.NET en Windows) obtiene los trabajos por HTTPS LAN, registra intentos en SQLite y ejecuta el adaptador homologado. Informa solo lo que el proveedor o dispositivo permite conocer. Véase el [contrato del agente de periféricos](decisions/device-agent.md).
 
 ```mermaid
 flowchart TB
-  DTE["Documento fiscal existente<br/>identidad y representación"] --> JOB[("Trabajo local identificado<br/>intento y binding del adaptador")]
-  JOB --> ADAPTER["Aplicación local de periféricos<br/>Enviar trabajo de impresión"]
-  ADAPTER --> DEVICE["Dispositivo / spooler"]
+  DTE["Documento fiscal existente<br/>identidad y representación"] --> API["branch-api · devices<br/>Autorizar trabajo y consultar estado"]
+  API -->|"PostgreSQL: persistir trabajo y auditoría"| JOB[("PostgreSQL de sucursal<br/>Trabajo, asignación y observaciones")]
+  ADAPTER["device-agent · C#/.NET · Windows"] -->|"HTTPS LAN: obtener trabajo y reportar evidencia"| API
+  ADAPTER -->|"SQLite: registrar recepción e intentos"| JOURNAL[("Diario técnico SQLite")]
+  ADAPTER -->|"Driver / SDK: enviar representación"| DEVICE["Dispositivo / spooler"]
   DEVICE --> RESULT{"Qué puede confirmar<br/>el contrato"}
   RESULT -->|"Resultado consultable"| KNOWN["Registrar estado conocido"]
   RESULT -->|"Sin acuse físico fiable"| UNCERTAIN["Enviado / resultado incierto<br/>hacer visible el límite"]

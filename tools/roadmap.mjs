@@ -11,7 +11,7 @@ const escape = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '
 const escapeMarkdown = value => escape(value).replace(/[\\`*_\[\]~]/g, '\\$&');
 const phaseCode = phase => `F${String(phase.number).padStart(2, '0')}`;
 const localLink = /^\/(?:guide|presentations)\/(?:[a-z0-9-]+\/)*(?:#[a-z0-9][a-z0-9-]*)?$/;
-const applications = new Set(['pos-desktop', 'pos-mobile', 'branch-api', 'branch-sync-worker', 'country-api', 'erp-worker']);
+const applications = new Set(JSON.parse(fs.readFileSync(new URL('../apps/starlight/src/data/monorepo-catalog.json', import.meta.url), 'utf8')).applications.map(app => app.name));
 export const phasePlanHref = phase => `/guide/roadmap/${phase.id}/`;
 
 function shape(value, keys, label) {
@@ -42,7 +42,7 @@ function validateDelivery(delivery, phase) {
     assert.equal(work.id, `${phaseCode(phase)}-${String(index + 1).padStart(2, '0')}`, `${workLabel} must have its ordered unique id`);
     text(work.title, `${workLabel} title`, 120);
     text(work.deliverable, `${workLabel} deliverable`);
-    textList(work.apps, `${workLabel} apps`, 1, 6);
+    textList(work.apps, `${workLabel} apps`, 1, applications.size);
     for (const app of work.apps) assert.ok(applications.has(app), `${workLabel} has an unknown app: ${app}`);
     textList(work.modules, `${workLabel} modules`, 1, 12);
     for (const module of work.modules) assert.match(module, /^libs\/(?:[a-z][a-z0-9-]*\/)*[a-z][a-z0-9-]*\/?$/, `${workLabel} requires repository library paths`);

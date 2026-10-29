@@ -29,7 +29,7 @@ function roadmapPair(slide) {
   return roadmapPairView(phases);
 }
 assert.equal(deck.schemaVersion, 1);
-assert.equal(deck.slides.length, 17);
+assert.equal(deck.slides.length, 18);
 assert.equal(new Set(deck.slides.map(s => s.id)).size, deck.slides.length);
 for (const input of sources.inputs) assert.equal(hash(path.join(root,input.path)), input.sha256, `Review the deck and refresh sources.json after editing ${input.path}`);
 const vendorRoot = path.join(root,'presentations/vendor/reveal');

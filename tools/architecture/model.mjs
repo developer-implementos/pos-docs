@@ -12,6 +12,7 @@ const source = {
   product: { label: 'Producto, alcance y países', href: '/guide/proposal/product/' },
   architecture: { label: 'Aplicaciones y autoridad de datos', href: '/guide/proposal/architecture/' },
   native: { label: 'Shells nativas y frontend Angular', href: '/guide/architecture/native-clients/' },
+  devices: { label: 'Agente de dispositivos y recuperación', href: '/guide/architecture/device-agent/' },
   monorepo: { label: 'Monorepo y estado de implementación', href: '/guide/implementation/monorepo/' },
   access: { label: 'Acceso, permisos y operación', href: '/guide/proposal/access-operations/' },
   pricing: { label: 'Publicación y vigencia comercial', href: '/guide/proposal/pricing-promotions/' },
@@ -55,7 +56,9 @@ const protocolLabels = {
   'send-erp': 'Protocolo por validar',
   'payment-api': 'API por homologar',
   'fiscal-api': 'Contrato por validar',
-  'device-command': 'IPC / loopback',
+  'device-command': 'HTTPS · LAN saliente',
+  'device-jobs-local': 'PostgreSQL',
+  'agent-journal': 'SQLite · local',
   'hardware-command': 'Driver / SDK',
   'payment-sdk': 'SDK / terminal',
   'worker-library': 'API Node.js',
@@ -66,7 +69,7 @@ const protocolLabels = {
   'sync-diagnostic': 'Telemetría',
   'country-diagnostic': 'Telemetría',
   'erp-diagnostic': 'Telemetría',
-  'bridge-evidence': 'IPC / loopback',
+  'bridge-evidence': 'HTTPS · LAN saliente',
   'prepare-masters': 'TypeScript',
   'submit-publication': 'HTTPS saliente',
   'finalize-publication': 'TypeScript',
@@ -104,7 +107,7 @@ function edge(id, from, to, title, protocol, mode, options) {
 
 export const architecture = {
   title: 'POS Platform · arquitectura propuesta',
-  subtitle: 'Seis aplicaciones, autoridad transaccional en PostgreSQL y contratos por país. Componentes internos y alternativas condicionadas no representan servicios adicionales ni capacidades productivas acreditadas.',
+  subtitle: 'Siete aplicaciones propuestas: seis con base o scaffolding y device-agent por implementar. PostgreSQL conserva el negocio; SQLite registra evidencia técnica del agente. SDK y dispositivos requieren homologación.',
   groups: [
     { id: 'clients', title: 'Clientes y puesto', subtitle: 'Escritorio y móvil · sin autoridad SQL de ventas' },
     { id: 'branch', title: 'Sucursal', subtitle: 'LAN disponible · un escritor de negocio autorizado' },
@@ -112,22 +115,35 @@ export const architecture = {
     { id: 'integrations', title: 'Integraciones y operación', subtitle: 'ERP en su red autorizada · proveedores y capacidades por homologar' },
   ],
   nodes: [
-    node('desktop', 'clients', 'client', { kind: 'app', data: ['Estado de interfaz y referencias de operaciones; sin credenciales SQL.', 'Comandos autorizados hacia backend y, si corresponde, puente del puesto.'], sources: ['native', 'monorepo', 'providers'] }),
+    node('desktop', 'clients', 'client', { kind: 'app', data: ['Estado de interfaz y referencias de operaciones; sin credenciales SQL.', 'Solicitudes de negocio y de dispositivos a branch-api; consulta de resultados.'], sources: ['native', 'monorepo', 'providers'] }),
     node('mobile', 'clients', 'mobileClient', { kind: 'app', data: ['Estado de UI y capacidades móviles habilitadas.', 'Mismo ámbito y autoridad de sucursal que el cliente de escritorio.'], sources: ['native', 'monorepo'] }),
-    node('bridge', 'clients', 'device', { kind: 'process', status: 'conditional', data: ['Identidad de comando, autorización original y evidencia técnica.', 'No crea una base de ventas ni un nuevo intento de pago.'], sources: ['providers', 'resilience', 'identity'] }),
-    node('devices', 'clients', null, {
+    node('bridge', 'clients', 'device', {
+      kind: 'app', summary: 'Ejecuta trabajos sin depender de la UI.',
+      description: 'Aplicación propuesta, todavía sin scaffolding ni integración de hardware. Se instala en el equipo autorizado que controla los periféricos. Inicia HTTPS hacia branch-api para obtener trabajos y reportar evidencia, independientemente de pos-desktop o pos-mobile. C# no garantiza compatibilidad de drivers, POS for .NET ni PrintDocument con un servicio Windows: se homologa una vía de impresión soportada; un helper de sesión se justifica sólo si el SDK lo exige. Los pagos mediante SDK son una extensión condicionada, no una integración Transbank implementada.',
+      responsibilities: ['Validar identidad, ámbito, binding y hash del trabajo antes de ejecutarlo.', 'Mantener un único controlador autorizado por periférico y serializar sus comandos.', 'Recuperar y reportar evidencia aunque el cliente se cierre; no confirmar ventas ni recalcular importes.'],
+      data: ['jobId, commandId, hash, destino, intento y resultado técnico en su diario SQLite.', 'Sin autoridad de ventas, credenciales SQL de sucursal ni ejecución genérica de comandos.'],
+      failure: ['Perder LAN detiene la admisión de nuevos trabajos; conserva intentos y evidencia pendientes.', 'Un reinicio o lease vencido no demuestra que un efecto físico no ocurrió ni autoriza repetirlo.'], sources: ['devices', 'providers', 'resilience', 'identity', 'monorepo'],
+    }),
+    node('device-journal', 'clients', 'deviceJournal', {
+      title: 'SQLite · diario del agente', kind: 'data', technology: 'Archivo local · propiedad de device-agent', summary: 'Recepción y evidencia técnica durables.',
+      description: 'Persistencia propuesta del agente: registra recepción antes del acuse, contenido mínimo del trabajo, intentos y observaciones antes de reportarlos. No mantiene el registro comercial ni permite operar comercialmente sin branch-api. El dispositivo externo y SQLite no comparten una transacción; el registro conserva explícitamente efectos inciertos.',
+      responsibilities: ['Deduplicar jobId/commandId y hash; rechazar la misma identidad con otro contenido.', 'Conservar observaciones hasta el acuse durable de sucursal y aplicar retención que cubra reentregas y recuperación.'],
+      data: ['Identidad, binding, versión de plantilla, intento y estado de entrega.', 'Referencia del spooler/dispositivo, evidencia y acuses; payload mínimo necesario protegido según política.'],
+      failure: ['Un ACK de recepción no significa impresión física.', 'Pérdida o restauración del diario exige conciliación; no reconstruir pendientes como nuevas ejecuciones.'], sources: ['devices', 'providers', 'resilience'],
+    }),
+    node('devices', 'clients', 'peripherals', {
       title: 'Periféricos del puesto', kind: 'external', status: 'unresolved', technology: 'Impresora · lector · terminal según contrato',
       summary: 'Capacidades físicas que requieren homologación.',
-      description: 'El inventario y el protocolo dependen del país y del puesto. Un lector, una impresora y un terminal de pago no comparten automáticamente garantías de resultado; el puente se incorpora sólo cuando el SDK o driver lo requiere.',
+      description: 'El inventario y el protocolo dependen del país y del puesto. Un lector, una impresora y un terminal de pago no comparten automáticamente garantías de resultado. Device-agent controla los equipos que se le asignan y homologa cada SDK/driver; varios clientes pueden solicitar trabajo al mismo propietario físico.',
       responsibilities: ['Ejecutar la capacidad física contratada.', 'Conservar o consultar evidencia cuando el equipo lo permita.'],
       data: ['Comandos y respuestas del dispositivo, sin autoridad sobre el importe comercial.', 'Identificadores físicos y referencias según proveedor.'],
       failure: ['Una aceptación del spooler no prueba que exista papel impreso.', 'La respuesta perdida puede dejar un efecto físico incierto.'], sources: ['providers', 'meetings'],
     }),
-    node('branch-api', 'branch', 'branchApi', { kind: 'app', data: ['Ventas, devoluciones, turnos, pagos y referencias fiscales mediante sus contextos.', 'Contexto de usuario, puesto, país, entidad legal y sucursal.'], sources: ['c4', 'monorepo', 'architecture'] }),
+    node('branch-api', 'branch', 'branchApi', { kind: 'app', data: ['Ventas, devoluciones, turnos, pagos y referencias fiscales mediante sus contextos.', 'Trabajos de dispositivos y observaciones vinculados a usuario, puesto, país, entidad legal y sucursal.'], sources: ['c4', 'monorepo', 'architecture', 'devices'] }),
     node('access', 'branch', 'access', { kind: 'component', owner: 'branch-api', data: ['Identidad, ámbito, capacidades y aprobaciones según la operación.', 'Evidencia de autorización; el menú no es la frontera de seguridad.'], sources: ['access', 'monorepo'] }),
     node('pricing', 'branch', 'pricing', { kind: 'component', owner: 'branch-api', data: ['Versión comercial completa, reglas, cobertura y vigencias.', 'Cotización explicable: origen, reglas, moneda y redondeos.'], sources: ['pricing', 'c4'] }),
     node('transaction', 'branch', 'unitOfWork', { kind: 'component', owner: 'branch-api', title: 'Confirmación local', data: ['Negocio, auditoría y outbox en la misma conexión/transacción.', 'Identidad del comando y restricciones de unicidad.'], sources: ['sync', 'architecture', 'resilience'] }),
-    node('branch-db', 'branch', 'branchDb', { kind: 'data', title: 'PostgreSQL de sucursal', data: ['Negocio y auditoría de los contextos; inbox/outbox y cursores.', 'Espejo comercial durable, candidatas y puntero de versión activa.'], sources: ['architecture', 'sync', 'pricing'] }),
+    node('branch-db', 'branch', 'branchDb', { kind: 'data', title: 'PostgreSQL de sucursal', data: ['Negocio y auditoría de los contextos; inbox/outbox y cursores.', 'Espejo comercial durable, candidatas y puntero de versión activa.', 'devices conserva trabajos autorizados, binding, asignación y observaciones de device-agent.'], sources: ['architecture', 'sync', 'pricing', 'devices'] }),
     node('branch-sync', 'branch', 'syncWorker', { kind: 'app', data: ['Pendientes, intentos, cursores recibidos/aplicados y progreso de descarga.', 'No obtiene permiso genérico para cambiar tablas de negocio.'], sources: ['sync', 'pricing', 'resilience'] }),
     node('country-api', 'country', 'countryApi', { kind: 'app', data: ['Inbox, proyección pactada y outbox de país antes del ACK.', 'Publicaciones versionadas y contratos públicos de trabajo/resultados ERP.'], sources: ['c4', 'sync', 'monorepo'] }),
     node('country-work', 'country', 'countryJobs', { kind: 'component', owner: 'country-api', data: ['Destino, versión de contrato, intento, dueño/vencimiento del claim y referencia ERP.', 'Los estados ERP pertenecen a erp; transporte y deduplicación técnica a sync.'], sources: ['c4', 'monorepo', 'migration'] }),
@@ -265,17 +281,25 @@ export const architecture = {
       status: 'conditional', summary: 'Modalidad fiscal independiente de venta y pago.', description: 'El contexto fiscal conserva solicitud, documento y estados del emisor. La ejecución local, central o remota depende del régimen y proveedor homologados; esta flecha expresa el contrato lógico.',
       payload: ['Documento identificado y datos fiscales autorizados.', 'Estado, referencia y respuesta del emisor.'], guarantees: ['Confirmación local o ACK de sincronización no acreditan aceptación fiscal.'], failure: ['Timeout o rechazo conservan referencia y excepción; no se borra la venta ni se reemite ciegamente.'], sources: ['fiscal', 'providers'],
     }),
-    edge('device-command', 'desktop', 'bridge', 'Transportar comando autorizado', 'IPC / loopback autenticado', 'local', {
-      status: 'conditional', summary: 'El cliente no inventa otro importe ni intento.', description: 'Cuando se necesita un proceso nativo, la UI transporta al puente el comando autorizado por backend. Sus capacidades se restringen a operaciones concretas, sin SQL ni ejecución genérica.',
-      payload: ['Identidad, autorización y parámetros del comando.', 'Destino de dispositivo homologado.'], guarantees: ['Autorización e identidad originales acompañan el comando.'], failure: ['Reabrir la UI no permite generar otro cargo si el anterior sigue incierto.'], sources: ['providers', 'native'],
+    edge('device-jobs-local', 'branch-api', 'branch-db', 'Conservar trabajos y observaciones', 'PostgreSQL · contexto devices de sucursal', 'data', {
+      summary: 'Devices es dueño del trabajo autorizado y su evidencia en sucursal.', description: 'El contexto devices de branch-api persiste jobId/commandId, hash, documento/versión, plantilla, binding, agente/dispositivo asignados y auditoría antes de hacer disponible un trabajo. Al recibir una observación identificada, la valida y confirma en PostgreSQL antes de devolver su acuse al agente. No reabre ventas ni reemite fiscalmente un documento por imprimirlo.',
+      payload: ['Trabajo autorizado, destino, versión y estado de asignación.', 'Observaciones por intento, referencias de dispositivo, certeza y auditoría.'], guarantees: ['Unicidad de trabajo/observación y hash coherente permiten reconocer reentregas.', 'La transacción PostgreSQL no incluye SQLite, spooler ni dispositivo.'], failure: ['Si falla el commit no hay acuse durable ni trabajo disponible para ejecutar.', 'Una copia intencional usa un nuevo jobId autorizado y referencia al documento original.'], sources: ['devices', 'providers', 'resilience'],
+    }),
+    edge('device-command', 'bridge', 'branch-api', 'Obtener trabajos autorizados', 'HTTPS · LAN · iniciado por device-agent', 'async', {
+      summary: 'El agente obtiene trabajo de sucursal con su propia identidad.', description: 'Device-agent inicia el canal autenticado hacia branch-api. La sucursal valida asignación y entrega trabajos persistidos con jobId/commandId, hash y binding fijo. Escritorio y móvil solicitan la operación a branch-api; ninguno actúa como relé obligatorio. El agente registra recepción durable antes del acuse y limita admisión por capacidad y estado del dispositivo.',
+      payload: ['Identidad de agente, sucursal y dispositivos asignados.', 'Trabajo autorizado, documento/versión, plantilla, hash, destino e intento.'], guarantees: ['La conexión es saliente desde el agente; no requiere exponer un puerto del PC a móviles.', 'Un solo controlador autorizado por periférico; un lease vencido no habilita otro ejecutor mientras el anterior pueda seguir activo.'], failure: ['Sin LAN no se admiten trabajos nuevos; recuperar el mismo ID no crea una nueva ejecución.', 'Cambiar destino exige resolver el intento previo; no reenrutar automáticamente una impresión incierta.'], sources: ['devices', 'providers', 'identity'],
+    }),
+    edge('agent-journal', 'bridge', 'device-journal', 'Persistir recepción y evidencia', 'SQLite · acceso local de device-agent', 'data', {
+      summary: 'El diario técnico permite reconocer reentregas y recuperar resultados.', description: 'El agente confirma recepción después de persistir jobId/commandId, hash y binding; conserva intentos y observaciones para reenviarlos hasta el acuse durable de branch-api. Una transacción SQLite no incluye spooler, terminal ni efectos físicos. La retención cubre reentrega y recuperación; no se purga inmediatamente al recibir un acuse.',
+      payload: ['Trabajo, intento, estado de recepción y hash.', 'Referencia del dispositivo, resultado observado y acuse de sucursal.'], guarantees: ['Mismo ID y hash recuperan el trabajo; mismo ID con contenido distinto se rechaza.', 'SQLite es evidencia técnica, no otra base de ventas.'], failure: ['Disco lleno o diario no disponible impiden admitir un efecto nuevo sin registro durable.', 'Una salida física sin evidencia suficiente queda incierta; no se reimprime automáticamente.'], sources: ['devices', 'providers', 'resilience'],
     }),
     edge('hardware-command', 'bridge', 'devices', 'Ejecutar capacidad física', 'Driver / SDK homologado', 'local', {
-      status: 'conditional', summary: 'Impresión, lectura o interacción con equipo autorizado.', description: 'La capacidad efectiva depende del dispositivo y contrato. La evidencia técnica y el efecto físico pueden confirmarse en momentos distintos y deben presentarse como tales.',
-      payload: ['Comando identificado y parámetros limitados.', 'Respuesta o evidencia que ofrezca el equipo.'], guarantees: ['Un comando técnico no crea otra venta.'], failure: ['Fallo o respuesta perdida conservan incertidumbre física; aceptar spooler no prueba impresión.'], sources: ['providers'],
+      status: 'conditional', summary: 'Impresión, lectura o interacción con equipo homologado.', description: 'Device-agent ejecuta sólo capacidades asignadas y serializadas por periférico. El SDK, driver, arquitectura y contexto de servicio o sesión requieren pruebas reales: C# no vuelve compatible PrintDocument con un servicio Windows. Evidencia técnica y efecto físico se confirman en momentos distintos. No se presupone soporte Transbank ni compatibilidad móvil por compartir frontend.',
+      payload: ['Comando identificado, binding y parámetros limitados.', 'Respuesta o evidencia que ofrezca el equipo.'], guarantees: ['Un comando técnico no crea otra venta.', 'El mismo dispositivo compartido tiene un único controlador activo, no una cola por cliente.'], failure: ['Fallo o respuesta perdida conservan incertidumbre física; aceptar spooler no prueba impresión.', 'Un helper de sesión se incorpora únicamente cuando un SDK homologado lo exige.'], sources: ['devices', 'providers'],
     }),
     edge('payment-sdk', 'bridge', 'payments', 'Pago mediante SDK local', 'SDK / terminal del proveedor', 'sync', {
-      status: 'conditional', summary: 'Alternativa homologada a la API de backend.', description: 'Representa el contrato lógico del proveedor cuando necesita su SDK o terminal. El puente ejecuta el intento emitido por backend y devuelve evidencia; no se activan ambas rutas para el mismo efecto.',
-      payload: ['Identidad de intento e importe autorizado.', 'Referencia técnica y resultado del proveedor.'], guarantees: ['El bridge no concede permisos ni recalcula dinero.'], failure: ['Una caída LAN posterior al cobro requiere recuperar evidencia y conciliar, no cobrar otra vez.'], sources: ['providers', 'resilience'],
+      status: 'conditional', summary: 'Extensión por homologar, alternativa a la API remota.', description: 'Representa una futura capacidad de device-agent sólo cuando el proveedor exige SDK o terminal y se aprueba su contrato. No acredita una integración Transbank ni amplía el alcance de api-impresion-caja a pagos. El agente ejecuta el intento fijado por backend; para la misma operación no se activa también la API remota.',
+      payload: ['Identidad de operación e intento, binding e importe autorizado.', 'Referencia técnica y resultado del proveedor.'], guarantees: ['Device-agent no concede permisos ni recalcula dinero.', 'Todos los intentos conservan proveedor, comercio y dispositivo originales mientras el efecto siga incierto.'], failure: ['Una caída LAN posterior al cobro requiere recuperar evidencia y conciliar, no cobrar otra vez.'], sources: ['devices', 'providers', 'resilience'],
     }),
     edge('worker-library', 'erp-worker', 'bullmq', 'Opción de jobs internos', 'API de librería Node.js', 'local', {
       status: 'conditional', summary: 'BullMQ se compone dentro del worker si se adopta.', description: 'Es una ubicación ilustrativa para tareas delimitadas; responsabilidad y backend siguen por validar. El trabajo comercial se reclama por HTTPS y conserva registro autoritativo en PostgreSQL.',
@@ -301,9 +325,9 @@ export const architecture = {
       status: 'conditional', summary: 'Telemetría técnica separada de la auditoría comercial.', description: 'Pino emite logs del proceso; un colector externo y Sentry se habilitan expresamente con datos permitidos y límites. El scaffold no acredita monitoreo productivo ni trazas distribuidas completas.',
       payload: ['Servicio, release, correlación y error técnico filtrado.'], guarantees: ['Sin secretos ni contenido comercial crudo.', 'Los logs no reemplazan auditoría, inbox/outbox ni backups.'], failure: ['La caída del destino de telemetría no confirma ni revierte negocio; buffers y descarte deben estar limitados.'], sources: ['monorepo', 'technology', 'c4'],
     })),
-    edge('bridge-evidence', 'bridge', 'desktop', 'Devolver evidencia del puesto', 'IPC / loopback autenticado', 'local', {
-      status: 'conditional', summary: 'La UI devuelve al backend la evidencia del mismo intento.', description: 'La respuesta pertenece al comando original. El cliente transporta la evidencia por su contrato autenticado con branch-api; ni el cierre de la ventana ni la pérdida de respuesta demuestran que el efecto no ocurrió.',
-      payload: ['Identidad original, estado técnico y referencia del dispositivo.'], guarantees: ['La confirmación comercial permanece en backend.'], failure: ['Sin evidencia suficiente se conserva incertidumbre para consulta o conciliación.'], sources: ['providers', 'resilience'],
+    edge('bridge-evidence', 'bridge', 'branch-api', 'Reportar evidencia y recuperar acuse', 'HTTPS · LAN · iniciado por device-agent', 'async', {
+      summary: 'El resultado se reporta sin depender de la ventana del cliente.', description: 'Device-agent envía observaciones identificadas y conserva su diario hasta que branch-api confirma el commit vinculado al trabajo e intento. Si se pierde el acuse, reenvía la misma observación; no repite el efecto. Escritorio y móvil consultan el resultado en branch-api. Ni cerrar la UI ni perder una respuesta demuestra que el dispositivo no actuó.',
+      payload: ['jobId/commandId, intento, observationId, hash y referencia del dispositivo.', 'Estado observado, certeza, error tipado y evidencia disponible.'], guarantees: ['La confirmación comercial permanece en backend.', 'El acuse de sucursal sucede después de persistir la observación; no significa impresión física.'], failure: ['Sin evidencia suficiente se conserva incertidumbre para consulta o conciliación.', 'Un reenvío de resultado no es un nuevo comando al dispositivo.'], sources: ['devices', 'providers', 'resilience'],
     }),
   ],
   scenarios: [
@@ -326,11 +350,18 @@ export const architecture = {
       { title: 'Descargar sin alterar la activa', description: 'La sucursal consulta versiones y persiste staging/cursor recibido. Recibir bytes no implica aplicación.', nodes: ['branch-sync', 'country-api', 'country-db', 'branch-db'], edges: ['sync-country', 'accept-country', 'sync-local'] },
       { title: 'Activar y cotizar', description: 'Tras validar, un commit corto cambia puntero, inbox aplicada y cursor aplicado. Las cotizaciones se revalidan; un pago iniciado conserva importe e identidad.', nodes: ['branch-sync', 'branch-db', 'pricing', 'branch-api'], edges: ['sync-local', 'read-prices', 'quote-pricing'] },
     ] },
-    { id: 'uncertain-payment', title: 'Pago y evidencia incierta', description: 'Este recorrido sigue un proveedor que exige SDK local homologado. La API remota es otra ruta posible según proveedor y no se ejecuta para este mismo intento.', steps: [
-      { title: 'Autorizar y persistir la intención', description: 'El puesto solicita el pago. Branch-api valida permisos y conserva intento, importe, moneda y destino antes del efecto; la transacción no abarca la espera del proveedor.', nodes: ['desktop', 'branch-api', 'access', 'transaction', 'branch-db'], edges: ['desktop-api', 'command-access', 'commit-operation', 'commit-local'] },
-      { title: 'Ejecutar mediante el SDK local', description: 'El cliente transporta el comando original autorizado al puente. El puente invoca el SDK con la misma identidad e importe, sin usar además la API remota de backend.', nodes: ['desktop', 'bridge', 'payments'], edges: ['device-command', 'payment-sdk'] },
-      { title: 'Recuperar con la misma identidad', description: 'Si el cobro ocurrió y después cayó la LAN, el puente recupera evidencia y consulta el resultado cuando el contrato lo permite. El cliente la entrega al backend; sin evidencia suficiente se conserva incertidumbre para conciliación, no se crea otro cargo.', nodes: ['payments', 'bridge', 'desktop', 'branch-api'], edges: ['payment-sdk', 'bridge-evidence', 'desktop-api'] },
-      { title: 'Separar documento e impresión', description: 'El resultado del pago, el documento fiscal y la salida física conservan estados propios. Consultar un documento o reimprimirlo mantiene sus referencias y no repite el cobro ni la emisión fiscal.', nodes: ['branch-api', 'fiscal', 'desktop', 'bridge', 'devices'], edges: ['fiscal-api', 'device-command', 'hardware-command'] },
+    { id: 'shared-printing', title: 'Imprimir desde móvil o escritorio', description: 'Propuesta de device-agent autónomo. Ambos clientes usan branch-api y un único controlador accede al periférico compartido; aplicación y hardware aún requieren implementación y homologación.', steps: [
+      { title: 'Autorizar y registrar el trabajo', description: 'El móvil o escritorio solicita imprimir un documento existente. Branch-api valida permisos y destino, y devices conserva jobId, hash, documento/versión, plantilla y binding antes de entregarlo. Imprimir no crea otra venta ni emite otro documento fiscal.', nodes: ['mobile', 'desktop', 'branch-api', 'access', 'branch-db'], edges: ['mobile-api', 'desktop-api', 'command-access', 'device-jobs-local'] },
+      { title: 'Recibir y reconocer reentregas', description: 'Device-agent inicia HTTPS a sucursal y obtiene trabajo para sus dispositivos asignados. Guarda recepción e identidad en SQLite antes del acuse: mismo jobId y hash recuperan el registro; mismo ID con otro contenido se rechaza.', nodes: ['bridge', 'branch-api', 'device-journal'], edges: ['device-command', 'agent-journal'] },
+      { title: 'Ejecutar con un único controlador', description: 'El propietario autorizado serializa comandos de la impresora compartida y utiliza el driver homologado. Registra intento y evidencia disponible. Aceptado por el spooler no equivale a papel impreso; una respuesta perdida conserva incertidumbre.', nodes: ['bridge', 'device-journal', 'devices'], edges: ['agent-journal', 'hardware-command'] },
+      { title: 'Recuperar evidencia sin reimprimir', description: 'Si se cierra la UI o se pierde LAN, el agente conserva observaciones y las reporta al reconectar. Branch-api acusa después del commit. Ante pérdida del acuse se reenvía la misma observación, nunca se vuelve a imprimir por defecto.', nodes: ['bridge', 'device-journal', 'branch-api', 'branch-db'], edges: ['agent-journal', 'bridge-evidence', 'device-jobs-local'] },
+      { title: 'Consultar o solicitar una copia', description: 'Móvil y escritorio consultan el mismo resultado en branch-api. Una copia intencional requiere un nuevo trabajo autorizado con motivo y referencia al documento original. La reasignación de dispositivo exige resolver el efecto anterior.', nodes: ['mobile', 'desktop', 'branch-api'], edges: ['mobile-api', 'desktop-api'] },
+    ] },
+    { id: 'uncertain-payment', title: 'Pago y evidencia incierta', description: 'Extensión de pagos por SDK local sujeta a homologación; no es una integración Transbank implementada. La API remota es otra ruta según proveedor y no se ejecuta además para el mismo efecto.', steps: [
+      { title: 'Autorizar y persistir la intención', description: 'El puesto solicita el pago. Branch-api valida permisos y conserva operación, intento, importe, moneda y binding antes del efecto; la transacción no abarca la espera del proveedor.', nodes: ['desktop', 'mobile', 'branch-api', 'access', 'transaction', 'branch-db'], edges: ['desktop-api', 'mobile-api', 'command-access', 'commit-operation', 'commit-local'] },
+      { title: 'Ejecutar mediante el SDK local', description: 'Device-agent obtiene el comando de branch-api y registra su recepción en SQLite. Si la capacidad está homologada, invoca el SDK con la misma identidad e importe; no usa también la API remota para esa operación.', nodes: ['branch-api', 'bridge', 'device-journal', 'payments'], edges: ['device-command', 'agent-journal', 'payment-sdk'] },
+      { title: 'Recuperar con la misma identidad', description: 'Si el cobro ocurrió y después cayó la LAN, el agente conserva evidencia y consulta el resultado cuando el contrato lo permite. Reporta directamente a branch-api sin esperar a la UI; la falta de evidencia mantiene incertidumbre, no autoriza otro cargo.', nodes: ['payments', 'bridge', 'device-journal', 'branch-api'], edges: ['payment-sdk', 'agent-journal', 'bridge-evidence'] },
+      { title: 'Separar documento e impresión', description: 'Pago, documento fiscal y salida física conservan estados propios. Imprimir utiliza otro trabajo identificado obtenido por device-agent; una copia del documento no repite cobro ni emisión fiscal.', nodes: ['branch-api', 'fiscal', 'bridge', 'devices'], edges: ['fiscal-api', 'device-command', 'hardware-command'] },
     ] },
     { id: 'optional-cache', title: 'Caché opcional de país', description: 'Sólo para consultas derivadas medidas; PostgreSQL sigue siendo la autoridad.', steps: [
       { title: 'Autorizar antes de leer', description: 'País, entidad y permisos limitan el resultado antes de buscar una clave.', nodes: ['country-api', 'cache-port'], edges: ['cache-policy'] },

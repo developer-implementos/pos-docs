@@ -30,7 +30,8 @@
       "summary": "Operación de sucursal, servicios de país e integración con el ERP, conectados mediante persistencia y sincronización durables.",
       "slides": [
         "slide-6",
-        "slide-7"
+        "slide-7",
+        "slide-18"
       ]
     },
     {
@@ -333,7 +334,7 @@
         },
         {
           "type": "text",
-          "text": "02 / 17",
+          "text": "02 / 18",
           "position": {
             "left": 1135,
             "top": 682,
@@ -909,7 +910,7 @@
         },
         {
           "type": "text",
-          "text": "03 / 17",
+          "text": "03 / 18",
           "position": {
             "left": 1135,
             "top": 682,
@@ -1623,7 +1624,7 @@
       "diagram": true,
       "title": "Aplicaciones y datos de la propuesta",
       "background": "#FFFFFF",
-      "notes": "Vista C2 resumida derivada del modelo de arquitectura: seis aplicaciones con arranque propio y dos almacenes PostgreSQL. pos-desktop y pos-mobile son aplicaciones completas: sus shells nativas Tauri y Capacitor alojan el frontend Angular. Los clientes llaman a branch-api por la red autorizada; branch-sync-worker intercambia por HTTPS con country-api; erp-worker inicia conexiones HTTPS para solicitar trabajo y reportar resultados desde la red autorizada. Los clientes y erp-worker no acceden por SQL a país. Las reglas y componentes internos pertenecen a sus aplicaciones. Los conectores a sistemas externos se detallan en el capítulo de integración. Los tres enlaces de persistencia usan PostgreSQL: branch-api confirma negocio, auditoría y outbox en una misma transacción; branch-sync-worker gestiona pendientes y versiones del espejo de sucursal; country-api conserva recepción y trabajo en la base de país. El sincronizador también usa transacciones para los cambios que deban confirmarse juntos. Ninguna de estas transacciones incluye llamadas de red a proveedores o ERP.",
+      "notes": "Vista C2 resumida derivada del modelo de arquitectura: siete aplicaciones objetivo, dos PostgreSQL de negocio y un registro SQLite técnico del agente, mostrado en la lámina de periféricos. pos-desktop y pos-mobile son aplicaciones completas: sus shells Tauri y Capacitor alojan Angular. Ambos solicitan operaciones autorizadas a branch-api por LAN. device-agent es una app independiente en .NET/C# para Windows: inicia HTTPS hacia branch-api para obtener trabajos y reportar evidencia. No recibe comandos comerciales directos del móvil ni depende de la ventana POS. branch-sync-worker intercambia por HTTPS con country-api; erp-worker inicia HTTPS desde su red autorizada. Clientes, agente y erp-worker no acceden por SQL a país. branch-api confirma negocio, auditoría y outbox en PostgreSQL; devices coordina allí los trabajos de periféricos. branch-sync-worker gestiona pendientes y versiones; country-api conserva recepción y trabajo. Ninguna transacción SQL incluye llamadas a hardware, proveedores o ERP. El objetivo comprende siete apps; seis tienen base técnica en el producto revisado y device-agent está pendiente de implementación y homologación.",
       "sources": [
         {
           "label": "Contenedores y límites C4",
@@ -1636,6 +1637,10 @@
         {
           "label": "Recorrido: recepción y resultado ERP",
           "href": "/architecture/?scenario=country-erp&step=1"
+        },
+        {
+          "label": "Agente de periféricos · decisión y contrato",
+          "href": "/guide/architecture/device-agent/"
         }
       ],
       "elements": [
@@ -1727,7 +1732,7 @@
         },
         {
           "type": "text",
-          "text": "04 / 17",
+          "text": "04 / 18",
           "position": {
             "left": 1135,
             "top": 682,
@@ -1762,7 +1767,7 @@
         },
         {
           "type": "text",
-          "text": "Base propuesta: PostgreSQL + HTTPS. Caché y brokers son opciones sujetas a validación.",
+          "text": "Clientes y agente: HTTPS / LAN. SQLite técnico del agente se detalla en la lámina de periféricos.",
           "position": {
             "left": 64,
             "top": 644,
@@ -1787,11 +1792,15 @@
       "id": "slide-4",
       "title": "Estructura objetivo del monorepo",
       "background": "#FFFFFF",
-      "notes": "Estructura objetivo de POS Platform: seis aplicaciones con arranque propio. pos-desktop y pos-mobile son aplicaciones completas: Tauri y Capacitor son sus shells nativas y alojan el frontend Angular compartido; branch-api atiende la operación de sucursal, branch-sync-worker intercambia información con país, country-api recibe operaciones y ofrece capacidades nacionales, y erp-worker integra el ERP. libs/backend organiza trece contextos de negocio; libs/shared reúne mecanismos técnicos y conceptos mínimos. libs/client-shell compone el frontend Angular: componente raíz, configuración, rutas, guards y layout. Cada biblioteca ofrece una entrada pública y dependencias explícitas. pos-clients-e2e es el proyecto de pruebas de los clientes y shared/testing el soporte técnico de pruebas previsto. La base actual incluye una UI demostrativa y estructura técnica de APIs, workers y contextos; persistencia, sincronización y operaciones comerciales forman parte del roadmap. POS Docs tiene repositorio y entrega independientes. Core es una referencia de organización y convenciones.",
+      "notes": "Estructura objetivo de POS Platform: siete aplicaciones objetivo con arranque propio. pos-desktop y pos-mobile son aplicaciones completas: Tauri y Capacitor son sus shells nativas y alojan el frontend Angular compartido; branch-api atiende la operación de sucursal, branch-sync-worker intercambia información con país, country-api recibe operaciones y ofrece capacidades nacionales, erp-worker integra el ERP, y device-agent ejecuta trabajos autorizados de periféricos desde un host Windows .NET/C#. libs/backend organiza trece contextos de negocio; libs/shared reúne mecanismos técnicos y conceptos mínimos. libs/client-shell compone el frontend Angular: componente raíz, configuración, rutas, guards y layout. Cada biblioteca ofrece una entrada pública y dependencias explícitas. pos-clients-e2e es el proyecto de pruebas de los clientes y shared/testing el soporte técnico de pruebas previsto. device-agent es una aplicación propuesta pendiente de implementación; el producto revisado contiene seis aplicaciones con base técnica. Nx coordina tareas del agente, pero su compilación, pruebas Windows y firma corresponden a .NET. La base actual incluye una UI demostrativa y estructura técnica de APIs, workers y contextos; persistencia, sincronización y operaciones comerciales forman parte del roadmap. POS Docs tiene repositorio y entrega independientes. Core es una referencia de organización y convenciones.",
       "sources": [
         {
           "label": "monorepo",
           "href": "/guide/implementation/monorepo/"
+        },
+        {
+          "label": "Agente de periféricos · decisión y contrato",
+          "href": "/guide/architecture/device-agent/"
         }
       ],
       "elements": [
@@ -1883,7 +1892,7 @@
         },
         {
           "type": "text",
-          "text": "05 / 17",
+          "text": "05 / 18",
           "position": {
             "left": 1135,
             "top": 682,
@@ -2049,286 +2058,6 @@
           "line": {
             "fill": "none",
             "width": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "pos-desktop/",
-          "position": {
-            "left": 78,
-            "top": 287,
-            "width": 340,
-            "height": 25
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 20,
-            "color": "#34383E",
-            "bold": true,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "Shell nativa Tauri · UI Angular",
-          "position": {
-            "left": 78,
-            "top": 310,
-            "width": 340,
-            "height": 22
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 18,
-            "color": "#636569",
-            "bold": false,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "pos-mobile/",
-          "position": {
-            "left": 78,
-            "top": 332,
-            "width": 340,
-            "height": 25
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 20,
-            "color": "#34383E",
-            "bold": true,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "Shell nativa Capacitor · UI Angular",
-          "position": {
-            "left": 78,
-            "top": 355,
-            "width": 340,
-            "height": 22
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 18,
-            "color": "#636569",
-            "bold": false,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "branch-api/",
-          "position": {
-            "left": 78,
-            "top": 377,
-            "width": 340,
-            "height": 25
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 20,
-            "color": "#34383E",
-            "bold": true,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "API y negocio de sucursal",
-          "position": {
-            "left": 78,
-            "top": 400,
-            "width": 340,
-            "height": 22
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 18,
-            "color": "#636569",
-            "bold": false,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "branch-sync-worker/",
-          "position": {
-            "left": 78,
-            "top": 422,
-            "width": 340,
-            "height": 25
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 20,
-            "color": "#34383E",
-            "bold": true,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "Entrega y recepción de sucursal",
-          "position": {
-            "left": 78,
-            "top": 445,
-            "width": 340,
-            "height": 22
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 18,
-            "color": "#636569",
-            "bold": false,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "country-api/",
-          "position": {
-            "left": 78,
-            "top": 467,
-            "width": 340,
-            "height": 25
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 20,
-            "color": "#34383E",
-            "bold": true,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "API y capacidades de país",
-          "position": {
-            "left": 78,
-            "top": 490,
-            "width": 340,
-            "height": 22
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 18,
-            "color": "#636569",
-            "bold": false,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "erp-worker/",
-          "position": {
-            "left": 78,
-            "top": 512,
-            "width": 340,
-            "height": 25
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 20,
-            "color": "#34383E",
-            "bold": true,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "Integración y conciliación ERP",
-          "position": {
-            "left": 78,
-            "top": 535,
-            "width": 340,
-            "height": 22
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 18,
-            "color": "#636569",
-            "bold": false,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "pos-clients-e2e/",
-          "position": {
-            "left": 78,
-            "top": 557,
-            "width": 340,
-            "height": 25
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 20,
-            "color": "#34383E",
-            "bold": true,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "Pruebas UI; sin despliegue de negocio",
-          "position": {
-            "left": 78,
-            "top": 580,
-            "width": 340,
-            "height": 22
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 18,
-            "color": "#636569",
-            "bold": false,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
           }
         },
         {
@@ -2805,6 +2534,326 @@
             "wrap": "square",
             "insets": 0
           }
+        },
+        {
+          "type": "text",
+          "text": "pos-desktop/",
+          "position": {
+            "left": 78,
+            "top": 287,
+            "width": 340,
+            "height": 25
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 20,
+            "color": "#34383E",
+            "bold": true,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
+        },
+        {
+          "type": "text",
+          "text": "Shell Tauri · UI Angular",
+          "position": {
+            "left": 78,
+            "top": 310,
+            "width": 340,
+            "height": 22
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 18,
+            "color": "#636569",
+            "bold": false,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
+        },
+        {
+          "type": "text",
+          "text": "pos-mobile/",
+          "position": {
+            "left": 78,
+            "top": 327,
+            "width": 340,
+            "height": 25
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 20,
+            "color": "#34383E",
+            "bold": true,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
+        },
+        {
+          "type": "text",
+          "text": "Shell Capacitor · UI Angular",
+          "position": {
+            "left": 78,
+            "top": 350,
+            "width": 340,
+            "height": 22
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 18,
+            "color": "#636569",
+            "bold": false,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
+        },
+        {
+          "type": "text",
+          "text": "branch-api/",
+          "position": {
+            "left": 78,
+            "top": 367,
+            "width": 340,
+            "height": 25
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 20,
+            "color": "#34383E",
+            "bold": true,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
+        },
+        {
+          "type": "text",
+          "text": "API y negocio de sucursal",
+          "position": {
+            "left": 78,
+            "top": 390,
+            "width": 340,
+            "height": 22
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 18,
+            "color": "#636569",
+            "bold": false,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
+        },
+        {
+          "type": "text",
+          "text": "branch-sync-worker/",
+          "position": {
+            "left": 78,
+            "top": 407,
+            "width": 340,
+            "height": 25
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 20,
+            "color": "#34383E",
+            "bold": true,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
+        },
+        {
+          "type": "text",
+          "text": "Entrega y recepción de sucursal",
+          "position": {
+            "left": 78,
+            "top": 430,
+            "width": 340,
+            "height": 22
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 18,
+            "color": "#636569",
+            "bold": false,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
+        },
+        {
+          "type": "text",
+          "text": "country-api/",
+          "position": {
+            "left": 78,
+            "top": 447,
+            "width": 340,
+            "height": 25
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 20,
+            "color": "#34383E",
+            "bold": true,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
+        },
+        {
+          "type": "text",
+          "text": "API y capacidades de país",
+          "position": {
+            "left": 78,
+            "top": 470,
+            "width": 340,
+            "height": 22
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 18,
+            "color": "#636569",
+            "bold": false,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
+        },
+        {
+          "type": "text",
+          "text": "erp-worker/",
+          "position": {
+            "left": 78,
+            "top": 487,
+            "width": 340,
+            "height": 25
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 20,
+            "color": "#34383E",
+            "bold": true,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
+        },
+        {
+          "type": "text",
+          "text": "Integración y conciliación ERP",
+          "position": {
+            "left": 78,
+            "top": 510,
+            "width": 340,
+            "height": 22
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 18,
+            "color": "#636569",
+            "bold": false,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
+        },
+        {
+          "type": "text",
+          "text": "device-agent/",
+          "position": {
+            "left": 78,
+            "top": 527,
+            "width": 340,
+            "height": 25
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 20,
+            "color": "#34383E",
+            "bold": true,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
+        },
+        {
+          "type": "text",
+          "text": ".NET / Windows · periféricos",
+          "position": {
+            "left": 78,
+            "top": 550,
+            "width": 340,
+            "height": 22
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 18,
+            "color": "#636569",
+            "bold": false,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
+        },
+        {
+          "type": "text",
+          "text": "pos-clients-e2e/",
+          "position": {
+            "left": 78,
+            "top": 567,
+            "width": 340,
+            "height": 25
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 20,
+            "color": "#34383E",
+            "bold": true,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
+        },
+        {
+          "type": "text",
+          "text": "Pruebas UI; sin despliegue comercial",
+          "position": {
+            "left": 78,
+            "top": 590,
+            "width": 340,
+            "height": 22
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 18,
+            "color": "#636569",
+            "bold": false,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
         }
       ]
     },
@@ -2812,11 +2861,15 @@
       "id": "slide-5",
       "title": "Responsabilidad de las bibliotecas",
       "background": "#FFFFFF",
-      "notes": "Shared agrupa mecanismos técnicos y conceptos mínimos. libs/client-shell compone el frontend Angular: componente raíz, configuración, rutas, guards y layout. Tauri y Capacitor son las shells nativas que alojan ese frontend en pos-desktop y pos-mobile. Country-policies define perfiles y selección de políticas por país; domain contiene reglas puras del prototipo y data-access su estado y adaptadores mock. Las reglas comerciales definitivas pertenecen a los contextos de negocio. Las carpetas de shared/backend describen responsabilidades; el número de bibliotecas Nx se determina por sus límites y consumidores. Los contratos de negocio pertenecen a su contexto, por ejemplo SaleConfirmedV1 en ventas; shared/contracts contiene sobres y metadatos técnicos. Shared/testing es soporte exclusivo de pruebas. Los clientes ofrecen puertos de acceso a capacidades nativas para las features.",
+      "notes": "Shared agrupa mecanismos técnicos y conceptos mínimos. libs/client-shell compone el frontend Angular: componente raíz, configuración, rutas, guards y layout. Tauri y Capacitor son las shells nativas que alojan ese frontend en pos-desktop y pos-mobile. Country-policies define perfiles y selección de políticas por país; domain contiene reglas puras del prototipo y data-access su estado y adaptadores mock. Las reglas comerciales definitivas pertenecen a los contextos de negocio. Las carpetas de shared/backend describen responsabilidades; el número de bibliotecas Nx se determina por sus límites y consumidores. Los contratos de negocio pertenecen a su contexto, por ejemplo SaleConfirmedV1 en ventas; shared/contracts contiene sobres y metadatos técnicos. Shared/testing es soporte exclusivo de pruebas. Los clientes ofrecen puertos de acceso a capacidades nativas para las features. Los periféricos compartidos se solicitan a branch-api y los ejecuta device-agent; las features no llaman directamente a drivers de la caja. El host .NET conserva código y adaptadores privados propios: comparte esquemas de red y fixtures con el contexto devices, no importa bibliotecas NestJS ni Pino de Node.",
       "sources": [
         {
           "label": "monorepo",
           "href": "/guide/implementation/monorepo/"
+        },
+        {
+          "label": "Agente de periféricos y contratos",
+          "href": "/guide/architecture/device-agent/"
         }
       ],
       "elements": [
@@ -2908,7 +2961,7 @@
         },
         {
           "type": "text",
-          "text": "06 / 17",
+          "text": "06 / 18",
           "position": {
             "left": 1135,
             "top": 682,
@@ -3643,11 +3696,15 @@
       "diagram": true,
       "title": "Flujo de deployment por país",
       "background": "#FFFFFF",
-      "notes": "Flujo objetivo, no pipeline productivo existente. GitHub Actions se alinea con el precedente de devops-platform y Nx coordina tareas. Compilaciones y firma nativas dependen de runners/herramientas de cada plataforma. Cada país promueve artefactos inmutables después de validación y aprobación. Credenciales/entornos aislados. La distribución por anillos incluye validación de dispositivos. Revertir binarios requiere esquema compatible: no restaurar una base antigua sobre ventas nuevas. pos-docs tiene entrega estática separada; no forma parte del runtime comercial.",
+      "notes": "Flujo objetivo, no pipeline productivo existente. GitHub Actions se alinea con el precedente de devops-platform y Nx coordina tareas. Compilaciones y firma nativas dependen de runners/herramientas de cada plataforma. Cada país promueve artefactos inmutables después de validación y aprobación. Credenciales/entornos aislados. La distribución por anillos incluye validación de dispositivos. Revertir binarios requiere esquema compatible: no restaurar una base antigua sobre ventas nuevas. pos-docs tiene entrega estática separada; no forma parte del runtime comercial. device-agent tiene artefacto e instalación firmados independientes de los clientes. Se valida el host Windows y cada driver/SDK: las clases GDI/PrintDocument del legacy no se trasladan automáticamente a un servicio. Las actualizaciones conservan el registro técnico local y los trabajos pendientes; un ejecutor interactivo sólo se incorpora cuando lo exige el SDK homologado.",
       "sources": [
         {
           "label": "technology",
           "href": "/guide/proposal/technology/"
+        },
+        {
+          "label": "Agente de periféricos · decisión y contrato",
+          "href": "/guide/architecture/device-agent/"
         }
       ],
       "elements": [
@@ -3739,7 +3796,7 @@
         },
         {
           "type": "text",
-          "text": "07 / 17",
+          "text": "07 / 18",
           "position": {
             "left": 1135,
             "top": 682,
@@ -3982,7 +4039,7 @@
         },
         {
           "type": "text",
-          "text": "Clientes firmados\nServicios versionados",
+          "text": "Artefactos firmados\nServicios versionados",
           "position": {
             "left": 672,
             "top": 290,
@@ -4601,7 +4658,7 @@
         },
         {
           "type": "text",
-          "text": "Canales independientes para escritorio, móvil, servicios y documentación.",
+          "text": "Canales propios: escritorio, móvil, device-agent, servicios y documentación.",
           "position": {
             "left": 336,
             "top": 583,
@@ -4660,11 +4717,15 @@
       "diagram": true,
       "title": "Stack de infraestructura propuesto",
       "background": "#FFFFFF",
-      "notes": "pos-desktop y pos-mobile son aplicaciones completas con frontend Angular alojado por las shells nativas Tauri y Capacitor, respectivamente. La base recomendada es PostgreSQL en sucursal y país, NestJS/Fastify y workers. Ningún motor/broker confirma por sí solo la durabilidad: se implementan transacciones, outbox/inbox, deduplicación y recuperación. GCP/Cloud Run, Pub/Sub, RabbitMQ, Redis/BullMQ y Kubernetes no se presentan como servicios elegidos. Cloud autorizado o VM privada requiere decisión operativa. El móvil no habilita por sí solo venta sin LAN ni acceso remoto público. LAN/escritor disponibles son requisito del perfil WAN. El OS, dimensionamiento, HA, RPO/RTO y distribución se homologan en piloto.",
+      "notes": "pos-desktop y pos-mobile son aplicaciones completas con frontend Angular alojado por las shells nativas Tauri y Capacitor, respectivamente. La base recomendada es PostgreSQL en sucursal y país, NestJS/Fastify y workers. Ningún motor/broker confirma por sí solo la durabilidad: se implementan transacciones, outbox/inbox, deduplicación y recuperación. GCP/Cloud Run, Pub/Sub, RabbitMQ, Redis/BullMQ y Kubernetes no se presentan como servicios elegidos. Cloud autorizado o VM privada requiere decisión operativa. El móvil no habilita por sí solo venta sin LAN ni acceso remoto público. LAN/escritor disponibles son requisito del perfil WAN. El OS, dimensionamiento, HA, RPO/RTO y distribución se homologan en piloto. device-agent se despliega en el equipo con acceso al hardware, con .NET/C# sobre Windows y SQLite para recepción, intentos y evidencia técnica. No mantiene el registro comercial de ventas ni comparte autoridad de negocio; conserva únicamente el contenido mínimo y la evidencia de cada trabajo autorizado. libs/backend/devices en branch-api autoriza, asigna trabajos y conserva auditoría en PostgreSQL. La conexión de trabajos y resultados la inicia el agente hacia branch-api por HTTPS autenticado. Un equipo puede atender distintos clientes, incluido el móvil, con un único dueño activo por periférico físico. Se homologa driver, arquitectura y requisitos de sesión; PrintDocument no es una vía soportada para un servicio Windows.",
       "sources": [
         {
           "label": "technology",
           "href": "/guide/proposal/technology/"
+        },
+        {
+          "label": "Agente de periféricos · decisión y contrato",
+          "href": "/guide/architecture/device-agent/"
         }
       ],
       "elements": [
@@ -4756,7 +4817,7 @@
         },
         {
           "type": "text",
-          "text": "08 / 17",
+          "text": "08 / 18",
           "position": {
             "left": 1135,
             "top": 682,
@@ -4878,7 +4939,7 @@
         },
         {
           "type": "text",
-          "text": "Integración nativa",
+          "text": "device-agent",
           "position": {
             "left": 76,
             "top": 392,
@@ -4897,7 +4958,7 @@
         },
         {
           "type": "text",
-          "text": "SDK y periféricos homologados\nPermisos por dispositivo",
+          "text": ".NET / C# · Windows\nSQLite técnico + driver / SDK",
           "position": {
             "left": 76,
             "top": 418,
@@ -5090,7 +5151,7 @@
         },
         {
           "type": "text",
-          "text": "PostgreSQL\nNegocio, inbox/outbox y espejos",
+          "text": "PostgreSQL: negocio y trabajos\nInbox/outbox y espejos",
           "position": {
             "left": 468,
             "top": 418,
@@ -5444,6 +5505,171 @@
       ]
     },
     {
+      "id": "slide-18",
+      "diagram": true,
+      "title": "Periféricos para escritorio y móvil",
+      "background": "#FFFFFF",
+      "notes": "device-agent es la aplicación propuesta en apps/device-agent: .NET/C# sobre Windows, con ciclo de vida independiente del POS. pos-desktop y pos-mobile solicitan imprimir o leer a branch-api; libs/backend/devices valida identidad, sucursal, destino y capacidad y persiste el trabajo y su auditoría en PostgreSQL. El agente inicia HTTPS autenticado hacia branch-api, obtiene el trabajo y registra su recepción en SQLite antes de ejecutar. Reporta el resultado por ese mismo límite de confianza. SQLite conserva jobId, hash, intentos, contenido mínimo del trabajo y evidencia técnica; no mantiene un registro comercial de ventas ni autoridad de negocio. Un mismo jobId y contenido recupera el resultado, mientras contenido distinto se rechaza. Los adaptadores acceden al driver/spooler o SDK homologado; sólo un agente controla cada dispositivo físico y serializa capacidades incompatibles. El spooler puede aceptar un trabajo sin acreditar papel impreso. Un resultado incierto se reconcilia; una reimpresión es una nueva acción autorizada vinculada a la anterior. Un móvil en la LAN puede imprimir en el PC sin acceder a localhost ni a SQL. Un periférico conectado directamente por Bluetooth al teléfono requiere un plugin Capacitor homologado y es otro despliegue. El agente no emite DTE ni trae pagos Transbank implementados. Las APIs de impresión del legacy deben sustituirse o aislarse según compatibilidad: System.Drawing.Printing no está soportado dentro de servicios Windows. Hardware, SDK y runtime se homologan antes de habilitar el piloto. Decisión aprobada de arquitectura; aplicación pendiente de implementación.",
+      "sources": [
+        {
+          "label": "Agente de periféricos · decisión y contrato",
+          "href": "/guide/architecture/device-agent/"
+        },
+        {
+          "label": "Extensibilidad de proveedores y dispositivos",
+          "href": "/guide/architecture/providers/"
+        },
+        {
+          "label": "Mapa interactivo · dispositivos",
+          "href": "/architecture/?scenario=shared-printing&step=1"
+        }
+      ],
+      "elements": [
+        {
+          "type": "image",
+          "src": "assets/logo.svg",
+          "alt": "Implementos",
+          "position": {
+            "left": 1002,
+            "top": 30,
+            "width": 214,
+            "height": 72.37400530503979
+          }
+        },
+        {
+          "type": "text",
+          "text": "DEVICE-AGENT / .NET · WINDOWS · SQLITE",
+          "position": {
+            "left": 64,
+            "top": 42,
+            "width": 850,
+            "height": 25
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 15,
+            "color": "#636569",
+            "bold": true,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
+        },
+        {
+          "type": "text",
+          "text": "Periféricos para escritorio y móvil",
+          "position": {
+            "left": 64,
+            "top": 105,
+            "width": 1152,
+            "height": 98
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 42,
+            "color": "#006DB6",
+            "bold": true,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
+        },
+        {
+          "type": "shape",
+          "geometry": "rect",
+          "position": {
+            "left": 64,
+            "top": 202,
+            "width": 62,
+            "height": 5
+          },
+          "fill": "#00937F",
+          "line": {
+            "fill": "none",
+            "width": 0
+          }
+        },
+        {
+          "type": "text",
+          "text": "IMPLEMENTOS / POS PLATFORM / PROPUESTA DE ARQUITECTURA",
+          "position": {
+            "left": 64,
+            "top": 682,
+            "width": 1000,
+            "height": 19
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 12,
+            "color": "#636569",
+            "bold": false,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
+        },
+        {
+          "type": "text",
+          "text": "09 / 18",
+          "position": {
+            "left": 1135,
+            "top": 682,
+            "width": 83,
+            "height": 19
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 12,
+            "color": "#636569",
+            "bold": false,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
+        },
+        {
+          "type": "shape",
+          "geometry": "rect",
+          "position": {
+            "left": 64,
+            "top": 630,
+            "width": 1152,
+            "height": 3
+          },
+          "fill": "#00937F",
+          "line": {
+            "fill": "none",
+            "width": 0
+          }
+        },
+        {
+          "type": "text",
+          "text": "App propuesta: autorización en sucursal y ejecución en el equipo. Driver y SDK se homologan por dispositivo.",
+          "position": {
+            "left": 64,
+            "top": 644,
+            "width": 1152,
+            "height": 30
+          },
+          "style": {
+            "typeface": "Inter",
+            "fontSize": 17,
+            "color": "#636569",
+            "bold": false,
+            "verticalAlignment": "top",
+            "autoFit": "none",
+            "wrap": "square",
+            "insets": 0
+          }
+        }
+      ],
+      "architectureView": "devices"
+    },
+    {
       "id": "slide-8",
       "diagram": true,
       "title": "Desacoplamiento del ERP",
@@ -5552,7 +5778,7 @@
         },
         {
           "type": "text",
-          "text": "09 / 17",
+          "text": "10 / 18",
           "position": {
             "left": 1135,
             "top": 682,
@@ -6408,7 +6634,7 @@
         },
         {
           "type": "text",
-          "text": "10 / 17",
+          "text": "11 / 18",
           "position": {
             "left": 1135,
             "top": 682,
@@ -6565,7 +6791,7 @@
         },
         {
           "type": "text",
-          "text": "11 / 17",
+          "text": "12 / 18",
           "position": {
             "left": 1135,
             "top": 682,
@@ -7191,7 +7417,7 @@
         },
         {
           "type": "text",
-          "text": "12 / 17",
+          "text": "13 / 18",
           "position": {
             "left": 1135,
             "top": 682,
@@ -7639,7 +7865,7 @@
         },
         {
           "type": "text",
-          "text": "13 / 17",
+          "text": "14 / 18",
           "position": {
             "left": 1135,
             "top": 682,
@@ -7701,7 +7927,7 @@
       "id": "slide-13",
       "title": "Primeras funcionalidades reales",
       "background": "#FFFFFF",
-      "notes": "F1: usar datos comerciales versionados de prueba, UI existente y efectivo. Confirmación local, control de turno, ámbito autorizado, autenticación/autorización de prueba verificable y persistencia real. El outbox se diseña desde esta primera transacción aunque su entrega se active en F3. F2 limita proveedores a una combinación inicial de país, medio y dispositivo acordada. La demo identifica explícitamente qué se simula y qué usa sandbox/hardware real. Impresión aceptada por software no prueba efecto físico. Pago autorizado, venta confirmada y documento fiscal aceptado tienen estados distintos. La habilitación de uso productivo exige homologación y autorización para la modalidad elegida, antes de F5. Roadmap propuesto para revisión con desarrollo y producto. El orden y los criterios son una propuesta editorial para esta presentación, no un calendario aprobado.",
+      "notes": "F1: usar datos comerciales versionados de prueba, UI existente y efectivo. Confirmación local, control de turno, ámbito autorizado, autenticación/autorización de prueba verificable y persistencia real. El outbox se diseña desde esta primera transacción aunque su entrega se active en F3. F2 limita proveedores a una combinación inicial de país, medio y dispositivo acordada. La demo identifica explícitamente qué se simula y qué usa sandbox/hardware real. Impresión aceptada por software no prueba efecto físico. Pago autorizado, venta confirmada y documento fiscal aceptado tienen estados distintos. La habilitación de uso productivo exige homologación y autorización para la modalidad elegida, antes de F5. Roadmap propuesto para revisión con desarrollo y producto. El orden y los criterios son una propuesta editorial para esta presentación, no un calendario aprobado. El recorrido de impresión usa branch-api, device-agent y un dispositivo homologado. El backend registra un jobId y el agente deduplica en SQLite antes de ejecutar. Se prueban papel agotado, desconexión, reinicio y resultado incierto. Un trabajo aceptado por el spooler no se declara automáticamente impreso; una reimpresión exige autorización y referencia al trabajo original.",
       "sources": [
         {
           "label": "Roadmap de producto y criterios de avance",
@@ -7718,6 +7944,10 @@
         {
           "label": "Pago con resultado incierto",
           "href": "/architecture/?scenario=uncertain-payment&step=3"
+        },
+        {
+          "label": "Agente de periféricos · decisión y contrato",
+          "href": "/guide/architecture/device-agent/"
         }
       ],
       "elements": [
@@ -7809,7 +8039,7 @@
         },
         {
           "type": "text",
-          "text": "14 / 17",
+          "text": "15 / 18",
           "position": {
             "left": 1135,
             "top": 682,
@@ -7983,7 +8213,7 @@
         },
         {
           "type": "text",
-          "text": "15 / 17",
+          "text": "16 / 18",
           "position": {
             "left": 1135,
             "top": 682,
@@ -8049,7 +8279,7 @@
       "id": "slide-15",
       "title": "Del piloto a la expansión",
       "background": "#FFFFFF",
-      "notes": "Antes de habilitar el piloto se requiere aceptación de F1–F4 para el alcance elegido, fiscalidad y pagos homologados, identidad y permisos reales, protección de datos, carga representativa, procedimientos de contingencia, soporte responsable y objetivos operativos acordados. No se declara un piloto exitoso sin evidencia. F5 fija local, cajas, medios, proveedores y operaciones autorizados; prueba instalación, monitoreo, restore y actualización compatible sin borrar ventas nuevas. F6 es una hipótesis de expansión que se reprioriza con producto: segundo país antes de generalizar a todos. El móvil comparte interfaz pero necesita pruebas de host, dispositivo y permisos; no implica venta sin LAN o acceso remoto público. La migración de ERP se coordina con ese programa; no es requisito automático para el primer piloto. Roadmap propuesto para revisión con desarrollo y producto. El orden y los criterios son una propuesta editorial para esta presentación, no un calendario aprobado.",
+      "notes": "Antes de habilitar el piloto se requiere aceptación de F1–F4 para el alcance elegido, fiscalidad y pagos homologados, identidad y permisos reales, protección de datos, carga representativa, procedimientos de contingencia, soporte responsable y objetivos operativos acordados. No se declara un piloto exitoso sin evidencia. F5 fija local, cajas, medios, proveedores y operaciones autorizados; prueba instalación, monitoreo, restore y actualización compatible sin borrar ventas nuevas. F6 es una hipótesis de expansión que se reprioriza con producto: segundo país antes de generalizar a todos. El móvil comparte interfaz pero necesita pruebas de host, dispositivo y permisos; no implica venta sin LAN o acceso remoto público. La migración de ERP se coordina con ese programa; no es requisito automático para el primer piloto. Roadmap propuesto para revisión con desarrollo y producto. El orden y los criterios son una propuesta editorial para esta presentación, no un calendario aprobado. El piloto valida instalación y actualización firmadas de device-agent, recuperación de trabajos sin repetir efectos físicos y acceso móvil al mismo dispositivo mediante branch-api. Homologación de impresoras y MICR no acredita un adaptador de pago Transbank.",
       "sources": [
         {
           "label": "Roadmap de producto y criterios de avance",
@@ -8058,6 +8288,10 @@
         {
           "label": "validation",
           "href": "/guide/operations/validation/"
+        },
+        {
+          "label": "Agente de periféricos · decisión y contrato",
+          "href": "/guide/architecture/device-agent/"
         }
       ],
       "elements": [
@@ -8149,7 +8383,7 @@
         },
         {
           "type": "text",
-          "text": "16 / 17",
+          "text": "17 / 18",
           "position": {
             "left": 1135,
             "top": 682,
@@ -8311,7 +8545,7 @@
         },
         {
           "type": "text",
-          "text": "17 / 17",
+          "text": "18 / 18",
           "position": {
             "left": 1135,
             "top": 682,

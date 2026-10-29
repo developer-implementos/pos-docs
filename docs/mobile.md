@@ -38,3 +38,7 @@ La alerta sigue pendiente: esta revisión de la llamada no significa que el paqu
 El cliente conserva el login y los recorridos de datos sintéticos del prototipo. No agrega autenticación real, un almacén seguro de credenciales, persistencia transaccional móvil ni sincronización de ventas en segundo plano. Tampoco habilita pagos, cámara, lectores, impresoras u otras capacidades nativas sin sus contratos, permisos e integración específica.
 
 La verificación del bundle y los recorridos de navegador se distingue de la apertura en Android/iOS. Antes de afirmar soporte nativo deben probarse instalación, acceso, teclado, orientación, áreas seguras, suspensión/reanudación, pérdida de conectividad y recuperación en dispositivos representativos. Los permisos, firma y distribución se validan por plataforma. La prueba de un viewport móvil en Chromium no cubre esas condiciones.
+
+## Acceso a periféricos de sucursal
+
+La propuesta usa `device-agent` (C#/.NET Windows) como controlador autónomo de los periféricos compartidos. El cliente solicita y consulta trabajos en `branch-api`; el agente inicia HTTPS LAN al backend, ejecuta el driver/SDK y conserva evidencia en SQLite técnico. No necesita que `pos-desktop` permanezca abierto. Esta capacidad está pendiente de implementación y homologación. El [ADR-17](decisions/device-agent.md) describe acceso móvil, seguridad, estados y recuperación; los dispositivos conectados directamente al móvil requieren una integración Capacitor específica.

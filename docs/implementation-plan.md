@@ -16,7 +16,7 @@ La interfaz permite recorrer una caja corporativa para Chile con datos sintétic
 
 ## Aplicaciones y estado actual
 
-El producto tiene seis puntos de entrada. Sus nombres delimitan responsabilidades; disponer de un proyecto compilable no implica tener su comportamiento operativo implementado.
+El producto revisado tiene seis puntos de entrada. La estructura objetivo añade `device-agent` como séptima aplicación, pendiente de implementación. Sus nombres delimitan responsabilidades; disponer de un proyecto compilable no implica tener su comportamiento operativo implementado.
 
 | Aplicación | Base disponible | Capacidad que requiere implementación y aceptación |
 | --- | --- | --- |
@@ -26,6 +26,7 @@ El producto tiene seis puntos de entrada. Sus nombres delimitan responsabilidade
 | `branch-sync-worker` | Composición técnica de un proceso independiente | Entrega y recepción durables, reintentos y recuperación con los datos reales de sucursal |
 | `country-api` | Composición técnica de la API de país | Recepción durable, consolidación y contratos de trabajo y resultados de integración |
 | `erp-worker` | Composición técnica del proceso de integración | Traducción, comunicación y conciliación con el ERP mediante contratos comprobados |
+| `device-agent` | Decisión acordada; proyecto aún no incorporado | Host C#/.NET en Windows, diario SQLite, protocolo HTTPS LAN con `branch-api`, adaptadores homologados y ejecución independiente de las ventanas cliente |
 
 Los dos clientes comparten bibliotecas de presentación y flujos. Las cuatro aplicaciones backend reutilizan mecanismos técnicos y delimitan sus contextos de negocio. La [arquitectura de la implementación](architecture.md), la [base de API](api.md) y los [contratos mock](mock-api.md) detallan sus alcances. El [catálogo del monorepo](monorepo.md) distingue la estructura objetivo de la evidencia del código.
 
@@ -39,6 +40,7 @@ POS Platform es un producto independiente, con Core solo como referencia. La [es
 | --- | --- | --- |
 | Documentación | Estructura del producto, propiedad DDD, proyectos de pruebas y evidencia identificada | Catálogo sincronizado, navegación, Astro, build y comprobación de navegador |
 | Base backend | Mecanismos técnicos del servidor en `shared/backend`, con proyectos definidos por fronteras reales | Lint, tipos, tests y build backend; artefactos arrancan fuera del workspace |
+| Periféricos | `devices` autoriza y audita en `branch-api`; `device-agent` ejecuta en el equipo Windows conectado al hardware | Contratos TypeScript/C#, pruebas de recuperación y hardware, instalación firmada y exclusión por dispositivo; criterios en [ADR-17](decisions/device-agent.md) |
 | Contratos y kernel | Sobres técnicos en `shared/contracts` y modelo mínimo acordado en `shared/kernel` | Dominio puro; contratos comerciales conservan propietario; sin imports de frameworks |
 | UI transversal | Componentes, tokens y activos de presentación en `shared/frontend/ui` | Builds de ambos clientes, iconografía, accesibilidad y recorridos de UI verificados |
 | E2E y soporte | `pos-clients-e2e` declara dependencias de `pos-desktop` y `pos-mobile`; `shared/testing` reúne mecanismos usados por varias suites | CI prueba el build de producción; reportes y fixtures funcionan; producción no importa testing |

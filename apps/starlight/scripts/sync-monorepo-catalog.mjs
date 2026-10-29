@@ -36,6 +36,9 @@ for (const entry of target.entries) {
   if ((entry.state === 'mover') !== Boolean(entry.currentPath)) throw new Error('Move requires currentPath: ' + entry.path);
 }
 for (const app of applications) {
+  if (typeof app.inReviewedWorkspace !== 'boolean') throw new Error('Missing workspace evidence state: ' + app.name);
+  const targetApp = target.entries.find(entry => entry.path === 'apps/' + app.name);
+  if (targetApp && (targetApp.state === 'por incorporar') === app.inReviewedWorkspace) throw new Error('App target conflicts with workspace evidence: ' + app.name);
   if (!targetPaths.has('apps/' + app.name)) throw new Error('Current app missing from target structure: ' + app.name);
 }
 for (const library of catalog.libraries) {
@@ -60,7 +63,7 @@ if (workspace) {
       if (isDocumentation !== project.tags?.includes('type:docs')) throw new Error(`Wrong documentation classification: ${project.name}`);
       return project.name;
     }).sort();
-  const expected = applications.map(app => app.name).sort();
+  const expected = applications.filter(app => app.inReviewedWorkspace).map(app => app.name).sort();
   if (JSON.stringify(projects) !== JSON.stringify(expected)) throw new Error(`Catalog apps differ from reviewed workspace: expected ${expected.join(', ')}, found ${projects.join(', ')}`);
   for (const library of catalog.libraries) {
     const directory = path.join(workspace, 'libs', library.path);
@@ -129,6 +132,6 @@ for (const [relative, blocks] of outputs) {
   if (check && stale) throw new Error('Catalog differs from ' + relative + '. Run npm --prefix apps/starlight run sync:catalog.');
   if (!check && stale) { fs.writeFileSync(file, expected); changed++; }
 }
-console.log('Monorepo catalog: ' + catalog.applications.length + ' runtime apps, ' + catalog.documentationApplications.length +
+console.log('Monorepo catalog: ' + catalog.applications.length + ' target runtime apps (' + applications.filter(app => app.inReviewedWorkspace).length + ' in reviewed workspace), ' + catalog.documentationApplications.length +
   ' documentation app, ' + catalog.libraries.length + ' current library locations; target structure and application catalog ' +
   (check ? 'consistent' : 'synchronized (' + changed + ' documents updated)') + '.');

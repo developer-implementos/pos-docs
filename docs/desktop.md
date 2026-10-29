@@ -51,3 +51,7 @@ El artefacto **`corporate-pos-windows-demo`** contiene `Corporate POS_0.1.0_x64-
 **El instalador no se ha ejecutado ni instalado en el equipo local.** La evidencia confirma compilación y empaquetado en CI, no una prueba de apertura o uso del programa nativo. El entorno local sigue sin Cargo/Rust ni MSVC. Falta comprobar la interfaz dentro de WebView2 y su comportamiento en los equipos objetivo. El instalador de demostración no tiene firma comercial.
 
 Las versiones directas de Tauri están fijadas en `Cargo.toml`. Los iconos pertenecen al proyecto, se generan desde una figura geométrica propia y no incluyen Font Awesome Pro.
+
+## Acceso a periféricos de sucursal
+
+La propuesta usa `device-agent` (C#/.NET Windows) como controlador autónomo de los periféricos compartidos. El cliente solicita y consulta trabajos en `branch-api`; el agente inicia HTTPS LAN al backend, ejecuta el driver/SDK y conserva evidencia en SQLite técnico. No necesita que `pos-desktop` permanezca abierto. Esta capacidad está pendiente de implementación y homologación. El [ADR-17](decisions/device-agent.md) describe acceso móvil, seguridad, estados y recuperación; los dispositivos conectados directamente al móvil requieren una integración Capacitor específica.

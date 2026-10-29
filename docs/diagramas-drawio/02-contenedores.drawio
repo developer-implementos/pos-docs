@@ -1,66 +1,72 @@
 <?xml version='1.0' encoding='utf-8'?>
 <mxfile host="app.diagrams.net" agent="POS C4 local export" type="device" pages="1">
   <diagram id="c4-1" name="C2 · Contenedores">
-    <mxGraphModel grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="5427" pageHeight="4714" math="0" shadow="0" background="#ffffff">
+    <mxGraphModel grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="6732" pageHeight="5012" math="0" shadow="0" background="#ffffff">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="group-notes-2233-0" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="64" y="2233.2" width="1728.693164" height="164.25" as="geometry" />
+          <mxGeometry x="64" y="2233.2" width="2163.858008" height="164.25" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-2233-1" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="1816.693164" y="2233.2" width="1728.693164" height="164.25" as="geometry" />
+          <mxGeometry x="2251.858008" y="2233.2" width="2163.858008" height="164.25" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-2233-2" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="3569.386328" y="2233.2" width="1728.693164" height="164.25" as="geometry" />
+          <mxGeometry x="4439.716016" y="2233.2" width="2163.858008" height="164.25" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-2531-0" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="64" y="2531.45" width="1290.519873" height="411.75" as="geometry" />
+          <mxGeometry x="64" y="2531.45" width="1616.893506" height="439.25" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-2531-1" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="1378.519873" y="2531.45" width="1290.519873" height="411.75" as="geometry" />
+          <mxGeometry x="1704.893506" y="2531.45" width="1616.893506" height="439.25" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-2531-2" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="2693.039746" y="2531.45" width="1290.519873" height="411.75" as="geometry" />
+          <mxGeometry x="3345.787012" y="2531.45" width="1616.893506" height="439.25" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-2531-3" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="4007.559619" y="2531.45" width="1290.519873" height="411.75" as="geometry" />
+          <mxGeometry x="4986.680518" y="2531.45" width="1616.893506" height="439.25" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-2531-4" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="64" y="2967.2" width="1290.519873" height="411.75" as="geometry" />
+          <mxGeometry x="64" y="2994.7" width="1616.893506" height="439.25" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-2531-5" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="1378.519873" y="2967.2" width="1290.519873" height="411.75" as="geometry" />
+          <mxGeometry x="1704.893506" y="2994.7" width="1616.893506" height="439.25" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-2531-6" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="2693.039746" y="2967.2" width="1290.519873" height="411.75" as="geometry" />
+          <mxGeometry x="3345.787012" y="2994.7" width="1616.893506" height="439.25" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-2531-7" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="4007.559619" y="2967.2" width="1290.519873" height="411.75" as="geometry" />
+          <mxGeometry x="4986.680518" y="2994.7" width="1616.893506" height="439.25" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-2531-8" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="64" y="3402.95" width="1290.519873" height="494.25" as="geometry" />
+          <mxGeometry x="64" y="3457.95" width="1616.893506" height="411.75" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-2531-9" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="1378.519873" y="3402.95" width="1290.519873" height="494.25" as="geometry" />
+          <mxGeometry x="1704.893506" y="3457.95" width="1616.893506" height="411.75" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-2531-10" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="2693.039746" y="3402.95" width="1290.519873" height="494.25" as="geometry" />
+          <mxGeometry x="3345.787012" y="3457.95" width="1616.893506" height="411.75" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-2531-11" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="4007.559619" y="3402.95" width="1290.519873" height="494.25" as="geometry" />
+          <mxGeometry x="4986.680518" y="3457.95" width="1616.893506" height="411.75" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-2531-12" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="64" y="3921.2" width="1290.519873" height="466.75" as="geometry" />
+          <mxGeometry x="64" y="3893.7" width="1616.893506" height="411.75" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-2531-13" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="1378.519873" y="3921.2" width="1290.519873" height="466.75" as="geometry" />
+          <mxGeometry x="1704.893506" y="3893.7" width="1616.893506" height="411.75" as="geometry" />
         </mxCell>
         <mxCell id="group-notes-2531-14" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="2693.039746" y="3921.2" width="1290.519873" height="466.75" as="geometry" />
+          <mxGeometry x="3345.787012" y="3893.7" width="1616.893506" height="411.75" as="geometry" />
+        </mxCell>
+        <mxCell id="group-notes-2531-15" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
+          <mxGeometry x="4986.680518" y="3893.7" width="1616.893506" height="411.75" as="geometry" />
+        </mxCell>
+        <mxCell id="group-notes-2531-16" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
+          <mxGeometry x="64" y="4329.45" width="1616.893506" height="356.75" as="geometry" />
         </mxCell>
         <mxCell id="sheet" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=1.5;fillColor=#fff;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="5362.079492" height="350" as="geometry" />
+          <mxGeometry x="0" y="0" width="6667.574023" height="350" as="geometry" />
         </mxCell>
         <mxCell id="kicker" value="POS CORPORATIVO  /  02  /  C2 · CONTENEDORES" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=19;align=left;verticalAlign=top;">
           <mxGeometry x="64" y="40" width="459.952148" height="23.75" as="geometry" />
@@ -68,10 +74,10 @@
         <mxCell id="title" value="Aplicaciones, procesos y datos" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=44;align=left;verticalAlign=top;">
           <mxGeometry x="64" y="85" width="604.097656" height="55" as="geometry" />
         </mxCell>
-        <mxCell id="scope" value="Aplicaciones de POS Platform, persistencia de sucursal y servicios de país. Cada nombre de app corresponde al monorepo; las capacidades son propuesta por implementar." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=24;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="152" width="1845" height="30" as="geometry" />
+        <mxCell id="scope" value="Siete aplicaciones objetivo de POS Platform, sus datos y sistemas externos. Seis apps tienen base técnica o scaffold; device-agent se incorpora como propuesta, aún no implementada." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=24;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="152" width="1964.660156" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="status" value="ARQUITECTURA PROPUESTA · 22 OCT 2026 · Chile / Perú / España · No representa una implementación homologada" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=19;align=left;verticalAlign=top;">
+        <mxCell id="status" value="ARQUITECTURA PROPUESTA · 29 OCT 2026 · Chile / Perú / España · No representa una implementación homologada" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=19;align=left;verticalAlign=top;">
           <mxGeometry x="64" y="230" width="1020.804688" height="23.75" as="geometry" />
         </mxCell>
         <mxCell id="key-0" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#163A73;strokeWidth=1.5;fillColor=#163A73;rounded=1;arcSize=8;">
@@ -95,8 +101,8 @@
         <mxCell id="key-3" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#64748B;strokeWidth=1.5;fillColor=#64748B;rounded=1;arcSize=8;">
           <mxGeometry x="692.816406" y="290" width="18" height="18" as="geometry" />
         </mxCell>
-        <mxCell id="key-text-3" value="Sistema externo" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="720.816406" y="285" width="144.511719" height="25" as="geometry" />
+        <mxCell id="key-text-3" value="Externo" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="720.816406" y="285" width="68.925781" height="25" as="geometry" />
         </mxCell>
         <mxCell id="key-4" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#946019;strokeWidth=1.5;fillColor=#946019;rounded=1;arcSize=8;">
           <mxGeometry x="952.816406" y="290" width="18" height="18" as="geometry" />
@@ -111,37 +117,37 @@
           <mxGeometry x="64" y="2169.2" width="496.3125" height="40" as="geometry" />
         </mxCell>
         <mxCell id="notes-2233-0-bg" value="" parent="group-notes-2233-0" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1728.693164" height="164.25" as="geometry" />
+          <mxGeometry x="0" y="0" width="2163.858008" height="164.25" as="geometry" />
         </mxCell>
         <mxCell id="notes-2233-0-title" value="Aplicaciones, procesos y propiedad" parent="group-notes-2233-0" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="22" width="393.286133" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2233-0-body" value="Los seis nombres de app identifican sus proyectos en apps/. PostgreSQL de sucursal conserva negocio y espejo comercial; PostgreSQL de país conserva integración y&#10;proyecciones. El publicador de maestros es una responsabilidad cuyo proceso sigue por asignar." parent="group-notes-2233-0" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="74.25" width="1637.453125" height="55" as="geometry" />
+        <mxCell id="notes-2233-0-body" value="Siete aplicaciones objetivo tienen nombre en apps/: seis cuentan con base técnica o scaffold; device-agent es propuesta aún no implementada. PostgreSQL de sucursal conserva negocio y espejo; país conserva&#10;integración. SQLite es el journal técnico privado del agente." parent="group-notes-2233-0" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="74.25" width="2059.083984" height="55" as="geometry" />
         </mxCell>
         <mxCell id="notes-2233-1-bg" value="" parent="group-notes-2233-1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1728.693164" height="164.25" as="geometry" />
+          <mxGeometry x="0" y="0" width="2163.858008" height="164.25" as="geometry" />
         </mxCell>
         <mxCell id="notes-2233-1-title" value="Entrega durable y ACK de aplicación" parent="group-notes-2233-1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="22" width="408.581543" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2233-1-body" value="País confirma inbox + efecto/proyección local + outbox antes de acusar aplicación. erp-worker obtiene el trabajo por HTTPS saliente y reporta resultados. Un ACK no&#10;certifica contabilización ERP, aceptación fiscal ni liquidación del pago." parent="group-notes-2233-1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="74.25" width="1612.960938" height="55" as="geometry" />
+        <mxCell id="notes-2233-1-body" value="País confirma inbox + efecto/proyección local + outbox antes de acusar aplicación. erp-worker obtiene el trabajo por HTTPS saliente y reporta resultados. Un ACK no certifica contabilización ERP, aceptación fiscal ni&#10;liquidación del pago." parent="group-notes-2233-1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="74.25" width="2091.912109" height="55" as="geometry" />
         </mxCell>
         <mxCell id="notes-2233-2-bg" value="" parent="group-notes-2233-2" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1728.693164" height="164.25" as="geometry" />
+          <mxGeometry x="0" y="0" width="2163.858008" height="164.25" as="geometry" />
         </mxCell>
         <mxCell id="notes-2233-2-title" value="Caché y capacidades condicionales" parent="group-notes-2233-2" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="22" width="397.473145" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2233-2-body" value="Redis de país es opcional y reconstruible para country-api; no reemplaza PostgreSQL ni el espejo local. El puente de periféricos depende del SDK homologado y ejecuta&#10;comandos autorizados. Ninguna de estas piezas crea otra autoridad de ventas." parent="group-notes-2233-2" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="74.25" width="1649.763672" height="55" as="geometry" />
+        <mxCell id="notes-2233-2-body" value="Redis de país es opcional y reconstruible para country-api; no reemplaza PostgreSQL ni el espejo local. device-agent inicia HTTPS LAN hacia branch-api, obtiene trabajos autorizados y conserva evidencia técnica. No&#10;depende de pos-desktop abierto. Drivers y SDK requieren homologación; impresión no acredita pagos ni crea otra autoridad de ventas." parent="group-notes-2233-2" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="74.25" width="2113.149414" height="55" as="geometry" />
         </mxCell>
         <mxCell id="details-title" value="Responsabilidades, propiedad y comportamiento ante fallos" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=32;align=left;verticalAlign=top;">
           <mxGeometry x="64" y="2456.45" width="848.515625" height="40" as="geometry" />
         </mxCell>
         <mxCell id="notes-2531-0-bg" value="" parent="group-notes-2531-0" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1290.519873" height="411.75" as="geometry" />
+          <mxGeometry x="0" y="0" width="1616.893506" height="439.25" as="geometry" />
         </mxCell>
         <mxCell id="notes-2531-0-title" value="Cajero" parent="group-notes-2531-0" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="22" width="73.64502" height="31.25" as="geometry" />
@@ -150,184 +156,205 @@
           <mxGeometry x="22" y="74.25" width="990.526367" height="192.5" as="geometry" />
         </mxCell>
         <mxCell id="notes-2531-1-bg" value="" parent="group-notes-2531-1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1290.519873" height="411.75" as="geometry" />
+          <mxGeometry x="0" y="0" width="1616.893506" height="439.25" as="geometry" />
         </mxCell>
         <mxCell id="notes-2531-1-title" value="pos-desktop" parent="group-notes-2531-1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="22" width="136.193848" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-1-body" value="Contenedor · Angular (frontend) · Tauri (shell nativa)&#10;&#10;apps/pos-desktop entrega la aplicación completa: la shell nativa Tauri aloja el frontend Angular. Tiene arranque, configuración&#10;nativa y build propios. Comparte con pos-mobile libs/client-shell: raíz, configuración, rutas, guards y layout Angular; esta&#10;biblioteca no es la shell nativa ni un proceso adicional. Hardware, SDK y distribución requieren homologación. Su registro&#10;técnico de periféricos no lo convierte en autoridad de ventas.&#10;&#10;AUTORIDAD · No posee otra base de ventas ni credenciales SQL.&#10;&#10;CONTINUIDAD · Sin WAN usa la API por LAN. Sin LAN o backend, se detienen nuevos comandos dependientes." parent="group-notes-2531-1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="74.25" width="1223.384766" height="275" as="geometry" />
+        <mxCell id="notes-2531-1-body" value="Contenedor · Angular (frontend) · Tauri (shell nativa)&#10;&#10;apps/pos-desktop entrega la aplicación completa: la shell nativa Tauri aloja el frontend Angular. Tiene arranque, configuración nativa y build propios. Comparte&#10;con pos-mobile libs/client-shell: raíz, configuración, rutas, guards y layout Angular; esta biblioteca no es la shell nativa ni un proceso adicional. Solicita&#10;capacidades de dispositivos a branch-api; no transporta trabajos a device-agent ni necesita mantenerse abierto para que éste opere. Distribución e integración&#10;nativa requieren homologación; no posee autoridad de ventas.&#10;&#10;AUTORIDAD · No posee otra base de ventas ni credenciales SQL.&#10;&#10;CONTINUIDAD · Sin WAN usa la API por LAN. Sin LAN o backend, se detienen nuevos comandos dependientes." parent="group-notes-2531-1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="74.25" width="1548.271484" height="275" as="geometry" />
         </mxCell>
         <mxCell id="notes-2531-2-bg" value="" parent="group-notes-2531-2" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1290.519873" height="411.75" as="geometry" />
+          <mxGeometry x="0" y="0" width="1616.893506" height="439.25" as="geometry" />
         </mxCell>
         <mxCell id="notes-2531-2-title" value="pos-mobile" parent="group-notes-2531-2" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="22" width="122.277832" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-2-body" value="Contenedor · Angular (frontend) · Capacitor (shell nativa)&#10;&#10;apps/pos-mobile entrega la aplicación completa: la shell nativa Capacitor aloja el frontend Angular. Tiene arranque,&#10;configuración nativa y build propios. Comparte con pos-desktop libs/client-shell: raíz, configuración, rutas, guards y layout&#10;Angular; esta biblioteca no es la shell nativa ni un proceso adicional. Los adaptadores actuales son mock. Instalación, ciclo de&#10;vida, almacenamiento y capacidades nativas requieren pruebas Android/iOS; no hay acceso SQL ni permisos implícitos por&#10;empaquetar la interfaz.&#10;&#10;AUTORIDAD · Comparte interfaz y contratos; no otra autoridad de ventas.&#10;&#10;CONTINUIDAD · Requiere conexión autorizada al backend de sucursal. El móvil no incorpora autonomía sin LAN." parent="group-notes-2531-2" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="74.25" width="1227.853516" height="302.5" as="geometry" />
+        <mxCell id="notes-2531-2-body" value="Contenedor · Angular (frontend) · Capacitor (shell nativa)&#10;&#10;apps/pos-mobile entrega la aplicación completa: la shell nativa Capacitor aloja el frontend Angular. Tiene arranque, configuración nativa y build propios.&#10;Comparte con pos-desktop libs/client-shell: raíz, configuración, rutas, guards y layout Angular; esta biblioteca no es la shell nativa ni un proceso adicional. Los&#10;adaptadores actuales son mock. Instalación, ciclo de vida, almacenamiento y capacidades nativas requieren pruebas Android/iOS; no hay acceso SQL ni&#10;permisos implícitos por empaquetar la interfaz. Solicita impresión y capacidades autorizadas a branch-api; device-agent las ejecuta en el equipo conectado al&#10;hardware, sin depender de pos-desktop.&#10;&#10;AUTORIDAD · Comparte interfaz y contratos; no otra autoridad de ventas.&#10;&#10;CONTINUIDAD · Requiere conexión autorizada al backend de sucursal. El móvil no incorpora autonomía sin LAN." parent="group-notes-2531-2" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="74.25" width="1540.848633" height="302.5" as="geometry" />
         </mxCell>
         <mxCell id="notes-2531-3-bg" value="" parent="group-notes-2531-3" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1290.519873" height="411.75" as="geometry" />
+          <mxGeometry x="0" y="0" width="1616.893506" height="439.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-3-title" value="Puente de periféricos" parent="group-notes-2531-3" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="22" width="236.254883" height="31.25" as="geometry" />
+        <mxCell id="notes-2531-3-title" value="device-agent" parent="group-notes-2531-3" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="22" width="143.151855" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-3-body" value="Contenedor condicional · Proceso nativo según SDK&#10;&#10;El cliente transporta el comando autorizado por backend al agente; no inventa importe, permiso ni otro intento. Puede requerir&#10;.NET u otro runtime por contrato del proveedor. Se representa como límite por homologar, no como SDK aprobado.&#10;&#10;AUTORIDAD · Ejecuta identidad y autorización emitidas por backend; registro técnico de evidencia, sin base de ventas.&#10;&#10;CONTINUIDAD · Una caída de LAN tras un cobro exige recuperar evidencia; no autoriza otro cobro." parent="group-notes-2531-3" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="74.25" width="1227.842773" height="220" as="geometry" />
+        <mxCell id="notes-2531-3-body" value="Contenedor · C# / .NET · Windows&#10;&#10;Aplicación objetivo apps/device-agent, aún no implementada. Servicio autónomo en el equipo Windows conectado al hardware; funciona sin pos-desktop abierto.&#10;Inicia HTTPS LAN autenticado hacia branch-api para obtener trabajos y reportar evidencia. Cada trabajo conserva jobId, hash del contenido, destino y&#10;autorización. SQLite registra deduplicación e intentos técnicos; una aceptación del spooler no acredita impresión física. SDK, drivers y hardware requieren&#10;homologación. Pagos por SDK local son una capacidad futura independiente: migrar impresión no acredita cobros.&#10;&#10;AUTORIDAD · Un único agente autorizado por equipo físico; branch-api conserva permisos, documentos y estado de negocio. El agente no cobra ni emite&#10;documentos por decisión propia.&#10;&#10;CONTINUIDAD · Sin LAN no obtiene trabajos nuevos. Conserva evidencia del trabajo en curso para reanudar su reporte; un resultado incierto no autoriza repetir&#10;el efecto." parent="group-notes-2531-3" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="74.25" width="1571.517578" height="330" as="geometry" />
         </mxCell>
         <mxCell id="notes-2531-4-bg" value="" parent="group-notes-2531-4" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1290.519873" height="411.75" as="geometry" />
+          <mxGeometry x="0" y="0" width="1616.893506" height="439.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-4-title" value="branch-api" parent="group-notes-2531-4" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="22" width="118.127441" height="31.25" as="geometry" />
+        <mxCell id="notes-2531-4-title" value="Journal técnico de dispositivos" parent="group-notes-2531-4" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="22" width="339.074707" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-4-body" value="Contenedor · NestJS + Fastify / Node.js&#10;&#10;apps/branch-api compone los contextos operativos: sales/returns, cash/collections, pricing/catalog, payments/devices, fiscal,&#10;reporting y administration. sync aporta el contrato outbox que se confirma con negocio. El transporte pertenece a&#10;branch-sync-worker y la ACL ERP a erp-worker. Bibliotecas no equivalen a microservicios; las capacidades de negocio aún&#10;requieren implementación.&#10;&#10;AUTORIDAD · Única autoridad de escritura del negocio de sucursal; módulos internos, un proceso.&#10;&#10;CONTINUIDAD · Opera por LAN con datos vigentes. Su caída exige recuperación del escritor autorizado." parent="group-notes-2531-4" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="74.25" width="1213.061523" height="275" as="geometry" />
+        <mxCell id="notes-2531-4-body" value="Contenedor de datos · SQLite&#10;&#10;Persistencia técnica propuesta. Registra recepción durable, identidad de agente y equipo, hash del contenido, intento y evidencia del driver/spooler. Mismo jobId&#10;con distinto hash es conflicto. Guarda evidencia antes de reportarla; no interpreta spool accepted como impresión física. Restore o pérdida del journal exige&#10;reconciliar antes de repetir efectos; un lease vencido no prueba que el hardware no actuó.&#10;&#10;AUTORIDAD · Privado de device-agent en su equipo. No contiene ventas, caja, precios ni autoridad financiera.&#10;&#10;CONTINUIDAD · Conserva jobId, hash y estados técnicos durante cortes de LAN; al reconectar reporta con la misma identidad." parent="group-notes-2531-4" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="74.25" width="1565.405273" height="247.5" as="geometry" />
         </mxCell>
         <mxCell id="notes-2531-5-bg" value="" parent="group-notes-2531-5" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1290.519873" height="411.75" as="geometry" />
+          <mxGeometry x="0" y="0" width="1616.893506" height="439.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-5-title" value="Datos de sucursal" parent="group-notes-2531-5" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="22" width="200.097656" height="31.25" as="geometry" />
+        <mxCell id="notes-2531-5-title" value="branch-api" parent="group-notes-2531-5" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="22" width="118.127441" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-5-body" value="Contenedor de datos · PostgreSQL&#10;&#10;branch-api y branch-sync-worker acceden al mismo PostgreSQL de la sucursal con responsabilidades y permisos distintos.&#10;Ventas, caja, pagos y evidencia fiscal se conservan aquí; inbox, outbox, cursores y staging tienen restricciones y transacciones&#10;según cada operación. Las llamadas de red quedan fuera de esas transacciones. Catálogo, precios y promociones son réplicas&#10;de lectura autorizadas, no maestros independientes.&#10;&#10;AUTORIDAD · Base compartida por la tienda, un primario autorizado. API escribe negocio; worker escribe su esquema técnico&#10;y publica espejos por un contrato acotado.&#10;&#10;CONTINUIDAD · Persistencia local disponible sin WAN. No implica respaldo, alta disponibilidad ni recuperación automática." parent="group-notes-2531-5" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="74.25" width="1243.751953" height="302.5" as="geometry" />
+        <mxCell id="notes-2531-5-body" value="Contenedor · NestJS + Fastify / Node.js&#10;&#10;apps/branch-api compone los contextos operativos: sales/returns, cash/collections, pricing/catalog, payments/devices, fiscal, reporting y administration. sync&#10;aporta el contrato outbox que se confirma con negocio. El transporte pertenece a branch-sync-worker y la ACL ERP a erp-worker. Bibliotecas no equivalen a&#10;microservicios; las capacidades de negocio aún requieren implementación. devices autoriza y conserva trabajos, auditoría y observaciones de periféricos en&#10;PostgreSQL de sucursal. Recibe evidencia de device-agent por conexiones iniciadas por el agente; los clientes no actúan como relé. Registrar o imprimir un&#10;trabajo conserva la referencia del documento y no modifica la confirmación de la venta.&#10;&#10;AUTORIDAD · Única autoridad de escritura del negocio de sucursal; módulos internos, un proceso.&#10;&#10;CONTINUIDAD · Opera por LAN con datos vigentes. Su caída exige recuperación del escritor autorizado." parent="group-notes-2531-5" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="74.25" width="1526.15332" height="302.5" as="geometry" />
         </mxCell>
         <mxCell id="notes-2531-6-bg" value="" parent="group-notes-2531-6" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1290.519873" height="411.75" as="geometry" />
+          <mxGeometry x="0" y="0" width="1616.893506" height="439.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-6-title" value="branch-sync-worker" parent="group-notes-2531-6" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="22" width="219.506836" height="31.25" as="geometry" />
+        <mxCell id="notes-2531-6-title" value="Datos de sucursal" parent="group-notes-2531-6" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="22" width="200.097656" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-6-body" value="Contenedor · NestJS / Node.js · sin servidor HTTP&#10;&#10;apps/branch-sync-worker compone libs/backend/sync con pricing/catalog para preparar y activar versiones. Entrega outbox por&#10;HTTPS con identidad y cursor; confirma acuses durables. El proceso supervisado sigue activo aunque el cliente se cierre.&#10;Descarga, staging, validación y activación conservan límites transaccionales.&#10;&#10;AUTORIDAD · Proceso supervisado; modifica datos técnicos y versiones de maestros, nunca venta libremente.&#10;&#10;CONTINUIDAD · Retiene pendientes durables y reanuda al recuperar WAN; limita reintentos y trabajo en curso." parent="group-notes-2531-6" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="74.25" width="1239.970703" height="247.5" as="geometry" />
+        <mxCell id="notes-2531-6-body" value="Contenedor de datos · PostgreSQL&#10;&#10;branch-api y branch-sync-worker acceden al mismo PostgreSQL de la sucursal con responsabilidades y permisos distintos. Ventas, caja, pagos y evidencia fiscal&#10;se conservan aquí. devices es propietario de los trabajos autorizados, su auditoría y las observaciones de periféricos recibidas del agente; estos registros&#10;conservan identidad y referencia al documento, sin formar parte de la misma transacción de confirmación de venta. El journal SQLite privado del agente sólo&#10;registra ejecución técnica. Inbox, outbox, cursores y staging tienen restricciones y transacciones según cada operación. Las llamadas de red quedan fuera de&#10;esas transacciones. Catálogo, precios y promociones son réplicas de lectura autorizadas, no maestros independientes.&#10;&#10;AUTORIDAD · Base compartida por la tienda, un primario autorizado. API escribe negocio; worker escribe su esquema técnico y publica espejos por un contrato&#10;acotado.&#10;&#10;CONTINUIDAD · Persistencia local disponible sin WAN. No implica respaldo, alta disponibilidad ni recuperación automática." parent="group-notes-2531-6" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="74.25" width="1572.548828" height="330" as="geometry" />
         </mxCell>
         <mxCell id="notes-2531-7-bg" value="" parent="group-notes-2531-7" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1290.519873" height="411.75" as="geometry" />
+          <mxGeometry x="0" y="0" width="1616.893506" height="439.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-7-title" value="country-api" parent="group-notes-2531-7" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="22" width="123.669434" height="31.25" as="geometry" />
+        <mxCell id="notes-2531-7-title" value="branch-sync-worker" parent="group-notes-2531-7" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="22" width="219.506836" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-7-body" value="Contenedor · NestJS + Fastify / Node.js&#10;&#10;apps/country-api autentica el ámbito país/entidad/sucursal. Confirma inbox, proyección operativa y outbox en un único commit&#10;antes del ACK de aplicación. Expone trabajo y resultados al erp-worker mediante HTTPS saliente iniciado por ese worker.&#10;Valida, publica y sirve versiones preparadas mediante MasterDataSourcePort en erp-worker; no ejecuta la ACL ni carga masiva&#10;pesada en un endpoint. La caché opcional acelera lecturas reconstruibles, con PostgreSQL como fuente durable.&#10;&#10;AUTORIDAD · Autentica sucursal y país; confirma inbox, efecto local y outbox juntos antes del ACK de aplicación. Conserva&#10;autoridad de versiones, manifiestos y publicación de maestros.&#10;&#10;CONTINUIDAD · No participa en la transacción local de sucursal. Su caída genera atraso de sincronización." parent="group-notes-2531-7" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="74.25" width="1243.204102" height="302.5" as="geometry" />
+        <mxCell id="notes-2531-7-body" value="Contenedor · NestJS / Node.js · sin servidor HTTP&#10;&#10;apps/branch-sync-worker compone libs/backend/sync con pricing/catalog para preparar y activar versiones. Entrega outbox por HTTPS con identidad y cursor;&#10;confirma acuses durables. El proceso supervisado sigue activo aunque el cliente se cierre. Descarga, staging, validación y activación conservan límites&#10;transaccionales.&#10;&#10;AUTORIDAD · Proceso supervisado; modifica datos técnicos y versiones de maestros, nunca venta libremente.&#10;&#10;CONTINUIDAD · Retiene pendientes durables y reanuda al recuperar WAN; limita reintentos y trabajo en curso." parent="group-notes-2531-7" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="74.25" width="1545.650391" height="247.5" as="geometry" />
         </mxCell>
         <mxCell id="notes-2531-8-bg" value="" parent="group-notes-2531-8" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1290.519873" height="494.25" as="geometry" />
+          <mxGeometry x="0" y="0" width="1616.893506" height="411.75" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-8-title" value="Datos operativos de país" parent="group-notes-2531-8" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="22" width="276.550293" height="31.25" as="geometry" />
+        <mxCell id="notes-2531-8-title" value="country-api" parent="group-notes-2531-8" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="22" width="123.669434" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-8-body" value="Contenedor de datos · PostgreSQL&#10;&#10;Aislamiento lógico y recursos por país/entidad legal. Retención, backups y deduplicación deben cubrir el horizonte de replay y&#10;restauración. ACK de aplicación local no equivale a contabilización ERP.&#10;&#10;AUTORIDAD · Proyección de operaciones de sucursal; inbox, outbox, versiones y resultados de integración.&#10;&#10;CONTINUIDAD · No sustituye la autoridad local ni habilita consumo concurrente offline de saldos globales." parent="group-notes-2531-8" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="74.25" width="1226.59668" height="220" as="geometry" />
+        <mxCell id="notes-2531-8-body" value="Contenedor · NestJS + Fastify / Node.js&#10;&#10;apps/country-api autentica el ámbito país/entidad/sucursal. Confirma inbox, proyección operativa y outbox en un único commit antes del ACK de aplicación.&#10;Expone trabajo y resultados al erp-worker mediante HTTPS saliente iniciado por ese worker. Valida, publica y sirve versiones preparadas mediante&#10;MasterDataSourcePort en erp-worker; no ejecuta la ACL ni carga masiva pesada en un endpoint. La caché opcional acelera lecturas reconstruibles, con&#10;PostgreSQL como fuente durable.&#10;&#10;AUTORIDAD · Autentica sucursal y país; confirma inbox, efecto local y outbox juntos antes del ACK de aplicación. Conserva autoridad de versiones, manifiestos&#10;y publicación de maestros.&#10;&#10;CONTINUIDAD · No participa en la transacción local de sucursal. Su caída genera atraso de sincronización." parent="group-notes-2531-8" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="74.25" width="1566.039062" height="302.5" as="geometry" />
         </mxCell>
         <mxCell id="notes-2531-9-bg" value="" parent="group-notes-2531-9" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1290.519873" height="494.25" as="geometry" />
+          <mxGeometry x="0" y="0" width="1616.893506" height="411.75" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-9-title" value="Redis · caché de país (opcional)" parent="group-notes-2531-9" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="22" width="358.520508" height="31.25" as="geometry" />
+        <mxCell id="notes-2531-9-title" value="Datos operativos de país" parent="group-notes-2531-9" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="22" width="276.550293" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-9-body" value="Contenedor de datos · Redis · datos reconstruibles&#10;&#10;Ampliación opcional sujeta a medición, capacidad y operación. La API comprueba identidad, ámbito y autorización antes de&#10;leer. Las claves incluyen país, entidad legal, versión y alcance de permisos cuando afecte al resultado; un prefijo no sustituye&#10;autorización. TTL y vigencia comercial son independientes. El fallback limita concurrencia, esperas y llenados para proteger&#10;PostgreSQL. No es la inbox, outbox, base de ventas ni único registro de permisos, dinero o trabajos; no implica BullMQ ni&#10;Redis en cada sucursal. Las versiones inmutables evitan mezclar publicaciones y PostgreSQL resuelve la versión autorizada.&#10;&#10;AUTORIDAD · Country-api lee y escribe entradas identificadas por país, entidad y versión. PostgreSQL conserva la autoridad y&#10;el estado durable.&#10;&#10;CONTINUIDAD · Un miss, expiración o caída permite consultar PostgreSQL con límites de carga y espera. La ausencia de&#10;caché no es condición del commit; la capacidad del origen sigue siendo necesaria." parent="group-notes-2531-9" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="74.25" width="1241.979492" height="357.5" as="geometry" />
+        <mxCell id="notes-2531-9-body" value="Contenedor de datos · PostgreSQL&#10;&#10;Aislamiento lógico y recursos por país/entidad legal. Retención, backups y deduplicación deben cubrir el horizonte de replay y restauración. ACK de aplicación&#10;local no equivale a contabilización ERP.&#10;&#10;AUTORIDAD · Proyección de operaciones de sucursal; inbox, outbox, versiones y resultados de integración.&#10;&#10;CONTINUIDAD · No sustituye la autoridad local ni habilita consumo concurrente offline de saldos globales." parent="group-notes-2531-9" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="74.25" width="1545.768555" height="220" as="geometry" />
         </mxCell>
         <mxCell id="notes-2531-10-bg" value="" parent="group-notes-2531-10" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1290.519873" height="494.25" as="geometry" />
+          <mxGeometry x="0" y="0" width="1616.893506" height="411.75" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-10-title" value="erp-worker" parent="group-notes-2531-10" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="22" width="119.470215" height="31.25" as="geometry" />
+        <mxCell id="notes-2531-10-title" value="Redis · caché de país (opcional)" parent="group-notes-2531-10" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="22" width="358.520508" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-10-body" value="Contenedor · NestJS / Node.js · libs/backend/erp&#10;&#10;apps/erp-worker se ejecuta en la red autorizada del ERP e inicia HTTPS autenticado hacia country-api para reclamar trabajo,&#10;renovar su lease y registrar resultados. Mantiene destino, versión de contrato e identidad de intento. Fachada, ACL y&#10;adaptadores son componentes de libs/backend/erp, no servicios HTTP separados obligatorios. Chile: AX; Perú: custom;&#10;España: Gira, con interfaces por homologar. No accede por SQL remoto a PostgreSQL de país. La preparación de maestros&#10;usa una identidad y presupuesto propios, conexión saliente a country-api y contrato de fuente homologado; no ejecuta SQL&#10;WAN.&#10;&#10;AUTORIDAD · Proceso con fachada, ACL y adaptadores internos. Prepara maestros por MasterDataSourcePort con identidad&#10;y presupuesto aislados; country-api conserva publicaciones y resultados durables.&#10;&#10;CONTINUIDAD · Si país o ERP no responde, conserva identidad y resultado incierto. Consulta o concilia antes de repetir un&#10;efecto." parent="group-notes-2531-10" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="74.25" width="1232.204102" height="385" as="geometry" />
+        <mxCell id="notes-2531-10-body" value="Contenedor de datos · Redis · datos reconstruibles&#10;&#10;Ampliación opcional sujeta a medición, capacidad y operación. La API comprueba identidad, ámbito y autorización antes de leer. Las claves incluyen país,&#10;entidad legal, versión y alcance de permisos cuando afecte al resultado; un prefijo no sustituye autorización. TTL y vigencia comercial son independientes. El&#10;fallback limita concurrencia, esperas y llenados para proteger PostgreSQL. No es la inbox, outbox, base de ventas ni único registro de permisos, dinero o&#10;trabajos; no implica BullMQ ni Redis en cada sucursal. Las versiones inmutables evitan mezclar publicaciones y PostgreSQL resuelve la versión autorizada.&#10;&#10;AUTORIDAD · Country-api lee y escribe entradas identificadas por país, entidad y versión. PostgreSQL conserva la autoridad y el estado durable.&#10;&#10;CONTINUIDAD · Un miss, expiración o caída permite consultar PostgreSQL con límites de carga y espera. La ausencia de caché no es condición del commit; la&#10;capacidad del origen sigue siendo necesaria." parent="group-notes-2531-10" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="74.25" width="1563.922852" height="302.5" as="geometry" />
         </mxCell>
         <mxCell id="notes-2531-11-bg" value="" parent="group-notes-2531-11" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1290.519873" height="494.25" as="geometry" />
+          <mxGeometry x="0" y="0" width="1616.893506" height="411.75" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-11-title" value="ERP del país" parent="group-notes-2531-11" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="22" width="145.910645" height="31.25" as="geometry" />
+        <mxCell id="notes-2531-11-title" value="erp-worker" parent="group-notes-2531-11" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="22" width="119.470215" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-11-body" value="Sistema externo · CL: AX · ES: Gira · PE: custom&#10;&#10;Chile usa Dynamics AX on-premise. Gira en España y custom en Perú son antecedentes; versión, interfaces y capacidades&#10;deben confirmarse. No se afirma que exista el adaptador objetivo en producción.&#10;&#10;AUTORIDAD · Autoridad financiera según contrato de cada país; no la base de ventas del POS.&#10;&#10;CONTINUIDAD · Su indisponibilidad deja integración pendiente; no revierte una venta local confirmada." parent="group-notes-2531-11" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="74.25" width="1205.724609" height="220" as="geometry" />
+        <mxCell id="notes-2531-11-body" value="Contenedor · NestJS / Node.js · libs/backend/erp&#10;&#10;apps/erp-worker se ejecuta en la red autorizada del ERP e inicia HTTPS autenticado hacia country-api para reclamar trabajo, renovar su lease y registrar&#10;resultados. Mantiene destino, versión de contrato e identidad de intento. Fachada, ACL y adaptadores son componentes de libs/backend/erp, no servicios HTTP&#10;separados obligatorios. Chile: AX; Perú: custom; España: Gira, con interfaces por homologar. No accede por SQL remoto a PostgreSQL de país. La preparación&#10;de maestros usa una identidad y presupuesto propios, conexión saliente a country-api y contrato de fuente homologado; no ejecuta SQL WAN.&#10;&#10;AUTORIDAD · Proceso con fachada, ACL y adaptadores internos. Prepara maestros por MasterDataSourcePort con identidad y presupuesto aislados;&#10;country-api conserva publicaciones y resultados durables.&#10;&#10;CONTINUIDAD · Si país o ERP no responde, conserva identidad y resultado incierto. Consulta o concilia antes de repetir un efecto." parent="group-notes-2531-11" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="74.25" width="1565.297852" height="302.5" as="geometry" />
         </mxCell>
         <mxCell id="notes-2531-12-bg" value="" parent="group-notes-2531-12" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1290.519873" height="466.75" as="geometry" />
+          <mxGeometry x="0" y="0" width="1616.893506" height="411.75" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-12-title" value="Fuentes de maestros y precios" parent="group-notes-2531-12" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="22" width="341.821289" height="31.25" as="geometry" />
+        <mxCell id="notes-2531-12-title" value="ERP del país" parent="group-notes-2531-12" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="22" width="145.910645" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-12-body" value="Sistema externo · Interfaces por confirmar&#10;&#10;Catálogo, impuestos, precios y promociones deben tener responsable, contrato, versión y vigencia. La fuente de precios no se&#10;sustituye por una tabla editada libremente en cada caja.&#10;&#10;AUTORIDAD · Propietario por dato y país pendiente: no se asigna al ERP por defecto.&#10;&#10;CONTINUIDAD · Sin WAN se usa la versión local vigente dentro de la política autorizada." parent="group-notes-2531-12" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="74.25" width="1232.719727" height="220" as="geometry" />
+        <mxCell id="notes-2531-12-body" value="Sistema externo · CL: AX · ES: Gira · PE: custom&#10;&#10;Chile usa Dynamics AX on-premise. Gira en España y custom en Perú son antecedentes; versión, interfaces y capacidades deben confirmarse. No se afirma&#10;que exista el adaptador objetivo en producción.&#10;&#10;AUTORIDAD · Autoridad financiera según contrato de cada país; no la base de ventas del POS.&#10;&#10;CONTINUIDAD · Su indisponibilidad deja integración pendiente; no revierte una venta local confirmada." parent="group-notes-2531-12" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="74.25" width="1530.976562" height="220" as="geometry" />
         </mxCell>
         <mxCell id="notes-2531-13-bg" value="" parent="group-notes-2531-13" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1290.519873" height="466.75" as="geometry" />
+          <mxGeometry x="0" y="0" width="1616.893506" height="411.75" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-13-title" value="Proveedor de pagos" parent="group-notes-2531-13" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="22" width="225.158691" height="31.25" as="geometry" />
+        <mxCell id="notes-2531-13-title" value="Fuentes de maestros y precios" parent="group-notes-2531-13" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="22" width="341.821289" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-13-body" value="Sistema externo · API / SDK según proveedor&#10;&#10;Autoriza o informa el resultado del pago. Transbank con terminal local en Chile y Niubiz en Perú proceden de las fuentes&#10;revisadas. Mercado Pago Point es un ejemplo presencial ilustrativo, sin adopción ni integración acreditadas; Webpay Plus es&#10;un ejemplo de pago online de Transbank, distinto de su terminal de tienda. En España se informan BBVA/Redsys con TPV&#10;portátiles sin conexión a Gira y conciliación contable; no se presume una API o SDK ya integrado. Cada ruta y capacidad&#10;requiere homologación. Pago, venta, documento fiscal e integración ERP tienen estados distintos. No repetir un cargo incierto&#10;ni cambiar de proveedor para resolverlo automáticamente.&#10;&#10;AUTORIDAD · El proveedor mantiene el efecto financiero; POS registra intento, referencia y resultado.&#10;&#10;CONTINUIDAD · Disponibilidad y modo offline por homologar. Un timeout puede dejar resultado desconocido." parent="group-notes-2531-13" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="74.25" width="1227.821289" height="330" as="geometry" />
+        <mxCell id="notes-2531-13-body" value="Sistema externo · Interfaces por confirmar&#10;&#10;Catálogo, impuestos, precios y promociones deben tener responsable, contrato, versión y vigencia. La fuente de precios no se sustituye por una tabla editada&#10;libremente en cada caja.&#10;&#10;AUTORIDAD · Propietario por dato y país pendiente: no se asigna al ERP por defecto.&#10;&#10;CONTINUIDAD · Sin WAN se usa la versión local vigente dentro de la política autorizada." parent="group-notes-2531-13" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="74.25" width="1538.485352" height="220" as="geometry" />
         </mxCell>
         <mxCell id="notes-2531-14-bg" value="" parent="group-notes-2531-14" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
-          <mxGeometry x="0" y="0" width="1290.519873" height="466.75" as="geometry" />
+          <mxGeometry x="0" y="0" width="1616.893506" height="411.75" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-14-title" value="Proveedor de facturación" parent="group-notes-2531-14" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
+        <mxCell id="notes-2531-14-title" value="Proveedor de pagos" parent="group-notes-2531-14" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="22" width="225.158691" height="31.25" as="geometry" />
+        </mxCell>
+        <mxCell id="notes-2531-14-body" value="Sistema externo · API / SDK según proveedor&#10;&#10;Autoriza o informa el resultado del pago. Transbank con terminal local en Chile y Niubiz en Perú proceden de las fuentes revisadas. Mercado Pago Point es un&#10;ejemplo presencial ilustrativo, sin adopción ni integración acreditadas; Webpay Plus es un ejemplo de pago online de Transbank, distinto de su terminal de&#10;tienda. En España se informan BBVA/Redsys con TPV portátiles sin conexión a Gira y conciliación contable; no se presume una API o SDK ya integrado. Cada&#10;ruta y capacidad requiere homologación. Pago, venta, documento fiscal e integración ERP tienen estados distintos. No repetir un cargo incierto ni cambiar de&#10;proveedor para resolverlo automáticamente.&#10;&#10;AUTORIDAD · El proveedor mantiene el efecto financiero; POS registra intento, referencia y resultado.&#10;&#10;CONTINUIDAD · Disponibilidad y modo offline por homologar. Un timeout puede dejar resultado desconocido." parent="group-notes-2531-14" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="74.25" width="1553.889648" height="302.5" as="geometry" />
+        </mxCell>
+        <mxCell id="notes-2531-15-bg" value="" parent="group-notes-2531-15" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
+          <mxGeometry x="0" y="0" width="1616.893506" height="411.75" as="geometry" />
+        </mxCell>
+        <mxCell id="notes-2531-15-title" value="Proveedor de facturación" parent="group-notes-2531-15" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="22" width="279.333496" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-2531-14-body" value="Sistema externo · Contrato por país y modalidad&#10;&#10;Acepta/Ingydev aparecen en el código legacy chileno y EFACT en las fuentes de Perú. Gira se informa como solución de&#10;España; su modalidad fiscal, interfaces y capacidades deben confirmarse. Estos ejemplos no seleccionan un proveedor&#10;corporativo ni acreditan adaptadores homologados para POS Platform. SII y SUNAT son autoridades tributarias, no estos&#10;proveedores de software; en España corresponde la autoridad del régimen y territorio aplicables. Emisión, aceptación y&#10;transmisión se modelan por separado. No se inventa un proveedor común ni una capacidad de consulta o idempotencia no&#10;acreditada.&#10;&#10;AUTORIDAD · La solución prepara, emite o transmite documentos por cuenta del contribuyente según su contrato. La&#10;autoridad tributaria es distinta: SII en Chile, SUNAT en Perú y la autoridad aplicable en España.&#10;&#10;CONTINUIDAD · Emitir offline exige modalidad y material fiscal válidos; no se promete universalmente." parent="group-notes-2531-14" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="22" y="74.25" width="1199.751953" height="357.5" as="geometry" />
+        <mxCell id="notes-2531-15-body" value="Sistema externo · Contrato por país y modalidad&#10;&#10;Acepta/Ingydev aparecen en el código legacy chileno y EFACT en las fuentes de Perú. Gira se informa como solución de España; su modalidad fiscal, interfaces&#10;y capacidades deben confirmarse. Estos ejemplos no seleccionan un proveedor corporativo ni acreditan adaptadores homologados para POS Platform. SII y&#10;SUNAT son autoridades tributarias, no estos proveedores de software; en España corresponde la autoridad del régimen y territorio aplicables. Emisión,&#10;aceptación y transmisión se modelan por separado. No se inventa un proveedor común ni una capacidad de consulta o idempotencia no acreditada.&#10;&#10;AUTORIDAD · La solución prepara, emite o transmite documentos por cuenta del contribuyente según su contrato. La autoridad tributaria es distinta: SII en&#10;Chile, SUNAT en Perú y la autoridad aplicable en España.&#10;&#10;CONTINUIDAD · Emitir offline exige modalidad y material fiscal válidos; no se promete universalmente." parent="group-notes-2531-15" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="74.25" width="1567.768555" height="302.5" as="geometry" />
+        </mxCell>
+        <mxCell id="notes-2531-16-bg" value="" parent="group-notes-2531-16" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
+          <mxGeometry x="0" y="0" width="1616.893506" height="356.75" as="geometry" />
+        </mxCell>
+        <mxCell id="notes-2531-16-title" value="Periféricos físicos" parent="group-notes-2531-16" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="22" width="195.88623" height="31.25" as="geometry" />
+        </mxCell>
+        <mxCell id="notes-2531-16-body" value="Hardware externo · Driver / SDK homologado&#10;&#10;Hardware de sucursal conectado al equipo que ejecuta device-agent. La impresión conserva referencia de documento y trabajo; el spooler sólo informa&#10;recepción técnica. Reimpresión es una operación autorizada explícita. Lectores y demás capacidades requieren contratos y homologación propios. El SDK de un&#10;terminal de pago no se presume habilitado por migrar impresión.&#10;&#10;AUTORIDAD · Un único device-agent autorizado opera cada equipo físico. La aplicación solicita capacidades a branch-api.&#10;&#10;CONTINUIDAD · La capacidad depende del equipo, driver y estado físico. Un timeout puede dejar resultado incierto." parent="group-notes-2531-16" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="22" y="74.25" width="1571.453125" height="247.5" as="geometry" />
         </mxCell>
         <mxCell id="footer" value="C4: contenedor = aplicación o almacén; componente = módulo dentro de un proceso. Despliegue y dinámicas son vistas complementarias, no el nivel de código." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="4446.95" width="1424.169922" height="25" as="geometry" />
+          <mxGeometry x="64" y="4745.2" width="1424.169922" height="25" as="geometry" />
         </mxCell>
         <mxCell id="glossary" value="LAN: red de tienda · WAN: enlace a país · ACK: acuse de aplicación durable · ACL: capa anticorrupción · outbox/inbox: registros de envío/recepción · watermark: corte consistente del origen" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="4512.95" width="1681.240234" height="25" as="geometry" />
+          <mxGeometry x="64" y="4811.2" width="1681.240234" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="sources" value="FUENTES DEL REPOSITORIO&#10;docs/c4-arquitectura-propuesta.md  ·  docs/propuesta-arquitectura.md  ·  docs/opciones-tecnologicas.md  ·  docs/operacion-caja-y-evolucion.md  ·  docs/revision-resiliencia-datos-pos.md&#10;Aplicaciones completas: frontend Angular alojado por las shells nativas Tauri (escritorio) y Capacitor (móvil). libs/client-shell compone Angular: raíz, configuración, rutas, guards y layout. Backend, datos e integración: diseño por implementar. Nx organiza código y CI." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=18;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="4581.95" width="2113.040039" height="67.5" as="geometry" />
+        <mxCell id="sources" value="FUENTES DEL REPOSITORIO&#10;docs/c4-arquitectura-propuesta.md  ·  docs/propuesta-arquitectura.md  ·  docs/opciones-tecnologicas.md  ·  docs/operacion-caja-y-evolucion.md  ·  docs/revision-resiliencia-datos-pos.md&#10;Aplicaciones completas: frontend Angular alojado por las shells nativas Tauri (escritorio) y Capacitor (móvil). libs/client-shell compone Angular: raíz, configuración, rutas, guards y layout. device-agent: C#/.NET Windows propuesto, aún no implementado; journal técnico SQLite, sin autoridad de ventas. Backend, datos e integración: diseño por implementar. Nx organiza código y CI." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=18;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="4880.2" width="3033.553711" height="67.5" as="geometry" />
         </mxCell>
         <mxCell id="systemScope" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;dashed=1;dashPattern=6 4;fillColor=#ffffff;rounded=0;arcSize=8;">
-          <mxGeometry x="1146.470312" y="622" width="3051.35918" height="1497.6" as="geometry" />
+          <mxGeometry x="1146.470312" y="622" width="3823.116211" height="1497.6" as="geometry" />
         </mxCell>
         <mxCell id="systemScope-title" value="POS Platform · aplicaciones y datos propuestos" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="1164.470312" y="636.39993" width="467.113281" height="27.5" as="geometry" />
+          <mxGeometry x="1164.470313" y="636.399984" width="467.113281" height="27.5" as="geometry" />
         </mxCell>
         <mxCell id="cashier" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#163A73;strokeWidth=1.5;fillColor=#163A73;rounded=1;arcSize=8;">
-          <mxGeometry x="1736.717383" y="430" width="416.41875" height="134.4" as="geometry" />
+          <mxGeometry x="1573.842578" y="430" width="416.41875" height="134.4" as="geometry" />
         </mxCell>
         <mxCell id="client" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=1.5;fillColor=#EDF3FF;rounded=0;arcSize=8;">
-          <mxGeometry x="1249.887695" y="910" width="397.549219" height="187.2" as="geometry" />
+          <mxGeometry x="1248.470313" y="910" width="397.549219" height="187.2" as="geometry" />
         </mxCell>
         <mxCell id="mobileClient" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=1.5;fillColor=#EDF3FF;rounded=0;arcSize=8;">
-          <mxGeometry x="1991.501172" y="910" width="326.98125" height="187.2" as="geometry" />
+          <mxGeometry x="1826.019531" y="910" width="326.98125" height="187.2" as="geometry" />
         </mxCell>
         <mxCell id="device" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=1.5;fillColor=#EDF3FF;rounded=0;arcSize=8;">
-          <mxGeometry x="1248.470312" y="1412.8" width="403.21875" height="134.4" as="geometry" />
+          <mxGeometry x="2651.685742" y="923.2" width="369.825" height="160.8" as="geometry" />
+        </mxCell>
+        <mxCell id="deviceJournal" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#6545A4;strokeWidth=1.5;fillColor=#F2EEFA;rounded=0;arcSize=8;">
+          <mxGeometry x="2842.717187" y="1399.6" width="409.699219" height="160.8" as="geometry" />
         </mxCell>
         <mxCell id="branchApi" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=1.5;fillColor=#EDF3FF;rounded=0;arcSize=8;">
-          <mxGeometry x="1831.689063" y="1412.8" width="441.2625" height="134.4" as="geometry" />
+          <mxGeometry x="1724.552734" y="1412.8" width="441.2625" height="134.4" as="geometry" />
         </mxCell>
         <mxCell id="branchDb" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#6545A4;strokeWidth=1.5;fillColor=#F2EEFA;rounded=0;arcSize=8;">
-          <mxGeometry x="2069.027734" y="1862.8" width="409.875" height="160.8" as="geometry" />
+          <mxGeometry x="2413.228516" y="1862.8" width="409.875" height="160.8" as="geometry" />
         </mxCell>
         <mxCell id="syncWorker" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=1.5;fillColor=#EDF3FF;rounded=0;arcSize=8;">
-          <mxGeometry x="2568.021484" y="910" width="382.010156" height="187.2" as="geometry" />
+          <mxGeometry x="3349.735938" y="910" width="382.010156" height="187.2" as="geometry" />
         </mxCell>
         <mxCell id="countryApi" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=1.5;fillColor=#EDF3FF;rounded=0;arcSize=8;">
-          <mxGeometry x="3276.707031" y="1399.6" width="425.85" height="160.8" as="geometry" />
+          <mxGeometry x="3995.011914" y="1399.6" width="425.85" height="160.8" as="geometry" />
         </mxCell>
         <mxCell id="countryDb" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#6545A4;strokeWidth=1.5;fillColor=#F2EEFA;rounded=0;arcSize=8;">
-          <mxGeometry x="2994.489062" y="1862.8" width="375.15" height="160.8" as="geometry" />
+          <mxGeometry x="3766.246094" y="1862.8" width="375.15" height="160.8" as="geometry" />
         </mxCell>
         <mxCell id="countryCache" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#6545A4;strokeWidth=1.5;fillColor=#F2EEFA;rounded=0;arcSize=8;">
-          <mxGeometry x="3549.639062" y="1862.8" width="402.225" height="160.8" as="geometry" />
+          <mxGeometry x="4321.396094" y="1862.8" width="402.225" height="160.8" as="geometry" />
         </mxCell>
         <mxCell id="erpAdapter" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=1.5;fillColor=#EDF3FF;rounded=0;arcSize=8;">
-          <mxGeometry x="3644.493555" y="923.2" width="432.46875" height="160.8" as="geometry" />
+          <mxGeometry x="4416.250586" y="923.2" width="432.46875" height="160.8" as="geometry" />
         </mxCell>
         <mxCell id="erp" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#64748B;strokeWidth=1.5;fillColor=#F1F5F9;rounded=0;arcSize=8;">
-          <mxGeometry x="4299.829492" y="1399.6" width="388.40625" height="160.8" as="geometry" />
+          <mxGeometry x="5605.324023" y="1399.6" width="388.40625" height="160.8" as="geometry" />
         </mxCell>
         <mxCell id="masters" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#64748B;strokeWidth=1.5;fillColor=#F1F5F9;rounded=0;arcSize=8;">
-          <mxGeometry x="4868.235742" y="1412.8" width="429.84375" height="134.4" as="geometry" />
+          <mxGeometry x="6173.730273" y="1412.8" width="429.84375" height="134.4" as="geometry" />
         </mxCell>
         <mxCell id="payments" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#64748B;strokeWidth=1.5;fillColor=#F1F5F9;rounded=0;arcSize=8;">
           <mxGeometry x="64" y="1862.8" width="371.08125" height="160.8" as="geometry" />
@@ -335,657 +362,777 @@
         <mxCell id="fiscal" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#64748B;strokeWidth=1.5;fillColor=#F1F5F9;rounded=0;arcSize=8;">
           <mxGeometry x="615.08125" y="1862.8" width="429.389062" height="160.8" as="geometry" />
         </mxCell>
-        <mxCell id="cashier_client" value="" parent="1" edge="1" source="cashier" target="client" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.082889;exitY=1.00372;exitPerimeter=0;entryX=0.499999;entryY=-0.028312;entryPerimeter=0;">
+        <mxCell id="peripherals" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#64748B;strokeWidth=1.5;fillColor=#F1F5F9;rounded=0;arcSize=8;">
+          <mxGeometry x="5071.586523" y="1399.6" width="353.7375" height="160.8" as="geometry" />
+        </mxCell>
+        <mxCell id="cashier_client" value="" parent="1" edge="1" source="cashier" target="client" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.218595;exitY=1.00372;exitPerimeter=0;entryX=0.5;entryY=-0.028312;entryPerimeter=0;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1771.233936" y="564.9" as="sourcePoint" />
-            <mxPoint x="1448.662012" y="904.7" as="targetPoint" />
+            <mxPoint x="1664.86958" y="564.9" as="sourcePoint" />
+            <mxPoint x="1447.244775" y="904.7" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="1747.654492" y="573.522662" />
-              <mxPoint x="1724.074902" y="582.645325" />
-              <mxPoint x="1700.501904" y="591.784869" />
-              <mxPoint x="1676.984277" y="601.065497" />
-              <mxPoint x="1653.564063" y="610.589105" />
-              <mxPoint x="1630.275977" y="620.431281" />
-              <mxPoint x="1607.157666" y="630.665448" />
-              <mxPoint x="1584.260693" y="641.385193" />
-              <mxPoint x="1561.661523" y="652.718359" />
-              <mxPoint x="1539.486719" y="664.859314" />
-              <mxPoint x="1517.964941" y="678.119043" />
-              <mxPoint x="1497.585303" y="693.062646" />
-              <mxPoint x="1479.307861" y="710.495312" />
-              <mxPoint x="1464.425049" y="730.879272" />
-              <mxPoint x="1454.390576" y="754.022925" />
-              <mxPoint x="1449.651953" y="778.815552" />
-              <mxPoint x="1448.666846" y="804.069092" />
-              <mxPoint x="1448.662012" y="829.351819" />
-              <mxPoint x="1448.662012" y="854.634546" />
-              <mxPoint x="1448.662012" y="879.917273" />
+              <mxPoint x="1642.122021" y="577.444507" />
+              <mxPoint x="1619.37959" y="590.497803" />
+              <mxPoint x="1596.758154" y="603.759088" />
+              <mxPoint x="1574.412549" y="617.479492" />
+              <mxPoint x="1552.462158" y="631.822656" />
+              <mxPoint x="1531.062256" y="646.973462" />
+              <mxPoint x="1510.471387" y="663.203345" />
+              <mxPoint x="1491.175732" y="680.945239" />
+              <mxPoint x="1474.225439" y="700.917651" />
+              <mxPoint x="1461.013135" y="723.522388" />
+              <mxPoint x="1452.403223" y="748.247595" />
+              <mxPoint x="1448.268701" y="774.115308" />
+              <mxPoint x="1447.261328" y="800.310815" />
+              <mxPoint x="1447.244775" y="826.533093" />
+              <mxPoint x="1447.244775" y="852.755371" />
+              <mxPoint x="1447.244775" y="878.977686" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="cashier_mobileClient" value="" parent="1" edge="1" source="cashier" target="mobileClient" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.67656;exitY=1.00372;exitPerimeter=0;entryX=0.5;entryY=-0.028312;entryPerimeter=0;">
+        <mxCell id="cashier_mobileClient" value="" parent="1" edge="1" source="cashier" target="mobileClient" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.67437;exitY=1.00372;exitPerimeter=0;entryX=0.500001;entryY=-0.028312;entryPerimeter=0;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="2018.449609" y="564.9" as="sourcePoint" />
-            <mxPoint x="2154.99165" y="904.7" as="targetPoint" />
+            <mxPoint x="1854.662793" y="564.9" as="sourcePoint" />
+            <mxPoint x="1989.510449" y="904.7" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="2037.604346" y="581.907281" />
-              <mxPoint x="2056.681885" y="599.498096" />
-              <mxPoint x="2075.298584" y="617.574579" />
-              <mxPoint x="2093.159277" y="636.396667" />
-              <mxPoint x="2109.936279" y="656.187915" />
-              <mxPoint x="2125.092578" y="677.239734" />
-              <mxPoint x="2137.620068" y="699.939282" />
-              <mxPoint x="2146.568799" y="724.271033" />
-              <mxPoint x="2151.963818" y="749.634875" />
-              <mxPoint x="2154.418604" y="775.458386" />
-              <mxPoint x="2154.985498" y="801.399707" />
-              <mxPoint x="2154.99165" y="827.349744" />
-              <mxPoint x="2154.99165" y="853.299817" />
-              <mxPoint x="2154.99165" y="879.249927" />
+              <mxPoint x="1873.656982" y="581.979297" />
+              <mxPoint x="1892.57207" y="599.64317" />
+              <mxPoint x="1911.020166" y="617.792749" />
+              <mxPoint x="1928.702734" y="636.687366" />
+              <mxPoint x="1945.292969" y="656.545044" />
+              <mxPoint x="1960.246826" y="677.656042" />
+              <mxPoint x="1972.558252" y="700.394739" />
+              <mxPoint x="1981.317871" y="724.722095" />
+              <mxPoint x="1986.579736" y="750.043677" />
+              <mxPoint x="1988.961279" y="775.804822" />
+              <mxPoint x="1989.505029" y="801.677332" />
+              <mxPoint x="1989.510449" y="827.557971" />
+              <mxPoint x="1989.510449" y="853.438647" />
+              <mxPoint x="1989.510449" y="879.319324" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="client_branchApi" value="" parent="1" edge="1" source="client" target="branchApi" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.400636;exitY=1.002671;exitPerimeter=0;entryX=0.022792;entryY=-0.014818;entryPerimeter=0;">
+        <mxCell id="client_branchApi" value="" parent="1" edge="1" source="client" target="branchApi" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.501257;exitY=1.002671;exitPerimeter=0;entryX=0.161581;entryY=-0.018783;entryPerimeter=0;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1409.160059" y="1097.7" as="sourcePoint" />
-            <mxPoint x="1841.746338" y="1410.808423" as="targetPoint" />
+            <mxPoint x="1447.744775" y="1097.7" as="sourcePoint" />
+            <mxPoint x="1795.852344" y="1410.275586" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="1398.63291" y="1120.66167" />
-              <mxPoint x="1389.728711" y="1144.548584" />
-              <mxPoint x="1386.339795" y="1169.747192" />
-              <mxPoint x="1391.035498" y="1194.704248" />
-              <mxPoint x="1403.177295" y="1217.050879" />
-              <mxPoint x="1420.218262" y="1235.986401" />
-              <mxPoint x="1440.091504" y="1251.958032" />
-              <mxPoint x="1461.561133" y="1265.730713" />
-              <mxPoint x="1483.883594" y="1278.081836" />
-              <mxPoint x="1506.72124" y="1289.455615" />
-              <mxPoint x="1529.905908" y="1300.105396" />
-              <mxPoint x="1553.340479" y="1310.19458" />
-              <mxPoint x="1576.964014" y="1319.833545" />
-              <mxPoint x="1600.735645" y="1329.101099" />
-              <mxPoint x="1624.6271" y="1338.055762" />
-              <mxPoint x="1648.615967" y="1346.745947" />
-              <mxPoint x="1672.685547" y="1355.2104" />
-              <mxPoint x="1696.822949" y="1363.479297" />
-              <mxPoint x="1721.013672" y="1371.591016" />
-              <mxPoint x="1745.243945" y="1379.583789" />
-              <mxPoint x="1769.493262" y="1387.518921" />
-              <mxPoint x="1793.744336" y="1395.448779" />
-              <mxPoint x="1817.995264" y="1403.378564" />
+              <mxPoint x="1447.244775" y="1122.396997" />
+              <mxPoint x="1448.35542" y="1147.55459" />
+              <mxPoint x="1453.292529" y="1172.230322" />
+              <mxPoint x="1462.505664" y="1195.647461" />
+              <mxPoint x="1475.504102" y="1217.202124" />
+              <mxPoint x="1491.497559" y="1236.648437" />
+              <mxPoint x="1509.721387" y="1254.030933" />
+              <mxPoint x="1529.4625" y="1269.679785" />
+              <mxPoint x="1550.117822" y="1284.105786" />
+              <mxPoint x="1571.370654" y="1297.638672" />
+              <mxPoint x="1593.047119" y="1310.482861" />
+              <mxPoint x="1615.039697" y="1322.77854" />
+              <mxPoint x="1637.276465" y="1334.627441" />
+              <mxPoint x="1659.70835" y="1346.102954" />
+              <mxPoint x="1682.29668" y="1357.267554" />
+              <mxPoint x="1705.010547" y="1368.174561" />
+              <mxPoint x="1727.814502" y="1378.892163" />
+              <mxPoint x="1750.659033" y="1389.522974" />
+              <mxPoint x="1773.505615" y="1400.149243" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="mobileClient_branchApi" value="" parent="1" edge="1" source="mobileClient" target="branchApi" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.49847;exitY=1.002671;exitPerimeter=0;entryX=0.573053;entryY=-0.036372;entryPerimeter=0;">
+        <mxCell id="mobileClient_branchApi" value="" parent="1" edge="1" source="mobileClient" target="branchApi" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.498472;exitY=1.002671;exitPerimeter=0;entryX=0.532325;entryY=-0.038801;entryPerimeter=0;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="2154.49165" y="1097.7" as="sourcePoint" />
-            <mxPoint x="2084.556006" y="1407.911621" as="targetPoint" />
+            <mxPoint x="1989.010449" y="1097.7" as="sourcePoint" />
+            <mxPoint x="1959.447656" y="1407.585181" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="2154.99165" y="1122.045215" />
-              <mxPoint x="2154.778955" y="1146.888892" />
-              <mxPoint x="2153.790771" y="1171.713013" />
-              <mxPoint x="2151.794336" y="1196.47583" />
-              <mxPoint x="2148.632764" y="1221.116333" />
-              <mxPoint x="2144.126904" y="1245.545825" />
-              <mxPoint x="2138.137598" y="1269.654443" />
-              <mxPoint x="2130.893799" y="1293.417871" />
-              <mxPoint x="2122.683057" y="1316.865698" />
-              <mxPoint x="2113.70459" y="1340.030811" />
-              <mxPoint x="2104.12041" y="1362.952466" />
-              <mxPoint x="2094.125049" y="1385.698193" />
+              <mxPoint x="1989.50957" y="1123.2948" />
+              <mxPoint x="1989.390479" y="1149.389233" />
+              <mxPoint x="1988.89126" y="1175.478906" />
+              <mxPoint x="1987.894434" y="1201.55415" />
+              <mxPoint x="1986.311816" y="1227.600244" />
+              <mxPoint x="1984.035303" y="1253.594556" />
+              <mxPoint x="1981.003809" y="1279.51189" />
+              <mxPoint x="1977.35752" y="1305.350195" />
+              <mxPoint x="1973.220801" y="1331.114673" />
+              <mxPoint x="1968.684473" y="1356.811987" />
+              <mxPoint x="1963.853271" y="1382.455615" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="client_device" value="" parent="1" edge="1" source="client" target="device" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.598853;exitY=1.002671;exitPerimeter=0;entryX=0.579946;entryY=-0.036372;entryPerimeter=0;">
+        <mxCell id="device_branchApi" value="" parent="1" edge="1" source="device" target="branchApi" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.073133;exitY=1.003109;exitPerimeter=0;entryX=0.781708;entryY=-0.021211;entryPerimeter=0;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1487.96123" y="1097.7" as="sourcePoint" />
-            <mxPoint x="1482.315527" y="1407.911621" as="targetPoint" />
+            <mxPoint x="2678.732129" y="1084.5" as="sourcePoint" />
+            <mxPoint x="2069.49126" y="1409.949219" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="1498.289307" y="1120.314648" />
-              <mxPoint x="1507.876563" y="1143.528979" />
-              <mxPoint x="1516.351855" y="1167.169067" />
-              <mxPoint x="1523.213623" y="1191.324561" />
-              <mxPoint x="1528.007031" y="1215.970703" />
-              <mxPoint x="1530.187891" y="1240.978589" />
-              <mxPoint x="1529.175977" y="1266.057007" />
-              <mxPoint x="1525.232617" y="1290.851538" />
-              <mxPoint x="1519.061816" y="1315.192041" />
-              <mxPoint x="1511.190918" y="1339.039771" />
-              <mxPoint x="1502.020557" y="1362.420508" />
-              <mxPoint x="1491.994727" y="1385.449463" />
+              <mxPoint x="2656.404004" y="1095.663086" />
+              <mxPoint x="2633.575879" y="1107.326099" />
+              <mxPoint x="2610.748926" y="1118.991821" />
+              <mxPoint x="2587.929297" y="1130.67124" />
+              <mxPoint x="2565.120508" y="1142.372119" />
+              <mxPoint x="2542.323145" y="1154.09519" />
+              <mxPoint x="2519.543945" y="1165.853711" />
+              <mxPoint x="2496.77793" y="1177.637573" />
+              <mxPoint x="2474.033301" y="1189.462817" />
+              <mxPoint x="2451.310059" y="1201.328711" />
+              <mxPoint x="2428.608496" y="1213.236499" />
+              <mxPoint x="2405.931396" y="1225.190576" />
+              <mxPoint x="2383.281396" y="1237.195923" />
+              <mxPoint x="2360.664795" y="1249.264038" />
+              <mxPoint x="2338.082764" y="1261.396606" />
+              <mxPoint x="2315.531934" y="1273.587329" />
+              <mxPoint x="2293.010107" y="1285.831372" />
+              <mxPoint x="2270.515234" y="1298.124707" />
+              <mxPoint x="2248.049219" y="1310.471143" />
+              <mxPoint x="2225.606055" y="1322.858887" />
+              <mxPoint x="2203.18457" y="1335.285815" />
+              <mxPoint x="2180.788135" y="1347.757935" />
+              <mxPoint x="2158.406348" y="1360.256055" />
+              <mxPoint x="2136.042432" y="1372.786401" />
+              <mxPoint x="2113.690674" y="1385.338062" />
+              <mxPoint x="2091.340967" y="1397.893677" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="device_payments" value="" parent="1" edge="1" source="device" target="payments" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.498759;exitY=1.00372;exitPerimeter=0;entryX=1.014048;entryY=0.268645;entryPerimeter=0;">
+        <mxCell id="device_payments" value="" parent="1" edge="1" source="device" target="payments" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.317058;exitY=1.003109;exitPerimeter=0;entryX=1.014223;entryY=0.381838;entryPerimeter=0;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1449.579248" y="1547.7" as="sourcePoint" />
-            <mxPoint x="440.294385" y="1905.998047" as="targetPoint" />
+            <mxPoint x="2768.941895" y="1084.5" as="sourcePoint" />
+            <mxPoint x="440.359204" y="1924.199609" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="1449.579248" y="1583.7" />
-              <mxPoint x="476.294385" y="1583.7" />
-              <mxPoint x="476.294385" y="1905.998047" />
+              <mxPoint x="2768.941895" y="1120.5" />
+              <mxPoint x="476.359204" y="1120.5" />
+              <mxPoint x="476.359204" y="1924.199609" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="branchApi_branchDb" value="" parent="1" edge="1" source="branchApi" target="branchDb" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.293252;exitY=1.00372;exitPerimeter=0;entryX=0.032538;entryY=-0.014916;entryPerimeter=0;">
+        <mxCell id="branchApi_branchDb" value="" parent="1" edge="1" source="branchApi" target="branchDb" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.123262;exitY=1.00372;exitPerimeter=0;entryX=-0.012733;entryY=0.254861;entryPerimeter=0;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1961.090332" y="1547.7" as="sourcePoint" />
-            <mxPoint x="2082.364355" y="1860.401562" as="targetPoint" />
+            <mxPoint x="1778.943604" y="1547.7" as="sourcePoint" />
+            <mxPoint x="2408.009668" y="1903.781592" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="1939.662402" y="1562.531348" />
-              <mxPoint x="1918.736963" y="1577.866211" />
-              <mxPoint x="1898.048389" y="1593.516895" />
-              <mxPoint x="1878.121826" y="1610.122656" />
-              <mxPoint x="1859.519775" y="1628.191943" />
-              <mxPoint x="1843.219727" y="1648.342627" />
-              <mxPoint x="1831.339551" y="1671.318994" />
-              <mxPoint x="1828.274219" y="1696.855469" />
-              <mxPoint x="1837.521484" y="1720.841992" />
-              <mxPoint x="1854.350781" y="1740.510889" />
-              <mxPoint x="1874.26665" y="1757.110645" />
-              <mxPoint x="1895.692334" y="1771.727002" />
-              <mxPoint x="1917.993994" y="1784.975195" />
-              <mxPoint x="1940.863281" y="1797.22041" />
-              <mxPoint x="1964.122656" y="1808.708594" />
-              <mxPoint x="1987.659912" y="1819.617432" />
-              <mxPoint x="2011.389941" y="1830.101025" />
-              <mxPoint x="2035.209912" y="1840.378955" />
-              <mxPoint x="2059.037207" y="1850.640332" />
+              <mxPoint x="1754.053955" y="1557.029248" />
+              <mxPoint x="1729.664307" y="1566.858643" />
+              <mxPoint x="1705.275537" y="1576.690234" />
+              <mxPoint x="1680.966162" y="1586.715479" />
+              <mxPoint x="1656.933203" y="1597.383789" />
+              <mxPoint x="1633.408545" y="1609.12583" />
+              <mxPoint x="1610.803076" y="1622.540869" />
+              <mxPoint x="1590.145264" y="1638.754346" />
+              <mxPoint x="1575.06792" y="1660.031934" />
+              <mxPoint x="1576.776807" y="1685.460596" />
+              <mxPoint x="1594.178271" y="1704.913135" />
+              <mxPoint x="1616.359521" y="1718.975195" />
+              <mxPoint x="1640.113867" y="1730.235449" />
+              <mxPoint x="1664.539697" y="1739.967432" />
+              <mxPoint x="1689.331299" y="1748.730127" />
+              <mxPoint x="1714.355811" y="1756.805664" />
+              <mxPoint x="1739.541016" y="1764.365576" />
+              <mxPoint x="1764.84502" y="1771.518701" />
+              <mxPoint x="1790.240137" y="1778.341357" />
+              <mxPoint x="1815.707764" y="1784.88877" />
+              <mxPoint x="1841.234717" y="1791.200342" />
+              <mxPoint x="1866.811328" y="1797.308301" />
+              <mxPoint x="1892.429102" y="1803.240771" />
+              <mxPoint x="1918.082178" y="1809.018848" />
+              <mxPoint x="1943.765869" y="1814.659375" />
+              <mxPoint x="1969.477539" y="1820.170996" />
+              <mxPoint x="1995.212793" y="1825.571729" />
+              <mxPoint x="2020.968848" y="1830.872559" />
+              <mxPoint x="2046.743213" y="1836.083008" />
+              <mxPoint x="2072.535889" y="1841.202344" />
+              <mxPoint x="2098.341455" y="1846.256348" />
+              <mxPoint x="2124.160352" y="1851.241943" />
+              <mxPoint x="2149.99126" y="1856.164844" />
+              <mxPoint x="2175.831104" y="1861.040576" />
+              <mxPoint x="2201.678125" y="1865.87793" />
+              <mxPoint x="2227.530859" y="1870.684668" />
+              <mxPoint x="2253.384619" y="1875.486133" />
+              <mxPoint x="2279.238818" y="1880.2854" />
+              <mxPoint x="2305.093018" y="1885.084668" />
+              <mxPoint x="2330.947217" y="1889.883936" />
+              <mxPoint x="2356.80127" y="1894.683057" />
+              <mxPoint x="2382.655469" y="1899.482324" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="branchApi_payments" value="" parent="1" edge="1" source="branchApi" target="payments" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.498868;exitY=1.00372;exitPerimeter=0;entryX=1.014178;entryY=0.344853;entryPerimeter=0;">
+        <mxCell id="branchApi_payments" value="" parent="1" edge="1" source="branchApi" target="payments" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.498866;exitY=1.00372;exitPerimeter=0;entryX=1.014165;entryY=0.335249;entryPerimeter=0;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="2051.820752" y="1547.7" as="sourcePoint" />
-            <mxPoint x="440.342395" y="1918.252344" as="targetPoint" />
+            <mxPoint x="1944.683545" y="1547.7" as="sourcePoint" />
+            <mxPoint x="440.337598" y="1916.707959" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="2051.820752" y="1583.7" />
-              <mxPoint x="476.342395" y="1583.7" />
-              <mxPoint x="476.342395" y="1918.252344" />
+              <mxPoint x="1944.683545" y="1583.7" />
+              <mxPoint x="476.337598" y="1583.7" />
+              <mxPoint x="476.337598" y="1916.707959" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="branchApi_fiscal" value="" parent="1" edge="1" source="branchApi" target="fiscal" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.814378;exitY=1.00372;exitPerimeter=0;entryX=1.012241;entryY=0.311226;entryPerimeter=0;">
+        <mxCell id="branchApi_fiscal" value="" parent="1" edge="1" source="branchApi" target="fiscal" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.847521;exitY=1.00372;exitPerimeter=0;entryX=1.012235;entryY=0.304823;entryPerimeter=0;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="2191.043604" y="1547.7" as="sourcePoint" />
-            <mxPoint x="1049.726367" y="1912.845166" as="targetPoint" />
+            <mxPoint x="2098.531982" y="1547.7" as="sourcePoint" />
+            <mxPoint x="1049.724023" y="1911.815527" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="2214.978906" y="1558.51167" />
-              <mxPoint x="2238.414209" y="1569.82334" />
-              <mxPoint x="2261.82373" y="1581.187598" />
-              <mxPoint x="2284.83833" y="1593.324414" />
-              <mxPoint x="2306.733643" y="1607.358936" />
-              <mxPoint x="2325.658691" y="1625.100684" />
-              <mxPoint x="2333.870752" y="1649.119727" />
-              <mxPoint x="2321.727783" y="1671.560547" />
-              <mxPoint x="2301.001855" y="1687.188379" />
-              <mxPoint x="2277.898193" y="1699.131104" />
-              <mxPoint x="2253.821289" y="1708.990381" />
-              <mxPoint x="2229.231689" y="1717.499219" />
-              <mxPoint x="2204.334326" y="1725.064404" />
-              <mxPoint x="2179.245801" y="1731.970557" />
-              <mxPoint x="2154.029541" y="1738.396387" />
-              <mxPoint x="2128.721582" y="1744.451025" />
-              <mxPoint x="2103.344336" y="1750.208594" />
-              <mxPoint x="2077.912451" y="1755.720801" />
-              <mxPoint x="2052.436475" y="1761.025146" />
-              <mxPoint x="2026.924023" y="1766.151074" />
-              <mxPoint x="2001.380225" y="1771.118506" />
-              <mxPoint x="1975.81167" y="1775.957324" />
-              <mxPoint x="1950.219678" y="1780.669727" />
-              <mxPoint x="1924.60791" y="1785.27417" />
-              <mxPoint x="1898.97959" y="1789.785742" />
-              <mxPoint x="1873.334131" y="1794.199609" />
-              <mxPoint x="1847.676074" y="1798.538037" />
-              <mxPoint x="1822.004688" y="1802.797949" />
-              <mxPoint x="1796.322314" y="1806.990479" />
-              <mxPoint x="1770.629541" y="1811.118994" />
-              <mxPoint x="1744.9271" y="1815.187158" />
-              <mxPoint x="1719.216309" y="1819.201709" />
-              <mxPoint x="1693.497168" y="1823.1625" />
-              <mxPoint x="1667.77085" y="1827.077295" />
-              <mxPoint x="1642.036914" y="1830.940234" />
-              <mxPoint x="1616.298145" y="1834.771973" />
-              <mxPoint x="1590.551904" y="1838.553027" />
-              <mxPoint x="1564.800684" y="1842.300098" />
-              <mxPoint x="1539.044775" y="1846.014648" />
-              <mxPoint x="1513.284326" y="1849.698145" />
-              <mxPoint x="1487.519775" y="1853.352051" />
-              <mxPoint x="1461.750684" y="1856.972852" />
-              <mxPoint x="1435.977783" y="1860.56875" />
-              <mxPoint x="1410.201953" y="1864.14209" />
-              <mxPoint x="1384.422607" y="1867.690234" />
-              <mxPoint x="1358.641504" y="1871.226221" />
-              <mxPoint x="1332.859082" y="1874.750635" />
-              <mxPoint x="1307.074756" y="1878.263037" />
-              <mxPoint x="1281.290063" y="1881.772949" />
-              <mxPoint x="1255.505225" y="1885.280957" />
-              <mxPoint x="1229.720313" y="1888.788965" />
-              <mxPoint x="1203.935474" y="1892.296973" />
-              <mxPoint x="1178.150635" y="1895.80498" />
-              <mxPoint x="1152.365796" y="1899.312988" />
-              <mxPoint x="1126.580957" y="1902.821143" />
-              <mxPoint x="1100.796045" y="1906.32915" />
-              <mxPoint x="1075.011206" y="1909.837158" />
+              <mxPoint x="2122.955078" y="1557.649316" />
+              <mxPoint x="2146.878027" y="1568.098486" />
+              <mxPoint x="2170.796143" y="1578.559229" />
+              <mxPoint x="2194.524121" y="1589.440967" />
+              <mxPoint x="2217.663379" y="1601.51582" />
+              <mxPoint x="2239.517236" y="1615.760254" />
+              <mxPoint x="2257.898242" y="1634.144189" />
+              <mxPoint x="2263.462891" y="1658.827832" />
+              <mxPoint x="2249.045312" y="1680.122559" />
+              <mxPoint x="2227.612305" y="1694.939014" />
+              <mxPoint x="2204.170264" y="1706.399658" />
+              <mxPoint x="2179.869531" y="1715.92583" />
+              <mxPoint x="2155.11001" y="1724.194141" />
+              <mxPoint x="2130.084619" y="1731.62251" />
+              <mxPoint x="2104.892383" y="1738.465527" />
+              <mxPoint x="2079.58501" y="1744.870264" />
+              <mxPoint x="2054.191943" y="1750.927246" />
+              <mxPoint x="2028.733545" y="1756.702979" />
+              <mxPoint x="2003.222998" y="1762.244336" />
+              <mxPoint x="1977.669824" y="1767.585889" />
+              <mxPoint x="1952.081641" y="1772.756641" />
+              <mxPoint x="1926.463281" y="1777.776807" />
+              <mxPoint x="1900.818555" y="1782.659717" />
+              <mxPoint x="1875.152295" y="1787.428662" />
+              <mxPoint x="1849.466992" y="1792.093604" />
+              <mxPoint x="1823.763086" y="1796.654834" />
+              <mxPoint x="1798.044385" y="1801.132275" />
+              <mxPoint x="1772.311914" y="1805.529736" />
+              <mxPoint x="1746.56626" y="1809.849414" />
+              <mxPoint x="1720.809912" y="1814.104639" />
+              <mxPoint x="1695.042432" y="1818.293066" />
+              <mxPoint x="1669.265869" y="1822.424219" />
+              <mxPoint x="1643.480664" y="1826.501611" />
+              <mxPoint x="1617.687256" y="1830.524951" />
+              <mxPoint x="1591.886523" y="1834.50332" />
+              <mxPoint x="1566.07876" y="1838.435693" />
+              <mxPoint x="1540.264844" y="1842.326025" />
+              <mxPoint x="1514.444336" y="1846.17373" />
+              <mxPoint x="1488.619434" y="1849.990381" />
+              <mxPoint x="1462.789551" y="1853.774365" />
+              <mxPoint x="1436.955273" y="1857.527734" />
+              <mxPoint x="1411.116895" y="1861.252686" />
+              <mxPoint x="1385.274707" y="1864.951709" />
+              <mxPoint x="1359.428271" y="1868.619971" />
+              <mxPoint x="1333.581543" y="1872.287793" />
+              <mxPoint x="1307.731445" y="1875.930566" />
+              <mxPoint x="1281.881128" y="1879.572461" />
+              <mxPoint x="1256.030371" y="1883.210547" />
+              <mxPoint x="1230.179614" y="1886.848779" />
+              <mxPoint x="1204.328784" y="1890.486865" />
+              <mxPoint x="1178.477954" y="1894.124951" />
+              <mxPoint x="1152.627124" y="1897.763037" />
+              <mxPoint x="1126.77644" y="1901.401123" />
+              <mxPoint x="1100.925684" y="1905.039355" />
+              <mxPoint x="1075.074854" y="1908.677441" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="syncWorker_branchDb" value="" parent="1" edge="1" source="syncWorker" target="branchDb" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.426051;exitY=1.002671;exitPerimeter=0;entryX=0.860792;entryY=-0.017721;entryPerimeter=0;">
+        <mxCell id="syncWorker_branchDb" value="" parent="1" edge="1" source="syncWorker" target="branchDb" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.416085;exitY=1.002671;exitPerimeter=0;entryX=1.012509;entryY=0.137577;entryPerimeter=0;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="2730.777148" y="1097.7" as="sourcePoint" />
-            <mxPoint x="2421.844775" y="1859.950391" as="targetPoint" />
+            <mxPoint x="3508.684473" y="1097.7" as="sourcePoint" />
+            <mxPoint x="2828.230664" y="1884.922461" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="2723.835449" y="1122.300537" />
-              <mxPoint x="2716.590625" y="1147.458057" />
-              <mxPoint x="2710.020215" y="1172.799487" />
-              <mxPoint x="2704.264551" y="1198.338232" />
-              <mxPoint x="2699.381055" y="1224.057812" />
-              <mxPoint x="2695.414551" y="1249.934497" />
-              <mxPoint x="2692.406934" y="1275.940088" />
-              <mxPoint x="2690.244531" y="1302.0302" />
-              <mxPoint x="2688.733984" y="1328.166455" />
-              <mxPoint x="2687.712402" y="1354.326587" />
-              <mxPoint x="2687.063184" y="1380.498804" />
-              <mxPoint x="2686.692578" y="1406.676587" />
-              <mxPoint x="2686.51709" y="1432.856348" />
-              <mxPoint x="2686.460547" y="1459.036694" />
-              <mxPoint x="2686.446191" y="1485.217187" />
-              <mxPoint x="2686.338672" y="1511.397241" />
-              <mxPoint x="2685.763574" y="1537.57063" />
-              <mxPoint x="2684.310742" y="1563.708789" />
-              <mxPoint x="2681.548926" y="1589.739209" />
-              <mxPoint x="2677.007031" y="1615.515625" />
-              <mxPoint x="2670.221289" y="1640.790625" />
-              <mxPoint x="2660.796484" y="1665.200195" />
-              <mxPoint x="2648.504102" y="1688.295508" />
-              <mxPoint x="2633.389844" y="1709.651611" />
-              <mxPoint x="2616.017383" y="1729.224268" />
-              <mxPoint x="2597.056152" y="1747.26792" />
-              <mxPoint x="2576.95" y="1764.02998" />
-              <mxPoint x="2555.988672" y="1779.711426" />
-              <mxPoint x="2534.377832" y="1794.48584" />
-              <mxPoint x="2512.261914" y="1808.494727" />
-              <mxPoint x="2489.760303" y="1821.876074" />
-              <mxPoint x="2467.000293" y="1834.813867" />
-              <mxPoint x="2444.1729" y="1847.632715" />
+              <mxPoint x="3500.800293" y="1122.06499" />
+              <mxPoint x="3492.625293" y="1146.999121" />
+              <mxPoint x="3485.187988" y="1172.162134" />
+              <mxPoint x="3478.647168" y="1197.572778" />
+              <mxPoint x="3473.077246" y="1223.213623" />
+              <mxPoint x="3468.537695" y="1249.056543" />
+              <mxPoint x="3465.078613" y="1275.066162" />
+              <mxPoint x="3462.589258" y="1301.187109" />
+              <mxPoint x="3460.847266" y="1327.368994" />
+              <mxPoint x="3459.668066" y="1353.58252" />
+              <mxPoint x="3458.918359" y="1379.812085" />
+              <mxPoint x="3458.490918" y="1406.049048" />
+              <mxPoint x="3458.286719" y="1432.288721" />
+              <mxPoint x="3458.219629" y="1458.529126" />
+              <mxPoint x="3458.205273" y="1484.769678" />
+              <mxPoint x="3457.951855" y="1511.008252" />
+              <mxPoint x="3456.609766" y="1537.210425" />
+              <mxPoint x="3453.249414" y="1563.224805" />
+              <mxPoint x="3447.031445" y="1588.699756" />
+              <mxPoint x="3437.399805" y="1613.083545" />
+              <mxPoint x="3424.276855" y="1635.779248" />
+              <mxPoint x="3408.064551" y="1656.386816" />
+              <mxPoint x="3389.398926" y="1674.809424" />
+              <mxPoint x="3368.908398" y="1691.185791" />
+              <mxPoint x="3347.097754" y="1705.763623" />
+              <mxPoint x="3324.372461" y="1718.876465" />
+              <mxPoint x="3301.043359" y="1730.885254" />
+              <mxPoint x="3277.293848" y="1742.041797" />
+              <mxPoint x="3253.234082" y="1752.513672" />
+              <mxPoint x="3228.937305" y="1762.42334" />
+              <mxPoint x="3204.451562" y="1771.856787" />
+              <mxPoint x="3179.816406" y="1780.893408" />
+              <mxPoint x="3155.053223" y="1789.572754" />
+              <mxPoint x="3130.185742" y="1797.949316" />
+              <mxPoint x="3105.228906" y="1806.055908" />
+              <mxPoint x="3080.194727" y="1813.920508" />
+              <mxPoint x="3055.095215" y="1821.574316" />
+              <mxPoint x="3029.937988" y="1829.035059" />
+              <mxPoint x="3004.732715" y="1836.332764" />
+              <mxPoint x="2979.487305" y="1843.491455" />
+              <mxPoint x="2954.211719" y="1850.541016" />
+              <mxPoint x="2928.917676" y="1857.525098" />
+              <mxPoint x="2903.620996" y="1864.499512" />
+              <mxPoint x="2878.324023" y="1871.473779" />
+              <mxPoint x="2853.027344" y="1878.448193" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="syncWorker_countryApi" value="" parent="1" edge="1" source="syncWorker" target="countryApi" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.710856;exitY=1.002671;exitPerimeter=0;entryX=0.063607;entryY=-0.015229;entryPerimeter=0;">
+        <mxCell id="syncWorker_countryApi" value="" parent="1" edge="1" source="syncWorker" target="countryApi" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.710853;exitY=1.002671;exitPerimeter=0;entryX=0.115542;entryY=-0.016587;entryPerimeter=0;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="2839.575586" y="1097.7" as="sourcePoint" />
-            <mxPoint x="3303.794141" y="1397.151172" as="targetPoint" />
+            <mxPoint x="3621.28916" y="1097.7" as="sourcePoint" />
+            <mxPoint x="4044.215527" y="1396.932764" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="2855.635059" y="1116.563696" />
-              <mxPoint x="2872.270117" y="1135.86228" />
-              <mxPoint x="2889.465625" y="1154.661353" />
-              <mxPoint x="2907.418457" y="1172.737891" />
-              <mxPoint x="2926.124512" y="1190.03396" />
-              <mxPoint x="2945.54248" y="1206.526782" />
-              <mxPoint x="2965.624023" y="1222.205078" />
-              <mxPoint x="2986.318457" y="1237.065479" />
-              <mxPoint x="3007.571875" y="1251.114355" />
-              <mxPoint x="3029.301074" y="1264.416968" />
-              <mxPoint x="3051.386523" y="1277.120459" />
-              <mxPoint x="3073.738574" y="1289.348682" />
-              <mxPoint x="3096.30332" y="1301.180371" />
-              <mxPoint x="3119.041211" y="1312.675806" />
-              <mxPoint x="3141.918262" y="1323.892187" />
-              <mxPoint x="3164.917188" y="1334.856104" />
-              <mxPoint x="3188.016016" y="1345.608496" />
-              <mxPoint x="3211.197754" y="1356.180933" />
-              <mxPoint x="3234.445996" y="1366.606592" />
-              <mxPoint x="3257.726172" y="1376.9604" />
-              <mxPoint x="3281.010156" y="1387.305786" />
+              <mxPoint x="3637.837598" y="1117.134326" />
+              <mxPoint x="3654.9625" y="1137.002954" />
+              <mxPoint x="3672.5875" y="1156.427881" />
+              <mxPoint x="3690.888086" y="1175.217139" />
+              <mxPoint x="3709.87627" y="1193.311328" />
+              <mxPoint x="3729.535645" y="1210.673975" />
+              <mxPoint x="3749.841016" y="1227.276294" />
+              <mxPoint x="3770.761914" y="1243.095801" />
+              <mxPoint x="3792.259668" y="1258.122388" />
+              <mxPoint x="3814.218555" y="1272.468188" />
+              <mxPoint x="3836.521094" y="1286.273828" />
+              <mxPoint x="3859.091699" y="1299.637158" />
+              <mxPoint x="3881.878516" y="1312.628638" />
+              <mxPoint x="3904.840527" y="1325.307739" />
+              <mxPoint x="3927.949316" y="1337.717749" />
+              <mxPoint x="3951.17998" y="1349.898364" />
+              <mxPoint x="3974.509668" y="1361.888037" />
+              <mxPoint x="3997.903223" y="1373.752686" />
+              <mxPoint x="4021.309375" y="1385.592725" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="countryApi_countryDb" value="" parent="1" edge="1" source="countryApi" target="countryDb" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.248097;exitY=1.003109;exitPerimeter=0;entryX=0.501334;entryY=-0.03296;entryPerimeter=0;">
+        <mxCell id="countryApi_countryDb" value="" parent="1" edge="1" source="countryApi" target="countryDb" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.291672;exitY=1.003109;exitPerimeter=0;entryX=0.501334;entryY=-0.03296;entryPerimeter=0;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="3382.359277" y="1560.9" as="sourcePoint" />
-            <mxPoint x="3182.564355" y="1857.5" as="targetPoint" />
+            <mxPoint x="4119.220508" y="1560.9" as="sourcePoint" />
+            <mxPoint x="3954.32168" y="1857.5" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="3362.635352" y="1575.628662" />
-              <mxPoint x="3342.415234" y="1590.862305" />
-              <mxPoint x="3322.325781" y="1606.267188" />
-              <mxPoint x="3302.547461" y="1622.068896" />
-              <mxPoint x="3283.205957" y="1638.402051" />
-              <mxPoint x="3264.443945" y="1655.396729" />
-              <mxPoint x="3246.468555" y="1673.219482" />
-              <mxPoint x="3229.611426" y="1692.099854" />
-              <mxPoint x="3214.47666" y="1712.378857" />
-              <mxPoint x="3201.946387" y="1734.355469" />
-              <mxPoint x="3192.45332" y="1757.803955" />
-              <mxPoint x="3186.124609" y="1782.298193" />
-              <mxPoint x="3182.836328" y="1807.385547" />
-              <mxPoint x="3182.06582" y="1832.683691" />
+              <mxPoint x="4100.877637" y="1577.573682" />
+              <mxPoint x="4082.053223" y="1594.767432" />
+              <mxPoint x="4063.462891" y="1612.213574" />
+              <mxPoint x="4045.340723" y="1630.14458" />
+              <mxPoint x="4027.852539" y="1648.693604" />
+              <mxPoint x="4011.215723" y="1668.008301" />
+              <mxPoint x="3995.761914" y="1688.278955" />
+              <mxPoint x="3982.053906" y="1709.762061" />
+              <mxPoint x="3970.92666" y="1732.682031" />
+              <mxPoint x="3962.684277" y="1756.791602" />
+              <mxPoint x="3957.271387" y="1781.691748" />
+              <mxPoint x="3954.482617" y="1807.023438" />
+              <mxPoint x="3953.823145" y="1832.505127" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="countryApi_countryCache" value="" parent="1" edge="1" source="countryApi" target="countryCache" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.714037;exitY=1.003109;exitPerimeter=0;entryX=0.498757;entryY=-0.03296;entryPerimeter=0;">
+        <mxCell id="countryApi_countryCache" value="" parent="1" edge="1" source="countryApi" target="countryCache" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.757611;exitY=1.003109;exitPerimeter=0;entryX=0.498758;entryY=-0.03296;entryPerimeter=0;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="3580.779492" y="1560.9" as="sourcePoint" />
-            <mxPoint x="3750.251563" y="1857.5" as="targetPoint" />
+            <mxPoint x="4317.640723" y="1560.9" as="sourcePoint" />
+            <mxPoint x="4522.008887" y="1857.5" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="3599.505859" y="1577.452686" />
-              <mxPoint x="3618.714941" y="1594.524854" />
-              <mxPoint x="3637.696387" y="1611.848828" />
-              <mxPoint x="3656.22168" y="1629.659424" />
-              <mxPoint x="3674.122949" y="1648.095654" />
-              <mxPoint x="3691.188086" y="1667.307227" />
-              <mxPoint x="3707.085156" y="1687.49292" />
-              <mxPoint x="3721.249902" y="1708.923291" />
-              <mxPoint x="3732.820703" y="1731.850732" />
-              <mxPoint x="3741.43252" y="1756.046729" />
-              <mxPoint x="3747.106152" y="1781.097168" />
-              <mxPoint x="3750.046387" y="1806.616357" />
-              <mxPoint x="3750.749805" y="1832.300781" />
+              <mxPoint x="4337.696289" y="1575.534033" />
+              <mxPoint x="4358.248926" y="1590.672314" />
+              <mxPoint x="4378.675879" y="1605.979346" />
+              <mxPoint x="4398.796973" y="1621.685254" />
+              <mxPoint x="4418.49502" y="1637.918213" />
+              <mxPoint x="4437.623242" y="1654.817676" />
+              <mxPoint x="4455.980664" y="1672.550049" />
+              <mxPoint x="4473.240332" y="1691.348975" />
+              <mxPoint x="4488.80459" y="1711.565723" />
+              <mxPoint x="4501.763477" y="1733.535156" />
+              <mxPoint x="4511.629199" y="1757.055859" />
+              <mxPoint x="4518.238281" y="1781.691895" />
+              <mxPoint x="4521.686523" y="1806.968506" />
+              <mxPoint x="4522.506836" y="1832.474072" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="erpAdapter_countryApi" value="" parent="1" edge="1" source="erpAdapter" target="countryApi" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.305992;exitY=1.003109;exitPerimeter=0;entryX=0.601767;entryY=-0.029744;entryPerimeter=0;">
+        <mxCell id="erpAdapter_countryApi" value="" parent="1" edge="1" source="erpAdapter" target="countryApi" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.305993;exitY=1.003109;exitPerimeter=0;entryX=0.646936;entryY=-0.027147;entryPerimeter=0;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="3776.825586" y="1084.5" as="sourcePoint" />
-            <mxPoint x="3532.969336" y="1394.817236" as="targetPoint" />
+            <mxPoint x="4548.58291" y="1084.5" as="sourcePoint" />
+            <mxPoint x="4270.509668" y="1395.23479" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="3759.372168" y="1101.306836" />
-              <mxPoint x="3741.42666" y="1118.621802" />
-              <mxPoint x="3723.559375" y="1136.017334" />
-              <mxPoint x="3705.876367" y="1153.600146" />
-              <mxPoint x="3688.428613" y="1171.416162" />
-              <mxPoint x="3671.269141" y="1189.509839" />
-              <mxPoint x="3654.463281" y="1207.9323" />
-              <mxPoint x="3638.111523" y="1226.758398" />
-              <mxPoint x="3622.355078" y="1246.084961" />
-              <mxPoint x="3607.364746" y="1266.011157" />
-              <mxPoint x="3593.166016" y="1286.509155" />
-              <mxPoint x="3579.74248" y="1307.523071" />
-              <mxPoint x="3567.073047" y="1329.000317" />
-              <mxPoint x="3555.112598" y="1350.880469" />
-              <mxPoint x="3543.724609" y="1373.064795" />
+              <mxPoint x="4530.22041" y="1102.183032" />
+              <mxPoint x="4511.36377" y="1120.371924" />
+              <mxPoint x="4492.566016" y="1138.621606" />
+              <mxPoint x="4473.886035" y="1156.991919" />
+              <mxPoint x="4455.351367" y="1175.508643" />
+              <mxPoint x="4436.989551" y="1194.196826" />
+              <mxPoint x="4418.843945" y="1213.095142" />
+              <mxPoint x="4400.962012" y="1232.242847" />
+              <mxPoint x="4383.417578" y="1251.699854" />
+              <mxPoint x="4366.263086" y="1271.501685" />
+              <mxPoint x="4349.479785" y="1291.619116" />
+              <mxPoint x="4333.046582" y="1312.023657" />
+              <mxPoint x="4316.939453" y="1332.686743" />
+              <mxPoint x="4301.132324" y="1353.580176" />
+              <mxPoint x="4285.548437" y="1374.640747" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="erpAdapter_erp" value="" parent="1" edge="1" source="erpAdapter" target="erp" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.486827;exitY=1.003109;exitPerimeter=0;entryX=-0.012931;entryY=0.05801;entryPerimeter=0;">
+        <mxCell id="erpAdapter_erp" value="" parent="1" edge="1" source="erpAdapter" target="erp" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.486828;exitY=1.003109;exitPerimeter=0;entryX=-0.013416;entryY=0.255308;entryPerimeter=0;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="3855.031055" y="1084.5" as="sourcePoint" />
-            <mxPoint x="4294.806934" y="1408.928003" as="targetPoint" />
+            <mxPoint x="4626.788379" y="1084.5" as="sourcePoint" />
+            <mxPoint x="5600.113086" y="1440.653589" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="3852.533301" y="1109.919531" />
-              <mxPoint x="3851.654102" y="1135.883667" />
-              <mxPoint x="3855.323242" y="1161.572046" />
-              <mxPoint x="3864.366309" y="1185.891748" />
-              <mxPoint x="3878.096289" y="1207.921973" />
-              <mxPoint x="3895.317871" y="1227.363159" />
-              <mxPoint x="3914.959375" y="1244.370801" />
-              <mxPoint x="3936.222461" y="1259.313232" />
-              <mxPoint x="3958.464355" y="1272.7646" />
-              <mxPoint x="3981.308594" y="1285.168677" />
-              <mxPoint x="4004.56416" y="1296.784888" />
-              <mxPoint x="4028.115625" y="1307.790186" />
-              <mxPoint x="4051.893555" y="1318.29751" />
-              <mxPoint x="4075.849316" y="1328.392407" />
-              <mxPoint x="4099.94834" y="1338.141748" />
-              <mxPoint x="4124.166309" y="1347.591089" />
-              <mxPoint x="4148.479199" y="1356.79375" />
-              <mxPoint x="4172.870898" y="1365.785547" />
-              <mxPoint x="4197.325586" y="1374.604712" />
-              <mxPoint x="4221.814258" y="1383.329395" />
-              <mxPoint x="4246.311719" y="1392.028955" />
-              <mxPoint x="4270.809473" y="1400.728442" />
+              <mxPoint x="4626.788379" y="1120.5" />
+              <mxPoint x="5564.113086" y="1120.5" />
+              <mxPoint x="5564.113086" y="1440.653589" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="erpAdapter_masters" value="" parent="1" edge="1" source="erpAdapter" target="masters" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.658619;exitY=1.003109;exitPerimeter=0;entryX=-0.012051;entryY=0.123485;entryPerimeter=0;">
+        <mxCell id="erpAdapter_masters" value="" parent="1" edge="1" source="erpAdapter" target="masters" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.658619;exitY=1.003109;exitPerimeter=0;entryX=-0.012207;entryY=0.251878;entryPerimeter=0;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="3929.325586" y="1084.5" as="sourcePoint" />
-            <mxPoint x="4863.055859" y="1429.396411" as="targetPoint" />
+            <mxPoint x="4701.08291" y="1084.5" as="sourcePoint" />
+            <mxPoint x="6168.483008" y="1446.652417" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="3945.625586" y="1103.834131" />
-              <mxPoint x="3962.565918" y="1123.546973" />
-              <mxPoint x="3980.763379" y="1142.095483" />
-              <mxPoint x="4000.474023" y="1159.028857" />
-              <mxPoint x="4021.391406" y="1174.450732" />
-              <mxPoint x="4043.223438" y="1188.551099" />
-              <mxPoint x="4065.750391" y="1201.513721" />
-              <mxPoint x="4088.816406" y="1213.49292" />
-              <mxPoint x="4112.305469" y="1224.620972" />
-              <mxPoint x="4136.134668" y="1235.001367" />
-              <mxPoint x="4160.240137" y="1244.723389" />
-              <mxPoint x="4184.573242" y="1253.861157" />
-              <mxPoint x="4209.089453" y="1262.496411" />
-              <mxPoint x="4233.741895" y="1270.734766" />
-              <mxPoint x="4258.500684" y="1278.648511" />
-              <mxPoint x="4283.344727" y="1286.289795" />
-              <mxPoint x="4308.260254" y="1293.695972" />
-              <mxPoint x="4333.233789" y="1300.903223" />
-              <mxPoint x="4358.257129" y="1307.93667" />
-              <mxPoint x="4383.324414" y="1314.810669" />
-              <mxPoint x="4408.430078" y="1321.543604" />
-              <mxPoint x="4433.569141" y="1328.150854" />
-              <mxPoint x="4458.736328" y="1334.650586" />
-              <mxPoint x="4483.929883" y="1341.04668" />
-              <mxPoint x="4509.148926" y="1347.341846" />
-              <mxPoint x="4534.388184" y="1353.556152" />
-              <mxPoint x="4559.646777" y="1359.690552" />
-              <mxPoint x="4584.923828" y="1365.748999" />
-              <mxPoint x="4610.215234" y="1371.746948" />
-              <mxPoint x="4635.522168" y="1377.678687" />
-              <mxPoint x="4660.842285" y="1383.554468" />
-              <mxPoint x="4686.170313" y="1389.394946" />
-              <mxPoint x="4711.506543" y="1395.200928" />
-              <mxPoint x="4736.847461" y="1400.986621" />
-              <mxPoint x="4762.189258" y="1406.768579" />
-              <mxPoint x="4787.530762" y="1412.550537" />
-              <mxPoint x="4812.872559" y="1418.332495" />
-              <mxPoint x="4838.214063" y="1424.114453" />
+              <mxPoint x="4701.08291" y="1120.5" />
+              <mxPoint x="6132.483008" y="1120.5" />
+              <mxPoint x="6132.483008" y="1446.652417" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="device_deviceJournal" value="" parent="1" edge="1" source="device" target="deviceJournal" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.688707;exitY=1.003109;exitPerimeter=0;entryX=0.49878;entryY=-0.03296;entryPerimeter=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2906.386816" y="1084.5" as="sourcePoint" />
+            <mxPoint x="3047.06709" y="1394.3" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="2922.362207" y="1103.117017" />
+              <mxPoint x="2938.816211" y="1122.252417" />
+              <mxPoint x="2955.00918" y="1141.608569" />
+              <mxPoint x="2970.719629" y="1161.357812" />
+              <mxPoint x="2985.780859" y="1181.605835" />
+              <mxPoint x="2999.99248" y="1202.457886" />
+              <mxPoint x="3013.053613" y="1224.047046" />
+              <mxPoint x="3024.471191" y="1246.544043" />
+              <mxPoint x="3033.607129" y="1270.057202" />
+              <mxPoint x="3040.337207" y="1294.36958" />
+              <mxPoint x="3044.752246" y="1319.20835" />
+              <mxPoint x="3047.033008" y="1344.335034" />
+              <mxPoint x="3047.566211" y="1369.563159" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="device_peripherals" value="" parent="1" edge="1" source="device" target="peripherals" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#48638C;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;exitX=0.91625;exitY=1.003109;exitPerimeter=0;entryX=-0.014887;entryY=0.362361;entryPerimeter=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2990.537988" y="1084.5" as="sourcePoint" />
+            <mxPoint x="5066.320508" y="1457.867627" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="3013.215039" y="1096.144067" />
+              <mxPoint x="3036.39209" y="1108.288135" />
+              <mxPoint x="3059.616895" y="1120.339771" />
+              <mxPoint x="3083.166016" y="1131.741821" />
+              <mxPoint x="3107.110352" y="1142.289502" />
+              <mxPoint x="3131.388672" y="1152.044336" />
+              <mxPoint x="3155.93125" y="1161.114795" />
+              <mxPoint x="3180.683008" y="1169.598145" />
+              <mxPoint x="3205.602344" y="1177.576562" />
+              <mxPoint x="3230.658203" y="1185.11604" />
+              <mxPoint x="3255.826562" y="1192.27063" />
+              <mxPoint x="3281.088672" y="1199.087207" />
+              <mxPoint x="3306.430762" y="1205.600195" />
+              <mxPoint x="3331.841699" y="1211.839697" />
+              <mxPoint x="3357.31123" y="1217.835303" />
+              <mxPoint x="3382.833789" y="1223.601147" />
+              <mxPoint x="3408.400586" y="1229.167114" />
+              <mxPoint x="3434.007812" y="1234.544409" />
+              <mxPoint x="3459.650781" y="1239.748486" />
+              <mxPoint x="3485.325684" y="1244.793774" />
+              <mxPoint x="3511.030176" y="1249.685693" />
+              <mxPoint x="3536.761035" y="1254.435156" />
+              <mxPoint x="3562.514746" y="1259.061719" />
+              <mxPoint x="3588.290723" y="1263.560767" />
+              <mxPoint x="3614.083398" y="1267.964673" />
+              <mxPoint x="3639.892773" y="1272.267798" />
+              <mxPoint x="3665.715039" y="1276.495264" />
+              <mxPoint x="3691.550195" y="1280.640405" />
+              <mxPoint x="3717.396191" y="1284.719922" />
+              <mxPoint x="3743.251562" y="1288.739233" />
+              <mxPoint x="3769.116602" y="1292.694604" />
+              <mxPoint x="3794.989551" y="1296.599585" />
+              <mxPoint x="3820.869238" y="1300.457178" />
+              <mxPoint x="3846.756836" y="1304.263794" />
+              <mxPoint x="3872.650293" y="1308.028149" />
+              <mxPoint x="3898.551074" y="1311.744458" />
+              <mxPoint x="3924.454199" y="1315.44209" />
+              <mxPoint x="3950.365527" y="1319.082153" />
+              <mxPoint x="3976.279785" y="1322.701489" />
+              <mxPoint x="4002.19873" y="1326.288232" />
+              <mxPoint x="4028.122656" y="1329.837476" />
+              <mxPoint x="4054.048926" y="1333.369507" />
+              <mxPoint x="4079.980762" y="1336.861621" />
+              <mxPoint x="4105.915234" y="1340.333594" />
+              <mxPoint x="4131.852637" y="1343.783667" />
+              <mxPoint x="4157.794434" y="1347.201147" />
+              <mxPoint x="4183.737988" y="1350.605225" />
+              <mxPoint x="4209.685059" y="1353.980151" />
+              <mxPoint x="4235.634766" y="1357.336475" />
+              <mxPoint x="4261.58623" y="1360.677856" />
+              <mxPoint x="4287.541797" y="1363.990454" />
+              <mxPoint x="4313.498242" y="1367.291699" />
+              <mxPoint x="4339.457617" y="1370.573389" />
+              <mxPoint x="4365.419336" y="1373.835742" />
+              <mxPoint x="4391.382227" y="1377.087109" />
+              <mxPoint x="4417.348047" y="1380.317603" />
+              <mxPoint x="4443.316211" y="1383.528467" />
+              <mxPoint x="4469.28584" y="1386.726147" />
+              <mxPoint x="4495.255469" y="1389.923828" />
+              <mxPoint x="4521.228027" y="1393.09939" />
+              <mxPoint x="4547.202051" y="1396.259644" />
+              <mxPoint x="4573.17666" y="1399.419897" />
+              <mxPoint x="4599.153613" y="1402.558325" />
+              <mxPoint x="4625.131445" y="1405.688696" />
+              <mxPoint x="4651.10957" y="1408.817896" />
+              <mxPoint x="4677.090918" y="1411.920874" />
+              <mxPoint x="4703.071973" y="1415.023853" />
+              <mxPoint x="4729.05332" y="1418.126831" />
+              <mxPoint x="4755.034375" y="1421.229736" />
+              <mxPoint x="4781.016016" y="1424.330078" />
+              <mxPoint x="4806.998242" y="1427.424414" />
+              <mxPoint x="4832.980469" y="1430.51875" />
+              <mxPoint x="4858.962695" y="1433.613013" />
+              <mxPoint x="4884.944922" y="1436.707349" />
+              <mxPoint x="4910.927148" y="1439.801685" />
+              <mxPoint x="4936.909375" y="1442.896021" />
+              <mxPoint x="4962.891602" y="1445.990356" />
+              <mxPoint x="4988.873828" y="1449.084692" />
+              <mxPoint x="5014.856055" y="1452.178955" />
+              <mxPoint x="5040.838281" y="1455.273291" />
             </Array>
           </mxGeometry>
         </mxCell>
         <mxCell id="label-bg-cashier_client" value="" parent="cashier_client" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;fillColor=#fff;rounded=0;arcSize=8;">
-          <mxGeometry x="0" y="0" width="205.619373" height="62.8" as="geometry" relative="1">
-            <mxPoint x="-262.320745" y="7.739378" as="offset" />
+          <mxGeometry x="0" y="0" width="205.618915" height="62.8" as="geometry" relative="1">
+            <mxPoint x="-94.481624" y="-2.85245" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-cashier_client" value="Opera caja · interfaz&#10;de escritorio" parent="cashier_client" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=21.6;align=left;verticalAlign=top;">
           <mxGeometry x="0" y="0" width="195.686508" height="52.8" as="geometry" relative="1">
-            <mxPoint x="-257.320745" y="12.739378" as="offset" />
+            <mxPoint x="-89.481624" y="2.14755" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-bg-cashier_mobileClient" value="" parent="cashier_mobileClient" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;fillColor=#fff;rounded=0;arcSize=8;">
-          <mxGeometry x="0" y="0" width="218.840759" height="62.8" as="geometry" relative="1">
-            <mxPoint x="-110.557128" y="-54.232458" as="offset" />
+          <mxGeometry x="0" y="0" width="218.840283" height="62.8" as="geometry" relative="1">
+            <mxPoint x="-110.883501" y="-54.687183" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-cashier_mobileClient" value="Funciones habilitadas&#10;· interfaz móvil" parent="cashier_mobileClient" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=21.6;align=left;verticalAlign=top;">
           <mxGeometry x="0" y="0" width="208.933395" height="52.8" as="geometry" relative="1">
-            <mxPoint x="-105.557128" y="-49.232458" as="offset" />
+            <mxPoint x="-105.883501" y="-49.687183" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-bg-client_branchApi" value="" parent="client_branchApi" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;fillColor=#fff;rounded=0;arcSize=8;">
-          <mxGeometry x="0" y="0" width="132.398215" height="89.2" as="geometry" relative="1">
-            <mxPoint x="-53.821523" y="-91.382409" as="offset" />
+          <mxGeometry x="0" y="0" width="132.397931" height="89.2" as="geometry" relative="1">
+            <mxPoint x="-199.481025" y="-93.832355" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-client_branchApi" value="Comandos y&#10;consultas ·&#10;HTTPS/LAN" parent="client_branchApi" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=21.6;align=left;verticalAlign=top;">
           <mxGeometry x="0" y="0" width="121.257309" height="79.2" as="geometry" relative="1">
-            <mxPoint x="-48.821523" y="-86.382409" as="offset" />
+            <mxPoint x="-194.481025" y="-88.832355" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-bg-mobileClient_branchApi" value="" parent="mobileClient_branchApi" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;fillColor=#fff;rounded=0;arcSize=8;">
-          <mxGeometry x="0" y="0" width="132.398215" height="89.2" as="geometry" relative="1">
-            <mxPoint x="-61.524777" y="-53.723355" as="offset" />
+          <mxGeometry x="0" y="0" width="132.397931" height="89.2" as="geometry" relative="1">
+            <mxPoint x="-69.894133" y="-49.751722" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-mobileClient_branchApi" value="Comandos y&#10;consultas ·&#10;HTTPS/LAN" parent="mobileClient_branchApi" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=21.6;align=left;verticalAlign=top;">
           <mxGeometry x="0" y="0" width="121.257309" height="79.2" as="geometry" relative="1">
-            <mxPoint x="-56.524777" y="-48.723355" as="offset" />
+            <mxPoint x="-64.894133" y="-44.751722" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="label-bg-client_device" value="" parent="client_device" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;fillColor=#fff;rounded=0;arcSize=8;">
-          <mxGeometry x="0" y="0" width="210.438159" height="89.2" as="geometry" relative="1">
-            <mxPoint x="-98.898104" y="53.577024" as="offset" />
+        <mxCell id="label-bg-device_branchApi" value="" parent="device_branchApi" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;fillColor=#fff;rounded=0;arcSize=8;">
+          <mxGeometry x="0" y="0" width="209.181415" height="89.2" as="geometry" relative="1">
+            <mxPoint x="-132.641861" y="-39.428006" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="label-client_device" value="Comando autorizado&#10;y evidencia ·&#10;IPC/loopback" parent="client_device" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=21.6;align=left;verticalAlign=top;">
-          <mxGeometry x="0" y="0" width="200.527542" height="79.2" as="geometry" relative="1">
-            <mxPoint x="-93.898104" y="58.577024" as="offset" />
+        <mxCell id="label-device_branchApi" value="Obtiene trabajos y&#10;reporta evidencia ·&#10;HTTPS/LAN saliente" parent="device_branchApi" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=21.6;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="199.272507" height="79.2" as="geometry" relative="1">
+            <mxPoint x="-127.641861" y="-34.428006" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-bg-device_payments" value="" parent="device_payments" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;fillColor=#fff;rounded=0;arcSize=8;">
-          <mxGeometry x="0" y="0" width="163.581744" height="89.2" as="geometry" relative="1">
-            <mxPoint x="565.968076" y="7" as="offset" />
+          <mxGeometry x="0" y="0" width="200.814355" height="62.8" as="geometry" relative="1">
+            <mxPoint x="1448.293181" y="7" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="label-device_payments" value="Terminal local si&#10;aplica · SDK&#10;homologado" parent="device_payments" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=21.6;align=left;verticalAlign=top;">
-          <mxGeometry x="0" y="0" width="153.646759" height="79.2" as="geometry" relative="1">
-            <mxPoint x="570.968076" y="12" as="offset" />
+        <mxCell id="label-device_payments" value="Pago local futuro ·&#10;SDK por homologar" parent="device_payments" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=21.6;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="189.695938" height="52.8" as="geometry" relative="1">
+            <mxPoint x="1453.293181" y="12" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-bg-branchApi_branchDb" value="" parent="branchApi_branchDb" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;fillColor=#fff;rounded=0;arcSize=8;">
-          <mxGeometry x="0" y="0" width="216.475659" height="62.8" as="geometry" relative="1">
-            <mxPoint x="-223.484053" y="-31.335495" as="offset" />
+          <mxGeometry x="0" y="0" width="216.475183" height="62.8" as="geometry" relative="1">
+            <mxPoint x="-300.744227" y="38.536928" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-branchApi_branchDb" value="Negocio + auditoría +&#10;outbox · PostgreSQL" parent="branchApi_branchDb" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=21.6;align=left;verticalAlign=top;">
           <mxGeometry x="0" y="0" width="206.539246" height="52.8" as="geometry" relative="1">
-            <mxPoint x="-218.484053" y="-26.335495" as="offset" />
+            <mxPoint x="-295.744227" y="43.536928" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-bg-branchApi_payments" value="" parent="branchApi_payments" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;fillColor=#fff;rounded=0;arcSize=8;">
-          <mxGeometry x="0" y="0" width="217.638159" height="62.8" as="geometry" relative="1">
-            <mxPoint x="846.16037" y="7" as="offset" />
+          <mxGeometry x="0" y="0" width="217.637665" height="62.8" as="geometry" relative="1">
+            <mxPoint x="791.821973" y="7" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-branchApi_payments" value="Pago remoto si aplica&#10;· API homologada" parent="branchApi_payments" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=21.6;align=left;verticalAlign=top;">
           <mxGeometry x="0" y="0" width="207.709961" height="52.8" as="geometry" relative="1">
-            <mxPoint x="851.16037" y="12" as="offset" />
+            <mxPoint x="796.821973" y="12" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-bg-branchApi_fiscal" value="" parent="branchApi_fiscal" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;fillColor=#fff;rounded=0;arcSize=8;">
-          <mxGeometry x="0" y="0" width="196.029572" height="89.2" as="geometry" relative="1">
-            <mxPoint x="67.5649" y="31.671504" as="offset" />
+          <mxGeometry x="0" y="0" width="196.029132" height="89.2" as="geometry" relative="1">
+            <mxPoint x="79.207619" y="29.496271" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-branchApi_fiscal" value="Emisión y consulta&#10;fiscal · contrato por&#10;país" parent="branchApi_fiscal" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=21.6;align=left;verticalAlign=top;">
           <mxGeometry x="0" y="0" width="183.673615" height="79.2" as="geometry" relative="1">
-            <mxPoint x="72.5649" y="36.671504" as="offset" />
+            <mxPoint x="84.207619" y="34.496271" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-bg-syncWorker_branchDb" value="" parent="syncWorker_branchDb" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;fillColor=#fff;rounded=0;arcSize=8;">
-          <mxGeometry x="0" y="0" width="192.400586" height="89.2" as="geometry" relative="1">
-            <mxPoint x="-108.105836" y="-102.096206" as="offset" />
+          <mxGeometry x="0" y="0" width="192.400165" height="89.2" as="geometry" relative="1">
+            <mxPoint x="-39.935768" y="-239.446802" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-syncWorker_branchDb" value="Outbox, inbox,&#10;cursores y espejo ·&#10;PostgreSQL" parent="syncWorker_branchDb" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=21.6;align=left;verticalAlign=top;">
           <mxGeometry x="0" y="0" width="182.471283" height="79.2" as="geometry" relative="1">
-            <mxPoint x="-103.105836" y="-97.096206" as="offset" />
+            <mxPoint x="-34.935768" y="-234.446802" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-bg-syncWorker_countryApi" value="" parent="syncWorker_countryApi" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;fillColor=#fff;rounded=0;arcSize=8;">
-          <mxGeometry x="0" y="0" width="223.642627" height="62.8" as="geometry" relative="1">
-            <mxPoint x="-209.181319" y="-60.134766" as="offset" />
+          <mxGeometry x="0" y="0" width="223.642114" height="62.8" as="geometry" relative="1">
+            <mxPoint x="-190.291498" y="-55.479745" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-syncWorker_countryApi" value="Lotes, deltas y acuses&#10;· HTTPS" parent="syncWorker_countryApi" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=21.6;align=left;verticalAlign=top;">
           <mxGeometry x="0" y="0" width="213.721619" height="52.8" as="geometry" relative="1">
-            <mxPoint x="-204.181319" y="-55.134766" as="offset" />
+            <mxPoint x="-185.291498" y="-50.479745" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-bg-countryApi_countryDb" value="" parent="countryApi_countryDb" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;fillColor=#fff;rounded=0;arcSize=8;">
-          <mxGeometry x="0" y="0" width="218.838177" height="115.6" as="geometry" relative="1">
-            <mxPoint x="-179.416084" y="-28.905752" as="offset" />
+          <mxGeometry x="0" y="0" width="218.837665" height="115.6" as="geometry" relative="1">
+            <mxPoint x="-165.381218" y="-34.542993" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-countryApi_countryDb" value="Recepción,&#10;publicaciones, trabajo&#10;y resultados ·&#10;PostgreSQL" parent="countryApi_countryDb" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=21.6;align=left;verticalAlign=top;">
           <mxGeometry x="0" y="0" width="208.93338" height="105.6" as="geometry" relative="1">
-            <mxPoint x="-174.416084" y="-23.905752" as="offset" />
+            <mxPoint x="-160.381218" y="-29.542993" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-bg-countryApi_countryCache" value="" parent="countryApi_countryCache" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;fillColor=#fff;rounded=0;arcSize=8;">
-          <mxGeometry x="0" y="0" width="215.219409" height="62.8" as="geometry" relative="1">
-            <mxPoint x="-77.849188" y="-7.354395" as="offset" />
+          <mxGeometry x="0" y="0" width="215.218933" height="62.8" as="geometry" relative="1">
+            <mxPoint x="-63.616777" y="-1.792954" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-countryApi_countryCache" value="Lecturas versionadas&#10;· Redis opcional" parent="countryApi_countryCache" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=21.6;align=left;verticalAlign=top;">
           <mxGeometry x="0" y="0" width="205.315796" height="52.8" as="geometry" relative="1">
-            <mxPoint x="-72.849188" y="-2.354395" as="offset" />
+            <mxPoint x="-58.616777" y="3.207046" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-bg-erpAdapter_countryApi" value="" parent="erpAdapter_countryApi" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;fillColor=#fff;rounded=0;arcSize=8;">
-          <mxGeometry x="0" y="0" width="211.992212" height="115.6" as="geometry" relative="1">
-            <mxPoint x="-126.66641" y="36.429535" as="offset" />
+          <mxGeometry x="0" y="0" width="211.991736" height="115.6" as="geometry" relative="1">
+            <mxPoint x="-124.372892" y="37.322296" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-erpAdapter_countryApi" value="Trabajo, resultados y&#10;porciones de&#10;maestros · HTTPS&#10;saliente" parent="erpAdapter_countryApi" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=21.6;align=left;verticalAlign=top;">
           <mxGeometry x="0" y="0" width="200.896667" height="105.6" as="geometry" relative="1">
-            <mxPoint x="-121.66641" y="41.429535" as="offset" />
+            <mxPoint x="-119.372892" y="42.322296" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-bg-erpAdapter_erp" value="" parent="erpAdapter_erp" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;fillColor=#fff;rounded=0;arcSize=8;">
-          <mxGeometry x="0" y="0" width="179.219299" height="89.2" as="geometry" relative="1">
-            <mxPoint x="-275.939153" y="-98.492269" as="offset" />
+          <mxGeometry x="0" y="0" width="179.218896" height="89.2" as="geometry" relative="1">
+            <mxPoint x="-249.715375" y="7" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-erpAdapter_erp" value="Envía, consulta y&#10;concilia · contrato&#10;ERP" parent="erpAdapter_erp" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=21.6;align=left;verticalAlign=top;">
           <mxGeometry x="0" y="0" width="169.277161" height="79.2" as="geometry" relative="1">
-            <mxPoint x="-270.939153" y="-93.492269" as="offset" />
+            <mxPoint x="-244.715375" y="12" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-bg-erpAdapter_masters" value="" parent="erpAdapter_masters" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;fillColor=#fff;rounded=0;arcSize=8;">
-          <mxGeometry x="0" y="0" width="196.075586" height="89.2" as="geometry" relative="1">
-            <mxPoint x="-135.100707" y="-3.489318" as="offset" />
+          <mxGeometry x="0" y="0" width="196.075146" height="89.2" as="geometry" relative="1">
+            <mxPoint x="-260.551115" y="7" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="label-erpAdapter_masters" value="Obtiene carga o&#10;deltas · contrato de&#10;fuente homologado" parent="erpAdapter_masters" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=21.6;align=left;verticalAlign=top;">
           <mxGeometry x="0" y="0" width="184.949814" height="79.2" as="geometry" relative="1">
-            <mxPoint x="-130.100707" y="1.510682" as="offset" />
+            <mxPoint x="-255.551115" y="12" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="KDf_TFo5_zNcddT_OZL86" value="Cajero&#10;«Persona»&#10;Operación humana&#10;Vende, cobra y gestiona su turno." parent="cashier" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#fff;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="label-bg-device_deviceJournal" value="" parent="device_deviceJournal" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;fillColor=#fff;rounded=0;arcSize=8;">
+          <mxGeometry x="0" y="0" width="188.818915" height="89.2" as="geometry" relative="1">
+            <mxPoint x="-72.328701" y="-20.32343" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-device_deviceJournal" value="Deduplicación y&#10;evidencia técnica ·&#10;SQLite" parent="device_deviceJournal" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=21.6;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="178.895905" height="79.2" as="geometry" relative="1">
+            <mxPoint x="-67.328701" y="-15.32343" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-bg-device_peripherals" value="" parent="device_peripherals" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;fillColor=#fff;rounded=0;arcSize=8;">
+          <mxGeometry x="0" y="0" width="154.037619" height="115.6" as="geometry" relative="1">
+            <mxPoint x="-180.768357" y="-7.478434" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="label-device_peripherals" value="Ejecuta trabajo&#10;autorizado ·&#10;driver/SDK&#10;homologado" parent="device_peripherals" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=21.6;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="144.091263" height="105.6" as="geometry" relative="1">
+            <mxPoint x="-175.768357" y="-2.478434" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HKsqf7Qqyc6AuSNo7kXA_" value="Cajero&#10;«Persona»&#10;Operación humana&#10;Vende, cobra y gestiona su turno." parent="cashier" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#fff;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="29.422266" y="14.4" width="357.574219" height="105.6" as="geometry" />
         </mxCell>
-        <mxCell id="60_y0k99SBGcCFmTx1OL_" value="pos-desktop&#10;«Contenedor»&#10;Angular (frontend) ·&#10;Tauri (shell nativa)&#10;Aplicación completa para caja y&#10;comandos." parent="client" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="qzkb2vSQDwm8DZo1hhB5K" value="pos-desktop&#10;«Contenedor»&#10;Angular (frontend) ·&#10;Tauri (shell nativa)&#10;Aplicación completa para caja y&#10;comandos." parent="client" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="30.01875" y="14.4" width="337.511719" height="158.4" as="geometry" />
         </mxCell>
-        <mxCell id="k3IWBeVlnL-N5j5I9PH_S" value="pos-mobile&#10;«Contenedor»&#10;Angular (frontend) ·&#10;Capacitor (shell nativa)&#10;Aplicación completa para&#10;Android/iOS." parent="mobileClient" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="8VeTFsKsXbQCKK_AYS0fi" value="pos-mobile&#10;«Contenedor»&#10;Angular (frontend) ·&#10;Capacitor (shell nativa)&#10;Aplicación completa para&#10;Android/iOS." parent="mobileClient" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="29.416406" y="14.4" width="268.148438" height="158.4" as="geometry" />
         </mxCell>
-        <mxCell id="XYfb_7cgvHCejB4h0mT_f" value="Puente de periféricos&#10;«Contenedor condicional»&#10;Proceso nativo según SDK&#10;Ejecuta capacidades del puesto." parent="device" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
-          <mxGeometry x="28.822266" y="14.4" width="345.574219" height="105.6" as="geometry" />
+        <mxCell id="FC1ODteekE4Fhj5ExW-u7" value="device-agent&#10;«Contenedor»&#10;C# / .NET · Windows&#10;Ejecuta trabajos de hardware&#10;autorizados." parent="device" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+          <mxGeometry x="28.81875" y="14.4" width="312.1875" height="132" as="geometry" />
         </mxCell>
-        <mxCell id="Q6_WDEQAtEnorfQ8QHBkN" value="branch-api&#10;«Contenedor»&#10;NestJS + Fastify / Node.js&#10;Valida y confirma la operación local." parent="branchApi" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="Aq06SpEfsHNRkPoMwzBUV" value="Journal técnico de dispositivos&#10;«Contenedor de datos»&#10;SQLite&#10;Guarda trabajos, deduplicación y&#10;evidencia." parent="deviceJournal" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+          <mxGeometry x="29.408203" y="14.4" width="350.882812" height="132" as="geometry" />
+        </mxCell>
+        <mxCell id="B43PvOLtnu9OWOTwz0qfw" value="branch-api&#10;«Contenedor»&#10;NestJS + Fastify / Node.js&#10;Valida y confirma la operación local." parent="branchApi" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="29.422266" y="14.4" width="382.417969" height="105.6" as="geometry" />
         </mxCell>
-        <mxCell id="yz1PUyR1SjC8aWLdWFqRy" value="Datos de sucursal&#10;«Contenedor de datos»&#10;PostgreSQL&#10;Guarda negocio, outbox y espejo&#10;local." parent="branchDb" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="-o0sAoz3GYHimPH55R2CW" value="Datos de sucursal&#10;«Contenedor de datos»&#10;PostgreSQL&#10;Guarda negocio, outbox y espejo&#10;local." parent="branchDb" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="28.816406" y="14.4" width="352.242188" height="132" as="geometry" />
         </mxCell>
-        <mxCell id="qXGJB0-0VroCQ4Do4f61L" value="branch-sync-worker&#10;«Contenedor»&#10;NestJS / Node.js · sin servidor&#10;HTTP&#10;Entrega eventos y actualiza&#10;espejos." parent="syncWorker" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="zorzxQhV-lG3DVRYGkh07" value="branch-sync-worker&#10;«Contenedor»&#10;NestJS / Node.js · sin servidor&#10;HTTP&#10;Entrega eventos y actualiza&#10;espejos." parent="syncWorker" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="29.620313" y="14.4" width="322.769531" height="158.4" as="geometry" />
         </mxCell>
-        <mxCell id="0zH_Goj1WESgxGWaIyfHv" value="country-api&#10;«Contenedor»&#10;NestJS + Fastify / Node.js&#10;Recibe operaciones y sirve trabajo&#10;y versiones." parent="countryApi" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="Fw6QjXD7jNi6oPkHybfnp" value="country-api&#10;«Contenedor»&#10;NestJS + Fastify / Node.js&#10;Recibe operaciones y sirve trabajo&#10;y versiones." parent="countryApi" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="28.829297" y="14.4" width="368.191406" height="132" as="geometry" />
         </mxCell>
-        <mxCell id="R30_ycEIj4M-OfDnyBsMQ" value="Datos operativos de país&#10;«Contenedor de datos»&#10;PostgreSQL&#10;Consolida y conserva entrega&#10;durable." parent="countryDb" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="sw6AO_0A47hmukAJU7_TR" value="Datos operativos de país&#10;«Contenedor de datos»&#10;PostgreSQL&#10;Consolida y conserva entrega&#10;durable." parent="countryDb" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="28.815234" y="14.4" width="317.519531" height="132" as="geometry" />
         </mxCell>
-        <mxCell id="00DmK75Ypyd-3-L9jmr0G" value="Redis · caché de país (opcional)&#10;«Contenedor de datos»&#10;Redis · datos reconstruibles&#10;Acelera consultas; no confirma&#10;operaciones." parent="countryCache" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="27hiDmdSvR_6SBWmaQ9q0" value="Redis · caché de país (opcional)&#10;«Contenedor de datos»&#10;Redis · datos reconstruibles&#10;Acelera consultas; no confirma&#10;operaciones." parent="countryCache" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="29.022656" y="14.4" width="344.179688" height="132" as="geometry" />
         </mxCell>
-        <mxCell id="CnkkxCkWHck0ApZd21c4L" value="erp-worker&#10;«Contenedor»&#10;NestJS / Node.js · libs/backend/erp&#10;Integra ERP y prepara maestros&#10;por contrato." parent="erpAdapter" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="Dsb7_urERP0IawC_VgFG-" value="erp-worker&#10;«Contenedor»&#10;NestJS / Node.js · libs/backend/erp&#10;Integra ERP y prepara maestros&#10;por contrato." parent="erpAdapter" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="28.816406" y="14.4" width="374.835938" height="132" as="geometry" />
         </mxCell>
-        <mxCell id="-cZUFK9seUeLNZc5jdAHs" value="ERP del país&#10;«Sistema externo»&#10;CL: AX · ES: Gira · PE: custom&#10;Recibe y concilia documentos&#10;financieros." parent="erp" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="GmqN4Z7NVgqeHCgEnmgMU" value="ERP del país&#10;«Sistema externo»&#10;CL: AX · ES: Gira · PE: custom&#10;Recibe y concilia documentos&#10;financieros." parent="erp" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="28.160156" y="14.4" width="332.085938" height="132" as="geometry" />
         </mxCell>
-        <mxCell id="oC36IbHSFOuruLY_Oic0u" value="Fuentes de maestros y precios&#10;«Sistema externo»&#10;Interfaces por confirmar&#10;Publica datos y reglas autorizados." parent="masters" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="Q4HJtxPAEuUFPthzu4FzV" value="Fuentes de maestros y precios&#10;«Sistema externo»&#10;Interfaces por confirmar&#10;Publica datos y reglas autorizados." parent="masters" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="28.816406" y="14.4" width="372.210938" height="105.6" as="geometry" />
         </mxCell>
-        <mxCell id="CZv37SPOCU_0w8hJaj5Hc" value="Proveedor de pagos&#10;«Sistema externo»&#10;API / SDK según proveedor&#10;Ej.: Transbank POS · Niubiz ·&#10;Mercado Pago Point." parent="payments" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="yOV4A_w47revRb6hnyy2f" value="Proveedor de pagos&#10;«Sistema externo»&#10;API / SDK según proveedor&#10;Ej.: Transbank POS · Niubiz ·&#10;Mercado Pago Point." parent="payments" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="28.603125" y="14.4" width="313.875" height="132" as="geometry" />
         </mxCell>
-        <mxCell id="Udum-h63MHjTFgpvyNhw6" value="Proveedor de facturación&#10;«Sistema externo»&#10;Contrato por país y modalidad&#10;Ej.: Acepta / Ingydev (CL) · EFACT&#10;(PE)." parent="fiscal" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+        <mxCell id="LHT9Pb6N_4lYtMqH6Dbd7" value="Proveedor de facturación&#10;«Sistema externo»&#10;Contrato por país y modalidad&#10;Ej.: Acepta / Ingydev (CL) · EFACT&#10;(PE)." parent="fiscal" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
           <mxGeometry x="28.630078" y="14.4" width="372.128906" height="132" as="geometry" />
+        </mxCell>
+        <mxCell id="iRhbDqHfRVyuTOY6NrXzp" value="Periféricos físicos&#10;«Hardware externo»&#10;Driver / SDK homologado&#10;Impresoras, lectores y otros&#10;dispositivos." parent="peripherals" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=21.6;align=center;verticalAlign=middle;">
+          <mxGeometry x="28.819922" y="14.4" width="296.097656" height="132" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

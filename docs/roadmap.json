@@ -1,11 +1,11 @@
 {
   "schemaVersion": 3,
   "title": "Roadmap de POS Platform",
-  "reviewedOn": "2026-10-23",
+  "reviewedOn": "2026-10-29",
   "status": "proposed",
   "statusLabel": "Secuencia propuesta",
   "notice": "Propuesta para acordar con producto, operaciones y desarrollo. No hay fechas, recursos ni habilitaciones productivas aprobadas. Los criterios de aceptación determinan el avance.",
-  "baseline": "La evidencia documentada del producto acredita una interfaz con adaptadores mock y una base técnica de APIs y workers. La persistencia comercial, la autenticación del backend y las integraciones de negocio siguen pendientes; el scaffold no acredita una fase completada.",
+  "baseline": "La evidencia documentada del producto acredita una interfaz con adaptadores mock y una base técnica de APIs y workers. La persistencia comercial, la autenticación del backend y las integraciones de negocio siguen pendientes; el scaffold no acredita una fase completada. La séptima aplicación objetivo, device-agent en C#/.NET Windows, está pendiente de implementación; el diario SQLite será exclusivamente técnico.",
   "phases": [
     {
       "id": "phase-01",
@@ -252,10 +252,11 @@
           },
           {
             "id": "F02-03",
-            "title": "Dispositivo y evidencia de impresión",
+            "title": "Agente autónomo y evidencia de periféricos",
             "apps": [
               "pos-desktop",
-              "branch-api"
+              "branch-api",
+              "device-agent"
             ],
             "modules": [
               "libs/features",
@@ -263,11 +264,13 @@
               "libs/backend/payments",
               "libs/backend/fiscal"
             ],
-            "deliverable": "Comandos de dispositivo autorizados y trazables, más reimpresión del mismo documento sin repetir efectos financieros ni fiscales.",
+            "deliverable": "device-agent C#/.NET Windows con trabajo autorizado en branch-api, diario técnico SQLite y primera impresión homologada, recuperable con la ventana POS cerrada.",
             "tasks": [
-              "Homologar el camino API o SDK requerido. Si existe puente nativo, el cliente transporta el comando original autorizado por backend.",
-              "Conservar identidad del comando y evidencia técnica del dispositivo, incluyendo caída de LAN después de ejecutar el efecto.",
-              "Separar aceptación por software de impresión física; una reimpresión conserva el documento y la operación originales."
+              "Inventariar modelo, driver, SDK, runtime, x86/x64 y sesión; seleccionar vía soportada de impresión. System.Drawing.Printing no se traslada a un servicio Windows sin revisar esa incompatibilidad.",
+              "Implementar host supervisado y HTTPS LAN iniciado por device-agent para obtener trabajos y reportar evidencia, con identidad de instalación y permisos acotados.",
+              "Guardar recepción e intentos en SQLite antes del acuse; deduplicar jobId y hash, conservar referencia de spooler y resultados pendientes de comunicar.",
+              "Serializar por dispositivo físico y capacidades excluyentes; MICR requiere espera asíncrona, timeout, cancelación y liberación del dispositivo.",
+              "Separar spooler de salida física, conservar incertidumbre tras cortes y exigir autorización/motivo para una nueva copia del mismo documento."
             ]
           },
           {
@@ -275,7 +278,8 @@
             "title": "Consulta y resolución de resultados inciertos",
             "apps": [
               "pos-desktop",
-              "branch-api"
+              "branch-api",
+              "device-agent"
             ],
             "modules": [
               "libs/features",
@@ -323,6 +327,16 @@
             "id": "F02-V06",
             "scenario": "El operador solicita reimprimir la operación.",
             "expected": "Se reproduce el documento identificado sin volver a cobrar, emitir otro documento fiscal ni generar otra venta."
+          },
+          {
+            "id": "F02-V07",
+            "scenario": "El agente cae después de enviar al spooler; el cliente reenvía el jobId y luego el mismo ID con otro contenido.",
+            "expected": "Recupera el diario y evidencia disponible, no imprime automáticamente otra copia y rechaza el hash conflictivo; si no puede confirmar efecto, conserva incertidumbre."
+          },
+          {
+            "id": "F02-V08",
+            "scenario": "Dos clientes solicitan impresión y lectura MICR del mismo equipo, se cancela la lectura y se cierra pos-desktop.",
+            "expected": "Un agente controla el equipo físico, respeta exclusión/timeout y libera recursos; los trabajos autorizados mantienen estado recuperable independientemente de la ventana."
           }
         ],
         "parallel": [
@@ -382,6 +396,10 @@
         {
           "label": "Escenarios de aceptación",
           "href": "/guide/operations/validation/"
+        },
+        {
+          "label": "ADR-17: agente y contratos de periféricos",
+          "href": "/guide/architecture/device-agent/"
         }
       ]
     },
@@ -817,7 +835,8 @@
               "branch-api",
               "branch-sync-worker",
               "country-api",
-              "erp-worker"
+              "erp-worker",
+              "device-agent"
             ],
             "modules": [
               "libs/client-shell",
@@ -829,7 +848,8 @@
             "tasks": [
               "Construir artefactos reproducibles que arranquen fuera del workspace y declarar configuración, dependencias y versiones admitidas.",
               "Preparar firma y verificación de los paquetes que la distribución requiera, con custodia y rotación de las claves correspondientes.",
-              "Ensayar actualización y detención controlada de admisión, conservando pendientes y compatibilidad de datos y contratos entre versiones."
+              "Ensayar actualización y detención controlada de admisión, conservando pendientes y compatibilidad de datos y contratos entre versiones.",
+              "Firmar e instalar device-agent con privilegios mínimos; validar protocolo y esquema SQLite al actualizar/volver de versión, sin borrar trabajos pendientes."
             ]
           },
           {
@@ -839,7 +859,8 @@
               "branch-api",
               "branch-sync-worker",
               "country-api",
-              "erp-worker"
+              "erp-worker",
+              "device-agent"
             ],
             "modules": [
               "libs/backend/sync",
@@ -851,7 +872,8 @@
             "tasks": [
               "Preparar copias independientes, retención de reconstrucción y restauración para PostgreSQL de sucursal y país; una copia en el mismo servidor no cubre su pérdida.",
               "Ensayar pérdida de proceso, disco o servidor y restore anterior a acuses, conservando evidencia de efectos externos ya ejecutados.",
-              "Aislar al escritor anterior antes de habilitar otro; medir RPO y RTO por escenario y contrastarlos con los objetivos acordados."
+              "Aislar al escritor anterior antes de habilitar otro; medir RPO y RTO por escenario y contrastarlos con los objetivos acordados.",
+              "Recuperar diario técnico del agente y excluir al controlador físico anterior; una copia o lease vencido no autoriza duplicar efectos inciertos."
             ]
           },
           {
@@ -862,7 +884,8 @@
               "branch-api",
               "branch-sync-worker",
               "country-api",
-              "erp-worker"
+              "erp-worker",
+              "device-agent"
             ],
             "modules": [
               "libs/features",
@@ -887,7 +910,8 @@
               "branch-api",
               "branch-sync-worker",
               "country-api",
-              "erp-worker"
+              "erp-worker",
+              "device-agent"
             ],
             "modules": [
               "libs/backend/administration",
@@ -1007,6 +1031,10 @@
         {
           "label": "Ciclo de vida de identidades",
           "href": "/guide/architecture/identity/"
+        },
+        {
+          "label": "Operación del agente de periféricos",
+          "href": "/guide/architecture/device-agent/"
         }
       ]
     },
@@ -1030,7 +1058,8 @@
               "pos-desktop",
               "branch-api",
               "country-api",
-              "erp-worker"
+              "erp-worker",
+              "device-agent"
             ],
             "modules": [
               "libs/country-policies",
@@ -1052,7 +1081,8 @@
             "title": "Uso móvil con host y dispositivos reales",
             "apps": [
               "pos-mobile",
-              "branch-api"
+              "branch-api",
+              "device-agent"
             ],
             "modules": [
               "libs/client-shell",
@@ -1065,7 +1095,8 @@
             "tasks": [
               "Componer la interfaz compartida y los adaptadores de plataforma para el recorrido móvil, manteniendo autorización de servidor.",
               "Probar ciclo de vida, permisos, almacenamiento permitido y capacidades de dispositivo dentro del host nativo; una prueba de navegador no sustituye esta comprobación.",
-              "Validar pérdida de LAN, retorno de la app y distribución nativa; no introducir una base de ventas autónoma ni exponer públicamente branch-api por incorporar móvil."
+              "Validar pérdida de LAN, retorno de la app y distribución nativa; no introducir una base de ventas autónoma ni exponer públicamente branch-api por incorporar móvil.",
+              "Probar móvil→branch-api→device-agent con destino autorizado, permisos de LAN/TLS y escritorio cerrado. Bluetooth/USB directo requiere plugin/SDK móvil homologado por separado."
             ]
           },
           {
@@ -1077,7 +1108,8 @@
               "branch-api",
               "branch-sync-worker",
               "country-api",
-              "erp-worker"
+              "erp-worker",
+              "device-agent"
             ],
             "modules": [
               "libs/backend/administration",
@@ -1150,6 +1182,11 @@
             "id": "F06-V07",
             "scenario": "Un anillo presenta diferencias o fallos de recuperación.",
             "expected": "Se detiene su ampliación y se conserva el negocio ya registrado; la revisión y aceptación se realizan para ese país, canal y configuración."
+          },
+          {
+            "id": "F06-V08",
+            "scenario": "Móvil y escritorio comparten impresora mediante device-agent; se corta WAN y después LAN.",
+            "expected": "Con WAN caída conserva el perfil autorizado si sucursal sigue disponible; sin LAN bloquea nuevas solicitudes dependientes, conserva evidencia y recupera sin duplicar la impresión."
           }
         ],
         "parallel": [
@@ -1209,6 +1246,10 @@
         {
           "label": "Coexistencia y migración ERP",
           "href": "/guide/proposal/erp-migration/"
+        },
+        {
+          "label": "Acceso móvil a periféricos compartidos",
+          "href": "/guide/architecture/device-agent/"
         }
       ]
     }

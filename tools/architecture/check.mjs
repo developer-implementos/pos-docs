@@ -31,7 +31,7 @@ function validateStructure() {
   validateArchitecture();
   assert.equal(itemById.size, allItems.length, 'Architecture item IDs are unique');
   const apps = architecture.nodes.filter(node => node.kind === 'app');
-  assert.deepEqual(sorted(apps.map(node => node.title)), sorted(['pos-desktop', 'pos-mobile', 'branch-api', 'branch-sync-worker', 'country-api', 'erp-worker']), 'The map declares exactly the six agreed applications');
+  assert.deepEqual(sorted(apps.map(node => node.title)), sorted(['pos-desktop', 'pos-mobile', 'branch-api', 'branch-sync-worker', 'country-api', 'device-agent', 'erp-worker']), 'The map declares exactly the seven proposed applications');
   const groups = new Set(architecture.groups.map(group => group.id));
   for (const item of allItems) {
     assert.match(item.id, /^[a-z][a-z0-9-]*$/u);
@@ -75,7 +75,7 @@ function validateStructure() {
     assert.ok(architecture.nodes.some(node => node.status === status), `The model records ${status} capabilities`);
     assert.ok(generated.includes(statuses[status]), `The SVG visibly identifies ${status} capabilities`);
   }
-  report.checks.push('Six applications; typed relationships, sources, statuses and scenario references; deterministic vector download');
+  report.checks.push('Seven proposed applications, including autonomous device-agent; typed relationships, sources, statuses and scenario references; deterministic vector download');
 }
 
 function observe(page) {

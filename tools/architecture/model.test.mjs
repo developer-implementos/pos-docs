@@ -6,9 +6,11 @@ import { renderArchitecture } from './render.mjs';
 
 const copy = () => structuredClone(architecture);
 
-test('the proposed topology retains explicit process ownership and six product applications', () => {
+test('the proposed topology retains explicit process ownership and seven product applications', () => {
   assert.doesNotThrow(() => validateArchitecture());
-  assert.equal(architecture.nodes.find(node => node.id === 'bridge').kind, 'process');
+  assert.equal(architecture.nodes.find(node => node.id === 'bridge').kind, 'app');
+  assert.equal(architecture.nodes.find(node => node.id === 'bridge').title, 'device-agent');
+  assert.equal(architecture.nodes.find(node => node.id === 'bridge').status, 'proposed');
   assert.equal(architecture.nodes.find(node => node.id === 'publisher').owner, 'country-api');
   assert.equal(architecture.nodes.find(node => node.id === 'master-source').owner, 'erp-worker');
   const invalid = copy(); invalid.nodes.find(node => node.id === 'access').owner = 'country-api';
@@ -24,18 +26,31 @@ test('a client or integration worker cannot bypass the owning API with SQL', () 
   }
 });
 
-test('country connectivity is initiated by the branch and ERP worker, including publication', () => {
-  for (const id of ['sync-country', 'claim-report', 'submit-publication']) {
+test('workers and the device agent initiate HTTPS toward their authoritative API', () => {
+  for (const id of ['sync-country', 'claim-report', 'submit-publication', 'device-command', 'bridge-evidence']) {
     const invalid = copy(), edge = invalid.edges.find(edge => edge.id === id);
     [edge.from, edge.to] = [edge.to, edge.from];
     assert.throws(() => validateArchitecture(invalid), /Outgoing HTTPS boundary changed/);
   }
 });
 
+test('device-agent owns its SQLite journal and cannot require a desktop or mobile relay', () => {
+  for (const [from, to] of [['desktop', 'bridge'], ['mobile', 'bridge'], ['bridge', 'desktop'], ['bridge', 'mobile'], ['desktop', 'devices'], ['mobile', 'device-journal']]) {
+    const invalid = copy(); invalid.edges.push({ ...invalid.edges[0], id: 'client-relay', from, to });
+    assert.throws(() => validateArchitecture(invalid), /client relay/);
+  }
+  const invalid = copy(); invalid.edges.push({ ...invalid.edges[0], id: 'journal-bypass', from: 'branch-api', to: 'device-journal' });
+  assert.throws(() => validateArchitecture(invalid), /journal has a single application owner/);
+  const missing = copy(); missing.edges = missing.edges.filter(edge => edge.id !== 'agent-journal');
+  assert.throws(() => validateArchitecture(missing), /local SQLite contract/);
+});
+
 test('base is a projection, with optional infrastructure excluded and contract identities preserved', () => {
   const before = JSON.stringify(architecture), base = architectureViews.find(view => view.id === 'base').model;
-  assert.equal(base.nodes.filter(node => node.kind === 'app').length, 6);
-  for (const id of ['redis-cache', 'redis-jobs', 'bullmq', 'rabbitmq', 'bridge']) assert.ok(!base.nodes.some(node => node.id === id), `${id} is not an initial dependency`);
+  assert.deepEqual(base.nodes.filter(node => node.kind === 'app').map(node => node.id).sort(), architecture.nodes.filter(node => node.kind === 'app').map(node => node.id).sort());
+  for (const id of ['redis-cache', 'redis-jobs', 'bullmq', 'rabbitmq']) assert.ok(!base.nodes.some(node => node.id === id), `${id} is not an initial dependency`);
+  for (const id of ['bridge', 'device-journal', 'devices']) assert.ok(base.nodes.some(node => node.id === id), `${id} must be visible in the base device flow`);
+  for (const id of ['device-command', 'device-jobs-local', 'bridge-evidence', 'agent-journal', 'hardware-command']) assert.ok(base.edges.some(edge => edge.id === id), `${id} must retain its contract in the base view`);
   const source = architecture.edges.find(edge => edge.id === 'commit-local');
   const projected = base.edges.find(edge => edge.id === 'commit-local');
   assert.equal(source.from, 'transaction'); assert.equal(projected.from, 'branch-api');

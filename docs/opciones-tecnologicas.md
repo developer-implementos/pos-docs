@@ -131,17 +131,22 @@ Se propone empaquetar los recursos necesarios de la interfaz para que pueda arra
 flowchart LR
     subgraph Caja["Puesto de caja"]
         UI["pos-desktop<br/>Frontend Angular/PrimeNG<br/>Shell nativa Tauri"]
-        Dispositivos["Adaptadores locales<br/>Impresión y pagos"]
-        UI <--> Dispositivos
+        Agent["device-agent<br/>C#/.NET · Windows<br/>Adaptadores homologados"]
+        Journal[("SQLite técnico<br/>Recepción, intentos y evidencia")]
+        Hardware["Impresora, Zebra o lector MICR"]
+        Agent -->|"SQLite: registrar y recuperar intentos"| Journal
+        Agent -->|"Driver / SDK: ejecutar capacidad"| Hardware
     end
     subgraph Sucursal["Servidor de sucursal · perfil WAN"]
-        API["NestJS + Fastify<br/>Ventas, precios y ofertas"]
-        DB[("PostgreSQL<br/>Ventas y outbox")]
-        Worker["Worker de sincronización"]
-        API <--> DB
-        Worker <--> DB
+        API["branch-api · NestJS + Fastify<br/>Negocio y trabajos autorizados de devices"]
+        DB[("PostgreSQL de sucursal<br/>Negocio, trabajos, auditoría y outbox")]
+        Worker["branch-sync-worker<br/>TypeScript / Node.js"]
+        API -->|"PostgreSQL: confirmar operación y trabajos"| DB
+        Worker -->|"PostgreSQL: entrega y activación de versiones"| DB
     end
-    UI <-->|"LAN autenticada"| API
+    UI -->|"HTTPS LAN: solicitar operación y consultar estado"| API
+    Mobile["pos-mobile<br/>Angular/PrimeNG + Capacitor"] -->|"HTTPS LAN: solicitar operación y consultar estado"| API
+    Agent -->|"HTTPS LAN: obtener trabajos y reportar evidencia"| API
     Worker -->|"HTTPS: entrega, consulta y acuses"| Central["country-api<br/>Recepción y trabajo durable"]
     ERPWorker["erp-worker en la red autorizada del ERP<br/>Fachada, ACL y adaptadores"] -->|"HTTPS saliente: solicitar trabajo y reportar"| Central
 ```
@@ -150,9 +155,9 @@ El diagrama corresponde al perfil WAN. Empaquetar el frontend en la shell nativa
 
 ### Relación con NestJS y los dispositivos
 
-NestJS corre en un proceso Node separado, no dentro del WebView. Puede residir en sucursal o en el terminal. Tauri documenta cómo distribuir Node como sidecar; si los trabajos deben continuar al cerrar la ventana, se propone un servicio supervisado independiente de la interfaz. [Node.js como sidecar](https://v2.tauri.app/learn/sidecar-nodejs/).
+`branch-api` ejecuta NestJS/Fastify en el servidor de sucursal, fuera del WebView. Su contexto `devices` autoriza, asigna y audita los trabajos. La ejecución física pertenece a **`apps/device-agent`, C#/.NET en Windows**, con ciclo de vida independiente de Tauri y Capacitor. El agente inicia HTTPS LAN hacia `branch-api`; ambos clientes solicitan operaciones al backend. El [contrato y despliegue del agente](decisions/device-agent.md) fija estas responsabilidades y las validaciones pendientes.
 
-Mantener inicialmente los adaptadores de impresión/pagos que superen validación, detrás de contratos locales. No se presupone compatibilidad Transbank porque funcione desde Chrome ni la necesidad de reescribir impresión/MICR en Rust. Corregir los resultados ambiguos y la identidad de trabajos documentados en el análisis sigue siendo necesario.
+Migrar impresión, Zebra y cheque/MICR mediante adaptadores homologados. El legado revisado no implementa Transbank; cualquier SDK de pago constituye una capacidad futura por validar. SQLite conserva el diario técnico del agente, sin autoridad de ventas. La compatibilidad de drivers, arquitectura de proceso, sesión de Windows y modo de ejecución debe comprobarse antes de elegir el runtime y empaquetado de producción.
 
 El requisito de variantes por país/sucursal se desarrolla en [Extensibilidad de proveedores y dispositivos](extensibilidad-proveedores-dispositivos.md). La selección se hace con perfiles aprobados y capacidades por operación; no con una bifurcación de la aplicación cliente por modelo. Un adaptador nuevo puede entregarse como proceso separado cuando el SDK lo requiera. Núcleo, interfaz y agentes mantienen contratos compatibles y ciclos de despliegue controlados; cerrar la ventana no debe borrar ni reiniciar intentos externos pendientes.
 
@@ -185,6 +190,7 @@ Nx tiene integraciones para Angular y NestJS. Para Rust/Tauri y otros componente
 apps/
   pos-desktop/                  # Aplicación completa: shell Tauri + frontend Angular
   pos-mobile/                   # Aplicación completa: shell Capacitor + frontend Angular
+  device-agent/                 # Agente C#/.NET Windows de periféricos; implementación pendiente
   branch-api/                   # API y composición de negocio de sucursal
   branch-sync-worker/           # Proceso de entrega y recepción de sucursal
   country-api/                  # API de recepción y capacidades de país
@@ -230,7 +236,7 @@ tools/                          # Herramientas de build, lint y pruebas del prod
 ```
 <!-- monorepo:target:end -->
 
-El árbol expresa la organización del producto, con seis aplicaciones operativas. `pos-clients-e2e` es el proyecto de pruebas previsto, sin despliegue de negocio; POS Docs es un repositorio editorial independiente. La [guía del monorepo](monorepo.md) distingue responsabilidades, reglas DDD y estado de implementación.
+El árbol expresa la organización del producto, con siete aplicaciones objetivo. `pos-clients-e2e` es el proyecto de pruebas previsto, sin despliegue de negocio; POS Docs es un repositorio editorial independiente. La [guía del monorepo](monorepo.md) distingue responsabilidades, reglas DDD y estado de implementación.
 
 `shared` es una agrupación, no una biblioteca universal. `shared/backend` contiene mecanismos técnicos; `shared/kernel`, conceptos de dominio mínimos acordados; `shared/contracts`, sobres y metadatos comunes. Los eventos y DTO de negocio conservan propietario en su contexto. El dominio permanece independiente de Nest, Angular, ORM y transporte.
 
@@ -243,6 +249,7 @@ El prototipo utiliza `libs/domain` y `libs/data-access` para reglas y adaptadore
 | --- | --- | --- | --- |
 | `pos-desktop` | Puesto Windows | Aplicación completa: shell nativa Tauri y frontend Angular | Frontend con adaptadores mock; integración nativa real pendiente |
 | `pos-mobile` | Dispositivo Android/iOS | Aplicación completa: shell nativa Capacitor y frontend Angular | Frontend con adaptadores mock; ejecución y distribución nativas por verificar |
+| `device-agent` | Equipo Windows con acceso al periférico | Agente C#/.NET autónomo; trabajos y evidencia por HTTPS con branch-api; diario técnico SQLite | Decisión acordada; app, protocolo y adaptadores pendientes de implementación y homologación |
 | `branch-api` | Sucursal | API y composición de negocio de sucursal | Base HTTP local; sin persistencia ni operaciones comerciales |
 | `branch-sync-worker` | Sucursal | Proceso de entrega y recepción de sucursal | Esqueleto local; sin jobs ni sincronización real |
 | `country-api` | País | API de recepción y capacidades de país | Base HTTP local; sin recepción de ventas ni consolidación |
@@ -251,7 +258,7 @@ El prototipo utiliza `libs/domain` y `libs/data-access` para reglas y adaptadore
 
 Los módulos de `libs/backend` tienen ubicación y composición inicial, pero sus casos de uso comerciales, repositorios, transacciones y adaptadores reales siguen pendientes. `contracts`, `shared-kernel` y `country-policies` contienen contratos iniciales que deben evolucionar con casos de uso y validación, no un protocolo productivo ya aprobado. La base técnica de Node incorpora configuración, logging con `nestjs-pino` y reporte opcional de errores a Sentry; su política exacta se mantiene junto al código del producto.
 
-Una aplicación `backoffice` separada, un publicador central adicional o un puente nativo de periféricos requieren justificar su proceso y sus contratos. No se incluyen entre las seis aplicaciones operativas existentes. Starlight pertenece a POS Docs y no es una aplicación del producto. La administración de demostración se compone desde `client-shell` y sus features.
+`device-agent` es la séptima aplicación objetivo: C#/.NET Windows con diario técnico SQLite, sin implementación acreditada. Su host, adaptadores y ciclo de vida se definen en [ADR-17](decisions/device-agent.md). Un backoffice separado requiere su propia necesidad; Starlight pertenece a POS Docs. La administración de demostración se compone desde `client-shell` y sus features.
 
 ### Correspondencia del legacy con POS Platform
 
@@ -266,7 +273,7 @@ La migración se organiza por responsabilidad y recorrido. Copiar un repositorio
 | `mountain-concentrador` | Recepción en `country-api` + `sync`; integración y preparación de maestros en `erp-worker`; autoridad de publicación en `country-api` | Separar acuse durable, procesamiento ERP y distribución. Los contratos del origen y sus capacidades necesitan validación; no sustituir todos sus procesos por un único endpoint genérico. |
 | Adaptadores AX y APIs corporativas de `apis-implementos` | `erp-worker` + `erp`, y contratos del contexto correspondiente | Conservar o adaptar capacidades verificadas detrás de una ACL; no migrar todo el repositorio ni exponer tablas/identificadores de AX al dominio. |
 | `api-pagos-caja` | Revisar capacidades de `payments`, `collections` y `returns` | La API histórica agrega datos y estados de notas de crédito; su nombre no demuestra autorización bancaria. |
-| `api-impresion-caja` y otros agentes de dispositivos | `devices` y adaptador/puente homologado cuando el SDK lo exija | Conservar la diferencia entre comando aceptado, spooler y efecto físico; la implementación nativa puede permanecer fuera de Node. |
+| `api-impresion-caja` | `apps/device-agent` (C#/.NET Windows) y coordinación `libs/backend/devices` en `branch-api` | Migrar por capacidad homologada; conservar identidad, SQLite técnico y evidencia. Spooler no prueba impresión física y el legacy no acredita integración Transbank. |
 | `core` | Referencia de organización para el código propio de `shared/backend` | No es origen de una migración de código, proveedor de paquetes ni servicio consumido por el POS. |
 | `devops-platform` | Antecedente de herramientas de entrega, sujeto a una decisión independiente | La organización del monorepo no adopta automáticamente acciones o infraestructura corporativa. |
 
@@ -281,9 +288,9 @@ El [mapa de repositorios](mapa-repositorios-y-conexiones.md), los [informes con 
 | Sincronizador de sucursal | `branch-sync-worker` + `sync` | El ciclo de vida del proceso es independiente de la ventana del cliente. |
 | API de país | `country-api` + contextos que necesite cada caso de uso | Recepción, autorización y persistencia son trabajo pendiente. |
 | Adaptador ERP / ACL | `erp-worker` + `erp` como composición inicial | La vista C2 muestra una frontera lógica y una opción de proceso separado; un servicio HTTP de ACL separado no está creado ni es requisito del scaffold. |
-| Publicación de maestros | Capacidad propuesta de `erp-worker` y `country-api` | El [contrato de publicación](contracts/master-data-publication.md) asigna extracción/preparación al worker en red autorizada y autoridad de versiones a país; no existe un publicador productivo acreditado ni una séptima app. |
+| Publicación de maestros | Capacidad propuesta de `erp-worker` y `country-api` | El [contrato de publicación](contracts/master-data-publication.md) asigna extracción/preparación al worker en red autorizada y autoridad de versiones a país; no existe un publicador productivo acreditado ni una aplicación adicional. |
 | PostgreSQL de sucursal y país | Persistencia futura de los módulos y sus migraciones | Un almacén C4 no es una carpeta `apps/`; las conexiones y esquemas no están implementados. |
-| Puente de periféricos | Adaptador nativo condicional, coordinado por `devices` | El SDK y la homologación determinan si necesita proceso/proyecto propio. |
+| `device-agent` | `apps/device-agent`, C#/.NET Windows; SQLite técnico | Aplicación acordada, sin implementar. Obtiene trabajo y reporta evidencia por HTTPS LAN a `branch-api`; adaptadores sujetos a homologación. |
 
 Las vistas [C4](c4-arquitectura-propuesta.md) representan responsabilidades y topología objetivo. El árbol muestra proyectos de código y su estado; no debe interpretarse como un inventario de servicios desplegados.
 

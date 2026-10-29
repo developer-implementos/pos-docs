@@ -9,6 +9,7 @@ flowchart TB
     masters["Fuentes de maestros y precios<br/>«Sistema externo»<br/>Interfaces por confirmar<br/>Publica datos y reglas autorizados."]:::external
     payments["Proveedor de pagos<br/>«Sistema externo»<br/>API / SDK según proveedor<br/>Ej.: Transbank POS · Niubiz · Mercado Pago Point."]:::external
     fiscal["Proveedor de facturación<br/>«Sistema externo»<br/>Contrato por país y modalidad<br/>Ej.: Acepta / Ingydev (CL) · EFACT (PE)."]:::external
+    peripherals["Periféricos físicos<br/>«Hardware externo»<br/>Driver / SDK homologado<br/>Impresoras, lectores y otros dispositivos."]:::external
     legend["Leyenda · notación C4<br/>Azul: POS · Violeta: datos<br/>Gris: externo · Ámbar: infraestructura<br/>Borde: sistema, proceso o nodo indicado<br/>Flecha: iniciador, propósito y protocolo<br/>Opcional / por asignar: condición explícita<br/>Contenedor no equivale a Docker"]:::key
     cashier -->|"Opera ventas y turnos · interfaz de caja"| pos
     supervisor -->|"Autoriza y revisa · interfaz de operación"| pos
@@ -17,6 +18,7 @@ flowchart TB
     pos -->|"Integra y concilia documentos · adaptador por país"| erp
     pos -->|"Solicita pago y consulta resultado · API/SDK por validar"| payments
     pos -->|"Solicita emisión/transmisión · contrato fiscal por validar"| fiscal
+    pos -->|"Opera capacidades autorizadas · driver/SDK homologado"| peripherals
     classDef pos fill:#EDF3FF,stroke:#0545BA,color:#25364D,stroke-width:2px
     classDef store fill:#F2EFFF,stroke:#6551A8,color:#25364D,stroke-width:2px
     classDef external fill:#F4F6F8,stroke:#6B788A,color:#25364D

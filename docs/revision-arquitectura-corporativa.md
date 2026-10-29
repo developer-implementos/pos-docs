@@ -75,41 +75,45 @@ La base central propuesta es un **registro operativo de integración**: inbox, i
 | MPOS SQL | Investigar productor, bajas, lotes y consumidores; encapsular el tramo heredado | Retirar solo cuando un publicador validado entregue todas sus capacidades y los consumidores hayan migrado. |
 | MongoDB para NC y otros consumidores | Evaluar persistencia relacional para capacidades migradas, conservando autoridad transaccional de reserva/consumo/liberación separada de proyecciones de lectura | Inventario de colecciones y consumidores: también aparecen directorio de sucursales y usuarios. Conciliar saldos, propietarios, índices e históricos. No basta con copiar documentos a JSONB; migrar NC no retira automáticamente todo Mongo. |
 | Redis o broker | Agregar únicamente por una necesidad probada | La identidad financiera y los estados recuperables no deben depender solo de una entrada transitoria de caché/cola. |
-| Persistencia por terminal | Solo para perfil ampliado aprobado | Añade administración, conflictos y recuperación por dispositivo. SQLite no debe incorporarse simplemente para uniformar la palabra «offline». |
+| Persistencia de negocio por terminal | Solo para perfil ampliado aprobado | Añade administración, conflictos y recuperación por dispositivo. El diario técnico SQLite de `device-agent` guarda recepción, intentos y evidencia; no habilita un segundo escritor de ventas ni autonomía comercial sin sucursal. |
 
 **Menos motores no significa una sola base física.** Offline necesita copias locales; límites de fallo y país pueden necesitar instancias separadas del mismo motor. Una base por módulo tampoco es obligatoria: el monolito modular puede compartir transacción local con tablas/schemas de propietario único. La simplificación se mide en despliegues operables, respaldos, restore y acoplamiento, no únicamente en contar cilindros en un diagrama.
 
 ## 6. Arquitectura preferente: perfil WAN con sucursal autónoma
 
-Este diagrama reemplaza como vista principal el perfil por terminal del borrador inicial. La topología ampliada sigue disponible cuando se apruebe ese requisito. Los componentes de pagos/fiscalidad aplican solo capacidades autorizadas y homologadas.
+La topología preferente conserva la autoridad transaccional en sucursal. El perfil ampliado por terminal exige una decisión y garantías adicionales. Los componentes de pagos/fiscalidad aplican solo capacidades autorizadas y homologadas. El [agente de periféricos](decisions/device-agent.md) ejecuta trabajos autorizados con independencia de las ventanas cliente.
 
 ```mermaid
 flowchart TB
   subgraph Tienda["Sucursal · una autoridad transaccional"]
-    UI["Puestos de caja\nAngular + Tauri; homologación pendiente"]
-    Local["Núcleo modular local\nventas, caja, precios y ofertas"]
+    UI["pos-desktop · Angular + Tauri"]
+    Mobile["pos-mobile · Angular + Capacitor"]
+    Local["branch-api · NestJS/Fastify\nnegocio y trabajos de devices"]
     DB[("PostgreSQL local\nnegocio + outbox en un commit")]
-    Pub["Publicador y descarga de maestros\nlotes, acuses y recuperación"]
-    Dispositivos["Agentes/adaptadores locales\nhacia impresora y proveedores homologados"]
-    UI --> Local
-    Local --> DB
-    Local --> Dispositivos
-    DB <--> Pub
+    Pub["branch-sync-worker · TypeScript/Node.js\nlotes, acuses y recuperación"]
+    Agent["device-agent · C#/.NET · Windows\nadaptadores homologados"]
+    Journal[("SQLite técnico\nrecepción, intentos y evidencia")]
+    Dispositivos["Periféricos físicos\nimpresora, Zebra, cheque/MICR"]
+    UI -->|"HTTPS LAN: solicitar y consultar"| Local
+    Mobile -->|"HTTPS LAN: solicitar y consultar"| Local
+    Local -->|"PostgreSQL: operación, auditoría y trabajos"| DB
+    Agent -->|"HTTPS LAN: obtener trabajos y reportar"| Local
+    Agent -->|"SQLite: registrar y recuperar intentos"| Journal
+    Agent -->|"Driver / SDK: ejecutar capacidad"| Dispositivos
+    Pub -->|"PostgreSQL: entrega y activación de versiones"| DB
   end
   subgraph Pais["Plataforma por país / entidad legal"]
-    Ingreso["API de sincronización\nHTTPS autenticado"]
+    Ingreso["country-api · NestJS/Fastify\nrecepción durable y publicación"]
     Registro[("PostgreSQL operativo\ninbox, estados, intentos y outbox")]
-    Workers["Workers por capacidad / destino\ncola durable; broker opcional"]
-    ACL["Puertos y ACL ERP\nmapeos y consulta de resultado"]
-    Maestros["Publicación de paquetes\nversiones, vigencia y firma"]
-    Ingreso --> Registro
-    Registro <--> Workers
-    Workers --> ACL
-    Maestros --> Ingreso
+    Ingreso -->|"PostgreSQL: confirmar recepción y publicaciones"| Registro
   end
-  Pub <-->|"Internet disponible; reentregas permitidas"| Ingreso
-  ACL --> Legacy["Adaptador AX y legado delimitado\nWSO2 si todavía aporta capacidades"]
-  ACL --> Otros["Gira / custom / ERP futuro\ndestino persistido por operación"]
+  subgraph RedERP["Red autorizada del ERP"]
+    ERPWorker["erp-worker · NestJS/Node.js\nfachada, ACL y preparación de maestros"]
+    Legacy["Dynamics AX / Gira / custom\ninterfaz por homologar por país"]
+    ERPWorker -->|"Contrato del proveedor: integrar y consultar"| Legacy
+  end
+  Pub -->|"HTTPS WAN: entregar, descargar y confirmar"| Ingreso
+  ERPWorker -->|"HTTPS: solicitar trabajo, reportar y cargar paquetes"| Ingreso
   Gobierno["Control de flota, versiones y configuración\nno requerido para cada venta autorizada"] -.-> Local
   Registro -.-> Analitica["Analítica asíncrona\nsin consultas SQL a cada tienda"]
 ```

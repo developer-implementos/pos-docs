@@ -106,6 +106,7 @@ La organización acordada agrupa lo transversal en `libs/shared/` y los contexto
 apps/
   pos-desktop/                  # Aplicación completa: shell Tauri + frontend Angular
   pos-mobile/                   # Aplicación completa: shell Capacitor + frontend Angular
+  device-agent/                 # Agente C#/.NET Windows de periféricos; implementación pendiente
   branch-api/                   # API y composición de negocio de sucursal
   branch-sync-worker/           # Proceso de entrega y recepción de sucursal
   country-api/                  # API de recepción y capacidades de país

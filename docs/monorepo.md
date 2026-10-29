@@ -16,13 +16,14 @@ La [guía de API](api.md#configuración) detalla los artefactos, prefijos de ent
 
 El código transversal se agrupa en `libs/shared/` y los contextos de negocio en `libs/backend/`. Core es una referencia de organización y convenciones; POS Platform es independiente y no consume su código, paquetes ni servicios.
 
-La estructura define seis aplicaciones operativas y el proyecto de pruebas `pos-clients-e2e`, sin artefacto de despliegue. La documentación se publica desde POS Docs. El [estado de implementación](#estado-de-implementación) indica el alcance disponible.
+La estructura define siete aplicaciones objetivo y el proyecto de pruebas `pos-clients-e2e`, sin artefacto de despliegue. La documentación se publica desde POS Docs. El [estado de implementación](#estado-de-implementación) indica el alcance disponible.
 
 <!-- monorepo:target:start -->
 ```text
 apps/
   pos-desktop/                  # Aplicación completa: shell Tauri + frontend Angular
   pos-mobile/                   # Aplicación completa: shell Capacitor + frontend Angular
+  device-agent/                 # Agente C#/.NET Windows de periféricos; implementación pendiente
   branch-api/                   # API y composición de negocio de sucursal
   branch-sync-worker/           # Proceso de entrega y recepción de sucursal
   country-api/                  # API de recepción y capacidades de país
@@ -75,7 +76,7 @@ Las carpetas internas de `shared/backend` representan responsabilidades; la sepa
 
 ## Estado de implementación
 
-Los clientes funcionan con adaptadores mock. El backend dispone de arranque, configuración, observabilidad y sondas; los contextos comerciales y workers son scaffolds sin operación real. La organización completa de `libs/shared/` y el proyecto `pos-clients-e2e` están pendientes.
+La revisión del producto contiene seis aplicaciones; `apps/device-agent` está acordada y pendiente de implementación. Los clientes funcionan con adaptadores mock. El backend dispone de arranque, configuración, observabilidad y sondas; los contextos comerciales y workers son scaffolds sin operación real. La organización completa de `libs/shared/` y el proyecto `pos-clients-e2e` están pendientes.
 
 La [guía de API](api.md), la [guía de pruebas](testing.md) y la [evidencia del producto](product-repository.md) describen las rutas y comandos disponibles en la revisión verificada. El árbol objetivo no acredita nuevos imports ni capacidades ya implementadas.
 
@@ -137,13 +138,14 @@ Una suite `pos-system-e2e` requerirá un recorrido real sucursal–persistencia�
 | --- | --- | --- | --- |
 | `pos-desktop` | Puesto Windows | Aplicación completa: shell nativa Tauri y frontend Angular | Frontend con adaptadores mock; integración nativa real pendiente |
 | `pos-mobile` | Dispositivo Android/iOS | Aplicación completa: shell nativa Capacitor y frontend Angular | Frontend con adaptadores mock; ejecución y distribución nativas por verificar |
+| `device-agent` | Equipo Windows con acceso al periférico | Agente C#/.NET autónomo; trabajos y evidencia por HTTPS con branch-api; diario técnico SQLite | Decisión acordada; app, protocolo y adaptadores pendientes de implementación y homologación |
 | `branch-api` | Sucursal | API y composición de negocio de sucursal | Base HTTP local; sin persistencia ni operaciones comerciales |
 | `branch-sync-worker` | Sucursal | Proceso de entrega y recepción de sucursal | Esqueleto local; sin jobs ni sincronización real |
 | `country-api` | País | API de recepción y capacidades de país | Base HTTP local; sin recepción de ventas ni consolidación |
 | `erp-worker` | Red autorizada del ERP | Proceso de integración, traducción y conciliación ERP | Esqueleto local; sin conexión a ERP |
 <!-- monorepo:applications:end -->
 
-Los workers tienen ciclo de vida propio. No se añade un listener HTTP de negocio solo para ejecutar tareas. Un futuro backoffice separado o un worker adicional de país requiere una necesidad concreta; no forma parte de estas seis aplicaciones operativas. Starlight se compila desde el repositorio editorial POS Docs y no integra el grafo Nx del producto.
+Los workers tienen ciclo de vida propio. No se añade un listener HTTP de negocio solo para ejecutar tareas. Un futuro backoffice separado o un worker adicional de país requiere una necesidad concreta; no forma parte de estas siete aplicaciones objetivo. Starlight se compila desde el repositorio editorial POS Docs y no integra el grafo Nx del producto.
 
 ## Comandos del workspace
 
@@ -299,3 +301,7 @@ git clone https://github.com/developer-implementos/pos-platform.git
 ```
 
 Las claves de almacenamiento de la demostración son `corporate-pos:demo:v1` y `corporate-pos:auth:v1`. El identificador Tauri `com.floxcristian.corporatepos` determina la identidad instalada y el directorio de datos del WebView. Son identificadores técnicos persistentes; cualquier cambio requiere comprobar la compatibilidad de datos y la actualización del instalador en Windows.
+
+## Aplicación nativa de periféricos
+
+`apps/device-agent` compone el host C#/.NET Windows, su diario técnico SQLite y adaptadores privados de impresión/MICR. `libs/backend/devices` coordina autorización, trabajos y auditoría en `branch-api`; sus contratos de red se validan con esquemas y fixtures comunes a TypeScript y C#. Los sobres técnicos reutilizables corresponden a `shared/contracts`, sin mover los contratos de negocio fuera de su contexto. Nx orquesta build/test/package .NET en Windows; ESLint y las utilidades Pino de Node no se importan en C#. La telemetría conserva los mismos identificadores y restricciones de datos mediante herramientas propias del runtime. Tecnología, instalación y recuperación se definen en [ADR-17](decisions/device-agent.md).

@@ -72,7 +72,7 @@ Actualmente ambos clientes utilizan datos sintéticos y adaptadores mock. La aut
 | Empaquetado Tauri o compilación móvil | Generación del artefacto en la plataforma usada | Firma, distribución, instalación, operación y recuperación sobre equipos reales |
 | Homologación | Comportamiento observado para el dispositivo, versión y proveedor probados | Plataformas o capacidades fuera de ese alcance |
 
-Las guías de [escritorio](../desktop.md) y [móvil](../mobile.md) mantienen los comandos y prerrequisitos, sin duplicarlos aquí. El [catálogo del monorepo](../monorepo.md) registra seis aplicaciones operativas. La guía Starlight se mantiene por separado en el repositorio editorial [POS Docs](https://github.com/developer-implementos/pos-docs).
+Las guías de [escritorio](../desktop.md) y [móvil](../mobile.md) mantienen los comandos y prerrequisitos, sin duplicarlos aquí. El [catálogo del monorepo](../monorepo.md) registra siete aplicaciones objetivo. La guía Starlight se mantiene por separado en el repositorio editorial [POS Docs](https://github.com/developer-implementos/pos-docs).
 
 <span id="consecuencias-y-alternativas"></span>
 
@@ -81,3 +81,7 @@ Las guías de [escritorio](../desktop.md) y [móvil](../mobile.md) mantienen los
 Esta separación permite evolucionar permisos, integración nativa, empaquetado y distribución por plataforma, conservando una sola implementación de las pantallas compartidas. Exige verificar los dos builds y probar los hosts de manera independiente; el resultado de Windows no certifica Android o iOS.
 
 La composición Angular compartida centraliza las pantallas y permite mantener reglas de interfaz, accesibilidad y experiencia comunes. Cada shell nativa conserva sus permisos, integración con la plataforma y ciclo de entrega.
+
+## Periféricos compartidos
+
+`device-agent` es una aplicación C#/.NET Windows autónoma, separada de ambas shells. Escritorio y móvil solicitan/consultan trabajos autorizados en `branch-api`; el agente obtiene trabajo y reporta evidencia directamente por HTTPS LAN. Cerrar una ventana no pierde su diario técnico SQLite. El [ADR-17](device-agent.md) define el recorrido y la homologación. Una capacidad conectada directamente al móvil requiere plugin Capacitor y SDK específicos; no se acredita por disponer del agente Windows.

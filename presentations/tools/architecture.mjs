@@ -5,8 +5,11 @@ import { projectArchitecture } from '../../tools/architecture/views.mjs';
 const nodes = new Map(architecture.nodes.map(node => [node.id, node]));
 const edges = new Map(architecture.edges.map(edge => [edge.id, edge]));
 export const containerOverview = projectArchitecture(architecture,
-  ['desktop', 'mobile', 'branch-api', 'branch-db', 'branch-sync', 'country-api', 'country-db', 'erp-worker'],
-  { id: 'presentation-containers', edgeIds: ['desktop-api', 'mobile-api', 'commit-local', 'sync-local', 'sync-country', 'accept-country', 'claim-report'] });
+  ['desktop', 'mobile', 'bridge', 'branch-api', 'branch-db', 'branch-sync', 'country-api', 'country-db', 'erp-worker'],
+  { id: 'presentation-containers', edgeIds: ['desktop-api', 'mobile-api', 'device-command', 'commit-local', 'sync-local', 'sync-country', 'accept-country', 'claim-report'] });
+export const deviceOverview = projectArchitecture(architecture,
+  ['desktop', 'mobile', 'branch-api', 'branch-db', 'bridge', 'device-journal', 'devices'],
+  { id: 'presentation-devices', edgeIds: ['desktop-api', 'mobile-api', 'device-jobs-local', 'device-command', 'bridge-evidence', 'agent-journal', 'hardware-command'] });
 const blue = '#0545BA', ink = '#24334B', pale = '#EFF4FF', green = '#007B6D';
 const box = (left, top, width, height) => ({ left, top, width, height });
 const shape = (left, top, width, height, fill = pale) => ({ type: 'shape', geometry: 'rect', position: box(left, top, width, height), fill, line: { fill, width: 0 } });
@@ -17,11 +20,11 @@ function line(x1, y1, x2, y2, arrow = true) {
   const reverse = x2 < x1 || y2 < y1;
   return { type: 'connector', geometry: 'connector', position: box(Math.min(x1, x2), Math.min(y1, y2), Math.abs(x2 - x1), Math.abs(y2 - y1)), line: { fill: green, width: 2 }, ...(arrow ? { [reverse ? 'head' : 'tail']: triangle } : {}) };
 }
-function node(id, x, y, width, height, description) {
+function node(id, x, y, width, height, description, title) {
   const source = nodes.get(id);
   assert.ok(source, `Unknown canonical architecture node: ${id}`);
   return [shape(x, y, width, height), shape(x, y, width, 38, source.kind === 'data' ? green : blue),
-    text(source.kind === 'data' ? source.title.replace(/ de (?:sucursal|país)$/u, '') : source.title, x + 12, y + 7, width - 24, 28, 'title', '#FFFFFF'),
+    text(title || (source.kind === 'data' ? source.title.replace(/ de (?:sucursal|país)$/u, '') : source.title), x + 12, y + 7, width - 24, 28, 'title', '#FFFFFF'),
     text(description, x + 12, y + 48, width - 24, height - 52)];
 }
 function connection(id, route, label, labelBox) {
@@ -35,14 +38,15 @@ export function architectureSlide(slide) {
   const chrome = slide.elements.filter(element => element.position.top < 220 || element.position.top >= 630);
   let body;
   if (slide.architectureView === 'containers') {
-    const apps = ['desktop', 'mobile', 'branch-api', 'branch-sync', 'country-api', 'erp-worker'];
-    assert.ok(apps.every(id => nodes.get(id)?.kind === 'app'), 'C2 shows the six canonical applications');
-    assert.equal(containerOverview.edges.length, 7, 'Every connection must project to the applications and stores shown');
+    const apps = ['desktop', 'mobile', 'bridge', 'branch-api', 'branch-sync', 'country-api', 'erp-worker'];
+    assert.ok(apps.every(id => nodes.get(id)?.kind === 'app'), 'C2 shows the seven canonical applications');
+    assert.equal(containerOverview.edges.length, 8, 'Every connection must project to the applications and stores shown');
     body = [
-      text('Apps cliente', 64, 224, 220, 32, 'group', blue), text('Sucursal', 352, 224, 270, 32, 'group', blue),
+      text('Puesto / clientes', 64, 224, 258, 32, 'group', blue), text('Sucursal', 352, 224, 270, 32, 'group', blue),
       text('País', 686, 224, 240, 32, 'group', blue), text('Red autorizada', 996, 224, 220, 32, 'group', blue),
-      ...node('desktop', 64, 280, 212, 98, 'Shell Tauri\nFrontend Angular'),
-      ...node('mobile', 64, 420, 212, 98, 'Shell Capacitor\nFrontend Angular'),
+      ...node('desktop', 64, 270, 212, 98, 'Shell Tauri\nFrontend Angular'),
+      ...node('mobile', 64, 390, 212, 98, 'Shell Capacitor\nFrontend Angular'),
+      ...node('bridge', 64, 510, 212, 98, '.NET / Windows\nPeriféricos'),
       ...node('branch-api', 352, 280, 262, 94, 'Reglas y permisos'),
       ...node('branch-db', 352, 420, 262, 94, 'Negocio + outbox'),
       ...node('branch-sync', 352, 550, 262, 74, 'Intercambio durable'),
@@ -50,14 +54,36 @@ export function architectureSlide(slide) {
       ...node('country-db', 686, 500, 238, 94, 'Inbox, trabajo y versiones'),
       ...node('erp-worker', 996, 280, 220, 118, 'ERP y fuentes\nautorizadas'),
       ...connection('desktop-api', [[276, 326], [352, 326]], 'HTTPS', [282, 300, 68, 22]),
-      ...connection('mobile-api', [[276, 466], [314, 466], [314, 354], [352, 354]], '', []),
+      ...connection('mobile-api', [[276, 440], [314, 440], [314, 344], [352, 344]], '', []),
+      ...connection('device-command', [[276, 560], [334, 560], [334, 362], [352, 362]], 'HTTPS', [278, 572, 68, 22]),
       ...connection('commit-local', [[483, 374], [483, 420]], 'PostgreSQL', [494, 388, 114, 22]),
       ...connection('sync-local', [[483, 550], [483, 514]], 'PostgreSQL', [494, 520, 114, 22]),
-      ...connection('sync-country', [[614, 588], [652, 588], [652, 348], [686, 348]], 'HTTPS', [620, 412, 64, 22]),
+      ...connection('sync-country', [[614, 588], [652, 588], [652, 348], [686, 348]], 'HTTPS', [660, 412, 64, 22]),
       ...connection('accept-country', [[805, 374], [805, 500]], 'PostgreSQL', [818, 430, 106, 22]),
       ...connection('claim-report', [[996, 326], [924, 326]], 'HTTPS', [930, 300, 64, 22]),
       text('Inicia conexiones\na país; sin SQL WAN.', 996, 430, 220, 60),
-      text('Tauri y Capacitor: shells nativas.\nCada app tiene arranque propio.', 64, 566, 258, 60, 'label'),
+    ];
+  } else if (slide.architectureView === 'devices') {
+    body = [
+      text('Clientes', 64, 224, 220, 32, 'group', blue), text('Servidor de sucursal', 352, 224, 310, 32, 'group', blue),
+      text('Equipo con hardware', 754, 224, 360, 32, 'group', blue),
+      ...node('desktop', 64, 280, 212, 98, 'Tauri + Angular'),
+      ...node('mobile', 64, 430, 212, 98, 'Capacitor + Angular'),
+      ...node('branch-api', 352, 280, 262, 118, 'NestJS · devices\nAutoriza y coordina'),
+      ...node('branch-db', 352, 478, 262, 98, 'Trabajos y auditoría'),
+      ...node('bridge', 754, 280, 232, 118, '.NET / C# · Windows\nEjecuta y recupera'),
+      ...node('device-journal', 754, 478, 248, 98, 'Intentos y evidencia\nSin autoridad de ventas', 'SQLite'),
+      ...node('devices', 1060, 280, 156, 118, 'Impresión\nLectura MICR', 'Periféricos'),
+      ...connection('desktop-api', [[276, 326], [352, 326]], 'HTTPS', [282, 300, 68, 22]),
+      ...connection('mobile-api', [[276, 476], [314, 476], [314, 364], [352, 364]], 'HTTPS', [280, 490, 68, 22]),
+      ...connection('device-command', [[754, 328], [614, 328]], 'Obtener trabajo', [624, 300, 128, 24]),
+      ...connection('bridge-evidence', [[754, 372], [614, 372]], 'Reportar estado', [624, 348, 128, 24]),
+      text('HTTPS / LAN\niniciado por agente', 624, 402, 128, 64, 'label'),
+      ...connection('agent-journal', [[870, 398], [870, 478]], 'SQLite', [882, 430, 96, 24]),
+      ...connection('hardware-command', [[986, 338], [1060, 338]], 'Driver /\nSDK', [992, 292, 68, 44]),
+      ...connection('device-jobs-local', [[483, 398], [483, 478]], 'PostgreSQL', [495, 430, 120, 24]),
+      text('Solicitud y resultado\npor branch-api.\nSin acceso SQL.', 64, 558, 230, 66, 'label'),
+      text('Mismo jobId · un dueño por equipo físico · enviado al spooler ≠ papel impreso.', 352, 594, 864, 32, 'label'),
     ];
   } else if (slide.architectureView === 'erp-topology') {
     body = [

@@ -1,45 +1,58 @@
 {
   "schemaVersion": 1,
   "product": "POS Platform",
-  "reviewedOn": "2026-10-21",
+  "reviewedOn": "2026-10-29",
   "repository": "https://github.com/developer-implementos/pos-platform",
-  "evidence": "Seis aplicaciones de POS Platform: aplicaciones cliente completas de escritorio y móvil, con shells nativas Tauri y Capacitor (Android/iOS) y composición Angular compartida, y cuatro entradas backend. La documentación Starlight se mantiene en developer-implementos/pos-docs. El estado distingue adaptadores mock, base técnica y scaffolding; no acredita operación productiva, periféricos homologados ni validación funcional en dispositivos físicos.",
+  "evidence": "Siete aplicaciones en la arquitectura objetivo. La revisión del producto acredita seis proyectos: dos clientes con shells Tauri/Capacitor y frontend Angular compartido, y cuatro entradas backend con base técnica. device-agent es una aplicación C#/.NET para Windows acordada, todavía sin proyecto ni adaptadores implementados. Starlight pertenece a POS Docs. Ningún scaffold acredita operación productiva ni homologación de hardware.",
   "applications": [
     {
       "name": "pos-desktop",
       "location": "Puesto Windows",
       "description": "Aplicación completa: shell nativa Tauri y frontend Angular",
-      "state": "Frontend con adaptadores mock; integración nativa real pendiente"
+      "state": "Frontend con adaptadores mock; integración nativa real pendiente",
+      "inReviewedWorkspace": true
     },
     {
       "name": "pos-mobile",
       "location": "Dispositivo Android/iOS",
       "description": "Aplicación completa: shell nativa Capacitor y frontend Angular",
-      "state": "Frontend con adaptadores mock; ejecución y distribución nativas por verificar"
+      "state": "Frontend con adaptadores mock; ejecución y distribución nativas por verificar",
+      "inReviewedWorkspace": true
+    },
+    {
+      "name": "device-agent",
+      "location": "Equipo Windows con acceso al periférico",
+      "description": "Agente C#/.NET autónomo; trabajos y evidencia por HTTPS con branch-api; diario técnico SQLite",
+      "state": "Decisión acordada; app, protocolo y adaptadores pendientes de implementación y homologación",
+      "inReviewedWorkspace": false
     },
     {
       "name": "branch-api",
       "location": "Sucursal",
       "description": "API y composición de negocio de sucursal",
-      "state": "Base HTTP local; sin persistencia ni operaciones comerciales"
+      "state": "Base HTTP local; sin persistencia ni operaciones comerciales",
+      "inReviewedWorkspace": true
     },
     {
       "name": "branch-sync-worker",
       "location": "Sucursal",
       "description": "Proceso de entrega y recepción de sucursal",
-      "state": "Esqueleto local; sin jobs ni sincronización real"
+      "state": "Esqueleto local; sin jobs ni sincronización real",
+      "inReviewedWorkspace": true
     },
     {
       "name": "country-api",
       "location": "País",
       "description": "API de recepción y capacidades de país",
-      "state": "Base HTTP local; sin recepción de ventas ni consolidación"
+      "state": "Base HTTP local; sin recepción de ventas ni consolidación",
+      "inReviewedWorkspace": true
     },
     {
       "name": "erp-worker",
       "location": "Red autorizada del ERP",
       "description": "Proceso de integración, traducción y conciliación ERP",
-      "state": "Esqueleto local; sin conexión a ERP"
+      "state": "Esqueleto local; sin conexión a ERP",
+      "inReviewedWorkspace": true
     }
   ],
   "libraries": [
@@ -156,13 +169,11 @@
   ],
   "future": [
     "Un backoffice independiente requiere justificar su separación; la administración compartida se compone desde client-shell.",
-    "El publicador central de maestros y precios requiere composición y proceso propios por decidir; no existe una app country-workers en este scaffolding.",
-    "El puente nativo de periféricos depende del SDK homologado; no se crea un proyecto adicional sin esa decisión.",
     "pos-system-e2e y pos-desktop-e2e se incorporarán con recorridos reales entre procesos o capacidades nativas; no se crean carpetas vacías."
   ],
   "documentationApplications": [],
   "targetStructure": {
-    "decidedOn": "2026-10-21",
+    "decidedOn": "2026-10-29",
     "status": "Estructura objetivo acordada; consultar la evidencia del producto para el alcance implementado.",
     "coreRelationship": "Core es únicamente referencia de organización y convenciones; no es dependencia, proveedor de paquetes ni servicio del POS.",
     "entries": [
@@ -175,6 +186,11 @@
         "path": "apps/pos-mobile",
         "description": "Aplicación completa: shell Capacitor + frontend Angular",
         "state": "conservado"
+      },
+      {
+        "path": "apps/device-agent",
+        "description": "Agente C#/.NET Windows de periféricos; implementación pendiente",
+        "state": "por incorporar"
       },
       {
         "path": "apps/branch-api",

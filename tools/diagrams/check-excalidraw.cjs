@@ -20,6 +20,16 @@ function validateModelSemantics(){
   assert.equal(node.projectPath,`apps/${node.appId}`,`Application path must identify its project: ${node.id}`);
   assert.ok(containers.nodeIds.includes(node.id),`Application absent from C2: ${node.appId}`);
  }
+ const device=model.nodes.device;
+ assert.equal(device.appId,'device-agent','The device host must identify its target application');
+ assert.equal(device.inReviewedWorkspace,false,'The proposed device agent must not be reported as an existing scaffold');
+ assert.equal(model.nodes.deviceJournal.technology,'SQLite','The technical journal must remain separate from business PostgreSQL');
+ assert.ok(containers.relationships.some(edge=>edge.from==='device'&&edge.to==='branchApi'&&edge.label.includes('HTTPS/LAN saliente')),'Device agent must initiate the authenticated LAN connection');
+ assert.ok(containers.relationships.some(edge=>edge.from==='device'&&edge.to==='deviceJournal'),'Device agent must own its technical journal');
+ for(const view of model.views){
+  assert.ok(!view.relationships.some(edge=>['client','mobileClient'].includes(edge.from)&&edge.to==='device'),`Clients must not relay hardware commands in ${view.id}`);
+  assert.ok(!view.relationships.some(edge=>edge.from==='device'&&['branchDb','countryDb'].includes(edge.to)),`Device agent must not access business PostgreSQL in ${view.id}`);
+ }
  const country=model.views.find(view=>view.id==='country'),erp=model.views.find(view=>view.id==='erp');
  assert.ok(country.boundaries[0].nodes.includes('countryWorker'),'Publication authority must be a country-api component');
  assert.ok(erp.boundaries[0].nodes.includes('erpMasterSource'),'Master-data preparation must be an erp-worker component');

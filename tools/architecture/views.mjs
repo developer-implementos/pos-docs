@@ -10,10 +10,10 @@ export function projectArchitecture(model, nodeIds, { id = 'projection', title =
   return { ...model, id, title, compact, groups: model.groups.filter(group => nodes.some(node => node.group === group.id)), nodes, edges };
 }
 
-const baseNodes = architecture.nodes.filter(node => node.kind === 'app' || (node.kind === 'data' && node.status === 'proposed') || node.kind === 'external' && node.id !== 'devices').map(node => node.id);
-const baseEdges = ['desktop-api', 'mobile-api', 'commit-local', 'sync-local', 'sync-country', 'accept-country', 'claim-report', 'send-erp', 'fetch-source', 'payment-api', 'fiscal-api'];
+const baseNodes = architecture.nodes.filter(node => node.kind === 'app' || (node.kind === 'data' && node.status === 'proposed') || node.kind === 'external').map(node => node.id);
+const baseEdges = ['desktop-api', 'mobile-api', 'commit-local', 'sync-local', 'sync-country', 'accept-country', 'claim-report', 'send-erp', 'fetch-source', 'payment-api', 'fiscal-api', 'device-command', 'device-jobs-local', 'bridge-evidence', 'agent-journal', 'hardware-command'];
 export const architectureViews = [
-  { id: 'base', title: 'Arquitectura base', description: 'Las seis aplicaciones, sus datos e interfaces externas. Selecciona una zona para ampliar sus componentes.', model: projectArchitecture(architecture, baseNodes, { id: 'base', title: 'POS Platform · arquitectura base', edgeIds: baseEdges }) },
+  { id: 'base', title: 'Arquitectura base', description: 'Siete aplicaciones propuestas, sus datos e interfaces externas. Seis tienen base o scaffolding; device-agent está por implementar. Selecciona una zona para ampliar sus componentes.', model: projectArchitecture(architecture, baseNodes, { id: 'base', title: 'POS Platform · arquitectura base', edgeIds: baseEdges }) },
   ...architecture.groups.map(group => {
     const local = architecture.nodes.filter(node => node.group === group.id).map(node => node.id);
     const related = architecture.edges.filter(edge => local.includes(edge.from) || local.includes(edge.to));
@@ -38,7 +38,8 @@ export function validateArchitecture(model = architecture) {
   const fail = message => { throw new Error(message); };
   if (nodes.size !== model.nodes.length) fail('Duplicate architecture node');
   const apps = model.nodes.filter(node => node.kind === 'app').map(node => node.title).sort();
-  if (JSON.stringify(apps) !== JSON.stringify(['branch-api', 'branch-sync-worker', 'country-api', 'erp-worker', 'pos-desktop', 'pos-mobile'])) fail('The architecture must retain the six agreed applications');
+  if (JSON.stringify(apps) !== JSON.stringify(['branch-api', 'branch-sync-worker', 'country-api', 'device-agent', 'erp-worker', 'pos-desktop', 'pos-mobile'])) fail('The architecture must retain the seven agreed applications');
+  if (nodes.get('bridge')?.kind !== 'app' || nodes.get('bridge')?.status !== 'proposed') fail('Device agent must remain a proposed application');
   for (const node of model.nodes) {
     if (node.kind === 'component' && (!node.owner || nodes.get(node.owner)?.kind !== 'app')) fail(`Internal component requires an application owner: ${node.id}`);
     if (node.owner && nodes.get(node.owner)?.group !== node.group) fail(`Component crosses its process boundary: ${node.id}`);
@@ -51,11 +52,17 @@ export function validateArchitecture(model = architecture) {
     if (edge.relation === 'evaluation' && edge.status !== 'unresolved') fail(`Evaluation is not an adopted contract: ${edge.id}`);
     if (['desktop', 'mobile', 'bridge', 'erp-worker', 'master-source'].includes(edge.from) && edge.to === 'country-db') fail(`Forbidden SQL authority: ${edge.id}`);
     if (['desktop', 'mobile', 'bridge'].includes(edge.from) && edge.to === 'branch-db') fail(`Clients cannot own SQL access: ${edge.id}`);
+    if (['desktop', 'mobile'].includes(edge.from) && ['bridge', 'device-journal', 'devices'].includes(edge.to) || edge.from === 'bridge' && ['desktop', 'mobile'].includes(edge.to)) fail(`Device work cannot depend on a client relay: ${edge.id}`);
+    if (edge.to === 'device-journal' && edge.from !== 'bridge') fail(`Agent journal has a single application owner: ${edge.id}`);
   }
-  for (const [id, from, to] of [['sync-country', 'branch-sync', 'country-api'], ['claim-report', 'erp-worker', 'country-api'], ['submit-publication', 'master-source', 'country-api']]) {
+  for (const [id, from, to] of [['sync-country', 'branch-sync', 'country-api'], ['claim-report', 'erp-worker', 'country-api'], ['submit-publication', 'master-source', 'country-api'], ['device-command', 'bridge', 'branch-api'], ['bridge-evidence', 'bridge', 'branch-api']]) {
     const edge = model.edges.find(edge => edge.id === id);
     if (!edge || edge.from !== from || edge.to !== to || !edge.protocol.includes('HTTPS')) fail(`Outgoing HTTPS boundary changed: ${id}`);
   }
+  const journal = model.edges.find(edge => edge.id === 'agent-journal');
+  if (!journal || journal.from !== 'bridge' || journal.to !== 'device-journal' || !journal.protocol.includes('SQLite')) fail('Agent journal must retain its local SQLite contract');
+  const deviceJobs = model.edges.find(edge => edge.id === 'device-jobs-local');
+  if (!deviceJobs || deviceJobs.from !== 'branch-api' || deviceJobs.to !== 'branch-db' || !deviceJobs.protocol.includes('PostgreSQL')) fail('Device work and observations must retain their branch PostgreSQL contract');
   for (const scenario of model.scenarios) for (const step of scenario.steps) {
     for (const id of [...step.nodes, ...step.edges]) if (!ids.has(id)) fail(`Unknown scenario item: ${id}`);
     for (const id of step.edges) { const edge = model.edges.find(edge => edge.id === id); if (!step.nodes.includes(edge.from) || !step.nodes.includes(edge.to)) fail(`Scenario omits relationship endpoint: ${scenario.id}/${id}`); }

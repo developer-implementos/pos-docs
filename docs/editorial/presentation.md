@@ -1,6 +1,6 @@
 # Presentación de la propuesta
 
-La presentación de **arquitectura y roadmap de Implementos** se mantiene en `presentations/architecture/` de [**POS Docs**](https://github.com/developer-implementos/pos-docs). Abre con la portada «POS Platform» y organiza la propuesta en cinco capítulos: cada uno comienza con una portada que presenta su título y alcance, seguida de las láminas de detalle al bajar. Son 22 páginas: una portada general, cinco portadas de capítulo y 16 láminas de detalle, con notas y enlaces a las fuentes canónicas. El sitio ofrece también lectura continua, impresión y diagramas SVG ampliables.
+La presentación de **arquitectura y roadmap de Implementos** se mantiene en `presentations/architecture/` de [**POS Docs**](https://github.com/developer-implementos/pos-docs). Abre con la portada «POS Platform» y organiza la propuesta en cinco capítulos: cada uno comienza con una portada que presenta su título y alcance, seguida de las láminas de detalle al bajar. Son 23 páginas: una portada general, cinco portadas de capítulo y 17 láminas de detalle, con notas y enlaces a las fuentes canónicas. El sitio ofrece también lectura continua, impresión y diagramas SVG ampliables.
 
 <span id="pos-platform-presentación-web-interactiva"></span>
 <span id="abrir"></span>
@@ -23,7 +23,7 @@ La presentación explica la arquitectura propuesta y distingue la base implement
 <span id="arquitectura-c4-de-la-propuesta"></span>
 <span id="profundizar-sin-repetir-el-recorrido"></span>
 
-El [explorador general de arquitectura](/architecture/) complementa las láminas con un mapa de las seis aplicaciones, sus tecnologías, almacenes y conexiones. Conserva el alcance de propuesta y enlaza los [contratos y vistas C4](/guide/architecture/c4-model/).
+El [explorador general de arquitectura](/architecture/) complementa las láminas con un mapa de las siete aplicaciones, sus tecnologías, almacenes y conexiones. Conserva el alcance de propuesta y enlaza los [contratos y vistas C4](/guide/architecture/c4-model/).
 
 ## Recorrer la presentación
 
@@ -33,7 +33,7 @@ Los controles nativos de Reveal.js están abajo a la derecha: `←` y `→` reco
 
 «Recursos» reúne pantalla completa, documentación y acceso al portal; en móvil también incluye las notas.
 
-La [lectura continua](/presentations/architecture/reading.html) presenta primero «POS Platform» y agrupa las 16 láminas de detalle bajo los cinco títulos de capítulo, sin depender de la navegación JavaScript. La [vista de impresión](/presentations/architecture/?print-pdf) prepara las 22 páginas, incluidas la portada general y las de capítulo, para imprimir en Chrome/Chromium con fondos y sin márgenes.
+La [lectura continua](/presentations/architecture/reading.html) presenta primero «POS Platform» y agrupa las 17 láminas de detalle bajo los cinco títulos de capítulo, sin depender de la navegación JavaScript. La [vista de impresión](/presentations/architecture/?print-pdf) prepara las 23 páginas, incluidas la portada general y las de capítulo, para imprimir en Chrome/Chromium con fondos y sin márgenes.
 
 <span id="decisiones-de-diseño"></span>
 

@@ -104,7 +104,7 @@
     "summary": "Opera sucursales e integra cada país.",
     "ownership": "La venta nace en sucursal; país mantiene la proyección consolidada.",
     "offline": "Perfil inicial: WAN caída con LAN y escritor de sucursal disponibles.",
-    "detail": "Sistema objetivo común para Chile, Perú y España. Aplicaciones completas con frontend Angular alojado por las shells nativas Tauri (escritorio) y Capacitor (móvil), aceptadas como dirección; backend, datos y topología son recomendaciones por validar.",
+    "detail": "Sistema objetivo común para Chile, Perú y España. Aplicaciones completas con frontend Angular alojado por las shells nativas Tauri (escritorio) y Capacitor (móvil), aceptadas como dirección; backend, datos y topología son recomendaciones por validar. device-agent es la aplicación autónoma propuesta para operar periféricos desde un equipo Windows, bajo autorización del backend; su journal técnico no sustituye PostgreSQL.",
     "sources": [
       {
         "label": "Propuesta y decisiones de arquitectura",
@@ -204,7 +204,7 @@
     "summary": "Aplicación completa para caja y comandos.",
     "ownership": "No posee otra base de ventas ni credenciales SQL.",
     "offline": "Sin WAN usa la API por LAN. Sin LAN o backend, se detienen nuevos comandos dependientes.",
-    "detail": "apps/pos-desktop entrega la aplicación completa: la shell nativa Tauri aloja el frontend Angular. Tiene arranque, configuración nativa y build propios. Comparte con pos-mobile libs/client-shell: raíz, configuración, rutas, guards y layout Angular; esta biblioteca no es la shell nativa ni un proceso adicional. Hardware, SDK y distribución requieren homologación. Su registro técnico de periféricos no lo convierte en autoridad de ventas.",
+    "detail": "apps/pos-desktop entrega la aplicación completa: la shell nativa Tauri aloja el frontend Angular. Tiene arranque, configuración nativa y build propios. Comparte con pos-mobile libs/client-shell: raíz, configuración, rutas, guards y layout Angular; esta biblioteca no es la shell nativa ni un proceso adicional. Solicita capacidades de dispositivos a branch-api; no transporta trabajos a device-agent ni necesita mantenerse abierto para que éste opere. Distribución e integración nativa requieren homologación; no posee autoridad de ventas.",
     "sources": [
       {
         "label": "Opciones tecnológicas y límites",
@@ -226,7 +226,7 @@
     "summary": "Aplicación completa para Android/iOS.",
     "ownership": "Comparte interfaz y contratos; no otra autoridad de ventas.",
     "offline": "Requiere conexión autorizada al backend de sucursal. El móvil no incorpora autonomía sin LAN.",
-    "detail": "apps/pos-mobile entrega la aplicación completa: la shell nativa Capacitor aloja el frontend Angular. Tiene arranque, configuración nativa y build propios. Comparte con pos-desktop libs/client-shell: raíz, configuración, rutas, guards y layout Angular; esta biblioteca no es la shell nativa ni un proceso adicional. Los adaptadores actuales son mock. Instalación, ciclo de vida, almacenamiento y capacidades nativas requieren pruebas Android/iOS; no hay acceso SQL ni permisos implícitos por empaquetar la interfaz.",
+    "detail": "apps/pos-mobile entrega la aplicación completa: la shell nativa Capacitor aloja el frontend Angular. Tiene arranque, configuración nativa y build propios. Comparte con pos-desktop libs/client-shell: raíz, configuración, rutas, guards y layout Angular; esta biblioteca no es la shell nativa ni un proceso adicional. Los adaptadores actuales son mock. Instalación, ciclo de vida, almacenamiento y capacidades nativas requieren pruebas Android/iOS; no hay acceso SQL ni permisos implícitos por empaquetar la interfaz. Solicita impresión y capacidades autorizadas a branch-api; device-agent las ejecuta en el equipo conectado al hardware, sin depender de pos-desktop.",
     "sources": [
       {
         "label": "Opciones tecnológicas y límites",
@@ -248,7 +248,7 @@
     "summary": "Valida y confirma la operación local.",
     "ownership": "Única autoridad de escritura del negocio de sucursal; módulos internos, un proceso.",
     "offline": "Opera por LAN con datos vigentes. Su caída exige recuperación del escritor autorizado.",
-    "detail": "apps/branch-api compone los contextos operativos: sales/returns, cash/collections, pricing/catalog, payments/devices, fiscal, reporting y administration. sync aporta el contrato outbox que se confirma con negocio. El transporte pertenece a branch-sync-worker y la ACL ERP a erp-worker. Bibliotecas no equivalen a microservicios; las capacidades de negocio aún requieren implementación.",
+    "detail": "apps/branch-api compone los contextos operativos: sales/returns, cash/collections, pricing/catalog, payments/devices, fiscal, reporting y administration. sync aporta el contrato outbox que se confirma con negocio. El transporte pertenece a branch-sync-worker y la ACL ERP a erp-worker. Bibliotecas no equivalen a microservicios; las capacidades de negocio aún requieren implementación. devices autoriza y conserva trabajos, auditoría y observaciones de periféricos en PostgreSQL de sucursal. Recibe evidencia de device-agent por conexiones iniciadas por el agente; los clientes no actúan como relé. Registrar o imprimir un trabajo conserva la referencia del documento y no modifica la confirmación de la venta.",
     "sources": [
       {
         "label": "Propuesta y decisiones de arquitectura",
@@ -270,7 +270,7 @@
     "summary": "Guarda negocio, outbox y espejo local.",
     "ownership": "Base compartida por la tienda, un primario autorizado. API escribe negocio; worker escribe su esquema técnico y publica espejos por un contrato acotado.",
     "offline": "Persistencia local disponible sin WAN. No implica respaldo, alta disponibilidad ni recuperación automática.",
-    "detail": "branch-api y branch-sync-worker acceden al mismo PostgreSQL de la sucursal con responsabilidades y permisos distintos. Ventas, caja, pagos y evidencia fiscal se conservan aquí; inbox, outbox, cursores y staging tienen restricciones y transacciones según cada operación. Las llamadas de red quedan fuera de esas transacciones. Catálogo, precios y promociones son réplicas de lectura autorizadas, no maestros independientes.",
+    "detail": "branch-api y branch-sync-worker acceden al mismo PostgreSQL de la sucursal con responsabilidades y permisos distintos. Ventas, caja, pagos y evidencia fiscal se conservan aquí. devices es propietario de los trabajos autorizados, su auditoría y las observaciones de periféricos recibidas del agente; estos registros conservan identidad y referencia al documento, sin formar parte de la misma transacción de confirmación de venta. El journal SQLite privado del agente sólo registra ejecución técnica. Inbox, outbox, cursores y staging tienen restricciones y transacciones según cada operación. Las llamadas de red quedan fuera de esas transacciones. Catálogo, precios y promociones son réplicas de lectura autorizadas, no maestros independientes.",
     "sources": [
       {
         "label": "Propuesta y decisiones de arquitectura",
@@ -520,10 +520,10 @@
     "name": "Pagos y dispositivos",
     "type": "Componente",
     "technology": "libs/backend/payments + devices",
-    "summary": "Gestiona intentos y evidencia de pago.",
+    "summary": "Gestiona intentos, trabajos y evidencia.",
     "ownership": "Conserva identidad de intento y referencia del proveedor; no inventa resultado.",
     "offline": "Si el proveedor no responde: pendiente/desconocido, consulta o resolución operativa.",
-    "detail": "Payments conserva intentos y estados financieros; devices coordina capacidades y evidencia del dispositivo. No mantiene SQL abierto al esperar al proveedor. Persiste intención y resultado en momentos separados. Para SDK local, el cliente transporta al puente el comando original autorizado por backend y devuelve evidencia; no inventa importe, permiso ni otro intento.",
+    "detail": "Payments conserva intentos y estados financieros; devices autoriza trabajos por capacidad, equipo y agente, con jobId y hash del contenido, y procesa evidencia técnica. device-agent inicia HTTPS autenticado para obtener trabajos y reportar resultados; escritorio y móvil sólo solicitan la operación a branch-api. No mantiene una transacción PostgreSQL abierta al esperar al hardware o proveedor. Pagos por SDK local son una capacidad futura por homologar, independiente de la impresión; API remota y SDK no se ejecutan simultáneamente para un mismo intento.",
     "sources": [
       {
         "label": "Proveedores, periféricos y homologación",
@@ -761,14 +761,18 @@
   },
   "device": {
     "id": "device",
-    "name": "Puente de periféricos",
-    "type": "Contenedor condicional",
-    "technology": "Proceso nativo según SDK",
-    "summary": "Ejecuta capacidades del puesto.",
-    "ownership": "Ejecuta identidad y autorización emitidas por backend; registro técnico de evidencia, sin base de ventas.",
-    "offline": "Una caída de LAN tras un cobro exige recuperar evidencia; no autoriza otro cobro.",
-    "detail": "El cliente transporta el comando autorizado por backend al agente; no inventa importe, permiso ni otro intento. Puede requerir .NET u otro runtime por contrato del proveedor. Se representa como límite por homologar, no como SDK aprobado.",
+    "name": "device-agent",
+    "type": "Contenedor",
+    "technology": "C# / .NET · Windows",
+    "summary": "Ejecuta trabajos de hardware autorizados.",
+    "ownership": "Un único agente autorizado por equipo físico; branch-api conserva permisos, documentos y estado de negocio. El agente no cobra ni emite documentos por decisión propia.",
+    "offline": "Sin LAN no obtiene trabajos nuevos. Conserva evidencia del trabajo en curso para reanudar su reporte; un resultado incierto no autoriza repetir el efecto.",
+    "detail": "Aplicación objetivo apps/device-agent, aún no implementada. Servicio autónomo en el equipo Windows conectado al hardware; funciona sin pos-desktop abierto. Inicia HTTPS LAN autenticado hacia branch-api para obtener trabajos y reportar evidencia. Cada trabajo conserva jobId, hash del contenido, destino y autorización. SQLite registra deduplicación e intentos técnicos; una aceptación del spooler no acredita impresión física. SDK, drivers y hardware requieren homologación. Pagos por SDK local son una capacidad futura independiente: migrar impresión no acredita cobros.",
     "sources": [
+      {
+        "label": "Agente autónomo de dispositivos",
+        "url": "../docs/decisions/device-agent.md"
+      },
       {
         "label": "Proveedores, periféricos y homologación",
         "url": "../docs/extensibilidad-proveedores-dispositivos.md"
@@ -778,7 +782,10 @@
         "url": "../docs/opciones-tecnologicas.md"
       }
     ],
-    "conditional": true
+    "appId": "device-agent",
+    "projectPath": "apps/device-agent",
+    "appState": "Propuesta; no implementada",
+    "inReviewedWorkspace": false
   },
   "backup": {
     "id": "backup",
@@ -1219,6 +1226,38 @@
         "url": "../docs/propuesta-arquitectura.md"
       }
     ]
+  },
+  "deviceJournal": {
+    "id": "deviceJournal",
+    "name": "Journal técnico de dispositivos",
+    "type": "Contenedor de datos",
+    "technology": "SQLite",
+    "summary": "Guarda trabajos, deduplicación y evidencia.",
+    "ownership": "Privado de device-agent en su equipo. No contiene ventas, caja, precios ni autoridad financiera.",
+    "offline": "Conserva jobId, hash y estados técnicos durante cortes de LAN; al reconectar reporta con la misma identidad.",
+    "detail": "Persistencia técnica propuesta. Registra recepción durable, identidad de agente y equipo, hash del contenido, intento y evidencia del driver/spooler. Mismo jobId con distinto hash es conflicto. Guarda evidencia antes de reportarla; no interpreta spool accepted como impresión física. Restore o pérdida del journal exige reconciliar antes de repetir efectos; un lease vencido no prueba que el hardware no actuó.",
+    "sources": [
+      {
+        "label": "Agente autónomo de dispositivos",
+        "url": "../docs/decisions/device-agent.md"
+      }
+    ]
+  },
+  "peripherals": {
+    "id": "peripherals",
+    "name": "Periféricos físicos",
+    "type": "Hardware externo",
+    "technology": "Driver / SDK homologado",
+    "summary": "Impresoras, lectores y otros dispositivos.",
+    "ownership": "Un único device-agent autorizado opera cada equipo físico. La aplicación solicita capacidades a branch-api.",
+    "offline": "La capacidad depende del equipo, driver y estado físico. Un timeout puede dejar resultado incierto.",
+    "detail": "Hardware de sucursal conectado al equipo que ejecuta device-agent. La impresión conserva referencia de documento y trabajo; el spooler sólo informa recepción técnica. Reimpresión es una operación autorizada explícita. Lectores y demás capacidades requieren contratos y homologación propios. El SDK de un terminal de pago no se presume habilitado por migrar impresión.",
+    "sources": [
+      {
+        "label": "Agente autónomo de dispositivos",
+        "url": "../docs/decisions/device-agent.md"
+      }
+    ]
   }
 };
   const views = [
@@ -1238,6 +1277,7 @@
       "masters",
       "payments",
       "fiscal",
+      "peripherals",
       "legend"
     ],
     "boundaries": [],
@@ -1276,6 +1316,11 @@
         "from": "pos",
         "to": "fiscal",
         "label": "Solicita emisión/transmisión · contrato fiscal por validar"
+      },
+      {
+        "from": "pos",
+        "to": "peripherals",
+        "label": "Opera capacidades autorizadas · driver/SDK homologado"
       }
     ]
   },
@@ -1284,13 +1329,14 @@
     "key": "c4-containers",
     "level": "C2 · Contenedores",
     "title": "Aplicaciones, procesos y datos",
-    "scope": "Aplicaciones de POS Platform, persistencia de sucursal y servicios de país. Cada nombre de app corresponde al monorepo; las capacidades son propuesta por implementar.",
-    "note": "PostgreSQL conserva negocio y entrega durable. Country-api publica versiones; erp-worker prepara maestros mediante un contrato de origen y presupuesto aislados. Redis es caché opcional. Sin SQL WAN ni aplicación adicional.",
+    "scope": "Siete aplicaciones objetivo de POS Platform, sus datos y sistemas externos. Seis apps tienen base técnica o scaffold; device-agent se incorpora como propuesta, aún no implementada.",
+    "note": "Siete aplicaciones objetivo; seis tienen base técnica o scaffold. device-agent y su journal SQLite son propuesta por implementar. PostgreSQL conserva el negocio; country-api publica versiones y erp-worker prepara maestros. Redis es caché opcional.",
     "nodeIds": [
       "cashier",
       "client",
       "mobileClient",
       "device",
+      "deviceJournal",
       "branchApi",
       "branchDb",
       "syncWorker",
@@ -1302,6 +1348,7 @@
       "masters",
       "payments",
       "fiscal",
+      "peripherals",
       "legend"
     ],
     "boundaries": [
@@ -1312,6 +1359,7 @@
           "client",
           "mobileClient",
           "device",
+          "deviceJournal",
           "branchApi",
           "branchDb",
           "syncWorker",
@@ -1344,14 +1392,14 @@
         "label": "Comandos y consultas · HTTPS/LAN"
       },
       {
-        "from": "client",
-        "to": "device",
-        "label": "Comando autorizado y evidencia · IPC/loopback"
+        "from": "device",
+        "to": "branchApi",
+        "label": "Obtiene trabajos y reporta evidencia · HTTPS/LAN saliente"
       },
       {
         "from": "device",
         "to": "payments",
-        "label": "Terminal local si aplica · SDK homologado"
+        "label": "Pago local futuro · SDK por homologar"
       },
       {
         "from": "branchApi",
@@ -1402,6 +1450,16 @@
         "from": "erpAdapter",
         "to": "masters",
         "label": "Obtiene carga o deltas · contrato de fuente homologado"
+      },
+      {
+        "from": "device",
+        "to": "deviceJournal",
+        "label": "Deduplicación y evidencia técnica · SQLite"
+      },
+      {
+        "from": "device",
+        "to": "peripherals",
+        "label": "Ejecuta trabajo autorizado · driver/SDK homologado"
       }
     ]
   },
@@ -1411,10 +1469,11 @@
     "level": "C3 · branch-api",
     "title": "Negocio de sucursal en un proceso",
     "scope": "apps/branch-api compone módulos de negocio y base técnica. Las bibliotecas agrupadas comparten proceso, sin convertirse en servicios independientes.",
-    "note": "sales/returns, cash/collections, pricing/catalog, payments/devices, fiscal, reporting, administration y contrato outbox de sync. El transporte vive en branch-sync-worker y la ACL en erp-worker.",
+    "note": "sales/returns, cash/collections, pricing/catalog, payments/devices, fiscal, reporting, administration y outbox de sync. devices conserva trabajos autorizados; device-agent los obtiene y reporta evidencia. No depende del cliente de escritorio.",
     "nodeIds": [
       "client",
       "mobileClient",
+      "device",
       "entry",
       "access",
       "sales",
@@ -1460,6 +1519,11 @@
         "label": "Comandos identificados · HTTPS/LAN"
       },
       {
+        "from": "device",
+        "to": "entry",
+        "label": "Obtiene trabajos y reporta evidencia · HTTPS/LAN saliente"
+      },
+      {
         "from": "entry",
         "to": "access",
         "label": "Autoriza ámbito y operación · TypeScript"
@@ -1478,6 +1542,11 @@
         "from": "entry",
         "to": "reporting",
         "label": "Consulta autorizada · TypeScript"
+      },
+      {
+        "from": "entry",
+        "to": "payPort",
+        "label": "Autoriza trabajo o registra evidencia · TypeScript"
       },
       {
         "from": "entry",
@@ -1671,11 +1740,12 @@
     "level": "Complemento · Despliegue",
     "title": "Sucursal, país y red autorizada del ERP",
     "scope": "Perfil WAN: puestos y móviles usan el servidor de sucursal por LAN. País y red del ERP son entornos independientes, conectados mediante contratos autenticados.",
-    "note": "PostgreSQL conserva negocio y entrega durable. Country-api publica versiones; erp-worker prepara maestros mediante un contrato de origen y presupuesto aislados. Redis es caché opcional. Sin SQL WAN ni aplicación adicional.",
+    "note": "Siete aplicaciones objetivo; seis tienen base técnica o scaffold. device-agent y su journal SQLite son propuesta por implementar. PostgreSQL conserva el negocio; country-api publica versiones y erp-worker prepara maestros. Redis es caché opcional.",
     "nodeIds": [
       "client",
       "mobileClient",
       "device",
+      "deviceJournal",
       "branchApi",
       "branchDb",
       "syncWorker",
@@ -1689,6 +1759,7 @@
       "backup",
       "observability",
       "masters",
+      "peripherals",
       "legend"
     ],
     "boundaries": [
@@ -1696,8 +1767,16 @@
         "id": "terminalNode",
         "label": "Puestos POS x N · Windows por homologar",
         "nodes": [
-          "client",
-          "device"
+          "client"
+        ]
+      },
+      {
+        "id": "deviceHost",
+        "label": "Equipo Windows conectado al hardware · agente autónomo",
+        "nodes": [
+          "device",
+          "deviceJournal",
+          "peripherals"
         ]
       },
       {
@@ -1746,9 +1825,9 @@
         "label": "Comandos autenticados · HTTPS/LAN"
       },
       {
-        "from": "client",
-        "to": "device",
-        "label": "Comando autorizado · IPC/loopback"
+        "from": "device",
+        "to": "branchApi",
+        "label": "Obtiene trabajos y reporta evidencia · HTTPS/LAN saliente"
       },
       {
         "from": "branchApi",
@@ -1788,7 +1867,7 @@
       {
         "from": "device",
         "to": "payments",
-        "label": "Terminal local · SDK/API homologado"
+        "label": "Pago local futuro · SDK por homologar"
       },
       {
         "from": "branchApi",
@@ -1824,6 +1903,16 @@
         "from": "erpAdapter",
         "to": "masters",
         "label": "Obtiene carga o deltas · contrato de fuente homologado"
+      },
+      {
+        "from": "device",
+        "to": "deviceJournal",
+        "label": "Deduplicación y evidencia técnica · SQLite"
+      },
+      {
+        "from": "device",
+        "to": "peripherals",
+        "label": "Ejecuta trabajo autorizado · driver/SDK homologado"
       }
     ]
   },

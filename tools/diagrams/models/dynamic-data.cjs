@@ -1,6 +1,3 @@
-'use strict';
-
-// Vistas dinámicas: participantes C2 y contratos de interacción, sin añadir otro nivel C4.
 module.exports = [
   {
     "id": "prices",
@@ -195,8 +192,8 @@ module.exports = [
     "id": "sale",
     "number": "07",
     "title": "D2 · Confirmación de venta y entrega durable",
-    "scope": "Venta con pago por API habilitada: intención durable, commit local y entrega a país. Luego erp-worker reclama trabajo por conexión saliente, integra y registra un resultado independiente.",
-    "note": "Secuencia objetivo recomendada. Cada flecha es una interacción, no una transacción distribuida. Venta, pago, fiscalidad, entrega a país y resultado ERP conservan identidades y estados separados.",
+    "scope": "Venta con pago por API habilitada: intención durable y commit local. La impresión se solicita al backend y device-agent opera de forma autónoma. Entrega a país e integración ERP conservan estados independientes.",
+    "note": "Secuencia objetivo recomendada. Cada flecha es una interacción, no una transacción distribuida. Impresión y sincronización son ramas independientes de la venta confirmada; imprimir no bloquea la entrega a país ni crea otra venta.",
     "participants": [
       {
         "id": "client",
@@ -229,6 +226,30 @@ module.exports = [
         "type": "Sistema externo",
         "technology": "API / SDK según proveedor",
         "summary": "Informa resultado y referencia; la consulta posterior está sujeta a homologación."
+      },
+      {
+        "id": "device",
+        "nodeId": "device",
+        "name": "device-agent",
+        "type": "Contenedor",
+        "technology": "C# / .NET · Windows",
+        "summary": "Ejecuta trabajos de hardware autorizados."
+      },
+      {
+        "id": "deviceJournal",
+        "nodeId": "deviceJournal",
+        "name": "Journal técnico de dispositivos",
+        "type": "Contenedor de datos",
+        "technology": "SQLite",
+        "summary": "Guarda trabajos, deduplicación y evidencia."
+      },
+      {
+        "id": "peripherals",
+        "nodeId": "peripherals",
+        "name": "Periféricos físicos",
+        "type": "Hardware externo",
+        "technology": "Driver / SDK homologado",
+        "summary": "Impresoras, lectores y otros dispositivos."
       },
       {
         "id": "syncWorker",
@@ -313,6 +334,66 @@ module.exports = [
         "to": "client",
         "label": "Confirma operación y documento permitido · HTTPS",
         "note": "Solo después del commit local. Muestra estados de pago, fiscalidad e integración; la entrega a país puede permanecer pendiente sin negar la venta ya confirmada."
+      },
+      {
+        "from": "client",
+        "to": "branchApi",
+        "label": "Solicita imprimir el documento existente · HTTPS/LAN",
+        "note": "Rama de impresión independiente de sincronización. Escritorio y móvil usan el mismo contrato del backend; pos-desktop no actúa como relé ni debe permanecer abierto."
+      },
+      {
+        "from": "branchApi",
+        "to": "branchDb",
+        "label": "Autoriza y registra trabajo con jobId y hash · PostgreSQL",
+        "note": "Valida usuario, sucursal, capacidad, dispositivo y agente dueño. El trabajo referencia el documento ya emitido; una impresión o reimpresión no genera otra venta ni documento fiscal."
+      },
+      {
+        "from": "device",
+        "to": "branchApi",
+        "label": "Obtiene trabajos de su equipo · HTTPS/LAN saliente",
+        "note": "Servicio autónomo C#/.NET Windows propuesto. Autentica agente y equipo; sólo obtiene trabajo autorizado para sus capacidades. No se exige conexión entrante al agente."
+      },
+      {
+        "from": "branchApi",
+        "to": "device",
+        "label": "Entrega trabajo autorizado e identidad estable · HTTPS",
+        "note": "Respuesta a la solicitud del agente. Mantiene jobId, hash, destino y autorización; un lease vencido no acredita que el efecto físico no se ejecutó."
+      },
+      {
+        "from": "device",
+        "to": "deviceJournal",
+        "label": "Persiste recepción y deduplicación · SQLite",
+        "note": "Antes de ejecutar registra jobId, hash e intento. Mismo jobId y mismo hash recuperan estado; mismo jobId con distinto hash es conflicto. El journal no es una base de ventas."
+      },
+      {
+        "from": "device",
+        "to": "peripherals",
+        "label": "Ejecuta impresión autorizada · driver/SDK homologado",
+        "note": "Un único agente autorizado opera el equipo físico. Las capacidades y drivers requieren homologación; este flujo de impresión no habilita un terminal de pago."
+      },
+      {
+        "from": "peripherals",
+        "to": "device",
+        "label": "Devuelve evidencia técnica de ejecución · driver/SDK",
+        "note": "La aceptación del spooler indica recepción técnica y no confirma salida física. Ante resultado incierto conserva la identidad y requiere consulta o intervención; no reimprime automáticamente."
+      },
+      {
+        "from": "device",
+        "to": "deviceJournal",
+        "label": "Conserva intento y evidencia antes de reportar · SQLite",
+        "note": "Si se corta la LAN conserva estado técnico y reanuda el reporte al reconectar. La pérdida o restauración del journal exige reconciliar antes de volver a ejecutar."
+      },
+      {
+        "from": "device",
+        "to": "branchApi",
+        "label": "Reporta evidencia con jobId original · HTTPS/LAN saliente",
+        "note": "Reintenta la entrega de la evidencia, no el efecto físico. El backend comprueba identidad, hash, dispositivo y transición de estado; no interpreta el spool como prueba física."
+      },
+      {
+        "from": "branchApi",
+        "to": "branchDb",
+        "label": "Conserva estado del trabajo y trazabilidad · PostgreSQL",
+        "note": "La venta y su documento mantienen sus identidades. Reimpresión es una operación explícita y autorizada con auditoría y referencia al trabajo anterior."
       },
       {
         "from": "syncWorker",
@@ -417,12 +498,12 @@ module.exports = [
         "body": "Un timeout conserva el intento y su incertidumbre: consulta o conciliación según capacidad, sin recargar ni cambiar automáticamente de proveedor. Si el pago se aprobó y falla el commit local, se recuperan intención y evidencia; una reversa o intervención controlada conserva el intento original."
       },
       {
-        "title": "SDK local es una ruta condicional",
-        "body": "La vista muestra una API ejecutada desde backend. Si el proveedor exige SDK local homologado, el cliente transporta al puente de periféricos el comando original autorizado por backend y retorna evidencia. No inventa importe o permiso, ni ejecuta ambas rutas para un mismo intento."
+        "title": "Pago por SDK: capacidad futura independiente",
+        "body": "La venta ilustrada usa una API desde backend. Si se homologa un SDK local, device-agent obtiene el trabajo autorizado directamente de branch-api y reporta evidencia con la misma identidad e importe. El cliente no transporta el comando al agente. Migrar impresión no habilita pagos; no se ejecutan API y SDK para el mismo intento."
       },
       {
         "title": "Fiscalidad e impresión tienen su propio resultado",
-        "body": "Solo se confirman operaciones y documentos permitidos por la modalidad nacional habilitada. Las llamadas fiscales conservan referencia, estado y recuperación fuera de una transacción distribuida. Un fallo de impresión permite reimprimir el mismo documento; no genera otra venta ni otro cargo."
+        "body": "Sólo se emiten documentos permitidos por la modalidad nacional habilitada. device-agent imprime una referencia existente; aceptación del spooler no acredita impresión física. Un resultado incierto conserva evidencia; reimprimir requiere una operación explícita autorizada, sin nueva venta, cargo ni emisión fiscal."
       },
       {
         "title": "Caída WAN frente a caída LAN",

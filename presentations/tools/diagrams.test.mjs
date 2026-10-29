@@ -1,4 +1,4 @@
-import { prepareDeck, containerOverview } from './architecture.mjs';
+import { prepareDeck, containerOverview, deviceOverview } from './architecture.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -159,13 +159,28 @@ test('generates all source diagrams deterministically with every label intact', 
   }
 });
 
-test('the overview reuses six application identities and projects the transaction to its owner', () => {
+test('the overview reuses seven target application identities and projects the transaction to its owner', () => {
   assert.deepEqual(containerOverview.nodes.filter(node => node.kind === 'app').map(node => node.title).sort(),
-    ['branch-api', 'branch-sync-worker', 'country-api', 'erp-worker', 'pos-desktop', 'pos-mobile']);
+    ['branch-api', 'branch-sync-worker', 'country-api', 'device-agent', 'erp-worker', 'pos-desktop', 'pos-mobile']);
   assert.deepEqual(containerOverview.nodes.filter(node => node.kind === 'data').map(node => node.id).sort(), ['branch-db', 'country-db']);
   const commit = containerOverview.edges.find(edge => edge.id === 'commit-local');
   assert.equal(commit.from, 'branch-api'); assert.equal(commit.sourceFrom, 'transaction'); assert.equal(commit.to, 'branch-db');
   const erp = containerOverview.edges.find(edge => edge.id === 'claim-report');
   assert.equal(erp.from, 'erp-worker'); assert.equal(erp.to, 'country-api');
   assert.ok(containerOverview.edges.every(edge => !(['desktop', 'mobile', 'erp-worker'].includes(edge.from) && edge.to.endsWith('-db'))), 'The summary must not invent client or WAN SQL access');
+});
+
+test('the device view preserves backend authorization and agent-initiated execution boundaries', () => {
+  const relationships = new Map(deviceOverview.edges.map(edge => [edge.id, edge]));
+  for (const id of ['device-command', 'bridge-evidence']) {
+    assert.equal(relationships.get(id)?.from, 'bridge', `${id}: the agent initiates HTTPS`);
+    assert.equal(relationships.get(id)?.to, 'branch-api');
+  }
+  assert.equal(relationships.get('device-jobs-local')?.from, 'branch-api');
+  assert.equal(relationships.get('device-jobs-local')?.to, 'branch-db');
+  assert.equal(relationships.get('agent-journal')?.from, 'bridge');
+  assert.equal(relationships.get('agent-journal')?.to, 'device-journal');
+  assert.equal(relationships.get('hardware-command')?.from, 'bridge');
+  assert.equal(relationships.get('hardware-command')?.to, 'devices');
+  assert.ok(!deviceOverview.edges.some(edge => ['desktop', 'mobile'].includes(edge.from) && ['bridge', 'device-journal', 'devices', 'branch-db'].includes(edge.to)), 'Clients request capabilities through branch-api');
 });

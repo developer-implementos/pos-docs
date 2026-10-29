@@ -2,7 +2,7 @@
 
 <span id="documentación-pos-platform"></span>
 
-Starlight vive en el repositorio editorial público [POS Docs](https://github.com/developer-implementos/pos-docs). Las decisiones, contratos, evidencias del legacy y guías de implementación están en `docs/`; la navegación, componentes y catálogos están en `apps/starlight/`. El software operativo se desarrolla en [POS Platform](https://github.com/developer-implementos/pos-platform), con seis aplicaciones y sus bibliotecas.
+Starlight vive en el repositorio editorial público [POS Docs](https://github.com/developer-implementos/pos-docs). Las decisiones, contratos, evidencias del legacy y guías de implementación están en `docs/`; la navegación, componentes y catálogos están en `apps/starlight/`. El software operativo se desarrolla en [POS Platform](https://github.com/developer-implementos/pos-platform): siete aplicaciones objetivo, seis con una base de proyecto revisada y `device-agent` pendiente de incorporación.
 
 <span id="comandos"></span>
 
@@ -26,7 +26,7 @@ npm --prefix apps/starlight run check
 npm --prefix apps/starlight run preview
 ```
 
-El build usa este repositorio y sus dependencias fijadas. No importa bibliotecas del producto ni forma parte de los procesos de caja, sucursal o país. El catálogo describe las seis aplicaciones de **pos-platform**: escritorio, móvil y cuatro entradas backend. Starlight pertenece a otro repositorio y no se cuenta como una séptima aplicación del producto. El catálogo distingue la demostración frontend, la base HTTP y los esqueletos de workers; seis entradas operativas no acreditan seis servicios productivos ni sus integraciones.
+El build usa este repositorio y sus dependencias fijadas. No importa bibliotecas del producto ni forma parte de los procesos de caja, sucursal o país. El catálogo describe siete aplicaciones objetivo de **pos-platform**: escritorio, móvil, cuatro entradas backend y `device-agent` para periféricos. Starlight pertenece a otro repositorio y queda fuera del producto operativo. El catálogo distingue la demostración frontend, la base HTTP, los esqueletos de workers y el agente pendiente; disponer de un proyecto no acredita capacidades productivas ni integraciones.
 
 <span id="fuente-de-cada-contenido"></span>
 <span id="diagramas-e-interacción"></span>

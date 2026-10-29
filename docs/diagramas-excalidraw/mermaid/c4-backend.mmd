@@ -1,6 +1,6 @@
 flowchart TB
     accTitle: C3 · branch-api — Negocio de sucursal en un proceso
-    accDescr: apps/branch-api compone módulos de negocio y base técnica. Las bibliotecas agrupadas comparten proceso, sin convertirse en servicios independientes. sales/returns, cash/collections, pricing/catalog, payments/devices, fiscal, reporting, administration y contrato outbox de sync. El transporte vive en branch-sync-worker y la ACL en erp-worker.
+    accDescr: apps/branch-api compone módulos de negocio y base técnica. Las bibliotecas agrupadas comparten proceso, sin convertirse en servicios independientes. sales/returns, cash/collections, pricing/catalog, payments/devices, fiscal, reporting, administration y outbox de sync. devices conserva trabajos autorizados; device-agent los obtiene y reporta evidencia. No depende del cliente de escritorio.
     subgraph backendScope["apps/branch-api · UN proceso NestJS + Fastify"]
         direction TB
         entry["API de comandos<br/>«Componente»<br/>Controllers NestJS / Fastify<br/>Valida entrada e identidad del comando."]:::pos
@@ -8,7 +8,7 @@ flowchart TB
         sales["Ventas y devoluciones<br/>«Componente»<br/>libs/backend/sales + returns<br/>Coordina el ciclo de la operación."]:::pos
         pricing["Catálogo, precios y ofertas<br/>«Componente»<br/>libs/backend/pricing + catalog<br/>Cotiza sobre una versión vigente."]:::pos
         cash["Caja, cobranzas y anticipos<br/>«Componente»<br/>libs/backend/cash + collections<br/>Coordina turnos, movimientos y cobranzas."]:::pos
-        payPort["Pagos y dispositivos<br/>«Componente»<br/>libs/backend/payments + devices<br/>Gestiona intentos y evidencia de pago."]:::pos
+        payPort["Pagos y dispositivos<br/>«Componente»<br/>libs/backend/payments + devices<br/>Gestiona intentos, trabajos y evidencia."]:::pos
         fiscalPort["Fiscalidad y adaptadores<br/>«Componente»<br/>libs/backend/fiscal<br/>Aplica modalidad fiscal por país."]:::pos
         reporting["Reportes operativos<br/>«Componente»<br/>libs/backend/reporting<br/>Consulta operaciones y estados locales."]:::pos
         unitOfWork["Persistencia transaccional<br/>«Componente»<br/>Repositorios + contrato outbox (sync)<br/>Confirma negocio, auditoría y outbox."]:::pos
@@ -16,16 +16,19 @@ flowchart TB
     end
     client["pos-desktop<br/>«Contenedor»<br/>Angular (frontend) ·<br/>Tauri (shell nativa)<br/>Aplicación completa para caja y comandos."]:::pos
     mobileClient["pos-mobile<br/>«Contenedor»<br/>Angular (frontend) ·<br/>Capacitor (shell nativa)<br/>Aplicación completa para Android/iOS."]:::pos
+    device["device-agent<br/>«Contenedor»<br/>C# / .NET · Windows<br/>Ejecuta trabajos de hardware autorizados."]:::pos
     branchDb[("Datos de sucursal<br/>«Contenedor de datos»<br/>PostgreSQL<br/>Guarda negocio, outbox y espejo local.")]:::store
     payments["Proveedor de pagos<br/>«Sistema externo»<br/>API / SDK según proveedor<br/>Ej.: Transbank POS · Niubiz · Mercado Pago Point."]:::external
     fiscal["Proveedor de facturación<br/>«Sistema externo»<br/>Contrato por país y modalidad<br/>Ej.: Acepta / Ingydev (CL) · EFACT (PE)."]:::external
     legend["Leyenda · notación C4<br/>Azul: POS · Violeta: datos<br/>Gris: externo · Ámbar: infraestructura<br/>Borde: sistema, proceso o nodo indicado<br/>Flecha: iniciador, propósito y protocolo<br/>Opcional / por asignar: condición explícita<br/>Contenedor no equivale a Docker"]:::key
     client -->|"Comandos identificados · HTTPS/LAN"| entry
     mobileClient -->|"Comandos identificados · HTTPS/LAN"| entry
+    device -->|"Obtiene trabajos y reporta evidencia · HTTPS/LAN saliente"| entry
     entry -->|"Autoriza ámbito y operación · TypeScript"| access
     entry -->|"Venta o devolución · TypeScript"| sales
     entry -->|"Turnos, cobranza o anticipo · TypeScript"| cash
     entry -->|"Consulta autorizada · TypeScript"| reporting
+    entry -->|"Autoriza trabajo o registra evidencia · TypeScript"| payPort
     entry -->|"Configura y correlaciona · TypeScript"| technicalBase
     sales -->|"Cotiza y fija versión · TypeScript"| pricing
     sales -->|"Comprueba turno · TypeScript"| cash

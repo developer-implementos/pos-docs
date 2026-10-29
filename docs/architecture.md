@@ -4,7 +4,7 @@
 
 ## 1. Monorepo Nx con límites de dependencia
 
-Un producto multipaís con seis aplicaciones operativas: `pos-desktop`, `pos-mobile`, `branch-api`, `branch-sync-worker`, `country-api` y `erp-worker`. Las apps componen librerías por responsabilidad; no equivalen a seis servicios ya desplegados. La documentación Starlight pertenece al repositorio editorial [POS Docs](https://github.com/developer-implementos/pos-docs), separado del código operativo. La [guía del monorepo](monorepo.md) detalla el scaffold, su propiedad de datos y la evidencia del legado que orienta las fronteras.
+Un producto multipaís con siete aplicaciones objetivo: `pos-desktop`, `pos-mobile`, `branch-api`, `branch-sync-worker`, `country-api`, `erp-worker` y `device-agent`. Las apps componen librerías por responsabilidad; seis tienen proyecto en la revisión del producto y `device-agent` está pendiente de implementación. La documentación Starlight pertenece al repositorio editorial [POS Docs](https://github.com/developer-implementos/pos-docs), separado del código operativo. La [guía del monorepo](monorepo.md) detalla el scaffold, su propiedad de datos y la evidencia del legado que orienta las fronteras.
 
 Las aplicaciones cliente `pos-desktop` y `pos-mobile` tienen entradas independientes. Cada una incluye un frontend Angular/PrimeNG alojado en una shell nativa (host): Tauri en escritorio y Capacitor en Android/iOS. Comparten `libs/client-shell`, la composición Angular de raíz, configuración, rutas, guards y layout, y `ui`, que concentra componentes, activos y estilos. La [decisión de clientes nativos](decisions/native-clients.md) fija sus límites. Vercel publica el portal, la documentación y las presentaciones desde POS Docs.
 
@@ -34,7 +34,7 @@ flowchart TB
     Tests["Suites de pruebas"] --> Support["shared/testing"]
 ```
 
-Las dependencias de servidor se limitan a adaptación/composición; el dominio permanece puro. Estos límites requieren reglas Nx/ESLint y pruebas negativas que rechacen imports prohibidos. El diseño incluye `apps/pos-clients-e2e` como proyecto de pruebas vinculado a ambas aplicaciones cliente; no amplía las seis aplicaciones operativas. Su estado se detalla en la [guía de pruebas](testing.md).
+Las dependencias de servidor se limitan a adaptación/composición; el dominio permanece puro. Estos límites requieren reglas Nx/ESLint y pruebas negativas que rechacen imports prohibidos. El diseño incluye `apps/pos-clients-e2e` como proyecto de pruebas vinculado a ambas aplicaciones cliente; no amplía las siete aplicaciones objetivo. Su estado se detalla en la [guía de pruebas](testing.md).
 
 ## 2. Estado y puertos
 
@@ -86,3 +86,7 @@ La actualización del producto requiere firma de instaladores, firma de manifies
 ## 8. Calidad
 
 Pruebas unitarias para dinero, permisos, eventos, calendario y recuperación; pruebas de navegador para recorridos; compilación estricta y límites Nx; CI en Linux y Windows. No se comunica “listo para producción” por tener una interfaz completa: pagos, fiscalidad, operación sin red y recuperación requieren pruebas de integración y operación real antes de habilitar una caja.
+
+## Agente de periféricos
+
+`apps/device-agent` es una aplicación C#/.NET para Windows, independiente de la ventana de los clientes. Obtiene trabajos y reporta evidencia mediante HTTPS LAN iniciado hacia `branch-api`; conserva un diario técnico SQLite, sin autoridad sobre ventas. El [ADR-17](decisions/device-agent.md) define tecnología, conexiones, acceso móvil y recuperación. El host y cada adaptador requieren homologación de SDK, arquitectura y sesión Windows; no se migra `PrintDocument` sin revisar su incompatibilidad con servicios.

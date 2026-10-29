@@ -135,6 +135,16 @@ Hay especializaciones chilenas en DTOs/formato (`rut`, datos de factura, timbre,
 
 **Acción propuesta:** elegir y documentar la unidad de despliegue, verificar fuente/binario, establecer compilación reproducible, firma y distribución gradual por terminal, rollback y telemetría de versión. Pruebas con dobles de spooler y un banco de hardware representativo antes de despliegue multinacional.
 
+### Ampliación del 29 de octubre de 2026 · Ejecución y recuperación nativas
+
+Se volvió a consultar `main`, que conserva el SHA identificado en este informe. La relectura estática de servicio, controlador, DTOs, proyectos y helpers confirma los hallazgos previos y añade tres condiciones para la migración. No se ejecutaron instaladores ni dispositivos.
+
+- **Host de impresión:** `PrinterHelper` utiliza `System.Drawing.Printing.PrintDocument` desde el servicio Windows. Microsoft declara que ese namespace no está soportado dentro de servicios Windows/ASP.NET. El reemplazo requiere una API/SDK soportada para el host elegido; migrar a .NET moderno no acredita compatibilidad. [Restricción oficial](https://learn.microsoft.com/en-us/dotnet/api/system.drawing.printing?view=windowsdesktop-9.0), [I05].
+- **Identidad del spooler:** los helpers RAW declaran `StartDocPrinter` como `bool`; Windows devuelve un identificador de trabajo `DWORD`. Se pierde esa referencia y tampoco se conserva/comprueba `dwWritten`. La nueva integración debe registrar identificador, resultado y bytes, manteniendo que aceptación no prueba papel impreso. [Contrato Windows](https://learn.microsoft.com/en-us/windows/win32/printdocs/startdocprinter), [I06], [I08].
+- **Equipo físico y compatibilidad:** la inicialización envía comandos a la cola de cheque frontal incluso antes de otras impresiones. Recibos, endoso y MICR pueden compartir mecanismos físicos; se requiere exclusión por equipo y grupos de capacidades, no sólo por nombre de cola. El proyecto referencia POS for .NET y un componente x86: arquitectura, runtime y sesión deben validarse con el fabricante. [I03], [I05].
+
+El destino acordado es [`apps/device-agent`, C#/.NET Windows](../decisions/device-agent.md), con coordinación en `branch-api`, diario técnico SQLite y acceso desde clientes de escritorio/móvil mediante la API de sucursal. Esta decisión no acredita migración ni homologación productiva.
+
 ## 4. Contraste con la presentación
 
 | Antecedente | Resultado |
@@ -149,7 +159,7 @@ Hay especializaciones chilenas en DTOs/formato (`rut`, datos de factura, timbre,
 
 ## 5. Consecuencias para la arquitectura objetivo
 
-1. **Mantener una fachada de periféricos local.** Estabilizar contratos de impresión/lector y encapsular drivers por adaptador. Esta es una frontera distinta de la ACL del ERP: no es necesario que el agente sepa qué ERP registra la venta.
+1. **Implementar `device-agent` como agente autónomo local.** Estabilizar contratos de impresión/lector y encapsular drivers por adaptador. Esta es una frontera distinta de la ACL del ERP: no es necesario que el agente sepa qué ERP registra la venta.
 2. **Separar documento comercial/fiscal y representación física.** El dominio POS y los adaptadores fiscales producen documentos válidos; plantillas por país los representan. El agente imprime un trabajo identificable. No introducir IDs/tablas AX ni nombres de ERP en su contrato.
 3. **Definir estados de trabajo y reimpresión.** Recibido, validado, enviado al spooler, fallido y resultado incierto son candidatos; «impreso» exige evidencia disponible. Guardar la referencia al contenido/versión y motivo de copia en el sistema responsable de auditoría.
 4. **Estandarizar naming gradualmente.** Acciones como `ImprimirDTE_Pdf` prometen una salida distinta de su implementación; nombres de código/DTO mezclan PascalCase, camelCase y guiones bajos. Publicar un contrato versionado y adaptadores de compatibilidad antes de renombrar clientes existentes.

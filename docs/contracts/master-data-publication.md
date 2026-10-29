@@ -12,7 +12,7 @@
 | `branch-sync-worker` | Descargar, reanudar, construir y validar una candidata; activar mediante el contrato local del módulo dueño | Su acuse de descarga no equivale a versión aplicada |
 | `branch-api`, módulos `catalog`/`pricing` | Leer una versión completa vigente, calcular y conservar la versión usada en cada operación | No consulta al origen para calcular cada venta ni cambia la autoridad comercial |
 
-Son capacidades de las seis aplicaciones propuestas. La instancia de `erp-worker` que prepara maestros puede desplegarse separadamente de la que ejecuta comandos financieros, conservando el mismo artefacto y una configuración de capacidad distinta. Usa identidad, permisos, claims, límites de concurrencia y presupuesto de recursos separados: una carga grande no puede ocupar todos los recursos de contabilización. Si el origen no es accesible desde esa red, la ubicación y el acceso deben resolverse antes de aceptar F03; no se abre acceso SQL por WAN como alternativa implícita.
+Son capacidades de las siete aplicaciones propuestas. La instancia de `erp-worker` que prepara maestros puede desplegarse separadamente de la que ejecuta comandos financieros, conservando el mismo artefacto y una configuración de capacidad distinta. Usa identidad, permisos, claims, límites de concurrencia y presupuesto de recursos separados: una carga grande no puede ocupar todos los recursos de contabilización. Si el origen no es accesible desde esa red, la ubicación y el acceso deben resolverse antes de aceptar F03; no se abre acceso SQL por WAN como alternativa implícita.
 
 ## Contratos de trabajo y paquete
 

@@ -36,14 +36,16 @@ La galería no necesita conexión. Para usar el editor, utiliza tu instalación 
 La colección usa **#0545BA** como color primario. Azul identifica software POS, azul oscuro a personas, violeta a almacenes de datos, gris a sistemas externos y ámbar a infraestructura o condiciones. Los nombres y estereotipos también identifican cada tipo; el significado no depende solo del color.
 
 - **Contexto** identifica actores, el POS y los sistemas externos.
-- **Contenedores** explica las seis apps, los almacenes, la preparación/publicación de maestros en `erp-worker`/`country-api` y la caché opcional de país. Son capacidades propuestas con homologación pendiente; un contenedor C4 no implica Docker.
+- **Contenedores** explica las siete apps objetivo, los almacenes, la preparación/publicación de maestros en `erp-worker`/`country-api` y la caché opcional de país. Son capacidades propuestas con homologación pendiente; un contenedor C4 no implica Docker.
 - **Componentes** amplía cuatro procesos: `branch-api`, `branch-sync-worker`, `country-api` y `erp-worker`. Muestra grupos de bibliotecas y soporte técnico dentro de cada aplicación; no microservicios por módulo.
-- **Despliegue** distribuye instancias entre puestos, móviles, sucursal, plataforma de país y red autorizada del ERP. Es una vista complementaria; el cuarto nivel de C4 sería código.
+- **Despliegue** distribuye instancias entre puestos, móviles, equipo de dispositivos, sucursal, plataforma de país y red autorizada del ERP. Es una vista complementaria; el cuarto nivel de C4 sería código.
 - **Dinámicas** numeran interacciones de precios y venta, con condiciones, fallos y recuperación. Complementan las vistas estructurales.
 
 Los diagramas mantienen separadas las autoridades y los estados de venta, pago, fiscalidad, precios e integración ERP. La sucursal conserva su autoridad de negocio local; la plataforma de país recibe y consolida bajo el contrato definido. El ACK de aplicación requiere el commit de inbox, efecto local y outbox, y no certifica el resultado de un sistema externo.
 
 Las aplicaciones completas `pos-desktop` y `pos-mobile` alojan su frontend Angular en las shells nativas Tauri y Capacitor, respectivamente. `libs/client-shell` comparte la composición Angular —raíz, configuración, rutas, guards y layout—; no es la shell nativa ni otra aplicación. PostgreSQL, sincronización, integración y topología representan capacidades por implementar y validar; la base técnica y los scaffolds no acreditan operaciones comerciales. La propiedad de maestros por dato y país, contratos de proveedores, infraestructura, dimensionamiento y objetivos de recuperación siguen pendientes de definición o validación.
+
+`device-agent` es la séptima aplicación objetivo, propuesta en C#/.NET para Windows y aún no implementada. Opera de forma autónoma en el equipo conectado al hardware, obtiene trabajos de `branch-api` por HTTPS LAN saliente y reporta evidencia con `jobId` y hash estables. Su journal SQLite guarda deduplicación e intentos técnicos, sin convertirse en base de ventas. La aceptación del spooler no acredita impresión física. Pagos por SDK requieren homologación independiente de la impresión. Véase la [decisión del agente de dispositivos](../decisions/device-agent.md).
 
 `erp-worker` inicia HTTPS hacia `country-api` desde la red autorizada del ERP; no accede por SQL a la base de país. Redis figura como candidato de caché reconstruible para consultas de país, sin reemplazar el espejo PostgreSQL local ni el registro financiero. BullMQ y RabbitMQ mantienen decisiones de adopción propias. El [contrato de caché](../c4-arquitectura-propuesta.md#caché-de-país-opcional) precisa sus límites.
 
@@ -72,4 +74,4 @@ Referencias primarias para el formato y la notación:
 - [Creación programática de elementos](https://docs.excalidraw.com/docs/@excalidraw/excalidraw/api/excalidraw-element-skeleton).
 - [Exportación de SVG y otros formatos](https://docs.excalidraw.com/docs/@excalidraw/excalidraw/api/utils/export).
 
-Fecha de revisión: 22 de octubre de 2026.
+Fecha de revisión: 29 de octubre de 2026.

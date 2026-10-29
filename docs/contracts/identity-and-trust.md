@@ -1,6 +1,6 @@
 # Identidad y confianza entre fronteras
 
-**Estado: propuesta de implementación — ADR-16.** Precisa autenticación, autorización y continuidad para las seis aplicaciones. No selecciona un proveedor de identidad, PKI ni plataforma de dispositivos; no acredita integración corporativa. F01 prueba el alcance de autorización en laboratorio; F03/F05 deben comprobar identidades y ciclo de vida reales antes de una habilitación productiva.
+**Estado: propuesta de implementación — ADR-16.** Precisa autenticación, autorización y continuidad para las siete aplicaciones. No selecciona un proveedor de identidad, PKI ni plataforma de dispositivos; no acredita integración corporativa. F01 prueba el alcance de autorización en laboratorio; F03/F05 deben comprobar identidades y ciclo de vida reales antes de una habilitación productiva.
 
 ## Identidades distintas
 
@@ -9,9 +9,9 @@
 | Operador | Persona autorizada para operaciones y ámbitos concretos | `branch-api` verifica sesión, permisos, país/entidad/sucursal/caja y límites del comando |
 | Puesto | Instalación de `pos-desktop` o `pos-mobile`, identificada por `deviceId` y época de instalación | Registro de dispositivos y backend de sucursal; posesión de una clave no concede permisos del operador |
 | Sucursal | Instalación y escritor autorizado del backend local, con época de recuperación | Registro de instalaciones en país; restaurar una copia no crea otro escritor autorizado |
-| Workload | Instancia/capacidad de `branch-sync-worker` o `erp-worker` y de las APIs | API receptora valida audiencia, identidad, ámbito y capacidades; un worker no usa la sesión personal de un administrador |
+| Workload | Instancia/capacidad de `branch-sync-worker`, `erp-worker`, `device-agent` y de las APIs | API receptora valida audiencia, identidad, ámbito y capacidades; un worker no usa la sesión personal de un administrador |
 
-`country-api` mantiene el registro POS de instalaciones, workloads, ámbitos y revocaciones. El proveedor de identidad corporativo propuesto autentica personas; `branch-api` decide la autorización del comando POS mediante políticas y asignaciones del producto. La operación de PKI y la integración con ese proveedor deben asignarse a plataforma/seguridad. No se añade una séptima aplicación `identity-api` ni se atribuye ese servicio al legacy.
+`country-api` mantiene el registro POS de instalaciones, workloads, ámbitos y revocaciones. El proveedor de identidad corporativo propuesto autentica personas; `branch-api` decide la autorización del comando POS mediante políticas y asignaciones del producto. La operación de PKI y la integración con ese proveedor deben asignarse a plataforma/seguridad. No se añade una aplicación `identity-api` ni se atribuye ese servicio al legacy.
 
 ## Autenticación por frontera
 
@@ -21,7 +21,7 @@
 | `branch-sync-worker` → `country-api` | OAuth de workload con mTLS y token ligado al certificado; permisos de entrega y descarga limitados a su instalación y entidades | Certificado/token no relacionados, audiencia distinta o lote que declara otra sucursal |
 | `erp-worker` → `country-api` | Identidad de workload y mTLS; capacidades separadas `erp.execute`, `masters.prepare` y entrega de sus resultados autorizados | Reclamar un trabajo de otra entidad/origen/capacidad o finalizar con un claim antiguo |
 | `erp-worker` → origen/ERP | Credencial de servicio propia del destino, mínimo privilegio y almacenamiento seguro | No reutilizar el token de país como credencial del ERP ni suponer que el proveedor admite OAuth/mTLS |
-| `branch-api` → cliente nativo → puente local de periféricos | `branch-api` autoriza el comando, dispositivo y operación. El cliente transporta esa autorización al puente por IPC o loopback homologado; el puente verifica identidad, integridad y vigencia antes de ejecutar | El cliente no concede permisos por sí mismo. La LAN o una dirección IP conocida no acreditan identidad. La recepción del comando no demuestra un cobro o impresión |
+| `device-agent` → `branch-api` | HTTPS LAN con identidad de instalación y mTLS; el agente solicita trabajo y reporta evidencia, limitado a sucursal/dispositivos/capacidades inscritos. El backend autoriza al operador y persiste el trabajo; el agente valida contrato, integridad, vigencia y asignación antes del efecto | Certificado/época no registrados, destino ajeno, comando vencido o mismo ID con contenido distinto. El cliente no es un relé obligatorio; IP y recepción no demuestran identidad ni efecto físico |
 
 Estos perfiles deben validarse con bibliotecas y componentes mantenidos; no se diseña un algoritmo criptográfico propio. OAuth y OIDC no conceden autorización de negocio por sí solos. El receptor comprueba el permiso sobre la operación y su objeto: una venta o un resultado no se autoriza sólo porque el token contenga un rol.
 
@@ -75,3 +75,7 @@ Los resultados humanos y las pruebas del producto siguen pendientes. El laborato
 ## Referencias del perfil propuesto
 
 El perfil de OAuth sigue las recomendaciones de seguridad de [RFC 9700](https://www.rfc-editor.org/rfc/rfc9700). La vinculación de tokens a certificados se define en [RFC 8705](https://www.rfc-editor.org/rfc/rfc8705) y DPoP en [RFC 9449](https://www.rfc-editor.org/rfc/rfc9449). Estos estándares sustentan mecanismos; no demuestran compatibilidad del proveedor corporativo ni resuelven la política offline del POS. La selección, interoperabilidad y operación se deben homologar.
+
+## Agente de periféricos
+
+El [ADR-17](../decisions/device-agent.md) aplica este contrato al host .NET y sus adaptadores. La credencial de agente se protege fuera de Angular; el diario SQLite conserva evidencia técnica y acceso restringido. Alta/rotación/revocación y cambio de dueño físico deben probarse con trabajos pendientes. Un lease vencido no excluye por sí mismo al proceso que aún controla el dispositivo. La caída de WAN no elimina verificación local de credenciales, política y vigencia; la pérdida de LAN bloquea nuevas solicitudes dependientes de sucursal.

@@ -56,33 +56,33 @@ La referencia sigue siendo **perfil WAN**: el servidor de sucursal es el escrito
 ```mermaid
 flowchart TB
     subgraph Sucursal["Sucursal · perfil WAN, LAN disponible"]
-        UI["PC de caja: interfaz común"]
-        POS["Servidor: núcleo POS y fachadas"]
-        DB[("PostgreSQL local<br/>operaciones, intentos y outbox")]
-        Config["Manifiestos y políticas aprobados<br/>copia local versionada"]
-        Agent["PC: aplicación local de periféricos<br/>adaptadores y registro durable de trabajos"]
-        SDK["Proceso SDK / driver homologado<br/>por ejemplo .NET cuando corresponda"]
-        Printer["Impresora asignada"]
-        Terminal["Terminal de pago asignado"]
-        FiscalLocal["Adaptador fiscal local<br/>si el perfil lo requiere"]
-        UI --> POS
-        POS <--> DB
+        UI["pos-desktop · Angular + Tauri"]
+        Mobile["pos-mobile · Angular + Capacitor"]
+        POS["branch-api · NestJS/Fastify<br/>Fachadas y autorización de negocio"]
+        DB[("PostgreSQL de sucursal<br/>Operaciones, trabajos y auditoría")]
+        Config["Manifiestos y políticas aprobados<br/>Copia local versionada"]
+        Agent["device-agent · C#/.NET · Windows<br/>Host autónomo y adaptadores"]
+        Journal[("SQLite técnico<br/>Recepción, intentos y evidencia")]
+        Printer["Impresora / lector MICR<br/>Driver y SDK homologados"]
+        Terminal["Terminal de pago asignado<br/>SDK pendiente de homologación propia"]
+        FiscalLocal["Componente fiscal local<br/>Modalidad homologada"]
+        UI -->|"Solicitar y consultar · HTTPS LAN"| POS
+        Mobile -->|"Solicitar y consultar · HTTPS LAN"| POS
+        POS -->|"Negocio, trabajos y auditoría · PostgreSQL"| DB
         Config --> POS
         Config --> Agent
-        POS <-->|"Comandos autorizados y resultados"| Agent
-        Agent --> SDK
-        SDK --> Printer
-        SDK --> Terminal
-        POS --> FiscalLocal
+        Agent -->|"Obtener trabajo / reportar evidencia<br/>HTTPS LAN iniciado por agente"| POS
+        Agent -->|"Diario técnico · SQLite"| Journal
+        Agent -->|"Driver / SDK del dispositivo"| Printer
+        Agent -.->|"SDK local · capacidad futura"| Terminal
+        POS -->|"Contrato de emisión autorizado"| FiscalLocal
     end
-    POS -->|"Si la capacidad y conectividad lo permiten"| Central["Adaptador / worker central"]
-    FiscalLocal --> Fiscal["Proveedor fiscal o componente autorizado"]
-    Central --> Fiscal
-    Terminal --> Acquirer["Proveedor de pagos"]
+    FiscalLocal -->|"Interfaz homologada"| Fiscal["Proveedor fiscal o componente autorizado"]
+    Terminal -.->|"Protocolo del proveedor"| Acquirer["Proveedor de pagos"]
     Fleet["Catálogo y distribución de flota"] -.-> Config
 ```
 
-Las dos rutas fiscales representan opciones de despliegue: **la operación lógica fija una ruta y todos sus intentos la conservan**, no se emite simultáneamente por ambas. El canal entre núcleo y aplicación local debe autenticar a ambas partes y puede iniciarlo la aplicación local; el dibujo no obliga a abrir un servicio remoto sin protección en el PC.
+La operación fiscal fija una ruta homologada y conserva sus referencias; el dibujo no acredita un emisor implementado. El agente inicia HTTPS LAN autenticado hacia `branch-api` para recibir trabajo y reportar evidencia. Los clientes no abren conexiones al puerto de impresión del PC ni transportan comandos como relé obligatorio. Las rutas de SDK de pagos son capacidades futuras; migrar impresión/MICR no las habilita.
 
 La fiscalidad puede ejecutarse localmente, en central o mediante proveedor, según la modalidad homologada. Offline solo permite las capacidades y documentos expresamente autorizados con recursos vigentes. Un terminal conectado, un driver cargado o un documento impreso no prueban aprobación del pago ni emisión fiscal. Ante caída de LAN/servidor, este perfil detiene nuevas operaciones; la autonomía por terminal sigue siendo otra decisión. [Perfiles y fiscalidad de la propuesta](propuesta-arquitectura.md).
 
@@ -164,13 +164,13 @@ Estas reglas amplían los controles descritos en la [propuesta](propuesta-arquit
 
 ## 7. Seguridad, catálogo y entrega a la flota
 
-El frontend Angular/PrimeNG de `pos-desktop`, alojado en la shell nativa Tauri, no recibe secretos de proveedor, claves fiscales ni credenciales de dispositivo. Expresa una intención de negocio; núcleo y aplicación local verifican identidad, ámbito, permisos y binding. La aplicación local autentica comandos, limita capacidades, valida contenido y serializa acceso al dispositivo; escuchar en localhost no sustituye autorización. La evidencia actual de autenticación de impresión está delimitada en [IMP-02](analisis-repositorios/api-impresion-caja.md).
+Los frontends Angular/PrimeNG de `pos-desktop` y `pos-mobile`, alojados en Tauri/Capacitor, solicitan operaciones a `branch-api` y no reciben secretos de proveedor ni credenciales del agente. `device-agent` (C#/.NET Windows) obtiene trabajos autorizados y reporta evidencia directamente por HTTPS LAN. Verifica identidad, integridad, ámbito, capacidad y vigencia; conserva SQLite técnico y serializa acceso por equipo físico. [ADR-17: contrato del agente](decisions/device-agent.md).
 
-Si varias cajas comparten un periférico, asignar una única aplicación local autorizada para controlar el dispositivo y serializar todos sus comandos; dos aplicaciones independientes no coordinan acceso por tener cada una su cola. El cambio de propietario exige resolver llamadas en curso y excluir a la aplicación anterior, sin interpretar el vencimiento de un lease como prueba de que dejó de ejecutar.
+Si varias cajas o móviles comparten un periférico, una única instancia de `device-agent` controla el equipo físico y sus capacidades mutuamente excluyentes. La asignación incluye `physicalDeviceId`; varias colas Windows pueden pertenecer a un mismo mecanismo. El cambio de dueño exige resolver intentos y excluir al anterior; un lease vencido no prueba que dejó de ejecutar.
 
 Las credenciales se aprovisionan y rotan mediante mecanismos administrativos protegidos; el manifiesto contiene referencias, no valores secretos. El control de acceso local debe funcionar durante la desconexión autorizada, con vigencia y límites. La aplicación local usa los privilegios mínimos compatibles con su driver/SDK.
 
-La dirección indicada para el cliente de escritorio `pos-desktop` combina el frontend Angular/PrimeNG y la shell nativa Tauri; su homologación con el hardware sigue pendiente. Los binarios externos de Tauri por plataforma son una opción de empaquetado, no una obligación de reescribir el SDK. La aplicación local de periféricos y la recuperación de intentos no deben depender de que la ventana del POS permanezca abierta: elegir servicio supervisado o ciclo de vida independiente según la capacidad. [Binarios externos en Tauri](https://v2.tauri.app/develop/sidecar/).
+`device-agent` tiene ciclo de vida supervisado independiente de las shells Tauri y Capacitor. El host se desarrolla en C#/.NET Windows; SDK, arquitectura y sesión se homologan por modelo. `System.Drawing.Printing` no está soportado dentro de servicios Windows/ASP.NET, por lo que el legacy no se copia al nuevo host. Si el fabricante exige otro runtime o sesión, se aísla un ejecutor mediante IPC privado; no es un relé de la ventana POS. [Decisión y referencias](decisions/device-agent.md#tecnología-y-ejecución-nativa).
 
 Los adaptadores se distribuyen como paquetes aprobados y firmados, con dueño, contrato, compatibilidad, pruebas y procedencia. **No se descargan ni ejecutan plugins JavaScript remotos arbitrarios por cambiar una configuración.** Cambiar un manifiesto selecciona componentes ya instalados/aprobados o programa su instalación verificada; no convierte configuración en código ejecutable.
 

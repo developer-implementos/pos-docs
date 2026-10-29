@@ -17,7 +17,7 @@ La organización del producto separa aplicaciones operativas y proyectos de prue
 
 ## Proyecto E2E de clientes objetivo
 
-`apps/pos-clients-e2e` será un proyecto de pruebas Nx vinculado a `pos-desktop` y `pos-mobile` mediante dependencias explícitas, porque visitar una URL no permite inferir el vínculo por imports. No se añade a las seis aplicaciones operativas ni se publica como servicio.
+`apps/pos-clients-e2e` será un proyecto de pruebas Nx vinculado a `pos-desktop` y `pos-mobile` mediante dependencias explícitas, porque visitar una URL no permite inferir el vínculo por imports. No se añade a las siete aplicaciones objetivo ni se publica como servicio.
 
 Los recorridos de escritorio y móvil tienen configuración, fixtures, control de tiempo, reportes y capturas de fallos propios. Los comandos son `npm run test:e2e` y `npm run test:e2e:mobile`. Localmente las suites pueden iniciar el servidor de desarrollo; CI debe probar el build de producción. Si se activa caché o ejecución affected, sus entradas deben incluir la configuración, fixtures y aplicación probada; entornos externos mutables no se consideran reproducibles por defecto.
 
@@ -53,3 +53,7 @@ npm run structure:check
 ```
 
 Para la documentación se ejecutan `validate`, `typecheck`, `build` y `check` desde `apps/starlight` en **pos-docs**. El build documental usa una revisión identificada del producto y no requiere instalar sus dependencias. Los [criterios técnicos de la base](implementation-plan.md) incluyen imports, empaquetado, comportamiento de los clientes y correspondencia entre catálogo y código verificado.
+
+## Agente de periféricos y contratos entre runtimes
+
+La futura app `device-agent` requiere pruebas .NET y de contrato con `branch-api`, usando esquemas y fixtures del contexto `devices`. El build del agente no valida drivers. Probar ACK perdido, deduplicación, hash conflictivo, reinicio antes/después de envío, registros SQLite y estado incierto; banco Windows para spooler, permisos, SDK, x86/x64, sesión y exclusión por equipo físico. Cubrir acceso concurrente escritorio/móvil, MICR cancelado y actualización con pendientes. La [aceptación del ADR-17](decisions/device-agent.md#entrega-y-aceptación) se vincula con F02/F05/F06; los casos físicos no forman parte de una suite que simule éxito.

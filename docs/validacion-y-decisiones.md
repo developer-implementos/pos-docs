@@ -172,7 +172,7 @@ Para evaluar [NestJS/Fastify, Pino/Sentry, Tauri, Nx y monolito modular](opcione
 | Caída de Sentry/destino de logs y saturación del almacenamiento de telemetría | Las ventas y commits continúan conforme a su política; memoria/disco acotados, recuperación de envío y descarte/retención explícitos. |
 | Correlación de HTTP, jobs e intentos de integración | Contextos separados, IDs consistentes, una captura por error según política y ausencia de secretos/datos personales innecesarios. |
 | Instalación y arranque de Tauri sin Internet | Recursos de interfaz y dependencias disponibles, WebView2 gestionado y comportamiento correcto para el perfil offline elegido. |
-| Periféricos desde Tauri | Impresión, reimpresión, lector y pagos homologados con hardware/SDK reales; resultados y permisos de los agentes verificados. |
+| `device-agent` desde escritorio y móvil | C#/.NET Windows, HTTPS LAN con `branch-api`, SQLite técnico, exclusión física y recuperación con la ventana cerrada. Homologar impresión/MICR; pagos por SDK requieren validación propia. |
 | Cierre de ventana, caída del proceso y actualización fallida | Trabajos recuperables según su ciclo de vida, persistencia conservada, convivencia de versiones y ningún cobro/documento repetido. |
 | Importación prohibida o ciclo entre módulos | CI rechaza la dependencia entre proyectos; reglas y responsables explícitos. Complementar lint con verificación de propiedad de datos y contratos. |
 | Cambio de contrato y caja con versión anterior | Verificaciones relevantes de productor/consumidores se ejecutan; el despliegue central sigue siendo compatible con los clientes admitidos aunque compartan monorepo. |
@@ -215,7 +215,7 @@ La [solicitud de información al equipo](solicitud-informacion-equipo.md) convie
 | Antes de desarrollar conector peruano | Interfaces, transacciones y responsable del custom | TI de Perú | Idempotencia, cambio de maestros y confirmación de asientos |
 | Antes de comprometer continuidad | Duración offline y escenarios WAN, LAN, energía y pérdida de equipo | Operaciones y arquitectura | Garantías de venta, segunda copia, RPO y hardware |
 | Antes del piloto | Tiendas, cajas, picos, periféricos y conectividad | Operaciones | Dimensionamiento y stack del cliente |
-| Antes de elegir componentes | Inventario de seis aplicaciones y de Angular, AdonisJS, .NET, Java, bus y bases existentes | Arquitectura y equipos actuales | Reutilización, actualización, límites y ruta de migración |
+| Antes de elegir componentes | Inventario de aplicaciones legacy informadas y de Angular, AdonisJS, .NET, Java, bus y bases existentes | Arquitectura y equipos actuales | Reutilización, actualización, límites y ruta de migración |
 | Antes de trasladar hallazgos a producción | Commits/artefactos desplegados y configuración efectiva; `main` es probable según el usuario, pero no existe en tres repositorios consultados | Equipos de desarrollo y operaciones | Determina qué caminos revisados están activos y permite reproducir los fallos sin asumir equivalencias |
 | Antes de diseñar el corte de NC | Autoridad de saldo, exclusión de reservas, significado de preparación/confirmación y cobertura de sucursales | Finanzas, caja e integración | Evita omitir consumo pendiente o autorizar uso sobre datos incompletos |
 | Antes de habilitar cada país | Sociedades, establecimientos, documentos y modalidad fiscal | Responsable tributario local | Emisión, numeración, firma, plazos y contingencias |
