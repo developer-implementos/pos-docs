@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "reviewedOn": "2026-10-23",
+  "reviewedOn": "2026-10-29",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "021e3bde2cb6e32922ac41e2f1aa555229cd6af6",
+  "revision": "dfa3329c35a61dd59f9c0b9159b0f36094c507b0",
   "sourceStatus": "Fuentes documentales verificadas en la revisión indicada.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "inputs": [
@@ -12,7 +12,7 @@
     },
     {
       "path": "docs/propuesta-arquitectura.md",
-      "sha256": "209e90a0b83e257b583df8e945c043f76ff63701b3420651ed74789a95f8812e"
+      "sha256": "88bd1aa924d4638ca72d276fe37c066842129d381be11cf32f74011a7e289670"
     },
     {
       "path": "docs/implementation-plan.md",
@@ -36,7 +36,7 @@
     },
     {
       "path": "docs/c4-arquitectura-propuesta.md",
-      "sha256": "969f62c8a7fc4cbaed9f49a61c74ec9312e9626d6e7c3055f0d26a840b9b810f"
+      "sha256": "50512bd9b8c7418e2d1f2e8d5f1aaad900b3468a579e830c97a0b2793c1260ab"
     },
     {
       "path": "docs/contracts/master-data-publication.md",
@@ -56,7 +56,11 @@
     },
     {
       "path": "tools/diagrams/models/c4-data.js",
-      "sha256": "fdbebe1898f8aa584ad0b61856c7c067c0fc19dee11395f3bf9a323161e756f2"
+      "sha256": "8847d651d84c088ec30a1655db7f4d7b90360ac6bb1a9ffbf58552b46a3a6abc"
+    },
+    {
+      "path": "docs/extensibilidad-proveedores-dispositivos.md",
+      "sha256": "1f73fd87e2f545fa8cf983a2f2b666673b41f3a2d0dac4523a6de0c6eda68b54"
     }
   ]
 }
