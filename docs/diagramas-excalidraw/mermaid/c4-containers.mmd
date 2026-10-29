@@ -17,8 +17,8 @@ flowchart TB
         cashier["Cajero<br/>«Persona»<br/>Operación humana<br/>Vende, cobra y gestiona su turno."]:::person
         erp["ERP del país<br/>«Sistema externo»<br/>CL: AX · ES: Gira · PE: custom<br/>Recibe y concilia documentos financieros."]:::external
         masters["Fuentes de maestros y precios<br/>«Sistema externo»<br/>Interfaces por confirmar<br/>Publica datos y reglas autorizados."]:::external
-        payments["Proveedor de pagos<br/>«Sistema externo»<br/>API / SDK según proveedor<br/>Autoriza o informa el resultado del pago."]:::external
-        fiscal["Proveedor fiscal<br/>«Sistema externo»<br/>Contrato por país y modalidad<br/>Emite o transmite documentos fiscales."]:::external
+        payments["Proveedor de pagos<br/>«Sistema externo»<br/>API / SDK según proveedor<br/>Ej.: Transbank POS · Niubiz · Mercado Pago Point."]:::external
+        fiscal["Proveedor de facturación<br/>«Sistema externo»<br/>Contrato por país y modalidad<br/>Ej.: Acepta / Ingydev (CL) · EFACT (PE)."]:::external
         legend["Leyenda<br/>«Clave de lectura»<br/>Notación C4<br/>Azul: POS. Violeta: datos. Gris: externo."]:::key
     cashier -->|"Opera caja · interfaz de escritorio"| client
     cashier -->|"Funciones habilitadas · interfaz móvil"| mobileClient

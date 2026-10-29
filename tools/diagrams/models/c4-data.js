@@ -161,10 +161,10 @@
     "name": "Proveedor de pagos",
     "type": "Sistema externo",
     "technology": "API / SDK según proveedor",
-    "summary": "Autoriza o informa el resultado del pago.",
+    "summary": "Ej.: Transbank POS · Niubiz · Mercado Pago Point.",
     "ownership": "El proveedor mantiene el efecto financiero; POS registra intento, referencia y resultado.",
     "offline": "Disponibilidad y modo offline por homologar. Un timeout puede dejar resultado desconocido.",
-    "detail": "Pago, venta, documento fiscal e integración ERP tienen estados distintos. No repetir un cargo incierto ni cambiar de proveedor para resolverlo automáticamente.",
+    "detail": "Autoriza o informa el resultado del pago. Transbank con terminal local en Chile y Niubiz en Perú proceden de las fuentes revisadas. Mercado Pago Point es un ejemplo presencial ilustrativo, sin adopción ni integración acreditadas; Webpay Plus es un ejemplo de pago online de Transbank, distinto de su terminal de tienda. En España se informan BBVA/Redsys con TPV portátiles sin conexión a Gira y conciliación contable; no se presume una API o SDK ya integrado. Cada ruta y capacidad requiere homologación. Pago, venta, documento fiscal e integración ERP tienen estados distintos. No repetir un cargo incierto ni cambiar de proveedor para resolverlo automáticamente.",
     "sources": [
       {
         "label": "Proveedores, periféricos y homologación",
@@ -178,13 +178,13 @@
   },
   "fiscal": {
     "id": "fiscal",
-    "name": "Proveedor fiscal",
+    "name": "Proveedor de facturación",
     "type": "Sistema externo",
     "technology": "Contrato por país y modalidad",
-    "summary": "Emite o transmite documentos fiscales.",
-    "ownership": "Autoridad y validez tributaria según régimen y proveedor.",
+    "summary": "Ej.: Acepta / Ingydev (CL) · EFACT (PE).",
+    "ownership": "La solución prepara, emite o transmite documentos por cuenta del contribuyente según su contrato. La autoridad tributaria es distinta: SII en Chile, SUNAT en Perú y la autoridad aplicable en España.",
     "offline": "Emitir offline exige modalidad y material fiscal válidos; no se promete universalmente.",
-    "detail": "Emisión, aceptación y transmisión se modelan por separado. No se inventa un proveedor común ni una capacidad de consulta o idempotencia no acreditada.",
+    "detail": "Acepta/Ingydev aparecen en el código legacy chileno y EFACT en las fuentes de Perú. Gira se informa como solución de España; su modalidad fiscal, interfaces y capacidades deben confirmarse. Estos ejemplos no seleccionan un proveedor corporativo ni acreditan adaptadores homologados para POS Platform. SII y SUNAT son autoridades tributarias, no estos proveedores de software; en España corresponde la autoridad del régimen y territorio aplicables. Emisión, aceptación y transmisión se modelan por separado. No se inventa un proveedor común ni una capacidad de consulta o idempotencia no acreditada.",
     "sources": [
       {
         "label": "Proveedores, periféricos y homologación",

@@ -8,7 +8,7 @@
       "type": "rectangle",
       "x": 0,
       "y": 0,
-      "width": 5005.796093749991,
+      "width": 5001.460156249999,
       "height": 350,
       "angle": 0,
       "strokeColor": "#fff",
@@ -24,12 +24,12 @@
       "roundness": {
         "type": 3
       },
-      "seed": 1259253861,
+      "seed": 782008870,
       "version": 2,
-      "versionNonce": 1816241547,
+      "versionNonce": 1982459642,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false
     },
@@ -52,12 +52,12 @@
       "frameId": null,
       "index": "a1",
       "roundness": null,
-      "seed": 918467691,
+      "seed": 2030082874,
       "version": 2,
-      "versionNonce": 775785637,
+      "versionNonce": 1290540454,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "POS CORPORATIVO  /  02  /  C2 · CONTENEDORES",
@@ -89,12 +89,12 @@
       "frameId": null,
       "index": "a2",
       "roundness": null,
-      "seed": 553999301,
+      "seed": 156585318,
       "version": 2,
-      "versionNonce": 128629803,
+      "versionNonce": 1472593850,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Aplicaciones, procesos y datos",
@@ -126,12 +126,12 @@
       "frameId": null,
       "index": "a3",
       "roundness": null,
-      "seed": 1633873675,
+      "seed": 1534927866,
       "version": 2,
-      "versionNonce": 713994245,
+      "versionNonce": 1868984550,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Aplicaciones de POS Platform, persistencia de sucursal y servicios de país. Cada nombre de app corresponde al monorepo; las capacidades son propuesta por implementar.",
@@ -163,12 +163,12 @@
       "frameId": null,
       "index": "a4",
       "roundness": null,
-      "seed": 231709477,
+      "seed": 22196390,
       "version": 2,
-      "versionNonce": 251133643,
+      "versionNonce": 1965160570,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "ARQUITECTURA PROPUESTA · 22 OCT 2026 · Chile / Perú / España · No representa una implementación homologada",
@@ -202,12 +202,12 @@
       "roundness": {
         "type": 3
       },
-      "seed": 753325483,
+      "seed": 1995084986,
       "version": 2,
-      "versionNonce": 2074371941,
+      "versionNonce": 1618175014,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false
     },
@@ -230,12 +230,12 @@
       "frameId": null,
       "index": "a6",
       "roundness": null,
-      "seed": 433778309,
+      "seed": 843164646,
       "version": 2,
-      "versionNonce": 1287908715,
+      "versionNonce": 503372090,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Persona",
@@ -269,12 +269,12 @@
       "roundness": {
         "type": 3
       },
-      "seed": 947185739,
+      "seed": 1290530170,
       "version": 2,
-      "versionNonce": 1137455813,
+      "versionNonce": 1644162918,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false
     },
@@ -297,12 +297,12 @@
       "frameId": null,
       "index": "a8",
       "roundness": null,
-      "seed": 1675941349,
+      "seed": 976174886,
       "version": 2,
-      "versionNonce": 1415120907,
+      "versionNonce": 835035642,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Software POS",
@@ -336,12 +336,12 @@
       "roundness": {
         "type": 3
       },
-      "seed": 1508353771,
+      "seed": 851717690,
       "version": 2,
-      "versionNonce": 2141426213,
+      "versionNonce": 1884885670,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false
     },
@@ -364,12 +364,12 @@
       "frameId": null,
       "index": "aA",
       "roundness": null,
-      "seed": 1459278149,
+      "seed": 1837656678,
       "version": 2,
-      "versionNonce": 1806814891,
+      "versionNonce": 728978106,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Almacén de datos",
@@ -403,12 +403,12 @@
       "roundness": {
         "type": 3
       },
-      "seed": 1204392331,
+      "seed": 1565939450,
       "version": 2,
-      "versionNonce": 1008207237,
+      "versionNonce": 1982582246,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false
     },
@@ -431,12 +431,12 @@
       "frameId": null,
       "index": "aC",
       "roundness": null,
-      "seed": 544891045,
+      "seed": 186264998,
       "version": 2,
-      "versionNonce": 897106251,
+      "versionNonce": 766307194,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Sistema externo",
@@ -470,12 +470,12 @@
       "roundness": {
         "type": 3
       },
-      "seed": 55912491,
+      "seed": 1831167930,
       "version": 2,
-      "versionNonce": 208080101,
+      "versionNonce": 8724774,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false
     },
@@ -498,12 +498,12 @@
       "frameId": null,
       "index": "aE",
       "roundness": null,
-      "seed": 1712391173,
+      "seed": 1880197350,
       "version": 2,
-      "versionNonce": 453533675,
+      "versionNonce": 246770746,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Infraestructura / condición",
@@ -535,12 +535,12 @@
       "frameId": null,
       "index": "aF",
       "roundness": null,
-      "seed": 41216715,
+      "seed": 2052350074,
       "version": 2,
-      "versionNonce": 1075718213,
+      "versionNonce": 1926368358,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Flecha: iniciador → destino; texto: propósito y protocolo. Borde discontinuo: límite nombrado. Todo el contenido es editable.",
@@ -572,12 +572,12 @@
       "frameId": null,
       "index": "aG",
       "roundness": null,
-      "seed": 1002191717,
+      "seed": 1274772518,
       "version": 2,
-      "versionNonce": 1986734731,
+      "versionNonce": 1685050618,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Contratos que gobiernan esta vista",
@@ -595,7 +595,7 @@
       "type": "rectangle",
       "x": 64,
       "y": 1996.8000000000002,
-      "width": 1609.932031249997,
+      "width": 1608.4867187499997,
       "height": 164.25,
       "angle": 0,
       "strokeColor": "#CCD7E8",
@@ -613,12 +613,12 @@
       "roundness": {
         "type": 3
       },
-      "seed": 432232811,
+      "seed": 547766586,
       "version": 2,
-      "versionNonce": 1494931365,
+      "versionNonce": 987729830,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false
     },
@@ -643,12 +643,12 @@
       "frameId": null,
       "index": "aI",
       "roundness": null,
-      "seed": 1506379461,
+      "seed": 1422198630,
       "version": 2,
-      "versionNonce": 2086379819,
+      "versionNonce": 274671034,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Aplicaciones, procesos y propiedad",
@@ -682,12 +682,12 @@
       "frameId": null,
       "index": "aJ",
       "roundness": null,
-      "seed": 646640651,
+      "seed": 192809466,
       "version": 2,
-      "versionNonce": 1099602693,
+      "versionNonce": 81439462,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Los seis nombres de app identifican sus proyectos en apps/. PostgreSQL de sucursal conserva negocio y espejo comercial; PostgreSQL de país conserva\nintegración y proyecciones. El publicador de maestros es una responsabilidad cuyo proceso sigue por asignar.",
@@ -703,9 +703,9 @@
     {
       "id": "notes-1997-1-bg",
       "type": "rectangle",
-      "x": 1697.932031249997,
+      "x": 1696.4867187499997,
       "y": 1996.8000000000002,
-      "width": 1609.932031249997,
+      "width": 1608.4867187499997,
       "height": 164.25,
       "angle": 0,
       "strokeColor": "#CCD7E8",
@@ -723,19 +723,19 @@
       "roundness": {
         "type": 3
       },
-      "seed": 316040741,
+      "seed": 2059086502,
       "version": 2,
-      "versionNonce": 1715749835,
+      "versionNonce": 1269194362,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false
     },
     {
       "id": "notes-1997-1-title",
       "type": "text",
-      "x": 1719.932031249997,
+      "x": 1718.4867187499997,
       "y": 2018.8000000000002,
       "width": 408.58154296875,
       "height": 31.25,
@@ -753,12 +753,12 @@
       "frameId": null,
       "index": "aL",
       "roundness": null,
-      "seed": 2026257067,
+      "seed": 31374010,
       "version": 2,
-      "versionNonce": 1105916517,
+      "versionNonce": 1867537958,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Entrega durable y ACK de aplicación",
@@ -774,7 +774,7 @@
     {
       "id": "notes-1997-1-body",
       "type": "text",
-      "x": 1719.932031249997,
+      "x": 1718.4867187499997,
       "y": 2071.05,
       "width": 1531.0302734375,
       "height": 55,
@@ -792,12 +792,12 @@
       "frameId": null,
       "index": "aM",
       "roundness": null,
-      "seed": 164649349,
+      "seed": 478864870,
       "version": 2,
-      "versionNonce": 1547670123,
+      "versionNonce": 856194874,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "País confirma inbox + efecto/proyección local + outbox antes de acusar aplicación. erp-worker obtiene el trabajo por HTTPS saliente y reporta resultados. Un\nACK no certifica contabilización ERP, aceptación fiscal ni liquidación del pago.",
@@ -813,9 +813,9 @@
     {
       "id": "notes-1997-2-bg",
       "type": "rectangle",
-      "x": 3331.864062499994,
+      "x": 3328.9734374999994,
       "y": 1996.8000000000002,
-      "width": 1609.932031249997,
+      "width": 1608.4867187499997,
       "height": 164.25,
       "angle": 0,
       "strokeColor": "#CCD7E8",
@@ -833,19 +833,19 @@
       "roundness": {
         "type": 3
       },
-      "seed": 2099227979,
+      "seed": 1919636346,
       "version": 2,
-      "versionNonce": 923360709,
+      "versionNonce": 1059957094,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false
     },
     {
       "id": "notes-1997-2-title",
       "type": "text",
-      "x": 3353.864062499994,
+      "x": 3350.9734374999994,
       "y": 2018.8000000000002,
       "width": 397.47314453125,
       "height": 31.25,
@@ -863,12 +863,12 @@
       "frameId": null,
       "index": "aO",
       "roundness": null,
-      "seed": 670359781,
+      "seed": 994130214,
       "version": 2,
-      "versionNonce": 521669899,
+      "versionNonce": 1390970874,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Caché y capacidades condicionales",
@@ -884,7 +884,7 @@
     {
       "id": "notes-1997-2-body",
       "type": "text",
-      "x": 3353.864062499994,
+      "x": 3350.9734374999994,
       "y": 2071.05,
       "width": 1555.59765625,
       "height": 55,
@@ -902,12 +902,12 @@
       "frameId": null,
       "index": "aP",
       "roundness": null,
-      "seed": 653380587,
+      "seed": 2137445434,
       "version": 2,
-      "versionNonce": 134438181,
+      "versionNonce": 331320486,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Redis de país es opcional y reconstruible para country-api; no reemplaza PostgreSQL ni el espejo local. El puente de periféricos depende del SDK homologado\ny ejecuta comandos autorizados. Ninguna de estas piezas crea otra autoridad de ventas.",
@@ -939,12 +939,12 @@
       "frameId": null,
       "index": "aQ",
       "roundness": null,
-      "seed": 1389460549,
+      "seed": 776676454,
       "version": 2,
-      "versionNonce": 1917334443,
+      "versionNonce": 860453050,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Responsabilidades, propiedad y comportamiento ante fallos",
@@ -962,7 +962,7 @@
       "type": "rectangle",
       "x": 64,
       "y": 2295.05,
-      "width": 1201.4490234374978,
+      "width": 1200.3650390624998,
       "height": 384.25,
       "angle": 0,
       "strokeColor": "#CCD7E8",
@@ -980,12 +980,12 @@
       "roundness": {
         "type": 3
       },
-      "seed": 440866443,
+      "seed": 179584250,
       "version": 2,
-      "versionNonce": 1548120197,
+      "versionNonce": 447940582,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false
     },
@@ -1010,12 +1010,12 @@
       "frameId": null,
       "index": "aS",
       "roundness": null,
-      "seed": 1648602021,
+      "seed": 1467328422,
       "version": 2,
-      "versionNonce": 1174046283,
+      "versionNonce": 1674465658,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Cajero",
@@ -1049,12 +1049,12 @@
       "frameId": null,
       "index": "aT",
       "roundness": null,
-      "seed": 366611755,
+      "seed": 1104580026,
       "version": 2,
-      "versionNonce": 294655973,
+      "versionNonce": 1142233894,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Persona · Operación humana\n\nUsa el cliente del puesto. Abrir o cerrar sesión de usuario no equivale a abrir o cerrar el turno de caja.\n\nAUTORIDAD · Ejecuta operaciones con permisos; no administra la base.\n\nCONTINUIDAD · Acceso local y operaciones habilitadas según vigencia, permisos y política offline.",
@@ -1070,9 +1070,9 @@
     {
       "id": "notes-2295-1-bg",
       "type": "rectangle",
-      "x": 1289.4490234374978,
+      "x": 1288.3650390624998,
       "y": 2295.05,
-      "width": 1201.4490234374978,
+      "width": 1200.3650390624998,
       "height": 384.25,
       "angle": 0,
       "strokeColor": "#CCD7E8",
@@ -1090,19 +1090,19 @@
       "roundness": {
         "type": 3
       },
-      "seed": 1450766085,
+      "seed": 1458422502,
       "version": 2,
-      "versionNonce": 554271979,
+      "versionNonce": 129634874,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false
     },
     {
       "id": "notes-2295-1-title",
       "type": "text",
-      "x": 1311.4490234374978,
+      "x": 1310.3650390624998,
       "y": 2317.05,
       "width": 136.19384765625,
       "height": 31.25,
@@ -1120,12 +1120,12 @@
       "frameId": null,
       "index": "aV",
       "roundness": null,
-      "seed": 487927755,
+      "seed": 703645306,
       "version": 2,
-      "versionNonce": 1911411525,
+      "versionNonce": 1985136230,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "pos-desktop",
@@ -1141,7 +1141,7 @@
     {
       "id": "notes-2295-1-body",
       "type": "text",
-      "x": 1311.4490234374978,
+      "x": 1310.3650390624998,
       "y": 2369.3,
       "width": 1136.072265625,
       "height": 247.5,
@@ -1159,12 +1159,12 @@
       "frameId": null,
       "index": "aW",
       "roundness": null,
-      "seed": 1307493989,
+      "seed": 1061189158,
       "version": 2,
-      "versionNonce": 1258270603,
+      "versionNonce": 1643100922,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Contenedor · Angular + Tauri\n\npos-desktop tiene arranque propio y comparte client-shell con pos-mobile. Tauri aloja el bundle de escritorio;\nhardware, SDK y distribución requieren homologación. Su registro técnico de periféricos no lo convierte en autoridad\nde ventas.\n\nAUTORIDAD · No posee otra base de ventas ni credenciales SQL.\n\nCONTINUIDAD · Sin WAN usa la API por LAN. Sin LAN o backend, se detienen nuevos comandos dependientes.",
@@ -1180,9 +1180,9 @@
     {
       "id": "notes-2295-2-bg",
       "type": "rectangle",
-      "x": 2514.8980468749955,
+      "x": 2512.7300781249996,
       "y": 2295.05,
-      "width": 1201.4490234374978,
+      "width": 1200.3650390624998,
       "height": 384.25,
       "angle": 0,
       "strokeColor": "#CCD7E8",
@@ -1200,19 +1200,19 @@
       "roundness": {
         "type": 3
       },
-      "seed": 1645411947,
+      "seed": 734390074,
       "version": 2,
-      "versionNonce": 700261029,
+      "versionNonce": 1111034278,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false
     },
     {
       "id": "notes-2295-2-title",
       "type": "text",
-      "x": 2536.8980468749955,
+      "x": 2534.7300781249996,
       "y": 2317.05,
       "width": 122.27783203125,
       "height": 31.25,
@@ -1230,12 +1230,12 @@
       "frameId": null,
       "index": "aY",
       "roundness": null,
-      "seed": 997372357,
+      "seed": 1230684518,
       "version": 2,
-      "versionNonce": 907511339,
+      "versionNonce": 1626491834,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "pos-mobile",
@@ -1251,7 +1251,7 @@
     {
       "id": "notes-2295-2-body",
       "type": "text",
-      "x": 2536.8980468749955,
+      "x": 2534.7300781249996,
       "y": 2369.3,
       "width": 1148.3291015625,
       "height": 247.5,
@@ -1269,12 +1269,12 @@
       "frameId": null,
       "index": "aZ",
       "roundness": null,
-      "seed": 1872623883,
+      "seed": 532213754,
       "version": 2,
-      "versionNonce": 2108392965,
+      "versionNonce": 385148134,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Contenedor · Angular + Capacitor\n\npos-mobile tiene arranque y bundle propios, compuestos con client-shell. Los adaptadores actuales son mock.\nInstalación, ciclo de vida, almacenamiento y capacidades nativas requieren pruebas Android/iOS; no hay acceso SQL\nni permisos implícitos por empaquetar la interfaz.\n\nAUTORIDAD · Comparte interfaz y contratos; no otra autoridad de ventas.\n\nCONTINUIDAD · Requiere conexión autorizada al backend de sucursal. El móvil no incorpora autonomía sin LAN.",
@@ -1290,9 +1290,9 @@
     {
       "id": "notes-2295-3-bg",
       "type": "rectangle",
-      "x": 3740.347070312493,
+      "x": 3737.0951171874995,
       "y": 2295.05,
-      "width": 1201.4490234374978,
+      "width": 1200.3650390624998,
       "height": 384.25,
       "angle": 0,
       "strokeColor": "#CCD7E8",
@@ -1310,19 +1310,19 @@
       "roundness": {
         "type": 3
       },
-      "seed": 1545744677,
+      "seed": 143238310,
       "version": 2,
-      "versionNonce": 691767499,
+      "versionNonce": 719635578,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false
     },
     {
       "id": "notes-2295-3-title",
       "type": "text",
-      "x": 3762.347070312493,
+      "x": 3759.0951171874995,
       "y": 2317.05,
       "width": 236.2548828125,
       "height": 31.25,
@@ -1340,12 +1340,12 @@
       "frameId": null,
       "index": "ab",
       "roundness": null,
-      "seed": 321953707,
+      "seed": 1506599098,
       "version": 2,
-      "versionNonce": 1085701477,
+      "versionNonce": 1980979238,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Puente de periféricos",
@@ -1361,7 +1361,7 @@
     {
       "id": "notes-2295-3-body",
       "type": "text",
-      "x": 3762.347070312493,
+      "x": 3759.0951171874995,
       "y": 2369.3,
       "width": 1145.9228515625,
       "height": 275,
@@ -1379,12 +1379,12 @@
       "frameId": null,
       "index": "ac",
       "roundness": null,
-      "seed": 1835713669,
+      "seed": 511320038,
       "version": 2,
-      "versionNonce": 705050475,
+      "versionNonce": 696919354,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Contenedor condicional · Proceso nativo según SDK\n\nEl cliente transporta el comando autorizado por backend al agente; no inventa importe, permiso ni otro intento. Puede\nrequerir .NET u otro runtime por contrato del proveedor. Se representa como límite por homologar, no como SDK\naprobado.\n\nAUTORIDAD · Ejecuta identidad y autorización emitidas por backend; registro técnico de evidencia, sin base de\nventas.\n\nCONTINUIDAD · Una caída de LAN tras un cobro exige recuperar evidencia; no autoriza otro cobro.",
@@ -1402,7 +1402,7 @@
       "type": "rectangle",
       "x": 64,
       "y": 2703.3,
-      "width": 1201.4490234374978,
+      "width": 1200.3650390624998,
       "height": 439.25,
       "angle": 0,
       "strokeColor": "#CCD7E8",
@@ -1420,12 +1420,12 @@
       "roundness": {
         "type": 3
       },
-      "seed": 116748875,
+      "seed": 899987834,
       "version": 2,
-      "versionNonce": 170625221,
+      "versionNonce": 662791014,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false
     },
@@ -1450,12 +1450,12 @@
       "frameId": null,
       "index": "ae",
       "roundness": null,
-      "seed": 587852773,
+      "seed": 1866019622,
       "version": 2,
-      "versionNonce": 650252811,
+      "versionNonce": 373648890,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "branch-api",
@@ -1489,12 +1489,12 @@
       "frameId": null,
       "index": "af",
       "roundness": null,
-      "seed": 1539764459,
+      "seed": 579041850,
       "version": 2,
-      "versionNonce": 732440613,
+      "versionNonce": 1837893286,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Contenedor · NestJS + Fastify / Node.js\n\napps/branch-api compone los contextos operativos: sales/returns, cash/collections, pricing/catalog, payments/devices,\nfiscal, reporting y administration. sync aporta el contrato outbox que se confirma con negocio. El transporte pertenece\na branch-sync-worker y la ACL ERP a erp-worker. Bibliotecas no equivalen a microservicios; las capacidades de\nnegocio aún requieren implementación.\n\nAUTORIDAD · Única autoridad de escritura del negocio de sucursal; módulos internos, un proceso.\n\nCONTINUIDAD · Opera por LAN con datos vigentes. Su caída exige recuperación del escritor autorizado.",
@@ -1510,9 +1510,9 @@
     {
       "id": "notes-2295-5-bg",
       "type": "rectangle",
-      "x": 1289.4490234374978,
+      "x": 1288.3650390624998,
       "y": 2703.3,
-      "width": 1201.4490234374978,
+      "width": 1200.3650390624998,
       "height": 439.25,
       "angle": 0,
       "strokeColor": "#CCD7E8",
@@ -1530,19 +1530,19 @@
       "roundness": {
         "type": 3
       },
-      "seed": 1561143109,
+      "seed": 1429462630,
       "version": 2,
-      "versionNonce": 1617533099,
+      "versionNonce": 102342330,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false
     },
     {
       "id": "notes-2295-5-title",
       "type": "text",
-      "x": 1311.4490234374978,
+      "x": 1310.3650390624998,
       "y": 2725.3,
       "width": 200.09765625,
       "height": 31.25,
@@ -1560,12 +1560,12 @@
       "frameId": null,
       "index": "ah",
       "roundness": null,
-      "seed": 590322571,
+      "seed": 793518842,
       "version": 2,
-      "versionNonce": 1729747845,
+      "versionNonce": 954221030,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Datos de sucursal",
@@ -1581,7 +1581,7 @@
     {
       "id": "notes-2295-5-body",
       "type": "text",
-      "x": 1311.4490234374978,
+      "x": 1310.3650390624998,
       "y": 2777.55,
       "width": 1109.173828125,
       "height": 275,
@@ -1599,12 +1599,12 @@
       "frameId": null,
       "index": "ai",
       "roundness": null,
-      "seed": 500299429,
+      "seed": 1429676454,
       "version": 2,
-      "versionNonce": 346508107,
+      "versionNonce": 1974056826,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Contenedor de datos · PostgreSQL\n\nVentas, caja, pagos y evidencia fiscal son locales. Inbox, outbox, cursores y staging tienen restricciones y\ntransacciones. Catálogo, precios y promociones son réplicas de lectura autorizadas, no maestros independientes.\n\nAUTORIDAD · Base compartida por la tienda, un primario autorizado. API escribe negocio; worker escribe su\nesquema técnico y publica espejos por un contrato acotado.\n\nCONTINUIDAD · Persistencia local disponible sin WAN. No implica respaldo, alta disponibilidad ni recuperación\nautomática.",
@@ -1620,9 +1620,9 @@
     {
       "id": "notes-2295-6-bg",
       "type": "rectangle",
-      "x": 2514.8980468749955,
+      "x": 2512.7300781249996,
       "y": 2703.3,
-      "width": 1201.4490234374978,
+      "width": 1200.3650390624998,
       "height": 439.25,
       "angle": 0,
       "strokeColor": "#CCD7E8",
@@ -1640,19 +1640,19 @@
       "roundness": {
         "type": 3
       },
-      "seed": 1500115499,
+      "seed": 377598906,
       "version": 2,
-      "versionNonce": 1690182373,
+      "versionNonce": 1552618790,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false
     },
     {
       "id": "notes-2295-6-title",
       "type": "text",
-      "x": 2536.8980468749955,
+      "x": 2534.7300781249996,
       "y": 2725.3,
       "width": 219.5068359375,
       "height": 31.25,
@@ -1670,12 +1670,12 @@
       "frameId": null,
       "index": "ak",
       "roundness": null,
-      "seed": 1074125317,
+      "seed": 1383070950,
       "version": 2,
-      "versionNonce": 1742055915,
+      "versionNonce": 1429780538,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "branch-sync-worker",
@@ -1691,7 +1691,7 @@
     {
       "id": "notes-2295-6-body",
       "type": "text",
-      "x": 2536.8980468749955,
+      "x": 2534.7300781249996,
       "y": 2777.55,
       "width": 1132.3876953125,
       "height": 247.5,
@@ -1709,12 +1709,12 @@
       "frameId": null,
       "index": "al",
       "roundness": null,
-      "seed": 257979595,
+      "seed": 1246178426,
       "version": 2,
-      "versionNonce": 1763868229,
+      "versionNonce": 1106870374,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Contenedor · NestJS / Node.js · sin servidor HTTP\n\napps/branch-sync-worker compone libs/backend/sync con pricing/catalog para preparar y activar versiones. Entrega\noutbox por HTTPS con identidad y cursor; confirma acuses durables. El proceso supervisado sigue activo aunque el\ncliente se cierre. Descarga, staging, validación y activación conservan límites transaccionales.\n\nAUTORIDAD · Proceso supervisado; modifica datos técnicos y versiones de maestros, nunca venta libremente.\n\nCONTINUIDAD · Retiene pendientes durables y reanuda al recuperar WAN; limita reintentos y trabajo en curso.",
@@ -1730,9 +1730,9 @@
     {
       "id": "notes-2295-7-bg",
       "type": "rectangle",
-      "x": 3740.347070312493,
+      "x": 3737.0951171874995,
       "y": 2703.3,
-      "width": 1201.4490234374978,
+      "width": 1200.3650390624998,
       "height": 439.25,
       "angle": 0,
       "strokeColor": "#CCD7E8",
@@ -1750,19 +1750,19 @@
       "roundness": {
         "type": 3
       },
-      "seed": 1822839141,
+      "seed": 1114337318,
       "version": 2,
-      "versionNonce": 251606155,
+      "versionNonce": 346661114,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false
     },
     {
       "id": "notes-2295-7-title",
       "type": "text",
-      "x": 3762.347070312493,
+      "x": 3759.0951171874995,
       "y": 2725.3,
       "width": 123.66943359375,
       "height": 31.25,
@@ -1780,12 +1780,12 @@
       "frameId": null,
       "index": "an",
       "roundness": null,
-      "seed": 1420665707,
+      "seed": 6262074,
       "version": 2,
-      "versionNonce": 1260678565,
+      "versionNonce": 486048678,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "country-api",
@@ -1801,7 +1801,7 @@
     {
       "id": "notes-2295-7-body",
       "type": "text",
-      "x": 3762.347070312493,
+      "x": 3759.0951171874995,
       "y": 2777.55,
       "width": 1152.72265625,
       "height": 330,
@@ -1819,12 +1819,12 @@
       "frameId": null,
       "index": "ao",
       "roundness": null,
-      "seed": 1359011013,
+      "seed": 1628863334,
       "version": 2,
-      "versionNonce": 970877739,
+      "versionNonce": 796881338,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Contenedor · NestJS + Fastify / Node.js\n\napps/country-api autentica el ámbito país/entidad/sucursal. Confirma inbox, proyección operativa y outbox en un único\ncommit antes del ACK de aplicación. Expone trabajo y resultados al erp-worker mediante HTTPS saliente iniciado por\nese worker. Valida, publica y sirve versiones preparadas mediante MasterDataSourcePort en erp-worker; no ejecuta la\nACL ni carga masiva pesada en un endpoint. La caché opcional acelera lecturas reconstruibles, con PostgreSQL\ncomo fuente durable.\n\nAUTORIDAD · Autentica sucursal y país; confirma inbox, efecto local y outbox juntos antes del ACK de aplicación.\nConserva autoridad de versiones, manifiestos y publicación de maestros.\n\nCONTINUIDAD · No participa en la transacción local de sucursal. Su caída genera atraso de sincronización.",
@@ -1842,7 +1842,7 @@
       "type": "rectangle",
       "x": 64,
       "y": 3166.55,
-      "width": 1201.4490234374978,
+      "width": 1200.3650390624998,
       "height": 494.25,
       "angle": 0,
       "strokeColor": "#CCD7E8",
@@ -1860,12 +1860,12 @@
       "roundness": {
         "type": 3
       },
-      "seed": 1637613067,
+      "seed": 1043191290,
       "version": 2,
-      "versionNonce": 703688965,
+      "versionNonce": 531963622,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false
     },
@@ -1890,12 +1890,12 @@
       "frameId": null,
       "index": "aq",
       "roundness": null,
-      "seed": 347274277,
+      "seed": 1690181286,
       "version": 2,
-      "versionNonce": 1021169099,
+      "versionNonce": 954018426,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Datos operativos de país",
@@ -1929,12 +1929,12 @@
       "frameId": null,
       "index": "ar",
       "roundness": null,
-      "seed": 19268779,
+      "seed": 1689585338,
       "version": 2,
-      "versionNonce": 1661405285,
+      "versionNonce": 784093734,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Contenedor de datos · PostgreSQL\n\nAislamiento lógico y recursos por país/entidad legal. Retención, backups y deduplicación deben cubrir el horizonte de\nreplay y restauración. ACK de aplicación local no equivale a contabilización ERP.\n\nAUTORIDAD · Proyección de operaciones de sucursal; inbox, outbox, versiones y resultados de integración.\n\nCONTINUIDAD · No sustituye la autoridad local ni habilita consumo concurrente offline de saldos globales.",
@@ -1950,9 +1950,9 @@
     {
       "id": "notes-2295-9-bg",
       "type": "rectangle",
-      "x": 1289.4490234374978,
+      "x": 1288.3650390624998,
       "y": 3166.55,
-      "width": 1201.4490234374978,
+      "width": 1200.3650390624998,
       "height": 494.25,
       "angle": 0,
       "strokeColor": "#CCD7E8",
@@ -1970,19 +1970,19 @@
       "roundness": {
         "type": 3
       },
-      "seed": 262811525,
+      "seed": 839866854,
       "version": 2,
-      "versionNonce": 2065161323,
+      "versionNonce": 1736821562,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false
     },
     {
       "id": "notes-2295-9-title",
       "type": "text",
-      "x": 1311.4490234374978,
+      "x": 1310.3650390624998,
       "y": 3188.55,
       "width": 358.5205078125,
       "height": 31.25,
@@ -2000,12 +2000,12 @@
       "frameId": null,
       "index": "at",
       "roundness": null,
-      "seed": 989214539,
+      "seed": 1016602490,
       "version": 2,
-      "versionNonce": 1211282373,
+      "versionNonce": 352001382,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Redis · caché de país (opcional)",
@@ -2021,7 +2021,7 @@
     {
       "id": "notes-2295-9-body",
       "type": "text",
-      "x": 1311.4490234374978,
+      "x": 1310.3650390624998,
       "y": 3240.8,
       "width": 1153.130859375,
       "height": 385,
@@ -2039,12 +2039,12 @@
       "frameId": null,
       "index": "au",
       "roundness": null,
-      "seed": 1076098789,
+      "seed": 269954342,
       "version": 2,
-      "versionNonce": 274142987,
+      "versionNonce": 568087546,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Contenedor de datos · Redis · datos reconstruibles\n\nAmpliación opcional sujeta a medición, capacidad y operación. La API comprueba identidad, ámbito y autorización\nantes de leer. Las claves incluyen país, entidad legal, versión y alcance de permisos cuando afecte al resultado; un\nprefijo no sustituye autorización. TTL y vigencia comercial son independientes. El fallback limita concurrencia, esperas\ny llenados para proteger PostgreSQL. No es la inbox, outbox, base de ventas ni único registro de permisos, dinero o\ntrabajos; no implica BullMQ ni Redis en cada sucursal. Las versiones inmutables evitan mezclar publicaciones y\nPostgreSQL resuelve la versión autorizada.\n\nAUTORIDAD · Country-api lee y escribe entradas identificadas por país, entidad y versión. PostgreSQL conserva la\nautoridad y el estado durable.\n\nCONTINUIDAD · Un miss, expiración o caída permite consultar PostgreSQL con límites de carga y espera. La\nausencia de caché no es condición del commit; la capacidad del origen sigue siendo necesaria.",
@@ -2060,9 +2060,9 @@
     {
       "id": "notes-2295-10-bg",
       "type": "rectangle",
-      "x": 2514.8980468749955,
+      "x": 2512.7300781249996,
       "y": 3166.55,
-      "width": 1201.4490234374978,
+      "width": 1200.3650390624998,
       "height": 494.25,
       "angle": 0,
       "strokeColor": "#CCD7E8",
@@ -2080,19 +2080,19 @@
       "roundness": {
         "type": 3
       },
-      "seed": 1030165995,
+      "seed": 35266618,
       "version": 2,
-      "versionNonce": 361886501,
+      "versionNonce": 935231654,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false
     },
     {
       "id": "notes-2295-10-title",
       "type": "text",
-      "x": 2536.8980468749955,
+      "x": 2534.7300781249996,
       "y": 3188.55,
       "width": 119.47021484375,
       "height": 31.25,
@@ -2110,12 +2110,12 @@
       "frameId": null,
       "index": "aw",
       "roundness": null,
-      "seed": 11391557,
+      "seed": 1547868262,
       "version": 2,
-      "versionNonce": 991296939,
+      "versionNonce": 165921978,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "erp-worker",
@@ -2131,7 +2131,7 @@
     {
       "id": "notes-2295-10-body",
       "type": "text",
-      "x": 2536.8980468749955,
+      "x": 2534.7300781249996,
       "y": 3240.8,
       "width": 1153.23828125,
       "height": 385,
@@ -2149,12 +2149,12 @@
       "frameId": null,
       "index": "ax",
       "roundness": null,
-      "seed": 126034059,
+      "seed": 1897793786,
       "version": 2,
-      "versionNonce": 663897733,
+      "versionNonce": 1253276646,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Contenedor · NestJS / Node.js · libs/backend/erp\n\napps/erp-worker se ejecuta en la red autorizada del ERP e inicia HTTPS autenticado hacia country-api para reclamar\ntrabajo, renovar su lease y registrar resultados. Mantiene destino, versión de contrato e identidad de intento. Fachada,\nACL y adaptadores son componentes de libs/backend/erp, no servicios HTTP separados obligatorios. Chile: AX; Perú:\ncustom; España: Gira, con interfaces por homologar. No accede por SQL remoto a PostgreSQL de país. La\npreparación de maestros usa una identidad y presupuesto propios, conexión saliente a country-api y contrato de\nfuente homologado; no ejecuta SQL WAN.\n\nAUTORIDAD · Proceso con fachada, ACL y adaptadores internos. Prepara maestros por MasterDataSourcePort con\nidentidad y presupuesto aislados; country-api conserva publicaciones y resultados durables.\n\nCONTINUIDAD · Si país o ERP no responde, conserva identidad y resultado incierto. Consulta o concilia antes de\nrepetir un efecto.",
@@ -2170,9 +2170,9 @@
     {
       "id": "notes-2295-11-bg",
       "type": "rectangle",
-      "x": 3740.347070312493,
+      "x": 3737.0951171874995,
       "y": 3166.55,
-      "width": 1201.4490234374978,
+      "width": 1200.3650390624998,
       "height": 494.25,
       "angle": 0,
       "strokeColor": "#CCD7E8",
@@ -2190,19 +2190,19 @@
       "roundness": {
         "type": 3
       },
-      "seed": 2116370853,
+      "seed": 1046387622,
       "version": 2,
-      "versionNonce": 108990539,
+      "versionNonce": 155131258,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false
     },
     {
       "id": "notes-2295-11-title",
       "type": "text",
-      "x": 3762.347070312493,
+      "x": 3759.0951171874995,
       "y": 3188.55,
       "width": 145.91064453125,
       "height": 31.25,
@@ -2220,12 +2220,12 @@
       "frameId": null,
       "index": "az",
       "roundness": null,
-      "seed": 1392826155,
+      "seed": 1361500602,
       "version": 2,
-      "versionNonce": 1894854117,
+      "versionNonce": 65474342,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "ERP del país",
@@ -2241,7 +2241,7 @@
     {
       "id": "notes-2295-11-body",
       "type": "text",
-      "x": 3762.347070312493,
+      "x": 3759.0951171874995,
       "y": 3240.8,
       "width": 1076.0771484375,
       "height": 220,
@@ -2259,12 +2259,12 @@
       "frameId": null,
       "index": "b00",
       "roundness": null,
-      "seed": 1840760069,
+      "seed": 1553479398,
       "version": 2,
-      "versionNonce": 879546091,
+      "versionNonce": 1563516474,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Sistema externo · CL: AX · ES: Gira · PE: custom\n\nChile usa Dynamics AX on-premise. Gira en España y custom en Perú son antecedentes; versión, interfaces y\ncapacidades deben confirmarse. No se afirma que exista el adaptador objetivo en producción.\n\nAUTORIDAD · Autoridad financiera según contrato de cada país; no la base de ventas del POS.\n\nCONTINUIDAD · Su indisponibilidad deja integración pendiente; no revierte una venta local confirmada.",
@@ -2282,8 +2282,8 @@
       "type": "rectangle",
       "x": 64,
       "y": 3684.8,
-      "width": 1201.4490234374978,
-      "height": 329.25,
+      "width": 1200.3650390624998,
+      "height": 466.75,
       "angle": 0,
       "strokeColor": "#CCD7E8",
       "backgroundColor": "#F7F9FD",
@@ -2300,12 +2300,12 @@
       "roundness": {
         "type": 3
       },
-      "seed": 1045871051,
+      "seed": 22516346,
       "version": 2,
-      "versionNonce": 817637701,
+      "versionNonce": 1338391142,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false
     },
@@ -2330,12 +2330,12 @@
       "frameId": null,
       "index": "b02",
       "roundness": null,
-      "seed": 48421989,
+      "seed": 259811878,
       "version": 2,
-      "versionNonce": 1734982027,
+      "versionNonce": 580749050,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Fuentes de maestros y precios",
@@ -2369,12 +2369,12 @@
       "frameId": null,
       "index": "b03",
       "roundness": null,
-      "seed": 915621995,
+      "seed": 74658618,
       "version": 2,
-      "versionNonce": 1750120613,
+      "versionNonce": 85851558,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Sistema externo · Interfaces por confirmar\n\nCatálogo, impuestos, precios y promociones deben tener responsable, contrato, versión y vigencia. La fuente de\nprecios no se sustituye por una tabla editada libremente en cada caja.\n\nAUTORIDAD · Propietario por dato y país pendiente: no se asigna al ERP por defecto.\n\nCONTINUIDAD · Sin WAN se usa la versión local vigente dentro de la política autorizada.",
@@ -2390,10 +2390,10 @@
     {
       "id": "notes-2295-13-bg",
       "type": "rectangle",
-      "x": 1289.4490234374978,
+      "x": 1288.3650390624998,
       "y": 3684.8,
-      "width": 1201.4490234374978,
-      "height": 329.25,
+      "width": 1200.3650390624998,
+      "height": 466.75,
       "angle": 0,
       "strokeColor": "#CCD7E8",
       "backgroundColor": "#F7F9FD",
@@ -2410,19 +2410,19 @@
       "roundness": {
         "type": 3
       },
-      "seed": 628361157,
+      "seed": 368588134,
       "version": 2,
-      "versionNonce": 212881451,
+      "versionNonce": 1644599226,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false
     },
     {
       "id": "notes-2295-13-title",
       "type": "text",
-      "x": 1311.4490234374978,
+      "x": 1310.3650390624998,
       "y": 3706.8,
       "width": 225.15869140625,
       "height": 31.25,
@@ -2440,12 +2440,12 @@
       "frameId": null,
       "index": "b05",
       "roundness": null,
-      "seed": 562365195,
+      "seed": 215792634,
       "version": 2,
-      "versionNonce": 291265541,
+      "versionNonce": 421222630,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "Proveedor de pagos",
@@ -2461,10 +2461,10 @@
     {
       "id": "notes-2295-13-body",
       "type": "text",
-      "x": 1311.4490234374978,
+      "x": 1310.3650390624998,
       "y": 3759.05,
-      "width": 1129.9599609375,
-      "height": 220,
+      "width": 1131.2060546875,
+      "height": 330,
       "angle": 0,
       "strokeColor": "#182842",
       "backgroundColor": "transparent",
@@ -2479,31 +2479,31 @@
       "frameId": null,
       "index": "b06",
       "roundness": null,
-      "seed": 1737017125,
+      "seed": 1230543014,
       "version": 2,
-      "versionNonce": 103486155,
+      "versionNonce": 462393466,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
-      "text": "Sistema externo · API / SDK según proveedor\n\nPago, venta, documento fiscal e integración ERP tienen estados distintos. No repetir un cargo incierto ni cambiar de\nproveedor para resolverlo automáticamente.\n\nAUTORIDAD · El proveedor mantiene el efecto financiero; POS registra intento, referencia y resultado.\n\nCONTINUIDAD · Disponibilidad y modo offline por homologar. Un timeout puede dejar resultado desconocido.",
+      "text": "Sistema externo · API / SDK según proveedor\n\nAutoriza o informa el resultado del pago. Transbank con terminal local en Chile y Niubiz en Perú proceden de las\nfuentes revisadas. Mercado Pago Point es un ejemplo presencial ilustrativo, sin adopción ni integración acreditadas;\nWebpay Plus es un ejemplo de pago online de Transbank, distinto de su terminal de tienda. En España se informan\nBBVA/Redsys con TPV portátiles sin conexión a Gira y conciliación contable; no se presume una API o SDK ya\nintegrado. Cada ruta y capacidad requiere homologación. Pago, venta, documento fiscal e integración ERP tienen\nestados distintos. No repetir un cargo incierto ni cambiar de proveedor para resolverlo automáticamente.\n\nAUTORIDAD · El proveedor mantiene el efecto financiero; POS registra intento, referencia y resultado.\n\nCONTINUIDAD · Disponibilidad y modo offline por homologar. Un timeout puede dejar resultado desconocido.",
       "fontSize": 22,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": null,
-      "originalText": "Sistema externo · API / SDK según proveedor\n\nPago, venta, documento fiscal e integración ERP tienen estados distintos. No repetir un cargo incierto ni cambiar de\nproveedor para resolverlo automáticamente.\n\nAUTORIDAD · El proveedor mantiene el efecto financiero; POS registra intento, referencia y resultado.\n\nCONTINUIDAD · Disponibilidad y modo offline por homologar. Un timeout puede dejar resultado desconocido.",
+      "originalText": "Sistema externo · API / SDK según proveedor\n\nAutoriza o informa el resultado del pago. Transbank con terminal local en Chile y Niubiz en Perú proceden de las\nfuentes revisadas. Mercado Pago Point es un ejemplo presencial ilustrativo, sin adopción ni integración acreditadas;\nWebpay Plus es un ejemplo de pago online de Transbank, distinto de su terminal de tienda. En España se informan\nBBVA/Redsys con TPV portátiles sin conexión a Gira y conciliación contable; no se presume una API o SDK ya\nintegrado. Cada ruta y capacidad requiere homologación. Pago, venta, documento fiscal e integración ERP tienen\nestados distintos. No repetir un cargo incierto ni cambiar de proveedor para resolverlo automáticamente.\n\nAUTORIDAD · El proveedor mantiene el efecto financiero; POS registra intento, referencia y resultado.\n\nCONTINUIDAD · Disponibilidad y modo offline por homologar. Un timeout puede dejar resultado desconocido.",
       "autoResize": true,
       "lineHeight": 1.25
     },
     {
       "id": "notes-2295-14-bg",
       "type": "rectangle",
-      "x": 2514.8980468749955,
+      "x": 2512.7300781249996,
       "y": 3684.8,
-      "width": 1201.4490234374978,
-      "height": 329.25,
+      "width": 1200.3650390624998,
+      "height": 466.75,
       "angle": 0,
       "strokeColor": "#CCD7E8",
       "backgroundColor": "#F7F9FD",
@@ -2520,21 +2520,21 @@
       "roundness": {
         "type": 3
       },
-      "seed": 1202088363,
+      "seed": 144125114,
       "version": 2,
-      "versionNonce": 333222757,
+      "versionNonce": 1397443622,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false
     },
     {
       "id": "notes-2295-14-title",
       "type": "text",
-      "x": 2536.8980468749955,
+      "x": 2534.7300781249996,
       "y": 3706.8,
-      "width": 179.248046875,
+      "width": 279.33349609375,
       "height": 31.25,
       "angle": 0,
       "strokeColor": "#0545BA",
@@ -2550,31 +2550,31 @@
       "frameId": null,
       "index": "b08",
       "roundness": null,
-      "seed": 999201413,
+      "seed": 1363842022,
       "version": 2,
-      "versionNonce": 343179627,
+      "versionNonce": 1392210234,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
-      "text": "Proveedor fiscal",
+      "text": "Proveedor de facturación",
       "fontSize": 25,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": null,
-      "originalText": "Proveedor fiscal",
+      "originalText": "Proveedor de facturación",
       "autoResize": true,
       "lineHeight": 1.25
     },
     {
       "id": "notes-2295-14-body",
       "type": "text",
-      "x": 2536.8980468749955,
+      "x": 2534.7300781249996,
       "y": 3759.05,
-      "width": 1145.9013671875,
-      "height": 220,
+      "width": 1150.31640625,
+      "height": 357.5,
       "angle": 0,
       "strokeColor": "#182842",
       "backgroundColor": "transparent",
@@ -2589,21 +2589,21 @@
       "frameId": null,
       "index": "b09",
       "roundness": null,
-      "seed": 2116156491,
+      "seed": 759530874,
       "version": 2,
-      "versionNonce": 2082397893,
+      "versionNonce": 26924902,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
-      "text": "Sistema externo · Contrato por país y modalidad\n\nEmisión, aceptación y transmisión se modelan por separado. No se inventa un proveedor común ni una capacidad de\nconsulta o idempotencia no acreditada.\n\nAUTORIDAD · Autoridad y validez tributaria según régimen y proveedor.\n\nCONTINUIDAD · Emitir offline exige modalidad y material fiscal válidos; no se promete universalmente.",
+      "text": "Sistema externo · Contrato por país y modalidad\n\nAcepta/Ingydev aparecen en el código legacy chileno y EFACT en las fuentes de Perú. Gira se informa como solución\nde España; su modalidad fiscal, interfaces y capacidades deben confirmarse. Estos ejemplos no seleccionan un\nproveedor corporativo ni acreditan adaptadores homologados para POS Platform. SII y SUNAT son autoridades\ntributarias, no estos proveedores de software; en España corresponde la autoridad del régimen y territorio aplicables.\nEmisión, aceptación y transmisión se modelan por separado. No se inventa un proveedor común ni una capacidad de\nconsulta o idempotencia no acreditada.\n\nAUTORIDAD · La solución prepara, emite o transmite documentos por cuenta del contribuyente según su contrato. La\nautoridad tributaria es distinta: SII en Chile, SUNAT en Perú y la autoridad aplicable en España.\n\nCONTINUIDAD · Emitir offline exige modalidad y material fiscal válidos; no se promete universalmente.",
       "fontSize": 22,
       "fontFamily": 2,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": null,
-      "originalText": "Sistema externo · Contrato por país y modalidad\n\nEmisión, aceptación y transmisión se modelan por separado. No se inventa un proveedor común ni una capacidad de\nconsulta o idempotencia no acreditada.\n\nAUTORIDAD · Autoridad y validez tributaria según régimen y proveedor.\n\nCONTINUIDAD · Emitir offline exige modalidad y material fiscal válidos; no se promete universalmente.",
+      "originalText": "Sistema externo · Contrato por país y modalidad\n\nAcepta/Ingydev aparecen en el código legacy chileno y EFACT en las fuentes de Perú. Gira se informa como solución\nde España; su modalidad fiscal, interfaces y capacidades deben confirmarse. Estos ejemplos no seleccionan un\nproveedor corporativo ni acreditan adaptadores homologados para POS Platform. SII y SUNAT son autoridades\ntributarias, no estos proveedores de software; en España corresponde la autoridad del régimen y territorio aplicables.\nEmisión, aceptación y transmisión se modelan por separado. No se inventa un proveedor común ni una capacidad de\nconsulta o idempotencia no acreditada.\n\nAUTORIDAD · La solución prepara, emite o transmite documentos por cuenta del contribuyente según su contrato. La\nautoridad tributaria es distinta: SII en Chile, SUNAT en Perú y la autoridad aplicable en España.\n\nCONTINUIDAD · Emitir offline exige modalidad y material fiscal válidos; no se promete universalmente.",
       "autoResize": true,
       "lineHeight": 1.25
     },
@@ -2611,7 +2611,7 @@
       "id": "footer",
       "type": "text",
       "x": 64,
-      "y": 4073.05,
+      "y": 4210.55,
       "width": 1424.169921875,
       "height": 25,
       "angle": 0,
@@ -2626,12 +2626,12 @@
       "frameId": null,
       "index": "b0A",
       "roundness": null,
-      "seed": 1782776293,
+      "seed": 1473980198,
       "version": 2,
-      "versionNonce": 14097419,
+      "versionNonce": 464337402,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "C4: contenedor = aplicación o almacén; componente = módulo dentro de un proceso. Despliegue y dinámicas son vistas complementarias, no el nivel de código.",
@@ -2648,7 +2648,7 @@
       "id": "glossary",
       "type": "text",
       "x": 64,
-      "y": 4139.05,
+      "y": 4276.55,
       "width": 1681.240234375,
       "height": 25,
       "angle": 0,
@@ -2663,12 +2663,12 @@
       "frameId": null,
       "index": "b0B",
       "roundness": null,
-      "seed": 282213099,
+      "seed": 69912122,
       "version": 2,
-      "versionNonce": 1891679781,
+      "versionNonce": 743897766,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "LAN: red de tienda · WAN: enlace a país · ACK: acuse de aplicación durable · ACL: capa anticorrupción · outbox/inbox: registros de envío/recepción · watermark: corte consistente del origen",
@@ -2685,7 +2685,7 @@
       "id": "sources",
       "type": "text",
       "x": 64,
-      "y": 4208.05,
+      "y": 4345.55,
       "width": 1643.8095703125,
       "height": 67.5,
       "angle": 0,
@@ -2700,12 +2700,12 @@
       "frameId": null,
       "index": "b0C",
       "roundness": null,
-      "seed": 1219722565,
+      "seed": 1031230054,
       "version": 2,
-      "versionNonce": 122512043,
+      "versionNonce": 614984378,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053759,
+      "updated": 1793288406237,
       "link": null,
       "locked": false,
       "text": "FUENTES DEL REPOSITORIO\ndocs/c4-arquitectura-propuesta.md  ·  docs/propuesta-arquitectura.md  ·  docs/opciones-tecnologicas.md  ·  docs/operacion-caja-y-evolucion.md  ·  docs/revision-resiliencia-datos-pos.md\nAngular + Tauri (escritorio), Angular + Capacitor (móvil) y Nx: dirección elegida. Backend, bases, integración y topología: diseño por implementar y validar. Nx organiza código y CI; no es un proceso runtime.",
@@ -2721,7 +2721,7 @@
     {
       "id": "systemScope",
       "type": "rectangle",
-      "x": 1060.8062499999912,
+      "x": 1056.4703125,
       "y": 596.4,
       "width": 2870.73984375,
       "height": 1256.8,
@@ -2737,20 +2737,20 @@
       "frameId": null,
       "index": "b0C0V",
       "roundness": null,
-      "seed": 480315755,
+      "seed": 1467736378,
       "version": 3,
-      "versionNonce": 1756344709,
+      "versionNonce": 1244444134,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false
     },
     {
       "id": "systemScope-title",
       "type": "text",
-      "x": 1078.80625,
-      "y": 610.7999874114989,
+      "x": 1074.4703125,
+      "y": 610.7999301910401,
       "width": 467.11328125,
       "height": 27.5,
       "angle": 0,
@@ -2765,12 +2765,12 @@
       "frameId": null,
       "index": "b0C1",
       "roundness": null,
-      "seed": 1088345797,
+      "seed": 1469671270,
       "version": 3,
-      "versionNonce": 8508747,
+      "versionNonce": 1150190458,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "text": "POS Platform · aplicaciones y datos propuestos",
@@ -2786,7 +2786,7 @@
     {
       "id": "cashier",
       "type": "rectangle",
-      "x": 1603.6761718749913,
+      "x": 1599.3402343750001,
       "y": 430,
       "width": 416.41875,
       "height": 134.4,
@@ -2804,14 +2804,14 @@
       "roundness": {
         "type": 3
       },
-      "seed": 1647485963,
+      "seed": 379562490,
       "version": 5,
-      "versionNonce": 556349669,
+      "versionNonce": 1948846374,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "6JbnliACf0LvCNFzzsk29"
+          "id": "2MfsVju6xtTCfvtvseJfO"
         },
         {
           "id": "cashier_client",
@@ -2822,7 +2822,7 @@
           "type": "arrow"
         }
       ],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -2833,7 +2833,7 @@
     {
       "id": "client",
       "type": "rectangle",
-      "x": 1153.287109375,
+      "x": 1148.951171875,
       "y": 833.2,
       "width": 379.16249999999997,
       "height": 160.79999999999993,
@@ -2849,14 +2849,14 @@
       "frameId": null,
       "index": "b0C3",
       "roundness": null,
-      "seed": 180467237,
+      "seed": 1677953702,
       "version": 6,
-      "versionNonce": 1271854059,
+      "versionNonce": 94635066,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "sYy6_PC_LyqapMZHnlaSg"
+          "id": "lihlVSSpLXYoIJzxlp8Xv"
         },
         {
           "id": "cashier_client",
@@ -2871,7 +2871,7 @@
           "type": "arrow"
         }
       ],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -2882,7 +2882,7 @@
     {
       "id": "mobileClient",
       "type": "rectangle",
-      "x": 1826.9541015624914,
+      "x": 1822.6181640625,
       "y": 833.2,
       "width": 324.4875,
       "height": 160.79999999999993,
@@ -2898,14 +2898,14 @@
       "frameId": null,
       "index": "b0C4",
       "roundness": null,
-      "seed": 1140320939,
+      "seed": 2009881274,
       "version": 5,
-      "versionNonce": 1404752965,
+      "versionNonce": 431551590,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "Ox-4vu1AzbLE3rJTNEbw7"
+          "id": "tbAZVT-CcUop-3wcCwmxj"
         },
         {
           "id": "cashier_mobileClient",
@@ -2916,7 +2916,7 @@
           "type": "arrow"
         }
       ],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -2927,8 +2927,8 @@
     {
       "id": "device",
       "type": "rectangle",
-      "x": 1147.2730468749912,
-      "y": 1262.8000000000002,
+      "x": 1142.937109375,
+      "y": 1262.8,
       "width": 403.21875,
       "height": 134.4,
       "angle": 0,
@@ -2943,14 +2943,14 @@
       "frameId": null,
       "index": "b0C4V",
       "roundness": null,
-      "seed": 131180933,
+      "seed": 2110211558,
       "version": 5,
-      "versionNonce": 2034187915,
+      "versionNonce": 835415290,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "VJURl8ZBZXqdvanVOSihy"
+          "id": "Im9CFsz79gg14N4iTzVnJ"
         },
         {
           "id": "client_device",
@@ -2961,7 +2961,7 @@
           "type": "arrow"
         }
       ],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -2972,8 +2972,8 @@
     {
       "id": "branchApi",
       "type": "rectangle",
-      "x": 1670.4917968749912,
-      "y": 1262.8000000000002,
+      "x": 1666.155859375,
+      "y": 1262.8,
       "width": 441.2625,
       "height": 134.4,
       "angle": 0,
@@ -2988,14 +2988,14 @@
       "frameId": null,
       "index": "b0C5",
       "roundness": null,
-      "seed": 1453022539,
+      "seed": 430240634,
       "version": 8,
-      "versionNonce": 742523813,
+      "versionNonce": 883521446,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "qrvqapyxQUywAIYuWj53J"
+          "id": "l7D5bfWMqhV8avDBmNtOS"
         },
         {
           "id": "client_branchApi",
@@ -3018,7 +3018,7 @@
           "type": "arrow"
         }
       ],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -3029,7 +3029,7 @@
     {
       "id": "branchDb",
       "type": "rectangle",
-      "x": 1903.2337890625,
+      "x": 1898.8978515625,
       "y": 1626.4,
       "width": 409.875,
       "height": 160.79999999999998,
@@ -3045,14 +3045,14 @@
       "frameId": null,
       "index": "b0C6",
       "roundness": null,
-      "seed": 2035036389,
+      "seed": 1978767654,
       "version": 5,
-      "versionNonce": 864892203,
+      "versionNonce": 1585954234,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "61fqM_JKFQRtHVDYLU9cl"
+          "id": "K6aT1rjI8Dbu3DcYIb8ch"
         },
         {
           "id": "branchApi_branchDb",
@@ -3063,7 +3063,7 @@
           "type": "arrow"
         }
       ],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -3074,7 +3074,7 @@
     {
       "id": "syncWorker",
       "type": "rectangle",
-      "x": 2387.2275390624914,
+      "x": 2382.8916015625,
       "y": 820,
       "width": 382.01015624999997,
       "height": 187.19999999999993,
@@ -3090,14 +3090,14 @@
       "frameId": null,
       "index": "b0C7",
       "roundness": null,
-      "seed": 897022955,
+      "seed": 1315730490,
       "version": 5,
-      "versionNonce": 2129413893,
+      "versionNonce": 2099745510,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "0Jl8kvKPwNWOynqcbVO6Y"
+          "id": "1uyCKpWbY22l5T_MGXjcs"
         },
         {
           "id": "syncWorker_branchDb",
@@ -3108,7 +3108,7 @@
           "type": "arrow"
         }
       ],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -3119,7 +3119,7 @@
     {
       "id": "countryApi",
       "type": "rectangle",
-      "x": 2974.666210937491,
+      "x": 2970.3302734375,
       "y": 1249.6,
       "width": 425.84999999999997,
       "height": 160.79999999999998,
@@ -3135,14 +3135,14 @@
       "frameId": null,
       "index": "b0C8",
       "roundness": null,
-      "seed": 482266181,
+      "seed": 1945076838,
       "version": 7,
-      "versionNonce": 1780701131,
+      "versionNonce": 2029778554,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "kec_ogaMgJFnDn1MuHbji"
+          "id": "gRNDvaqwQi-WCUtQ1UjyU"
         },
         {
           "id": "syncWorker_countryApi",
@@ -3161,7 +3161,7 @@
           "type": "arrow"
         }
       ],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -3172,7 +3172,7 @@
     {
       "id": "countryDb",
       "type": "rectangle",
-      "x": 2768.6951171875,
+      "x": 2764.3591796875,
       "y": 1626.4,
       "width": 375.15,
       "height": 160.79999999999998,
@@ -3188,21 +3188,21 @@
       "frameId": null,
       "index": "b0C8V",
       "roundness": null,
-      "seed": 748078731,
+      "seed": 671472890,
       "version": 4,
-      "versionNonce": 1043799653,
+      "versionNonce": 499140134,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "rRyT_2Gp9eK63QrKoAOIN"
+          "id": "GYHnhf4NhcfmuIi-0lFba"
         },
         {
           "id": "countryApi_countryDb",
           "type": "arrow"
         }
       ],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -3213,7 +3213,7 @@
     {
       "id": "countryCache",
       "type": "rectangle",
-      "x": 3298.355664062491,
+      "x": 3294.0197265625,
       "y": 1626.4,
       "width": 402.22499999999997,
       "height": 160.79999999999998,
@@ -3229,21 +3229,21 @@
       "frameId": null,
       "index": "b0C9",
       "roundness": null,
-      "seed": 570882981,
+      "seed": 697173926,
       "version": 4,
-      "versionNonce": 991700587,
+      "versionNonce": 1374361402,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "XfOL6CRIPDw3fbCabeX3X"
+          "id": "zWVhKUvhlOJ5_pPiszp_u"
         },
         {
           "id": "countryApi_countryCache",
           "type": "arrow"
         }
       ],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -3254,7 +3254,7 @@
     {
       "id": "erpAdapter",
       "type": "rectangle",
-      "x": 3375.919140625,
+      "x": 3371.583203124991,
       "y": 833.2,
       "width": 432.46875,
       "height": 160.79999999999993,
@@ -3270,14 +3270,14 @@
       "frameId": null,
       "index": "b0CA",
       "roundness": null,
-      "seed": 582204715,
+      "seed": 66334138,
       "version": 6,
-      "versionNonce": 821037509,
+      "versionNonce": 1734381926,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "-3U9mMwLCd2xRGRmu5372"
+          "id": "IBlwXNFSFJ_G3V2tbKn-E"
         },
         {
           "id": "erpAdapter_countryApi",
@@ -3292,7 +3292,7 @@
           "type": "arrow"
         }
       ],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -3303,7 +3303,7 @@
     {
       "id": "erp",
       "type": "rectangle",
-      "x": 4003.546093749991,
+      "x": 3999.2101562499997,
       "y": 1249.6,
       "width": 388.40625,
       "height": 160.79999999999998,
@@ -3319,21 +3319,21 @@
       "frameId": null,
       "index": "b0CB",
       "roundness": null,
-      "seed": 1632780037,
+      "seed": 117056230,
       "version": 4,
-      "versionNonce": 490873099,
+      "versionNonce": 699932666,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "6-NqPQiYsgXrnRL8mqIns"
+          "id": "UNR0d3qRkYrWRI-satbIZ"
         },
         {
           "id": "erpAdapter_erp",
           "type": "arrow"
         }
       ],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -3344,8 +3344,8 @@
     {
       "id": "masters",
       "type": "rectangle",
-      "x": 4511.952343749991,
-      "y": 1262.8000000000002,
+      "x": 4507.616406249999,
+      "y": 1262.8,
       "width": 429.84375,
       "height": 134.4,
       "angle": 0,
@@ -3360,21 +3360,21 @@
       "frameId": null,
       "index": "b0CC",
       "roundness": null,
-      "seed": 1127800779,
+      "seed": 391800442,
       "version": 4,
-      "versionNonce": 1748273445,
+      "versionNonce": 89486502,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "ITIkS4YCKXZUENsv9D8jU"
+          "id": "HP_cq1_oiR7Hkl52go3Xm"
         },
         {
           "id": "erpAdapter_masters",
           "type": "arrow"
         }
       ],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -3387,7 +3387,7 @@
       "type": "rectangle",
       "x": 64,
       "y": 1626.4,
-      "width": 423.03749999999997,
+      "width": 371.08125,
       "height": 160.79999999999998,
       "angle": 0,
       "strokeColor": "#64748B",
@@ -3401,14 +3401,14 @@
       "frameId": null,
       "index": "b0CD",
       "roundness": null,
-      "seed": 1360926309,
+      "seed": 1858131494,
       "version": 5,
-      "versionNonce": 1242548139,
+      "versionNonce": 1013321914,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "wVs7Zx3IQ0qbenpa8tGdb"
+          "id": "W82d7x9Xv2LJo1j-dD67u"
         },
         {
           "id": "device_payments",
@@ -3419,7 +3419,7 @@
           "type": "arrow"
         }
       ],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -3430,9 +3430,9 @@
     {
       "id": "fiscal",
       "type": "rectangle",
-      "x": 607.0374999999913,
+      "x": 555.08125,
       "y": 1626.4,
-      "width": 381.76875,
+      "width": 429.38906249999997,
       "height": 160.79999999999998,
       "angle": 0,
       "strokeColor": "#64748B",
@@ -3446,21 +3446,21 @@
       "frameId": null,
       "index": "b0CE",
       "roundness": null,
-      "seed": 1749069419,
+      "seed": 2063304506,
       "version": 4,
-      "versionNonce": 1970412677,
+      "versionNonce": 827060198,
       "isDeleted": false,
       "boundElements": [
         {
           "type": "text",
-          "id": "UsiLmSIu7nGD6xE_ERyH7"
+          "id": "_WrLpsyt_dPNMZHjq6SlQ"
         },
         {
           "id": "branchApi_fiscal",
           "type": "arrow"
         }
       ],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -3471,9 +3471,9 @@
     {
       "id": "cashier_client",
       "type": "arrow",
-      "x": 1617.330419921875,
+      "x": 1612.9947753906251,
       "y": 564.9,
-      "width": 274.46162109375,
+      "width": 274.46279296874997,
       "height": 263,
       "angle": 0,
       "strokeColor": "#48638C",
@@ -3489,12 +3489,12 @@
       "frameId": null,
       "index": "b0CF",
       "roundness": null,
-      "seed": 1010303429,
+      "seed": 1775182182,
       "version": 5,
-      "versionNonce": 1739561547,
+      "versionNonce": 1301801338,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -3512,79 +3512,79 @@
           7.830218505859374
         ],
         [
-          -48.23349609375,
-          16.16131591796875
+          -48.233642578125,
+          16.161334228515624
         ],
         [
-          -72.326953125,
-          24.55919189453125
+          -72.327099609375,
+          24.559228515624998
         ],
         [
-          -96.337060546875,
-          33.19180908203125
+          -96.33720703125,
+          33.191864013671875
         ],
         [
-          -120.21943359375,
-          42.17159423828125
+          -120.21958007812499,
+          42.17166748046875
         ],
         [
-          -143.928076171875,
-          51.599951171875
+          -143.92822265625,
+          51.600024414062496
         ],
         [
-          -167.39296875,
-          61.61851196289062
+          -167.393115234375,
+          61.618603515625
         ],
         [
-          -190.499267578125,
-          72.43603515625
+          -190.499560546875,
+          72.43614501953125
         ],
         [
-          -213.01435546874998,
-          84.43021240234374
+          -213.0146484375,
+          84.43039550781249
         ],
         [
-          -234.36386718749998,
-          98.37332763671874
+          -234.364306640625,
+          98.37351074218749
         ],
         [
-          -253.15107421874998,
-          115.57088623046874
+          -253.15166015625,
+          115.57099609375
         ],
         [
-          -266.965283203125,
-          136.90655517578125
+          -266.966015625,
+          136.90644531249998
         ],
         [
-          -273.479296875,
-          161.47491455078125
+          -273.48046875,
+          161.47476806640626
         ],
         [
-          -274.46162109375,
-          186.9548095703125
+          -274.46279296874997,
+          186.95466308593748
         ],
         [
-          -274.46162109375,
-          212.46986083984373
+          -274.46279296874997,
+          212.46978759765625
         ],
         [
-          -274.46162109375,
-          237.98494873046874
+          -274.46279296874997,
+          237.98487548828123
         ],
         [
-          -274.46162109375,
+          -274.46279296874997,
           263
         ]
       ],
       "lastCommittedPoint": null,
       "startBinding": {
         "elementId": "cashier",
-        "focus": 0.00000936085243481095,
-        "gap": 3.453569785134916
+        "focus": 0.000008633450981858317,
+        "gap": 3.4534469737609466
       },
       "endBinding": {
         "elementId": "client",
-        "focus": 0.0000023180199800242033,
+        "focus": -0.0000023180199765435416,
         "gap": 4.800000000000068
       },
       "startArrowhead": null,
@@ -3594,9 +3594,9 @@
     {
       "id": "cashier_mobileClient",
       "type": "arrow",
-      "x": 1885.43681640625,
+      "x": 1881.101171875,
       "y": 564.9,
-      "width": 103.76162109375,
+      "width": 103.76044921875,
       "height": 263,
       "angle": 0,
       "strokeColor": "#48638C",
@@ -3612,12 +3612,12 @@
       "frameId": null,
       "index": "b0CG",
       "roundness": null,
-      "seed": 1150658827,
+      "seed": 926584826,
       "version": 5,
-      "versionNonce": 1617314789,
+      "versionNonce": 1733362470,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -3631,63 +3631,63 @@
           0
         ],
         [
-          18.506982421874998,
-          16.40968017578125
+          18.50654296875,
+          16.410211181640623
         ],
         [
-          36.793359375,
-          33.556207275390626
+          36.79306640625,
+          33.556390380859376
         ],
         [
-          54.308642578124996,
-          51.486682128906246
+          54.30849609375,
+          51.486627197265626
         ],
         [
           70.56870117187499,
-          70.55751953125
+          70.5574462890625
         ],
         [
-          84.7283203125,
-          91.22166748046875
+          84.728173828125,
+          91.22159423828124
         ],
         [
-          95.16342773437499,
-          113.97105712890625
+          95.162841796875,
+          113.97116699218749
         ],
         [
-          101.1515625,
-          138.28109130859374
+          101.15024414062499,
+          138.2812744140625
         ],
         [
-          103.46279296875,
-          163.228076171875
+          103.46176757812499,
+          163.22822265624998
         ],
         [
-          103.76162109375,
-          188.2933837890625
+          103.76044921875,
+          188.29349365234376
         ],
         [
-          103.76162109375,
-          213.3622802734375
+          103.76044921875,
+          213.362353515625
         ],
         [
-          103.76162109375,
-          238.43114013671874
+          103.76044921875,
+          238.4311767578125
         ],
         [
-          103.76162109375,
+          103.76044921875,
           263
         ]
       ],
       "lastCommittedPoint": null,
       "startBinding": {
         "elementId": "cashier",
-        "focus": -0.00001243079052595969,
+        "focus": -0.00002786588265743406,
         "gap": 1
       },
       "endBinding": {
         "elementId": "mobileClient",
-        "focus": 0.0000036114642820195206,
+        "focus": -0.0000018057321158837165,
         "gap": 4.800000000000068
       },
       "startArrowhead": null,
@@ -3697,9 +3697,9 @@
     {
       "id": "client_branchApi",
       "type": "arrow",
-      "x": 1304.407177734375,
+      "x": 1300.071533203125,
       "y": 994.5,
-      "width": 387.9468994140625,
+      "width": 387.9471923828125,
       "height": 266.382763671875,
       "angle": 0,
       "strokeColor": "#48638C",
@@ -3715,12 +3715,12 @@
       "frameId": null,
       "index": "b0CGV",
       "roundness": null,
-      "seed": 935166245,
+      "seed": 1534198950,
       "version": 5,
-      "versionNonce": 1929124075,
+      "versionNonce": 881895994,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -3735,54 +3735,54 @@
         ],
         [
           -11.993017578125,
-          23.2223388671875
+          23.222412109375
         ],
         [
           -21.5910400390625,
-          47.7249267578125
+          47.725
         ],
         [
-          -23.7653076171875,
-          73.84462890625
+          -23.7654541015625,
+          73.84470214843749
         ],
         [
-          -15.70009765625,
-          98.7584716796875
+          -15.700244140625,
+          98.7586181640625
         ],
         [
-          0.32719726562499996,
-          119.57573242187499
+          0.32661132812499993,
+          119.57609863281249
         ],
         [
-          20.65205078125,
-          136.306884765625
+          20.651611328125,
+          136.3072509765625
         ],
         [
-          43.062255859375,
-          150.166064453125
+          43.061962890625,
+          150.1661376953125
         ],
         [
-          66.450390625,
-          162.3165771484375
+          66.450244140625,
+          162.31650390625
         ],
         [
-          90.38798828125,
+          90.387841796875,
           173.3503662109375
         ],
         [
-          114.678759765625,
-          183.5850830078125
+          114.67861328125,
+          183.585009765625
         ],
         [
-          139.21767578125,
-          193.21064453124998
+          139.217529296875,
+          193.2105712890625
         ],
         [
-          163.93837890625,
+          163.938232421875,
           202.359765625
         ],
         [
-          188.799560546875,
+          188.7994140625,
           211.1204833984375
         ],
         [
@@ -3795,35 +3795,35 @@
         ],
         [
           263.956591796875,
-          235.70759277343748
+          235.70751953125
         ],
         [
-          289.12832031249997,
-          243.5319091796875
+          289.128466796875,
+          243.53183593749998
         ],
         [
           314.3125,
           251.3165283203125
         ],
         [
-          339.49697265624997,
-          259.0996826171875
+          339.497119140625,
+          259.099609375
         ],
         [
-          364.181591796875,
+          364.18173828125,
           266.382763671875
         ]
       ],
       "lastCommittedPoint": null,
       "startBinding": {
         "elementId": "client",
-        "focus": 0.00003905674643030239,
+        "focus": 0.000038301057232186334,
         "gap": 1
       },
       "endBinding": {
         "elementId": "branchApi",
-        "focus": -0.0000034649485405818028,
-        "gap": 1.9942528769047925
+        "focus": -0.000007231325258685528,
+        "gap": 1.9939437305713512
       },
       "startArrowhead": null,
       "endArrowhead": "arrow",
@@ -3832,9 +3832,9 @@
     {
       "id": "mobileClient_branchApi",
       "type": "arrow",
-      "x": 1988.6984375,
+      "x": 1984.36162109375,
       "y": 994.5,
-      "width": 62.782861328124994,
+      "width": 62.781542968749996,
       "height": 263.4836181640625,
       "angle": 0,
       "strokeColor": "#48638C",
@@ -3850,12 +3850,12 @@
       "frameId": null,
       "index": "b0CH",
       "roundness": null,
-      "seed": 1303531435,
+      "seed": 1343914170,
       "version": 5,
-      "versionNonce": 1562279749,
+      "versionNonce": 433172070,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -3874,55 +3874,55 @@
         ],
         [
           0.14902343750000002,
-          49.63984375
+          49.6397705078125
         ],
         [
-          -1.202734375,
-          74.6727783203125
+          -1.20244140625,
+          74.67270507812499
         ],
         [
-          -3.8489746093749995,
-          99.6009033203125
+          -3.8485351562499996,
+          99.600830078125
         ],
         [
-          -8.066552734375,
-          124.3099609375
+          -8.06552734375,
+          124.31003417968749
         ],
         [
-          -14.160595703124999,
-          148.6227783203125
+          -14.159423828125,
+          148.6228515625
         ],
         [
-          -21.9478515625,
+          -21.946679687499998,
           172.4502197265625
         ],
         [
-          -31.01083984375,
-          195.8239990234375
+          -31.009814453125,
+          195.82392578124998
         ],
         [
-          -41.057763671875,
-          218.79296875
+          -41.056884765625,
+          218.792822265625
         ],
         [
-          -51.81630859375,
-          241.4383544921875
+          -51.816015625,
+          241.4379150390625
         ],
         [
-          -62.284472656249996,
+          -62.283154296875,
           263.4836181640625
         ]
       ],
       "lastCommittedPoint": null,
       "startBinding": {
         "elementId": "mobileClient",
-        "focus": -0.00003545880909438338,
+        "focus": -0.00003004178521575535,
         "gap": 1
       },
       "endBinding": {
         "elementId": "branchApi",
-        "focus": -0.000005776342976474436,
-        "gap": 4.316381835937591
+        "focus": 0.000011475336957324975,
+        "gap": 4.316381835937477
       },
       "startArrowhead": null,
       "endArrowhead": "arrow",
@@ -3931,9 +3931,9 @@
     {
       "id": "client_device",
       "type": "arrow",
-      "x": 1381.3292480468751,
+      "x": 1376.993603515625,
       "y": 994.5,
-      "width": 43.86494140625,
+      "width": 43.864794921874996,
       "height": 263.4836181640625,
       "angle": 0,
       "strokeColor": "#48638C",
@@ -3949,12 +3949,12 @@
       "frameId": null,
       "index": "b0CI",
       "roundness": null,
-      "seed": 1495012485,
+      "seed": 894861286,
       "version": 5,
-      "versionNonce": 1769980811,
+      "versionNonce": 1748194042,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -3968,44 +3968,44 @@
           0
         ],
         [
-          11.62138671875,
-          22.4537353515625
+          11.621533203124999,
+          22.453662109375
         ],
         [
           22.36396484375,
-          45.5849365234375
+          45.58486328125
         ],
         [
           31.710107421874998,
-          69.310791015625
+          69.3107177734375
         ],
         [
           38.99375,
-          93.743798828125
+          93.7437255859375
         ],
         [
           43.411279296875,
-          118.844921875
+          118.8448486328125
         ],
         [
-          43.86494140625,
-          144.31357421875
+          43.864794921874996,
+          144.3135009765625
         ],
         [
-          40.16298828125,
-          169.52705078124998
+          40.162402343749996,
+          169.526904296875
         ],
         [
-          33.326416015625,
-          194.0866943359375
+          33.325830078125,
+          194.086474609375
         ],
         [
-          24.201025390625,
-          217.8968505859375
+          24.200585937499998,
+          217.8967041015625
         ],
         [
-          13.501660156249999,
-          241.04731445312498
+          13.500927734374999,
+          241.04694824218748
         ],
         [
           2.8443847656249996,
@@ -4015,13 +4015,13 @@
       "lastCommittedPoint": null,
       "startBinding": {
         "elementId": "client",
-        "focus": -0.000026389983302728823,
+        "focus": -0.000024882828890986474,
         "gap": 1
       },
       "endBinding": {
         "elementId": "device",
-        "focus": 0.000010013774193045517,
-        "gap": 4.316381835937591
+        "focus": 0.00002338202901766927,
+        "gap": 4.316381835937477
       },
       "startArrowhead": null,
       "endArrowhead": "arrow",
@@ -4030,10 +4030,10 @@
     {
       "id": "device_payments",
       "type": "arrow",
-      "x": 1348.3819824218751,
+      "x": 1344.046337890625,
       "y": 1397.6999999999998,
-      "width": 856.1167724609375,
-      "height": 270.64399414062495,
+      "width": 903.7351440429687,
+      "height": 275.86279296875,
       "angle": 0,
       "strokeColor": "#48638C",
       "backgroundColor": "transparent",
@@ -4048,12 +4048,12 @@
       "frameId": null,
       "index": "b0CJ",
       "roundness": null,
-      "seed": 1707156043,
+      "seed": 1363040634,
       "version": 5,
-      "versionNonce": 1106792101,
+      "versionNonce": 1704653222,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -4071,28 +4071,28 @@
           36
         ],
         [
-          -820.1167724609375,
+          -867.7351440429687,
           36
         ],
         [
-          -820.1167724609375,
-          270.64399414062495
+          -867.7351440429687,
+          275.86279296875
         ],
         [
-          -856.1167724609375,
-          270.64399414062495
+          -903.7351440429687,
+          275.86279296875
         ]
       ],
       "lastCommittedPoint": null,
       "startBinding": {
         "elementId": "device",
-        "focus": -0.0013047576554355064,
+        "focus": -0.0012887839053249944,
         "gap": 1
       },
       "endBinding": {
         "elementId": "payments",
-        "focus": -2.682866961082741e-7,
-        "gap": 4.727709960937602
+        "focus": -0.000002299956219709317,
+        "gap": 4.729943847656102
       },
       "startArrowhead": null,
       "endArrowhead": "arrow",
@@ -4101,9 +4101,9 @@
     {
       "id": "branchApi_branchDb",
       "type": "arrow",
-      "x": 1789.56123046875,
+      "x": 1785.2244140625,
       "y": 1397.6999999999998,
-      "width": 216.946826171875,
+      "width": 216.94814453125,
       "height": 230.18603515625,
       "angle": 0,
       "strokeColor": "#48638C",
@@ -4119,12 +4119,12 @@
       "frameId": null,
       "index": "b0CK",
       "roundness": null,
-      "seed": 739326949,
+      "seed": 730436390,
       "version": 5,
-      "versionNonce": 863312427,
+      "versionNonce": 184738746,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -4138,80 +4138,80 @@
           0
         ],
         [
-          -22.173388671875,
-          13.769482421874999
+          -22.173095703125,
+          13.769848632812499
         ],
         [
-          -43.80166015625,
-          28.106640625
+          -43.8013671875,
+          28.1072998046875
         ],
         [
-          -64.8271484375,
-          43.3065185546875
+          -64.82700195312499,
+          43.30703125
         ],
         [
-          -84.38720703125,
-          60.3343017578125
+          -84.38706054687499,
+          60.334814453125
         ],
         [
           -100.713623046875,
-          80.4221435546875
+          80.42265625
         ],
         [
           -108.269287109375,
-          104.8859130859375
+          104.8864990234375
         ],
         [
-          -98.729638671875,
-          128.48103027343748
+          -98.729052734375,
+          128.4814697265625
         ],
         [
-          -79.73603515625,
-          146.0639892578125
+          -79.73515625,
+          146.064208984375
         ],
         [
-          -58.023974609374996,
-          160.249169921875
+          -58.02294921875,
+          160.24931640625
         ],
         [
-          -35.165673828125,
-          172.521337890625
+          -35.1646484375,
+          172.521484375
         ],
         [
-          -11.683935546875,
-          183.559814453125
+          -11.682763671875,
+          183.5599609375
         ],
         [
-          12.184521484374999,
-          193.738134765625
+          12.185546875,
+          193.73828125
         ],
         [
-          36.305810546875,
-          203.302978515625
+          36.3068359375,
+          203.303271484375
         ],
         [
-          60.574609374999994,
-          212.488134765625
+          60.57578125,
+          212.488427734375
         ],
         [
-          84.87607421874999,
-          221.58701171875
+          84.87724609375,
+          221.5873046875
         ],
         [
-          108.6775390625,
+          108.678857421875,
           230.18603515625
         ]
       ],
       "lastCommittedPoint": null,
       "startBinding": {
         "elementId": "branchApi",
-        "focus": -0.000017899707417418548,
+        "focus": -0.0000027836313110609145,
         "gap": 1
       },
       "endBinding": {
         "elementId": "branchDb",
-        "focus": -0.000014977831153594984,
-        "gap": 4.495019531249909
+        "focus": 0.000005145497807767134,
+        "gap": 4.4945800781249545
       },
       "startArrowhead": null,
       "endArrowhead": "arrow",
@@ -4220,10 +4220,10 @@
     {
       "id": "branchApi_payments",
       "type": "arrow",
-      "x": 1890.6236328125,
+      "x": 1886.28681640625,
       "y": 1397.6999999999998,
-      "width": 1398.3188354492188,
-      "height": 283.37846679687505,
+      "width": 1445.93720703125,
+      "height": 286.701171875,
       "angle": 0,
       "strokeColor": "#48638C",
       "backgroundColor": "transparent",
@@ -4238,12 +4238,12 @@
       "frameId": null,
       "index": "b0CKV",
       "roundness": null,
-      "seed": 1167892715,
+      "seed": 1508448826,
       "version": 5,
-      "versionNonce": 1033974277,
+      "versionNonce": 1171901670,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -4261,28 +4261,28 @@
           36
         ],
         [
-          -1362.3188354492188,
+          -1409.93720703125,
           36
         ],
         [
-          -1362.3188354492188,
-          283.37846679687505
+          -1409.93720703125,
+          286.701171875
         ],
         [
-          -1398.3188354492188,
-          283.37846679687505
+          -1445.93720703125,
+          286.701171875
         ]
       ],
       "lastCommittedPoint": null,
       "startBinding": {
         "elementId": "branchApi",
-        "focus": -0.0020439146520850556,
+        "focus": -0.0020282690326594,
         "gap": 1
       },
       "endBinding": {
         "elementId": "payments",
-        "focus": 0.0000029922309491394193,
-        "gap": 4.767297363281216
+        "focus": 0.0000014953309796564767,
+        "gap": 4.768359374999875
       },
       "startArrowhead": null,
       "endArrowhead": "arrow",
@@ -4291,10 +4291,10 @@
     {
       "id": "branchApi_fiscal",
       "type": "arrow",
-      "x": 2060.129638671875,
+      "x": 2055.793994140625,
       "y": 1397.6999999999998,
-      "width": 1192.3088623046876,
-      "height": 285.09804687499997,
+      "width": 1192.302197265625,
+      "height": 282.63198242187497,
       "angle": 0,
       "strokeColor": "#48638C",
       "backgroundColor": "transparent",
@@ -4309,12 +4309,12 @@
       "frameId": null,
       "index": "b0CL",
       "roundness": null,
-      "seed": 1756002117,
+      "seed": 1752710758,
       "version": 5,
-      "versionNonce": 1304861899,
+      "versionNonce": 1998740602,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -4328,228 +4328,228 @@
           0
         ],
         [
-          24.626123046874998,
-          9.0644775390625
+          24.617041015625,
+          9.0608154296875
         ],
         [
-          48.752246093749996,
-          18.6288818359375
+          48.73408203125,
+          18.621630859375
         ],
         [
-          72.791796875,
-          28.406494140625
+          72.76499023437499,
+          28.394189453124998
         ],
         [
-          96.20102539062499,
-          39.589697265625
+          96.16923828125,
+          39.5650146484375
         ],
         [
-          117.5029296875,
-          54.289477539062496
+          117.47905273437499,
+          54.2373291015625
         ],
         [
-          126.25083007812499,
-          77.2279052734375
+          126.24541015624999,
+          77.1489501953125
         ],
         [
-          109.191552734375,
-          96.140869140625
+          109.12958984375,
+          95.99599609375
         ],
         [
-          86.22646484375,
-          108.158740234375
+          86.1359375,
+          107.938427734375
         ],
         [
-          61.967187499999994,
-          117.36008300781249
+          61.861132812499996,
+          117.07114257812499
         ],
         [
-          37.174853515624996,
-          125.02531738281249
+          37.059423828125,
+          124.67258300781249
         ],
         [
-          12.096142578124999,
-          131.6995849609375
+          11.975,
+          131.2863525390625
         ],
         [
-          -13.150146484375,
-          137.7114501953125
+          -13.274951171875,
+          137.2406494140625
         ],
         [
-          -38.502197265625,
-          143.2621826171875
+          -38.629052734375,
+          142.73542480468748
         ],
         [
-          -63.92661132812499,
-          148.4713134765625
+          -64.054638671875,
+          147.88984374999998
         ],
         [
-          -89.405224609375,
-          153.40908203125
+          -89.53354492187499,
+          152.77421875
         ],
         [
-          -114.925,
-          158.130712890625
+          -115.05302734374999,
+          157.44296875
         ],
         [
-          -140.477587890625,
-          162.669677734375
+          -140.6048828125,
+          161.930078125
         ],
         [
-          -166.056689453125,
-          167.058642578125
+          -166.182666015625,
+          166.267333984375
         ],
         [
-          -191.658203125,
-          171.314013671875
+          -191.78271484375,
+          170.47216796875
         ],
         [
-          -217.279052734375,
-          175.4517578125
+          -217.40166015625,
+          174.559228515625
         ],
         [
-          -242.916015625,
-          179.48872070312498
+          -243.03657226562498,
+          178.545654296875
         ],
         [
-          -268.566748046875,
-          183.436328125
+          -268.685107421875,
+          182.44345703125
         ],
         [
-          -294.22978515625,
-          187.30292968749998
+          -294.345654296875,
+          186.26069335937498
         ],
         [
-          -319.90468749999997,
-          191.091162109375
+          -320.0177734375,
+          189.9994140625
         ],
         [
-          -345.589111328125,
-          194.81435546875
+          -345.699267578125,
+          193.67353515624998
         ],
         [
-          -371.28203125,
-          198.47763671875
+          -371.3892578125,
+          197.28803710937498
         ],
         [
-          -396.983740234375,
-          202.07998046875
+          -397.087744140625,
+          200.84189453125
         ],
         [
-          -422.692333984375,
-          205.632080078125
+          -422.79311523437497,
+          204.34565429687498
         ],
         [
-          -448.4072265625,
-          209.137451171875
+          -448.504638671875,
+          207.80268554687498
         ],
         [
-          -474.12885742187495,
-          212.5943359375
+          -474.22275390625,
+          211.21137695312498
         ],
         [
-          -499.85634765624997,
-          216.00625
+          -499.94672851562495,
+          214.57539062499998
         ],
         [
-          -525.58837890625,
-          219.38388671875
+          -525.6750976562499,
+          217.905126953125
         ],
         [
-          -551.32509765625,
-          222.7263671875
+          -551.4080078124999,
+          221.199853515625
         ],
         [
-          -577.066064453125,
-          226.03559570312498
+          -577.145166015625,
+          224.46162109374998
         ],
         [
-          -602.8111328125,
-          229.313623046875
+          -602.88642578125,
+          227.692041015625
         ],
         [
-          -628.56015625,
-          232.558984375
+          -628.631494140625,
+          230.88994140625
         ],
         [
-          -654.312841796875,
-          235.77680664062498
+          -654.3799316406249,
+          234.060302734375
         ],
         [
-          -680.06845703125,
-          238.97001953125
+          -680.1314453125,
+          237.20634765625
         ],
         [
-          -705.827587890625,
-          242.13364257812498
+          -705.8857421875,
+          240.329833984375
         ],
         [
-          -731.588330078125,
-          245.28642578125
+          -731.64267578125,
+          243.43295898437498
         ],
         [
-          -757.351416015625,
-          248.41884765625
+          -757.401953125,
+          246.51396484375
         ],
         [
-          -783.1161865234375,
-          251.5369140625
+          -783.162548828125,
+          249.585009765625
         ],
         [
-          -808.8824951171874,
-          254.64252929687498
+          -808.9245361328125,
+          252.64389648437498
         ],
         [
-          -834.6496826171875,
-          257.741259765625
+          -834.6873291015625,
+          255.69589843749998
         ],
         [
-          -860.417236328125,
-          260.8369140625
+          -860.450634765625,
+          258.744677734375
         ],
         [
-          -886.1848632812499,
-          263.931982421875
+          -886.2138671875,
+          261.7931640625
         ],
         [
-          -911.952490234375,
-          267.027197265625
+          -911.9771728515625,
+          264.84150390625
         ],
         [
-          -937.7201171874999,
-          270.122265625
+          -937.7404052734374,
+          267.889990234375
         ],
         [
-          -963.4876708984375,
-          273.21748046875
+          -963.5036376953125,
+          270.938330078125
         ],
         [
-          -989.255224609375,
-          276.312548828125
+          -989.266943359375,
+          273.98681640625
         ],
         [
-          -1015.0227783203125,
-          279.407763671875
+          -1015.0303222656249,
+          277.03515625
         ],
         [
-          -1040.790478515625,
-          282.502978515625
+          -1040.7935546874999,
+          280.08364257812497
         ],
         [
-          -1066.0580322265625,
-          285.09804687499997
+          -1066.056787109375,
+          282.63198242187497
         ]
       ],
       "lastCommittedPoint": null,
       "startBinding": {
         "elementId": "branchApi",
-        "focus": 0.000008971942298363735,
+        "focus": 0.000011023073661573463,
         "gap": 1
       },
       "endBinding": {
         "elementId": "fiscal",
-        "focus": -0.000014477362319552489,
-        "gap": 4.765356445321004
+        "focus": -0.00000992874364744106,
+        "gap": 4.7668945312500455
       },
       "startArrowhead": null,
       "endArrowhead": "arrow",
@@ -4558,9 +4558,9 @@
     {
       "id": "syncWorker_branchDb",
       "type": "arrow",
-      "x": 2546.10693359375,
+      "x": 2541.7712890625,
       "y": 1007.6999999999999,
-      "width": 263.4705078125,
+      "width": 263.4716796875,
       "height": 616.144384765625,
       "angle": 0,
       "strokeColor": "#48638C",
@@ -4576,12 +4576,12 @@
       "frameId": null,
       "index": "b0CM",
       "roundness": null,
-      "seed": 651119499,
+      "seed": 687719162,
       "version": 5,
-      "versionNonce": 1293330789,
+      "versionNonce": 1209745446,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -4595,127 +4595,127 @@
           0
         ],
         [
-          -7.875683593749999,
-          24.3051513671875
+          -7.876269531249999,
+          24.304931640625
         ],
         [
-          -15.77265625,
-          49.265063476562496
+          -15.773535156249999,
+          49.26484375
         ],
         [
-          -22.580078125,
+          -22.58037109375,
           74.5429931640625
         ],
         [
-          -28.17841796875,
+          -28.1787109375,
           100.115869140625
         ],
         [
           -32.5228515625,
-          125.9311767578125
+          125.93124999999999
         ],
         [
           -35.601513671875,
-          151.928125
+          151.928271484375
         ],
         [
           -37.654345703124996,
-          178.027392578125
+          178.02753906249998
         ],
         [
           -38.978125,
-          204.17426757812498
+          204.1744873046875
         ],
         [
           -39.781005859375,
-          230.34267578125
+          230.3428955078125
         ],
         [
           -40.21474609375,
-          256.5199462890625
+          256.5202392578125
         ],
         [
           -40.402685546875,
-          282.70021972656247
+          282.70058593749997
         ],
         [
           -40.445166015625,
-          308.8812255859375
+          308.8816650390625
         ],
         [
           -40.470654296875,
-          335.0622314453125
+          335.0626708984375
         ],
         [
           -40.81298828125,
-          361.24038085937497
+          361.2408203125
         ],
         [
           -42.07626953125,
-          387.3883544921875
+          387.3888671875
         ],
         [
           -44.939599609375,
-          413.4058837890625
+          413.40639648437497
         ],
         [
-          -50.183886718749996,
-          439.04306640625
+          -50.183740234375,
+          439.04372558593747
         ],
         [
-          -58.595019531249996,
-          463.81269531249995
+          -58.5953125,
+          463.8132080078125
         ],
         [
-          -70.743408203125,
-          486.96967773437495
+          -70.743701171875,
+          486.9701904296875
         ],
         [
-          -86.651611328125,
-          507.7240966796875
+          -86.651904296875,
+          507.72468261718745
         ],
         [
-          -105.388134765625,
-          525.9873291015625
+          -105.388720703125,
+          525.9877685546875
         ],
         [
-          -125.90927734374999,
-          542.23193359375
+          -125.91000976562499,
+          542.2322998046875
         ],
         [
-          -147.604638671875,
-          556.878173828125
+          -147.60537109375,
+          556.8784667968749
         ],
         [
-          -170.10830078125,
-          570.252783203125
+          -170.1091796875,
+          570.253076171875
         ],
         [
-          -193.186767578125,
-          582.611669921875
+          -193.18779296875,
+          582.61181640625
         ],
         [
-          -216.66220703125,
-          594.200634765625
+          -216.663232421875,
+          594.20107421875
         ],
         [
-          -240.312548828125,
-          605.430419921875
+          -240.31357421874998,
+          605.4307128906249
         ],
         [
-          -263.4705078125,
+          -263.4716796875,
           616.144384765625
         ]
       ],
       "lastCommittedPoint": null,
       "startBinding": {
         "elementId": "syncWorker",
-        "focus": 0.00009342557828661828,
+        "focus": 0.00008091879782224645,
         "gap": 1
       },
       "endBinding": {
         "elementId": "branchDb",
-        "focus": 0.00002556125320048121,
+        "focus": 0.000008205149868900307,
         "gap": 2.055615234375182
       },
       "startArrowhead": null,
@@ -4725,9 +4725,9 @@
     {
       "id": "syncWorker_countryApi",
       "type": "arrow",
-      "x": 2663.4251953125,
+      "x": 2659.08837890625,
       "y": 1007.6999999999999,
-      "width": 353.84228515625,
+      "width": 353.84375,
       "height": 239.3024169921875,
       "angle": 0,
       "strokeColor": "#48638C",
@@ -4743,12 +4743,12 @@
       "frameId": null,
       "index": "b0CN",
       "roundness": null,
-      "seed": 1766147749,
+      "seed": 1089438118,
       "version": 5,
-      "versionNonce": 873384811,
+      "versionNonce": 1247067450,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -4762,84 +4762,84 @@
           0
         ],
         [
-          16.570703124999998,
-          18.366162109375
+          16.5712890625,
+          18.36572265625
         ],
         [
-          33.806640625,
-          37.080493164062496
+          33.80751953125,
+          37.0799072265625
         ],
         [
-          51.684765625,
-          55.1805419921875
+          51.685351562499996,
+          55.1802490234375
         ],
         [
-          70.30820312499999,
-          72.51279296874999
+          70.3087890625,
+          72.5125732421875
         ],
         [
-          89.66376953125,
-          89.02341308593749
+          89.66435546875,
+          89.0232666015625
         ],
         [
-          109.71748046875,
-          104.67841796875
+          109.71806640625,
+          104.6783447265625
         ],
         [
-          130.42978515625,
-          119.45085449218749
+          130.43037109374998,
+          119.4512939453125
         ],
         [
-          151.7330078125,
-          133.3592529296875
+          151.73359374999998,
+          133.35932617187498
         ],
         [
-          173.47275390625,
-          146.5755859375
+          173.4736328125,
+          146.5756591796875
         ],
         [
-          195.52890625,
-          159.25812988281248
+          195.52949218749998,
+          159.2584228515625
         ],
         [
-          217.826171875,
-          171.511474609375
+          217.82734374999998,
+          171.51154785156248
         ],
         [
-          240.3138671875,
-          183.4122314453125
+          240.31503906249998,
+          183.41230468749998
         ],
         [
-          262.95478515625,
-          195.0192138671875
+          262.95595703124997,
+          195.01936035156248
         ],
         [
-          285.71816406249997,
-          206.384130859375
+          285.7193359375,
+          206.3842041015625
         ],
         [
-          308.57177734375,
-          217.56660156249998
+          308.5732421875,
+          217.5666748046875
         ],
         [
-          331.45673828125,
+          331.458203125,
           228.6852783203125
         ],
         [
-          353.84228515625,
+          353.84375,
           239.3024169921875
         ]
       ],
       "lastCommittedPoint": null,
       "startBinding": {
         "elementId": "syncWorker",
-        "focus": -0.0000011719777834795646,
+        "focus": 0.000019715663180654805,
         "gap": 1
       },
       "endBinding": {
         "elementId": "countryApi",
-        "focus": 0.000011490440968806094,
-        "gap": 2.0975830078125455
+        "focus": 0.000013038758232364493,
+        "gap": 2.097583007812432
       },
       "startArrowhead": null,
       "endArrowhead": "arrow",
@@ -4848,9 +4848,9 @@
     {
       "id": "countryApi_countryDb",
       "type": "arrow",
-      "x": 3088.3748046875,
+      "x": 3084.03916015625,
       "y": 1410.9,
-      "width": 132.02412109374998,
+      "width": 132.0244140625,
       "height": 210.2,
       "angle": 0,
       "strokeColor": "#48638C",
@@ -4866,12 +4866,12 @@
       "frameId": null,
       "index": "b0CO",
       "roundness": null,
-      "seed": 764650027,
+      "seed": 687821754,
       "version": 5,
-      "versionNonce": 1906717893,
+      "versionNonce": 1078741862,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -4885,39 +4885,39 @@
           0
         ],
         [
-          -19.868359375,
-          16.08935546875
+          -19.8689453125,
+          16.0888427734375
         ],
         [
-          -40.12802734375,
-          32.8109130859375
+          -40.1283203125,
+          32.810473632812496
         ],
         [
-          -59.87060546875,
-          50.1375244140625
+          -59.870898437499996,
+          50.1372314453125
         ],
         [
           -78.7626953125,
-          68.3853759765625
+          68.3850830078125
         ],
         [
           -96.32734375,
-          87.9077880859375
+          87.9076416015625
         ],
         [
           -111.57841796875,
-          109.2674072265625
+          109.26748046875
         ],
         [
-          -122.87177734375,
-          132.9420654296875
+          -122.871484375,
+          132.942138671875
         ],
         [
-          -129.59892578125,
-          158.298583984375
+          -129.59921875,
+          158.2984375
         ],
         [
-          -132.02412109374998,
+          -132.0244140625,
           184.43125
         ],
         [
@@ -4928,12 +4928,12 @@
       "lastCommittedPoint": null,
       "startBinding": {
         "elementId": "countryApi",
-        "focus": 0.000004924680540680849,
+        "focus": -0.00001491741705852178,
         "gap": 1
       },
       "endBinding": {
         "elementId": "countryDb",
-        "focus": -0.0013912611980496025,
+        "focus": -0.001384648852195933,
         "gap": 4.7999999999999545
       },
       "startArrowhead": null,
@@ -4943,9 +4943,9 @@
     {
       "id": "countryApi_countryCache",
       "type": "arrow",
-      "x": 3321.18486328125,
+      "x": 3316.84921875,
       "y": 1410.9,
-      "width": 178.22001953125,
+      "width": 178.2203125,
       "height": 210.2,
       "angle": 0,
       "strokeColor": "#48638C",
@@ -4961,12 +4961,12 @@
       "frameId": null,
       "index": "b0COV",
       "roundness": null,
-      "seed": 1619995141,
+      "seed": 1746689254,
       "version": 5,
-      "versionNonce": 177743371,
+      "versionNonce": 1912407546,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -4985,58 +4985,58 @@
         ],
         [
           41.63125,
-          24.9838134765625
+          24.98388671875
         ],
         [
           62.509667968749994,
-          38.0294189453125
+          38.0295654296875
         ],
         [
           83.04677734375,
-          51.6050048828125
+          51.605151367187496
         ],
         [
           103.08261718749999,
-          65.908837890625
+          65.90869140625
         ],
         [
           122.3740234375,
-          81.1983642578125
+          81.1985107421875
         ],
         [
           140.45224609375,
-          97.896630859375
+          97.89677734375
         ],
         [
-          156.23652343749998,
-          116.753564453125
+          156.23623046875,
+          116.7537841796875
         ],
         [
           168.26611328125,
           138.1866455078125
         ],
         [
-          175.62812499999998,
+          175.62841796875,
           161.6318359375
         ],
         [
-          178.22001953125,
+          178.2203125,
           186.08095703125
         ],
         [
-          177.7830078125,
+          177.78330078125,
           210.2
         ]
       ],
       "lastCommittedPoint": null,
       "startBinding": {
         "elementId": "countryApi",
-        "focus": 4.016374310465192e-7,
+        "focus": -4.450470466604256e-7,
         "gap": 1
       },
       "endBinding": {
         "elementId": "countryCache",
-        "focus": 0.0010813369941414946,
+        "focus": 0.001084247498394645,
         "gap": 4.7999999999999545
       },
       "startArrowhead": null,
@@ -5046,7 +5046,7 @@
     {
       "id": "erpAdapter_countryApi",
       "type": "arrow",
-      "x": 3497.46083984375,
+      "x": 3493.1240234375,
       "y": 994.5,
       "width": 245.48603515624998,
       "height": 250.77558593749998,
@@ -5064,12 +5064,12 @@
       "frameId": null,
       "index": "b0CP",
       "roundness": null,
-      "seed": 315892939,
+      "seed": 2081475706,
       "version": 5,
-      "versionNonce": 653087781,
+      "versionNonce": 2092560038,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -5083,56 +5083,56 @@
           0
         ],
         [
-          -18.700585937499998,
-          15.888452148437498
+          -18.70029296875,
+          15.888891601562499
         ],
         [
-          -37.89150390625,
-          32.288256835937496
+          -37.8912109375,
+          32.288623046874996
         ],
         [
-          -56.99599609375,
-          48.7885498046875
+          -56.995410156249996,
+          48.788989257812496
         ],
         [
-          -75.95048828125,
-          65.460888671875
+          -75.94990234375,
+          65.461328125
         ],
         [
-          -94.71249999999999,
-          82.349365234375
+          -94.7119140625,
+          82.3497314453125
         ],
         [
-          -113.2380859375,
-          99.4966064453125
+          -113.2375,
+          99.497119140625
         ],
         [
-          -131.45224609375,
-          116.9742431640625
+          -131.45166015625,
+          116.97482910156249
         ],
         [
-          -149.2556640625,
-          134.86943359375
+          -149.25507812499998,
+          134.869873046875
         ],
         [
-          -166.5337890625,
-          153.272119140625
+          -166.53349609375,
+          153.2724853515625
         ],
         [
-          -183.29658203124998,
-          172.14560546875
+          -183.29599609375,
+          172.146044921875
         ],
         [
-          -199.55869140625,
-          191.45246582031248
+          -199.55781249999998,
+          191.4530517578125
         ],
         [
-          -215.34853515625,
-          211.14765624999998
+          -215.34794921875,
+          211.14802246093748
         ],
         [
-          -230.72998046875,
-          231.16357421875
+          -230.72910156249998,
+          231.1640869140625
         ],
         [
           -245.48603515624998,
@@ -5142,13 +5142,13 @@
       "lastCommittedPoint": null,
       "startBinding": {
         "elementId": "erpAdapter",
-        "focus": -0.000010800959900265492,
+        "focus": 0.0000047965473037283525,
         "gap": 1
       },
       "endBinding": {
         "elementId": "countryApi",
-        "focus": -0.00001900200096266452,
-        "gap": 3.824414062500068
+        "focus": -0.00004159363873478379,
+        "gap": 3.8244140624999545
       },
       "startArrowhead": null,
       "endArrowhead": "arrow",
@@ -5157,9 +5157,9 @@
     {
       "id": "erpAdapter_erp",
       "type": "arrow",
-      "x": 3586.449609375,
+      "x": 3582.11279296875,
       "y": 994.5,
-      "width": 414.490234375,
+      "width": 414.49052734375,
       "height": 270.593603515625,
       "angle": 0,
       "strokeColor": "#48638C",
@@ -5175,12 +5175,12 @@
       "frameId": null,
       "index": "b0CQ",
       "roundness": null,
-      "seed": 1334157669,
+      "seed": 596365350,
       "version": 5,
-      "versionNonce": 140324011,
+      "versionNonce": 924726970,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -5194,100 +5194,100 @@
           0
         ],
         [
-          -2.4599609375,
-          25.001977539062498
+          -2.4587890625,
+          25.00205078125
         ],
         [
-          -1.85849609375,
-          50.517431640625
+          -1.85673828125,
+          50.517578125
         ],
         [
-          5.39775390625,
-          74.9549072265625
+          5.39921875,
+          74.95505371093749
         ],
         [
-          18.779687499999998,
-          96.68095703125
+          18.781152343749998,
+          96.681103515625
         ],
         [
-          36.33349609375,
-          115.2388427734375
+          36.3349609375,
+          115.23898925781249
         ],
         [
-          56.44931640625,
-          131.008544921875
+          56.45078125,
+          131.00869140625
         ],
         [
-          78.12255859375,
-          144.5757080078125
+          78.12373046875,
+          144.575927734375
         ],
         [
-          100.6638671875,
-          156.6555419921875
+          100.66533203125,
+          156.65576171875
         ],
         [
-          123.71640624999999,
-          167.732763671875
+          123.71757812499999,
+          167.73298339843748
         ],
         [
-          147.10439453125,
-          178.08408203125
+          147.105859375,
+          178.0841552734375
         ],
         [
-          170.73291015625,
+          170.734375,
           187.87458496093748
         ],
         [
-          194.54189453125,
-          197.2186767578125
+          194.543359375,
+          197.21882324218748
         ],
         [
-          218.49091796874998,
+          218.49238281249998,
           206.19765625
         ],
         [
-          242.55302734375,
+          242.5544921875,
           214.86953125
         ],
         [
-          266.705078125,
+          266.70654296875,
           223.28798828125
         ],
         [
-          290.93095703125,
+          290.932421875,
           231.49155273437498
         ],
         [
-          315.21455078125,
+          315.216015625,
           239.522705078125
         ],
         [
-          339.5353515625,
-          247.4399658203125
+          339.53681640625,
+          247.44003906249998
         ],
         [
-          363.86669921875,
-          255.3250732421875
+          363.8681640625,
+          255.32514648437498
         ],
         [
-          388.19863281249997,
+          388.20009765624997,
           263.20937499999997
         ],
         [
-          412.0302734375,
+          412.03173828125,
           270.593603515625
         ]
       ],
       "lastCommittedPoint": null,
       "startBinding": {
         "elementId": "erpAdapter",
-        "focus": 0.00011125178631086986,
+        "focus": 0.00013189665522295673,
         "gap": 1
       },
       "endBinding": {
         "elementId": "erp",
-        "focus": -0.000008480005906022775,
-        "gap": 4.566210937491178
+        "focus": -0.000007155334953228909,
+        "gap": 4.565624999999727
       },
       "startArrowhead": null,
       "endArrowhead": "arrow",
@@ -5296,9 +5296,9 @@
     {
       "id": "erpAdapter_masters",
       "type": "arrow",
-      "x": 3671.1193359375,
+      "x": 3666.78369140625,
       "y": 994.5,
-      "width": 835.6434570312499,
+      "width": 835.6422851562497,
       "height": 287.1415771484375,
       "angle": 0,
       "strokeColor": "#48638C",
@@ -5314,12 +5314,12 @@
       "frameId": null,
       "index": "b0CR",
       "roundness": null,
-      "seed": 237720427,
+      "seed": 133508410,
       "version": 5,
-      "versionNonce": 416909189,
+      "versionNonce": 2047945190,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -5337,28 +5337,28 @@
           36
         ],
         [
-          799.6434570312499,
+          799.6422851562497,
           36
         ],
         [
-          799.6434570312499,
+          799.6422851562497,
           287.1415771484375
         ],
         [
-          835.6434570312499,
+          835.6422851562497,
           287.1415771484375
         ]
       ],
       "lastCommittedPoint": null,
       "startBinding": {
         "elementId": "erpAdapter",
-        "focus": -0.0000017293219259200365,
+        "focus": -6.579965634939261e-7,
         "gap": 1
       },
       "endBinding": {
         "elementId": "masters",
-        "focus": -0.00000426686790441729,
-        "gap": 4.689550781241451
+        "focus": -0.000010715675474476581,
+        "gap": 4.6904296875
       },
       "startArrowhead": null,
       "endArrowhead": "arrow",
@@ -5367,9 +5367,9 @@
     {
       "id": "label-bg-cashier_client",
       "type": "rectangle",
-      "x": 1270.7296951293947,
-      "y": 678.8721069335937,
-      "width": 205.61884155273438,
+      "x": 1266.3935379028321,
+      "y": 678.8722534179688,
+      "width": 205.6194091796875,
       "height": 62.8,
       "angle": 0,
       "strokeColor": "#fff",
@@ -5385,20 +5385,20 @@
       "frameId": null,
       "index": "b0CS",
       "roundness": null,
-      "seed": 997600453,
+      "seed": 2133515110,
       "version": 3,
-      "versionNonce": 554196811,
+      "versionNonce": 1247498106,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false
     },
     {
       "id": "label-cashier_client",
       "type": "text",
-      "x": 1275.7296951293947,
-      "y": 683.8721069335937,
+      "x": 1271.3935379028321,
+      "y": 683.8722534179688,
       "width": 195.68650817871094,
       "height": 52.8,
       "angle": 0,
@@ -5415,12 +5415,12 @@
       "frameId": null,
       "index": "b0CT",
       "roundness": null,
-      "seed": 2145627659,
+      "seed": 34567674,
       "version": 3,
-      "versionNonce": 430460645,
+      "versionNonce": 392101158,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -5439,9 +5439,9 @@
     {
       "id": "label-bg-cashier_mobileClient",
       "type": "rectangle",
-      "x": 1865.7166015624914,
-      "y": 627.7999919891357,
-      "width": 218.8402099609375,
+      "x": 1861.3806640625,
+      "y": 627.7999370574951,
+      "width": 218.8407958984375,
       "height": 62.8,
       "angle": 0,
       "strokeColor": "#fff",
@@ -5457,20 +5457,20 @@
       "frameId": null,
       "index": "b0CU",
       "roundness": null,
-      "seed": 603868197,
+      "seed": 21397158,
       "version": 3,
-      "versionNonce": 1861500395,
+      "versionNonce": 1341607994,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false
     },
     {
       "id": "label-cashier_mobileClient",
       "type": "text",
-      "x": 1870.7166015624914,
-      "y": 632.7999919891357,
+      "x": 1866.3806640625,
+      "y": 632.7999370574951,
       "width": 208.9333953857422,
       "height": 52.8,
       "angle": 0,
@@ -5487,12 +5487,12 @@
       "frameId": null,
       "index": "b0CUV",
       "roundness": null,
-      "seed": 1526183083,
+      "seed": 2070062778,
       "version": 3,
-      "versionNonce": 1474767429,
+      "versionNonce": 1242589286,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -5511,9 +5511,9 @@
     {
       "id": "label-bg-client_branchApi",
       "type": "rectangle",
-      "x": 1163.4142578124913,
-      "y": 1083.7999919891358,
-      "width": 132.3978759765625,
+      "x": 1159.0783203125,
+      "y": 1083.799937057495,
+      "width": 132.39822387695312,
       "height": 89.2,
       "angle": 0,
       "strokeColor": "#fff",
@@ -5529,20 +5529,20 @@
       "frameId": null,
       "index": "b0CV",
       "roundness": null,
-      "seed": 957054853,
+      "seed": 1586215398,
       "version": 3,
-      "versionNonce": 1563117707,
+      "versionNonce": 1809135866,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false
     },
     {
       "id": "label-client_branchApi",
       "type": "text",
-      "x": 1168.4142578124913,
-      "y": 1088.7999919891358,
+      "x": 1164.0783203125,
+      "y": 1088.799937057495,
       "width": 121.25730895996094,
       "height": 79.19999999999999,
       "angle": 0,
@@ -5559,12 +5559,12 @@
       "frameId": null,
       "index": "b0CVV",
       "roundness": null,
-      "seed": 1326573387,
+      "seed": 1821491066,
       "version": 3,
-      "versionNonce": 1416862117,
+      "versionNonce": 1374841766,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -5583,9 +5583,9 @@
     {
       "id": "label-bg-mobileClient_branchApi",
       "type": "rectangle",
-      "x": 1913.8326171875,
-      "y": 1083.7999919891358,
-      "width": 132.3978759765625,
+      "x": 1909.4966796875,
+      "y": 1083.799937057495,
+      "width": 132.39822387695312,
       "height": 89.2,
       "angle": 0,
       "strokeColor": "#fff",
@@ -5601,20 +5601,20 @@
       "frameId": null,
       "index": "b0CW",
       "roundness": null,
-      "seed": 1356547813,
+      "seed": 772246822,
       "version": 3,
-      "versionNonce": 292028203,
+      "versionNonce": 1299712442,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false
     },
     {
       "id": "label-mobileClient_branchApi",
       "type": "text",
-      "x": 1918.8326171875,
-      "y": 1088.7999919891358,
+      "x": 1914.4966796875,
+      "y": 1088.799937057495,
       "width": 121.25730895996094,
       "height": 79.19999999999999,
       "angle": 0,
@@ -5631,12 +5631,12 @@
       "frameId": null,
       "index": "b0CX",
       "roundness": null,
-      "seed": 848086507,
+      "seed": 1105182778,
       "version": 3,
-      "versionNonce": 410721541,
+      "versionNonce": 1831995110,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -5655,9 +5655,9 @@
     {
       "id": "label-bg-client_device",
       "type": "rectangle",
-      "x": 1412.5302734375002,
-      "y": 1167.7968505859376,
-      "width": 210.43760986328124,
+      "x": 1408.1941894531249,
+      "y": 1167.7967041015625,
+      "width": 210.4381591796875,
       "height": 89.2,
       "angle": 0,
       "strokeColor": "#fff",
@@ -5673,20 +5673,20 @@
       "frameId": null,
       "index": "b0CY",
       "roundness": null,
-      "seed": 502997573,
+      "seed": 489093222,
       "version": 3,
-      "versionNonce": 370467275,
+      "versionNonce": 1006813818,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false
     },
     {
       "id": "label-client_device",
       "type": "text",
-      "x": 1417.5302734375002,
-      "y": 1172.7968505859376,
+      "x": 1413.1941894531249,
+      "y": 1172.7967041015625,
       "width": 200.5275421142578,
       "height": 79.19999999999999,
       "angle": 0,
@@ -5703,12 +5703,12 @@
       "frameId": null,
       "index": "b0CZ",
       "roundness": null,
-      "seed": 745721995,
+      "seed": 1731176698,
       "version": 3,
-      "versionNonce": 729494629,
+      "versionNonce": 207370790,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -5727,9 +5727,9 @@
     {
       "id": "label-bg-device_payments",
       "type": "rectangle",
-      "x": 1266.5586029052736,
+      "x": 1262.2229583740234,
       "y": 1440.6999999999998,
-      "width": 163.5813232421875,
+      "width": 163.5817626953125,
       "height": 89.2,
       "angle": 0,
       "strokeColor": "#fff",
@@ -5745,19 +5745,19 @@
       "frameId": null,
       "index": "b0CZV",
       "roundness": null,
-      "seed": 625512869,
+      "seed": 599194534,
       "version": 3,
-      "versionNonce": 1145860203,
+      "versionNonce": 574120762,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false
     },
     {
       "id": "label-device_payments",
       "type": "text",
-      "x": 1271.5586029052736,
+      "x": 1267.2229583740234,
       "y": 1445.6999999999998,
       "width": 153.64675903320312,
       "height": 79.19999999999999,
@@ -5775,12 +5775,12 @@
       "frameId": null,
       "index": "b0Ca",
       "roundness": null,
-      "seed": 511608619,
+      "seed": 1409579450,
       "version": 3,
-      "versionNonce": 1229021125,
+      "versionNonce": 106825062,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -5799,9 +5799,9 @@
     {
       "id": "label-bg-branchApi_branchDb",
       "type": "rectangle",
-      "x": 1596.8071716308593,
-      "y": 1546.3682495117187,
-      "width": 216.47510986328123,
+      "x": 1592.4711608886719,
+      "y": 1546.3685241699218,
+      "width": 216.47567749023438,
       "height": 62.8,
       "angle": 0,
       "strokeColor": "#fff",
@@ -5817,20 +5817,20 @@
       "frameId": null,
       "index": "b0Cb",
       "roundness": null,
-      "seed": 1945179397,
+      "seed": 937727718,
       "version": 3,
-      "versionNonce": 1842948875,
+      "versionNonce": 444328954,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false
     },
     {
       "id": "label-branchApi_branchDb",
       "type": "text",
-      "x": 1601.8071716308593,
-      "y": 1551.3682495117187,
+      "x": 1597.4711608886719,
+      "y": 1551.3685241699218,
       "width": 206.53924560546875,
       "height": 52.8,
       "angle": 0,
@@ -5847,12 +5847,12 @@
       "frameId": null,
       "index": "b0Cc",
       "roundness": null,
-      "seed": 1327131083,
+      "seed": 394343034,
       "version": 3,
-      "versionNonce": 1475026725,
+      "versionNonce": 1283745958,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -5871,9 +5871,9 @@
     {
       "id": "label-bg-branchApi_payments",
       "type": "rectangle",
-      "x": 1781.76865234375,
+      "x": 1777.4318359375,
       "y": 1440.6999999999998,
-      "width": 217.63760986328126,
+      "width": 217.63819580078123,
       "height": 62.8,
       "angle": 0,
       "strokeColor": "#fff",
@@ -5889,19 +5889,19 @@
       "frameId": null,
       "index": "b0Cd",
       "roundness": null,
-      "seed": 359804005,
+      "seed": 37538342,
       "version": 3,
-      "versionNonce": 1194693035,
+      "versionNonce": 2060475578,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false
     },
     {
       "id": "label-branchApi_payments",
       "type": "text",
-      "x": 1786.76865234375,
+      "x": 1782.4318359375,
       "y": 1445.6999999999998,
       "width": 207.7099609375,
       "height": 52.8,
@@ -5919,12 +5919,12 @@
       "frameId": null,
       "index": "b0CdV",
       "roundness": null,
-      "seed": 1398863979,
+      "seed": 1684591418,
       "version": 3,
-      "versionNonce": 501609093,
+      "versionNonce": 511468518,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -5943,9 +5943,9 @@
     {
       "id": "label-bg-branchApi_fiscal",
       "type": "rectangle",
-      "x": 1572.734518432617,
-      "y": 1605.87939453125,
-      "width": 196.0290771484375,
+      "x": 1561.8694427490236,
+      "y": 1605.54189453125,
+      "width": 196.02958984375,
       "height": 89.2,
       "angle": 0,
       "strokeColor": "#fff",
@@ -5961,20 +5961,20 @@
       "frameId": null,
       "index": "b0Ce",
       "roundness": null,
-      "seed": 1234786245,
+      "seed": 296523110,
       "version": 3,
-      "versionNonce": 294397003,
+      "versionNonce": 1624814970,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false
     },
     {
       "id": "label-branchApi_fiscal",
       "type": "text",
-      "x": 1577.734518432617,
-      "y": 1610.87939453125,
+      "x": 1566.8694427490236,
+      "y": 1610.54189453125,
       "width": 183.67361450195312,
       "height": 79.19999999999999,
       "angle": 0,
@@ -5991,12 +5991,12 @@
       "frameId": null,
       "index": "b0Cf",
       "roundness": null,
-      "seed": 958182155,
+      "seed": 488528890,
       "version": 3,
-      "versionNonce": 938432997,
+      "versionNonce": 1045624614,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -6015,9 +6015,9 @@
     {
       "id": "label-bg-syncWorker_branchDb",
       "type": "rectangle",
-      "x": 2396.8654296875,
-      "y": 1285.3999919891357,
-      "width": 192.4000732421875,
+      "x": 2392.5294921875,
+      "y": 1285.3999370574952,
+      "width": 192.40060424804688,
       "height": 89.2,
       "angle": 0,
       "strokeColor": "#fff",
@@ -6033,20 +6033,20 @@
       "frameId": null,
       "index": "b0Cg",
       "roundness": null,
-      "seed": 2055477029,
+      "seed": 260110502,
       "version": 3,
-      "versionNonce": 79127275,
+      "versionNonce": 1037563450,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false
     },
     {
       "id": "label-syncWorker_branchDb",
       "type": "text",
-      "x": 2401.8654296875,
-      "y": 1290.3999919891357,
+      "x": 2397.5294921875,
+      "y": 1290.3999370574952,
       "width": 182.47128295898438,
       "height": 79.19999999999999,
       "angle": 0,
@@ -6063,12 +6063,12 @@
       "frameId": null,
       "index": "b0Ch",
       "roundness": null,
-      "seed": 1892161963,
+      "seed": 1604635834,
       "version": 3,
-      "versionNonce": 1326765381,
+      "versionNonce": 611656294,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -6087,9 +6087,9 @@
     {
       "id": "label-bg-syncWorker_countryApi",
       "type": "rectangle",
-      "x": 2646.437304687491,
-      "y": 1096.9999919891359,
-      "width": 223.64204101562498,
+      "x": 2642.1013671875,
+      "y": 1096.9999370574951,
+      "width": 223.64264526367188,
       "height": 62.8,
       "angle": 0,
       "strokeColor": "#fff",
@@ -6105,20 +6105,20 @@
       "frameId": null,
       "index": "b0Ci",
       "roundness": null,
-      "seed": 1923082885,
+      "seed": 1936126950,
       "version": 3,
-      "versionNonce": 2034355595,
+      "versionNonce": 1655774970,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false
     },
     {
       "id": "label-syncWorker_countryApi",
       "type": "text",
-      "x": 2651.437304687491,
-      "y": 1101.9999919891359,
+      "x": 2647.1013671875,
+      "y": 1101.9999370574951,
       "width": 213.72161865234375,
       "height": 52.8,
       "angle": 0,
@@ -6135,12 +6135,12 @@
       "frameId": null,
       "index": "b0Cj",
       "roundness": null,
-      "seed": 2005773387,
+      "seed": 295642490,
       "version": 3,
-      "versionNonce": 246670501,
+      "versionNonce": 867165606,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -6159,9 +6159,9 @@
     {
       "id": "label-bg-countryApi_countryDb",
       "type": "rectangle",
-      "x": 2832.7888671875,
-      "y": 1473.7999919891358,
-      "width": 218.83760986328124,
+      "x": 2828.4529296875,
+      "y": 1473.7999370574948,
+      "width": 218.83819580078125,
       "height": 89.2,
       "angle": 0,
       "strokeColor": "#fff",
@@ -6177,20 +6177,20 @@
       "frameId": null,
       "index": "b0Ck",
       "roundness": null,
-      "seed": 1386893797,
+      "seed": 929793830,
       "version": 3,
-      "versionNonce": 1382409259,
+      "versionNonce": 199700410,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false
     },
     {
       "id": "label-countryApi_countryDb",
       "type": "text",
-      "x": 2837.7888671875,
-      "y": 1478.7999919891358,
+      "x": 2833.4529296875,
+      "y": 1478.7999370574948,
       "width": 208.93338012695312,
       "height": 79.19999999999999,
       "angle": 0,
@@ -6207,12 +6207,12 @@
       "frameId": null,
       "index": "b0Cl",
       "roundness": null,
-      "seed": 1095232235,
+      "seed": 1817208378,
       "version": 3,
-      "versionNonce": 1517946885,
+      "versionNonce": 1831878886,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -6231,9 +6231,9 @@
     {
       "id": "label-bg-countryApi_countryCache",
       "type": "rectangle",
-      "x": 3377.9931640624914,
-      "y": 1486.9999919891357,
-      "width": 215.21884155273438,
+      "x": 3373.6572265625,
+      "y": 1486.9999370574951,
+      "width": 215.21944580078124,
       "height": 62.8,
       "angle": 0,
       "strokeColor": "#fff",
@@ -6249,20 +6249,20 @@
       "frameId": null,
       "index": "b0ClV",
       "roundness": null,
-      "seed": 1202769221,
+      "seed": 201044582,
       "version": 3,
-      "versionNonce": 672016075,
+      "versionNonce": 1839016058,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false
     },
     {
       "id": "label-countryApi_countryCache",
       "type": "text",
-      "x": 3382.9931640624914,
-      "y": 1491.9999919891357,
+      "x": 3378.6572265625,
+      "y": 1491.9999370574951,
       "width": 205.3157958984375,
       "height": 52.8,
       "angle": 0,
@@ -6279,12 +6279,12 @@
       "frameId": null,
       "index": "b0Cm",
       "roundness": null,
-      "seed": 1652643211,
+      "seed": 144412410,
       "version": 3,
-      "versionNonce": 1147453285,
+      "versionNonce": 612578342,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -6303,9 +6303,9 @@
     {
       "id": "label-bg-erpAdapter_countryApi",
       "type": "rectangle",
-      "x": 3260.5602600097654,
-      "y": 1118.4742431640625,
-      "width": 211.99166259765624,
+      "x": 3256.2240295410156,
+      "y": 1118.4748291015626,
+      "width": 211.99224853515625,
       "height": 115.6,
       "angle": 0,
       "strokeColor": "#fff",
@@ -6321,20 +6321,20 @@
       "frameId": null,
       "index": "b0Cn",
       "roundness": null,
-      "seed": 17882277,
+      "seed": 199521702,
       "version": 3,
-      "versionNonce": 819271019,
+      "versionNonce": 1066797370,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false
     },
     {
       "id": "label-erpAdapter_countryApi",
       "type": "text",
-      "x": 3265.5602600097654,
-      "y": 1123.4742431640625,
+      "x": 3261.2240295410156,
+      "y": 1123.4748291015626,
       "width": 200.89666748046875,
       "height": 105.6,
       "angle": 0,
@@ -6351,12 +6351,12 @@
       "frameId": null,
       "index": "b0Co",
       "roundness": null,
-      "seed": 2054450219,
+      "seed": 1795399610,
       "version": 3,
-      "versionNonce": 1119980229,
+      "versionNonce": 865451878,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -6375,9 +6375,9 @@
     {
       "id": "label-bg-erpAdapter_erp",
       "type": "rectangle",
-      "x": 3474.1273437499913,
-      "y": 1083.7999919891358,
-      "width": 179.21882324218748,
+      "x": 3469.79140625,
+      "y": 1083.799937057495,
+      "width": 179.2193176269531,
       "height": 89.2,
       "angle": 0,
       "strokeColor": "#fff",
@@ -6393,20 +6393,20 @@
       "frameId": null,
       "index": "b0Cp",
       "roundness": null,
-      "seed": 1719140357,
+      "seed": 1884475622,
       "version": 3,
-      "versionNonce": 1812279307,
+      "versionNonce": 1228198394,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false
     },
     {
       "id": "label-erpAdapter_erp",
       "type": "text",
-      "x": 3479.1273437499913,
-      "y": 1088.7999919891358,
+      "x": 3474.79140625,
+      "y": 1088.799937057495,
       "width": 169.27716064453125,
       "height": 79.19999999999999,
       "angle": 0,
@@ -6423,12 +6423,12 @@
       "frameId": null,
       "index": "b0CpV",
       "roundness": null,
-      "seed": 1561046731,
+      "seed": 262903930,
       "version": 3,
-      "versionNonce": 640543269,
+      "versionNonce": 783606438,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -6447,9 +6447,9 @@
     {
       "id": "label-bg-erpAdapter_masters",
       "type": "rectangle",
-      "x": 3973.466157531738,
+      "x": 3969.1299270629884,
       "y": 1037.5,
-      "width": 196.07509155273436,
+      "width": 196.07562255859375,
       "height": 89.2,
       "angle": 0,
       "strokeColor": "#fff",
@@ -6465,19 +6465,19 @@
       "frameId": null,
       "index": "b0Cq",
       "roundness": null,
-      "seed": 233027429,
+      "seed": 1154728998,
       "version": 3,
-      "versionNonce": 194573995,
+      "versionNonce": 1836876474,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false
     },
     {
       "id": "label-erpAdapter_masters",
       "type": "text",
-      "x": 3978.466157531738,
+      "x": 3974.1299270629884,
       "y": 1042.5,
       "width": 184.94981384277344,
       "height": 79.19999999999999,
@@ -6495,12 +6495,12 @@
       "frameId": null,
       "index": "b0Cr",
       "roundness": null,
-      "seed": 2095160683,
+      "seed": 1985378618,
       "version": 3,
-      "versionNonce": 1335319941,
+      "versionNonce": 411934182,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "customData": {
@@ -6517,9 +6517,9 @@
       "lineHeight": 1.222222222222222
     },
     {
-      "id": "6JbnliACf0LvCNFzzsk29",
+      "id": "2MfsVju6xtTCfvtvseJfO",
       "type": "text",
-      "x": 1633.0984374999912,
+      "x": 1628.7625,
       "y": 444.4,
       "width": 357.57421875,
       "height": 105.60000000000001,
@@ -6535,12 +6535,12 @@
       "frameId": null,
       "index": "b0Cs",
       "roundness": null,
-      "seed": 1191103499,
+      "seed": 164551162,
       "version": 4,
-      "versionNonce": 507177291,
+      "versionNonce": 923802490,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "text": "Cajero\n«Persona»\nOperación humana\nVende, cobra y gestiona su turno.",
@@ -6554,9 +6554,9 @@
       "lineHeight": 1.1
     },
     {
-      "id": "sYy6_PC_LyqapMZHnlaSg",
+      "id": "lihlVSSpLXYoIJzxlp8Xv",
       "type": "text",
-      "x": 1182.110546875,
+      "x": 1177.774609375,
       "y": 847.6,
       "width": 321.515625,
       "height": 132,
@@ -6572,12 +6572,12 @@
       "frameId": null,
       "index": "b0Ct",
       "roundness": null,
-      "seed": 218043051,
+      "seed": 496339642,
       "version": 4,
-      "versionNonce": 641426661,
+      "versionNonce": 372044070,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "text": "pos-desktop\n«Contenedor»\nAngular + Tauri\nPresenta caja y comandos del\noperador.",
@@ -6591,9 +6591,9 @@
       "lineHeight": 1.1
     },
     {
-      "id": "Ox-4vu1AzbLE3rJTNEbw7",
+      "id": "tbAZVT-CcUop-3wcCwmxj",
       "type": "text",
-      "x": 1855.7740234374915,
+      "x": 1851.4380859375,
       "y": 847.6,
       "width": 266.84765625,
       "height": 132,
@@ -6609,12 +6609,12 @@
       "frameId": null,
       "index": "b0CtV",
       "roundness": null,
-      "seed": 1149076811,
+      "seed": 247997306,
       "version": 4,
-      "versionNonce": 2034599915,
+      "versionNonce": 1681038394,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "text": "pos-mobile\n«Contenedor»\nAngular + Capacitor\nPresenta operaciones en\nAndroid/iOS.",
@@ -6628,10 +6628,10 @@
       "lineHeight": 1.1
     },
     {
-      "id": "VJURl8ZBZXqdvanVOSihy",
+      "id": "Im9CFsz79gg14N4iTzVnJ",
       "type": "text",
-      "x": 1176.0953124999912,
-      "y": 1277.2,
+      "x": 1171.759375,
+      "y": 1277.1999999999998,
       "width": 345.57421875,
       "height": 105.60000000000001,
       "angle": 0,
@@ -6646,12 +6646,12 @@
       "frameId": null,
       "index": "b0Cu",
       "roundness": null,
-      "seed": 1960092651,
+      "seed": 396993594,
       "version": 4,
-      "versionNonce": 1302822981,
+      "versionNonce": 587193446,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "text": "Puente de periféricos\n«Contenedor condicional»\nProceso nativo según SDK\nEjecuta capacidades del puesto.",
@@ -6665,10 +6665,10 @@
       "lineHeight": 1.1
     },
     {
-      "id": "qrvqapyxQUywAIYuWj53J",
+      "id": "l7D5bfWMqhV8avDBmNtOS",
       "type": "text",
-      "x": 1699.9140624999911,
-      "y": 1277.2,
+      "x": 1695.578125,
+      "y": 1277.1999999999998,
       "width": 382.41796875,
       "height": 105.60000000000001,
       "angle": 0,
@@ -6683,12 +6683,12 @@
       "frameId": null,
       "index": "b0Cv",
       "roundness": null,
-      "seed": 1443819147,
+      "seed": 840764666,
       "version": 4,
-      "versionNonce": 1656967819,
+      "versionNonce": 1925645562,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "text": "branch-api\n«Contenedor»\nNestJS + Fastify / Node.js\nValida y confirma la operación local.",
@@ -6702,9 +6702,9 @@
       "lineHeight": 1.1
     },
     {
-      "id": "61fqM_JKFQRtHVDYLU9cl",
+      "id": "K6aT1rjI8Dbu3DcYIb8ch",
       "type": "text",
-      "x": 1932.0501953125,
+      "x": 1927.7142578125,
       "y": 1640.8000000000002,
       "width": 352.2421875,
       "height": 132,
@@ -6720,12 +6720,12 @@
       "frameId": null,
       "index": "b0Cw",
       "roundness": null,
-      "seed": 988210475,
+      "seed": 598039994,
       "version": 4,
-      "versionNonce": 465121189,
+      "versionNonce": 1154703270,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "text": "Datos de sucursal\n«Contenedor de datos»\nPostgreSQL\nGuarda negocio, outbox y espejo\nlocal.",
@@ -6739,9 +6739,9 @@
       "lineHeight": 1.1
     },
     {
-      "id": "0Jl8kvKPwNWOynqcbVO6Y",
+      "id": "1uyCKpWbY22l5T_MGXjcs",
       "type": "text",
-      "x": 2416.8478515624915,
+      "x": 2412.5119140625,
       "y": 834.4,
       "width": 322.76953125,
       "height": 158.4,
@@ -6757,12 +6757,12 @@
       "frameId": null,
       "index": "b0Cx",
       "roundness": null,
-      "seed": 986122187,
+      "seed": 157652602,
       "version": 4,
-      "versionNonce": 2070858027,
+      "versionNonce": 743462330,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "text": "branch-sync-worker\n«Contenedor»\nNestJS / Node.js · sin servidor\nHTTP\nEntrega eventos y actualiza\nespejos.",
@@ -6776,9 +6776,9 @@
       "lineHeight": 1.1
     },
     {
-      "id": "kec_ogaMgJFnDn1MuHbji",
+      "id": "gRNDvaqwQi-WCUtQ1UjyU",
       "type": "text",
-      "x": 3003.4955078124913,
+      "x": 2999.1595703125004,
       "y": 1264,
       "width": 368.19140625,
       "height": 132,
@@ -6794,12 +6794,12 @@
       "frameId": null,
       "index": "b0Cy",
       "roundness": null,
-      "seed": 466212459,
+      "seed": 1679865658,
       "version": 4,
-      "versionNonce": 1318974213,
+      "versionNonce": 1070889702,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "text": "country-api\n«Contenedor»\nNestJS + Fastify / Node.js\nRecibe operaciones y sirve trabajo\ny versiones.",
@@ -6813,9 +6813,9 @@
       "lineHeight": 1.1
     },
     {
-      "id": "rRyT_2Gp9eK63QrKoAOIN",
+      "id": "GYHnhf4NhcfmuIi-0lFba",
       "type": "text",
-      "x": 2797.5103515624996,
+      "x": 2793.1744140624996,
       "y": 1640.8000000000002,
       "width": 317.51953125,
       "height": 132,
@@ -6831,12 +6831,12 @@
       "frameId": null,
       "index": "b0Cz",
       "roundness": null,
-      "seed": 2092552459,
+      "seed": 607764474,
       "version": 4,
-      "versionNonce": 1756523467,
+      "versionNonce": 837914234,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "text": "Datos operativos de país\n«Contenedor de datos»\nPostgreSQL\nConsolida y conserva entrega\ndurable.",
@@ -6850,9 +6850,9 @@
       "lineHeight": 1.1
     },
     {
-      "id": "XfOL6CRIPDw3fbCabeX3X",
+      "id": "zWVhKUvhlOJ5_pPiszp_u",
       "type": "text",
-      "x": 3327.3783203124913,
+      "x": 3323.0423828125004,
       "y": 1640.8000000000002,
       "width": 344.1796875,
       "height": 132,
@@ -6868,12 +6868,12 @@
       "frameId": null,
       "index": "b0CzV",
       "roundness": null,
-      "seed": 1058109355,
+      "seed": 900968634,
       "version": 4,
-      "versionNonce": 47401573,
+      "versionNonce": 1250962982,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053761,
+      "updated": 1793288406238,
       "link": null,
       "locked": false,
       "text": "Redis · caché de país (opcional)\n«Contenedor de datos»\nRedis · datos reconstruibles\nAcelera consultas; no confirma\noperaciones.",
@@ -6887,9 +6887,9 @@
       "lineHeight": 1.1
     },
     {
-      "id": "-3U9mMwLCd2xRGRmu5372",
+      "id": "IBlwXNFSFJ_G3V2tbKn-E",
       "type": "text",
-      "x": 3404.735546875,
+      "x": 3400.399609374991,
       "y": 847.6,
       "width": 374.8359375,
       "height": 132,
@@ -6905,12 +6905,12 @@
       "frameId": null,
       "index": "b0D",
       "roundness": null,
-      "seed": 821774923,
+      "seed": 204573050,
       "version": 3,
-      "versionNonce": 112659595,
+      "versionNonce": 20082938,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053696,
+      "updated": 1793288406202,
       "link": null,
       "locked": false,
       "text": "erp-worker\n«Contenedor»\nNestJS / Node.js · libs/backend/erp\nIntegra ERP y prepara maestros\npor contrato.",
@@ -6924,9 +6924,9 @@
       "lineHeight": 1.1
     },
     {
-      "id": "6-NqPQiYsgXrnRL8mqIns",
+      "id": "UNR0d3qRkYrWRI-satbIZ",
       "type": "text",
-      "x": 4031.706249999991,
+      "x": 4027.3703124999997,
       "y": 1264,
       "width": 332.0859375,
       "height": 132,
@@ -6942,12 +6942,12 @@
       "frameId": null,
       "index": "b0E",
       "roundness": null,
-      "seed": 2001848555,
+      "seed": 787892794,
       "version": 3,
-      "versionNonce": 762713509,
+      "versionNonce": 908374950,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053696,
+      "updated": 1793288406202,
       "link": null,
       "locked": false,
       "text": "ERP del país\n«Sistema externo»\nCL: AX · ES: Gira · PE: custom\nRecibe y concilia documentos\nfinancieros.",
@@ -6961,10 +6961,10 @@
       "lineHeight": 1.1
     },
     {
-      "id": "ITIkS4YCKXZUENsv9D8jU",
+      "id": "HP_cq1_oiR7Hkl52go3Xm",
       "type": "text",
-      "x": 4540.768749999991,
-      "y": 1277.2,
+      "x": 4536.432812499999,
+      "y": 1277.1999999999998,
       "width": 372.2109375,
       "height": 105.60000000000001,
       "angle": 0,
@@ -6979,12 +6979,12 @@
       "frameId": null,
       "index": "b0F",
       "roundness": null,
-      "seed": 933196683,
+      "seed": 1155855098,
       "version": 3,
-      "versionNonce": 484131627,
+      "versionNonce": 846086586,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053696,
+      "updated": 1793288406202,
       "link": null,
       "locked": false,
       "text": "Fuentes de maestros y precios\n«Sistema externo»\nInterfaces por confirmar\nPublica datos y reglas autorizados.",
@@ -6998,11 +6998,11 @@
       "lineHeight": 1.1
     },
     {
-      "id": "wVs7Zx3IQ0qbenpa8tGdb",
+      "id": "W82d7x9Xv2LJo1j-dD67u",
       "type": "text",
-      "x": 93.42109374999998,
+      "x": 92.603125,
       "y": 1640.8000000000002,
-      "width": 364.1953125,
+      "width": 313.875,
       "height": 132,
       "angle": 0,
       "strokeColor": "#182842",
@@ -7016,30 +7016,30 @@
       "frameId": null,
       "index": "b0G",
       "roundness": null,
-      "seed": 35572267,
+      "seed": 545293242,
       "version": 3,
-      "versionNonce": 600709381,
+      "versionNonce": 601575142,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053696,
+      "updated": 1793288406202,
       "link": null,
       "locked": false,
-      "text": "Proveedor de pagos\n«Sistema externo»\nAPI / SDK según proveedor\nAutoriza o informa el resultado del\npago.",
+      "text": "Proveedor de pagos\n«Sistema externo»\nAPI / SDK según proveedor\nEj.: Transbank POS · Niubiz ·\nMercado Pago Point.",
       "fontSize": 24,
       "fontFamily": 2,
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "payments",
-      "originalText": "Proveedor de pagos\n«Sistema externo»\nAPI / SDK según proveedor\nAutoriza o informa el resultado del\npago.",
+      "originalText": "Proveedor de pagos\n«Sistema externo»\nAPI / SDK según proveedor\nEj.: Transbank POS · Niubiz ·\nMercado Pago Point.",
       "autoResize": true,
       "lineHeight": 1.1
     },
     {
-      "id": "UsiLmSIu7nGD6xE_ERyH7",
+      "id": "_WrLpsyt_dPNMZHjq6SlQ",
       "type": "text",
-      "x": 635.8515624999912,
+      "x": 583.7113281249999,
       "y": 1640.8000000000002,
-      "width": 324.140625,
+      "width": 372.12890625,
       "height": 132,
       "angle": 0,
       "strokeColor": "#182842",
@@ -7053,21 +7053,21 @@
       "frameId": null,
       "index": "b0H",
       "roundness": null,
-      "seed": 2075806923,
+      "seed": 1273756794,
       "version": 3,
-      "versionNonce": 1518314955,
+      "versionNonce": 359791226,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1792788053696,
+      "updated": 1793288406202,
       "link": null,
       "locked": false,
-      "text": "Proveedor fiscal\n«Sistema externo»\nContrato por país y modalidad\nEmite o transmite documentos\nfiscales.",
+      "text": "Proveedor de facturación\n«Sistema externo»\nContrato por país y modalidad\nEj.: Acepta / Ingydev (CL) · EFACT\n(PE).",
       "fontSize": 24,
       "fontFamily": 2,
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "fiscal",
-      "originalText": "Proveedor fiscal\n«Sistema externo»\nContrato por país y modalidad\nEmite o transmite documentos\nfiscales.",
+      "originalText": "Proveedor de facturación\n«Sistema externo»\nContrato por país y modalidad\nEj.: Acepta / Ingydev (CL) · EFACT\n(PE).",
       "autoResize": true,
       "lineHeight": 1.1
     }

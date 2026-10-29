@@ -17,8 +17,8 @@ flowchart TB
     client["pos-desktop<br/>«Contenedor»<br/>Angular + Tauri<br/>Presenta caja y comandos del operador."]:::pos
     mobileClient["pos-mobile<br/>«Contenedor»<br/>Angular + Capacitor<br/>Presenta operaciones en Android/iOS."]:::pos
     branchDb[("Datos de sucursal<br/>«Contenedor de datos»<br/>PostgreSQL<br/>Guarda negocio, outbox y espejo local.")]:::store
-    payments["Proveedor de pagos<br/>«Sistema externo»<br/>API / SDK según proveedor<br/>Autoriza o informa el resultado del pago."]:::external
-    fiscal["Proveedor fiscal<br/>«Sistema externo»<br/>Contrato por país y modalidad<br/>Emite o transmite documentos fiscales."]:::external
+    payments["Proveedor de pagos<br/>«Sistema externo»<br/>API / SDK según proveedor<br/>Ej.: Transbank POS · Niubiz · Mercado Pago Point."]:::external
+    fiscal["Proveedor de facturación<br/>«Sistema externo»<br/>Contrato por país y modalidad<br/>Ej.: Acepta / Ingydev (CL) · EFACT (PE)."]:::external
     legend["Leyenda · notación C4<br/>Azul: POS · Violeta: datos<br/>Gris: externo · Ámbar: infraestructura<br/>Borde: sistema, proceso o nodo indicado<br/>Flecha: iniciador, propósito y protocolo<br/>Opcional / por asignar: condición explícita<br/>Contenedor no equivale a Docker"]:::key
     client -->|"Comandos identificados · HTTPS/LAN"| entry
     mobileClient -->|"Comandos identificados · HTTPS/LAN"| entry

@@ -813,7 +813,7 @@
       "diagram": true,
       "title": "Contexto del sistema",
       "background": "#FFFFFF",
-      "notes": "C1 muestra el sistema completo y sus actores y dependencias externas. Los conectores indican propósito, no un camino técnico de red. Los nombres ERP corresponden al contexto informado, no a integraciones implementadas.",
+      "notes": "C1 muestra el sistema completo y sus actores y dependencias externas. Los conectores indican propósito, no un camino técnico de red. Los nombres ERP corresponden al contexto informado, no a integraciones implementadas. Transbank con terminal local en Chile y Niubiz en Perú son ejemplos de pagos presentes en las fuentes. Webpay Plus es el producto online de Transbank; no equivale al terminal de tienda. Mercado Pago Point es otro ejemplo presencial ilustrativo, sin integración acreditada. Acepta/Ingydev en Chile y EFACT en Perú son ejemplos de soluciones de facturación por cuenta del contribuyente. SII y SUNAT son autoridades tributarias, distintas de esos proveedores. Los nombres concretan responsabilidades; no acreditan selección ni homologación en POS Platform.",
       "sources": [
         {
           "label": "integration",
@@ -1250,7 +1250,7 @@
         },
         {
           "type": "text",
-          "text": "Autoriza e informa el pago",
+          "text": "Ej.: Transbank POS · Niubiz",
           "position": {
             "left": 379,
             "top": 598,
@@ -1299,7 +1299,7 @@
         },
         {
           "type": "text",
-          "text": "Proveedor fiscal",
+          "text": "Proveedor de facturación",
           "position": {
             "left": 889,
             "top": 554,
@@ -1318,7 +1318,7 @@
         },
         {
           "type": "text",
-          "text": "Emite o transmite documentos",
+          "text": "Ej.: Acepta/Ingydev · EFACT",
           "position": {
             "left": 889,
             "top": 598,
@@ -1598,7 +1598,7 @@
         },
         {
           "type": "text",
-          "text": "Relaciones lógicas por país. Los contratos, proveedores y modalidades requieren homologación.",
+          "text": "Ejemplos por homologar. SII y SUNAT son autoridades tributarias, distintas del proveedor de facturación.",
           "position": {
             "left": 64,
             "top": 644,

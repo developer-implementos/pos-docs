@@ -437,6 +437,8 @@ Los mapeos al futuro ERP deberán probar capacidades y casos de negocio reales. 
 
 Venta comercial, autorización del pago, documento fiscal y entrega de su representación tienen estados distintos. Un ticket interno no sustituye automáticamente a un comprobante tributario. El motor fiscal debe seleccionar reglas por entidad legal, establecimiento, país, documento y modalidad; conservar evidencias y controlar sus plazos.
 
+El **proveedor de facturación** es la solución de software o servicio: por ejemplo, Acepta/Ingydev en el legado chileno o EFACT según las reuniones de Perú. **SII y SUNAT son autoridades tributarias**, distintas de esos proveedores. La [matriz de ejemplos y evidencia](extensibilidad-proveedores-dispositivos.md#ejemplos-reales-pagos-facturación-y-autoridad-tributaria) precisa país, canal y estado de validación; el diagrama no presupone una integración fiscal idéntica para todos los países.
+
 ### Chile
 
 El formato oficial de boleta electrónica incorpora timbre, CAF y firma. Se propone reservar folios de forma exclusiva, custodiar material fiscal y generar los documentos mediante un componente validado para la operación. Una caja restaurada o reemplazada no puede reutilizar folios de la anterior. La distribución de rangos por caja debe verificarse con el emisor y la solución fiscal. [Formato oficial de boletas del SII](https://www.sii.cl/factura_electronica/factura_mercado/formato_boletas_elec_202412.pdf).

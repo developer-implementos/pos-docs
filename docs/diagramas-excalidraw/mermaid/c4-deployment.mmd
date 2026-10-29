@@ -27,8 +27,8 @@ flowchart TB
         erpAdapter["erp-worker<br/>«Contenedor»<br/>NestJS / Node.js · libs/backend/erp<br/>Integra ERP y prepara maestros por contrato."]:::pos
         erp["ERP del país<br/>«Sistema externo»<br/>CL: AX · ES: Gira · PE: custom<br/>Recibe y concilia documentos financieros."]:::external
     end
-        payments["Proveedor de pagos<br/>«Sistema externo»<br/>API / SDK según proveedor<br/>Autoriza o informa el resultado del pago."]:::external
-        fiscal["Proveedor fiscal<br/>«Sistema externo»<br/>Contrato por país y modalidad<br/>Emite o transmite documentos fiscales."]:::external
+        payments["Proveedor de pagos<br/>«Sistema externo»<br/>API / SDK según proveedor<br/>Ej.: Transbank POS · Niubiz · Mercado Pago Point."]:::external
+        fiscal["Proveedor de facturación<br/>«Sistema externo»<br/>Contrato por país y modalidad<br/>Ej.: Acepta / Ingydev (CL) · EFACT (PE)."]:::external
         backup["Respaldo y recuperación<br/>«Infraestructura»<br/>Backups PostgreSQL / herramienta por definir<br/>Conserva y ensaya restauraciones."]:::pos
         observability["Observabilidad operativa (opcional)<br/>«Sistema externo»<br/>Recolector de logs / Sentry opt-in<br/>Recibe diagnóstico y correlación técnica."]:::external
         masters["Fuentes de maestros y precios<br/>«Sistema externo»<br/>Interfaces por confirmar<br/>Publica datos y reglas autorizados."]:::external

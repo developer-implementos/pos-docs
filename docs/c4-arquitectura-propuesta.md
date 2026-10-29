@@ -1,6 +1,6 @@
 # Modelo C4 de la arquitectura propuesta del POS
 
-Fecha de revisión: 22 de octubre de 2026. Alcance: arquitectura de referencia para Chile, Perú y España; no certifica software, topología ni integraciones desplegadas.
+Fecha de revisión: 29 de octubre de 2026. Alcance: arquitectura de referencia para Chile, Perú y España; no certifica software, topología ni integraciones desplegadas.
 
 La [propuesta y sus decisiones](propuesta-arquitectura.md) gobiernan la recomendación. Estas vistas explican sus límites, procesos y responsabilidades. **Los clientes son Angular + Tauri para escritorio y Angular + Capacitor para móvil**. La base técnica NestJS/Fastify y los scaffolds no acreditan los contratos comerciales, persistencia o integraciones aquí propuestos. El [estado del monorepo](monorepo.md#estado-de-implementación) delimita lo implementado; el [catálogo de integraciones](catalogo-integraciones-actuales.md) conserva la evidencia del legado.
 
@@ -62,6 +62,8 @@ En la propuesta, el POS permite al cajero operar, al supervisor autorizar/revisa
 **Maestros y precios.** El propietario debe identificarse por dato y país. No se adjudica automáticamente al ERP ni al backend POS. Deben acordarse publicación, vigencia, correcciones y disponibilidad de deltas/cargas completas. El espejo local no convierte a cada sucursal en autora independiente de precios.
 
 **Pago y fiscalidad.** Son efectos distintos de la confirmación local y de la integración ERP. Un pago incierto no se repite automáticamente; un acuse de sincronización no prueba aceptación fiscal. Operar sin WAN depende de capacidades y políticas validadas, no de disponer de disco local.
+
+Los ejemplos dentro de los nodos concretan su significado: **Transbank POS, Niubiz y Mercado Pago Point** representan productos de pagos; **Acepta/Ingydev y EFACT**, soluciones de facturación. **SII y SUNAT son autoridades tributarias**, distintas del proveedor de software. La ficha de cada nodo y la [matriz de proveedores](extensibilidad-proveedores-dispositivos.md#ejemplos-reales-pagos-facturación-y-autoridad-tributaria) separan evidencia del legado/reuniones de ejemplos ilustrativos. Los nombres no acreditan integración, elección ni homologación en POS Platform; tampoco implican que una operación se envíe a todos ellos.
 
 ## C2: procesos, persistencia y propiedad
 

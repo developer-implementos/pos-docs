@@ -15,6 +15,24 @@ Fuentes del estado actual: [Mountain: facturación y selección de proveedor](an
 
 **«Plug-and-play» significa aquí configurar una combinación previamente homologada.** Un modelo o proveedor nuevo puede necesitar desarrollo de adaptador, cambios de contrato y certificación. Una API común reduce el alcance del cambio; no convierte cualquier hardware en compatible ni elimina las reglas fiscales o de pago.
 
+### Ejemplos reales: pagos, facturación y autoridad tributaria
+
+El **proveedor de pagos** procesa un cobro o permite consultar su resultado. El **proveedor de facturación** aporta el software o servicio que prepara, emite o transmite documentos por cuenta del contribuyente, según el contrato. La **autoridad tributaria** es otra parte: SII en Chile, SUNAT en Perú y la autoridad competente en España. El contribuyente sigue siendo el emisor del documento; recibir una respuesta técnica del facturador no equivale por sí solo a aceptación fiscal.
+
+| País | Pagos descritos en las fuentes | Solución de facturación descrita | Alcance de la evidencia |
+| --- | --- | --- | --- |
+| Chile | **Transbank**, con terminal y conexión local al puesto. | **Acepta / Ingydev**. | Hay referencias en antecedentes y llamadas a los facturadores en Mountain. Se debe confirmar la configuración instalada y las capacidades de cada contrato. |
+| Perú | **Niubiz/POS**, además de Yape como medio informado. | **EFACT**; **SUNAT** es la autoridad tributaria. | Informados en cuestionario y reuniones. No acreditan adaptadores implementados en POS Platform. |
+| España | **BBVA/Redsys**, además de Bizum y otros medios informados. | **Gira**, según las fuentes recibidas; modalidad fiscal por validar. | El cuestionario describe TPV portátiles sin conexión a Gira, conciliados por contabilidad. No demuestra una integración API/SDK actual. CashKeeper gestiona efectivo físico; no es una pasarela de pagos online. |
+
+La [comparación de reuniones por país](meeting-sources/country-comparison.md) conserva el origen y las diferencias de nombres; el [catálogo de integraciones actuales](catalogo-integraciones-actuales.md) enlaza la evidencia del código chileno. Estos nombres concretan las responsabilidades del diagrama, sin seleccionar automáticamente proveedores para el producto nuevo.
+
+**Webpay Plus** es un producto de Transbank para pagos online. Para una caja presencial, **Transbank POS Integrado** es el ejemplo más próximo al terminal conectado al sistema de caja. **Mercado Pago Point** también ofrece integración de terminales con un POS. Webpay Plus y Point son ejemplos ilustrativos de productos distintos, no proveedores confirmados del despliegue actual. Tener soporte para uno no acredita soporte para los otros. Fuentes: [Webpay Plus](https://transbankdevelopers.com/documentacion/webpay-plus), [POS Integrado](https://transbankdevelopers.com/producto/posintegrado) y [Mercado Pago Point](https://www.mercadopago.cl/developers/es/docs/mp-point/overview).
+
+**SII no es el nombre del facturador Acepta o Ingydev.** En Chile puede utilizarse software propio o de mercado, además del sistema gratuito del SII; la solución y el canal deben definirse expresamente. En Perú, SUNAT distingue el **PSE**, que presta servicios al emisor, del **OSE**, que comprueba documentos en la modalidad correspondiente. No se atribuyen ambos papeles a EFACT por el solo hecho de aparecer en una reunión. La integración con la autoridad, directa o mediante servicios, depende del país y modalidad; el mapa general no dibuja una cadena universal ni supone emisión offline. Fuentes: [sistemas de facturación del SII](https://www.sii.cl/destacados/factura_electronica/factura_etapas_2.html) y [conceptos de SUNAT](https://cpe.sunat.gob.pe/informacion_general/conceptos_generales).
+
+En los nodos del mapa, **«Ej.» identifica ejemplos reales**. La ficha explica su país, canal y evidencia; el estado «Por definir» conserva pendiente la selección y homologación de la integración objetivo.
+
 ## 2. Fronteras de responsabilidad
 
 | Pieza | Responsabilidad propuesta | Límite |
