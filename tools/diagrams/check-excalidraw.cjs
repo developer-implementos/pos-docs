@@ -41,6 +41,25 @@ function validateModelSemantics(){
  assert.ok(erp.boundaries[0].nodes.includes('erpMasterSource'),'Master-data preparation must be an erp-worker component');
  assert.ok(!containers.nodeIds.includes('countryWorker'),'C2 must not invent a separate publisher application');
  assert.ok(containers.relationships.some(edge=>edge.from==='erpAdapter'&&edge.to==='masters'),'C2 must show the authorized source contract');
+ for(const [appId,componentId,storeId,viewId,boundaryId] of [
+  ['countryApi','countryQueue','countryJobStore','country','countryNode'],
+  ['erpAdapter','erpQueue','erpJobStore','erp','erpNode']
+ ]){
+  assert.match(model.nodes[appId].technology,/BullMQ/,`Chosen queue library must be visible on ${appId}`);
+  assert.equal(model.nodes[componentId].type,'Componente',`BullMQ is internal code, not another application: ${componentId}`);
+  assert.ok(model.views.find(view=>view.id===viewId).boundaries[0].nodes.includes(componentId),`BullMQ must belong to its application: ${componentId}`);
+  assert.ok(!containers.nodeIds.includes(componentId),`C2 must not expose internal queue modules: ${componentId}`);
+  assert.equal(model.nodes[storeId].type,'Contenedor de datos');
+  assert.notEqual(model.nodes[storeId].conditional,true,`Jobs Redis is required: ${storeId}`);
+  assert.ok(deployment.boundaries.find(boundary=>boundary.id===boundaryId).nodes.includes(storeId),`Redis must remain within its deployment boundary: ${storeId}`);
+  assert.ok(containers.relationships.some(edge=>edge.from===appId&&edge.to===storeId&&!edge.conditional),`C2 must show the mandatory jobs connection: ${appId}`);
+  for(const view of model.views)for(const edge of view.relationships){
+   if(edge.to===storeId)assert.ok([appId,componentId].includes(edge.from),`No cross-boundary Redis access: ${view.id}/${edge.from}/${storeId}`);
+   if(edge.from===storeId)assert.ok([appId,componentId].includes(edge.to),`No cross-boundary Redis access: ${view.id}/${storeId}/${edge.to}`);
+  }
+ }
+ assert.equal(model.nodes.countryCache.conditional,true,'Cache remains optional and separate from mandatory jobs Redis');
+ assert.ok(!deployment.boundaries.find(boundary=>boundary.id==='serverNode').nodes.some(id=>/JobStore|Cache/.test(id)),'The branch has no required Redis instance');
  for(const view of model.views)assert.ok(!view.relationships.some(edge=>['erpAdapter','erpMasterSource','client','mobileClient','device'].includes(edge.from)&&edge.to==='countryDb'),`No remote SQL authority in ${view.id}`);
  const prices=dynamicViews.find(view=>view.id==='prices');
  assert.ok(prices.steps.some(step=>step.from==='erpAdapter'&&step.to==='countryApi'),'Prepared publications must cross the HTTPS API boundary');

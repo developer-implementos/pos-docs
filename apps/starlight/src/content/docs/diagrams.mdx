@@ -10,11 +10,19 @@ El mapa general, las siete vistas estructurales y los dos recorridos representan
 
 ## Mapa general de arquitectura
 
-La vista inicial reúne las seis aplicaciones, PostgreSQL de sucursal y país y las relaciones principales. El explorador permite profundizar por zona y seleccionar elementos o conexiones para consultar responsabilidades, contratos y recuperación ante fallos. Redis, BullMQ y RabbitMQ se consultan en la vista de opciones y conservan sus condiciones de adopción.
+La vista inicial reúne las siete aplicaciones, PostgreSQL de sucursal y país, SQLite del agente y los dos almacenes Redis de jobs. **BullMQ con Redis dedicado es una dependencia seleccionada**, pendiente de implementación: programación breve en `country-api` y ejecución en `erp-worker`, cada una dentro de su red. El explorador permite seleccionar elementos o conexiones y consultar responsabilidades, contratos y recuperación. La caché Redis sigue siendo opcional y usa una instancia distinta.
 
-<Diagram src="/docs/architecture/pos-platform-base.svg" alt="Arquitectura base: clientes de escritorio y móvil, branch-api, branch-sync-worker, country-api, erp-worker, PostgreSQL de sucursal y país y sistemas externos." title="Mapa general de arquitectura" caption="Arquitectura base · Explora las zonas, las conexiones y los recorridos desde el mismo modelo." interactiveHref="/architecture/" downloadHref="/docs/architecture/pos-platform.svg" width={1830} height={1322} />
+<Diagram src="/docs/architecture/pos-platform-base.svg" alt="Arquitectura base: siete aplicaciones, PostgreSQL de sucursal y país, SQLite técnico y Redis jobs separados para país y ERP; sistemas externos mediante contratos autorizados." title="Mapa general de arquitectura" caption="Arquitectura base · Explora las zonas, las conexiones y los recorridos desde el mismo modelo." interactiveHref="/architecture/" downloadHref="/docs/architecture/pos-platform.svg" width={1830} height={2044} />
 
 [Recorrido de una venta](/architecture/?scenario=local-sale&step=1) · [Restauración y conciliación](/architecture/?scenario=recovery&step=1) · [Mapa completo](/architecture/?view=full)
+
+## Vista general de aplicaciones y despliegue
+
+Vista intermedia sin módulos internos: cada aplicación declara tecnología y responsabilidad, y las flechas describen la operación y el protocolo. Las instancias Redis de jobs permanecen en país y en la red ERP, separadas de la caché opcional. PostgreSQL conserva el estado de negocio y la outbox que permite recuperar los jobs; los trabajos de periféricos conservan su registro SQLite propio.
+
+<Diagram src="/docs/architecture/pos-platform-overview.svg" alt="Vista general de las siete aplicaciones del POS, datos de sucursal y país, BullMQ con Redis dedicado por entorno, periféricos y proveedores; conectores descriptivos sin módulos internos." title="Aplicaciones, datos y conexiones" caption="Vista de despliegue · Dependencias seleccionadas, contratos y evolución F06 de periféricos de red." downloadHref="/docs/architecture/pos-platform-overview.svg" width={3600} height={2650} />
+
+[Procesamiento de jobs](/guide/architecture/job-processing/) · [Explorar BullMQ en país](/architecture/?view=full#detail-country-bullmq) · [Explorar BullMQ en ERP](/architecture/?view=full#detail-bullmq)
 
 ## Contexto del producto
 
@@ -26,9 +34,9 @@ Actores, POS corporativo y sistemas externos. La operación supervisada represen
 
 ## Aplicaciones y persistencia
 
-Las seis aplicaciones son `pos-desktop`, `pos-mobile`, `branch-api`, `branch-sync-worker`, `country-api` y `erp-worker`. La vista separa aplicaciones, almacenes y caché opcional de país; la venta habilitada conserva su persistencia local. El [contrato de publicación](/guide/architecture/master-data-publication/) asigna preparación a `erp-worker` y publicación a `country-api`.
+Las siete aplicaciones son `pos-desktop`, `pos-mobile`, `device-agent`, `branch-api`, `branch-sync-worker`, `country-api` y `erp-worker`. BullMQ es una librería dentro de las aplicaciones de país y ERP. La vista separa aplicaciones, almacenes de jobs y caché opcional; la venta habilitada conserva su persistencia local. El [contrato de publicación](/guide/architecture/master-data-publication/) asigna programación de solicitudes y publicación a `country-api`, y preparación por lotes a `erp-worker`.
 
-<Diagram src="/docs/diagramas-excalidraw/previews/02-contenedores.svg" alt="C2: seis aplicaciones, PostgreSQL de sucursal y país, publicación comercial y caché Redis opcional; ERP mediante conexión saliente de su worker." caption="C2 · Aplicaciones, almacenes y contratos; cada bloque declara su alcance." sourceHref="/docs/diagramas-excalidraw/02-contenedores.excalidraw" />
+<Diagram src="/docs/diagramas-excalidraw/previews/02-contenedores.svg" alt="C2: siete aplicaciones, PostgreSQL de sucursal y país, SQLite técnico, Redis jobs dedicado a cada entorno y caché Redis opcional; ERP mediante conexión HTTPS saliente de su worker." caption="C2 · Aplicaciones, almacenes y contratos; cada bloque declara su alcance." sourceHref="/docs/diagramas-excalidraw/02-contenedores.excalidraw" />
 
 [Contratos de contenedores](/guide/proposal/architecture/#contratos-de-contenedores-y-propiedad-de-datos)
 
@@ -50,23 +58,23 @@ Las seis aplicaciones son `pos-desktop`, `pos-mobile`, `branch-api`, `branch-syn
 
 ## API de país
 
-`country-api` recibe operaciones, confirma el efecto local antes del ACK y sirve trabajo, resultados y publicaciones. Redis es una caché opcional de lecturas reconstruibles; PostgreSQL conserva la autoridad.
+`country-api` recibe operaciones, confirma el efecto local antes del ACK y sirve trabajo, resultados y publicaciones. BullMQ programa publicaciones y crea solicitudes breves fuera del ciclo HTTP con su Redis de jobs dedicado. PostgreSQL conserva el calendario, las solicitudes y el estado de negocio. La caché Redis opcional acelera lecturas reconstruibles en otra instancia.
 
-<Diagram src="/docs/diagramas-excalidraw/previews/08-country-api.svg" alt="C3 de country-api: autorización por ámbito, recepción transaccional, trabajo y resultados ERP, consultas y publicaciones, PostgreSQL y caché Redis opcional." caption="C3 · country-api: recepción durable y servicios de país en un proceso." sourceHref="/docs/diagramas-excalidraw/08-country-api.excalidraw" />
+<Diagram src="/docs/diagramas-excalidraw/previews/08-country-api.svg" alt="C3 de country-api: autorización por ámbito, recepción transaccional, trabajo ERP, publicaciones, programación BullMQ con Redis jobs, PostgreSQL y caché Redis opcional separada." caption="C3 · country-api: recepción durable y servicios de país en un proceso." sourceHref="/docs/diagramas-excalidraw/08-country-api.excalidraw" />
 
 [Contratos de país](/guide/architecture/c4-model/#c3-de-país-recepción-consulta-y-entrega-de-trabajo) · [Caché de país opcional](/guide/architecture/c4-model/#caché-de-país-opcional)
 
 ## Integración ERP
 
-`erp-worker` corre en la red autorizada del ERP. Inicia HTTPS a `country-api` para solicitar trabajo y entregar resultados; compone fachadas, ACL y adaptadores sin SQL remoto a la base del POS.
+`erp-worker` corre en la red autorizada del ERP. Inicia HTTPS a `country-api` para solicitar trabajo y entregar resultados; compone fachadas, ACL y adaptadores. BullMQ con Redis dedicado en esa misma red organiza ejecución, preparación por lotes y consultas de conciliación. No existe Redis ni SQL WAN; un reintento no autoriza repetir un efecto externo incierto.
 
-<Diagram src="/docs/diagramas-excalidraw/previews/09-erp-worker.svg" alt="C3 de erp-worker: admisión, cliente de trabajo y resultados, fachadas, ACL, adaptadores y conciliación; conexión HTTPS saliente a país y protocolo ERP por validar." caption="C3 · erp-worker: traducción y conciliación con destino e identidad estables." sourceHref="/docs/diagramas-excalidraw/09-erp-worker.excalidraw" />
+<Diagram src="/docs/diagramas-excalidraw/previews/09-erp-worker.svg" alt="C3 de erp-worker: BullMQ y Redis jobs en red ERP, admisión, trabajo y resultados, fachadas, ACL, adaptadores y conciliación; conexión HTTPS saliente a país y protocolo ERP por validar." caption="C3 · erp-worker: traducción y conciliación con destino e identidad estables." sourceHref="/docs/diagramas-excalidraw/09-erp-worker.excalidraw" />
 
 [Responsabilidades del worker ERP](/guide/architecture/c4-model/#c3-de-integración-erp-ejecución-dentro-de-la-red-autorizada) · [Contratos ERP](/guide/proposal/contracts/)
 
 ## Despliegue y continuidad
 
-Puestos, móviles, servidor de sucursal, plataforma de país y red autorizada del ERP. El perfil inicial cubre pérdida de WAN con LAN y escritor local disponibles; Redis no es requisito para operar offline.
+Puestos, móviles, servidor de sucursal, plataforma de país y red autorizada del ERP. El perfil inicial cubre pérdida de WAN con LAN y escritor local disponibles. Los Redis de jobs pertenecen a país y red ERP: no se instala Redis por sucursal ni se requiere acceso WAN para confirmar una operación local habilitada.
 
 <Diagram src="/docs/diagramas-excalidraw/previews/05-despliegue.svg" alt="Despliegue de referencia entre puestos, móviles, servidor local, plataforma de país y red autorizada ERP, con caché opcional y recuperación." caption="Vista de despliegue complementaria · No corresponde al cuarto nivel de C4." sourceHref="/docs/diagramas-excalidraw/05-despliegue.excalidraw" />
 

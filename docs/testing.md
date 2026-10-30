@@ -33,6 +33,7 @@ Su alcance son mecanismos técnicos usados por varias suites: relojes controlabl
 
 - **Sistema:** una futura `apps/pos-system-e2e` recorrerá APIs, PostgreSQL, entrega y recepción entre procesos cuando estén implementados. Deberá verificar commit de venta y outbox, duplicados, reinicios, pérdida de acuses, concurrencia y resultados externos inciertos.
 - **Hosts nativos:** las futuras suites nativas verificarán capacidades implementadas de Tauri y Capacitor en sus entornos homologados. Chromium sobre la web no demuestra instalación, actualización, WebView ni periféricos.
+- **Trabajos BullMQ:** probar con Redis y PostgreSQL reales en entornos de prueba: commit sin enqueue, enqueue con respuesta perdida, reconstrucción de Redis, lock perdido, claims vencidos, calendario en dos réplicas, contrapresión y separación de recursos. Una repetición conserva la identidad; un efecto ERP incierto deriva a consulta/conciliación. El [ADR-18](decisions/job-processing.md) fija la aceptación de esta implementación pendiente.
 - **Adaptadores:** contratos y pruebas de integración se añaden con cada proveedor, sin ejecutar pagos o dispositivos productivos en suites ordinarias.
 
 Estas suites no existen por describirlas aquí. La ausencia de un recorrido implementado no se resuelve creando proyectos vacíos ni pruebas que devuelvan éxitos ficticios.

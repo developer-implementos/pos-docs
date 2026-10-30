@@ -1624,7 +1624,7 @@
       "diagram": true,
       "title": "Aplicaciones y datos de la propuesta",
       "background": "#FFFFFF",
-      "notes": "Vista C2 resumida derivada del modelo de arquitectura: siete aplicaciones objetivo, dos PostgreSQL de negocio y un registro SQLite técnico del agente, mostrado en la lámina de periféricos. pos-desktop y pos-mobile son aplicaciones completas: sus shells Tauri y Capacitor alojan Angular. Ambos solicitan operaciones autorizadas a branch-api por LAN. device-agent es una app independiente en .NET/C# instalada por puesto Windows desde F02, para periféricos locales USB, serie o SDK: inicia HTTPS hacia branch-api para obtener trabajos y reportar evidencia. No depende de la ventana POS. Las estaciones o dispositivos de red compartidos y el uso de sus periféricos desde móvil corresponden a F06, después del piloto F05; no forman parte de la primera entrega por puesto. branch-sync-worker intercambia por HTTPS con country-api; erp-worker inicia HTTPS desde su red autorizada. Clientes, agente y erp-worker no acceden por SQL a país. branch-api confirma negocio, auditoría y outbox en PostgreSQL; devices coordina allí los trabajos de periféricos. branch-sync-worker gestiona pendientes y versiones; country-api conserva recepción y trabajo. Ninguna transacción SQL incluye llamadas a hardware, proveedores o ERP. El objetivo comprende siete apps; seis tienen base técnica en el producto revisado y device-agent está pendiente de implementación y homologación.",
+      "notes": "Vista C2 resumida derivada del modelo de arquitectura: siete aplicaciones objetivo, dos PostgreSQL de negocio y un registro SQLite técnico del agente, mostrado en la lámina de periféricos. pos-desktop y pos-mobile son aplicaciones completas: sus shells Tauri y Capacitor alojan Angular. Ambos solicitan operaciones autorizadas a branch-api por LAN. device-agent es una app independiente en .NET/C# instalada por puesto Windows desde F02, para periféricos locales USB, serie o SDK: inicia HTTPS hacia branch-api para obtener trabajos y reportar evidencia. No depende de la ventana POS. Las estaciones o dispositivos de red compartidos y el uso de sus periféricos desde móvil corresponden a F06, después del piloto F05; no forman parte de la primera entrega por puesto. branch-sync-worker intercambia por HTTPS con country-api; erp-worker inicia HTTPS desde su red autorizada. Clientes, agente y erp-worker no acceden por SQL a país. branch-api confirma negocio, auditoría y outbox en PostgreSQL; devices coordina allí los trabajos de periféricos. branch-sync-worker gestiona pendientes y versiones; country-api conserva recepción y trabajo. Ninguna transacción SQL incluye llamadas a hardware, proveedores o ERP. El objetivo comprende siete apps; seis tienen base técnica en el producto revisado y device-agent está pendiente de implementación y homologación. BullMQ es obligatorio dentro de country-api y erp-worker, sin añadir aplicaciones. Cada entorno tiene Redis jobs dedicado y aislado: país programa publicaciones y crea solicitudes breves fuera de HTTP; ERP ejecuta trabajos, prepara lotes y consulta conciliaciones. Redis caché es opcional y separado. El commit de PostgreSQL y el encolado no comparten transacción; la outbox y el relay recuperan pendientes con identidad estable. Redis jobs no comunica ambas redes y no reemplaza el registro de negocio. El worker encola referencias sin lease de ejecución. El consumidor BullMQ toma el claim por HTTPS sólo al comenzar con capacidad disponible; una espera prolongada en cola no mantiene un lease.",
       "sources": [
         {
           "label": "Contenedores y límites C4",
@@ -1641,6 +1641,10 @@
         {
           "label": "Agente de periféricos · decisión y contrato",
           "href": "/guide/architecture/device-agent/"
+        },
+        {
+          "label": "Procesamiento de trabajos con BullMQ",
+          "href": "/guide/architecture/job-processing/"
         }
       ],
       "elements": [
@@ -4717,7 +4721,7 @@
       "diagram": true,
       "title": "Stack de infraestructura propuesto",
       "background": "#FFFFFF",
-      "notes": "pos-desktop y pos-mobile son aplicaciones completas con frontend Angular alojado por las shells nativas Tauri y Capacitor, respectivamente. La base recomendada es PostgreSQL en sucursal y país, NestJS/Fastify y workers. Ningún motor/broker confirma por sí solo la durabilidad: se implementan transacciones, outbox/inbox, deduplicación y recuperación. GCP/Cloud Run, Pub/Sub, RabbitMQ, Redis/BullMQ y Kubernetes no se presentan como servicios elegidos. Cloud autorizado o VM privada requiere decisión operativa. El móvil no habilita por sí solo venta sin LAN ni acceso remoto público. LAN/escritor disponibles son requisito del perfil WAN. El OS, dimensionamiento, HA, RPO/RTO y distribución se homologan en piloto. En la primera entrega F02, device-agent se instala por puesto y utiliza sus dispositivos locales USB/serie/SDK, con .NET/C# sobre Windows y SQLite para recepción, intentos y evidencia técnica. No mantiene el registro comercial de ventas ni comparte autoridad de negocio; conserva únicamente el contenido mínimo y la evidencia de cada trabajo autorizado. libs/backend/devices en branch-api autoriza, asigna trabajos y conserva auditoría en PostgreSQL. La conexión de trabajos y resultados la inicia el agente hacia branch-api por HTTPS autenticado. La primera entrega asocia cada trabajo al agente del puesto autorizado. Los periféricos de red o la estación compartida, incluido el acceso móvil, se implementan como evolución F06 después del piloto F05, con asignación y concurrencia homologadas y un único dueño activo por periférico físico. Se homologa driver, arquitectura y requisitos de sesión; PrintDocument no es una vía soportada para un servicio Windows.",
+      "notes": "pos-desktop y pos-mobile son aplicaciones completas con frontend Angular alojado por las shells nativas Tauri y Capacitor, respectivamente. La base recomendada es PostgreSQL en sucursal y país, NestJS/Fastify y workers. Ningún motor/broker confirma por sí solo la durabilidad: se implementan transacciones, outbox/inbox, deduplicación y recuperación. BullMQ con Redis dedicado es la solución seleccionada para jobs y está pendiente de implementación. country-api programa publicaciones y crea solicitudes breves fuera de HTTP; erp-worker ejecuta trabajos, preparación por lotes y consultas de conciliación. Cada entorno mantiene su Redis de jobs aislado de caché, con persistencia y noeviction. El calendario y los registros de negocio siguen en PostgreSQL; relay y recuperación reconstruyen jobs con identidad estable. La red ERP intercambia trabajo y resultados por HTTPS, sin Redis o SQL WAN. branch-sync-worker usa PostgreSQL y HTTPS; el agente conserva SQLite. Un job reintentado no autoriza repetir un efecto monetario incierto. La caché Redis de país es opcional. GCP/Cloud Run y Kubernetes requieren decisión operativa. Cloud autorizado o VM privada requiere decisión operativa. El móvil no habilita por sí solo venta sin LAN ni acceso remoto público. LAN/escritor disponibles son requisito del perfil WAN. El OS, dimensionamiento, HA, RPO/RTO y distribución se homologan en piloto. En la primera entrega F02, device-agent se instala por puesto y utiliza sus dispositivos locales USB/serie/SDK, con .NET/C# sobre Windows y SQLite para recepción, intentos y evidencia técnica. No mantiene el registro comercial de ventas ni comparte autoridad de negocio; conserva únicamente el contenido mínimo y la evidencia de cada trabajo autorizado. libs/backend/devices en branch-api autoriza, asigna trabajos y conserva auditoría en PostgreSQL. La conexión de trabajos y resultados la inicia el agente hacia branch-api por HTTPS autenticado. La primera entrega asocia cada trabajo al agente del puesto autorizado. Los periféricos de red o la estación compartida, incluido el acceso móvil, se implementan como evolución F06 después del piloto F05, con asignación y concurrencia homologadas y un único dueño activo por periférico físico. Se homologa driver, arquitectura y requisitos de sesión; PrintDocument no es una vía soportada para un servicio Windows. El worker encola referencias sin lease de ejecución. El consumidor BullMQ toma el claim por HTTPS sólo al comenzar con capacidad disponible; una espera prolongada en cola no mantiene un lease.",
       "sources": [
         {
           "label": "technology",
@@ -4726,6 +4730,10 @@
         {
           "label": "Agente de periféricos · decisión y contrato",
           "href": "/guide/architecture/device-agent/"
+        },
+        {
+          "label": "Procesamiento de trabajos con BullMQ",
+          "href": "/guide/architecture/job-processing/"
         }
       ],
       "elements": [
@@ -5378,7 +5386,7 @@
         },
         {
           "type": "text",
-          "text": "Alojamiento",
+          "text": "Jobs con BullMQ",
           "position": {
             "left": 860,
             "top": 486,
@@ -5397,7 +5405,7 @@
         },
         {
           "type": "text",
-          "text": "Cloud autorizado o VM privada\nGCP es opción por confirmar",
+          "text": "Redis dedicado en país y red ERP\nSin Redis ni PostgreSQL por WAN",
           "position": {
             "left": 860,
             "top": 512,
@@ -5484,7 +5492,7 @@
         },
         {
           "type": "text",
-          "text": "Base de sincronización: PostgreSQL + workers + HTTPS durable. Broker central según necesidad y destino aprobado.",
+          "text": "BullMQ + Redis: seleccionado, por implementar. PostgreSQL conserva negocio; HTTPS conecta fronteras.",
           "position": {
             "left": 64,
             "top": 644,
@@ -6542,7 +6550,7 @@
       "diagram": true,
       "title": "ACL e integración con los ERP actuales",
       "background": "#FFFFFF",
-      "notes": "Topología objetivo para conectar los ERP actuales, no evidencia de ACL desplegadas. La plataforma lógica se repite/aisla por país y no implica una base mundial compartida. El proceso erp-worker consume trabajo mediante conexión saliente autenticada y conserva resultados; las flechas izquierdas muestran el inicio de la conexión, no la única dirección del flujo de datos. En Chile se ubica dentro de la red autorizada de AX. AX versión, servicios y personalizaciones requieren inventario; no se asume API Dynamics 365. España usa Gira y Perú un sistema custom, con interfaces y ubicación por confirmar. ACL/fachada/adaptador pueden ser responsabilidades dentro de erp-worker + libs/backend/erp. Elegir país no implementa automáticamente un adaptador ni sus reglas. El enlace de country-api a PostgreSQL conserva recepción, trabajo y resultados. La confirmación de recepción agrupa inbox, proyección pactada y outbox antes del ACK; no confirma la contabilización en el ERP. El intercambio HTTPS con erp-worker y las llamadas al ERP ocurren fuera de esa transacción.",
+      "notes": "Topología objetivo para conectar los ERP actuales, no evidencia de ACL desplegadas. La plataforma lógica se repite/aisla por país y no implica una base mundial compartida. El proceso erp-worker consume trabajo mediante conexión saliente autenticada y conserva resultados; las flechas izquierdas muestran el inicio de la conexión, no la única dirección del flujo de datos. En Chile se ubica dentro de la red autorizada de AX. AX versión, servicios y personalizaciones requieren inventario; no se asume API Dynamics 365. España usa Gira y Perú un sistema custom, con interfaces y ubicación por confirmar. ACL/fachada/adaptador pueden ser responsabilidades dentro de erp-worker + libs/backend/erp. Elegir país no implementa automáticamente un adaptador ni sus reglas. El enlace de country-api a PostgreSQL conserva recepción, trabajo y resultados. La confirmación de recepción agrupa inbox, proyección pactada y outbox antes del ACK; no confirma la contabilización en el ERP. El intercambio HTTPS con erp-worker y las llamadas al ERP ocurren fuera de esa transacción. Cada entorno ERP ejecuta BullMQ con un Redis local dedicado a jobs y aislado del Redis de país y de caché. Concurrencia, consultas de conciliación y preparación por lotes se gestionan por cola. Un reintento técnico conserva la identidad y nunca autoriza repetir un efecto externo incierto. Los jobs se recuperan desde el trabajo durable de país por HTTPS. El worker encola referencias sin lease de ejecución. El consumidor BullMQ toma el claim por HTTPS sólo al comenzar con capacidad disponible; una espera prolongada en cola no mantiene un lease.",
       "sources": [
         {
           "label": "integration",
@@ -6551,6 +6559,10 @@
         {
           "label": "Trabajo ERP paso a paso",
           "href": "/architecture/?scenario=country-erp&step=3"
+        },
+        {
+          "label": "Procesamiento de trabajos con BullMQ",
+          "href": "/guide/architecture/job-processing/"
         }
       ],
       "elements": [

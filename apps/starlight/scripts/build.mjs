@@ -18,6 +18,7 @@ function run(file, args = []) {
   if (result.status !== 0) throw new Error(`Documentation command failed (${result.status}): ${file}`);
 }
 run(path.join(root, 'tools/architecture/build.mjs'), ['--source-only']);
+run(path.join(root, 'tools/architecture/overview.mjs'));
 run(path.join(app, 'scripts/validate-content.mjs'));
 run(path.join(app, 'scripts/prepare-content.mjs'));
 

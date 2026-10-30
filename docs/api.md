@@ -25,7 +25,7 @@ POS conserva npm, Nx 23 y NestJS 12. La incorporación de varias aplicaciones ba
 
 Para Sentry se toma como referencia la [inicialización y cierre de Core](https://github.com/developer-implementos/core/tree/531f9aa80bc0f9b60ca29bfa38e6694453af99ba/apps/core-api/src/common/sentry), con una integración más acotada: un `NodeClient` privado de `@sentry/node` por aplicación, captura explícita y filtrado por campos permitidos. No se copia la inicialización global de `@sentry/nestjs`, el profiling ni las integraciones automáticas de Core. Pino sigue siendo el logger de Nest y HTTP; Sentry es un destino opcional para errores seleccionados.
 
-No se trasladan MongoDB, Redis, servicios cloud, OpenTelemetry ni la autenticación ecommerce de Core: el scaffold no tiene esos consumidores ni contratos, y el backend de sucursal conserva el alcance de la propuesta POS.
+El scaffold no incorpora MongoDB, Redis, servicios cloud, OpenTelemetry ni la autenticación ecommerce de Core: no tiene esos consumidores ni contratos, y el backend de sucursal conserva el alcance de la propuesta POS. El [ADR-18](decisions/job-processing.md) selecciona BullMQ + Redis propio para trabajos de país y ERP, pendiente de implementación; no añade esa dependencia al backend de sucursal ni importa infraestructura de Core.
 
 <span id="actualización-de-nombres-y-configuración"></span>
 

@@ -64,7 +64,7 @@ Cada hallazgo tiene las fuentes y sus límites en los dos informes especializado
 
 ## 5. Consecuencias para la propuesta enterprise
 
-La decisión de sustituir WSO2 debe evaluarse **por capacidad**. RabbitMQ puede cubrir transporte y BullMQ ciertos trabajos; ninguno reemplaza por sí solo las APIs, consultas DSS, transformaciones Java, lectura MPOS, distribución de lotes, estados, reintentos y adaptación AX que ahora identificamos. Primero se requiere inventario del despliegue, pruebas de contrato y estrategia de migración por recorrido.
+La sustitución WSO2 debe ejecutarse **por capacidad**. La [decisión vigente de trabajos](../decisions/job-processing.md) usa BullMQ + Redis en país y red ERP, con HTTPS entre entornos. Esa decisión no implementa por sí sola las APIs, consultas DSS, transformaciones Java, lectura MPOS, distribución de lotes, estados y adaptación AX identificados en este análisis. La migración requiere inventario del despliegue, pruebas de contrato y corte por recorrido; las observaciones del código legacy permanecen como evidencia.
 
 | Capacidad heredada | Contrato propuesto y criterio de salida |
 | --- | --- |

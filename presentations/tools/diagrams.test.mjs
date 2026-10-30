@@ -162,7 +162,11 @@ test('generates all source diagrams deterministically with every label intact', 
 test('the overview reuses seven target application identities and projects the transaction to its owner', () => {
   assert.deepEqual(containerOverview.nodes.filter(node => node.kind === 'app').map(node => node.title).sort(),
     ['branch-api', 'branch-sync-worker', 'country-api', 'device-agent', 'erp-worker', 'pos-desktop', 'pos-mobile']);
-  assert.deepEqual(containerOverview.nodes.filter(node => node.kind === 'data').map(node => node.id).sort(), ['branch-db', 'country-db']);
+  assert.deepEqual(containerOverview.nodes.filter(node => node.kind === 'data').map(node => node.id).sort(), ['branch-db', 'country-db', 'country-redis-jobs', 'redis-jobs']);
+  for (const [id, from, to] of [['country-job-store', 'country-api', 'country-redis-jobs'], ['queue-store', 'erp-worker', 'redis-jobs']]) {
+    const job = containerOverview.edges.find(edge => edge.id === id);
+    assert.equal(job?.from, from); assert.equal(job?.to, to); assert.equal(job?.status, 'proposed');
+  }
   const commit = containerOverview.edges.find(edge => edge.id === 'commit-local');
   assert.equal(commit.from, 'branch-api'); assert.equal(commit.sourceFrom, 'transaction'); assert.equal(commit.to, 'branch-db');
   const erp = containerOverview.edges.find(edge => edge.id === 'claim-report');

@@ -1,9 +1,9 @@
 flowchart TB
     accTitle: C3 · erp-worker — Contrato POS, ACL y recuperación ERP
-    accDescr: Un proceso apps/erp-worker en la red autorizada del ERP. Fachada, ACL, protocolo y conciliación son componentes internos de libs/backend/erp. MasterDataSourcePort prepara publicaciones con claims, identidad y presupuesto propios. El worker inicia HTTPS hacia country-api. Lease, destino, versión e intento permanecen identificados; un timeout no autoriza duplicar efectos ni cambiar de ERP.
-    subgraph erpScope["apps/erp-worker · UN proceso supervisado"]
+    accDescr: Un proceso apps/erp-worker con BullMQ y Redis de trabajos en la red autorizada del ERP. Fachada, ACL, protocolo y preparación son componentes internos; trabajo durable y resultados se consultan por HTTPS en país. BullMQ y Redis de trabajos elegidos, aún no implementados. Un job no reemplaza el lease ni el resultado durable. Reentrega e incertidumbre exigen consulta/conciliación; nunca se abre Redis o SQL por WAN.
+    subgraph erpScope["apps/erp-worker · UN proceso NestJS + BullMQ"]
         direction TB
-        erpExecution["Planificador y ejecutor<br/>«Componente»<br/>libs/backend/erp + worker<br/>Admite trabajo con límites por destino."]:::pos
+        erpExecution["Admisión y ejecución ERP<br/>«Componente»<br/>libs/backend/erp + worker<br/>Revalida trabajo e intento antes de actuar."]:::pos
         erpClient["Cliente de country-api<br/>«Componente»<br/>HTTPS autenticado · contrato POS<br/>Reclama trabajo y registra resultados."]:::pos
         erpMasterSource["Extracción de maestros<br/>«Componente»<br/>MasterDataSourcePort · TypeScript<br/>Prepara cargas en la red del origen."]:::pos
         erpFacade["Fachada de integración POS<br/>«Componente»<br/>libs/backend/erp · TypeScript<br/>Expone casos de uso con lenguaje POS."]:::pos
@@ -11,11 +11,13 @@ flowchart TB
         erpProtocol["Adaptadores AX / custom / Gira<br/>«Componente»<br/>Protocolo de cada ERP por homologar<br/>Ejecuta envío y consulta autorizados."]:::pos
         erpRecovery["Resultado y conciliación<br/>«Componente»<br/>libs/backend/erp · TypeScript<br/>Distingue éxito, rechazo e incertidumbre."]:::pos
         technicalBase["Base técnica compartida<br/>«Componente»<br/>shared/backend · composición objetivo<br/>Configuración, salud, Pino y Sentry opt-in."]:::pos
+        erpQueue["Ejecución de trabajos técnicos<br/>«Componente»<br/>BullMQ · librería Node.js<br/>Distribuye ejecución y consultas seguras."]:::pos
     end
-        countryApi["country-api<br/>«Contenedor»<br/>NestJS + Fastify / Node.js<br/>Recibe operaciones y sirve trabajo y versiones."]:::pos
+        countryApi["country-api<br/>«Contenedor»<br/>NestJS + Fastify / Node.js ·<br/>BullMQ<br/>Recibe operaciones y sirve trabajo y versiones."]:::pos
         erp["ERP del país<br/>«Sistema externo»<br/>CL: AX · ES: Gira · PE: custom<br/>Recibe y concilia documentos financieros."]:::external
         masters["Fuentes de maestros y precios<br/>«Sistema externo»<br/>Interfaces por confirmar<br/>Publica datos y reglas autorizados."]:::external
         legend["Leyenda<br/>«Clave de lectura»<br/>Notación C4<br/>Azul: POS. Violeta: datos. Gris: externo."]:::key
+        erpJobStore["Redis · trabajos de ERP<br/>«Contenedor de datos»<br/>Redis dedicado · BullMQ<br/>Colas técnicas dentro de la red ERP."]:::store
     erpExecution -->|"Solicita trabajo / renueva lease · TypeScript"| erpClient
     erpClient -->|"Claim y resultados · HTTPS saliente"| countryApi
     erpExecution -->|"Ejecuta con destino e intento fijos · TypeScript"| erpFacade
@@ -29,6 +31,10 @@ flowchart TB
     erpExecution -->|"Preparación con presupuesto aislado · TypeScript"| erpMasterSource
     erpMasterSource -->|"Snapshot o deltas · contrato de fuente homologado"| masters
     erpMasterSource -->|"Claim, upload y finalize · TypeScript"| erpClient
+    erpQueue -->|"Programa y consume jobs · Redis privado"| erpJobStore
+    erpQueue -->|"Entrega job; revalida intento y lease · TypeScript"| erpExecution
+    erpClient -->|"Reconstruye pendientes por identidad · TypeScript"| erpQueue
+    erpRecovery -->|"Programa consulta segura de estado · TypeScript"| erpQueue
     classDef pos fill:#EDF3FF,stroke:#0545BA,color:#25364D,stroke-width:2px
     classDef store fill:#F2EFFF,stroke:#6551A8,color:#25364D,stroke-width:2px
     classDef external fill:#F4F6F8,stroke:#6B788A,color:#25364D

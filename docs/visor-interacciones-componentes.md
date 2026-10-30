@@ -93,7 +93,7 @@ Fuentes: [confirmación local](propuesta-arquitectura.md#confirmación-local-de-
 
 ## Entrega y resultado ERP propuestos
 
-Identificador estable: `proposed-erp`. Se apoya en el perfil preferente **outbox local → HTTPS → registro operativo PostgreSQL central → worker/ACL**. Añadir un broker es una decisión separada; este recorrido no obliga a instalarlo en cada sucursal.
+Identificador estable: `proposed-erp`. Se apoya en el perfil preferente **outbox local → HTTPS → registro operativo PostgreSQL central → worker/ACL**. BullMQ + Redis de trabajos coordina programación breve en país y ejecución/lotes/conciliación en la red ERP, en instancias separadas. PostgreSQL conserva autoridad y recuperación; el [ADR-18](decisions/job-processing.md) no añade Redis a cada sucursal.
 
 | Paso | Interacción que enseña | Frontera que debe quedar visible |
 | --- | --- | --- |

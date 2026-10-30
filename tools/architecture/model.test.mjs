@@ -48,7 +48,12 @@ test('device-agent owns its SQLite journal and cannot require a desktop or mobil
 test('base is a projection, with optional infrastructure excluded and contract identities preserved', () => {
   const before = JSON.stringify(architecture), base = architectureViews.find(view => view.id === 'base').model;
   assert.deepEqual(base.nodes.filter(node => node.kind === 'app').map(node => node.id).sort(), architecture.nodes.filter(node => node.kind === 'app').map(node => node.id).sort());
-  for (const id of ['redis-cache', 'redis-jobs', 'bullmq', 'rabbitmq', 'network-devices']) assert.ok(!base.nodes.some(node => node.id === id), `${id} is not an initial dependency`);
+  for (const id of ['redis-cache', 'bullmq', 'country-bullmq', 'network-devices']) assert.ok(!base.nodes.some(node => node.id === id), `${id} is optional or internal to its application`);
+  for (const id of ['country-redis-jobs', 'redis-jobs']) assert.ok(base.nodes.some(node => node.id === id), `${id} is required by the target architecture`);
+  for (const [id, from, to] of [['country-job-store', 'country-api', 'country-redis-jobs'], ['queue-store', 'erp-worker', 'redis-jobs']]) {
+    assert.equal(base.edges.find(edge => edge.id === id)?.from, from);
+    assert.equal(base.edges.find(edge => edge.id === id)?.to, to);
+  }
   for (const id of ['bridge', 'device-journal', 'devices']) assert.ok(base.nodes.some(node => node.id === id), `${id} must be visible in the base device flow`);
   for (const id of ['device-command', 'device-jobs-local', 'bridge-evidence', 'agent-journal', 'hardware-command']) assert.ok(base.edges.some(edge => edge.id === id), `${id} must retain its contract in the base view`);
   const source = architecture.edges.find(edge => edge.id === 'commit-local');
@@ -84,16 +89,20 @@ test('every scenario renders its actual participants and only the selected contr
   assert.throws(() => validateArchitecture(invalid), /Scenario omits relationship endpoint/);
 });
 
-test('RabbitMQ evaluation is an association, never an invented producer contract', () => {
-  const edge = architecture.edges.find(edge => edge.id === 'broker-candidate');
-  assert.equal(edge.relation, 'evaluation'); assert.equal(edge.status, 'unresolved');
-  const view = projectArchitecture(architecture, ['country-api', 'country-work', 'rabbitmq'], { compact: false, edgeIds: [edge.id] });
-  const svg = renderArchitecture(view);
-  const group = svg.match(/<g class="architecture-edge"[^]*?<\/g>/u)?.[0];
-  assert.match(group, /data-relation="evaluation"/);
-  assert.doesNotMatch(group, /marker-end=/);
-  const invalid = copy(); invalid.edges.find(edge => edge.id === 'broker-candidate').status = 'proposed';
-  assert.throws(() => validateArchitecture(invalid), /Evaluation is not an adopted contract/);
+test('BullMQ is selected in two isolated execution domains, with cache and business authority kept separate', () => {
+  for (const id of ['country-bullmq', 'bullmq', 'country-redis-jobs', 'redis-jobs']) {
+    const invalid = copy(); invalid.nodes.find(node => node.id === id).status = 'conditional';
+    assert.throws(() => validateArchitecture(invalid), /must be selected/);
+  }
+  const missing = copy(); missing.edges = missing.edges.filter(edge => edge.id !== 'queue-store');
+  assert.throws(() => validateArchitecture(missing), /dedicated Redis contract/);
+  for (const [from, to, expected] of [['bullmq', 'country-redis-jobs', /cannot cross execution domains/], ['country-bullmq', 'redis-jobs', /cannot cross execution domains/], ['bullmq', 'redis-cache', /discardable cache/]]) {
+    const invalid = copy(); invalid.edges.push({ ...invalid.edges[0], id: 'invalid-job-store', from, to });
+    assert.throws(() => validateArchitecture(invalid), expected);
+  }
+  const request = architecture.edges.find(edge => edge.id === 'country-job-execution');
+  assert.equal(request.from, 'country-bullmq'); assert.equal(request.to, 'publisher');
+  assert.ok(!architecture.nodes.some(node => /RabbitMQ/i.test(node.title)));
 });
 
 test('the base download is deterministic, portable vector output with meaningful labels', () => {

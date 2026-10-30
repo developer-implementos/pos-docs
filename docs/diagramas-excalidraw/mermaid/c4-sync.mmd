@@ -12,7 +12,7 @@ flowchart TB
         activation["Activación de versión<br/>«Componente»<br/>Transacción SQL / TypeScript<br/>Cambia atómicamente la versión activa."]:::pos
     end
     branchDb[("Datos de sucursal<br/>«Contenedor de datos»<br/>PostgreSQL<br/>Guarda negocio, outbox y espejo local.")]:::store
-    countryApi["country-api<br/>«Contenedor»<br/>NestJS + Fastify / Node.js<br/>Recibe operaciones y sirve trabajo y versiones."]:::pos
+        countryApi["country-api<br/>«Contenedor»<br/>NestJS + Fastify / Node.js ·<br/>BullMQ<br/>Recibe operaciones y sirve trabajo y versiones."]:::pos
     legend["Leyenda · notación C4<br/>Azul: POS · Violeta: datos<br/>Gris: externo · Ámbar: infraestructura<br/>Borde: sistema, proceso o nodo indicado<br/>Flecha: iniciador, propósito y protocolo<br/>Opcional / por asignar: condición explícita<br/>Contenedor no equivale a Docker"]:::key
     schedule -->|"Admite lote / reintento acotado · TypeScript"| sender
     sender -->|"Claim y lectura de outbox · PostgreSQL"| branchDb

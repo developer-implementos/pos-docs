@@ -11,7 +11,7 @@ export function projectArchitecture(model, nodeIds, { id = 'projection', title =
 }
 
 const baseNodes = architecture.nodes.filter(node => node.kind === 'app' || (node.kind === 'data' && node.status === 'proposed') || (node.kind === 'external' && node.status !== 'conditional')).map(node => node.id);
-const baseEdges = ['desktop-api', 'mobile-api', 'commit-local', 'sync-local', 'sync-country', 'accept-country', 'claim-report', 'send-erp', 'fetch-source', 'payment-api', 'fiscal-api', 'device-command', 'device-jobs-local', 'bridge-evidence', 'agent-journal', 'hardware-command'];
+const baseEdges = ['desktop-api', 'mobile-api', 'commit-local', 'sync-local', 'sync-country', 'accept-country', 'claim-report', 'send-erp', 'fetch-source', 'payment-api', 'fiscal-api', 'device-command', 'device-jobs-local', 'bridge-evidence', 'agent-journal', 'hardware-command', 'country-job-store', 'queue-store'];
 export const architectureViews = [
   { id: 'base', title: 'Arquitectura base', description: 'Siete aplicaciones propuestas. Device-agent: F02 por puesto Windows y piloto F05; red, estación compartida y móvil se homologan en F06. Seis apps tienen base o scaffolding; el agente está por implementar.', model: projectArchitecture(architecture, baseNodes, { id: 'base', title: 'POS Platform · arquitectura base', edgeIds: baseEdges }) },
   ...architecture.groups.map(group => {
@@ -21,7 +21,7 @@ export const architectureViews = [
     const nodes = [...new Set([...local, ...adjacent])];
     return { id: group.id, title: group.title, description: `Componentes de ${group.title.toLowerCase()} y sus colaboradores directos.`, model: projectArchitecture(architecture, nodes, { id: group.id, title: group.title, compact: false, edgeIds: related.map(edge => edge.id) }) };
   }),
-  { id: 'options', title: 'Capacidades condicionales', description: 'Caché, jobs y transporte se evalúan por necesidad; no son dependencias de la arquitectura base.', model: projectArchitecture(architecture, ['country-api', 'country-work', 'cache-port', 'redis-cache', 'country-db', 'rabbitmq', 'erp-worker', 'bullmq', 'redis-jobs', 'erp-acl'], { id: 'options', title: 'Opciones de caché y mensajería', compact: false }) },
+  { id: 'options', title: 'Caché y observabilidad', description: 'Caché descartable y destinos externos de telemetría conservan su adopción condicionada. Los jobs BullMQ y sus Redis dedicados pertenecen a la arquitectura base.', model: projectArchitecture(architecture, ['branch-api', 'branch-sync', 'country-api', 'cache-port', 'redis-cache', 'country-db', 'erp-worker', 'observability'], { id: 'options', title: 'Caché y observabilidad', compact: false }) },
   { id: 'full', title: 'Mapa completo', description: 'Todas las responsabilidades, contratos y alternativas de la propuesta.', model: { ...architecture, id: 'full' } },
 ];
 
@@ -45,10 +45,19 @@ export function validateArchitecture(model = architecture) {
     if (node.owner && nodes.get(node.owner)?.group !== node.group) fail(`Component crosses its process boundary: ${node.id}`);
     if (node.kind === 'process' && node.owner) fail(`Independent process cannot be an internal component: ${node.id}`);
   }
+  for (const [library, owner, store, group] of [['country-bullmq', 'country-api', 'country-redis-jobs', 'country'], ['bullmq', 'erp-worker', 'redis-jobs', 'integrations']]) {
+    if (nodes.get(library)?.owner !== owner || nodes.get(library)?.status !== 'proposed' || nodes.get(library)?.kind !== 'component') fail(`BullMQ must be selected within its application: ${library}`);
+    if (nodes.get(store)?.status !== 'proposed' || nodes.get(store)?.kind !== 'data' || nodes.get(store)?.group !== group) fail(`Dedicated job store must be selected in its execution domain: ${store}`);
+    const connection = model.edges.find(edge => edge.from === library && edge.to === store);
+    if (!connection || connection.status !== 'proposed' || !connection.protocol.includes('Redis')) fail(`BullMQ requires its dedicated Redis contract: ${library}`);
+  }
+  if (nodes.get('redis-cache')?.status !== 'conditional') fail('Discardable cache remains optional and separate from jobs');
   const ids = new Set(nodes.keys());
   for (const edge of model.edges) {
     if (ids.has(edge.id)) fail(`Duplicate architecture ID: ${edge.id}`); ids.add(edge.id);
     if (!nodes.has(edge.from) || !nodes.has(edge.to)) fail(`Dangling edge: ${edge.id}`);
+    if (['country-redis-jobs', 'redis-jobs'].includes(edge.to) && nodes.get(edge.from)?.group !== nodes.get(edge.to).group) fail(`Redis cannot cross execution domains: ${edge.id}`);
+    if (['country-bullmq', 'bullmq'].includes(edge.from) && edge.to === 'redis-cache') fail(`Jobs cannot use the discardable cache: ${edge.id}`);
     if (edge.relation === 'evaluation' && edge.status !== 'unresolved') fail(`Evaluation is not an adopted contract: ${edge.id}`);
     if (['desktop', 'mobile', 'bridge', 'erp-worker', 'master-source'].includes(edge.from) && edge.to === 'country-db') fail(`Forbidden SQL authority: ${edge.id}`);
     if (['desktop', 'mobile', 'bridge'].includes(edge.from) && edge.to === 'branch-db') fail(`Clients cannot own SQL access: ${edge.id}`);

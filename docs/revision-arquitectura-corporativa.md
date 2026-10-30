@@ -2,7 +2,7 @@
 
 **Decisión posterior — 21 de octubre de 2026:** este informe conserva la evidencia y las alternativas evaluadas en su fecha. La organización vigente es un POS independiente con `libs/shared/`; Core se usa solo como referencia, sin incorporar su código, paquetes ni servicios. Las recomendaciones históricas de reutilización de Core quedan sustituidas por la [decisión vigente](propuesta-arquitectura.md#independencia-del-pos-y-referencias-de-organización).
 
-**Función de esta revisión:** conservar motivos, alternativas, objeciones y evidencia que sustentan el diseño. La [propuesta y sus ADR](propuesta-arquitectura.md#decisiones-de-arquitectura) son la fuente de la recomendación vigente, todavía por aprobar; esta revisión no mantiene una segunda arquitectura objetivo independiente.
+**Función de esta revisión:** conservar motivos, alternativas, objeciones y evidencia que sustentan el diseño. La [propuesta y sus ADR](propuesta-arquitectura.md#decisiones-de-arquitectura) son la fuente de las decisiones vigentes y de su estado individual de aceptación; esta revisión no mantiene una segunda arquitectura objetivo independiente.
 
 Fecha: 1 de octubre de 2026. Complementa y ajusta la [propuesta de arquitectura](propuesta-arquitectura.md). Se apoya en los ocho repositorios ya analizados, nuevos apuntes operativos y fuentes públicas primarias. **Es una decisión de diseño propuesta, no una implementación ni una aprobación de producción.**
 
@@ -14,7 +14,7 @@ La nueva inversión debe concentrarse en dominio, reglas de ofertas, identidad, 
 
 Recomiendo **sacar progresivamente de WSO2 la responsabilidad de definir el negocio del nuevo POS**. Su retirada física queda condicionada al inventario de contratos y artefactos: hoy también puede mediar protocolos, SQL, transformaciones y procesos que una cola no reemplaza. Mantener capacidades necesarias detrás de adaptadores es una transición válida con criterios de salida; debe cubrir maestros, precios y otros consumidores, además del registro en AX.
 
-La **base preferente para un piloto**, condicionada a pruebas de capacidad y recuperación, es **outbox local → HTTPS por lotes → inbox/registro operativo PostgreSQL central → workers y adaptadores**. Esto no significa hacer SQL remoto desde tiendas. Antes de agregar infraestructura, evaluar capacidades corporativas mantenidas. RabbitMQ es candidato para transporte central cuando se justifiquen consumidores independientes, enrutamiento o aislamiento de cargas; no requiere instalar un broker por sucursal. BullMQ es candidato para trabajos de aplicación, no un sustituto completo de WSO2. La [investigación de mensajería](investigacion-mensajeria-pos.md) compara también su backend PostgreSQL actual y la plataforma Pub/Sub ya presente en `core`.
+La arquitectura de trabajos usa **outbox local → HTTPS por lotes → inbox/registro operativo PostgreSQL de país → BullMQ y adaptadores**. BullMQ con Redis exclusivo es la decisión aceptada, pendiente de implementar: programación breve en `country-api` y ejecución, preparación por lotes y conciliación en `erp-worker`. Cada ámbito utiliza su propia instancia Redis; el worker ERP solicita trabajo y entrega resultados por HTTPS, sin Redis ni SQL de país sobre WAN. La [decisión ADR-18](decisions/job-processing.md) mantiene PostgreSQL como autoridad recuperable y deja la caché Redis como capacidad opcional separada.
 
 ## 2. Qué cambian los nuevos apuntes
 
@@ -39,29 +39,32 @@ El [contraste operativo](contraste-apuntes-operacion-chile.md) y la [revisión d
 
 Las rondas son revisiones de diseño y evidencia. Los ensayos de fallos descritos son trabajo pendiente; no se han ejecutado sobre un POS nuevo.
 
-## 4. WSO2, RabbitMQ y BullMQ: separar las decisiones
+<span id="4-wso2-rabbitmq-y-bullmq-separar-las-decisiones"></span>
+
+## 4. WSO2 y BullMQ: responsabilidades
 
 | Responsabilidad | Dónde debe quedar en el objetivo | Qué no debe suponerse |
 |---|---|---|
 | Reglas de venta, turnos, precios y ofertas | Módulos del núcleo POS; cálculo puro y versionado cuando corresponda | Un broker no calcula promociones ni elimina una llamada online. |
 | Traducción de modelos AX/Gira/custom | ACL y adaptadores por capacidad/ERP | Una fachada de nombres nuevos sobre DTO de AX no protege el dominio. |
-| Transporte, retención y reparto de mensajes | Protocolo de sincronización y, si aporta valor, broker central | Confirmación del broker no es confirmación del ERP. |
-| Reintentos, dependencias y tareas programadas | Workers con estados durables, presupuesto de reintentos y límites por destino | Una cola con reintentos no sabe si el ERP ya produjo el efecto. |
+| Transporte y custodia entre entornos | HTTPS + outbox/inbox PostgreSQL | Acuse de recepción no es confirmación del ERP. |
+| Ejecución y tareas programadas | BullMQ + Redis exclusivo por entorno; PostgreSQL conserva estado y recuperación | Una cola con reintentos no sabe si el ERP ya produjo el efecto. |
 | Registro y consulta del estado de cada operación | Base operativa POS/integración con identidad estable y evidencias | Los logs o la cola no sustituyen al registro auditable. |
-| Adaptación SOAP/WCF, JDBC, archivos y transformaciones existentes | Adaptadores específicos; legado delimitado durante transición | RabbitMQ/BullMQ no ejecutan automáticamente los mediadores existentes. |
+| Adaptación SOAP/WCF, JDBC, archivos y transformaciones existentes | Adaptadores específicos; legado delimitado durante transición | BullMQ no ejecuta automáticamente los mediadores existentes. |
 
 La decisión no es elegir una marca para todas las filas. El detalle de garantías, límites, versiones y fuentes está en [Mensajería](investigacion-mensajeria-pos.md).
 
-### Selección inicial y condiciones para cambiarla
+<span id="selección-inicial-y-condiciones-para-cambiarla"></span>
 
-1. **Tienda:** persistencia y outbox en PostgreSQL; publicador con lotes, checkpoints, límites y reconexión. No agregar Redis/RabbitMQ por defecto a la flota.
-2. **Ingreso central:** API con identidad de tienda, control por país/sociedad, acuse después del commit y respuestas por operación. Soportar reentrega parcial del lote.
-3. **Despacho central básico:** workers sobre registros durables con concurrencia limitada. Adoptar biblioteca mantenida o un mecanismo acotado; no construir accidentalmente un broker genérico. Antes de adoptarlo, demostrar claims con dueño/vencimiento, transiciones condicionales, orden por agregado, retención, replay y operación de soporte. La expiración de un lease no detiene una llamada externa ya iniciada.
-4. **RabbitMQ central:** candidato si las pruebas muestran necesidad de enrutamiento, varios consumidores o separación de cargas. Acordar custodia, retención, alta disponibilidad y equipo operador. Un cluster central dentro de redes estables; no un cluster quorum extendido por WAN entre tiendas.
-5. **BullMQ:** evaluar para tareas de aplicación. Redis sigue siendo el backend predeterminado; la documentación actual también ofrece PostgreSQL y lo diferencia del más probado Redis. Compartir una base no demuestra que `Queue.add` participe en el commit de la venta. La outbox se mantiene salvo prueba de atomicidad equivalente. [Backend PostgreSQL de BullMQ](https://docs.bullmq.io/guide/postgresql).
-6. **Servicio gestionado existente:** si el POS central puede usar cloud y el equipo ya opera Pub/Sub en `core`, compararlo con introducir RabbitMQ. Incluir cuota, coste, soporte, conectividad on-premise y salida del proveedor. La tienda conserva autonomía sin ese servicio.
+### Distribución elegida y aceptación
 
-No instalar simultáneamente RabbitMQ, Redis/BullMQ y otro bus para el mismo trabajo sin una responsabilidad distinta, un dueño y una medición que lo justifique. Kafka no queda descartado universalmente: requiere una necesidad concreta de log de eventos, replay y consumidores que el alcance actual todavía no demuestra.
+1. **Sucursal:** PostgreSQL y outbox; `branch-sync-worker` entrega lotes, conserva checkpoints y recupera conexión por HTTPS, sin Redis obligatorio en la tienda.
+2. **País:** `country-api` confirma recepción antes del acuse y utiliza BullMQ con Redis de trabajos para disparos programados y creación breve de solicitudes fuera de HTTP. PostgreSQL conserva calendario, intervalos y solicitudes.
+3. **Red ERP:** `erp-worker` utiliza BullMQ con su Redis de trabajos para ejecución, preparación de maestros y consulta/conciliación. Solicita trabajo y reporta resultados por HTTPS; los trabajos pesados no se ejecutan en la API de país.
+4. **Recuperación:** relay y reconciliador reconstruyen jobs desde los registros durables. Encolar no comparte el commit PostgreSQL; los duplicados se controlan mediante identidad y transiciones condicionales. Expirar un claim o lock no detiene un efecto remoto ya iniciado.
+5. **Operación:** Redis de jobs con persistencia, recuperación, `noeviction` y presupuestos por cola/destino. Redis de caché es opcional y usa otra instancia. RabbitMQ no forma parte del objetivo.
+
+Las pruebas de compatibilidad, carga, caída y reconstrucción aceptan esta implementación. La selección BullMQ + Redis no queda condicionada a elegir posteriormente otro motor. El [ADR-18](decisions/job-processing.md) delimita los contratos y el estado pendiente.
 
 ## 5. Una base intermedia sí puede ser útil; una copia indiscriminada del ERP no
 
@@ -74,7 +77,8 @@ La base central propuesta es un **registro operativo de integración**: inbox, i
 | SQL Server de AX | Mantener mientras AX lo requiera | Depende del programa ERP; no es una base propia del POS que pueda sustituirse unilateralmente. |
 | MPOS SQL | Investigar productor, bajas, lotes y consumidores; encapsular el tramo heredado | Retirar solo cuando un publicador validado entregue todas sus capacidades y los consumidores hayan migrado. |
 | MongoDB para NC y otros consumidores | Evaluar persistencia relacional para capacidades migradas, conservando autoridad transaccional de reserva/consumo/liberación separada de proyecciones de lectura | Inventario de colecciones y consumidores: también aparecen directorio de sucursales y usuarios. Conciliar saldos, propietarios, índices e históricos. No basta con copiar documentos a JSONB; migrar NC no retira automáticamente todo Mongo. |
-| Redis o broker | Agregar únicamente por una necesidad probada | La identidad financiera y los estados recuperables no deben depender solo de una entrada transitoria de caché/cola. |
+| Redis de trabajos | BullMQ con instancias dedicadas a país y red ERP | Persistencia y restauración verificadas, sin eviction; identidad y estado financiero recuperables desde PostgreSQL. |
+| Redis de caché | Opcional, sujeto a consulta y beneficio medidos; instancia separada | Reconstrucción y fallback limitados; no almacena pendientes ni autoridad financiera. |
 | Persistencia de negocio por terminal | Solo para perfil ampliado aprobado | Añade administración, conflictos y recuperación por dispositivo. El diario técnico SQLite de `device-agent` guarda recepción, intentos y evidencia; no habilita un segundo escritor de ventas ni autonomía comercial sin sucursal. |
 
 **Menos motores no significa una sola base física.** Offline necesita copias locales; límites de fallo y país pueden necesitar instancias separadas del mismo motor. Una base por módulo tampoco es obligatoria: el monolito modular puede compartir transacción local con tablas/schemas de propietario único. La simplificación se mide en despliegues operables, respaldos, restore y acoplamiento, no únicamente en contar cilindros en un diagrama.
@@ -105,10 +109,14 @@ flowchart TB
   subgraph Pais["Plataforma por país / entidad legal"]
     Ingreso["country-api · NestJS/Fastify\nrecepción durable y publicación"]
     Registro[("PostgreSQL operativo\ninbox, estados, intentos y outbox")]
+    CountryJobs[("Redis trabajos país\nBullMQ · calendario y solicitudes")]
+    Ingreso -->|"Programar y consumir coordinación breve"| CountryJobs
     Ingreso -->|"PostgreSQL: confirmar recepción y publicaciones"| Registro
   end
   subgraph RedERP["Red autorizada del ERP"]
     ERPWorker["erp-worker · NestJS/Node.js\nfachada, ACL y preparación de maestros"]
+    ERPJobs[("Redis trabajos ERP\nBullMQ · ejecución, lotes y conciliación")]
+    ERPWorker -->|"Encolar y consumir en la red ERP"| ERPJobs
     Legacy["Dynamics AX / Gira / custom\ninterfaz por homologar por país"]
     ERPWorker -->|"Contrato del proveedor: integrar y consultar"| Legacy
   end
@@ -120,7 +128,7 @@ flowchart TB
 
 Un centro inaccesible no debe impedir operaciones locales autorizadas. Un servidor de sucursal inaccesible sí detiene esas operaciones en este perfil; se resuelve con el objetivo de recuperación local o con el perfil por terminal, no habilitando un segundo escritor improvisado.
 
-El relay central, el broker opcional y el worker pueden repetir entregas. La escritura de negocio y deduplicación se confirma en la misma transacción de su receptor cuando comparten base. La llamada externa al ERP está fuera de esa transacción: un intento de resultado incierto se consulta y concilia.
+El relay, BullMQ y los workers pueden repetir entregas. Redis de trabajos se reconstruye desde la autoridad durable PostgreSQL; el enqueue no comparte su commit. La escritura de negocio y deduplicación se confirma en la misma transacción de su receptor cuando comparten base. La llamada externa al ERP está fuera de esa transacción: un intento de resultado incierto se consulta y concilia.
 
 ## 7. Cómo conservar la inversión al cambiar el ERP
 
@@ -212,10 +220,10 @@ Es una aproximación estacionaria: `lambda` y `mu` deben expresarse en la misma 
 | Tratamiento | Elementos | Evidencia de aceptación |
 |---|---|---|
 | Conservar y evolucionar | Persistencia local, separación sucursal/central, UX conocida, agentes homologables, adaptadores .NET útiles | Contratos, soporte y pruebas en hardware real. |
-| Incorporar | Motor local de ofertas, outbox/inbox, estados de efectos externos, registro de integración, ACL, identidad de flota, conciliación | Recuperación demostrada ante cortes, duplicados, disco lleno y respuesta externa perdida. |
+| Incorporar | Motor local de ofertas, outbox/inbox, BullMQ + Redis de trabajos, estados de efectos externos, registro de integración, ACL, identidad de flota, conciliación | Recuperación demostrada ante cortes, duplicados, disco lleno y respuesta externa perdida. |
 | Simplificar | Estados ambiguos, consultas de NC contra muchas tiendas, múltiples copias sin dueño, frameworks duplicados sin justificación | Equivalencia funcional, medición de coste/operación y saldos reconciliados. |
 | Retirar gradualmente | Mediaciones WSO2 migradas, concentradores redundantes, MPOS/Mongo si pierden consumidores, configuraciones residuales de Instacheck | Inventario cerrado, consumidores migrados, pendientes drenados, históricos conservados y rollback. |
-| Condicionar a evidencia | RabbitMQ/BullMQ, motor por terminal, microservicios adicionales, Kafka, multi-región activa | Necesidad concreta, coste operativo sostenible, benchmark y prueba de fallo. |
+| Condicionar a evidencia | Caché Redis, motor comercial por terminal, microservicios adicionales y multi-región activa | Necesidad concreta, coste operativo sostenible, benchmark y prueba de fallo. |
 
 ## 11. Decisión y validación siguientes
 
@@ -253,4 +261,4 @@ Se reutilizan contratos, perfiles de capacidades y agentes para encapsular lecto
 
 ## Evidencia central recibida el 2 de octubre
 
-La [auditoría de mountain-concentrador](analisis-repositorios/mountain-concentrador.md) identifica ahora APIs Synapse, DSS, mediadores Java, api-lectura y consumidor Node. Esto concreta el inventario previo a sustituir WSO2: separar transporte, transformación, generación de lotes, persistencia, estados y adaptación AX. RabbitMQ/BullMQ no sustituyen ese conjunto por sí solos. El origen AX→MPOS y la configuración instalada siguen pendientes.
+La [auditoría de mountain-concentrador](analisis-repositorios/mountain-concentrador.md) identifica ahora APIs Synapse, DSS, mediadores Java, api-lectura y consumidor Node. Esto concreta el inventario previo a sustituir WSO2: separar transporte, transformación, generación de lotes, persistencia, estados y adaptación AX. BullMQ no sustituye ese conjunto por sí solo. El origen AX→MPOS y la configuración instalada siguen pendientes.

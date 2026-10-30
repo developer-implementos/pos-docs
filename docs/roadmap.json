@@ -1,7 +1,7 @@
 {
   "schemaVersion": 3,
   "title": "Roadmap de POS Platform",
-  "reviewedOn": "2026-10-29",
+  "reviewedOn": "2026-10-30",
   "status": "proposed",
   "statusLabel": "Secuencia propuesta",
   "notice": "Propuesta para acordar con producto, operaciones y desarrollo. No hay fechas, recursos ni habilitaciones productivas aprobadas. Los criterios de aceptación determinan el avance.",
@@ -415,7 +415,8 @@
           "Aceptar F02 para el recorrido cuya continuidad se demostrará y acordar qué operaciones permite cada modalidad sin Internet.",
           "Confirmar autoridad y contrato de maestros: cobertura, versiones, vigencia, bajas, deltas y punto de corte consistente de las cargas.",
           "Acordar primer ERP, red autorizada, autenticación y contratos de envío y consulta; asignar responsables de unicidad y recuperación en el destino.",
-          "Definir retención de eventos, límites de entrega y objetivos de drenaje con una carga representativa; no asignar cifras de servicio sin aprobación."
+          "Definir retención de eventos, límites de entrega y objetivos de drenaje con una carga representativa; no asignar cifras de servicio sin aprobación.",
+          "Asignar responsables, capacidad, persistencia, respaldo y recuperación de los Redis dedicados a BullMQ en país y en la red ERP; confirmar conectividad local y credenciales separadas de la caché."
         ],
         "work": [
           {
@@ -461,7 +462,8 @@
               "Persistir porciones, progreso recibido y candidatas aisladas; comprobar cobertura, referencias, bajas, versión, checksum y punto de corte.",
               "Aplicar el mismo validador a deltas y cargas completas; confirmar inbox aplicada, puntero activo y cursor aplicado en un commit corto.",
               "Retener versiones referenciadas y revalidar vigencia antes del pago; la publicación no modifica un intento de pago iniciado o incierto.",
-              "Separar identidad, claims y concurrencia de publicación respecto al trabajo financiero; aplicar fencing, paquetes inmutables y recuperación por publicationId."
+              "Separar identidad, claims y concurrencia de publicación respecto al trabajo financiero; aplicar fencing, paquetes inmutables y recuperación por publicationId.",
+              "Programar disparadores con BullMQ en country-api y su Redis de trabajos: cada intervalo reclama una solicitud única en PostgreSQL; la extracción pesada se delega al erp-worker por HTTPS."
             ]
           },
           {
@@ -481,6 +483,7 @@
             "tasks": [
               "Exponer trabajo y resultados mediante contratos públicos del contexto erp en country-api, con persistencia PostgreSQL y transporte identificado por sync.",
               "Ejecutar erp-worker en la red autorizada del ERP: reclama trabajo y reporta resultados mediante HTTPS saliente, sin SQL remoto a la base de país.",
+              "Admitir y ejecutar tareas con BullMQ y Redis de trabajos en la red ERP; vincular jobId y workId; reclamar lease al iniciar el consumidor con capacidad disponible, renovar durante la ejecución, comprobar fencing y reportar resultados por HTTPS. Redis no se expone entre redes.",
               "Implementar fachada, ACL y adaptador dentro del worker, con destino y versión fijos, límites de concurrencia y asignación temporal de trabajo mediante lease.",
               "Consultar o conciliar resultados inciertos según capacidades homologadas; expirar un lease no demuestra que una llamada externa haya terminado."
             ]
@@ -501,12 +504,34 @@
               "libs/features",
               "libs/shared/backend/observability"
             ],
-            "deliverable": "Pendientes, fallos y recuperación observables, con drenaje controlado y decisiones de infraestructura sustentadas en mediciones.",
+            "deliverable": "Pendientes y colas BullMQ observables, con admisión y drenaje controlados, recuperación probada y caché de lectura sólo si se justifica.",
             "tasks": [
               "Exponer progreso y excepciones por flujo, con edad de pendientes, intentos y referencias para conciliación; una sonda saludable no equivale a backlog resuelto.",
               "Limitar lotes, concurrencia y reintentos para proteger destinos y atender ventas nuevas mientras se recupera el atraso.",
-              "Evaluar Redis sólo si una lectura de country-api demuestra necesidad: autorización previa, claves por ámbito y versión, TTL, límites y fallback a PostgreSQL. El espejo local sigue siendo PostgreSQL.",
-              "Conservar PostgreSQL y HTTPS como base; BullMQ o RabbitMQ requieren responsabilidad delimitada, recuperación probada y decisión explícita, sin sustituir la outbox."
+              "Evaluar únicamente la caché Redis de lecturas de country-api según mediciones: autorización previa, claves por ámbito y versión, TTL y fallback limitado a PostgreSQL. Esta caché se despliega separada de los Redis obligatorios de trabajos.",
+              "Configurar los dos Redis de trabajos con persistencia, respaldo, capacidad y noeviction. Separar colas y presupuestos de maestros y operaciones financieras; alertar por edad de pendientes, fallos de admisión, bloqueos y reintentos agotados."
+            ]
+          },
+          {
+            "id": "F03-05",
+            "title": "Recuperación de colas y programación BullMQ",
+            "apps": [
+              "country-api",
+              "erp-worker"
+            ],
+            "modules": [
+              "libs/backend/sync",
+              "libs/backend/erp",
+              "libs/shared/backend/worker",
+              "libs/shared/backend/observability"
+            ],
+            "deliverable": "Colas reconstruibles desde trabajo y resultados durables en PostgreSQL, sin duplicar solicitudes ni efectos al reiniciar procesos o restaurar Redis.",
+            "tasks": [
+              "Implementar el relay entre el commit PostgreSQL y la admisión en BullMQ con IDs estables, relectura del estado y reconciliación periódica. No asumir atomicidad entre SQL y Redis.",
+              "En país, recuperar intervalos pendientes desde el calendario durable y crear solicitudes idempotentes; Redis contiene disparadores y no es la autoridad del calendario o de las publicaciones.",
+              "En ERP, reconstruir tareas a partir de referencias autorizadas y resultados persistidos por country-api; al iniciar el consumidor, obtener el claim por HTTPS y comprobar estado y fencing. No reservar un lease durante una espera larga en cola.",
+              "Definir intentos, backoff, límites y escalamiento por tipo de tarea; un job stalled, un timeout o una restauración no habilita repetir un efecto externo incierto.",
+              "Documentar y probar caída, restauración, saturación sin expulsión de claves y cambio compatible de versión de BullMQ/Redis. La sucursal conserva PostgreSQL y HTTPS, sin añadir Redis local."
             ]
           }
         ],
@@ -528,7 +553,7 @@
           },
           {
             "id": "F03-V04",
-            "scenario": "ERP ejecuta una operación, pierde la respuesta y vence el lease del intento.",
+            "scenario": "ERP ejecuta una operación, pierde la respuesta y vence el lease o BullMQ vuelve a ofrecer un job stalled.",
             "expected": "Se conserva destino e identidad y se consulta o concilia antes de repetir efectos. La falta de capacidad para conocer el resultado queda como limitación bloqueante del alcance."
           },
           {
@@ -539,7 +564,7 @@
           {
             "id": "F03-V06",
             "scenario": "El backlog crece mientras llegan operaciones nuevas o falla una caché opcional de país.",
-            "expected": "El drenaje respeta límites y objetivos acordados. Si existe Redis, su ausencia deriva lecturas autorizadas al origen con carga acotada; no pierde negocio ni convierte datos cacheados en autorización financiera."
+            "expected": "El drenaje respeta límites y objetivos acordados. La caída de la caché de lectura deriva consultas autorizadas al origen con carga acotada; no afecta los Redis independientes de trabajos ni convierte datos cacheados en autorización financiera."
           },
           {
             "id": "F03-V07",
@@ -550,6 +575,16 @@
             "id": "F03-V08",
             "scenario": "Vence el claim de un publicador, otro termina el trabajo y el primero reintenta; un worker de maestros intenta ejecutar un comando financiero.",
             "expected": "El fencing rechaza la finalización antigua y la autorización impide cruzar capacidades; se conserva una publicación completa y el trabajo financiero mantiene su presupuesto de recursos."
+          },
+          {
+            "id": "F03-V09",
+            "scenario": "El relay cae después del commit SQL o después de encolar y antes de registrar la entrega; dos réplicas procesan el mismo intervalo de publicación.",
+            "expected": "La reconciliación recupera el pendiente con identidad estable y crea una sola solicitud de negocio. El estado durable impide duplicar efectos incluso si el job anterior ya fue eliminado de Redis."
+          },
+          {
+            "id": "F03-V10",
+            "scenario": "Cae o se restaura cada Redis de trabajos, o su capacidad se agota con noeviction, mientras hay maestros y operaciones financieras pendientes.",
+            "expected": "La admisión se pausa o rechaza de forma observable; no se acusa trabajo no persistido. Se reconstruye desde PostgreSQL por los contratos autorizados, se conservan límites separados y se concilian efectos inciertos antes de reanudarlos."
           }
         ],
         "parallel": [
@@ -558,7 +593,7 @@
           "Diseñar restauración, capacidad y compatibilidad de versiones del piloto antes de habilitar operación real."
         ],
         "deferred": [
-          "Redis, BullMQ y RabbitMQ no son dependencias obligatorias de esta fase; sólo se incorporan con necesidad medida, dueño y contrato de recuperación.",
+          "La caché Redis de lecturas sigue condicionada a mediciones. BullMQ y los Redis dedicados a trabajos sí forman parte de F03; la fase se acepta con su recuperación probada.",
           "La continuidad sin LAN, sin servidor o sin energía permanece fuera del perfil base y requiere otra decisión de arquitectura.",
           "Integrar un ERP no acredita los conectores de otros países ni corrige automáticamente garantías ausentes en el sistema externo."
         ],
@@ -566,7 +601,8 @@
           "Contratos versionados de eventos, publicaciones, acuses y trabajo ERP, con autoridad y estados definidos por flujo.",
           "Trazas de IDs y commits para corte, replay, duplicados y respuesta perdida, incluyendo referencias del ERP y resultados conciliados.",
           "Manifiestos y casos de carga/deltas con versión activa anterior y posterior, cursores y evidencia de validación.",
-          "Mediciones reproducibles de backlog, drenaje y recuperación con carga y entorno identificados; decisiones sobre infraestructura opcional."
+          "Mediciones reproducibles de backlog, colas BullMQ, drenaje y recuperación de ambos Redis de trabajos, con carga y entorno identificados; evaluar por separado la caché opcional.",
+          "Pruebas de relay interrumpido, scheduling concurrente, restauración, saturación noeviction y jobs repetidos con IDs, resultados durables y procedimientos de operación verificables."
         ],
         "reviewers": [
           "Equipo de integración ERP",
@@ -584,15 +620,15 @@
       },
       "construction": {
         "title": "Entrega e integración",
-        "summary": "Conectar workers y country-api con inbox/outbox, maestros y ACL del primer ERP.",
-        "slideDetail": "Implementar acuse tras commit, deduplicación, cursores y espejo comercial. La ACL consulta el resultado ERP; el drenaje respeta su capacidad y atiende ventas nuevas.",
-        "detail": "Implementar branch-sync-worker, country-api y erp-worker: entrega durable, acuse posterior al commit en país, deduplicación, cursores y recuperación. Distribuir el espejo de datos comerciales con sus versiones y autoridades. Incorporar la ACL del primer ERP y comprobar sus garantías de registro y consulta. Limitar el drenaje del backlog para respetar la capacidad de los destinos y atender operaciones nuevas."
+        "summary": "Conectar APIs y workers con inbox/outbox, BullMQ, Redis y ACL del primer ERP.",
+        "slideDetail": "Implementar entrega durable y maestros versionados. BullMQ usa Redis de trabajos por entorno; PostgreSQL permite reconstruir pendientes y conciliar resultados ERP.",
+        "detail": "Implementar branch-sync-worker, country-api y erp-worker con entrega durable, acuse posterior al commit, deduplicación y versiones comerciales. BullMQ programa publicaciones en país y ejecuta tareas en la red ERP, cada entorno con Redis de trabajos independiente de la caché. PostgreSQL conserva trabajo y resultados para reconstruir las colas. La ACL comprueba las garantías del ERP y el drenaje respeta la capacidad de los destinos."
       },
       "acceptance": {
         "title": "Backlog conciliado",
         "summary": "Reenvíos y reinicios conservan operaciones; backlog y resultado ERP se concilian.",
         "slideDetail": "Probar pérdida de acuse, repetición y reinicio sin duplicados. Medir el drenaje y conciliar el resultado; perder LAN o escritor detiene nuevas ventas en el perfil base.",
-        "detail": "Probar corte de Internet, repetición de eventos, pérdida de acuse y reinicio con almacenamiento sano. La operación conserva su identidad y su resultado ERP es comprobable sin registros duplicados. Conciliar el backlog y medir su drenaje frente a objetivos acordados. El perfil base detiene nuevas ventas cuando se pierde la LAN o el escritor de sucursal: esta fase no acredita autonomía de una caja aislada ni corrige por sí sola los defectos del ERP."
+        "detail": "Probar corte de Internet, repetición de eventos, pérdida de acuse y reinicio con almacenamiento sano. La operación conserva su identidad y su resultado ERP es comprobable sin registros duplicados. Conciliar el backlog y medir su drenaje frente a objetivos acordados. El perfil base detiene nuevas ventas cuando se pierde la LAN o el escritor de sucursal: esta fase no acredita autonomía de una caja aislada ni corrige por sí sola los defectos del ERP. Acreditar además los reintentos idempotentes de BullMQ, la reconciliación del relay y la recuperación o saturación de cada Redis de trabajos sin repetir efectos inciertos."
       },
       "requires": [
         "phase-02"
@@ -617,6 +653,10 @@
         {
           "label": "Identidad entre fronteras",
           "href": "/guide/architecture/identity/"
+        },
+        {
+          "label": "BullMQ y recuperación de trabajos",
+          "href": "/guide/architecture/job-processing/"
         }
       ]
     },
@@ -827,7 +867,8 @@
           "Contar con identidad y permisos reales, modalidades fiscales y de pago autorizadas, protección de datos y equipos homologados para ese alcance.",
           "Acordar criterios de capacidad, disponibilidad, recuperación, soporte y detención con responsables; sus valores no se fijan en este roadmap.",
           "Definir qué sistema será activo durante el corte y la comparación con el legacy, evitando doble cobro, doble emisión y dos escritores.",
-          "El piloto utiliza el perfil por puesto aceptado en F02, con modelos y drivers identificados. No habilita todavía estación compartida, dispositivos de red ni acceso móvil a periféricos."
+          "El piloto utiliza el perfil por puesto aceptado en F02, con modelos y drivers identificados. No habilita todavía estación compartida, dispositivos de red ni acceso móvil a periféricos.",
+          "Aceptar la operación y recuperación de BullMQ y los dos Redis de trabajos de F03: responsables, alertas, respaldo, restauración y límites de reintento probados en el entorno del piloto."
         ],
         "work": [
           {

@@ -46,6 +46,8 @@ La dirección de producto propone un backend de sucursal NestJS/Fastify comparti
 
 `apps/branch-api` incorpora la [base HTTP de ese backend](api.md): NestJS/Fastify, configuración y sondas de aplicación. Aún no tiene persistencia ni casos de uso de negocio, y no sustituye los adaptadores mock actuales del frontend. Instalar un framework no acredita las garantías transaccionales, de seguridad o continuidad de la propuesta.
 
+El [ADR-18](decisions/job-processing.md) selecciona BullMQ con Redis exclusivo para programación breve en `country-api` y ejecución, preparación de lotes y conciliación en `erp-worker`. Son dominios de cola aislados; PostgreSQL conserva solicitudes/resultados y permite reconstruir jobs. No añade Redis a sucursal ni cambia el protocolo PostgreSQL/HTTPS de `branch-sync-worker`. Colas, relay, consumidores y recuperación están pendientes de implementación.
+
 `country-api` prepara la composición del backend de país; `branch-sync-worker` y `erp-worker` preparan procesos separados para entrega y adaptadores. Son puntos de implementación, no sincronizadores reales. Los contextos scaffold no exponen fachadas que simulen una operación exitosa: deben incorporar casos de uso y pruebas antes de habilitar endpoints o jobs comerciales.
 
 ## 3. Cuatro estados distintos

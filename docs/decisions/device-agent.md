@@ -108,7 +108,7 @@ La asignación a otro agente requiere excluir al dueño anterior y resolver inte
 
 SQLite conserva un diario técnico recuperable y acotado. Los payloads necesarios para el trabajo tienen retención y acceso restringidos; los resultados MICR no se vuelcan en logs. Después del acuse de backend se aplica la retención acordada, conservando deduplicación durante toda la ventana de reentrega. PostgreSQL es la autoridad de trabajos y auditoría de sucursal; el agente no modifica ventas por SQL ni mantiene un espejo de negocio.
 
-BullMQ y RabbitMQ no son dependencias de este recorrido inicial. Una futura incorporación requiere un problema medido y conserva estas garantías de identidad, custodia e incertidumbre física.
+El recorrido de periféricos utiliza SQLite y HTTPS LAN; no utiliza BullMQ. La decisión de [BullMQ y Redis para país e integración ERP](job-processing.md) no cambia estas garantías de identidad, custodia e incertidumbre física ni añade una cola Redis al puesto.
 
 ## Identidad y operación
 

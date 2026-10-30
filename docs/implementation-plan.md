@@ -24,8 +24,8 @@ El producto revisado tiene seis puntos de entrada. La estructura objetivo añade
 | `pos-mobile` | Aplicación cliente móvil: frontend Angular/PrimeNG con arranque propio y shell nativa Capacitor | Integración real y verificación del recorrido, dispositivos y entrega en Android/iOS |
 | `branch-api` | Base HTTP NestJS/Fastify, configuración, sondas y OpenAPI de desarrollo | Casos de uso de sucursal, autorización de servidor y persistencia transaccional de negocio |
 | `branch-sync-worker` | Composición técnica de un proceso independiente | Entrega y recepción durables, reintentos y recuperación con los datos reales de sucursal |
-| `country-api` | Composición técnica de la API de país | Recepción durable, consolidación y contratos de trabajo y resultados de integración |
-| `erp-worker` | Composición técnica del proceso de integración | Traducción, comunicación y conciliación con el ERP mediante contratos comprobados |
+| `country-api` | Composición técnica de la API de país | Recepción durable, consolidación y contratos de trabajo/resultados; BullMQ + Redis de trabajos de país para disparos y solicitudes breves, con calendario e identidad durables |
+| `erp-worker` | Composición técnica del proceso de integración | BullMQ + Redis de trabajos en red ERP para ejecución, preparación de maestros y consulta/conciliación; contratos, reconstrucción e idempotencia comprobados |
 | `device-agent` | Decisión acordada; proyecto aún no incorporado | Host C#/.NET en cada puesto Windows (F02/F05), diario SQLite y protocolo HTTPS LAN con `branch-api`; red compartida y móvil en F06 tras homologación |
 
 Los dos clientes comparten bibliotecas de presentación y flujos. Las cuatro aplicaciones backend reutilizan mecanismos técnicos y delimitan sus contextos de negocio. La [arquitectura de la implementación](architecture.md), la [base de API](api.md) y los [contratos mock](mock-api.md) detallan sus alcances. El [catálogo del monorepo](monorepo.md) distingue la estructura objetivo de la evidencia del código.
@@ -40,6 +40,7 @@ POS Platform es un producto independiente, con Core solo como referencia. La [es
 | --- | --- | --- |
 | Documentación | Estructura del producto, propiedad DDD, proyectos de pruebas y evidencia identificada | Catálogo sincronizado, navegación, Astro, build y comprobación de navegador |
 | Base backend | Mecanismos técnicos del servidor en `shared/backend`, con proyectos definidos por fronteras reales | Lint, tipos, tests y build backend; artefactos arrancan fuera del workspace |
+| Trabajos BullMQ | Programación breve de `country-api` y ejecución/lotes/conciliación de `erp-worker`, con Redis exclusivo por entorno | [ADR-18](decisions/job-processing.md): persistencia, relay tras commit, reconstrucción tras pérdida de Redis, pérdida de lock, identidad e incertidumbre externa; pendiente de implementar |
 | Periféricos | `devices` autoriza y audita en `branch-api`; `device-agent` ejecuta en el equipo Windows conectado al hardware | Contratos TypeScript/C#, pruebas de recuperación y hardware, instalación firmada y exclusión por dispositivo; criterios en [ADR-17](decisions/device-agent.md) |
 | Contratos y kernel | Sobres técnicos en `shared/contracts` y modelo mínimo acordado en `shared/kernel` | Dominio puro; contratos comerciales conservan propietario; sin imports de frameworks |
 | UI transversal | Componentes, tokens y activos de presentación en `shared/frontend/ui` | Builds de ambos clientes, iconografía, accesibilidad y recorridos de UI verificados |

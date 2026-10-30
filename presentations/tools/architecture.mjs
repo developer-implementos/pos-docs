@@ -5,8 +5,8 @@ import { projectArchitecture } from '../../tools/architecture/views.mjs';
 const nodes = new Map(architecture.nodes.map(node => [node.id, node]));
 const edges = new Map(architecture.edges.map(edge => [edge.id, edge]));
 export const containerOverview = projectArchitecture(architecture,
-  ['desktop', 'mobile', 'bridge', 'branch-api', 'branch-db', 'branch-sync', 'country-api', 'country-db', 'erp-worker'],
-  { id: 'presentation-containers', edgeIds: ['desktop-api', 'mobile-api', 'device-command', 'commit-local', 'sync-local', 'sync-country', 'accept-country', 'claim-report'] });
+  ['desktop', 'mobile', 'bridge', 'branch-api', 'branch-db', 'branch-sync', 'country-api', 'country-db', 'country-redis-jobs', 'erp-worker', 'redis-jobs'],
+  { id: 'presentation-containers', edgeIds: ['desktop-api', 'mobile-api', 'device-command', 'commit-local', 'sync-local', 'sync-country', 'accept-country', 'claim-report', 'country-job-store', 'queue-store'] });
 export const deviceOverview = projectArchitecture(architecture,
   ['desktop', 'branch-api', 'branch-db', 'bridge', 'device-journal', 'devices'],
   { id: 'presentation-devices', edgeIds: ['desktop-api', 'device-jobs-local', 'device-command', 'bridge-evidence', 'agent-journal', 'hardware-command'] });
@@ -40,7 +40,7 @@ export function architectureSlide(slide) {
   if (slide.architectureView === 'containers') {
     const apps = ['desktop', 'mobile', 'bridge', 'branch-api', 'branch-sync', 'country-api', 'erp-worker'];
     assert.ok(apps.every(id => nodes.get(id)?.kind === 'app'), 'C2 shows the seven canonical applications');
-    assert.equal(containerOverview.edges.length, 8, 'Every connection must project to the applications and stores shown');
+    assert.equal(containerOverview.edges.length, 10, 'Every connection must project to the applications and stores shown');
     body = [
       text('Puesto / clientes', 64, 224, 258, 32, 'group', blue), text('Sucursal', 352, 224, 270, 32, 'group', blue),
       text('País', 686, 224, 240, 32, 'group', blue), text('Red autorizada', 996, 224, 220, 32, 'group', blue),
@@ -50,18 +50,21 @@ export function architectureSlide(slide) {
       ...node('branch-api', 352, 280, 262, 94, 'Reglas y permisos'),
       ...node('branch-db', 352, 420, 262, 94, 'Negocio + outbox'),
       ...node('branch-sync', 352, 550, 262, 74, 'Intercambio durable'),
-      ...node('country-api', 686, 280, 238, 94, 'Recepción y contratos'),
-      ...node('country-db', 686, 500, 238, 94, 'Inbox, trabajo y versiones'),
-      ...node('erp-worker', 996, 280, 220, 118, 'ERP y fuentes\nautorizadas'),
+      ...node('country-api', 686, 280, 238, 94, 'Recepción y jobs\nBullMQ interno'),
+      ...node('country-redis-jobs', 686, 416, 238, 74, 'Jobs de país', 'Redis · jobs'),
+      ...node('country-db', 686, 550, 238, 74, 'Estado de negocio'),
+      ...node('erp-worker', 996, 280, 220, 118, 'ERP y fuentes\nBullMQ interno'),
+      ...node('redis-jobs', 996, 500, 220, 94, 'Jobs en red ERP\nInstancia dedicada', 'Redis · jobs'),
       ...connection('desktop-api', [[276, 326], [352, 326]], 'HTTPS', [282, 300, 68, 22]),
       ...connection('mobile-api', [[276, 440], [314, 440], [314, 344], [352, 344]], '', []),
       ...connection('device-command', [[276, 560], [334, 560], [334, 362], [352, 362]], 'HTTPS', [278, 572, 68, 22]),
       ...connection('commit-local', [[483, 374], [483, 420]], 'PostgreSQL', [494, 388, 114, 22]),
       ...connection('sync-local', [[483, 550], [483, 514]], 'PostgreSQL', [494, 520, 114, 22]),
-      ...connection('sync-country', [[614, 588], [652, 588], [652, 348], [686, 348]], 'HTTPS', [660, 412, 64, 22]),
-      ...connection('accept-country', [[805, 374], [805, 500]], 'PostgreSQL', [818, 430, 106, 22]),
+      ...connection('sync-country', [[614, 588], [652, 588], [652, 348], [686, 348]], 'HTTPS', [660, 510, 64, 22]),
+      ...connection('accept-country', [[924, 360], [954, 360], [954, 587], [924, 587]], 'SQL', [926, 600, 64, 22]),
+      ...connection('country-job-store', [[805, 374], [805, 416]], 'Redis', [818, 387, 106, 22]),
       ...connection('claim-report', [[996, 326], [924, 326]], 'HTTPS', [930, 300, 64, 22]),
-      text('Inicia conexiones\na país; sin SQL WAN.', 996, 430, 220, 60),
+      ...connection('queue-store', [[1106, 398], [1106, 500]], 'Redis', [1120, 436, 92, 22]),
     ];
   } else if (slide.architectureView === 'devices') {
     body = [
@@ -95,9 +98,9 @@ export function architectureSlide(slide) {
     const worker = nodes.get('erp-worker');
     for (const [index, [country, erp, description]] of [['CL', 'Dynamics AX', 'Identidades y estados AX'], ['PE', 'ICS / custom', 'Modelo e interfaz por validar'], ['ES', 'Gira', 'Modelo e interfaz por validar']].entries()) {
       const y = 282 + index * 112;
-      body.push(shape(550, y, 354, 94), shape(550, y, 354, 38, blue), text(`${country} / ${worker.title}`, 564, y + 7, 326, 28, 'title', '#FFFFFF'), text(`ACL interna · ${description}`, 564, y + 47, 326, 46),
+      body.push(shape(550, y, 354, 94), shape(550, y, 354, 38, blue), text(`${country} / ${worker.title}`, 564, y + 7, 326, 28, 'title', '#FFFFFF'), text(`BullMQ + ACL · Redis local\n${description}`, 564, y + 47, 326, 46),
         shape(1040, y, 176, 94), shape(1040, y, 176, 38, blue), text(erp, 1052, y + 7, 152, 28, 'title', '#FFFFFF'), text('Contrato por\nhomologar', 1052, y + 47, 152, 46),
-        line(550, y + 55, 440, y + 55, false), text('HTTPS saliente', 368, y + 16, 174, 23, 'label'), line(904, y + 55, 1040, y + 55), text('Interfaz', 924, y + 12, 98, 22, 'label'), text('por validar', 912, y + 72, 122, 22, 'label'));
+        line(550, y + 55, 440, y + 55, false), text('HTTPS\nsaliente', 448, y + 5, 94, 46, 'label'), line(904, y + 55, 1040, y + 55), text('Interfaz', 924, y + 12, 98, 22, 'label'), text('por validar', 912, y + 72, 122, 22, 'label'));
     }
     body.push(line(440, 561, 440, 337, false), line(440, 337, 360, 337), text('Trabajo y resultados', 372, 604, 230, 22, 'label'));
   } else throw new Error(`Unknown architecture view: ${slide.architectureView}`);

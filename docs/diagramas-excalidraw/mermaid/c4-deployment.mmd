@@ -1,6 +1,6 @@
 flowchart TB
     accTitle: Complemento · Despliegue — Sucursal, país y red autorizada del ERP
-    accDescr: F02/F05: pos-desktop, device-agent, journal SQLite y hardware local comparten el puesto Windows. Backend y PostgreSQL viven en el servidor de sucursal. Red, estación compartida y acceso móvil a periféricos son expansión F06. Siete apps objetivo; seis tienen base técnica. device-agent y SQLite: propuesta pendiente. F02: puesto Windows dedicado; F05: piloto del mismo perfil. F06: red y estación compartida por homologar; no agrega otra app. PostgreSQL conserva el negocio.
+    accDescr: F02/F05: pos-desktop, device-agent, journal SQLite y hardware local comparten el puesto Windows. Backend y PostgreSQL viven en el servidor de sucursal. Red, estación compartida y acceso móvil a periféricos son expansión F06. Siete apps objetivo; seis tienen base técnica. device-agent y SQLite: propuesta pendiente. F02: puesto Windows dedicado; F05: piloto del mismo perfil. F06: red y estación compartida por homologar; no agrega otra app. PostgreSQL conserva el negocio. BullMQ y dos Redis de trabajos son obligatorios en el diseño elegido, aún no implementados; caché país opcional separada. Entre redes sólo HTTPS.
     subgraph terminalNode["Puesto Windows x N · perfil dedicado F02 / piloto F05"]
         direction TB
         client["pos-desktop<br/>«Contenedor»<br/>Angular (frontend) ·<br/>Tauri (shell nativa)<br/>Aplicación completa para caja y comandos."]:::pos
@@ -20,21 +20,23 @@ flowchart TB
     end
     subgraph countryNode["Plataforma de país · alojamiento por decidir"]
         direction TB
-        countryApi["country-api<br/>«Contenedor»<br/>NestJS + Fastify / Node.js<br/>Recibe operaciones y sirve trabajo y versiones."]:::pos
+        countryApi["country-api<br/>«Contenedor»<br/>NestJS + Fastify / Node.js ·<br/>BullMQ<br/>Recibe operaciones y sirve trabajo y versiones."]:::pos
         countryDb["Datos operativos de país<br/>«Contenedor de datos»<br/>PostgreSQL<br/>Consolida y conserva entrega durable."]:::store
         countryCache["Redis · caché de país (opcional)<br/>«Contenedor de datos»<br/>Redis · datos reconstruibles<br/>Acelera consultas; no confirma operaciones."]:::store
+        countryJobStore["Redis · trabajos de país<br/>«Contenedor de datos»<br/>Redis dedicado · BullMQ<br/>Colas y programación de country-api."]:::store
     end
     subgraph erpNode["Red autorizada del ERP · entorno por país"]
         direction TB
-        erpAdapter["erp-worker<br/>«Contenedor»<br/>NestJS / Node.js · libs/backend/erp<br/>Integra ERP y prepara maestros por contrato."]:::pos
+        erpAdapter["erp-worker<br/>«Contenedor»<br/>NestJS / Node.js ·<br/>BullMQ<br/>Integra ERP y prepara maestros por contrato."]:::pos
         erp["ERP del país<br/>«Sistema externo»<br/>CL: AX · ES: Gira · PE: custom<br/>Recibe y concilia documentos financieros."]:::external
+        erpJobStore["Redis · trabajos de ERP<br/>«Contenedor de datos»<br/>Redis dedicado · BullMQ<br/>Colas técnicas dentro de la red ERP."]:::store
     end
         payments["Proveedor de pagos<br/>«Sistema externo»<br/>API / SDK según proveedor<br/>Ej.: Transbank POS · Niubiz · Mercado Pago Point."]:::external
         fiscal["Proveedor de facturación<br/>«Sistema externo»<br/>Contrato por país y modalidad<br/>Ej.: Acepta / Ingydev (CL) · EFACT (PE)."]:::external
         backup["Respaldo y recuperación<br/>«Infraestructura»<br/>Backups PostgreSQL / herramienta por definir<br/>Conserva y ensaya restauraciones."]:::pos
         observability["Observabilidad operativa (opcional)<br/>«Sistema externo»<br/>Recolector de logs / Sentry opt-in<br/>Recibe diagnóstico y correlación técnica."]:::external
         masters["Fuentes de maestros y precios<br/>«Sistema externo»<br/>Interfaces por confirmar<br/>Publica datos y reglas autorizados."]:::external
-    networkPeripherals["Periféricos de red · F06<br/>«Hardware externo»<br/>TCP/IP · driver / SDK homologado<br/>Expansión: impresoras de recibos y etiquetas."]:::external
+        networkPeripherals["Periféricos de red · F06<br/>«Hardware externo»<br/>TCP/IP · driver / SDK homologado<br/>Expansión: impresoras de recibos y etiquetas."]:::external
         legend["Leyenda<br/>«Clave de lectura»<br/>Notación C4<br/>Azul: POS. Violeta: datos. Gris: externo."]:::key
     client -->|"Comandos autenticados · HTTPS/LAN"| branchApi
     mobileClient -.->|"F06 · comandos habilitados · HTTPS/LAN"| branchApi
@@ -57,6 +59,8 @@ flowchart TB
     device -->|"Deduplicación y evidencia técnica · SQLite"| deviceJournal
     device -->|"F02 · ejecuta en el puesto · USB/serie/SDK"| peripherals
     device -.->|"F06 · ejecución en red · protocolo homologado"| networkPeripherals
+    countryApi -->|"Programa y procesa jobs breves · BullMQ/Redis privado"| countryJobStore
+    erpAdapter -->|"Ejecuta jobs y consultas · BullMQ/Redis privado"| erpJobStore
     classDef pos fill:#EDF3FF,stroke:#0545BA,color:#25364D,stroke-width:2px
     classDef store fill:#F2EFFF,stroke:#6551A8,color:#25364D,stroke-width:2px
     classDef external fill:#F4F6F8,stroke:#6B788A,color:#25364D

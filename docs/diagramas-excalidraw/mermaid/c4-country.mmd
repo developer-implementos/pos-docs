@@ -1,7 +1,7 @@
 flowchart TB
     accTitle: C3 · country-api — Recepción, trabajo y consultas de país
-    accDescr: Un proceso HTTP apps/country-api. Recibe operaciones, ofrece trabajo al ERP y sirve publicaciones; no ejecuta la ACL ni construye cargas masivas dentro de una petición. ACK sólo después del commit de inbox + efecto + outbox. Redis acelera lecturas opcionales con fallback SQL; no contiene el único estado de recepción, trabajo o resultados.
-    subgraph countryScope["apps/country-api · UN proceso NestJS + Fastify"]
+    accDescr: Un proceso apps/country-api: HTTP y consumidores BullMQ internos para disparos y solicitudes breves. PostgreSQL conserva trabajo y publicaciones; la ACL y preparación pesada se ejecutan en erp-worker. ACK tras commit de inbox + efecto + outbox. Relay y reconciliación encolan o reconstruyen jobs BullMQ. Redis de trabajos es obligatorio; Redis caché es opcional y separado. Implementación pendiente.
+    subgraph countryScope["apps/country-api · UN proceso NestJS + Fastify + BullMQ"]
         direction TB
         countryEntry["Entrada y autorización<br/>«Componente»<br/>administration + sync · NestJS<br/>Valida emisor, ámbito y contrato HTTP."]:::pos
         countryInbox["Recepción de operaciones<br/>«Componente»<br/>libs/backend/sync<br/>Deduplica y aplica el efecto local pactado."]:::pos
@@ -11,12 +11,14 @@ flowchart TB
         countryCachePort["Puerto de caché opcional<br/>«Componente»<br/>Adaptador TypeScript / cache-aside<br/>Acelera lecturas reconstruibles."]:::pos
         countryUow["Persistencia de país<br/>«Componente»<br/>Repositorios TypeScript / SQL<br/>Confirma estado y trabajo en PostgreSQL."]:::pos
         technicalBase["Base técnica compartida<br/>«Componente»<br/>shared/backend · composición objetivo<br/>Configuración, salud, Pino y Sentry opt-in."]:::pos
+        countryQueue["Programación de trabajos<br/>«Componente»<br/>BullMQ · librería Node.js<br/>Programa disparos y solicitudes breves."]:::pos
     end
         syncWorker["branch-sync-worker<br/>«Contenedor»<br/>NestJS / Node.js · sin servidor HTTP<br/>Entrega eventos y actualiza espejos."]:::pos
-        erpAdapter["erp-worker<br/>«Contenedor»<br/>NestJS / Node.js · libs/backend/erp<br/>Integra ERP y prepara maestros por contrato."]:::pos
+        erpAdapter["erp-worker<br/>«Contenedor»<br/>NestJS / Node.js ·<br/>BullMQ<br/>Integra ERP y prepara maestros por contrato."]:::pos
         countryDb["Datos operativos de país<br/>«Contenedor de datos»<br/>PostgreSQL<br/>Consolida y conserva entrega durable."]:::store
         countryCache["Redis · caché de país (opcional)<br/>«Contenedor de datos»<br/>Redis · datos reconstruibles<br/>Acelera consultas; no confirma operaciones."]:::store
         legend["Leyenda<br/>«Clave de lectura»<br/>Notación C4<br/>Azul: POS. Violeta: datos. Gris: externo."]:::key
+        countryJobStore["Redis · trabajos de país<br/>«Contenedor de datos»<br/>Redis dedicado · BullMQ<br/>Colas y programación de country-api."]:::store
     syncWorker -->|"Lotes, acuses y publicaciones · HTTPS"| countryEntry
     erpAdapter -->|"Claim, consulta y resultado · HTTPS saliente"| countryEntry
     countryEntry -->|"Recibe evento identificado · TypeScript"| countryInbox
@@ -31,6 +33,9 @@ flowchart TB
     countryUow -->|"Persistencia y lectura autorizada · PostgreSQL"| countryDb
     countryEntry -->|"Claim, porciones y finalización · TypeScript"| countryWorker
     countryWorker -->|"Versión, manifiesto y evento · una transacción"| countryUow
+    countryQueue -->|"Programa y consume jobs · Redis privado"| countryJobStore
+    countryQueue -->|"Lee calendario/outbox y confirma solicitud · TypeScript"| countryUow
+    countryQueue -->|"Dispara publicación fuera de HTTP · TypeScript"| countryWorker
     classDef pos fill:#EDF3FF,stroke:#0545BA,color:#25364D,stroke-width:2px
     classDef store fill:#F2EFFF,stroke:#6551A8,color:#25364D,stroke-width:2px
     classDef external fill:#F4F6F8,stroke:#6B788A,color:#25364D

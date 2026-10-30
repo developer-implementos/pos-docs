@@ -4,7 +4,7 @@ module.exports = [
     "number": "06",
     "title": "D1 · Publicación y activación de precios",
     "scope": "Desde la fuente autorizada hasta una cotización con versión fijada. La misma publicación controlada atiende deltas, carga masiva programada y recuperación manual.",
-    "note": "Secuencia objetivo recomendada, no implementación acreditada. El propietario de cada dato y su contrato se confirman por país. El espejo de sucursal es de lectura y no se convierte en un maestro independiente.",
+    "note": "Secuencia objetivo elegida, aún no implementada. BullMQ usa Redis de trabajos separado en país y red ERP; PostgreSQL conserva solicitudes y versiones. El espejo de sucursal sólo es lectura autorizada.",
     "participants": [
       {
         "id": "masters",
@@ -19,7 +19,7 @@ module.exports = [
         "nodeId": "erpAdapter",
         "name": "erp-worker",
         "type": "Contenedor",
-        "technology": "NestJS / Node.js · libs/backend/erp",
+        "technology": "NestJS / Node.js · BullMQ",
         "summary": "Prepara datos autorizados y sube porciones mediante HTTPS saliente; no activa versiones ni usa SQL WAN."
       },
       {
@@ -35,7 +35,7 @@ module.exports = [
         "nodeId": "countryApi",
         "name": "country-api",
         "type": "Contenedor",
-        "technology": "NestJS + Fastify / Node.js",
+        "technology": "NestJS + Fastify / Node.js · BullMQ",
         "summary": "Autentica sucursales y sirve publicaciones por contrato y cursor."
       },
       {
@@ -72,6 +72,36 @@ module.exports = [
       }
     ],
     "steps": [
+      {
+        "from": "countryApi",
+        "to": "countryDb",
+        "label": "Lee calendario, checkpoint y pendientes · PostgreSQL",
+        "note": "La programación durable identifica país, cobertura, zona horaria y ventana. Relay y reconciliación reconstruyen trabajos si falla Redis; no se depende sólo del historial del scheduler."
+      },
+      {
+        "from": "countryApi",
+        "to": "countryApi",
+        "label": "BullMQ programa y consume disparo breve · Redis país",
+        "note": "Librería dentro de country-api, fuera de la petición HTTP; usa Redis exclusivo de trabajos, separado de la caché. El jobId estable no reemplaza restricciones transaccionales de negocio."
+      },
+      {
+        "from": "countryApi",
+        "to": "countryDb",
+        "label": "Registra solicitud de publicación + outbox · PostgreSQL",
+        "note": "Identifica una solicitud durable por ventana y ámbito. La preparación pesada queda pendiente para erp-worker; no se ejecuta dentro del endpoint ni se comparte Redis con su red."
+      },
+      {
+        "from": "erpAdapter",
+        "to": "erpAdapter",
+        "label": "BullMQ admite tarea técnica · Redis red ERP",
+        "note": "El consumidor obtiene capacidad antes del claim. Concurrencia, reintentos y preparación masiva tienen presupuesto propio; el estado durable se consulta por HTTPS, sin Redis o SQL WAN."
+      },
+      {
+        "from": "erpAdapter",
+        "to": "countryApi",
+        "label": "Reclama solicitud y corte autorizado · HTTPS saliente",
+        "note": "Al comenzar la ejecución obtiene trabajo, identidad y lease de publicación. Una reentrega consulta su estado original; la espera en Redis no extiende un lease de negocio."
+      },
       {
         "from": "erpAdapter",
         "to": "masters",
@@ -185,6 +215,10 @@ module.exports = [
       {
         "title": "Responsabilidades de publicación",
         "body": "erp-worker prepara mediante MasterDataSourcePort en la red autorizada del origen; country-api conserva versiones y confirma su publicación en país. Fuente, interfaz y acceso se homologan por país; la preparación tiene identidad, claims y presupuesto aislados del trabajo financiero."
+      },
+      {
+        "title": "Redis de trabajos no es la autoridad comercial",
+        "body": "BullMQ es obligatorio en país y red ERP, cada uno con su propia instancia Redis. Una caída detiene jobs; solicitudes y versiones permanecen en PostgreSQL y permiten reconstrucción. La sucursal sigue con PostgreSQL y HTTPS, sin Redis obligatorio."
       }
     ]
   },
@@ -264,7 +298,7 @@ module.exports = [
         "nodeId": "countryApi",
         "name": "country-api",
         "type": "Contenedor",
-        "technology": "NestJS + Fastify / Node.js",
+        "technology": "NestJS + Fastify / Node.js · BullMQ",
         "summary": "Valida el contrato y confirma inbox, efecto local y outbox antes de acusar aplicación."
       },
       {
@@ -280,7 +314,7 @@ module.exports = [
         "nodeId": "erpAdapter",
         "name": "erp-worker",
         "type": "Contenedor",
-        "technology": "NestJS / Node.js · libs/backend/erp",
+        "technology": "NestJS / Node.js · BullMQ",
         "summary": "Consume trabajo; traduce y concilia con ERP."
       },
       {
@@ -445,6 +479,12 @@ module.exports = [
       },
       {
         "from": "erpAdapter",
+        "to": "erpAdapter",
+        "label": "BullMQ activa consumidor técnico · Redis red ERP",
+        "note": "El job ejecuta dentro de erp-worker con concurrencia acotada; consulta/reclama la operación durable al comenzar, no después de esperar con lease en una cola larga. Los pendientes se reconstruyen mediante country-api HTTPS."
+      },
+      {
+        "from": "erpAdapter",
         "to": "countryApi",
         "label": "Solicita trabajo identificado · HTTPS saliente",
         "note": "erp-worker inicia la conexión desde la red autorizada del ERP. Presenta identidad y ámbito; country-api conserva la autoridad del registro durable. No hay SQL remoto ni llamada entrante obligatoria al worker."
@@ -516,6 +556,10 @@ module.exports = [
       {
         "title": "ERP posterior no es el ACK de país",
         "body": "erp-worker reclama trabajo mediante HTTPS saliente a country-api y ejecuta fachada, ACL y adaptadores dentro del mismo proceso. Country-api conserva intentos y resultados en PostgreSQL; no existe acceso SQL WAN desde el worker. Una respuesta incierta requiere consulta o conciliación antes de repetir efectos."
+      },
+      {
+        "title": "Reintento técnico y efecto financiero",
+        "body": "BullMQ + Redis de trabajos es la tecnología elegida dentro de erp-worker. Un job stalled puede entregarse otra vez: debe consultar estado e identidad durables. PostgreSQL, restricciones y reconciliación protegen el negocio; un efecto ERP incierto no se reenvía automáticamente. Las colas no participan del commit de venta en sucursal."
       }
     ]
   }

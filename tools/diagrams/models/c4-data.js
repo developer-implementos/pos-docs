@@ -33,6 +33,10 @@
   "publication": {
     "label": "Contrato de publicación de maestros",
     "url": "../docs/contracts/master-data-publication.md"
+  },
+  "jobs": {
+    "label": "ADR-18 · Procesamiento de trabajos con BullMQ",
+    "url": "../docs/decisions/job-processing.md"
   }
 };
   const nodes = {
@@ -290,7 +294,7 @@
     "summary": "Entrega eventos y actualiza espejos.",
     "ownership": "Proceso supervisado; modifica datos técnicos y versiones de maestros, nunca venta libremente.",
     "offline": "Retiene pendientes durables y reanuda al recuperar WAN; limita reintentos y trabajo en curso.",
-    "detail": "apps/branch-sync-worker compone libs/backend/sync con pricing/catalog para preparar y activar versiones. Entrega outbox por HTTPS con identidad y cursor; confirma acuses durables. El proceso supervisado sigue activo aunque el cliente se cierre. Descarga, staging, validación y activación conservan límites transaccionales.",
+    "detail": "apps/branch-sync-worker compone libs/backend/sync con pricing/catalog para preparar y activar versiones. Entrega outbox por HTTPS con identidad y cursor; confirma acuses durables. El proceso supervisado sigue activo aunque el cliente se cierre. Descarga, staging, validación y activación conservan límites transaccionales. No requiere Redis ni BullMQ por sucursal: el control de pendientes, calendario, cursores y activación utiliza PostgreSQL local y HTTPS.",
     "sources": [
       {
         "label": "Propuesta y decisiones de arquitectura",
@@ -308,11 +312,11 @@
     "id": "countryApi",
     "name": "country-api",
     "type": "Contenedor",
-    "technology": "NestJS + Fastify / Node.js",
+    "technology": "NestJS + Fastify / Node.js · BullMQ",
     "summary": "Recibe operaciones y sirve trabajo y versiones.",
     "ownership": "Autentica sucursal y país; confirma inbox, efecto local y outbox juntos antes del ACK de aplicación. Conserva autoridad de versiones, manifiestos y publicación de maestros.",
     "offline": "No participa en la transacción local de sucursal. Su caída genera atraso de sincronización.",
-    "detail": "apps/country-api autentica el ámbito país/entidad/sucursal. Confirma inbox, proyección operativa y outbox en un único commit antes del ACK de aplicación. Expone trabajo y resultados al erp-worker mediante HTTPS saliente iniciado por ese worker. Valida, publica y sirve versiones preparadas mediante MasterDataSourcePort en erp-worker; no ejecuta la ACL ni carga masiva pesada en un endpoint. La caché opcional acelera lecturas reconstruibles, con PostgreSQL como fuente durable.",
+    "detail": "apps/country-api autentica el ámbito país/entidad/sucursal. Confirma inbox, proyección operativa y outbox en un único commit antes del ACK de aplicación. Expone trabajo y resultados al erp-worker mediante HTTPS saliente iniciado por ese worker. Valida, publica y sirve versiones preparadas mediante MasterDataSourcePort en erp-worker; no ejecuta la ACL ni carga masiva pesada en un endpoint. La caché opcional acelera lecturas reconstruibles, con PostgreSQL como fuente durable. BullMQ es la librería elegida dentro del mismo proceso para programar publicaciones y ejecutar tareas breves fuera de HTTP. Usa Redis de trabajos exclusivo de país; PostgreSQL conserva solicitudes, calendario, outbox y resultados para reconstruir jobs. La preparación pesada se ejecuta en erp-worker. La decisión está adoptada; su integración todavía no está implementada.",
     "sources": [
       {
         "label": "Propuesta y decisiones de arquitectura",
@@ -321,6 +325,10 @@
       {
         "label": "Opciones tecnológicas y límites",
         "url": "../docs/opciones-tecnologicas.md"
+      },
+      {
+        "label": "ADR-18 · Procesamiento de trabajos con BullMQ",
+        "url": "../docs/decisions/job-processing.md"
       }
     ],
     "appId": "country-api",
@@ -334,7 +342,7 @@
     "summary": "Valida y publica versiones comerciales.",
     "ownership": "country-api conserva la autoridad de candidata, versión, manifiesto, paquetes y publicación en país.",
     "offline": "Una carga incompleta no sustituye la publicación vigente. Las sucursales continúan según vigencia y políticas.",
-    "detail": "Componente propuesto dentro de country-api. Recibe porciones idempotentes y finalización desde erp-worker por HTTPS, valida cobertura, corte e integridad y confirma versión, manifiesto y evento. La preparación pesada permanece en el adaptador de fuente del worker; no ocurre dentro de una petición.",
+    "detail": "Componente propuesto dentro de country-api. Recibe porciones idempotentes y finalización desde erp-worker por HTTPS, valida cobertura, corte e integridad y confirma versión, manifiesto y evento. La preparación pesada permanece en el adaptador de fuente del worker; no ocurre dentro de una petición. Los disparos programados y la creación breve de solicitudes se orquestan con BullMQ fuera de la petición HTTP; calendario, identidad de ejecución y estado de publicación permanecen en PostgreSQL.",
     "sources": [
       {
         "label": "Contrato de publicación de maestros",
@@ -343,6 +351,10 @@
       {
         "label": "Propuesta y decisiones de arquitectura",
         "url": "../docs/propuesta-arquitectura.md"
+      },
+      {
+        "label": "ADR-18 · Procesamiento de trabajos con BullMQ",
+        "url": "../docs/decisions/job-processing.md"
       }
     ],
     "codePaths": [
@@ -359,7 +371,7 @@
     "summary": "Consolida y conserva entrega durable.",
     "ownership": "Proyección de operaciones de sucursal; inbox, outbox, versiones y resultados de integración.",
     "offline": "No sustituye la autoridad local ni habilita consumo concurrente offline de saldos globales.",
-    "detail": "Aislamiento lógico y recursos por país/entidad legal. Retención, backups y deduplicación deben cubrir el horizonte de replay y restauración. ACK de aplicación local no equivale a contabilización ERP.",
+    "detail": "Aislamiento lógico y recursos por país/entidad legal. Retención, backups y deduplicación deben cubrir el horizonte de replay y restauración. ACK de aplicación local no equivale a contabilización ERP. Conserva también calendarios, solicitudes de publicación, intentos y checkpoints durables. La outbox permite encolar tras el commit y un reconciliador reconstruye jobs pendientes sin confiar en la permanencia del historial Redis.",
     "sources": [
       {
         "label": "Propuesta y decisiones de arquitectura",
@@ -368,6 +380,10 @@
       {
         "label": "Integridad, recuperación y casos adversos",
         "url": "../docs/revision-resiliencia-datos-pos.md"
+      },
+      {
+        "label": "ADR-18 · Procesamiento de trabajos con BullMQ",
+        "url": "../docs/decisions/job-processing.md"
       }
     ]
   },
@@ -375,11 +391,11 @@
     "id": "erpAdapter",
     "name": "erp-worker",
     "type": "Contenedor",
-    "technology": "NestJS / Node.js · libs/backend/erp",
+    "technology": "NestJS / Node.js · BullMQ",
     "summary": "Integra ERP y prepara maestros por contrato.",
     "ownership": "Proceso con fachada, ACL y adaptadores internos. Prepara maestros por MasterDataSourcePort con identidad y presupuesto aislados; country-api conserva publicaciones y resultados durables.",
     "offline": "Si país o ERP no responde, conserva identidad y resultado incierto. Consulta o concilia antes de repetir un efecto.",
-    "detail": "apps/erp-worker se ejecuta en la red autorizada del ERP e inicia HTTPS autenticado hacia country-api para reclamar trabajo, renovar su lease y registrar resultados. Mantiene destino, versión de contrato e identidad de intento. Fachada, ACL y adaptadores son componentes de libs/backend/erp, no servicios HTTP separados obligatorios. Chile: AX; Perú: custom; España: Gira, con interfaces por homologar. No accede por SQL remoto a PostgreSQL de país. La preparación de maestros usa una identidad y presupuesto propios, conexión saliente a country-api y contrato de fuente homologado; no ejecuta SQL WAN.",
+    "detail": "apps/erp-worker se ejecuta en la red autorizada del ERP e inicia HTTPS autenticado hacia country-api para reclamar trabajo, renovar su lease y registrar resultados. Mantiene destino, versión de contrato e identidad de intento. Fachada, ACL y adaptadores son componentes de libs/backend/erp, no servicios HTTP separados obligatorios. Chile: AX; Perú: custom; España: Gira, con interfaces por homologar. No accede por SQL remoto a PostgreSQL de país. La preparación de maestros usa una identidad y presupuesto propios, conexión saliente a country-api y contrato de fuente homologado; no ejecuta SQL WAN. BullMQ organiza trabajos técnicos, preparación de maestros y consultas de conciliación dentro del mismo proceso. Utiliza Redis de trabajos exclusivo de la red ERP y obtiene el estado durable por HTTPS de country-api. La cola puede reentregar: antes de actuar revalida estado y autorización; un resultado financiero incierto se consulta o concilia, no se repite automáticamente. La integración BullMQ está elegida, aún no implementada.",
     "sources": [
       {
         "label": "Propuesta y decisiones de arquitectura",
@@ -392,6 +408,10 @@
       {
         "label": "Integridad, recuperación y casos adversos",
         "url": "../docs/revision-resiliencia-datos-pos.md"
+      },
+      {
+        "label": "ADR-18 · Procesamiento de trabajos con BullMQ",
+        "url": "../docs/decisions/job-processing.md"
       }
     ],
     "appId": "erp-worker",
@@ -819,7 +839,7 @@
     "summary": "Azul: POS. Violeta: datos. Gris: externo.",
     "ownership": "Borde discontinuo: sistema, proceso o nodo según título. Opcional/por asignar se indica expresamente.",
     "offline": "Flecha: iniciador, propósito y protocolo. Respuesta por el mismo contrato.",
-    "detail": "Persona: rol. Contenedor: aplicación o almacén. Componente: módulo de un proceso. Las apps usan su nombre de monorepo. Redis de país y observabilidad son condicionales; publicación y extracción son responsabilidades internas de las aplicaciones indicadas.",
+    "detail": "Persona: rol. Contenedor: aplicación o almacén. Componente: módulo de un proceso. Las apps usan su nombre de monorepo. Redis de trabajos país y ERP son obligatorios para BullMQ; sólo la caché de país y la telemetría externa son condicionales; publicación y extracción son responsabilidades internas de las aplicaciones indicadas.",
     "sources": [
       {
         "label": "Guía de estas vistas C4",
@@ -835,7 +855,7 @@
     "summary": "Acelera consultas; no confirma operaciones.",
     "ownership": "Country-api lee y escribe entradas identificadas por país, entidad y versión. PostgreSQL conserva la autoridad y el estado durable.",
     "offline": "Un miss, expiración o caída permite consultar PostgreSQL con límites de carga y espera. La ausencia de caché no es condición del commit; la capacidad del origen sigue siendo necesaria.",
-    "detail": "Ampliación opcional sujeta a medición, capacidad y operación. La API comprueba identidad, ámbito y autorización antes de leer. Las claves incluyen país, entidad legal, versión y alcance de permisos cuando afecte al resultado; un prefijo no sustituye autorización. TTL y vigencia comercial son independientes. El fallback limita concurrencia, esperas y llenados para proteger PostgreSQL. No es la inbox, outbox, base de ventas ni único registro de permisos, dinero o trabajos; no implica BullMQ ni Redis en cada sucursal. Las versiones inmutables evitan mezclar publicaciones y PostgreSQL resuelve la versión autorizada.",
+    "detail": "Ampliación opcional sujeta a medición, capacidad y operación. La API comprueba identidad, ámbito y autorización antes de leer. Las claves incluyen país, entidad legal, versión y alcance de permisos cuando afecte al resultado; un prefijo no sustituye autorización. TTL y vigencia comercial son independientes. El fallback limita concurrencia, esperas y llenados para proteger PostgreSQL. No es la inbox, outbox, base de ventas ni único registro de permisos, dinero o trabajos; se despliega en una instancia separada de Redis de trabajos y no implica Redis en cada sucursal. Las versiones inmutables evitan mezclar publicaciones y PostgreSQL resuelve la versión autorizada.",
     "conditional": true,
     "sources": [
       {
@@ -1067,13 +1087,13 @@
   },
   "erpExecution": {
     "id": "erpExecution",
-    "name": "Planificador y ejecutor",
+    "name": "Admisión y ejecución ERP",
     "type": "Componente",
     "technology": "libs/backend/erp + worker",
-    "summary": "Admite trabajo con límites por destino.",
+    "summary": "Revalida trabajo e intento antes de actuar.",
     "ownership": "Respeta lease, identidad, destino y versión fijados al crear el intento.",
     "offline": "Backoff y ventanas limitan reintentos; lease expirado no autoriza duplicar un efecto incierto.",
-    "detail": "El proceso supervisado obtiene trabajo mediante el cliente de country-api. Limita concurrencia por contrato/ERP, conserva el destino de pendientes durante una migración y drena o interrumpe admisión de forma controlada.",
+    "detail": "El consumidor BullMQ solicita o renueva el claim por HTTPS cuando dispone de capacidad de ejecución; no retiene leases de negocio en una cola larga. Aplica límites por contrato y destino, preserva identidad y versión, y no ejecuta fuera del lease autorizado. Un job reentregado consulta el estado durable y la evidencia antes de actuar; no repite un efecto financiero incierto.",
     "sources": [
       {
         "label": "Propuesta y decisiones de arquitectura",
@@ -1082,6 +1102,10 @@
       {
         "label": "Opciones tecnológicas y límites",
         "url": "../docs/opciones-tecnologicas.md"
+      },
+      {
+        "label": "ADR-18 · Procesamiento de trabajos con BullMQ",
+        "url": "../docs/decisions/job-processing.md"
       }
     ],
     "codePaths": [
@@ -1279,6 +1303,96 @@
         "url": "../docs/decisions/device-agent.md#network-expansion"
       }
     ]
+  },
+  "countryJobStore": {
+    "id": "countryJobStore",
+    "name": "Redis · trabajos de país",
+    "type": "Contenedor de datos",
+    "technology": "Redis dedicado · BullMQ",
+    "summary": "Colas y programación de country-api.",
+    "ownership": "Instancia exclusiva del dominio país; separada del Redis de caché. PostgreSQL conserva calendario, solicitudes, outbox y resultados de negocio.",
+    "offline": "Si falla, se detiene la programación y ejecución de jobs del país. Los pendientes durables se conservan en PostgreSQL; no revierte ventas confirmadas ni habilita ACK sin commit.",
+    "detail": "Dependencia obligatoria de la arquitectura elegida, aún no implementada. Red privada, autenticación y TLS según despliegue; sin conexión desde sucursales ni desde la red ERP. Persistencia Redis y política noeviction para proteger jobs, capacidad y retención acotadas. El relay encola después del commit PostgreSQL y la reconciliación reconstruye pendientes por identidad estable. Perder Redis no autoriza repetir efectos; BullMQ no ofrece exactamente una vez sobre sistemas externos.",
+    "sources": [
+      {
+        "label": "ADR-18 · Procesamiento de trabajos con BullMQ",
+        "url": "../docs/decisions/job-processing.md"
+      },
+      {
+        "label": "Integridad, recuperación y casos adversos",
+        "url": "../docs/revision-resiliencia-datos-pos.md"
+      }
+    ]
+  },
+  "erpJobStore": {
+    "id": "erpJobStore",
+    "name": "Redis · trabajos de ERP",
+    "type": "Contenedor de datos",
+    "technology": "Redis dedicado · BullMQ",
+    "summary": "Colas técnicas dentro de la red ERP.",
+    "ownership": "Instancia exclusiva de erp-worker en la red autorizada del ERP. No comparte Redis con país ni con su caché; el estado de negocio reside en PostgreSQL de país.",
+    "offline": "Sin Redis local se detiene la admisión de jobs ERP. Al recuperar, consulta por HTTPS trabajo, intentos y resultados durables antes de reconstruir pendientes.",
+    "detail": "Dependencia obligatoria de la arquitectura elegida, aún no implementada. BullMQ almacena colas, retrasos y metadatos técnicos en esta instancia con noeviction y persistencia operada. Límites separados para preparación masiva y operaciones/consultas de conciliación. La recuperación usa country-api por HTTPS; no abre Redis ni PostgreSQL a través de WAN. El job técnico no sustituye el lease de negocio ni el resultado ERP y nunca habilita reenviar ciegamente una operación incierta.",
+    "sources": [
+      {
+        "label": "ADR-18 · Procesamiento de trabajos con BullMQ",
+        "url": "../docs/decisions/job-processing.md"
+      },
+      {
+        "label": "Integridad, recuperación y casos adversos",
+        "url": "../docs/revision-resiliencia-datos-pos.md"
+      }
+    ]
+  },
+  "countryQueue": {
+    "id": "countryQueue",
+    "name": "Programación de trabajos",
+    "type": "Componente",
+    "technology": "BullMQ · librería Node.js",
+    "summary": "Programa disparos y solicitudes breves.",
+    "ownership": "Componente interno de country-api; ejecuta fuera de HTTP. PostgreSQL gobierna calendario, ámbito, solicitud e identidad estable; el trabajo pesado pertenece a erp-worker.",
+    "offline": "El relay reintenta después del commit. Tras pérdida de Redis, reconstruye programaciones y pendientes desde PostgreSQL sin crear otra solicitud equivalente.",
+    "detail": "Librería elegida para country-api, no una octava aplicación. Usa Redis de trabajos de país para scheduling, reintentos y concurrencia técnica. Configuración IANA, ventanas y checkpoints de ejecuciones esperadas permanecen en PostgreSQL; un scheduler por sí solo no prueba que una ventana se haya ejecutado. El consumidor realiza tareas breves y registra solicitudes durables para ERP. Relay y reconciliación cubren el hueco entre commit y encolado; handlers idempotentes validan identidad, versión y ámbito. Implementación pendiente.",
+    "codePaths": [
+      "apps/country-api",
+      "libs/backend/sync",
+      "libs/backend/catalog",
+      "libs/backend/pricing"
+    ],
+    "sources": [
+      {
+        "label": "ADR-18 · Procesamiento de trabajos con BullMQ",
+        "url": "../docs/decisions/job-processing.md"
+      },
+      {
+        "label": "Contrato de publicación de maestros",
+        "url": "../docs/contracts/master-data-publication.md"
+      }
+    ]
+  },
+  "erpQueue": {
+    "id": "erpQueue",
+    "name": "Ejecución de trabajos técnicos",
+    "type": "Componente",
+    "technology": "BullMQ · librería Node.js",
+    "summary": "Distribuye ejecución y consultas seguras.",
+    "ownership": "Componente interno de erp-worker. Separa concurrencia y presupuesto de preparación masiva y tareas financieras; Redis está dentro de la red ERP.",
+    "offline": "Sin país no obtiene autorización nueva. Una reentrega o un job stalled conserva identidad y exige consultar el estado antes de repetir efectos externos.",
+    "detail": "Librería elegida, aún no implementada. Programa extracción/preparación de maestros, consultas de conciliación y tareas técnicas con backoff, jitter, límites de intentos y cierre controlado. El consumidor reclama el trabajo durable al iniciar la ejecución; el lock BullMQ y el lease de negocio cumplen funciones distintas. Reconciliación por HTTPS reconstruye jobs desde solicitudes/resultados de país. La deduplicación por jobId reduce reentregas técnicas, pero las restricciones de negocio y las capacidades homologadas del ERP resuelven efectos inciertos.",
+    "codePaths": [
+      "apps/erp-worker",
+      "libs/backend/erp"
+    ],
+    "sources": [
+      {
+        "label": "ADR-18 · Procesamiento de trabajos con BullMQ",
+        "url": "../docs/decisions/job-processing.md"
+      },
+      {
+        "label": "Integridad, recuperación y casos adversos",
+        "url": "../docs/revision-resiliencia-datos-pos.md"
+      }
+    ]
   }
 };
   const views = [
@@ -1358,7 +1472,7 @@
     "level": "C2 · Contenedores",
     "title": "Aplicaciones, procesos y datos",
     "scope": "Siete aplicaciones objetivo de POS Platform, sus datos y sistemas externos. Seis apps tienen base técnica o scaffold; device-agent se incorpora como propuesta, aún no implementada.",
-    "note": "Siete apps objetivo; seis tienen base técnica. device-agent y SQLite: propuesta pendiente. F02: puesto Windows dedicado; F05: piloto del mismo perfil. F06: red y estación compartida por homologar; no agrega otra app. PostgreSQL conserva el negocio.",
+    "note": "Siete apps objetivo; seis tienen base técnica. device-agent y SQLite: propuesta pendiente. F02: puesto Windows dedicado; F05: piloto del mismo perfil. F06: red y estación compartida por homologar; no agrega otra app. PostgreSQL conserva el negocio. BullMQ y dos Redis de trabajos son obligatorios en el diseño elegido, aún no implementados; caché país opcional separada. Entre redes sólo HTTPS.",
     "nodeIds": [
       "cashier",
       "client",
@@ -1370,6 +1484,8 @@
       "syncWorker",
       "countryApi",
       "countryDb",
+      "countryJobStore",
+      "erpJobStore",
       "countryCache",
       "erpAdapter",
       "erp",
@@ -1395,7 +1511,9 @@
           "countryApi",
           "countryDb",
           "countryCache",
-          "erpAdapter"
+          "erpAdapter",
+          "countryJobStore",
+          "erpJobStore"
         ]
       }
     ],
@@ -1496,6 +1614,16 @@
         "to": "networkPeripherals",
         "label": "F06 · ejecución en red · protocolo homologado",
         "conditional": true
+      },
+      {
+        "from": "countryApi",
+        "to": "countryJobStore",
+        "label": "Programa y procesa jobs breves · BullMQ/Redis privado"
+      },
+      {
+        "from": "erpAdapter",
+        "to": "erpJobStore",
+        "label": "Ejecuta jobs y consultas · BullMQ/Redis privado"
       }
     ]
   },
@@ -1776,7 +1904,7 @@
     "level": "Complemento · Despliegue",
     "title": "Sucursal, país y red autorizada del ERP",
     "scope": "F02/F05: pos-desktop, device-agent, journal SQLite y hardware local comparten el puesto Windows. Backend y PostgreSQL viven en el servidor de sucursal. Red, estación compartida y acceso móvil a periféricos son expansión F06.",
-    "note": "Siete apps objetivo; seis tienen base técnica. device-agent y SQLite: propuesta pendiente. F02: puesto Windows dedicado; F05: piloto del mismo perfil. F06: red y estación compartida por homologar; no agrega otra app. PostgreSQL conserva el negocio.",
+    "note": "Siete apps objetivo; seis tienen base técnica. device-agent y SQLite: propuesta pendiente. F02: puesto Windows dedicado; F05: piloto del mismo perfil. F06: red y estación compartida por homologar; no agrega otra app. PostgreSQL conserva el negocio. BullMQ y dos Redis de trabajos son obligatorios en el diseño elegido, aún no implementados; caché país opcional separada. Entre redes sólo HTTPS.",
     "nodeIds": [
       "client",
       "mobileClient",
@@ -1787,6 +1915,8 @@
       "syncWorker",
       "countryApi",
       "countryDb",
+      "countryJobStore",
+      "erpJobStore",
       "countryCache",
       "erpAdapter",
       "erp",
@@ -1832,7 +1962,8 @@
         "nodes": [
           "countryApi",
           "countryDb",
-          "countryCache"
+          "countryCache",
+          "countryJobStore"
         ]
       },
       {
@@ -1840,7 +1971,8 @@
         "label": "Red autorizada del ERP · entorno por país",
         "nodes": [
           "erpAdapter",
-          "erp"
+          "erp",
+          "erpJobStore"
         ]
       }
     ],
@@ -1951,6 +2083,16 @@
         "to": "networkPeripherals",
         "label": "F06 · ejecución en red · protocolo homologado",
         "conditional": true
+      },
+      {
+        "from": "countryApi",
+        "to": "countryJobStore",
+        "label": "Programa y procesa jobs breves · BullMQ/Redis privado"
+      },
+      {
+        "from": "erpAdapter",
+        "to": "erpJobStore",
+        "label": "Ejecuta jobs y consultas · BullMQ/Redis privado"
       }
     ]
   },
@@ -1960,8 +2102,8 @@
     "level": "C3 · country-api",
     "title": "Recepción, trabajo y consultas de país",
     "containerId": "countryApi",
-    "scope": "Un proceso HTTP apps/country-api. Recibe operaciones, ofrece trabajo al ERP y sirve publicaciones; no ejecuta la ACL ni construye cargas masivas dentro de una petición.",
-    "note": "ACK sólo después del commit de inbox + efecto + outbox. Redis acelera lecturas opcionales con fallback SQL; no contiene el único estado de recepción, trabajo o resultados.",
+    "scope": "Un proceso apps/country-api: HTTP y consumidores BullMQ internos para disparos y solicitudes breves. PostgreSQL conserva trabajo y publicaciones; la ACL y preparación pesada se ejecutan en erp-worker.",
+    "note": "ACK tras commit de inbox + efecto + outbox. Relay y reconciliación encolan o reconstruyen jobs BullMQ. Redis de trabajos es obligatorio; Redis caché es opcional y separado. Implementación pendiente.",
     "nodeIds": [
       "syncWorker",
       "erpAdapter",
@@ -1975,12 +2117,14 @@
       "technicalBase",
       "countryDb",
       "countryCache",
-      "legend"
+      "legend",
+      "countryQueue",
+      "countryJobStore"
     ],
     "boundaries": [
       {
         "id": "countryScope",
-        "label": "apps/country-api · UN proceso NestJS + Fastify",
+        "label": "apps/country-api · UN proceso NestJS + Fastify + BullMQ",
         "nodes": [
           "countryEntry",
           "countryInbox",
@@ -1989,7 +2133,8 @@
           "countryWorker",
           "countryCachePort",
           "countryUow",
-          "technicalBase"
+          "technicalBase",
+          "countryQueue"
         ]
       }
     ],
@@ -2063,6 +2208,21 @@
         "from": "countryWorker",
         "to": "countryUow",
         "label": "Versión, manifiesto y evento · una transacción"
+      },
+      {
+        "from": "countryQueue",
+        "to": "countryJobStore",
+        "label": "Programa y consume jobs · Redis privado"
+      },
+      {
+        "from": "countryQueue",
+        "to": "countryUow",
+        "label": "Lee calendario/outbox y confirma solicitud · TypeScript"
+      },
+      {
+        "from": "countryQueue",
+        "to": "countryWorker",
+        "label": "Dispara publicación fuera de HTTP · TypeScript"
       }
     ]
   },
@@ -2072,8 +2232,8 @@
     "level": "C3 · erp-worker",
     "title": "Contrato POS, ACL y recuperación ERP",
     "containerId": "erpAdapter",
-    "scope": "Un proceso apps/erp-worker en la red autorizada del ERP. Fachada, ACL, protocolo y conciliación son componentes internos de libs/backend/erp. MasterDataSourcePort prepara publicaciones con claims, identidad y presupuesto propios.",
-    "note": "El worker inicia HTTPS hacia country-api. Lease, destino, versión e intento permanecen identificados; un timeout no autoriza duplicar efectos ni cambiar de ERP.",
+    "scope": "Un proceso apps/erp-worker con BullMQ y Redis de trabajos en la red autorizada del ERP. Fachada, ACL, protocolo y preparación son componentes internos; trabajo durable y resultados se consultan por HTTPS en país.",
+    "note": "BullMQ y Redis de trabajos elegidos, aún no implementados. Un job no reemplaza el lease ni el resultado durable. Reentrega e incertidumbre exigen consulta/conciliación; nunca se abre Redis o SQL por WAN.",
     "nodeIds": [
       "countryApi",
       "erpExecution",
@@ -2086,12 +2246,14 @@
       "technicalBase",
       "erp",
       "masters",
-      "legend"
+      "legend",
+      "erpQueue",
+      "erpJobStore"
     ],
     "boundaries": [
       {
         "id": "erpScope",
-        "label": "apps/erp-worker · UN proceso supervisado",
+        "label": "apps/erp-worker · UN proceso NestJS + BullMQ",
         "nodes": [
           "erpExecution",
           "erpClient",
@@ -2100,7 +2262,8 @@
           "erpAcl",
           "erpProtocol",
           "erpRecovery",
-          "technicalBase"
+          "technicalBase",
+          "erpQueue"
         ]
       }
     ],
@@ -2169,6 +2332,26 @@
         "from": "erpMasterSource",
         "to": "erpClient",
         "label": "Claim, upload y finalize · TypeScript"
+      },
+      {
+        "from": "erpQueue",
+        "to": "erpJobStore",
+        "label": "Programa y consume jobs · Redis privado"
+      },
+      {
+        "from": "erpQueue",
+        "to": "erpExecution",
+        "label": "Entrega job; revalida intento y lease · TypeScript"
+      },
+      {
+        "from": "erpClient",
+        "to": "erpQueue",
+        "label": "Reconstruye pendientes por identidad · TypeScript"
+      },
+      {
+        "from": "erpRecovery",
+        "to": "erpQueue",
+        "label": "Programa consulta segura de estado · TypeScript"
       }
     ]
   }

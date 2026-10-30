@@ -105,7 +105,7 @@ Además, `procesados` con `data:[]` referencia `repuesta` en lugar de `respuesta
 
 - Mantener contratos POS independientes de las tablas MPOS y del vocabulario AX. La ACL de maestros debe normalizar identidades, versiones y estados; no basta con renombrar tablas.
 - Separar recepción durable, aplicación de cada maestro y reporte de resultado. El nuevo diseño debe definir duplicados, lotes parciales, causalidad cliente→dirección/contacto y recuperación tras restore.
-- Planificar la sustitución WSO2 por funciones: polling/SP, paginación, traducción, creación de lotes, distribución por destino, API de lectura, avisos y conciliación. RabbitMQ o un scheduler por sí solos no implementan todas ellas.
+- Planificar la sustitución WSO2 por funciones: polling/SP, paginación, traducción, creación de lotes, distribución por destino, API de lectura, avisos y conciliación. El [BullMQ + Redis elegido](../decisions/job-processing.md) coordina los trabajos de país y ERP; no implementa esas capacidades automáticamente ni sustituye los contratos de origen y publicación.
 - Conservar versiones e identidad del origen durante la migración ERP; cambiar de base o adaptador no debe reinterpretar pendientes históricos como un maestro nuevo.
 - En el perfil offline WAN, la sucursal necesita datos válidos y políticas locales. Recibir clientes/precios mediante este mecanismo no demuestra que el POS actual evalúe ofertas offline ni que la caja sea dueña del inventario.
 
