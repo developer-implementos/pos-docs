@@ -1,26 +1,26 @@
 {
   "schemaVersion": 1,
-  "reviewedOn": "2026-10-29",
+  "reviewedOn": "2026-10-30",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "b2c06c0578eae46f4009037e84699484145d0a12",
+  "revision": "814c25904070becb7d496f47e4faaebcb12fa95f",
   "sourceStatus": "Fuentes documentales verificadas en la revisión indicada.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "inputs": [
     {
       "path": "docs/monorepo.md",
-      "sha256": "1d3cd4a58a36268faf83ba52f0de8862af88daa9d000436bd294e5f1d9a5eb23"
+      "sha256": "66487391c30225b132c62844f98041be287a8552ee136e9a261db5b631e273c3"
     },
     {
       "path": "docs/propuesta-arquitectura.md",
-      "sha256": "86c8b7233892493995cab98c58b7ca0084699e2ed714192ed46ca6b4e54f386c"
+      "sha256": "69adf04e2e197bfe29c0a0239b6300958efe0278b872e9c08e723ab4259a9138"
     },
     {
       "path": "docs/implementation-plan.md",
-      "sha256": "7a1ae08627ef2764f4f01c57fe7ae08461fcf25065ebeed2d3a786507bc2e428"
+      "sha256": "c2109b023250b5f1b84eda48f3e856a145cc211ee4064730737a16b0c9f368de"
     },
     {
       "path": "docs/validacion-y-decisiones.md",
-      "sha256": "565a3140954149106a523761f99f71da99c8c38dd0152c8a8b37f526cc577a70"
+      "sha256": "52aa2c0229751786533a51bd7e9f6fc2b5906646f753d0d01372d04bb8736aed"
     },
     {
       "path": "apps/starlight/src/data/product-evidence.json",
@@ -28,19 +28,19 @@
     },
     {
       "path": "docs/roadmap.md",
-      "sha256": "168d70de403c19c9a682575d7e7978cce94fdbfdcfc819063748bd4b12f41ed9"
+      "sha256": "ae7c691f67807ab14fdfa70f772a99f46e98025772487048fc324ebe01ab8fb6"
     },
     {
       "path": "docs/roadmap.json",
-      "sha256": "2f03dcfcfdffd64818dd635e10cb05b7f6200293855d5a1ae7f02287c95ae3b0"
+      "sha256": "cdbc145cf883f855302ff29b68f6a8c9604513cfbd1784fb016b3fca9a7c2379"
     },
     {
       "path": "docs/c4-arquitectura-propuesta.md",
-      "sha256": "30cc3ba0f29e74a02badc7f414612e40e19ee38ba1683ec3c53eff413eff2374"
+      "sha256": "fdccae303af2e8d9a96c6289530297e121108999e8f8458863b15d4bb33bed4e"
     },
     {
       "path": "docs/contracts/master-data-publication.md",
-      "sha256": "1c904566fb99c6557c486e676ffdad12ff6764ef53b61f540c3a30ccac1ceca4"
+      "sha256": "e156668d4f84173dcebd81ef34be9f198166d416e3a487325ef719288acaf9f7"
     },
     {
       "path": "docs/contracts/identity-and-trust.md",
@@ -48,15 +48,15 @@
     },
     {
       "path": "tools/architecture/model.mjs",
-      "sha256": "0b16bb510852d72d39deefd97f935813d21283c2a8114f2dcd3ca0df647d67dd"
+      "sha256": "f76b8045993d3d28bbb2654ab5cd88c5cfb5b48f59a7e9090bccfcb24e8921f9"
     },
     {
       "path": "tools/architecture/views.mjs",
-      "sha256": "89cd3065a3aa6f4df983e17a1ffa9e12d461f96ed4996e8dea3667f88e3fa998"
+      "sha256": "bf885fabddb192cbe90dcb2902cd85060545eda30c719012805669d4e6b54c5f"
     },
     {
       "path": "tools/diagrams/models/c4-data.js",
-      "sha256": "0a5eb98805ff01feb2a4d569850da6230072597a9196da0073712647ea04726f"
+      "sha256": "060a0f190c8c385c4a55a0a8bbc7cc951784c1f81ee66da729fc9ba81b52eaca"
     },
     {
       "path": "docs/extensibilidad-proveedores-dispositivos.md",
@@ -72,7 +72,15 @@
     },
     {
       "path": "docs/decisions/device-agent.md",
-      "sha256": "a14eee4450efb259e69000d92b5b106009cc370a58e4aac22dba007883b6d74f"
+      "sha256": "53dc5b9424f0ca035ee341fc1b60b02ab7f662f39c07d930a5055623c6443305"
+    },
+    {
+      "path": "docs/decisions/job-processing.md",
+      "sha256": "1ff2e46f6ca0707f4a5dc9678db20f2140eabf6022574cd8d9b9f6f077d7f879"
+    },
+    {
+      "path": "docs/investigacion-mensajeria-pos.md",
+      "sha256": "7cf74bb1e061d1668da5ecf335ac1226c7bdc42a9b27502ba026f59c20b81ce3"
     }
   ]
 }
