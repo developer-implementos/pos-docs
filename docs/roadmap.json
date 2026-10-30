@@ -17,12 +17,13 @@
           "Acordar país, entidad legal, tienda, canal y operaciones del laboratorio. Chile y escritorio siguen como hipótesis inicial, sin habilitación productiva.",
           "Disponer de casos aprobados de apertura, venta en efectivo, impuestos, redondeo y cierre de consulta, con datos sintéticos y resultados esperados.",
           "Definir identidad de usuario y puesto, permisos mínimos de servidor y aislamiento entre países, entidades y sucursales; las cuentas mock no acreditan estos controles.",
-          "Identificar propietarios de datos y contratos públicos de ventas, caja, pagos, catálogo, precios y sincronización."
+          "Identificar propietarios de datos y contratos públicos de ventas, caja, pagos, catálogo, precios y sincronización.",
+          "Acordar esquema lógico, contratos HTTP y despliegue local reproducible antes de asignar tareas de implementación; las rutas y tablas de las fichas son propuestas revisables."
         ],
         "work": [
           {
             "id": "F01-01",
-            "title": "Identidad, ámbito y turno de laboratorio",
+            "title": "Identidad, permisos y apertura de turno de laboratorio",
             "apps": [
               "pos-desktop",
               "branch-api"
@@ -31,15 +32,14 @@
               "libs/client-shell",
               "libs/backend/administration",
               "libs/backend/cash",
-              "libs/shared/backend/http",
-              "libs/shared/backend/config"
+              "libs/shared/backend/http"
             ],
-            "deliverable": "Un operador identificado puede abrir y consultar el turno autorizado desde el cliente, con controles ejecutados en branch-api.",
+            "deliverable": "Un operador y puesto identificados abren un turno único en su ámbito; toda autorización y exclusión se comprueba en branch-api.",
             "tasks": [
-              "Implementar el mecanismo de identidad acordado para laboratorio y comprobar usuario, puesto, país, entidad y sucursal en cada comando.",
-              "Aplicar permisos y condiciones del turno en servidor; ocultar un botón no sustituye el rechazo de un comando no autorizado.",
-              "Devolver errores de negocio y autorización identificables para que la interfaz pueda explicar el rechazo sin crear movimientos.",
-              "Delimitar operador, puesto e instalación; probar el contrato de ámbito sin presentar identidades de laboratorio como federación corporativa."
+              "Implementar autenticación de laboratorio segregada del perfil corporativo, sesión caducable y cierre de sesión, sin credenciales embebidas en Angular.",
+              "Definir permisos por acción, objeto, entidad, sucursal y caja; comprobarlos antes de leer o modificar datos, incluso con acceso directo a la API.",
+              "Implementar apertura de turno con monto inicial autorizado, exclusión de caja ocupada y consulta de turno/operador; devolver conflictos sin efectos parciales.",
+              "Registrar decisiones de autorización y apertura con identidad y política, sin tokens ni datos personales en logs; impedir que fixtures de laboratorio arranquen como producción."
             ]
           },
           {
@@ -55,11 +55,12 @@
               "libs/backend/pricing",
               "libs/country-policies"
             ],
-            "deliverable": "Cotización explicable sobre un conjunto comercial versionado de prueba, con importes e impuestos contrastados contra casos acordados.",
+            "deliverable": "Una cotización conserva versión comercial y desglose verificable de importes, impuestos y redondeos del alcance inicial.",
             "tasks": [
-              "Cargar productos, condiciones y reglas sintéticas con versión identificada en PostgreSQL; el suministro comercial real se conecta en F03.",
-              "Implementar cálculo monetario, impuestos y redondeos del alcance elegido, conservando versión, reglas y resultado de la cotización.",
-              "Revalidar vigencia y permisos antes del pago; si corresponde recalcular, obtener la confirmación del importe revisado."
+              "Implementar tipos monetarios exactos y unidades/cantidades con precisión explícita; evitar floats binarios en persistencia y contratos financieros.",
+              "Evaluar lista por ámbito, cliente y cantidad, impuestos y redondeo del perfil versionado; entregar explicación por línea y total.",
+              "Cargar un conjunto sintético versionado mediante migración/fixture controlado y registrar la versión aplicada en cada cotización.",
+              "Revalidar versión, elegibilidad y vigencia antes de iniciar el pago; confirmar cualquier cambio de importe sin modificar intentos ya iniciados."
             ]
           },
           {
@@ -75,11 +76,12 @@
               "libs/backend/sync",
               "libs/backend/administration"
             ],
-            "deliverable": "Venta en efectivo persistida con su pago, movimiento de caja, auditoría y evento de salida en una única transacción local.",
+            "deliverable": "Una venta en efectivo confirma cabecera, líneas, pago, movimiento, auditoría y outbox en una única transacción PostgreSQL recuperable.",
             "tasks": [
-              "Crear migraciones y restricciones de identidad, ámbito y relaciones; cada contexto conserva la propiedad de sus tablas.",
-              "Coordinar cabecera, líneas, impuestos, pago, caja, auditoría y outbox con la misma conexión y transacción PostgreSQL.",
-              "Conservar identidad y resultado del comando para reintentos; rechazar la reutilización de la identidad con otro contenido."
+              "Implementar el caso de uso de confirmación sobre una conexión transaccional compartida a través de contratos públicos de los contextos.",
+              "Comprobar turno, permiso, versión de cesta/cotización e importe; persistir operación, pago efectivo, movimiento de caja, auditoría y outbox antes de responder éxito.",
+              "Persistir commandId, hash canónico y resultado; deduplicar concurrentemente y rechazar el mismo identificador con otro contenido.",
+              "Inyectar fallos en puntos de escritura y después del commit para verificar atomicidad y recuperación, sin mantener SQL abierto durante efectos externos."
             ]
           },
           {
@@ -96,11 +98,218 @@
               "libs/backend/reporting",
               "libs/shared/backend/observability"
             ],
-            "deliverable": "Una demostración reproducible que usa la API y la base reales para este recorrido y recupera el ticket de prueba después de reiniciar.",
+            "deliverable": "Una prueba de sistema usa API y PostgreSQL reales para abrir caja, vender y recuperar una operación sin depender del adaptador mock.",
             "tasks": [
-              "Reemplazar el adaptador mock del recorrido elegido y señalar los demás recorridos que continúan simulados.",
-              "Consultar por identidad el resultado después de perder la respuesta o reiniciar, sin generar una segunda venta.",
-              "Añadir correlación y diagnóstico sin datos sensibles; mantener la auditoría de negocio en la transacción, separada de los logs."
+              "Conectar los puertos del recorrido con branch-api y retirar el mock de ese flujo sin presentar otros recorridos simulados como reales.",
+              "Implementar estados de espera, rechazo, conflicto y resultado desconocido con consulta por commandId; conservar cesta y contexto al fallar.",
+              "Crear un entorno de pruebas repetible con migraciones y datos sintéticos, ejecutando cliente, API y PostgreSQL con versiones identificadas.",
+              "Verificar teclado, foco, feedback y reconexión; registrar correlación técnica y evidencia de persistencia sin PII."
+            ]
+          },
+          {
+            "id": "F01-05",
+            "title": "Gobierno de tareas, agentes, revisiones y aceptación",
+            "apps": [
+              "pos-desktop",
+              "pos-mobile",
+              "branch-api",
+              "branch-sync-worker",
+              "country-api",
+              "erp-worker",
+              "device-agent"
+            ],
+            "modules": [
+              "libs/shared/contracts",
+              "libs/shared/backend",
+              "libs/shared/testing",
+              "libs/client-shell"
+            ],
+            "deliverable": "El equipo coordina cambios mediante issues, PR y controles verificables, con instrucciones comunes para agentes y aceptación funcional separada del estado de GitHub.",
+            "tasks": [
+              "Publicar un backlog trazable por fase, app y módulo, con fichas técnicas, dependencias y códigos estables sin duplicar issues.",
+              "Configurar AGENTS.md, CLAUDE.md, CONTRIBUTING.md y plantillas para ramas aisladas, coordinación, revisiones y traspasos reproducibles entre máquinas.",
+              "Comprobar metadatos de PR contra issues reales y activar protección de main, revisiones, CODEOWNERS y checks de integración sin ejecutar texto ni código no confiables.",
+              "Validar dos sesiones coordinadas, PR parcial, rechazo de metadatos inválidos, publicación idempotente y aceptación documentada antes de actualizar el avance."
+            ]
+          },
+          {
+            "id": "F01-06",
+            "title": "Persistencia PostgreSQL, migraciones y entorno repetible",
+            "apps": [
+              "branch-api",
+              "country-api"
+            ],
+            "modules": [
+              "libs/shared/backend/config",
+              "libs/shared/backend/worker",
+              "libs/backend/administration"
+            ],
+            "deliverable": "Las bases de sucursal y país tienen propietarios, credenciales separadas, migraciones reproducibles y transacciones probadas antes de recibir negocio.",
+            "tasks": [
+              "Acordar driver/ORM mantenido mediante ADR y separar cuentas de migración y runtime, pools, timeouts y configuración validada por aplicación.",
+              "Crear esquemas y migraciones iniciales por contexto, versionado de contratos y mecanismo de transacción compartida de sucursal, sin acoplar repositorios privados.",
+              "Preparar despliegue local reproducible de PostgreSQL y datos sintéticos con secretos de ejemplo vacíos; documentar arranque, reset exclusivo de datos de prueba y puertos.",
+              "Implementar readiness con consultas inocuas a dependencias reales y pruebas de migración desde cero/versión anterior; prohibir auto-sync destructivo en producción.",
+              "Establecer expansión/contracción de esquema, locks acotados y recuperación de migración interrumpida; un down destructivo no es una estrategia de restauración."
+            ]
+          },
+          {
+            "id": "F01-07",
+            "title": "Ámbitos y configuración operativa versionada",
+            "apps": [
+              "branch-api",
+              "country-api",
+              "pos-desktop"
+            ],
+            "modules": [
+              "libs/backend/administration",
+              "libs/country-policies",
+              "libs/shared/contracts",
+              "libs/shared/backend/config"
+            ],
+            "deliverable": "País, entidad, sucursal, caja y puesto tienen identidad estable y una configuración efectiva validada que el servidor aplica a cada operación.",
+            "tasks": [
+              "Definir IDs y relaciones de país, entidad legal, sucursal, caja, instalación y canal, separando configuración de negocio de secretos de despliegue.",
+              "Resolver herencia corporativa, país, sucursal y caja con versión y procedencia; rechazar combinaciones incompatibles de moneda, documento, pago o dispositivo.",
+              "Proveer bootstrap de laboratorio con datos sintéticos y consulta autorizada de capacidades efectivas y motivos de restricción.",
+              "Registrar versión de configuración en operaciones; un cambio posterior no redirige pendientes ni altera historial."
+            ]
+          },
+          {
+            "id": "F01-08",
+            "title": "Clientes, datos fiscales y alta express autorizada",
+            "apps": [
+              "pos-desktop",
+              "branch-api"
+            ],
+            "modules": [
+              "libs/features",
+              "libs/backend/catalog",
+              "libs/backend/sales",
+              "libs/country-policies"
+            ],
+            "deliverable": "El operador busca clientes autorizados, identifica al receptor del documento y gestiona un alta express sin inventar autoridad sobre el maestro corporativo.",
+            "tasks": [
+              "Implementar búsqueda paginada por identificador/nombre y ficha mínima por ámbito, con genérico explícito y reglas de identificación por país.",
+              "Validar datos requeridos por tipo de documento y conservar snapshot del receptor en la venta, sin sobrescribir comprobantes históricos al editar el maestro.",
+              "Implementar solicitud idempotente de alta/actualización express cuando la política lo permita, mostrando pendiente, aprobado o conflicto de identidad.",
+              "Propagar al cálculo cambios de cliente, lista, elegibilidad y bloqueo; cuenta corriente y consumo de crédito permanecen en su contexto financiero.",
+              "Separar consulta local autorizada de refresco remoto: conservar cesta ante fallo, mostrar frescura y aplicar versiones/precedencia para que un lote atrasado no sobrescriba una actualización más reciente o pendiente."
+            ]
+          },
+          {
+            "id": "F01-09",
+            "title": "Borradores, captura de artículos y recuperación de cesta",
+            "apps": [
+              "pos-desktop",
+              "branch-api"
+            ],
+            "modules": [
+              "libs/features",
+              "libs/data-access",
+              "libs/backend/sales",
+              "libs/backend/catalog",
+              "libs/backend/pricing"
+            ],
+            "deliverable": "La cesta puede editarse, pausarse, retomarse o cancelarse con versión y permisos, sin duplicar ventas ni recuperar cobros como si fueran borradores.",
+            "tasks": [
+              "Implementar captura por SKU/código de barras, cantidades y unidades con resolución explícita de códigos ambiguos; mostrar líneas, restricciones e importes.",
+              "Persistir borradores y presupuestos locales con dueño, versión, vencimiento y estado; limitar recuperación y edición concurrentes mediante compare-and-set.",
+              "Pausar y retomar conserva referencias pero recotiza vigencias cuando corresponde; cancelar exige motivo y no cancela efectos de pago ya iniciados.",
+              "Separar borrador, presupuesto no fiscal y venta confirmada; una captura tardía no cambia la cesta congelada de un pago."
+            ]
+          },
+          {
+            "id": "F01-10",
+            "title": "Promociones, cupones y descuentos con autorización",
+            "apps": [
+              "pos-desktop",
+              "branch-api"
+            ],
+            "modules": [
+              "libs/features",
+              "libs/backend/pricing",
+              "libs/backend/administration",
+              "libs/country-policies"
+            ],
+            "deliverable": "El cálculo aplica reglas comerciales versionadas y explica promociones, límites y descuentos autorizados sin permitir rebajas arbitrarias desde el cliente.",
+            "tasks": [
+              "Definir prioridad, exclusión, acumulación y desempate de listas, escalas, packs, promociones y cupones; conservar reglas aplicadas y rechazadas.",
+              "Validar vigencia, ámbito, cliente, productos y límites de uso; negar descuentos manuales fuera de permiso o de la aprobación requerida.",
+              "Modelar cupones de uso limitado con autoridad de consumo explícita; sin reserva verificable durante aislamiento, bloquear la capacidad restringida.",
+              "Agregar vectores de prueba de precio mínimo, conflicto de campañas, cupón repetido, redondeo y reversión del cálculo al quitar una promoción."
+            ]
+          },
+          {
+            "id": "F01-11",
+            "title": "Consulta de catálogo, códigos, unidades y disponibilidad",
+            "apps": [
+              "pos-desktop",
+              "branch-api"
+            ],
+            "modules": [
+              "libs/features",
+              "libs/backend/catalog",
+              "libs/backend/pricing",
+              "libs/country-policies"
+            ],
+            "deliverable": "El cliente consulta un catálogo autorizado con códigos, unidades y disponibilidad informativa, sin convertir al POS en autoridad de inventario.",
+            "tasks": [
+              "Implementar búsqueda paginada por código, nombre, familia y marca con límites, orden estable y selección de productos vigentes.",
+              "Resolver múltiples códigos de barra y unidades/empaques con conversión explícita, bajas y referencias de impuestos/precios válidas.",
+              "Mostrar disponibilidad por bodega como consulta con origen y antigüedad; bloquear la interpretación de cero datos como stock cero.",
+              "Probar búsqueda con códigos duplicados, productos descontinuados y referencias faltantes; la venta persiste el snapshot utilizado."
+            ]
+          },
+          {
+            "id": "F01-12",
+            "title": "Contratos HTTP, errores y concurrencia de comandos",
+            "apps": [
+              "pos-desktop",
+              "branch-api",
+              "country-api"
+            ],
+            "modules": [
+              "libs/shared/contracts",
+              "libs/shared/kernel",
+              "libs/shared/backend/http",
+              "libs/shared/backend/config"
+            ],
+            "deliverable": "Los clientes y APIs comparten contratos versionados verificables, errores previsibles y reglas de idempotencia/concurrencia sin importar implementación privada.",
+            "tasks": [
+              "Definir OpenAPI y esquemas de comando/respuesta con operationId estables, importes exactos, fechas con zona, enums y campos de ámbito definidos.",
+              "Aplicar validación estricta de entrada, límites de tamaño/paginación, errores de negocio y validación de propiedad de recursos; no filtrar excepciones internas.",
+              "Definir idempotency key, canonicalización, hash, expectedVersion y consulta de resultado; probar contratos negativos y compatibilidad cliente/servidor.",
+              "Ubicar contratos y tipos puros en la estructura compartida acordada y verificar fronteras Nx/ESLint con pruebas negativas, sin trasladar Nest o SQL al cliente."
+            ]
+          },
+          {
+            "id": "F01-13",
+            "title": "Estructura compartida y fronteras verificables del monorepo",
+            "apps": [
+              "pos-desktop",
+              "pos-mobile",
+              "branch-api",
+              "branch-sync-worker",
+              "country-api",
+              "erp-worker"
+            ],
+            "modules": [
+              "libs/shared/contracts",
+              "libs/shared/kernel",
+              "libs/shared/frontend/ui",
+              "libs/shared/frontend/data-access",
+              "libs/shared/backend/http",
+              "libs/shared/backend/config",
+              "libs/shared/backend/worker"
+            ],
+            "deliverable": "La estructura compartida acordada organiza responsabilidades y puntos de entrada sin dependencias entre aplicaciones ni mezcla de frontend, dominio y servidor.",
+            "tasks": [
+              "Organizar las bibliotecas en libs/shared según responsabilidad y consumidores reales; no crear un proyecto Nx por cada carpeta ni extraer capas vacías.",
+              "Definir entradas públicas, aliases y tags de entorno/tipo/dominio con reglas Nx/ESLint; preservar aislamiento de apps y propiedad de cada contexto backend.",
+              "Incorporar pos-clients-e2e como proyecto de pruebas común y conservar suites que distingan UI browser de capacidades nativas; no contarlo como app operativa.",
+              "Actualizar imports y comandos públicos de forma compatible, verificar artefactos backend fuera del checkout y evitar que bundling arrastre Nest/SQL/secretos a Angular.",
+              "Actualizar AGENTS y evidencia de estructura en POS Docs con revisión identificada, sin afirmar que mover carpetas implementa negocio."
             ]
           }
         ],
@@ -134,6 +343,36 @@
             "id": "F01-V06",
             "scenario": "Se reinician cliente y API después de una venta confirmada.",
             "expected": "La consulta recupera importes, reglas, operador, turno y trazabilidad desde PostgreSQL; el documento sigue identificado como prueba."
+          },
+          {
+            "id": "F01-V07",
+            "scenario": "La base se migra desde cero y desde una versión anterior mientras otro migrador intenta el mismo cambio.",
+            "expected": "El esquema y checksum coinciden; la exclusión evita aplicar dos veces y el runtime rechaza una versión incompatible."
+          },
+          {
+            "id": "F01-V08",
+            "scenario": "Dos puestos editan el mismo borrador y otro intenta confirmar una versión/cotización anterior.",
+            "expected": "El conflicto es explícito; no se pierde la edición ni se cobra un importe obsoleto."
+          },
+          {
+            "id": "F01-V09",
+            "scenario": "El cliente cambia después de cotizar, un cupón se reutiliza y el catálogo contiene código de barras ambiguo.",
+            "expected": "Se recotiza, se aplica la autoridad de cupón y se resuelve la ambigüedad antes de admitir el pago; no se inventan valores."
+          },
+          {
+            "id": "F01-V10",
+            "scenario": "Una búsqueda o descarga intenta acceder a clientes, productos o configuración de otra entidad.",
+            "expected": "La autorización por objeto/ámbito impide exposición y mutación, con diagnóstico sin datos sensibles."
+          },
+          {
+            "id": "F01-V11",
+            "scenario": "PR sin issue real, código fuera del catálogo o cierre de un entregable parcial.",
+            "expected": "La política rechaza el cambio; una PR válida conserva trazabilidad y exige revisión ajena antes del merge."
+          },
+          {
+            "id": "F01-V12",
+            "scenario": "Dos sesiones retoman trabajo y se republica el inventario de issues.",
+            "expected": "Se conserva un responsable, una ficha y un código por entregable, sin duplicar issues ni sobrescribir notas; un cierre de GitHub no aumenta el porcentaje sin aceptación."
           }
         ],
         "parallel": [
@@ -208,7 +447,8 @@
           "Seleccionar una combinación de país, medio, proveedor, modalidad fiscal y dispositivo; la selección y sus capacidades requieren acuerdo, no están fijadas por este plan.",
           "Disponer de contratos, acceso autorizado a sandbox y hardware cuando corresponda, con responsables de pago, fiscalidad y soporte del dispositivo.",
           "Acordar consulta de resultado, referencias externas, tratamiento de incertidumbre y condiciones para autorizar una operación nueva.",
-          "Fijar el perfil por puesto: mismo PC Windows para cliente y agente, dispositivos locales asignados y sin habilitación compartida o móvil en esta entrega."
+          "Fijar el perfil por puesto: mismo PC Windows para cliente y agente, dispositivos locales asignados y sin habilitación compartida o móvil en esta entrega.",
+          "Definir pagos combinados, compensación, evidencia de medios manuales y autoridad de numeración; ningún medio se habilita sólo por existir en el legacy."
         ],
         "work": [
           {
@@ -216,24 +456,28 @@
             "title": "Intento de pago y adaptador inicial",
             "apps": [
               "pos-desktop",
-              "branch-api"
+              "branch-api",
+              "device-agent"
             ],
             "modules": [
               "libs/features",
               "libs/backend/payments",
               "libs/backend/sales",
-              "libs/backend/administration"
+              "libs/backend/administration",
+              "libs/backend/devices"
             ],
-            "deliverable": "Un pago ejecutado mediante el primer contrato homologable, con intención durable, importe autorizado y referencia estable.",
+            "deliverable": "El primer medio externo ejecuta un cobro con intención durable, destino fijo y consulta de resultado, sin reintentos financieros ciegos.",
             "tasks": [
-              "Persistir intención, identidad, importe, moneda y destino antes de invocar el efecto externo.",
-              "Implementar el adaptador con capacidades verificadas de envío y consulta; no mantener una transacción SQL abierta durante la espera.",
-              "Registrar el resultado y devolver estados independientes de pago y venta; preservar los intentos inciertos para consulta o conciliación."
+              "Homologar el contrato de envío, consulta y capacidades del primer proveedor; versionar mapeo de estados y errores mediante puerto/fachada/ACL donde corresponda.",
+              "Persistir intención, importe, moneda, cuenta comercial y ruta antes de invocar el efecto; cerrar la transacción SQL antes de la llamada.",
+              "Registrar intento y resultado con referencia externa; separar autorizado, rechazado, incierto, reversado y liquidado según evidencia real.",
+              "Integrar UX de cobro y consulta; una respuesta perdida preserva el intento y bloquea otro cargo hasta resolver la incertidumbre.",
+              "Si el proveedor requiere SDK local, ejecutar la capacidad homologada en device-agent y relacionar jobId con paymentIntentId; conservar autorización y estado financiero en branch-api."
             ]
           },
           {
             "id": "F02-02",
-            "title": "Documento y estado fiscal del alcance elegido",
+            "title": "Emisión y estado fiscal del primer alcance",
             "apps": [
               "pos-desktop",
               "branch-api"
@@ -244,16 +488,17 @@
               "libs/backend/sales",
               "libs/country-policies"
             ],
-            "deliverable": "Solicitud y consulta de documento fiscal con identidad, referencias y estados separados de la confirmación comercial.",
+            "deliverable": "El primer documento fiscal conserva identidad y estados separados de venta, transmisión, aceptación y rechazo, según régimen homologado.",
             "tasks": [
-              "Implementar el contrato de la modalidad fiscal elegida y conservar solicitudes, respuestas y referencias del emisor.",
-              "Distinguir emisión, transmisión, aceptación y rechazo según las capacidades y reglas validadas para el país.",
-              "Recuperar respuestas perdidas mediante consulta o resolución controlada; no crear otro documento sólo por recibir un timeout."
+              "Homologar proveedor/modalidad y perfil de país; traducir documentos, impuestos y estados sin tratar al regulador como API genérica de facturación.",
+              "Persistir solicitud y material fiscal requerido antes de enviar; fijar emisor, folio/identidad, versión de perfil y hash de contenido.",
+              "Implementar envío, consulta y manejo de rechazo con conservación de referencias; no emitir otro documento por un timeout.",
+              "Mostrar al operador estado y acción permitida, protegiendo XML/PDF y datos personales según autorización y retención acordadas."
             ]
           },
           {
             "id": "F02-03",
-            "title": "Agente por puesto y periféricos locales",
+            "title": "Host de periféricos por puesto y recuperación SQLite",
             "apps": [
               "pos-desktop",
               "branch-api",
@@ -265,18 +510,18 @@
               "libs/backend/payments",
               "libs/backend/fiscal"
             ],
-            "deliverable": "device-agent C#/.NET instalado en cada puesto Windows del alcance inicial, con periféricos locales asignados, autorización en branch-api y diario SQLite recuperable con la ventana POS cerrada.",
+            "deliverable": "device-agent C#/.NET se ejecuta independientemente de la ventana POS y conserva recepción, intentos y evidencia técnica de los periféricos del puesto.",
             "tasks": [
-              "Homologar la combinación inicial de puesto Windows, periférico USB/serie, driver/SDK, runtime, x86/x64 y sesión. Elegir una vía de impresión soportada; no trasladar System.Drawing.Printing a un servicio Windows sin resolver su incompatibilidad.",
-              "Instalar el agente en el mismo PC que pos-desktop, con identidad de puesto y dispositivo. Iniciar HTTPS LAN hacia branch-api para obtener trabajos y reportar evidencia; rechazar destinos de otros puestos y comandos sin autorización.",
-              "Guardar recepción e intentos en SQLite antes del acuse; deduplicar jobId y hash, conservar referencia de spooler y resultados pendientes de comunicar.",
-              "Serializar por dispositivo físico y capacidades excluyentes; MICR requiere espera asíncrona, timeout, cancelación y liberación del dispositivo.",
-              "Separar spooler de salida física, conservar incertidumbre tras cortes y exigir autorización/motivo para una nueva copia del mismo documento."
+              "Crear la app .NET Windows y tareas Nx con matriz runtime/SDK/x86-x64/cuenta/sesión; elegir host supervisado compatible con los drivers homologados.",
+              "Implementar SQLite privado con migraciones, deduplicación por jobId/hash, estados de intento y resultados pendientes de reportar; no almacenar ventas ni claves SQL.",
+              "Consumir el protocolo F02-09 con identidad propia y sólo dispositivos asignados; iniciar HTTPS LAN hacia branch-api sin depender de un relé Angular.",
+              "Serializar capacidades excluyentes por dispositivo físico, soportar cierre acotado, reinicio y actualización que preserven trabajo/identidad.",
+              "Distinguir enviado al spooler, efecto confirmado e incertidumbre; no repetir automáticamente una impresión tras caída de energía."
             ]
           },
           {
             "id": "F02-04",
-            "title": "Consulta y resolución de resultados inciertos",
+            "title": "Resolución visible de pagos, fiscalidad y dispositivos inciertos",
             "apps": [
               "pos-desktop",
               "branch-api",
@@ -290,11 +535,228 @@
               "libs/backend/reporting",
               "libs/shared/backend/observability"
             ],
-            "deliverable": "Vista operativa y procedimiento de recuperación para pagos, documentos e impresión pendientes o rechazados.",
+            "deliverable": "El operador puede consultar excepciones por efecto y solicitar sólo acciones de recuperación autorizadas con evidencia auditada.",
             "tasks": [
-              "Mostrar referencias, estados y última evidencia sin convertir un estado desconocido en éxito o rechazo definitivo.",
-              "Aplicar consultas, reintentos permitidos e intervención autorizada según el contrato de cada proveedor.",
-              "Correlacionar intentos y respuestas, filtrar datos sensibles y registrar las resoluciones auditables."
+              "Construir una vista por operación con estados independientes de venta, pago, fiscalidad e impresión, referencias y última evidencia.",
+              "Exponer consulta, reintento seguro, cancelación previa al efecto, reversa y reimpresión según las capacidades y estado concretos.",
+              "Exigir permiso, motivo y aprobación cuando corresponda; registrar resolución y evitar que un botón cambie manualmente un estado financiero sin evidencia.",
+              "Crear runbooks por resultado desconocido, rechazo, fallo conocido y pérdida de LAN; explicar qué no puede inferirse."
+            ]
+          },
+          {
+            "id": "F02-05",
+            "title": "Pagos combinados, asignación y vuelto",
+            "apps": [
+              "pos-desktop",
+              "branch-api"
+            ],
+            "modules": [
+              "libs/features",
+              "libs/backend/payments",
+              "libs/backend/sales",
+              "libs/backend/cash"
+            ],
+            "deliverable": "Una venta admite la combinación de medios aprobada y concilia asignaciones exactas, pendientes y vuelto sin confirmar importes insuficientes o duplicados.",
+            "tasks": [
+              "Modelar asignaciones de pago a una versión congelada de venta; aplicar reglas de elegibilidad por moneda/medio y límites.",
+              "Distinguir importe recibido, aplicado, vuelto y pendiente; el vuelto sólo utiliza los medios y políticas autorizados.",
+              "Coordinar resultado de cada intento externo y confirmación final sin transacción SQL abierta durante esperas; compensar cuando no se pueda completar.",
+              "Probar cancelación parcial, medio rechazado, respuestas tardías y reintentos desde varios puestos."
+            ]
+          },
+          {
+            "id": "F02-06",
+            "title": "Medios manuales, vouchers y verificación de transferencia",
+            "apps": [
+              "pos-desktop",
+              "branch-api"
+            ],
+            "modules": [
+              "libs/features",
+              "libs/backend/payments",
+              "libs/backend/administration",
+              "libs/backend/reporting"
+            ],
+            "deliverable": "Transferencias, vouchers y medios manuales conservan evidencia y estados de verificación que impiden tratar una declaración o captura como dinero confirmado.",
+            "tasks": [
+              "Definir por medio qué evidencia valida el pago, su autoridad y referencia única; distinguir declarado, pendiente de verificar, confirmado y rechazado.",
+              "Implementar registro idempotente de referencia, importe, moneda y cuenta receptora autorizada, con aprobación cuando la verificación sea manual.",
+              "Integrar consulta de verificación sólo con contratos autorizados; validar referencia, destino e importe y conservar incertidumbre ante fallos.",
+              "Detectar reutilización de voucher/transferencia entre ventas y proteger acceso/retención de comprobantes; no publicar archivos aportados sin controles."
+            ]
+          },
+          {
+            "id": "F02-07",
+            "title": "Perfiles de proveedores y capacidades con destino fijo",
+            "apps": [
+              "branch-api",
+              "country-api",
+              "pos-desktop",
+              "device-agent"
+            ],
+            "modules": [
+              "libs/backend/administration",
+              "libs/backend/payments",
+              "libs/backend/fiscal",
+              "libs/backend/devices",
+              "libs/country-policies"
+            ],
+            "deliverable": "Una configuración aprobada selecciona adaptadores y capacidades por ámbito y conserva el destino de toda operación iniciada.",
+            "tasks": [
+              "Inventariar proveedores/modelos/versiones y describir capacidades soportadas, habilitadas y disponibles con contratos públicos tipados.",
+              "Validar configuración por país, entidad, sucursal y caja; referenciar credenciales custodiadas fuera del cliente y del registro editorial.",
+              "Resolver y congelar destinationSnapshot al iniciar pago/documento/trabajo; la nueva configuración afecta únicamente operaciones nuevas.",
+              "Implementar pruebas de conformidad de adaptador y un simulador con fallos definidos para cada capacidad, sin respuestas exitosas ficticias."
+            ]
+          },
+          {
+            "id": "F02-08",
+            "title": "Identidad fiscal, folios y material de contingencia",
+            "apps": [
+              "branch-api",
+              "country-api"
+            ],
+            "modules": [
+              "libs/backend/fiscal",
+              "libs/backend/administration",
+              "libs/country-policies"
+            ],
+            "deliverable": "El primer perfil controla numeración, material fiscal, vigencia y consumo concurrente sin reutilizar identidades ni habilitar contingencias no autorizadas.",
+            "tasks": [
+              "Determinar quién asigna correlativos/folios en el régimen elegido y qué material puede custodiar localmente; registrar esa decisión.",
+              "Implementar reserva/consumo único con ámbito de emisor y documento, y almacenamiento protegido de material/certificados mediante referencias seguras.",
+              "Verificar disponibilidad, vencimiento y reloj antes del cobro; bloquear nuevas operaciones que no puedan documentarse dentro del perfil aprobado.",
+              "Registrar anulaciones de reserva y recuperación tras reinicio/restauración sin devolver folios utilizados al pool ni ampliar su vigencia."
+            ]
+          },
+          {
+            "id": "F02-09",
+            "title": "Contrato de trabajos de dispositivos y coordinación de sucursal",
+            "apps": [
+              "branch-api",
+              "device-agent",
+              "pos-desktop"
+            ],
+            "modules": [
+              "libs/shared/contracts",
+              "libs/backend/devices",
+              "libs/backend/administration"
+            ],
+            "deliverable": "branch-api admite trabajos de dispositivos autorizados y el host .NET intercambia comandos/resultados versionados sin acceso SQL ni rutas arbitrarias.",
+            "tasks": [
+              "Definir esquema de sobre y resultados compartido por TypeScript/.NET con fixtures positivos/negativos y límites de payload.",
+              "Implementar registro y asignación de dispositivos por puesto, solicitud/consulta de trabajo y canal HTTPS saliente del host con identidad de instalación.",
+              "Persistir trabajo, permiso y auditoría antes de admisión; comprobar vigencia, hash, capacidad, destino y exclusión al entregar y ejecutar.",
+              "Definir ACK de recepción durable separado de resultado; deduplicar reportes y bloquear reasignación mientras el dueño anterior pueda seguir ejecutando."
+            ]
+          },
+          {
+            "id": "F02-10",
+            "title": "Plantillas e impresión de documentos existentes",
+            "apps": [
+              "pos-desktop",
+              "branch-api",
+              "device-agent"
+            ],
+            "modules": [
+              "libs/features",
+              "libs/backend/devices",
+              "libs/backend/fiscal",
+              "libs/backend/reporting"
+            ],
+            "deliverable": "Recibos y etiquetas del alcance se renderizan con plantillas versionadas y se imprimen mediante adaptadores homologados sin volver a cobrar o emitir.",
+            "tasks": [
+              "Separar datos del documento, plantilla versionada y adaptador físico; congelar la representación requerida por el documento original.",
+              "Implementar el primer adaptador con vía soportada en el host elegido, declarando tamaño, corte, caracteres y capacidades del modelo.",
+              "Registrar referencia de spooler/evidencia, fallos de papel/desconexión y resultado desconocido; reimpresión es otro trabajo con autorización y motivo.",
+              "Probar documentos extensos, caracteres españoles, códigos y límites, sin construir comandos de dispositivo desde entrada no validada."
+            ]
+          },
+          {
+            "id": "F02-11",
+            "title": "Lectura MICR y verificación de cheques con Orsan",
+            "apps": [
+              "pos-desktop",
+              "branch-api",
+              "device-agent"
+            ],
+            "modules": [
+              "libs/features",
+              "libs/backend/devices",
+              "libs/backend/payments",
+              "libs/country-policies"
+            ],
+            "deliverable": "El perfil de cheque elegido captura datos con sesión acotada y verifica el instrumento mediante el contrato vigente de Orsan, conservando incertidumbre y privacidad.",
+            "tasks": [
+              "Homologar lector MICR, driver, formato y sesión de interacción; implementar timeout, cancelación y exclusión con impresión/endoso del mismo dispositivo.",
+              "Validar identificación del cheque y campos necesarios en servidor; minimizar datos retenidos y excluir contenido MICR de logs.",
+              "Implementar puerto de verificación y adaptador Orsan según contrato autorizado, con referencias estables, estados y límites; no reintroducir Instacheck.",
+              "Vincular resultado de verificación a instrumento/importe/destino y mostrar aprobación, rechazo o incertidumbre; verificación no equivale a cobro liquidado.",
+              "Implementar impresión de frente/endoso con plantilla y autorización específicas cuando esté en el modelo homologado; conservar trabajo, exclusión y evidencia de efecto físico."
+            ]
+          },
+          {
+            "id": "F02-12",
+            "title": "Consulta y entrega segura de documentos",
+            "apps": [
+              "pos-desktop",
+              "branch-api"
+            ],
+            "modules": [
+              "libs/features",
+              "libs/backend/reporting",
+              "libs/backend/fiscal",
+              "libs/backend/sales"
+            ],
+            "deliverable": "Los operadores autorizados encuentran comprobantes y sus representaciones con filtros, estados y trazabilidad, sin exponer documentos de otro ámbito.",
+            "tasks": [
+              "Implementar consulta paginada por fecha, cliente, folio, tipo y estado, con límites y permisos sobre cada documento.",
+              "Entregar representación PDF/HTML u original fiscal sólo desde referencias autorizadas; validar MIME, integridad y tamaño con almacenamiento protegido.",
+              "Separar descarga, copia, envío autorizado y reimpresión; si se habilita correo, validar destino y persistir solicitud sin confundir entrega con emisión fiscal.",
+              "Mostrar rechazo, documento pendiente, representación ausente y error recuperable; conservar vínculo a la venta original y a correcciones posteriores."
+            ]
+          },
+          {
+            "id": "F02-13",
+            "title": "Compensación y reversa de cobros no completados",
+            "apps": [
+              "branch-api",
+              "pos-desktop"
+            ],
+            "modules": [
+              "libs/backend/payments",
+              "libs/backend/sales",
+              "libs/backend/administration",
+              "libs/features"
+            ],
+            "deliverable": "Un cobro aprobado que no logra completar la venta tiene un procedimiento durable de recuperación o reversa sin duplicar cargo ni devolución.",
+            "tasks": [
+              "Modelar la compensación como operación independiente ligada al pago original, con importe máximo, destino fijo y autorización.",
+              "Resolver primero la incertidumbre del cargo; intentar reversa sólo según capacidades y ventana del proveedor.",
+              "Persistir intención y resultado de reversa, consultar después de respuesta perdida y bloquear compensaciones concurrentes incompatibles.",
+              "Recuperar la venta cuando sea válido o escalar una compensación no disponible; auditar decisión y mantener estados separados."
+            ]
+          },
+          {
+            "id": "F02-14",
+            "title": "Operación y cierre del terminal de pago",
+            "apps": [
+              "pos-desktop",
+              "branch-api",
+              "device-agent"
+            ],
+            "modules": [
+              "libs/features",
+              "libs/backend/payments",
+              "libs/backend/devices",
+              "libs/backend/administration"
+            ],
+            "deliverable": "Un operador autorizado consulta y mantiene el terminal homologado con operaciones auditadas, diferenciando cierre de terminal y cierre de caja.",
+            "tasks": [
+              "Inventariar capacidades administrativas del terminal: conexión, inicialización/carga de llaves, última transacción, totales y cierre; no simular soporte universal.",
+              "Exponer comandos explícitos autorizados con exclusión frente a un cobro en curso, destino fijo y límites del contrato proveedor.",
+              "Conservar solicitudes/resultados de mantenimiento y cierre, referencias de lote y totales, sin almacenar claves de pago o datos de tarjeta en el POS.",
+              "Recuperar respuesta perdida antes de repetir cierre o inicialización; vincular comprobantes al resultado original y mostrar impacto sobre disponibilidad."
             ]
           }
         ],
@@ -338,6 +800,36 @@
             "id": "F02-V08",
             "scenario": "En el mismo puesto coinciden impresión y lectura MICR, se cancela la lectura y se cierra pos-desktop; otra caja intenta usar ese dispositivo.",
             "expected": "El agente respeta exclusión y timeout, libera recursos y conserva los trabajos autorizados aunque cierre la ventana. La solicitud de otra caja se rechaza: F02 sólo habilita el destino asignado al puesto."
+          },
+          {
+            "id": "F02-V09",
+            "scenario": "Un pago combinado tiene un componente aprobado y otro incierto; el operador intenta cubrir de nuevo el saldo.",
+            "expected": "El plan conserva asignaciones y congela el importe; se consulta/compensa según evidencia antes de un nuevo efecto."
+          },
+          {
+            "id": "F02-V10",
+            "scenario": "Se reutiliza una transferencia/voucher, se cambia la cuenta receptora o se presenta evidencia no verificable.",
+            "expected": "No se duplica la aplicación; destino/importe se verifican y lo incierto no se declara pagado."
+          },
+          {
+            "id": "F02-V11",
+            "scenario": "Dos emisores concurrentes solicitan numeración y luego se restaura una copia con un folio ya utilizado.",
+            "expected": "La unicidad por emisor/tipo/número y el procedimiento de recuperación impiden reutilización; no se emite con material vencido."
+          },
+          {
+            "id": "F02-V12",
+            "scenario": "Se actualiza el perfil de proveedor mientras existen un pago y una emisión pendientes.",
+            "expected": "Consultas y compensaciones conservan el destino original; la configuración nueva sólo rige para operaciones nuevas."
+          },
+          {
+            "id": "F02-V13",
+            "scenario": "Un pago se aprueba pero falla la confirmación local y la respuesta de la reversa también se pierde.",
+            "expected": "Se recupera la venta o la compensación identificada; no se cobra ni devuelve dos veces y queda incertidumbre visible si no hay evidencia suficiente."
+          },
+          {
+            "id": "F02-V14",
+            "scenario": "Una solicitud de dispositivo tiene versión desconocida, URL arbitraria o datos de otro puesto.",
+            "expected": "Los contratos TypeScript/.NET y la autorización rechazan el trabajo antes de ejecutarlo; no se filtran datos MICR en logs."
           }
         ],
         "parallel": [
@@ -416,12 +908,13 @@
           "Confirmar autoridad y contrato de maestros: cobertura, versiones, vigencia, bajas, deltas y punto de corte consistente de las cargas.",
           "Acordar primer ERP, red autorizada, autenticación y contratos de envío y consulta; asignar responsables de unicidad y recuperación en el destino.",
           "Definir retención de eventos, límites de entrega y objetivos de drenaje con una carga representativa; no asignar cifras de servicio sin aprobación.",
-          "Asignar responsables, capacidad, persistencia, respaldo y recuperación de los Redis dedicados a BullMQ en país y en la red ERP; confirmar conectividad local y credenciales separadas de la caché."
+          "Asignar responsables, capacidad, persistencia, respaldo y recuperación de los Redis dedicados a BullMQ en país y en la red ERP; confirmar conectividad local y credenciales separadas de la caché.",
+          "Homologar identidad de workloads/operadores, grants de continuidad y matriz de versiones; aprobar autoridad, corte y retención por cada maestro."
         ],
         "work": [
           {
             "id": "F03-01",
-            "title": "Entrega de operaciones y recepción durable",
+            "title": "Entrega de operaciones y recepción durable de país",
             "apps": [
               "branch-api",
               "branch-sync-worker",
@@ -433,16 +926,17 @@
               "libs/backend/administration",
               "libs/shared/backend/worker"
             ],
-            "deliverable": "Un evento confirmado en sucursal llega a país con identidad estable y ACK posterior al commit de inbox, efecto local y siguiente outbox.",
+            "deliverable": "La outbox de sucursal se entrega por HTTPS con ACK posterior al commit de inbox, efecto local y siguiente trabajo durable de país.",
             "tasks": [
-              "Implementar lotes HTTPS autenticados, ámbitos, versiones de contrato, límites y reintentos sobre outbox confirmada.",
-              "Deduplicar por identidad y contenido en país; confirmar inbox, proyección operativa pactada y trabajo posterior en una transacción antes del acuse.",
-              "Mantener recepción, aplicación y resultado ERP como estados distintos; conservar eventos acusados durante la ventana de recuperación acordada."
+              "Implementar selección y envío acotados de eventos confirmados con identidad estable, versión, ámbito y hash.",
+              "Autenticar instalación y validar lote; deduplicar en país y confirmar inbox, proyección exigida y outbox posterior en una transacción.",
+              "Distinguir recepción, aplicación y resultado ERP; conservar origen durante la ventana de replay/restauración y no purgar sólo por recibir ACK.",
+              "Aplicar reintentos con backoff, clasificación de errores, cuarentena y control de orden por agregado sin detener innecesariamente otros ámbitos."
             ]
           },
           {
             "id": "F03-02",
-            "title": "Publicación y espejo comercial de sucursal",
+            "title": "Publicación comercial y calendario durable de país",
             "apps": [
               "erp-worker",
               "country-api",
@@ -456,19 +950,17 @@
               "libs/backend/sync",
               "libs/country-policies"
             ],
-            "deliverable": "Versiones comerciales completas que pueden distribuirse por deltas, carga programada o recuperación manual y activarse atómicamente en sucursal.",
+            "deliverable": "country-api coordina publicaciones comerciales inmutables y verificadas por ámbito, activadas por eventos, calendario o solicitud manual controlada.",
             "tasks": [
-              "Implementar MasterDataSourcePort en erp-worker para extracción y preparación desde un origen autorizado; country-api conserva autoridad de versiones y publicación, sin construir cargas pesadas dentro de una petición.",
-              "Persistir porciones, progreso recibido y candidatas aisladas; comprobar cobertura, referencias, bajas, versión, checksum y punto de corte.",
-              "Aplicar el mismo validador a deltas y cargas completas; confirmar inbox aplicada, puntero activo y cursor aplicado en un commit corto.",
-              "Retener versiones referenciadas y revalidar vigencia antes del pago; la publicación no modifica un intento de pago iniciado o incierto.",
-              "Separar identidad, claims y concurrencia de publicación respecto al trabajo financiero; aplicar fencing, paquetes inmutables y recuperación por publicationId.",
-              "Programar disparadores con BullMQ en country-api y su Redis de trabajos: cada intervalo reclama una solicitud única en PostgreSQL; la extracción pesada se delega al erp-worker por HTTPS."
+              "Persistir calendario, intervalo y solicitud de publicación; un trigger BullMQ reclama una solicitud única en PostgreSQL antes de delegar preparación al ERP.",
+              "Recibir candidata preparada con manifest, cobertura y corte consistente; validar referencias, bajas, integridad, vigencia y permisos antes de publicar.",
+              "Aplicar leases/fencing separados para preparación comercial; sólo la finalización vigente puede publicar y un worker de maestros no ejecuta finanzas.",
+              "Publicar manifest inmutable y porciones recuperables con contratos de descarga; fijar retención de versiones referenciadas y rechazo de candidatas incompletas."
             ]
           },
           {
             "id": "F03-03",
-            "title": "Trabajo ERP y resultado independiente",
+            "title": "Trabajo ERP, ACL y primer adaptador con resultado verificable",
             "apps": [
               "country-api",
               "erp-worker"
@@ -479,18 +971,17 @@
               "libs/backend/administration",
               "libs/shared/backend/worker"
             ],
-            "deliverable": "Una operación aceptada por país se integra con el primer ERP y conserva destino, intento, referencias y resultado verificable.",
+            "deliverable": "erp-worker integra una operación con el primer ERP desde su red autorizada y conserva identidad, destino, lease y resultado verificable en país.",
             "tasks": [
-              "Exponer trabajo y resultados mediante contratos públicos del contexto erp en country-api, con persistencia PostgreSQL y transporte identificado por sync.",
-              "Ejecutar erp-worker en la red autorizada del ERP: reclama trabajo y reporta resultados mediante HTTPS saliente, sin SQL remoto a la base de país.",
-              "Admitir y ejecutar tareas con BullMQ y Redis de trabajos en la red ERP; vincular jobId y workId; reclamar lease al iniciar el consumidor con capacidad disponible, renovar durante la ejecución, comprobar fencing y reportar resultados por HTTPS. Redis no se expone entre redes.",
-              "Implementar fachada, ACL y adaptador dentro del worker, con destino y versión fijos, límites de concurrencia y asignación temporal de trabajo mediante lease.",
-              "Consultar o conciliar resultados inciertos según capacidades homologadas; expirar un lease no demuestra que una llamada externa haya terminado."
+              "Definir facade/ACL/adapter y matriz de mapeos de cliente, producto, impuestos, pago, documento y estado; no copiar modelos ERP a los contratos POS.",
+              "Persistir trabajo en PostgreSQL de país y admitir referencias en BullMQ local a la red ERP; obtener claim por HTTPS al comenzar el consumidor con capacidad.",
+              "Aplicar identidad estable en destino, lease/fencing, renovación y límite de concurrencia; persistir intento antes del efecto y reportar resultado por HTTPS.",
+              "Consultar/conciliar ante resultado desconocido; si el destino no ofrece garantías suficientes, mantener bloqueo explícito del alcance."
             ]
           },
           {
             "id": "F03-04",
-            "title": "Operación del backlog y capacidad de lectura",
+            "title": "Backlog observable, admisión y caché de lectura evaluada",
             "apps": [
               "branch-sync-worker",
               "country-api",
@@ -504,12 +995,12 @@
               "libs/features",
               "libs/shared/backend/observability"
             ],
-            "deliverable": "Pendientes y colas BullMQ observables, con admisión y drenaje controlados, recuperación probada y caché de lectura sólo si se justifica.",
+            "deliverable": "El equipo observa pendientes y drena colas sin saturar destinos; decide y prueba por separado si una caché de lectura aporta valor medido.",
             "tasks": [
-              "Exponer progreso y excepciones por flujo, con edad de pendientes, intentos y referencias para conciliación; una sonda saludable no equivale a backlog resuelto.",
-              "Limitar lotes, concurrencia y reintentos para proteger destinos y atender ventas nuevas mientras se recupera el atraso.",
-              "Evaluar únicamente la caché Redis de lecturas de country-api según mediciones: autorización previa, claves por ámbito y versión, TTL y fallback limitado a PostgreSQL. Esta caché se despliega separada de los Redis obligatorios de trabajos.",
-              "Configurar los dos Redis de trabajos con persistencia, respaldo, capacidad y noeviction. Separar colas y presupuestos de maestros y operaciones financieras; alertar por edad de pendientes, fallos de admisión, bloqueos y reintentos agotados."
+              "Exponer edad de pendientes, throughput, reintentos, saturación y resultados inciertos por flujo/ámbito, sin datos sensibles ni cardinalidad ilimitada.",
+              "Configurar lotes, concurrencia, backoff, presupuestos separados de maestros/finanzas y pausa de admisión según capacidad; preservar atención a operación nueva.",
+              "Operar los Redis obligatorios de trabajos con persistencia, noeviction, respaldo y alertas; país y red ERP tienen instancias/credenciales separadas.",
+              "Medir consultas de país y registrar decisión explícita sobre caché opcional; si se adopta, aislarla de jobs con claves por ámbito/versión, TTL, autorización previa y fallback acotado."
             ]
           },
           {
@@ -525,13 +1016,173 @@
               "libs/shared/backend/worker",
               "libs/shared/backend/observability"
             ],
-            "deliverable": "Colas reconstruibles desde trabajo y resultados durables en PostgreSQL, sin duplicar solicitudes ni efectos al reiniciar procesos o restaurar Redis.",
+            "deliverable": "Los trabajos BullMQ se reconstruyen desde PostgreSQL y contratos de país tras interrupciones o pérdida de Redis sin duplicar solicitudes ni efectos inciertos.",
             "tasks": [
-              "Implementar el relay entre el commit PostgreSQL y la admisión en BullMQ con IDs estables, relectura del estado y reconciliación periódica. No asumir atomicidad entre SQL y Redis.",
-              "En país, recuperar intervalos pendientes desde el calendario durable y crear solicitudes idempotentes; Redis contiene disparadores y no es la autoridad del calendario o de las publicaciones.",
-              "En ERP, reconstruir tareas a partir de referencias autorizadas y resultados persistidos por country-api; al iniciar el consumidor, obtener el claim por HTTPS y comprobar estado y fencing. No reservar un lease durante una espera larga en cola.",
-              "Definir intentos, backoff, límites y escalamiento por tipo de tarea; un job stalled, un timeout o una restauración no habilita repetir un efecto externo incierto.",
-              "Documentar y probar caída, restauración, saturación sin expulsión de claves y cambio compatible de versión de BullMQ/Redis. La sucursal conserva PostgreSQL y HTTPS, sin añadir Redis local."
+              "Implementar relay posterior al commit con jobIds estables, relectura de estado y reconciliación periódica; no asumir atomicidad SQL/Redis.",
+              "Recuperar intervalos y solicitudes desde calendario durable; en ERP reconstruir referencias autorizadas por HTTPS y reclamar sólo al iniciar ejecución.",
+              "Definir intentos, backoff, stalled, retención y escalamiento por tipo; diferenciar fallo conocido previo al efecto de resultado incierto.",
+              "Ensayar caída, restauración, pérdida total/saturación Redis y actualización compatible de BullMQ/Redis, preservando estados durables y prioridades."
+            ]
+          },
+          {
+            "id": "F03-06",
+            "title": "Identidades workload, inscripción y rotación de confianza",
+            "apps": [
+              "branch-api",
+              "branch-sync-worker",
+              "country-api",
+              "erp-worker",
+              "device-agent"
+            ],
+            "modules": [
+              "libs/backend/administration",
+              "libs/shared/backend/http",
+              "libs/shared/backend/config",
+              "libs/shared/contracts"
+            ],
+            "deliverable": "Cada instalación y workload se autentica con su propia identidad, ámbito y capacidades; alta, rotación, revocación y restore no clonan autoridad.",
+            "tasks": [
+              "Implementar registro de instalaciones/workloads con desafío de uso único y prueba de posesión, sin autoasignación de sucursal o capacidad.",
+              "Homologar mTLS y tokens vinculados a certificado según ADR-16, incluyendo terminación TLS/proxy confiable y eliminación de cabeceras aportadas por el cliente.",
+              "Separar permisos de sync, maestros, ejecución ERP y dispositivos; cada endpoint valida identidad, audiencia, ámbito, capacidad y época.",
+              "Implementar rotación con solapamiento acotado, revocación y nueva época tras recuperación; conservar la trazabilidad de pendientes con identidad nueva autorizada."
+            ]
+          },
+          {
+            "id": "F03-07",
+            "title": "Identidad corporativa y autorizaciones de continuidad",
+            "apps": [
+              "pos-desktop",
+              "branch-api",
+              "country-api"
+            ],
+            "modules": [
+              "libs/client-shell",
+              "libs/backend/administration",
+              "libs/country-policies",
+              "libs/shared/contracts"
+            ],
+            "deliverable": "El operador usa identidad corporativa homologada y la sucursal aplica autorizaciones de continuidad firmadas y acotadas durante cortes de WAN.",
+            "tasks": [
+              "Integrar OIDC/OAuth Authorization Code + PKCE con navegador externo del host y almacén nativo; homologar DPoP o decisión de seguridad equivalente sin degradación silenciosa.",
+              "Mapear identidad corporativa a asignaciones/permisos POS y separar autenticación de autorización por acción/objeto/ámbito.",
+              "Emitir grants de continuidad desde country-api con usuario, puesto, instalación, política, límites y vencimiento; distribuir claves públicas confiables.",
+              "Implementar desbloqueo/presencia local homologado, revocaciones conocidas y reconexión; negar alta, elevación o renovación no autorizadas durante aislamiento."
+            ]
+          },
+          {
+            "id": "F03-08",
+            "title": "Admisión de operaciones durante caída de WAN",
+            "apps": [
+              "pos-desktop",
+              "branch-api",
+              "branch-sync-worker"
+            ],
+            "modules": [
+              "libs/features",
+              "libs/backend/administration",
+              "libs/backend/pricing",
+              "libs/backend/payments",
+              "libs/backend/fiscal",
+              "libs/country-policies"
+            ],
+            "deliverable": "Antes de admitir cada operación, branch-api verifica que datos, permisos, reloj, material fiscal y medio permiten ejecutarla bajo el perfil de continuidad vigente.",
+            "tasks": [
+              "Construir matriz de capacidades por operación/país y dependencia: WAN, LAN, escritor, ERP, pago, fiscalidad y periférico.",
+              "Evaluar grant, política, precio vigente, material fiscal, capacidad de persistencia y reloj confiable en servidor antes de comprometer dinero.",
+              "Mostrar motivos específicos de bloqueo y pendientes; separar venta local permitida de integración ERP diferida y pago externo no disponible.",
+              "Restablecer admisión al reconectar después de validar autoridad, sin renovar automáticamente versiones vencidas ni crear autoridad local adicional."
+            ]
+          },
+          {
+            "id": "F03-09",
+            "title": "Extracción y preparación consistente de maestros",
+            "apps": [
+              "erp-worker",
+              "country-api"
+            ],
+            "modules": [
+              "libs/backend/erp",
+              "libs/backend/catalog",
+              "libs/backend/pricing",
+              "libs/backend/sync"
+            ],
+            "deliverable": "erp-worker prepara catálogo, clientes y precios desde sus fuentes autorizadas con un punto de corte consistente y manifiesto verificable.",
+            "tasks": [
+              "Inventariar autoridad por maestro y fuente, incluidos precios externos al ERP; definir interfaces de snapshot/delta, bajas y consistencia.",
+              "Implementar MasterDataSourcePort y adaptadores con paginación estable, checkpoint y permisos mínimos en red autorizada.",
+              "Construir paquetes inmutables con corte, versión, cobertura, conteos y hashes; mantener maestras financieras separadas de datos consultivos.",
+              "Reanudar extracción interrumpida sin combinar cortes distintos; detectar huecos/bajas y generar carga completa cuando el origen no garantiza deltas suficientes."
+            ]
+          },
+          {
+            "id": "F03-10",
+            "title": "Staging, validación y activación atómica de espejos",
+            "apps": [
+              "branch-sync-worker",
+              "branch-api"
+            ],
+            "modules": [
+              "libs/backend/sync",
+              "libs/backend/catalog",
+              "libs/backend/pricing",
+              "libs/country-policies"
+            ],
+            "deliverable": "La sucursal descarga y valida candidatas sin alterar el conjunto activo; sólo cambia versión, inbox y cursor aplicado en un commit completo.",
+            "tasks": [
+              "Descargar manifests/porciones autenticadas con límites y reanudación; separar recibido, validado y aplicado.",
+              "Guardar staging aislado y validar hashes, secuencia, base, cobertura, referencias, bajas y vigencias con la misma regla para delta y carga completa.",
+              "Activar el conjunto completo mediante puntero versionado y commit corto con inbox aplicada y cursor aplicado; no hacer updates parciales sobre tablas activas.",
+              "Retener versiones usadas por operaciones y limpiar candidatas/versiones según referencias y política; una limpieza no elimina la evidencia de una venta."
+            ]
+          },
+          {
+            "id": "F03-11",
+            "title": "Evolución de contratos y compatibilidad entre componentes",
+            "apps": [
+              "pos-desktop",
+              "branch-api",
+              "branch-sync-worker",
+              "country-api",
+              "erp-worker",
+              "device-agent"
+            ],
+            "modules": [
+              "libs/shared/contracts",
+              "libs/backend/sync",
+              "libs/backend/erp",
+              "libs/backend/devices"
+            ],
+            "deliverable": "Las versiones de cliente, sucursal, país, ERP y dispositivo pueden coexistir dentro de una matriz declarada sin interpretar incorrectamente mensajes persistidos.",
+            "tasks": [
+              "Definir contrato/version de eventos, jobs, publicaciones y resultados con reglas aditivas, campos desconocidos, enums y breaking changes.",
+              "Crear pruebas proveedor/consumidor y fixtures de versiones admitidas, incluyendo TypeScript/.NET y replay de mensajes persistidos antiguos.",
+              "Implementar handshake de capacidades y rechazo/cuarentena de versiones no soportadas antes del efecto.",
+              "Acordar expansión/contracción, retención de decodificadores y orden de despliegue; no purgar versiones mientras existan pendientes que las necesiten."
+            ]
+          },
+          {
+            "id": "F03-12",
+            "title": "Conciliación de entrega, replay y resultados ERP",
+            "apps": [
+              "pos-desktop",
+              "branch-sync-worker",
+              "country-api",
+              "erp-worker"
+            ],
+            "modules": [
+              "libs/features",
+              "libs/backend/reporting",
+              "libs/backend/sync",
+              "libs/backend/erp",
+              "libs/backend/administration"
+            ],
+            "deliverable": "Una operación puede seguirse desde la sucursal hasta país y ERP; las diferencias se detectan y recuperan con acciones acotadas y evidencia durable.",
+            "tasks": [
+              "Definir reconciliación por IDs, rangos/cursores y totales de control entre origen, recepción, trabajo y resultado, sin confundir ACK con finalización.",
+              "Implementar diagnóstico de faltantes, duplicados, rechazados e inciertos con responsable y próxima acción, preservando separación de ámbitos.",
+              "Implementar replay autorizado desde origen/archivo retenido con el mismo ID y contrato; consultar efectos externos antes de crear trabajo de recuperación.",
+              "Ensayar restauración de país anterior al ACK, interrupción de red y discrepancia de resultado con informe de conciliación y límites de recuperación."
             ]
           }
         ],
@@ -585,6 +1236,31 @@
             "id": "F03-V10",
             "scenario": "Cae o se restaura cada Redis de trabajos, o su capacidad se agota con noeviction, mientras hay maestros y operaciones financieras pendientes.",
             "expected": "La admisión se pausa o rechaza de forma observable; no se acusa trabajo no persistido. Se reconstruye desde PostgreSQL por los contratos autorizados, se conservan límites separados y se concilian efectos inciertos antes de reanudarlos."
+          },
+          {
+            "id": "F03-V11",
+            "scenario": "Se rota o revoca la credencial de un workload y se intenta reutilizarla desde otra instalación o detrás de un proxy no confiable.",
+            "expected": "La API comprueba vínculo, audiencia, capacidades y época; rechaza credenciales retiradas y cabeceras de identidad no confiables."
+          },
+          {
+            "id": "F03-V12",
+            "scenario": "La WAN cae y el grant vence, el reloj retrocede o expira el material fiscal mientras el servidor sigue disponible.",
+            "expected": "Se bloquea nueva admisión dependiente; no se alarga vigencia ni se crea otra autoridad local. Al reconectar se actualiza confianza antes de renovar."
+          },
+          {
+            "id": "F03-V13",
+            "scenario": "El origen comercial cambia entre páginas de extracción y una carga se reanuda con otro punto de corte.",
+            "expected": "La candidata no se publica mezclada; se reanuda bajo el mismo corte o se reconstruye una candidata completa."
+          },
+          {
+            "id": "F03-V14",
+            "scenario": "Se despliega un consumidor nuevo con mensajes antiguos pendientes y luego llega una versión desconocida.",
+            "expected": "Los contratos admitidos se procesan con semántica comprobada; la versión no soportada se conserva en cuarentena antes de cualquier efecto."
+          },
+          {
+            "id": "F03-V15",
+            "scenario": "La conciliación compara sucursal, recepción país y ERP con un faltante, un resultado incierto y un rango fuera de retención.",
+            "expected": "Cada diferencia conserva ID y acción autorizada; no se declara conciliación total ni se crean nuevas ventas para ocultar el faltante."
           }
         ],
         "parallel": [
@@ -664,13 +1340,14 @@
       "id": "phase-04",
       "number": 4,
       "title": "Jornada de tienda",
-      "summary": "Devolver, cobrar deuda, cerrar y conciliar la jornada priorizada.",
+      "summary": "Completar caja, crédito, devoluciones, cobranzas, administración, reportes y conciliación con contratos y permisos comprobados.",
       "delivery": {
         "entry": [
           "Aceptar F03 para el alcance que se conciliará y disponer de estados separados de venta, pago, documento y ERP.",
-          "Acordar los recorridos de devolución, cobranza, anticipo, custodia y cierre exigidos para el piloto, incluidos sus límites.",
+          "Acordar los recorridos de devolución, crédito, cobranza, anticipo, custodia y cierre exigidos para el piloto, incluidos sus límites.",
           "Definir la autoridad de saldos y reservas, referencias originales, aprobaciones y tratamiento de operaciones concurrentes.",
-          "Acordar qué operaciones sensibles requieren conexión, autorización exclusiva o bloqueo durante una desconexión."
+          "Acordar qué operaciones sensibles requieren conexión, autorización exclusiva o bloqueo durante una desconexión.",
+          "Inventariar funciones y consumidores operativos del legacy; seleccionar explícitamente reportes, administración, órdenes externas y conciliación de depósitos que se requieren antes del piloto."
         ],
         "work": [
           {
@@ -716,7 +1393,8 @@
             "tasks": [
               "Implementar reserva, consumo y liberación mediante el propietario acordado del saldo, con identidad de operación y transiciones condicionales.",
               "Vincular cobro, deuda, anticipo y movimiento de caja sin tratar una consulta de saldo como permiso para consumirlo.",
-              "Aplicar las restricciones offline: capacidad exclusiva previamente asignada o conexión/bloqueo según la política aprobada."
+              "Aplicar las restricciones offline: capacidad exclusiva previamente asignada o conexión/bloqueo según la política aprobada.",
+              "Implementar vuelto como anticipo solo con consentimiento explícito y cliente identificado; registrar localmente obligación, movimiento de caja y outbox en una transacción y conciliar reconocimiento externo antes de habilitar el saldo."
             ]
           },
           {
@@ -733,11 +1411,13 @@
               "libs/backend/reporting",
               "libs/backend/devices"
             ],
-            "deliverable": "Una jornada del alcance priorizado termina con movimientos, conteos, entregas y diferencias explicables y trazables.",
+            "deliverable": "Jornada con ingresos, retiros, arqueos, custodia y depósito trazables; cierre parcial, traspaso y cierre final sujetos a reglas y corte transaccional aprobados.",
             "tasks": [
-              "Implementar ingresos, retiros, arqueo y custodia requeridos, preservando responsables, motivos y referencias.",
-              "Calcular esperado y declarado según los movimientos autorizados; registrar diferencias y aplicar la política acordada de cierre.",
-              "Emitir consultas y representaciones del cierre sin modificar operaciones de origen ni confundir impresión con aceptación fiscal."
+              "Implementar ingresos, retiros, conteo por denominación, entregas a custodia y confirmación de depósito con responsables, motivos y referencias.",
+              "Definir e implementar cierre parcial y traspaso de turno cuando el alcance los autorice; registrar quién conserva responsabilidad del efectivo y bloquear cambios incompatibles.",
+              "Fijar corte transaccional y calcular esperado/declarado desde movimientos; impedir ventas o doble cierre después del corte y someter diferencias a la política de aprobación.",
+              "Persistir cierre, detalle e intención de integración atómicamente; consultas, impresión y exportación no alteran operaciones de origen.",
+              "Conciliar vuelto entregado y convertido en anticipo con consentimiento y referencia de obligación; incluir el efectivo retenido y los reconocimientos externos pendientes sin duplicar ingresos."
             ]
           },
           {
@@ -761,6 +1441,172 @@
               "Ampliar los permisos de servidor por operación, importe y ámbito conforme a la matriz acordada; registrar actor y aprobación.",
               "Construir consultas de conciliación que muestren cobertura, referencias y estado de cada resultado sin asumir equivalencia entre procesos.",
               "Definir el tratamiento autorizado de pendientes al cerrar y asignar responsables por tipo de excepción."
+            ]
+          },
+          {
+            "id": "F04-05",
+            "title": "Reportes operativos, consultas y exportaciones",
+            "apps": [
+              "pos-desktop",
+              "branch-api",
+              "country-api"
+            ],
+            "modules": [
+              "libs/features",
+              "libs/backend/reporting",
+              "libs/backend/administration"
+            ],
+            "deliverable": "Reportes de ventas, medios de pago, cierres, cobranzas y devoluciones consultables y exportables con permisos, corte y frescura visibles.",
+            "tasks": [
+              "Acordar definición de cada KPI y total por moneda, fecha comercial, sucursal, operador y estado; separar aceptado, pendiente y excluido.",
+              "Construir proyecciones reconstruibles y paginadas mediante contratos de lectura; impedir que reportes se vuelvan autoridad de operaciones.",
+              "Implementar filtros, exportaciones acotadas y cancelables con identidad, auditoría y caducidad; neutralizar fórmulas en CSV/hojas de cálculo.",
+              "Acordar contrato de salida analítica y responsables del consumidor; inventariar QLIKTail sin atribuirle una interfaz aún no recibida."
+            ]
+          },
+          {
+            "id": "F04-06",
+            "title": "Administración de usuarios, cajas y configuración operativa",
+            "apps": [
+              "pos-desktop",
+              "branch-api",
+              "country-api"
+            ],
+            "modules": [
+              "libs/features",
+              "libs/backend/administration",
+              "libs/country-policies"
+            ],
+            "deliverable": "Administración real de asignaciones y configuración autorizada, con versiones, aprobación y propagación comprobable por sucursal.",
+            "tasks": [
+              "Implementar alta, suspensión y asignación de usuarios/perfiles/sucursales/cajas utilizando el proveedor de identidad y los ámbitos ya definidos.",
+              "Gestionar límites operativos, calendarios, medios habilitados y configuración de caja mediante cambios versionados; validar referencias y permisos antes de publicar.",
+              "Aplicar separación de funciones para cambios sensibles y mostrar aprobación, vigencia, recepción/aplicación y fallos por sucursal.",
+              "Probar cambios concurrentes, revocación y reconexión sin que una edición de UI altere credenciales ni permisos fuera de alcance."
+            ]
+          },
+          {
+            "id": "F04-07",
+            "title": "Administración autorizada de maestros y consulta de ofertas",
+            "apps": [
+              "pos-desktop",
+              "branch-api",
+              "country-api",
+              "erp-worker"
+            ],
+            "modules": [
+              "libs/features",
+              "libs/backend/catalog",
+              "libs/backend/pricing",
+              "libs/backend/administration",
+              "libs/backend/erp"
+            ],
+            "deliverable": "Cada maestro u oferta visible tiene autoridad declarada y flujo de consulta o modificación aprobado, sin editar directamente el espejo de venta.",
+            "tasks": [
+              "Inventariar maestros y campos que el POS consulta o puede proponer modificar: clientes, direcciones, medios, impuestos y sucursales; registrar el dueño de cada atributo. Las ofertas se consultan desde caja.",
+              "Implementar comandos solo para cambios autorizados por el dueño; cuando el POS no sea autoridad, crear solicitud y seguimiento mediante adaptador o mantener la vista de solo lectura.",
+              "Validar vigencias, aprobaciones y conflictos; publicar cambios comerciales autorizados por el mismo flujo versionado de espejos, sin mutar una versión activa.",
+              "Mostrar estado solicitado/aceptado/rechazado/publicado/aplicado y conservar referencias del sistema dueño; la consulta de ofertas explica versión, alcance y vigencia."
+            ]
+          },
+          {
+            "id": "F04-08",
+            "title": "Pedidos y documentos comerciales de sistemas externos",
+            "apps": [
+              "pos-desktop",
+              "branch-api",
+              "country-api",
+              "erp-worker"
+            ],
+            "modules": [
+              "libs/features",
+              "libs/backend/sales",
+              "libs/backend/catalog",
+              "libs/backend/erp",
+              "libs/backend/sync"
+            ],
+            "deliverable": "Una orden, nota de venta o documento externo autorizado puede recuperarse y consumirse en caja con propietario, versión y exclusión verificables.",
+            "tasks": [
+              "Inventariar los documentos externos utilizados en caja y su autoridad: OV/pedido, presupuesto, nota de venta y referencias documentales, sin asumir contratos de ApiCarro no homologados.",
+              "Implementar fachada de consulta/reserva/consumo/cancelación acordada con el dueño, traduciendo identidades y estados dentro de ERP ACL.",
+              "Vincular la venta POS al origen, comprobar precios/cantidades/versión y liberar reservas solo conforme a un resultado conocido.",
+              "Conservar retiro o despacho, direcciones de facturación/entrega, contacto comprador, líneas y referencia externa; no generar movimientos locales de stock ni editar condiciones protegidas de la OV.",
+              "Cubrir clientes concurrentes, pedido modificado, documento consumido y pérdida de respuesta; impedir que lectura del JSON interno del concentrador sea el contrato nuevo."
+            ]
+          },
+          {
+            "id": "F04-09",
+            "title": "Conciliación de depósitos, excedentes y saldos a favor",
+            "apps": [
+              "pos-desktop",
+              "branch-api",
+              "country-api",
+              "erp-worker"
+            ],
+            "modules": [
+              "libs/features",
+              "libs/backend/collections",
+              "libs/backend/payments",
+              "libs/backend/reporting",
+              "libs/backend/erp"
+            ],
+            "deliverable": "Un depósito verificado se imputa una sola vez a documentos y conserva parciales, excedentes y excepciones según la autoridad financiera.",
+            "tasks": [
+              "Definir criterios de coincidencia entre depósitos y documentos: referencia, moneda, importe, fecha y titular; no tratar una captura o coincidencia de monto como prueba suficiente.",
+              "Implementar reglas versionadas de conciliación y umbrales aprobados; enviar casos ambiguos a revisión con evidencias y segregación de funciones.",
+              "Reservar e imputar de forma atómica contra la autoridad de saldo, conservando asignaciones parciales, remanentes y reversas autorizadas.",
+              "Vincular el resultado con cobranza, anticipo/NC y ERP sin cambiar el estado bancario ni reaplicar el mismo depósito."
+            ]
+          },
+          {
+            "id": "F04-10",
+            "title": "Consola operativa de pendientes y acciones autorizadas",
+            "apps": [
+              "pos-desktop",
+              "branch-api",
+              "country-api",
+              "erp-worker"
+            ],
+            "modules": [
+              "libs/features",
+              "libs/backend/administration",
+              "libs/backend/reporting",
+              "libs/backend/sync",
+              "libs/backend/erp"
+            ],
+            "deliverable": "Soporte y operaciones consultan el estado completo de una operación y gestionan excepciones con permisos y evidencia, cubriendo la administración central necesaria.",
+            "tasks": [
+              "Inventariar acciones de administración del concentrador/colas vigentes y mapearlas a consultas o comandos autorizados del nuevo producto.",
+              "Construir vistas de seguimiento por operación, sucursal, trabajo, pago, documento y ERP; exponer estado, antigüedad, intentos y responsable sin payload sensible.",
+              "Implementar solicitudes de reintento, consulta, cuarentena y resolución según el contexto dueño; exigir aprobación para efectos sensibles y rechazar replay indiscriminado.",
+              "Auditar cada acción administrativa, límites de alcance y resultado; mantener un procedimiento para incertidumbre y caída de la consola."
+            ]
+          },
+          {
+            "id": "F04-11",
+            "title": "Venta a crédito y consumo autorizado de cupo",
+            "apps": [
+              "pos-desktop",
+              "branch-api",
+              "country-api",
+              "erp-worker"
+            ],
+            "modules": [
+              "libs/features",
+              "libs/backend/sales",
+              "libs/backend/payments",
+              "libs/backend/collections",
+              "libs/backend/administration",
+              "libs/backend/erp"
+            ],
+            "deliverable": "Venta financiada contra cupo autorizado, con bloqueos, condiciones, cuotas, consumo y deuda vinculados; una consulta de saldo no concede crédito offline.",
+            "tasks": [
+              "Construir matriz de cupo, bloqueos y condiciones por país y entidad, identificando autoridad y casos permitidos; mostrar origen y versión de consulta.",
+              "Implementar autorización, reserva, consumo, consulta y liberación con identidad estable, control de versión y conciliación; homologar el contrato del dueño antes de activar el medio.",
+              "Integrar crédito al cierre comercial y asignaciones mixtas sin convertirlo en ingreso de caja; persistir condiciones, cuotas, vencimientos, referencias, auditoría y trabajo durable.",
+              "Validar permisos y aprobaciones sobre cliente, importe y condiciones exactas; un cambio invalida la autorización y no muta ventas confirmadas.",
+              "Construir seguimiento de autorización, consumo y deuda con responsable; bloquear financiación desconectada sin contrato de capacidad exclusiva homologada.",
+              "Probar concurrencia entre tiendas, pérdida de respuesta y expiración durante la confirmación; conciliar importes, deuda y recuperación con finanzas."
             ]
           }
         ],
@@ -794,6 +1640,46 @@
             "id": "F04-V06",
             "scenario": "Un operador intenta aprobar su propia excepción sin la facultad requerida.",
             "expected": "El servidor rechaza la acción y registra la evidencia correspondiente; la resolución permitida conserva actor, aprobación y contexto."
+          },
+          {
+            "id": "F04-V07",
+            "scenario": "La exportación de un usuario de tienda intenta incluir otra sociedad o fórmulas de hoja de cálculo.",
+            "expected": "El servidor restringe el ámbito y el archivo neutraliza contenido ejecutable; filtros, corte y moneda son verificables."
+          },
+          {
+            "id": "F04-V08",
+            "scenario": "Una configuración o maestro cambia concurrentemente y una sucursal descarga una publicación parcial.",
+            "expected": "Se detecta conflicto; el espejo activo anterior se conserva y la revisión solicitada/aprobada/publicada/aplicada no se confunde."
+          },
+          {
+            "id": "F04-V09",
+            "scenario": "Dos cajas consumen una orden externa o asignan el mismo depósito a varios documentos.",
+            "expected": "La autoridad limita el consumo; pérdida de respuesta se consulta con la misma referencia y el excedente queda identificado."
+          },
+          {
+            "id": "F04-V10",
+            "scenario": "Soporte solicita replay de un efecto incierto o un cambio de estado fuera de su ámbito.",
+            "expected": "La consola permite solo la acción autorizada por el dueño; exige conciliación/aprobación cuando corresponde y conserva auditoría."
+          },
+          {
+            "id": "F04-V11",
+            "scenario": "Cierre parcial o traspaso compite con movimientos de efectivo y custodia todavía no recibida.",
+            "expected": "El corte y la responsabilidad del efectivo permanecen claros; no se duplica sesión/cierre ni se considera depósito confirmado por imprimir."
+          },
+          {
+            "id": "F04-V12",
+            "scenario": "Dos tiendas intentan financiar ventas que exceden el cupo conjunto, o una caja usa un saldo espejado durante desconexión.",
+            "expected": "La autoridad impide exceder el cupo y aplica bloqueos y condiciones; sin autorización exclusiva homologada se bloquea el crédito desconectado, aunque el saldo consultado sea reciente."
+          },
+          {
+            "id": "F04-V13",
+            "scenario": "Se pierde la respuesta de autorización o consumo de crédito y la reserva vence cerca de la confirmación comercial.",
+            "expected": "Se consulta la misma identidad; no se duplican reserva ni deuda ni se confirma sobre permiso inválido. Condiciones, cuotas, obligación y efectivo inmediato se concilian por separado."
+          },
+          {
+            "id": "F04-V14",
+            "scenario": "El cliente convierte voluntariamente el vuelto en anticipo y ocurre un fallo antes del commit o se pierde la respuesta del dueño externo.",
+            "expected": "Consentimiento, obligación local, movimiento de caja y outbox se registran juntos; no se entrega además el mismo vuelto ni se duplica saldo. El efectivo retenido entra al arqueo y el saldo externo permanece no gastable hasta reconocimiento."
           }
         ],
         "parallel": [
@@ -807,10 +1693,11 @@
           "La habilitación en tienda y la expansión nacional dependen de F05 y F06, no de completar consultas de cierre."
         ],
         "evidence": [
-          "Casos de jornada con operaciones originales, devoluciones, cobros, reservas, anticipos, movimientos y documentos vinculados.",
+          "Casos de jornada con operaciones originales, devoluciones, crédito, cobros, reservas, anticipos, movimientos y documentos vinculados.",
           "Resultados de concurrencia, pérdida de respuesta y aprobación denegada, con saldos antes y después.",
           "Informe de conciliación con diferencias, pendientes, causa y responsable, aceptado para el alcance seleccionado.",
-          "Matriz de permisos, aprobaciones y restricciones offline aplicada por el servidor."
+          "Matriz de permisos, aprobaciones y restricciones offline aplicada por el servidor.",
+          "Matriz de cobertura de administración, reportes, órdenes externas, maestros y responsabilidades del concentrador, con contratos y permisos comprobados."
         ],
         "reviewers": [
           "Operaciones de caja y tienda",
@@ -822,15 +1709,15 @@
       },
       "operation": {
         "title": "Jornada completa",
-        "summary": "Devolver, cobrar deuda y anticipos; arquear y cerrar con diferencias visibles.",
-        "slideDetail": "Recorrer devoluciones autorizadas, cobranzas, anticipos, arqueo y cierre del alcance priorizado para el piloto. Mostrar diferencias, pendientes y sus responsables.",
-        "detail": "Completar los recorridos exigidos para el piloto: devolución autorizada, referencias de notas de crédito, cobranzas, anticipos, arqueo, cierre y reporte de diferencias. Producto y operaciones delimitan cuáles se habilitarán y bajo qué condiciones. La demostración recorre una jornada completa y muestra pendientes, responsables y resolución."
+        "summary": "Crédito autorizado, devoluciones, cobranzas, anticipos, arqueo y cierre trazable.",
+        "slideDetail": "Recorrer crédito, devoluciones, cobranzas, anticipos, arqueo y cierre del piloto. Mostrar autorización de cupo, diferencias, pendientes y responsables.",
+        "detail": "Completar los recorridos exigidos para el piloto: venta a crédito con cupo autorizado, devolución autorizada, referencias de notas de crédito, cobranzas, anticipos, arqueo, cierre y reporte de diferencias. Producto y operaciones delimitan cuáles se habilitarán y bajo qué condiciones. La demostración recorre una jornada completa y muestra pendientes, responsables y resolución."
       },
       "construction": {
         "title": "Saldos y aprobaciones",
         "summary": "Implementar saldos, referencias, aprobaciones y conciliación de la jornada.",
         "slideDetail": "Vincular cada movimiento con la operación original y controlar autoridad y consumo de saldos. Ampliar permisos y auditoría; conciliar caja, pagos, documentos y ERP.",
-        "detail": "Implementar autoridad y consumo de saldos, referencias a la operación original, aprobaciones y consultas operativas. Ampliar a los nuevos casos los controles de autorización y auditoría incorporados desde el primer incremento. Conciliar caja, pagos, documentos y registro ERP, manteniendo separados los resultados y las excepciones de cada proceso."
+        "detail": "Implementar saldos, referencias y aprobaciones, junto con administración operativa, maestros autorizados, reportes/exportaciones, órdenes externas y resolución de excepciones. Cada contexto conserva autoridad; los reportes son reconstruibles y las acciones privilegiadas se verifican en servidor. Completar trazabilidad de cierre, custodia y depósito, incluidos cierre parcial o traspaso cuando se aprueben."
       },
       "acceptance": {
         "title": "Cierre trazable",
@@ -860,7 +1747,7 @@
       "id": "phase-05",
       "number": 5,
       "title": "Piloto controlado",
-      "summary": "Operar en una tienda acotada con soporte y recuperación ensayada.",
+      "summary": "Habilitar un piloto con migración, infraestructura, seguridad, capacidad, soporte y recuperación verificadas.",
       "delivery": {
         "entry": [
           "Aceptar F01 a F04 para una tienda, operadores, cajas, proveedores y operaciones explícitamente delimitados.",
@@ -914,10 +1801,10 @@
             ],
             "deliverable": "Procedimientos ensayados para recuperar sucursal y país con evidencia de pérdida de datos, tiempo de recuperación y conciliación.",
             "tasks": [
-              "Preparar copias independientes, retención de reconstrucción y restauración para PostgreSQL de sucursal y país; una copia en el mismo servidor no cubre su pérdida.",
-              "Ensayar pérdida de proceso, disco o servidor y restore anterior a acuses, conservando evidencia de efectos externos ya ejecutados.",
-              "Aislar al escritor anterior antes de habilitar otro; medir RPO y RTO por escenario y contrastarlos con los objetivos acordados.",
-              "Recuperar diario técnico del agente y excluir al controlador físico anterior; una copia o lease vencido no autoriza duplicar efectos inciertos."
+              "Preparar copias independientes y restaurables de PostgreSQL de sucursal/país, con retención de evidencia de reconstrucción y pruebas de acceso; una copia en el mismo servidor no cubre su pérdida.",
+              "Ensayar pérdida de proceso, disco o servidor y restore anterior a acuses; reconstruir BullMQ desde el registro durable y consultar efectos externos posteriores.",
+              "Aislar al escritor anterior antes de habilitar otro, medir RPO/RTO por escenario y contrastar objetivos acordados sin prometer pérdida cero en destrucción de tienda aislada.",
+              "Recuperar registro durable de trabajos e intentos SQLite del servicio de dispositivos y excluir al controlador físico anterior; una copia o lease vencido no autoriza duplicar efectos inciertos."
             ]
           },
           {
@@ -940,10 +1827,10 @@
             ],
             "deliverable": "Operadores y soporte pueden detectar, clasificar y atender los incidentes previstos para la configuración piloto.",
             "tasks": [
-              "Preparar formación y procedimientos de venta, excepción, cierre y recuperación, con responsables y escalamiento acordados.",
-              "Configurar diagnósticos y alertas sobre pendientes, errores y capacidad; separar logs técnicos de auditoría y filtrar datos sensibles.",
-              "Ensayar carga representativa y horarios operativos con soporte disponible; comprobar los criterios medidos antes de ampliar el alcance.",
-              "Homologar alta, rotación, revocación y recuperación de identidades; probar autorización offline acotada, reloj y nueva admisión al reconectar."
+              "Preparar formación y procedimientos de venta, excepción, cierre, permisos y recuperación con responsables, turnos y escalamiento acordados.",
+              "Ensayar alertas y diagnóstico de F05-06 con soporte; registrar clasificación, severidad, comunicación, mitigación y recuperación sin datos sensibles.",
+              "Realizar una jornada de ensayo con los perfiles/hardware/volumen aceptados y validar que soporte resuelve casos sin acceso SQL improvisado.",
+              "Practicar alta, rotación, revocación y recuperación de identidades; comprobar la comunicación al operador cuando vence continuidad o cambia una habilitación."
             ]
           },
           {
@@ -969,6 +1856,212 @@
               "Identificar el sistema activo y las operaciones permitidas; limitar la comparación con el legacy a mecanismos sin duplicar efectos.",
               "Revisar jornadas y pendientes con producto, operaciones y finanzas, registrando defectos y decisiones sobre la configuración ensayada.",
               "Preparar la detención o reversión de habilitación con conciliación de operaciones nuevas; restaurar un binario no revierte ventas ni documentos."
+            ]
+          },
+          {
+            "id": "F05-05",
+            "title": "Infraestructura reproducible, red, secretos y operación de datos",
+            "apps": [
+              "pos-desktop",
+              "branch-api",
+              "branch-sync-worker",
+              "country-api",
+              "erp-worker",
+              "device-agent"
+            ],
+            "modules": [
+              "libs/shared/backend/config",
+              "libs/shared/backend/health",
+              "libs/backend/administration",
+              "libs/backend/sync"
+            ],
+            "deliverable": "Entorno piloto reproducible con PostgreSQL, Redis de trabajos separados, TLS, mínimo privilegio y configuración identificable por ámbito.",
+            "tasks": [
+              "Definir y automatizar provisión/configuración de sucursal, país, red ERP y puestos; registrar versiones soportadas, recursos, volúmenes y dependencias.",
+              "Separar Redis de trabajos de país y ERP; política no-eviction, persistencia/recuperación acordada y Redis de caché solo si se justifica, sin mezclar ciclos de vida.",
+              "Configurar TLS/certificados, DNS/rutas/firewalls y autenticación de workload; sucursal inicia comunicaciones autorizadas y no expone bases o colas a clientes.",
+              "Administrar secretos por referencias y roles de mínimo privilegio; probar rotación, expiración y arranque fallido seguro, además de mantenimiento de PostgreSQL/volúmenes."
+            ]
+          },
+          {
+            "id": "F05-06",
+            "title": "Observabilidad, SLO y alertas operativas",
+            "apps": [
+              "pos-desktop",
+              "branch-api",
+              "branch-sync-worker",
+              "country-api",
+              "erp-worker",
+              "device-agent"
+            ],
+            "modules": [
+              "libs/shared/backend/observability",
+              "libs/shared/backend/health",
+              "libs/backend/reporting",
+              "libs/backend/sync",
+              "libs/backend/erp"
+            ],
+            "deliverable": "Se detectan fallos y degradación del recorrido mediante métricas y alertas accionables con responsables y objetivos medidos.",
+            "tasks": [
+              "Definir SLIs/SLO por recorrido: confirmación local, entrega durable, antigüedad de pendientes, frescura comercial, resultados inciertos y disponibilidad por ámbito.",
+              "Instrumentar métricas/correlación con IDs técnicos, cardinalidad acotada y redacción; distinguir logs de diagnóstico, auditoría y métricas de negocio.",
+              "Crear dashboards y alertas por impacto con ventanas, deduplicación, severidad, propietario y runbook; incluir disco, cola, reloj, certificados y backups.",
+              "Verificar funcionamiento sin telemetría externa; amortiguar o descartar diagnóstico permitido sin bloquear venta ni confundirlo con evidencia durable."
+            ]
+          },
+          {
+            "id": "F05-07",
+            "title": "Capacidad, rendimiento y pruebas de degradación",
+            "apps": [
+              "pos-desktop",
+              "branch-api",
+              "branch-sync-worker",
+              "country-api",
+              "erp-worker",
+              "device-agent"
+            ],
+            "modules": [
+              "libs/backend/sales",
+              "libs/backend/pricing",
+              "libs/backend/sync",
+              "libs/backend/erp",
+              "libs/shared/backend/worker"
+            ],
+            "deliverable": "El alcance piloto cumple objetivos de latencia, volumen y recuperación medidos con carga representativa, límites y backpressure verificables.",
+            "tasks": [
+              "Construir perfil de carga aprobado: cajas concurrentes, catálogo/reglas, ventas, documentos, ventanas offline, volumen histórico y recomposición de backlog.",
+              "Medir latencias percentiles, recursos, bloqueos y tamaño durable durante venta/precio/reportes/sync; comprobar que procesos secundarios no desplazan al commit local.",
+              "Ensayar picos, reconexión masiva, proveedor lento, disco bajo y Redis perdido, con límites de concurrencia y cola acordados.",
+              "Documentar capacidad por hardware/topología, coste, márgenes, umbrales de admisión y decisiones de optimización reproducibles."
+            ]
+          },
+          {
+            "id": "F05-08",
+            "title": "Revisión de seguridad y cierre de riesgos del piloto",
+            "apps": [
+              "pos-desktop",
+              "pos-mobile",
+              "branch-api",
+              "branch-sync-worker",
+              "country-api",
+              "erp-worker",
+              "device-agent"
+            ],
+            "modules": [
+              "libs/backend/administration",
+              "libs/backend/payments",
+              "libs/backend/devices",
+              "libs/shared/backend/config",
+              "libs/shared/contracts",
+              "libs/client-shell"
+            ],
+            "deliverable": "Modelo de amenazas y revisión técnica/operativa del alcance piloto con hallazgos tratados y decisiones de riesgo explícitas.",
+            "tasks": [
+              "Modelar activos, actores y fronteras entre cliente, sucursal, país, ERP, proveedor y periférico; priorizar autorización, replay, manipulación local y agotamiento de recursos.",
+              "Ejecutar pruebas de seguridad de APIs, scopes, sesiones/grants offline, input, archivos, TLS, IPC/plugins y dispositivos; verificar aislamiento por empresa/sucursal.",
+              "Revisar mínimos privilegios, secretos, dependencias y datos de pago; resolver hallazgos bloqueantes o documentar aceptación excepcional por responsable autorizado y vigencia.",
+              "Probar incidentes de credencial perdida/robada, revocación, reloj alterado y soporte privilegiado; conservar evidencia saneada y plan de respuesta."
+            ]
+          },
+          {
+            "id": "F05-09",
+            "title": "Privacidad, retención y auditoría verificable",
+            "apps": [
+              "pos-desktop",
+              "pos-mobile",
+              "branch-api",
+              "branch-sync-worker",
+              "country-api",
+              "erp-worker",
+              "device-agent"
+            ],
+            "modules": [
+              "libs/backend/administration",
+              "libs/backend/reporting",
+              "libs/backend/fiscal",
+              "libs/backend/sync",
+              "libs/shared/backend/observability"
+            ],
+            "deliverable": "Datos personales, auditoría, documentos y evidencias técnicas tienen propiedad, retención y acceso aprobados y mecanismos comprobables.",
+            "tasks": [
+              "Inventariar datos y flujos por país: finalidad, autoridad, ubicación, acceso, transferencias, retención y dependencia de obligaciones fiscales/financieras.",
+              "Separar auditoría de negocio, diagnóstico y registros de recuperación; limitar acceso y proteger integridad según política, sin publicar PII en repositorios.",
+              "Implementar retención/archivado/purga por categoría con legal hold y comprobación de reconstruibilidad; no borrar inbox/outbox/intentos antes de la ventana de deduplicación y recuperación.",
+              "Definir y probar solicitudes de acceso/corrección/supresión cuando apliquen, con validación de identidad y preservación de registros sujetos a obligación legal."
+            ]
+          },
+          {
+            "id": "F05-10",
+            "title": "Migración de datos y compatibilidad con consumidores legacy",
+            "apps": [
+              "branch-api",
+              "branch-sync-worker",
+              "country-api",
+              "erp-worker",
+              "pos-desktop"
+            ],
+            "modules": [
+              "libs/backend/sync",
+              "libs/backend/erp",
+              "libs/backend/catalog",
+              "libs/backend/collections",
+              "libs/backend/fiscal",
+              "libs/backend/administration"
+            ],
+            "deliverable": "Datos y referencias necesarios para el piloto se migran mediante un corte reproducible, conciliado y compatible con los consumidores autorizados.",
+            "tasks": [
+              "Inventariar tablas, mensajes, saldos, documentos, usuarios/asignaciones, pendientes y consumidores directos: ApiCarro, API de pagos, concentrador, BI/QLIKTail por confirmar.",
+              "Definir mapeos de IDs/estados/fechas/moneda, propietario y reglas de calidad; preservar referencias de documentos y efectos externos, sin copiar credenciales ni historiales indiscriminados.",
+              "Construir extracción/validación/carga en staging con manifiesto/hash/checkpoint y repetición idempotente; ejecutar ensayos completos y reconciliación cuantitativa.",
+              "Diseñar contratos/vistas transitorias solo cuando el consumidor las necesite, con propietario y fecha/criterio de retiro; habilitar un único escritor y congelar el origen durante corte aprobado."
+            ]
+          },
+          {
+            "id": "F05-11",
+            "title": "Seguridad de la cadena de suministro y licencias",
+            "apps": [
+              "pos-desktop",
+              "pos-mobile",
+              "branch-api",
+              "branch-sync-worker",
+              "country-api",
+              "erp-worker",
+              "device-agent"
+            ],
+            "modules": [
+              "libs/client-shell",
+              "libs/shared/backend/bootstrap",
+              "libs/shared/contracts",
+              "libs/backend/devices"
+            ],
+            "deliverable": "Cada release piloto tiene procedencia, inventario de dependencias/licencias y vulnerabilidades revisadas, sin excepciones silenciosas.",
+            "tasks": [
+              "Generar inventario/SBOM por artefacto Angular/Tauri/Capacitor/Nest/.NET, incluyendo SDKs y drivers de terceros y licencias redistribuibles.",
+              "Fijar herramientas/dependencias/actions y verificar integridad; separar secretos de firma/publicación y limitar permisos del pipeline.",
+              "Evaluar avisos de seguridad por impacto/exposición; corregir según política o registrar aceptación de riesgo aprobada con vencimiento, sin deshabilitar auditoría.",
+              "Mantener proceso de actualización/revocación de artefactos, contratos de soporte y prueba de reconstrucción desde tag/revisión identificada."
+            ]
+          },
+          {
+            "id": "F05-12",
+            "title": "Aceptación de experiencia, accesibilidad y matriz de equipos",
+            "apps": [
+              "pos-desktop",
+              "branch-api",
+              "device-agent"
+            ],
+            "modules": [
+              "libs/client-shell",
+              "libs/features",
+              "libs/shared/frontend/ui",
+              "libs/backend/devices"
+            ],
+            "deliverable": "Los recorridos del piloto se pueden ejecutar en los puestos elegidos con teclado, ayudas accesibles, errores comprensibles y periféricos homologados.",
+            "tasks": [
+              "Acordar matriz de pantallas, resolución, escalado, teclado/lector, SO, impresoras, conectividad y necesidades de accesibilidad de operadores.",
+              "Probar venta, cobro, devolución, cierre y recuperación con usuarios representativos: orden de foco, etiquetas, contraste, zoom y no dependencia exclusiva del color.",
+              "Validar búsqueda/lectura de códigos, formatos monetarios/fechas, estados vacíos, carga y error, además de impresión física legible y restricciones de permisos.",
+              "Registrar defectos, gravedad y evidencia por configuración; incluir regresión de rutas críticas y criterio de no salida ante bloqueo operativo."
             ]
           }
         ],
@@ -1012,6 +2105,36 @@
             "id": "F05-V08",
             "scenario": "Se revoca una identidad mientras la tienda está aislada, vence su autorización de continuidad y después vuelve la conexión.",
             "expected": "La admisión local respeta vigencia, permisos y reloj confiable; al reconectar aplica revocaciones antes de renovar acceso. Los pendientes conservan evidencia e identidad y se recuperan mediante el workload autorizado."
+          },
+          {
+            "id": "F05-V09",
+            "scenario": "Se provisiona el entorno desde manifiestos, rota un secreto y vence un certificado mientras hay pendientes.",
+            "expected": "La instalación es reproducible; acceso no autorizado se rechaza y los pendientes se recuperan sin borrar identidad ni registros."
+          },
+          {
+            "id": "F05-V10",
+            "scenario": "La telemetría externa cae y una reconexión masiva coincide con ventas y exportaciones.",
+            "expected": "Venta conserva límites acordados; diagnóstico y trabajos aplican backpressure, alertas y capacidad medida sin pérdida silenciosa."
+          },
+          {
+            "id": "F05-V11",
+            "scenario": "La revisión de seguridad o licencias detecta un hallazgo bloqueante o un artefacto sin procedencia.",
+            "expected": "No se habilita el perfil afectado; corrección o aceptación de riesgo autorizada y vigente conserva evidencia del hallazgo."
+          },
+          {
+            "id": "F05-V12",
+            "scenario": "La política de retención intenta borrar evidencia necesaria para deduplicación o documentación fiscal.",
+            "expected": "Legal hold y ventanas de recuperación detienen la eliminación; acceso, motivo y decisión quedan trazables."
+          },
+          {
+            "id": "F05-V13",
+            "scenario": "Una migración contiene duplicados, saldo discrepante o consumidor del concentrador todavía activo.",
+            "expected": "Staging rechaza o reporta diferencias; se bloquea corte hasta reconciliar y disponer de un contrato de compatibilidad aceptado."
+          },
+          {
+            "id": "F05-V14",
+            "scenario": "La release se prueba con teclado, escalado y hardware del piloto ante fallos de impresión y conexión.",
+            "expected": "Los recorridos siguen siendo utilizables y accesibles; errores no inducen pagos repetidos y cada configuración tiene aceptación propia."
           }
         ],
         "parallel": [
@@ -1029,7 +2152,8 @@
           "Resultados de carga, actualización y restauración con entorno, datos, tiempos, pérdida observada y conciliación.",
           "Registro de jornadas, incidencias, pendientes y decisiones de soporte y negocio durante el alcance piloto.",
           "Aceptación o condiciones pendientes de producto, operaciones, finanzas y responsables técnicos, vinculadas a esa configuración.",
-          "Inventario de agentes por puesto, periféricos locales y versiones homologadas, con pruebas de aislamiento de destinos y cierre/reinicio del cliente y agente."
+          "Inventario de agentes por puesto, periféricos locales y versiones homologadas, con pruebas de aislamiento de destinos y cierre/reinicio del cliente y agente.",
+          "Expedientes de infraestructura, seguridad, privacidad, capacidad, migración, cadena de suministro y experiencia de operación que sustentan la habilitación."
         ],
         "reviewers": [
           "Producto y operaciones de tienda",
@@ -1049,7 +2173,7 @@
         "title": "Preparación operativa",
         "summary": "Preparar equipos, formación, alertas, backups, restauración y versión firmada.",
         "slideDetail": "Ensayar instalación, actualización compatible, carga y contingencias. Preparar formación, alertas, backups y restauración con soporte responsable y objetivos acordados.",
-        "detail": "Preparar instalación y actualización compatible, equipos y proveedores homologados, formación, monitoreo, alertas, copias de seguridad y restauración. Ensayar carga representativa y contingencias. Acordar objetivos operativos y responsables de soporte; preparar el tratamiento de pendientes cuando se detiene o revierte una habilitación, sin borrar ventas nuevas ni restaurar datos indiscriminadamente."
+        "detail": "Producir artefactos instalables y una infraestructura reproducible con TLS y secretos; ensayar respaldo y recuperación. Instrumentar SLO/alertas, medir capacidad, completar seguridad/privacidad/retención y cadena de suministro. Migrar datos y consumidores con reconciliación, comprobar accesibilidad/hardware y formar a operación/soporte antes del corte controlado."
       },
       "acceptance": {
         "title": "Aceptación del piloto",
@@ -1087,7 +2211,7 @@
       "id": "phase-06",
       "number": 6,
       "title": "Expansión validada",
-      "summary": "Validar otro país y ampliar canales y tiendas por anillos.",
+      "summary": "Aceptar los tres perfiles nacionales, móvil y red compartida; operar por anillos con aislamiento y ciclo de flota.",
       "delivery": {
         "entry": [
           "Disponer de evidencia del piloto y acordar el siguiente alcance; no se fija aquí orden entre Perú y España.",
@@ -1217,6 +2341,109 @@
               "Validar permisos entre puestos, móviles y sucursales, enrolamiento/TLS y sesión operativa. MICR, cajones y pagos requieren aceptación propia y no se habilitan por homologar una impresora de red.",
               "Permitir coexistencia con agentes locales sobre dispositivos distintos, versiones compatibles, diagnóstico y habilitación por anillos. Suspender nuevas solicitudes del perfil compartido sin perder trabajos ni reasignarlos ciegamente."
             ]
+          },
+          {
+            "id": "F06-06",
+            "title": "Perfil del tercer país y cobertura local completa",
+            "apps": [
+              "pos-desktop",
+              "branch-api",
+              "branch-sync-worker",
+              "country-api",
+              "erp-worker",
+              "device-agent"
+            ],
+            "modules": [
+              "libs/country-policies",
+              "libs/backend/catalog",
+              "libs/backend/pricing",
+              "libs/backend/fiscal",
+              "libs/backend/payments",
+              "libs/backend/erp",
+              "libs/backend/administration"
+            ],
+            "deliverable": "El país restante entre Chile, Perú y España tiene perfil, contratos y casos locales aceptados; ningún país queda implícito por haber probado solo dos.",
+            "tasks": [
+              "Asignar el país restante y levantar su matriz de identificación, moneda, impuestos, documentos, medios, permisos y operación sin extrapolar reglas del piloto.",
+              "Completar adaptadores y políticas de su ERP/proveedores/hardware, con contratos recibidos y consulta/conciliación de resultados inciertos.",
+              "Probar ventas, devoluciones, cobranza, cierre, migración y continuidad del alcance local, incluidos casos de reuniones no cubiertos por el primer país.",
+              "Obtener aceptación local por configuración y registrar diferencias/exclusiones y dependencias del programa ERP; actualizar la matriz corporativa de capacidades."
+            ]
+          },
+          {
+            "id": "F06-07",
+            "title": "Retiro controlado de componentes legacy y consumidores",
+            "apps": [
+              "branch-api",
+              "branch-sync-worker",
+              "country-api",
+              "erp-worker"
+            ],
+            "modules": [
+              "libs/backend/sync",
+              "libs/backend/erp",
+              "libs/backend/reporting",
+              "libs/backend/administration"
+            ],
+            "deliverable": "Los componentes legacy sustituidos se retiran solo después de demostrar ausencia de dependencias activas, conciliación y conservación del histórico necesario.",
+            "tasks": [
+              "Inventariar por país componente, consumidor, datos, pendientes y responsable; incluir WSO2/Synapse, concentrador, APIs de lectura/pagos y lectores directos cuando correspondan.",
+              "Migrar o retirar consumidores mediante contrato acordado; confirmar uso real y propietarios, incluyendo QLIKTail/BI antes de decidir que no aplica.",
+              "Drenar/conciliar pendientes y preservar consultas históricas, auditoría, backups y referencias fiscales según retención aprobada.",
+              "Ejecutar deshabilitación progresiva con observación, revocación de credenciales/puertos y ventana de retorno; cerrar costes/licencias solo con aprobación operativa."
+            ]
+          },
+          {
+            "id": "F06-08",
+            "title": "Ciclo de vida y administración de la flota",
+            "apps": [
+              "pos-desktop",
+              "pos-mobile",
+              "branch-api",
+              "branch-sync-worker",
+              "country-api",
+              "erp-worker",
+              "device-agent"
+            ],
+            "modules": [
+              "libs/backend/administration",
+              "libs/backend/devices",
+              "libs/shared/contracts",
+              "libs/shared/backend/config",
+              "libs/client-shell"
+            ],
+            "deliverable": "Puestos, móviles, servicios y periféricos se enrolan, inventarían, actualizan, revocan y retiran con identidad y configuración trazables.",
+            "tasks": [
+              "Definir inventario y alta autorizada por empresa/sucursal, evitando que una reinstalación genere una segunda autoridad o identidad indistinguible.",
+              "Gestionar salud/versiones/configuración/certificados, detectar deriva y programar mantenimiento con mínimos privilegios y ventanas.",
+              "Probar pérdida, reemplazo, revocación, rotación y retiro de equipos; preservar o conciliar pendientes antes de reasignar puesto/periférico.",
+              "Integrar con gestión corporativa de dispositivos si existe y se aprueba; separar permisos del técnico, operador y administrador, con auditoría de acciones remotas."
+            ]
+          },
+          {
+            "id": "F06-09",
+            "title": "Aislamiento y operación simultánea de países",
+            "apps": [
+              "branch-api",
+              "branch-sync-worker",
+              "country-api",
+              "erp-worker"
+            ],
+            "modules": [
+              "libs/backend/administration",
+              "libs/backend/reporting",
+              "libs/backend/sync",
+              "libs/backend/erp",
+              "libs/shared/backend/config",
+              "libs/shared/backend/worker"
+            ],
+            "deliverable": "La operación simultánea de países y sociedades mantiene aislamiento de datos, identidad, destinos, recursos y fallos con capacidad y recuperación medidas.",
+            "tasks": [
+              "Definir particiones por país/sociedad y topología física según capacidad, seguridad y operación; comprobar aislamiento lógico aunque se comparta infraestructura.",
+              "Validar autorización y enrutamiento en API, trabajos, exportaciones, caches, configuración y recuperación; ninguna omisión de ámbito adopta un país por defecto.",
+              "Probar saturación/falla de un país, proveedor o conector sin bloquear compromisos de los otros; aplicar presupuestos de recursos y alertas por ámbito.",
+              "Ensayar operación/recovery/rotación por país y consolidación de reporting autorizada, sin convertir una vista global en escritor de operaciones locales."
+            ]
           }
         ],
         "validation": [
@@ -1269,6 +2496,26 @@
             "id": "F06-V10",
             "scenario": "Un móvil o puesto solicita un dispositivo sin permiso o de otra sucursal; cambia la IP del destino y luego se suspende el perfil compartido.",
             "expected": "El backend rechaza destinos ajenos; sólo una actualización autorizada cambia la configuración conservando identidad física. La suspensión bloquea admisión nueva y preserva trabajos, auditoría y evidencia para recuperación."
+          },
+          {
+            "id": "F06-V11",
+            "scenario": "La revisión final contiene aceptaciones de solo dos de los tres países propuestos.",
+            "expected": "El país restante conserva su tarea y sus bloqueos; no se declara cobertura corporativa completa ni se heredan aprobaciones."
+          },
+          {
+            "id": "F06-V12",
+            "scenario": "Se reemplaza un equipo, cambia su dirección y se revoca la identidad anterior.",
+            "expected": "La flota conserva identidad física/instalación y ámbito, excluye al anterior y concilia pendientes antes de reasignar control."
+          },
+          {
+            "id": "F06-V13",
+            "scenario": "Un país agota su cola/recursos o intenta consultar/exportar datos de otra sociedad.",
+            "expected": "La partición respeta límites y permisos; la operación/recuperación de otros países cumple objetivos medidos."
+          },
+          {
+            "id": "F06-V14",
+            "scenario": "Se propone retirar un servicio legacy con un consumidor o consulta histórica sin dueño confirmado.",
+            "expected": "El retiro se bloquea hasta inventariar, sustituir o aprobar la dependencia y preservar datos exigidos."
           }
         ],
         "parallel": [
@@ -1287,7 +2534,8 @@
           "Evidencias de sandbox, hardware y host nativo que identifican exactamente las capacidades y configuraciones aceptadas.",
           "Registro por anillo de versiones, conciliación, métricas, incidentes y decisión de avance o detención.",
           "Contratos y pruebas de transición ERP con identidades, destinos y referencias preservados, más aceptación de responsables locales.",
-          "Matriz de impresoras de red, protocolos, host y versiones; resultados de concurrencia, aislamiento de destinos, cambio de controlador, cortes, actualización y suspensión del perfil compartido."
+          "Matriz de impresoras de red, protocolos, host y versiones; resultados de concurrencia, aislamiento de destinos, cambio de controlador, cortes, actualización y suspensión del perfil compartido.",
+          "Matriz completa de Chile, Perú y España, flota y aislamiento; actas de retiro de componentes sustituidos y de permanencia de dependencias externas autorizadas."
         ],
         "reviewers": [
           "Producto y operaciones de cada país",
@@ -1301,19 +2549,19 @@
         "title": "Otro país y canal",
         "summary": "Demostrar el recorrido en un segundo país y móvil en un uso acotado.",
         "slideDetail": "Demostrar el mismo recorrido en otro país y móvil en un uso delimitado. Acordar el orden de países, canales y tiendas según el piloto y las dependencias locales.",
-        "detail": "Demostrar el mismo recorrido de negocio en un segundo país antes de generalizarlo a todos. Incorporar móvil en un caso de uso delimitado y homologado. Producto y operaciones acuerdan el orden de países, canales y tiendas a partir de la evidencia del piloto y de las dependencias locales; no se fija aquí un orden entre Perú y España."
+        "detail": "Aceptar sucesivamente los perfiles de Chile, Perú y España según la prioridad confirmada, sin extrapolar una homologación. Delimitar el uso móvil y las capacidades compartidas de red. Desplegar configuraciones verificadas por anillos con responsables locales, operación de flota y recuperación por país; retirar componentes legacy únicamente cuando sus consumidores, pendientes e histórico estén resueltos."
       },
       "construction": {
         "title": "Adaptación y anillos",
         "summary": "Adaptar país y móvil; homologar red compartida y distribuir por anillos.",
         "slideDetail": "Tras F05, homologar impresoras de red y estación compartida; validar acceso móvil. Añadir políticas del país y desplegar sólo combinaciones aceptadas por anillos.",
-        "detail": "Ampliar después del piloto el perfil por puesto con impresoras de red y una estación compartida homologada (F06-05), sin duplicar apps ni permitir dos controladores físicos. Aceptar ese perfil antes del uso móvil compartido de F06-02. Incorporar políticas y adaptadores nacionales, probar fiscalidad/pagos y ampliar por anillos con versiones compatibles y soporte local."
+        "detail": "Extender políticas y adaptadores sobre contratos comunes y completar la aceptación explícita del tercer país. Implementar perfil de periféricos de red, lifecycle de flota y pruebas de aislamiento/capacidad entre países. Mantener compatibilidad, destino ERP fijado por operación y trazabilidad de la transición; un ERP común nuevo sigue su propio programa."
       },
       "acceptance": {
         "title": "Validación por alcance",
         "summary": "Probar reutilización del núcleo y aceptación propia de cada país y canal.",
         "slideDetail": "Cada país y canal demuestra reutilización del núcleo y supera su aceptación propia. Ampliar anillos con conciliación, soporte y recuperación verificados por escenario.",
-        "detail": "Demostrar con escenarios verificables qué comportamiento del núcleo se reutiliza y qué adaptación corresponde al país. Cada país, canal y configuración supera su propia aceptación antes de habilitarse. Los anillos se amplían con conciliación, observabilidad, soporte y recuperación comprobados. IA, RFID y omnicanal permanecen como extensiones posteriores sujetas a priorización. El perfil de red demuestra exclusión física, aislamiento por destino y recuperación de resultados inciertos; su aceptación no certifica otros tipos de periféricos."
+        "detail": "Cada país, canal, proveedor y configuración tiene evidencia local y autorización; el resultado no se hereda entre combinaciones. Probar móvil real, red compartida, versiones atrasadas, cambios de conector, flota e impacto entre países. Detener ampliación ante diferencias, retirar legacy solo con dependencias resueltas y conservar visibles las exclusiones aprobadas."
       },
       "requires": [
         "phase-05"

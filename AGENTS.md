@@ -2,6 +2,14 @@
 
 Repositorio editorial público de POS Platform. Contiene el portal de recursos, Starlight, fuentes técnicas, diagramas y presentaciones Reveal.js. El código operativo pertenece a `developer-implementos/pos-platform`.
 
+## Trabajo coordinado
+
+El backlog de producto y sus responsables están en GitHub Issues de `developer-implementos/pos-platform`; leer su `CONTRIBUTING.md` y la ficha `delivery/specs/Fxx-xx.md` antes de cambiar un contrato o el alcance. Enlazar cada PR documental al issue del producto mediante URL completa. No cerrar el entregable desde un PR editorial ni atribuir aceptación de producto a la publicación de documentación. Una sesión de agente trabaja en una rama propia y deja decisiones, validaciones y bloqueos en el issue o PR, no sólo en el chat.
+
+`docs/roadmap.json` define el alcance versionado. Cambiar IDs, aplicaciones o aceptación exige coordinar `delivery/backlog.json`, fichas, issues y registro de avance del producto; no mantener un segundo backlog manual aquí. Importar el avance sólo desde una revisión limpia y verificable, siguiendo `docs/project-progress.md`.
+
+## Convenciones editoriales
+
 - Mantener rutas públicas en inglés y contenido en español. Conservar `/guide/` y sus enlaces permanentes.
 - `/` es el portal: `portal/catalog.json` registra las presentaciones y descargas. Publicar originales de `materials/` sólo cuando estén catalogados; no copiar indiscriminadamente el directorio. Ver `materials/README.md`.
 - `docs/` contiene las fuentes canónicas. `apps/starlight/src/content/docs/` combina páginas manuales con carpetas generadas que no se editan ni versionan.

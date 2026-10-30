@@ -36,7 +36,7 @@ function validateDelivery(delivery, phase) {
   const label = `${phase.id} delivery`;
   shape(delivery, ['entry', 'work', 'validation', 'parallel', 'deferred', 'evidence', 'reviewers'], label);
   for (const field of ['entry', 'parallel', 'deferred', 'evidence', 'reviewers']) textList(delivery[field], `${label} ${field}`, 2, 6);
-  assert.ok(Array.isArray(delivery.work) && delivery.work.length >= 3 && delivery.work.length <= 5, `${label} requires 3–5 work packages`);
+  assert.ok(Array.isArray(delivery.work) && delivery.work.length >= 3 && delivery.work.length <= 99, `${label} requires 3–99 work packages with stable two-digit IDs`);
   for (const [index, work] of delivery.work.entries()) {
     const workLabel = `${label} work ${index + 1}`;
     shape(work, ['id', 'title', 'apps', 'modules', 'deliverable', 'tasks'], workLabel);
@@ -49,7 +49,7 @@ function validateDelivery(delivery, phase) {
     for (const module of work.modules) assert.match(module, /^libs\/(?:[a-z][a-z0-9-]*\/)*[a-z][a-z0-9-]*\/?$/, `${workLabel} requires repository library paths`);
     textList(work.tasks, `${workLabel} tasks`, 2, 6);
   }
-  assert.ok(Array.isArray(delivery.validation) && delivery.validation.length >= 4 && delivery.validation.length <= 10, `${label} requires 4–10 acceptance scenarios`);
+  assert.ok(Array.isArray(delivery.validation) && delivery.validation.length >= 4 && delivery.validation.length <= 99, `${label} requires 4–99 acceptance scenarios with stable two-digit IDs`);
   for (const validation of delivery.validation) {
     shape(validation, ['id', 'scenario', 'expected'], `${label} validation`);
     assert.match(validation.id, new RegExp(`^${phaseCode(phase)}-V[0-9]{2}$`), `${label} validation must have a stable phase ID`);
@@ -180,7 +180,7 @@ export function renderRoadmapPhase(roadmap, phaseId) {
     const target = roadmap.phases.find(item => item.id === id);
     return `<a href="${phasePlanHref(target)}">${phaseCode(target)} · ${escape(target.title)}</a>`;
   }).join(', ') || 'No requiere una fase anterior.';
-  const work = delivery.work.map(item => `<article class="roadmap-work-package" data-work-package="${item.id}" aria-labelledby="work-${item.id.toLowerCase()}"><h3 id="work-${item.id.toLowerCase()}"><span>${item.id}</span> ${escape(item.title)}</h3><dl class="roadmap-work-scope"><div><dt>Aplicaciones</dt><dd>${item.apps.map(app => `<code>apps/${app}</code>`).join(' ')}</dd></div><div><dt>Módulos del diseño objetivo</dt><dd>${item.modules.map(module => `<code>${escape(module)}</code>`).join(' ')}</dd></div></dl><p class="roadmap-deliverable"><strong>Entregable:</strong> ${escape(item.deliverable)}</p>${list(item.tasks)}</article>`).join('\n');
+  const work = delivery.work.map(item => `<article class="roadmap-work-package" data-work-package="${item.id}" aria-labelledby="work-${item.id.toLowerCase()}"><h3 id="work-${item.id.toLowerCase()}"><span>${item.id}</span> ${escape(item.title)}</h3><dl class="roadmap-work-scope"><div><dt>Aplicaciones</dt><dd>${item.apps.map(app => `<code>apps/${app}</code>`).join(' ')}</dd></div><div><dt>Módulos del diseño objetivo</dt><dd>${item.modules.map(module => `<code>${escape(module)}</code>`).join(' ')}</dd></div></dl><p class="roadmap-deliverable"><strong>Entregable:</strong> ${escape(item.deliverable)}</p>${list(item.tasks)}<p><a href="https://github.com/developer-implementos/pos-platform/issues?q=${encodeURIComponent(`is:issue in:title "[${item.id}]"`)}">Issue y ficha técnica de ${item.id}</a> · requiere acceso al repositorio del producto.</p></article>`).join('\n');
   const validation = `<dl class="roadmap-validation">${delivery.validation.map((item, index) => `<div data-roadmap-scenario="${index}" id="${item.id.toLowerCase()}"><dt><span>${item.id}</span> ${escape(item.scenario)}</dt><dd>${escape(item.expected)}</dd></div>`).join('')}</dl>`;
   const adjacent = [roadmap.phases[phase.number - 2], roadmap.phases[phase.number]].filter(Boolean);
   return `<div class="roadmap-docs roadmap-phase-plan" data-roadmap-phase-plan="${phase.id}">

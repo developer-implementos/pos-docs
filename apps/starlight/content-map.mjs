@@ -55,6 +55,7 @@ const reference = (route, source, title, description, kind = 'reference') => ({ 
 const phaseHeading = phase => `F${String(phase.number).padStart(2, '0')} · ${phase.title}`;
 
 export const generatedPages = [
+  reference('roadmap/coverage', 'docs/roadmap-coverage.md', 'Cobertura y criterios de finalización', 'Capacidades, límites del 100 %, dependencias externas y aceptación del alcance de entrega.', 'proposal'),
   { ...reference('proposal/roadmap', 'docs/roadmap.md', roadmap.title, 'Punto de partida, secuencia de seis fases y acceso a sus entregables, aplicaciones y pruebas de aceptación.', 'proposal'), range: { from: null, to: phaseHeading(roadmap.phases[0]) }, roadmap: true },
   ...roadmap.phases.map((phase, index) => ({
     ...reference(`roadmap/${phase.id}`, 'docs/roadmap.md', phaseHeading(phase), phase.summary, 'proposal'),
@@ -157,7 +158,7 @@ export const sidebar = [
   { label: 'Inicio', link: '/' },
   { label: 'Visión general de la solución', link: '/overview/' },
   { label: 'Mapa general y diagramas C4', link: '/diagrams/' },
-  { label: 'Roadmap de entrega', collapsed: false, items: [item('proposal/roadmap', 'Visión general'), ...roadmap.phases.map(phase => item(`roadmap/${phase.id}`))] },
+  { label: 'Roadmap de entrega', collapsed: false, items: [item('proposal/roadmap', 'Visión general'), item('roadmap/coverage'), ...roadmap.phases.map(phase => item(`roadmap/${phase.id}`))] },
   { label: 'Mapa de contenidos', link: '/contents/' },
   { label: 'Glosario del POS', link: '/glossary/' },
   { label: 'Producto y alcance', collapsed: true, items: ['product', 'evolution', 'corporate-reuse'].map(route => item(`proposal/${route}`)) },
