@@ -7,12 +7,14 @@ import {loadCatalog} from './catalog.mjs';
 import {loadPreviews} from './previews.mjs';
 import {renderMaterialViewer} from './viewer.mjs';
 import {renderPortal} from './render.mjs';
+import {loadProgress} from './progress.mjs';
 import {docsOrigin, repositoryOrigin} from '../apps/starlight/site-config.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const output = path.join(root, 'dist');
 assert.ok(fs.existsSync(path.join(output, '.pos-docs-build')) && !fs.lstatSync(output).isSymbolicLink(), 'Build the documentation artifact before the portal');
 const catalog = loadCatalog(root);
+const progress = loadProgress(root);
 const previews = loadPreviews(root, catalog);
 const assets = path.join(output, 'portal/assets');
 fs.mkdirSync(assets, {recursive:true});
@@ -48,5 +50,5 @@ for (const item of catalog.presentations) {
     assert.ok(fs.existsSync(destination), `Presentation was catalogued but not built: ${href}`);
   }
 }
-fs.writeFileSync(path.join(output, 'index.html'), renderPortal(catalog, docsOrigin, repositoryOrigin));
+fs.writeFileSync(path.join(output, 'index.html'), renderPortal(catalog, docsOrigin, repositoryOrigin, progress));
 console.log(`Resource portal: / with ${catalog.presentations.length} presentation(s), ${catalog.materials.length} originals and ${previews.size} PDF previews.`);

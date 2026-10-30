@@ -5,8 +5,11 @@ import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 import {documentKinds, generatedDirectories, generatedPages, readingPath, sidebar} from '../content-map.mjs';
 import {productEvidence} from './product-evidence.mjs';
+import {loadProgress} from '../../../portal/progress.mjs';
 
 const root = fileURLToPath(new URL('../../../', import.meta.url));
+const progress = loadProgress(root);
+console.log(`Project progress: ${progress.accepted}/${progress.total} accepted work packages, ${progress.applications.length} applications; source ${progress.source.revision.slice(0, 12)}.`);
 assert.ok(fs.existsSync(path.join(root, productEvidence.productGuide.source)), 'Missing editorial product guide');
 const content = path.join(root, 'apps/starlight/src/content/docs');
 const routes = new Set();

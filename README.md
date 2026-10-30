@@ -7,6 +7,7 @@ El código de las aplicaciones pertenece a [POS Platform](https://github.com/dev
 | Acceso público | Contenido |
 | --- | --- |
 | [`/`](https://pos-docs-starlight.vercel.app/) | Punto de entrada y catálogo de materiales |
+| [`/#progress`](https://pos-docs-starlight.vercel.app/#progress) | Avance general y por aplicación, basado en entregables verificados del producto |
 | [`/guide/`](https://pos-docs-starlight.vercel.app/guide/) | Documentación técnica Starlight |
 | [`/architecture/`](https://pos-docs-starlight.vercel.app/architecture/) | Mapa SVG interactivo de aplicaciones, tecnologías y contratos de integración |
 | [`/presentations/architecture/`](https://pos-docs-starlight.vercel.app/presentations/architecture/) | Arquitectura y roadmap en Reveal.js |
@@ -67,6 +68,8 @@ Cada archivo ofrece **Visualizar** y **Descargar**. Las vistas de lectura `/mate
 Las páginas distinguen propuesta, implementación, investigación e historia. La revisión de código que sustenta el catálogo se registra aparte de la revisión de este repositorio editorial. El build usa archivos versionados y no consulta `main` del producto ni repositorios vecinos.
 
 La actualización de evidencia es una operación explícita sobre un checkout limpio del producto. Revisar los cambios del catálogo, los documentos afectados y los diagramas antes de registrar una nueva revisión. Los detalles están en [mantenimiento](apps/starlight/README.md).
+
+El registro de avance pertenece a `delivery/progress.json` en POS Platform. El portal calcula sus porcentajes a partir de entregables aceptados y publica un snapshot revisado; no estima avances desde commits o carpetas ni accede al repositorio privado desde el navegador. Tras actualizar y confirmar el registro del producto, ejecutar `npm run progress:sync -- --workspace ../pos-platform`, validar y publicar el cambio en POS Docs. La metodología, evidencia requerida y actualización están en [Seguimiento del avance](docs/project-progress.md).
 
 ## Vercel
 

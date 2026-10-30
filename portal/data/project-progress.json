@@ -1,0 +1,438 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "repository": "https://github.com/developer-implementos/pos-platform",
+    "revision": "bc0365188fa5ea47d9b87bdc23d8278143863b55",
+    "path": "delivery/progress.json",
+    "sha256": "2f50acb9811f60495b0d305f776f33424055d62b0f69ccac7f1eef1b11cd0826"
+  },
+  "content": {
+    "schemaVersion": 1,
+    "reviewedOn": "2026-10-30",
+    "productRevision": "b9cef7d5c30160e913dda834e3abfd5856ebc1cb",
+    "scope": {
+      "repository": "https://github.com/developer-implementos/pos-docs",
+      "revision": "91c24b9961f4582bdb7a90d6bdd14c77ff3cb856",
+      "path": "docs/roadmap.json",
+      "sha256": "cdbc145cf883f855302ff29b68f6a8c9604513cfbd1784fb016b3fca9a7c2379"
+    },
+    "summary": "La interfaz demostrativa y la base técnica están disponibles. La revisión del producto no acredita entregables funcionales completos del roadmap; persistencia comercial, identidad del backend e integraciones siguen pendientes.",
+    "applications": [
+      {
+        "id": "pos-desktop",
+        "stage": "prototype",
+        "summary": "Interfaz Angular compartida en host Tauri, con recorridos y persistencia de demostración.",
+        "nextStep": "Conectar identidad, turno y venta con branch-api y PostgreSQL; comprobar el recorrido integrado.",
+        "evidence": [
+          {
+            "path": "apps/pos-desktop/src/main.ts",
+            "label": "Entrada del cliente de escritorio"
+          },
+          {
+            "path": "apps/pos-desktop/src-tauri/tauri.conf.json",
+            "label": "Configuración del host Tauri"
+          },
+          {
+            "path": "libs/data-access/src/lib/ports.ts",
+            "label": "Adaptadores locales de demostración"
+          }
+        ]
+      },
+      {
+        "id": "pos-mobile",
+        "stage": "prototype",
+        "summary": "Interfaz Angular compartida en host Capacitor, con proyectos Android e iOS y adaptadores de demostración.",
+        "nextStep": "Conectar el backend y validar permisos, conectividad y capacidades en dispositivos elegidos.",
+        "evidence": [
+          {
+            "path": "apps/pos-mobile/src/main.ts",
+            "label": "Entrada del cliente móvil"
+          },
+          {
+            "path": "apps/pos-mobile/project.json",
+            "label": "Build y comandos nativos móviles"
+          },
+          {
+            "path": "libs/data-access/src/lib/ports.ts",
+            "label": "Adaptadores locales de demostración"
+          }
+        ]
+      },
+      {
+        "id": "branch-api",
+        "stage": "foundation",
+        "summary": "Base NestJS/Fastify con configuración, observabilidad y sondas; contextos de negocio sin implementar.",
+        "nextStep": "Implementar identidad y permisos, persistencia PostgreSQL y la primera venta transaccional.",
+        "evidence": [
+          {
+            "path": "apps/branch-api/src/app.module.ts",
+            "label": "Composición de contextos de sucursal"
+          },
+          {
+            "path": "apps/branch-api/test/http.test.ts",
+            "label": "Comprobaciones de la base HTTP"
+          },
+          {
+            "path": "libs/backend/sales/src/lib/sales.module.ts",
+            "label": "Límite actual del módulo de ventas"
+          }
+        ]
+      },
+      {
+        "id": "branch-sync-worker",
+        "stage": "foundation",
+        "summary": "Proceso y módulos preparados; el procesamiento de sincronización permanece deshabilitado.",
+        "nextStep": "Implementar entrega de outbox, recepción de paquetes y recuperación durable por HTTPS.",
+        "evidence": [
+          {
+            "path": "apps/branch-sync-worker/src/app.module.ts",
+            "label": "Composición del sincronizador"
+          },
+          {
+            "path": "apps/branch-sync-worker/test/composition.test.ts",
+            "label": "Procesamiento deshabilitado y ciclo de vida"
+          }
+        ]
+      },
+      {
+        "id": "country-api",
+        "stage": "foundation",
+        "summary": "Base HTTP de país con módulos compuestos; recepción, publicaciones y trabajo durable pendientes.",
+        "nextStep": "Implementar persistencia de país, inbox, contratos de trabajo y publicación comercial.",
+        "evidence": [
+          {
+            "path": "apps/country-api/src/app.module.ts",
+            "label": "Composición de la API de país"
+          },
+          {
+            "path": "apps/country-api/test/http.test.ts",
+            "label": "Comprobaciones de la base HTTP de país"
+          }
+        ]
+      },
+      {
+        "id": "erp-worker",
+        "stage": "foundation",
+        "summary": "Proceso de integración preparado; ejecución ERP, preparación de maestros y colas pendientes.",
+        "nextStep": "Implementar el contrato de trabajo, BullMQ y el primer adaptador ERP con recuperación.",
+        "evidence": [
+          {
+            "path": "apps/erp-worker/src/app.module.ts",
+            "label": "Composición del integrador ERP"
+          },
+          {
+            "path": "apps/erp-worker/test/composition.test.ts",
+            "label": "Procesamiento deshabilitado y ciclo de vida"
+          }
+        ]
+      },
+      {
+        "id": "device-agent",
+        "stage": "planned",
+        "summary": "Aplicación objetivo C#/.NET Windows todavía ausente del monorepo revisado.",
+        "nextStep": "Crear el servicio por puesto, recepción durable de comandos y primer periférico homologado.",
+        "evidence": []
+      }
+    ],
+    "workPackages": [
+      {
+        "id": "F01-01",
+        "apps": [
+          "pos-desktop",
+          "branch-api"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de identidad y permisos en el servidor y apertura de turno persistida.",
+        "acceptance": null
+      },
+      {
+        "id": "F01-02",
+        "apps": [
+          "pos-desktop",
+          "branch-api"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de catálogo versionado y cálculo comercial en el backend con casos acordados.",
+        "acceptance": null
+      },
+      {
+        "id": "F01-03",
+        "apps": [
+          "branch-api"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de persistir venta, pago, caja, auditoría y outbox en una transacción PostgreSQL.",
+        "acceptance": null
+      },
+      {
+        "id": "F01-04",
+        "apps": [
+          "pos-desktop",
+          "branch-api"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente del recorrido integrado cliente–API–base y su recuperación después de reiniciar.",
+        "acceptance": null
+      },
+      {
+        "id": "F02-01",
+        "apps": [
+          "pos-desktop",
+          "branch-api"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de intención de pago durable y primer adaptador de proveedor homologable.",
+        "acceptance": null
+      },
+      {
+        "id": "F02-02",
+        "apps": [
+          "pos-desktop",
+          "branch-api"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de solicitud y consulta fiscal con identidad y estados independientes de la venta.",
+        "acceptance": null
+      },
+      {
+        "id": "F02-03",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "device-agent"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar device-agent, autorización del backend y registro técnico SQLite.",
+        "acceptance": null
+      },
+      {
+        "id": "F02-04",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "device-agent"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de consulta y conciliación de pagos, documentos y efectos físicos inciertos.",
+        "acceptance": null
+      },
+      {
+        "id": "F03-01",
+        "apps": [
+          "branch-api",
+          "branch-sync-worker",
+          "country-api"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de transporte sucursal–país con outbox, inbox y acuses posteriores al commit.",
+        "acceptance": null
+      },
+      {
+        "id": "F03-02",
+        "apps": [
+          "erp-worker",
+          "country-api",
+          "branch-sync-worker",
+          "branch-api"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de preparar, publicar, descargar y activar versiones comerciales completas.",
+        "acceptance": null
+      },
+      {
+        "id": "F03-03",
+        "apps": [
+          "country-api",
+          "erp-worker"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de ejecutar la primera integración ERP con intentos y resultados durables.",
+        "acceptance": null
+      },
+      {
+        "id": "F03-04",
+        "apps": [
+          "branch-sync-worker",
+          "country-api",
+          "erp-worker",
+          "pos-desktop"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de supervisión de pendientes, límites de admisión y recuperación de carga.",
+        "acceptance": null
+      },
+      {
+        "id": "F03-05",
+        "apps": [
+          "country-api",
+          "erp-worker"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de BullMQ, Redis dedicado y reconstrucción de trabajos sin duplicar efectos.",
+        "acceptance": null
+      },
+      {
+        "id": "F04-01",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "country-api",
+          "erp-worker"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de devolución persistida y coordinación de nota de crédito y devolución de dinero.",
+        "acceptance": null
+      },
+      {
+        "id": "F04-02",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "country-api"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de cobranzas y anticipos con autoridad de saldo y exclusión del doble consumo.",
+        "acceptance": null
+      },
+      {
+        "id": "F04-03",
+        "apps": [
+          "pos-desktop",
+          "branch-api"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de arqueo, custodia y cierre con datos reales persistidos y diferencias trazables.",
+        "acceptance": null
+      },
+      {
+        "id": "F04-04",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "country-api",
+          "erp-worker"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de aprobaciones y conciliación entre caja, pagos, documentos y ERP.",
+        "acceptance": null
+      },
+      {
+        "id": "F05-01",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "branch-sync-worker",
+          "country-api",
+          "erp-worker",
+          "device-agent"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de artefactos del alcance piloto y actualización compatible de todas sus aplicaciones.",
+        "acceptance": null
+      },
+      {
+        "id": "F05-02",
+        "apps": [
+          "branch-api",
+          "branch-sync-worker",
+          "country-api",
+          "erp-worker",
+          "device-agent"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de ensayar respaldos, restauración, exclusión del escritor y conciliación.",
+        "acceptance": null
+      },
+      {
+        "id": "F05-03",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "branch-sync-worker",
+          "country-api",
+          "erp-worker",
+          "device-agent"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de preparación operativa y atención de incidentes de la configuración piloto.",
+        "acceptance": null
+      },
+      {
+        "id": "F05-04",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "branch-sync-worker",
+          "country-api",
+          "erp-worker",
+          "device-agent"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de corte controlado y expediente de aceptación de la tienda piloto.",
+        "acceptance": null
+      },
+      {
+        "id": "F06-01",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "country-api",
+          "erp-worker",
+          "device-agent"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de validar el recorrido en un segundo país con sus contratos y reglas.",
+        "acceptance": null
+      },
+      {
+        "id": "F06-02",
+        "apps": [
+          "pos-mobile",
+          "branch-api",
+          "device-agent"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de validar un uso móvil con backend, permisos y dispositivos homologados.",
+        "acceptance": null
+      },
+      {
+        "id": "F06-03",
+        "apps": [
+          "pos-desktop",
+          "pos-mobile",
+          "branch-api",
+          "branch-sync-worker",
+          "country-api",
+          "erp-worker",
+          "device-agent"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de compatibilidad entre versiones y despliegue gradual por anillos.",
+        "acceptance": null
+      },
+      {
+        "id": "F06-04",
+        "apps": [
+          "country-api",
+          "erp-worker",
+          "branch-sync-worker"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de aceptación por país y transición de conectores preservando operaciones pendientes.",
+        "acceptance": null
+      },
+      {
+        "id": "F06-05",
+        "apps": [
+          "pos-desktop",
+          "pos-mobile",
+          "branch-api",
+          "device-agent"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de homologar periféricos de red y una estación compartida para puestos y móvil.",
+        "acceptance": null
+      }
+    ]
+  }
+}

@@ -127,6 +127,7 @@ export const generatedPages = [
   reference('reference/narration-pipeline', 'docs/editorial/narration-pipeline.md', 'Narrador de la presentación histórica', 'Antecedentes del guion, generación y publicación del audio del explorador anterior.', 'historical'),
   reference('reference/video-publication', 'docs/editorial/video-publication.md', 'Video: producción y publicación', 'Antecedentes del video y su procedimiento de producción.', 'historical'),
   reference('implementation/repository', 'docs/product-repository.md', 'Repositorio POS Platform', 'Entrada al monorepo: aplicaciones, comandos, documentación y límites de implementación.', 'implementation'),
+  reference('implementation/progress', 'docs/project-progress.md', 'Seguimiento del avance', 'Entregables verificados, porcentajes por aplicación y publicación del registro de POS Platform en el portal.', 'reference'),
   reference('implementation/architecture', 'docs/architecture.md', 'Arquitectura de la implementación', 'Límites y dependencias de la base de código actual, diferenciados de la arquitectura objetivo.', 'implementation'),
   reference('implementation/monorepo', 'docs/monorepo.md', 'Estructura del monorepo', 'Estructura objetivo con shared, límites DDD, proyectos de pruebas y correspondencia con las rutas físicas actuales.', 'implementation'),
   reference('implementation/testing', 'docs/testing.md', 'Pruebas y proyectos E2E', 'Cobertura disponible, organización de los proyectos E2E y soporte compartido de pruebas.', 'implementation'),

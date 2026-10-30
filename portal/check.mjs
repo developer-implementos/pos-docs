@@ -6,12 +6,14 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { docsOrigin } from '../apps/starlight/site-config.mjs';
 import { loadCatalog } from './catalog.mjs';
+import { loadProgress } from './progress.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const require = createRequire(path.join(root, 'apps/starlight/package.json'));
 const { chromium } = require('playwright');
 const { servePublic } = require(path.join(root, 'apps/starlight/scripts/serve.cjs'));
 const catalog = loadCatalog(root);
+const progress = loadProgress(root);
 const sourceMaterials = catalog.materials.filter(item => item.kind !== 'proposal');
 const proposalMaterials = catalog.materials.filter(item => item.kind === 'proposal');
 const comparisonHref = '/guide/evidence/country-comparison/';
@@ -96,6 +98,27 @@ try {
   assert.equal(await page.getByRole('navigation', { name: 'Navegación principal' }).count(), 1);
   assert.equal(await page.locator('script:not([src])').count(), 0, 'Portal scripts are externalized');
   report.checks.push('Root response, security headers, canonical URL and landmarks');
+
+  const progressSection = page.locator('#progress');
+  assert.equal(await progressSection.getByRole('heading', { name: 'Avance del proyecto', exact: true }).count(), 1);
+  const overall = progressSection.getByRole('progressbar', { name: 'Entregables aceptados del proyecto', exact: true });
+  assert.equal(await overall.getAttribute('max'), String(progress.total));
+  assert.equal(await overall.getAttribute('value'), String(progress.accepted));
+  assert.equal(await progressSection.locator('[data-progress-app]').count(), progress.applications.length);
+  for (const app of progress.applications) {
+    const row = progressSection.locator(`[data-progress-app="${app.id}"]`);
+    assert.equal(await row.getByRole('progressbar').getAttribute('value'), String(app.accepted));
+    assert.equal(await row.getByRole('progressbar').getAttribute('max'), String(app.total));
+    assert.equal((await row.locator('.progress-app-value strong').textContent()).trim(), `${app.percent} %`);
+  }
+  const method = progressSection.locator('summary');
+  await method.focus();
+  await page.keyboard.press('Enter');
+  assert.ok(await progressSection.locator('.progress-work-list').isVisible());
+  assert.equal(await progressSection.locator('.progress-work-list>li').count(), progress.total);
+  await page.keyboard.press('Enter');
+  assert.ok(await progressSection.locator('.progress-work-list').isHidden());
+  report.checks.push('Pinned project/app progress, acceptance counts and keyboard-operated methodology');
 
   const references = await page.locator('a[href], link[href], script[src], img[src]').evaluateAll(nodes => nodes.map(node => ({
     tag: node.tagName,
@@ -323,6 +346,8 @@ try {
   const fallback = await noJs.newPage();
   observe(fallback);
   assert.equal((await fallback.goto(origin + '/')).status(), 200);
+  assert.equal(await fallback.locator('#progress [data-progress-app]').count(), progress.applications.length, 'All app progress is available without JavaScript');
+  assert.ok(await fallback.locator('#progress time').isVisible(), 'The review date is visible without JavaScript');
   await assertSources(fallback, sourceMaterials, 'All source documents are available without JavaScript');
   assert.deepEqual(await downloadHrefs(fallback.locator('a[download]:visible')), sorted(catalog.materials.map(item => item.href)), 'Every original, including proposals, is downloadable without JavaScript');
   assert.ok(await fallback.locator(`#materials a[href="${comparisonHref}"]`).isVisible(), 'The synthesis remains available without JavaScript');

@@ -1,3 +1,5 @@
+import { renderProgress } from './progress-view.mjs';
+
 const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const size = bytes => {
   const unit = bytes < 1024 ? 'B' : bytes < 1024 * 1024 ? 'KB' : 'MB';
@@ -22,7 +24,7 @@ function downloadItem(item, proposal = false) {
   </li>`;
 }
 
-export function renderPortal(catalog, origin, repository) {
+export function renderPortal(catalog, origin, repository, progress) {
   const decks = catalog.presentations.map(deck => `<article class="presentation">
     <div class="presentation-cover" aria-hidden="true"><span>POS PLATFORM</span><strong>${escape(deck.title)}</strong><span>PROPUESTA · REVEAL.JS</span></div>
     <div class="presentation-content"><p class="eyebrow">Presentación web · Reveal.js</p><h3>${escape(deck.title)}</h3><p>${escape(deck.description)}</p>
@@ -43,6 +45,7 @@ export function renderPortal(catalog, origin, repository) {
 <nav aria-label="Navegación principal"><a href="/guide/">Documentación</a><a href="#presentations">Propuestas</a><a href="#materials">Fuentes</a><a href="#team">Equipo</a></nav></div></header>
 <main id="main" tabindex="-1">
 <div class="intro"><p class="eyebrow">IMPLEMENTOS · POS PLATFORM</p><h1>Documentación y recursos</h1><p class="lead">La arquitectura del producto, las propuestas del equipo y las fuentes de reuniones que explican las necesidades de cada país.</p></div>
+${renderProgress(progress)}
 <section class="resource-section" aria-labelledby="documentation-title"><div class="section-heading"><span class="section-number" aria-hidden="true">01</span><div><h2 id="documentation-title">Documentación técnica</h2><p>La referencia para entender y desarrollar la plataforma.</p></div></div>
 <div class="documentation"><div class="documentation-intro"><p class="eyebrow">GUÍA STARLIGHT</p><h3>De la propuesta<br>a la implementación.</h3><p>Arquitectura, límites del monorepo, decisiones y evidencia del sistema actual, organizados por tema.</p><a class="button light" href="/guide/">Explorar documentación</a></div>
 <ul class="guide-paths"><li><a href="/guide/overview/">Visión general</a><p>Alcance corporativo y responsabilidades de cada pieza.</p></li><li><a href="/architecture/">Mapa interactivo de arquitectura</a><p>Aplicaciones, tecnologías y conexiones. <a href="/guide/diagrams/">Consultar las vistas C4</a>.</p></li><li><a href="/guide/implementation/monorepo/">Estructura e implementación</a><p>Aplicaciones, bibliotecas y estado del código.</p></li><li><a href="/guide/api/mountain/">Referencia del sistema actual</a><p>Endpoints y responsabilidades del legacy Mountain.</p></li></ul><p><a class="text-link" href="/guide/proposal/roadmap/">Roadmap detallado de entrega</a>: entregables por aplicación, dependencias y pruebas para aceptar cada fase.</p></div></section>
