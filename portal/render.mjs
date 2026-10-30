@@ -6,6 +6,13 @@ const size = bytes => {
 };
 const countryNames = {chile:'Chile',peru:'Perú',spain:'España',regional:'Multipaís'};
 const kindNames = {historical:'Antecedente recibido',proposal:'Documento de propuesta',meeting:'Registro de reunión',questionnaire:'Cuestionario'};
+const teamMembers = [
+  { name: 'Cristian Flores', role: 'Arquitectura' },
+  { name: 'Jose Espinoza', role: 'Arquitectura' },
+  { name: 'Javier Uribe', role: 'Desarrollador' },
+  { name: 'Jesus Abdul', role: 'Desarrollador' },
+  { name: 'Pedro Yañez', role: 'Líder de equipo' },
+];
 
 function downloadItem(item, proposal = false) {
   return `<li class="material" ${proposal ? '' : `data-material data-format="${escape(item.format)}" data-country="${escape(item.country || '')}"`}>
@@ -33,7 +40,7 @@ export function renderPortal(catalog, origin, repository) {
 <link rel="icon" href="/portal/assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/portal/portal.css"><script type="module" src="/portal/portal.js"></script></head>
 <body><a class="skip-link" href="#main">Saltar al contenido</a>
 <header class="site-header"><div class="header-inner"><a class="brand" href="/" aria-label="POS Platform, inicio"><img src="/portal/assets/logo.svg" width="148" height="50" alt="Implementos"><span>POS Platform</span></a>
-<nav aria-label="Navegación principal"><a href="/guide/">Documentación</a><a href="#presentations">Propuestas</a><a href="#materials">Fuentes</a></nav></div></header>
+<nav aria-label="Navegación principal"><a href="/guide/">Documentación</a><a href="#presentations">Propuestas</a><a href="#materials">Fuentes</a><a href="#team">Equipo</a></nav></div></header>
 <main id="main" tabindex="-1">
 <div class="intro"><p class="eyebrow">IMPLEMENTOS · POS PLATFORM</p><h1>Documentación y recursos</h1><p class="lead">La arquitectura del producto, las propuestas del equipo y las fuentes de reuniones que explican las necesidades de cada país.</p></div>
 <section class="resource-section" aria-labelledby="documentation-title"><div class="section-heading"><span class="section-number" aria-hidden="true">01</span><div><h2 id="documentation-title">Documentación técnica</h2><p>La referencia para entender y desarrollar la plataforma.</p></div></div>
@@ -49,5 +56,7 @@ ${proposalFiles.length ? `<ul class="proposal-downloads" aria-label="Documentos 
 <p class="result-count" aria-live="polite" aria-atomic="true" data-count>${sources.length} fuentes</p><ul class="materials-list">${materials}</ul>
 <div class="empty-state" data-empty hidden><h3>No hay fuentes con esos filtros</h3><p>Prueba otra búsqueda o limpia los filtros.</p></div>
 <div class="contribute"><div><h3>¿Un nuevo documento del equipo?</h3><p>Identifica su país, contexto y fecha conocida, y clasifícalo como fuente original, síntesis o propuesta, independientemente de su formato.</p></div><a class="text-link" href="${escape(repository)}/blob/main/materials/README.md">Cómo añadir materiales</a></div></section>
+<section id="team" class="resource-section" aria-labelledby="team-title"><div class="section-heading"><span class="section-number" aria-hidden="true">04</span><h2 id="team-title">Equipo de trabajo</h2></div>
+<ul class="team-list" role="list">${teamMembers.map(member => `<li><p class="team-name">${escape(member.name)}</p><p class="team-role">${escape(member.role)}</p></li>`).join('')}</ul></section>
 </main><footer><div class="footer-inner"><p><strong>POS Platform</strong><span>Documentación de Implementos</span></p><a class="text-link" href="${escape(repository)}">Repositorio pos-docs</a></div></footer></body></html>`;
 }
