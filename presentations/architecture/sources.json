@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "reviewedOn": "2026-10-30",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "814c25904070becb7d496f47e4faaebcb12fa95f",
+  "revision": "e2554fb4949e38d1a5c4930794560b1217e738fb",
   "sourceStatus": "Fuentes documentales verificadas en la revisión indicada.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "inputs": [
@@ -52,7 +52,7 @@
     },
     {
       "path": "tools/architecture/views.mjs",
-      "sha256": "bf885fabddb192cbe90dcb2902cd85060545eda30c719012805669d4e6b54c5f"
+      "sha256": "89ce3a66c1d1f8cf9db00ef98df4e81b91cd48f14f925d42fe2e6153ceb58335"
     },
     {
       "path": "tools/diagrams/models/c4-data.js",
