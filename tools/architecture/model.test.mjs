@@ -113,3 +113,19 @@ test('the base download is deterministic, portable vector output with meaningful
   for (const node of model.nodes) assert.ok(svg.includes(`data-item-id="${node.id}"`));
   for (const edge of model.edges) assert.ok(svg.includes(edge.protocolLabel));
 });
+
+test('the optional-capability projection contains cache and telemetry contracts without unrelated work flows', () => {
+  const options = architectureViews.find(view => view.id === 'options').model;
+  assert.deepEqual(options.edges.map(edge => edge.id).sort(), ['cache-policy', 'cache-read', 'cache-fallback', 'branch-diagnostic', 'sync-diagnostic', 'country-diagnostic', 'erp-diagnostic'].sort());
+  assert.ok(options.edges.every(edge => edge.status === 'conditional'));
+});
+
+test('every published view and guided step has a readable layout with all its contracts', () => {
+  const views = [...architectureViews, ...architecture.scenarios.flatMap(scenario => scenario.steps.map((_, index) => ({ id: `${scenario.id}/${index + 1}`, model: scenarioView(scenario, index) })))];
+  for (const view of views) {
+    const svg = renderArchitecture(view.model, { interactive: true });
+    for (const item of [...view.model.nodes, ...view.model.edges]) {
+      assert.ok(svg.includes(`data-item-id="${item.id}"`), `${view.id} preserves ${item.id}`);
+    }
+  }
+});

@@ -21,7 +21,7 @@ export const architectureViews = [
     const nodes = [...new Set([...local, ...adjacent])];
     return { id: group.id, title: group.title, description: `Componentes de ${group.title.toLowerCase()} y sus colaboradores directos.`, model: projectArchitecture(architecture, nodes, { id: group.id, title: group.title, compact: false, edgeIds: related.map(edge => edge.id) }) };
   }),
-  { id: 'options', title: 'Caché y observabilidad', description: 'Caché descartable y destinos externos de telemetría conservan su adopción condicionada. Los jobs BullMQ y sus Redis dedicados pertenecen a la arquitectura base.', model: projectArchitecture(architecture, ['branch-api', 'branch-sync', 'country-api', 'cache-port', 'redis-cache', 'country-db', 'erp-worker', 'observability'], { id: 'options', title: 'Caché y observabilidad', compact: false }) },
+  { id: 'options', title: 'Caché y observabilidad', description: 'Caché descartable y destinos externos de telemetría conservan su adopción condicionada. Los jobs BullMQ y sus Redis dedicados pertenecen a la arquitectura base.', model: projectArchitecture(architecture, ['branch-api', 'branch-sync', 'country-api', 'cache-port', 'redis-cache', 'country-db', 'erp-worker', 'observability'], { id: 'options', title: 'Caché y observabilidad', compact: false, edgeIds: ['cache-policy', 'cache-read', 'cache-fallback', 'branch-diagnostic', 'sync-diagnostic', 'country-diagnostic', 'erp-diagnostic'] }) },
   { id: 'full', title: 'Mapa completo', description: 'Todas las responsabilidades, contratos y alternativas de la propuesta.', model: { ...architecture, id: 'full' } },
 ];
 
