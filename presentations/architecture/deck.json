@@ -2521,7 +2521,7 @@
         },
         {
           "type": "text",
-          "text": "F01 en revisión: administración POS y HTTPS; venta sintética. Integraciones pendientes.",
+          "text": "F01 integrado: administración POS y venta sintética verificadas. Integraciones pendientes.",
           "position": {
             "left": 64,
             "top": 644,
@@ -7172,7 +7172,7 @@
       "id": "slide-11",
       "title": "De la demostración al producto",
       "background": "#FFFFFF",
-      "notes": "F01 incorpora usuarios, roles y permisos propios POS para Chile, provisión persistente de sucursal y puestos, y HTTPS entre clientes Angular y branch-api sobre PostgreSQL. La administración operativa está implementada y en revisión; no implica aceptación de fase ni habilitación productiva. Los clientes branch aplican las capacidades del servidor y parten sin configurar; branch-lab y demo permanecen separados. Apertura, cotización, efectivo y recuperación se prueban con datos comerciales sintéticos: el perfil operativo no cobra ni cotiza con fuentes incompletas. Los documentos de prueba no tienen validez fiscal. La CLI Mountain consulta referencias por HTTPS, pero falta validar el acceso corporativo y no abastece la UI ni el espejo. Chile con identidad propia POS es el alcance inicial acordado; la instalación y distribución nativa de escritorio y móvil requieren validación específica. No se asignan plazos ni recursos sin información de capacidad y dependencias. Roadmap propuesto para revisión con desarrollo y producto. El orden y los criterios son una propuesta editorial para esta presentación, no un calendario aprobado.",
+      "notes": "F01 incorpora usuarios, roles y permisos propios POS para Chile, provisión persistente de sucursal y puestos, y HTTPS entre clientes Angular y branch-api sobre PostgreSQL. La administración operativa está integrada y técnicamente verificada; la aceptación manual y la habilitación productiva se mantienen separadas. Los clientes branch aplican las capacidades del servidor y parten sin configurar; branch-lab y demo permanecen separados. Apertura, cotización, efectivo y recuperación se prueban con datos comerciales sintéticos: el perfil operativo no cobra ni cotiza con fuentes incompletas. Los documentos de prueba no tienen validez fiscal. La CLI Mountain consulta referencias por HTTPS, pero falta validar el acceso corporativo y no abastece la UI ni el espejo. Chile con identidad propia POS es el alcance inicial acordado; la instalación y distribución nativa de escritorio y móvil requieren validación específica. No se asignan plazos ni recursos sin información de capacidad y dependencias. Roadmap propuesto para revisión con desarrollo y producto. El orden y los criterios son una propuesta editorial para esta presentación, no un calendario aprobado.",
       "sources": [
         {
           "label": "Base técnica y demostración",

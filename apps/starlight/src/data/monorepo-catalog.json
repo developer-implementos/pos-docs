@@ -9,14 +9,14 @@
       "name": "pos-desktop",
       "location": "Puesto Windows",
       "description": "Aplicación completa: shell nativa Tauri y frontend Angular",
-      "state": "Cliente conectado con registro del puesto y administración POS; demo y laboratorio explícitos. Instalación y confianza TLS del WebView requieren validación nativa",
+      "state": "Cliente conectado con administración POS, frescura del cliente y recotización con consentimiento; demo y laboratorio explícitos. Paquete Tauri y política embebida pendientes en F01-04",
       "inReviewedWorkspace": true
     },
     {
       "name": "pos-mobile",
       "location": "Dispositivo Android/iOS",
       "description": "Aplicación completa: shell nativa Capacitor y frontend Angular",
-      "state": "Cliente conectado compartido con política HTTPS y registro de puesto; distribución y capacidades nativas por homologar",
+      "state": "Cliente conectado compartido; dos APK Android y política HTTPS embebida comprobados. Instalación, distribución y capacidades nativas se homologan en sus fases",
       "inReviewedWorkspace": true
     },
     {
@@ -30,7 +30,7 @@
       "name": "branch-api",
       "location": "Sucursal",
       "description": "API y composición de negocio de sucursal",
-      "state": "Identidad y administración propias del POS para Chile con HTTPS/PostgreSQL; motor comercial probado en laboratorio. Cotización requiere fuente completa y caja operativa permanece cerrada",
+      "state": "Identidad y administración POS Chile, configuración compatible, cestas y motor comercial técnicamente verificados con PostgreSQL; pruebas comerciales sintéticas. Precios y cobros operativos sujetos a fuente validada",
       "inReviewedWorkspace": true
     },
     {
