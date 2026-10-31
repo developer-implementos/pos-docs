@@ -2,19 +2,19 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "bc0365188fa5ea47d9b87bdc23d8278143863b55",
+    "revision": "bf98c2f8822897c2aa98dc33ab3fd609ff5d3e9e",
     "path": "delivery/progress.json",
-    "sha256": "2f50acb9811f60495b0d305f776f33424055d62b0f69ccac7f1eef1b11cd0826"
+    "sha256": "246acb957370dd604b290f74d3fc0b76023f839757c79819c88f2dea76c619d7"
   },
   "content": {
     "schemaVersion": 1,
     "reviewedOn": "2026-10-30",
-    "productRevision": "b9cef7d5c30160e913dda834e3abfd5856ebc1cb",
+    "productRevision": "bc0365188fa5ea47d9b87bdc23d8278143863b55",
     "scope": {
       "repository": "https://github.com/developer-implementos/pos-docs",
-      "revision": "91c24b9961f4582bdb7a90d6bdd14c77ff3cb856",
+      "revision": "7f29e2cef103aee4d7e470baf19178e7f03fcf92",
       "path": "docs/roadmap.json",
-      "sha256": "cdbc145cf883f855302ff29b68f6a8c9604513cfbd1784fb016b3fca9a7c2379"
+      "sha256": "6b4f54498d21cd06cb3e376168d5fd19d6cdfcfd4eb1c10bc06d651494adb5ee"
     },
     "summary": "La interfaz demostrativa y la base técnica están disponibles. La revisión del producto no acredita entregables funcionales completos del roadmap; persistencia comercial, identidad del backend e integraciones siguen pendientes.",
     "applications": [
@@ -142,7 +142,7 @@
           "branch-api"
         ],
         "status": "not_started",
-        "summary": "Pendiente de identidad y permisos en el servidor y apertura de turno persistida.",
+        "summary": "Pendiente de implementar y aceptar: Un operador y puesto identificados abren un turno único en su ámbito; toda autorización y exclusión se comprueba en branch-api.",
         "acceptance": null
       },
       {
@@ -152,7 +152,7 @@
           "branch-api"
         ],
         "status": "not_started",
-        "summary": "Pendiente de catálogo versionado y cálculo comercial en el backend con casos acordados.",
+        "summary": "Pendiente de implementar y aceptar: Una cotización conserva versión comercial y desglose verificable de importes, impuestos y redondeos del alcance inicial.",
         "acceptance": null
       },
       {
@@ -161,7 +161,7 @@
           "branch-api"
         ],
         "status": "not_started",
-        "summary": "Pendiente de persistir venta, pago, caja, auditoría y outbox en una transacción PostgreSQL.",
+        "summary": "Pendiente de implementar y aceptar: Una venta en efectivo confirma cabecera, líneas, pago, movimiento, auditoría y outbox en una única transacción PostgreSQL recuperable.",
         "acceptance": null
       },
       {
@@ -171,17 +171,119 @@
           "branch-api"
         ],
         "status": "not_started",
-        "summary": "Pendiente del recorrido integrado cliente–API–base y su recuperación después de reiniciar.",
+        "summary": "Pendiente de implementar y aceptar: Una prueba de sistema usa API y PostgreSQL reales para abrir caja, vender y recuperar una operación sin depender del adaptador mock.",
+        "acceptance": null
+      },
+      {
+        "id": "F01-05",
+        "apps": [
+          "pos-desktop",
+          "pos-mobile",
+          "branch-api",
+          "branch-sync-worker",
+          "country-api",
+          "erp-worker",
+          "device-agent"
+        ],
+        "status": "in_progress",
+        "summary": "Controles de colaboración y fichas en preparación; pendiente de revisión del equipo y evidencia de aceptación.",
+        "acceptance": null
+      },
+      {
+        "id": "F01-06",
+        "apps": [
+          "branch-api",
+          "country-api"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Las bases de sucursal y país tienen propietarios, credenciales separadas, migraciones reproducibles y transacciones probadas antes de recibir negocio.",
+        "acceptance": null
+      },
+      {
+        "id": "F01-07",
+        "apps": [
+          "branch-api",
+          "country-api",
+          "pos-desktop"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: País, entidad, sucursal, caja y puesto tienen identidad estable y una configuración efectiva validada que el servidor aplica a cada operación.",
+        "acceptance": null
+      },
+      {
+        "id": "F01-08",
+        "apps": [
+          "pos-desktop",
+          "branch-api"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: El operador busca clientes autorizados, identifica al receptor del documento y gestiona un alta express sin inventar autoridad sobre el maestro corporativo.",
+        "acceptance": null
+      },
+      {
+        "id": "F01-09",
+        "apps": [
+          "pos-desktop",
+          "branch-api"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: La cesta puede editarse, pausarse, retomarse o cancelarse con versión y permisos, sin duplicar ventas ni recuperar cobros como si fueran borradores.",
+        "acceptance": null
+      },
+      {
+        "id": "F01-10",
+        "apps": [
+          "pos-desktop",
+          "branch-api"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: El cálculo aplica reglas comerciales versionadas y explica promociones, límites y descuentos autorizados sin permitir rebajas arbitrarias desde el cliente.",
+        "acceptance": null
+      },
+      {
+        "id": "F01-11",
+        "apps": [
+          "pos-desktop",
+          "branch-api"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: El cliente consulta un catálogo autorizado con códigos, unidades y disponibilidad informativa, sin convertir al POS en autoridad de inventario.",
+        "acceptance": null
+      },
+      {
+        "id": "F01-12",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "country-api"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Los clientes y APIs comparten contratos versionados verificables, errores previsibles y reglas de idempotencia/concurrencia sin importar implementación privada.",
+        "acceptance": null
+      },
+      {
+        "id": "F01-13",
+        "apps": [
+          "pos-desktop",
+          "pos-mobile",
+          "branch-api",
+          "branch-sync-worker",
+          "country-api",
+          "erp-worker"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: La estructura compartida acordada organiza responsabilidades y puntos de entrada sin dependencias entre aplicaciones ni mezcla de frontend, dominio y servidor.",
         "acceptance": null
       },
       {
         "id": "F02-01",
         "apps": [
           "pos-desktop",
-          "branch-api"
+          "branch-api",
+          "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de intención de pago durable y primer adaptador de proveedor homologable.",
+        "summary": "Pendiente de implementar y aceptar: El primer medio externo ejecuta un cobro con intención durable, destino fijo y consulta de resultado, sin reintentos financieros ciegos.",
         "acceptance": null
       },
       {
@@ -191,7 +293,7 @@
           "branch-api"
         ],
         "status": "not_started",
-        "summary": "Pendiente de solicitud y consulta fiscal con identidad y estados independientes de la venta.",
+        "summary": "Pendiente de implementar y aceptar: El primer documento fiscal conserva identidad y estados separados de venta, transmisión, aceptación y rechazo, según régimen homologado.",
         "acceptance": null
       },
       {
@@ -202,7 +304,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar device-agent, autorización del backend y registro técnico SQLite.",
+        "summary": "Pendiente de implementar y aceptar: device-agent C#/.NET se ejecuta independientemente de la ventana POS y conserva recepción, intentos y evidencia técnica de los periféricos del puesto.",
         "acceptance": null
       },
       {
@@ -213,7 +315,113 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de consulta y conciliación de pagos, documentos y efectos físicos inciertos.",
+        "summary": "Pendiente de implementar y aceptar: El operador puede consultar excepciones por efecto y solicitar sólo acciones de recuperación autorizadas con evidencia auditada.",
+        "acceptance": null
+      },
+      {
+        "id": "F02-05",
+        "apps": [
+          "pos-desktop",
+          "branch-api"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Una venta admite la combinación de medios aprobada y concilia asignaciones exactas, pendientes y vuelto sin confirmar importes insuficientes o duplicados.",
+        "acceptance": null
+      },
+      {
+        "id": "F02-06",
+        "apps": [
+          "pos-desktop",
+          "branch-api"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Transferencias, vouchers y medios manuales conservan evidencia y estados de verificación que impiden tratar una declaración o captura como dinero confirmado.",
+        "acceptance": null
+      },
+      {
+        "id": "F02-07",
+        "apps": [
+          "branch-api",
+          "country-api",
+          "pos-desktop",
+          "device-agent"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Una configuración aprobada selecciona adaptadores y capacidades por ámbito y conserva el destino de toda operación iniciada.",
+        "acceptance": null
+      },
+      {
+        "id": "F02-08",
+        "apps": [
+          "branch-api",
+          "country-api"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: El primer perfil controla numeración, material fiscal, vigencia y consumo concurrente sin reutilizar identidades ni habilitar contingencias no autorizadas.",
+        "acceptance": null
+      },
+      {
+        "id": "F02-09",
+        "apps": [
+          "branch-api",
+          "device-agent",
+          "pos-desktop"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: branch-api admite trabajos de dispositivos autorizados y el host .NET intercambia comandos/resultados versionados sin acceso SQL ni rutas arbitrarias.",
+        "acceptance": null
+      },
+      {
+        "id": "F02-10",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "device-agent"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Recibos y etiquetas del alcance se renderizan con plantillas versionadas y se imprimen mediante adaptadores homologados sin volver a cobrar o emitir.",
+        "acceptance": null
+      },
+      {
+        "id": "F02-11",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "device-agent"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: El perfil de cheque elegido captura datos con sesión acotada y verifica el instrumento mediante el contrato vigente de Orsan, conservando incertidumbre y privacidad.",
+        "acceptance": null
+      },
+      {
+        "id": "F02-12",
+        "apps": [
+          "pos-desktop",
+          "branch-api"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Los operadores autorizados encuentran comprobantes y sus representaciones con filtros, estados y trazabilidad, sin exponer documentos de otro ámbito.",
+        "acceptance": null
+      },
+      {
+        "id": "F02-13",
+        "apps": [
+          "branch-api",
+          "pos-desktop"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Un cobro aprobado que no logra completar la venta tiene un procedimiento durable de recuperación o reversa sin duplicar cargo ni devolución.",
+        "acceptance": null
+      },
+      {
+        "id": "F02-14",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "device-agent"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Un operador autorizado consulta y mantiene el terminal homologado con operaciones auditadas, diferenciando cierre de terminal y cierre de caja.",
         "acceptance": null
       },
       {
@@ -224,7 +432,7 @@
           "country-api"
         ],
         "status": "not_started",
-        "summary": "Pendiente de transporte sucursal–país con outbox, inbox y acuses posteriores al commit.",
+        "summary": "Pendiente de implementar y aceptar: La outbox de sucursal se entrega por HTTPS con ACK posterior al commit de inbox, efecto local y siguiente trabajo durable de país.",
         "acceptance": null
       },
       {
@@ -236,7 +444,7 @@
           "branch-api"
         ],
         "status": "not_started",
-        "summary": "Pendiente de preparar, publicar, descargar y activar versiones comerciales completas.",
+        "summary": "Pendiente de implementar y aceptar: country-api coordina publicaciones comerciales inmutables y verificadas por ámbito, activadas por eventos, calendario o solicitud manual controlada.",
         "acceptance": null
       },
       {
@@ -246,7 +454,7 @@
           "erp-worker"
         ],
         "status": "not_started",
-        "summary": "Pendiente de ejecutar la primera integración ERP con intentos y resultados durables.",
+        "summary": "Pendiente de implementar y aceptar: erp-worker integra una operación con el primer ERP desde su red autorizada y conserva identidad, destino, lease y resultado verificable en país.",
         "acceptance": null
       },
       {
@@ -258,7 +466,7 @@
           "pos-desktop"
         ],
         "status": "not_started",
-        "summary": "Pendiente de supervisión de pendientes, límites de admisión y recuperación de carga.",
+        "summary": "Pendiente de implementar y aceptar: El equipo observa pendientes y drena colas sin saturar destinos; decide y prueba por separado si una caché de lectura aporta valor medido.",
         "acceptance": null
       },
       {
@@ -268,7 +476,88 @@
           "erp-worker"
         ],
         "status": "not_started",
-        "summary": "Pendiente de BullMQ, Redis dedicado y reconstrucción de trabajos sin duplicar efectos.",
+        "summary": "Pendiente de implementar y aceptar: Los trabajos BullMQ se reconstruyen desde PostgreSQL y contratos de país tras interrupciones o pérdida de Redis sin duplicar solicitudes ni efectos inciertos.",
+        "acceptance": null
+      },
+      {
+        "id": "F03-06",
+        "apps": [
+          "branch-api",
+          "branch-sync-worker",
+          "country-api",
+          "erp-worker",
+          "device-agent"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Cada instalación y workload se autentica con su propia identidad, ámbito y capacidades; alta, rotación, revocación y restore no clonan autoridad.",
+        "acceptance": null
+      },
+      {
+        "id": "F03-07",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "country-api"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: El operador usa identidad corporativa homologada y la sucursal aplica autorizaciones de continuidad firmadas y acotadas durante cortes de WAN.",
+        "acceptance": null
+      },
+      {
+        "id": "F03-08",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "branch-sync-worker"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Antes de admitir cada operación, branch-api verifica que datos, permisos, reloj, material fiscal y medio permiten ejecutarla bajo el perfil de continuidad vigente.",
+        "acceptance": null
+      },
+      {
+        "id": "F03-09",
+        "apps": [
+          "erp-worker",
+          "country-api"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: erp-worker prepara catálogo, clientes y precios desde sus fuentes autorizadas con un punto de corte consistente y manifiesto verificable.",
+        "acceptance": null
+      },
+      {
+        "id": "F03-10",
+        "apps": [
+          "branch-sync-worker",
+          "branch-api"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: La sucursal descarga y valida candidatas sin alterar el conjunto activo; sólo cambia versión, inbox y cursor aplicado en un commit completo.",
+        "acceptance": null
+      },
+      {
+        "id": "F03-11",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "branch-sync-worker",
+          "country-api",
+          "erp-worker",
+          "device-agent"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Las versiones de cliente, sucursal, país, ERP y dispositivo pueden coexistir dentro de una matriz declarada sin interpretar incorrectamente mensajes persistidos.",
+        "acceptance": null
+      },
+      {
+        "id": "F03-12",
+        "apps": [
+          "pos-desktop",
+          "branch-sync-worker",
+          "country-api",
+          "erp-worker"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Una operación puede seguirse desde la sucursal hasta país y ERP; las diferencias se detectan y recuperan con acciones acotadas y evidencia durable.",
         "acceptance": null
       },
       {
@@ -280,7 +569,7 @@
           "erp-worker"
         ],
         "status": "not_started",
-        "summary": "Pendiente de devolución persistida y coordinación de nota de crédito y devolución de dinero.",
+        "summary": "Pendiente de implementar y aceptar: Devolución autorizada ligada a las líneas originales, con nota de crédito y devolución de dinero identificadas como efectos independientes.",
         "acceptance": null
       },
       {
@@ -291,7 +580,7 @@
           "country-api"
         ],
         "status": "not_started",
-        "summary": "Pendiente de cobranzas y anticipos con autoridad de saldo y exclusión del doble consumo.",
+        "summary": "Pendiente de implementar y aceptar: Aplicaciones de cobro y anticipo con reserva o exclusión autorizada, referencias durables y protección frente al doble consumo.",
         "acceptance": null
       },
       {
@@ -301,7 +590,7 @@
           "branch-api"
         ],
         "status": "not_started",
-        "summary": "Pendiente de arqueo, custodia y cierre con datos reales persistidos y diferencias trazables.",
+        "summary": "Pendiente de implementar y aceptar: Jornada con ingresos, retiros, arqueos, custodia y depósito trazables; cierre parcial, traspaso y cierre final sujetos a reglas y corte transaccional aprobados.",
         "acceptance": null
       },
       {
@@ -313,7 +602,89 @@
           "erp-worker"
         ],
         "status": "not_started",
-        "summary": "Pendiente de aprobaciones y conciliación entre caja, pagos, documentos y ERP.",
+        "summary": "Pendiente de implementar y aceptar: Revisión de jornada que explica diferencias entre caja, pagos, documentos y ERP, con excepciones y aprobaciones auditadas.",
+        "acceptance": null
+      },
+      {
+        "id": "F04-05",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "country-api"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Reportes de ventas, medios de pago, cierres, cobranzas y devoluciones consultables y exportables con permisos, corte y frescura visibles.",
+        "acceptance": null
+      },
+      {
+        "id": "F04-06",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "country-api"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Administración real de asignaciones y configuración autorizada, con versiones, aprobación y propagación comprobable por sucursal.",
+        "acceptance": null
+      },
+      {
+        "id": "F04-07",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "country-api",
+          "erp-worker"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Cada maestro u oferta visible tiene autoridad declarada y flujo de consulta o modificación aprobado, sin editar directamente el espejo de venta.",
+        "acceptance": null
+      },
+      {
+        "id": "F04-08",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "country-api",
+          "erp-worker"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Una orden, nota de venta o documento externo autorizado puede recuperarse y consumirse en caja con propietario, versión y exclusión verificables.",
+        "acceptance": null
+      },
+      {
+        "id": "F04-09",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "country-api",
+          "erp-worker"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Un depósito verificado se imputa una sola vez a documentos y conserva parciales, excedentes y excepciones según la autoridad financiera.",
+        "acceptance": null
+      },
+      {
+        "id": "F04-10",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "country-api",
+          "erp-worker"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Soporte y operaciones consultan el estado completo de una operación y gestionan excepciones con permisos y evidencia, cubriendo la administración central necesaria.",
+        "acceptance": null
+      },
+      {
+        "id": "F04-11",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "country-api",
+          "erp-worker"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Venta financiada contra cupo autorizado, con bloqueos, condiciones, cuotas, consumo y deuda vinculados; una consulta de saldo no concede crédito offline.",
         "acceptance": null
       },
       {
@@ -327,7 +698,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de artefactos del alcance piloto y actualización compatible de todas sus aplicaciones.",
+        "summary": "Pendiente de implementar y aceptar: Una revisión identificada e instalable del alcance piloto, con integridad comprobable y procedimiento de actualización compatible.",
         "acceptance": null
       },
       {
@@ -340,7 +711,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de ensayar respaldos, restauración, exclusión del escritor y conciliación.",
+        "summary": "Pendiente de implementar y aceptar: Procedimientos ensayados para recuperar sucursal y país con evidencia de pérdida de datos, tiempo de recuperación y conciliación.",
         "acceptance": null
       },
       {
@@ -354,7 +725,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de preparación operativa y atención de incidentes de la configuración piloto.",
+        "summary": "Pendiente de implementar y aceptar: Operadores y soporte pueden detectar, clasificar y atender los incidentes previstos para la configuración piloto.",
         "acceptance": null
       },
       {
@@ -368,7 +739,118 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de corte controlado y expediente de aceptación de la tienda piloto.",
+        "summary": "Pendiente de implementar y aceptar: Expediente del piloto con configuración, conciliación, incidencias y decisión explícita de continuar, corregir o detener.",
+        "acceptance": null
+      },
+      {
+        "id": "F05-05",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "branch-sync-worker",
+          "country-api",
+          "erp-worker",
+          "device-agent"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Entorno piloto reproducible con PostgreSQL, Redis de trabajos separados, TLS, mínimo privilegio y configuración identificable por ámbito.",
+        "acceptance": null
+      },
+      {
+        "id": "F05-06",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "branch-sync-worker",
+          "country-api",
+          "erp-worker",
+          "device-agent"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Se detectan fallos y degradación del recorrido mediante métricas y alertas accionables con responsables y objetivos medidos.",
+        "acceptance": null
+      },
+      {
+        "id": "F05-07",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "branch-sync-worker",
+          "country-api",
+          "erp-worker",
+          "device-agent"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: El alcance piloto cumple objetivos de latencia, volumen y recuperación medidos con carga representativa, límites y backpressure verificables.",
+        "acceptance": null
+      },
+      {
+        "id": "F05-08",
+        "apps": [
+          "pos-desktop",
+          "pos-mobile",
+          "branch-api",
+          "branch-sync-worker",
+          "country-api",
+          "erp-worker",
+          "device-agent"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Modelo de amenazas y revisión técnica/operativa del alcance piloto con hallazgos tratados y decisiones de riesgo explícitas.",
+        "acceptance": null
+      },
+      {
+        "id": "F05-09",
+        "apps": [
+          "pos-desktop",
+          "pos-mobile",
+          "branch-api",
+          "branch-sync-worker",
+          "country-api",
+          "erp-worker",
+          "device-agent"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Datos personales, auditoría, documentos y evidencias técnicas tienen propiedad, retención y acceso aprobados y mecanismos comprobables.",
+        "acceptance": null
+      },
+      {
+        "id": "F05-10",
+        "apps": [
+          "branch-api",
+          "branch-sync-worker",
+          "country-api",
+          "erp-worker",
+          "pos-desktop"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Datos y referencias necesarios para el piloto se migran mediante un corte reproducible, conciliado y compatible con los consumidores autorizados.",
+        "acceptance": null
+      },
+      {
+        "id": "F05-11",
+        "apps": [
+          "pos-desktop",
+          "pos-mobile",
+          "branch-api",
+          "branch-sync-worker",
+          "country-api",
+          "erp-worker",
+          "device-agent"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Cada release piloto tiene procedencia, inventario de dependencias/licencias y vulnerabilidades revisadas, sin excepciones silenciosas.",
+        "acceptance": null
+      },
+      {
+        "id": "F05-12",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "device-agent"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Los recorridos del piloto se pueden ejecutar en los puestos elegidos con teclado, ayudas accesibles, errores comprensibles y periféricos homologados.",
         "acceptance": null
       },
       {
@@ -381,7 +863,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de validar el recorrido en un segundo país con sus contratos y reglas.",
+        "summary": "Pendiente de implementar y aceptar: El recorrido priorizado se demuestra en otro país reutilizando el núcleo y delimitando sus reglas, datos y adaptadores propios.",
         "acceptance": null
       },
       {
@@ -392,7 +874,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de validar un uso móvil con backend, permisos y dispositivos homologados.",
+        "summary": "Pendiente de implementar y aceptar: Un uso móvil delimitado funciona en Capacitor con permisos, conectividad y capacidades nativas verificadas en los dispositivos elegidos.",
         "acceptance": null
       },
       {
@@ -407,7 +889,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de compatibilidad entre versiones y despliegue gradual por anillos.",
+        "summary": "Pendiente de implementar y aceptar: Configuraciones aceptadas se habilitan gradualmente con versiones compatibles y criterios explícitos de avance o detención.",
         "acceptance": null
       },
       {
@@ -418,7 +900,7 @@
           "branch-sync-worker"
         ],
         "status": "not_started",
-        "summary": "Pendiente de aceptación por país y transición de conectores preservando operaciones pendientes.",
+        "summary": "Pendiente de implementar y aceptar: Cada país conserva su aceptación y puede coordinar cambios de ERP sin redirigir pendientes ni repetir efectos.",
         "acceptance": null
       },
       {
@@ -430,7 +912,60 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de homologar periféricos de red y una estación compartida para puestos y móvil.",
+        "summary": "Pendiente de implementar y aceptar: Perfil de red homologado para impresoras de recibos o etiquetas seleccionadas, atendidas por una instancia compartida de device-agent, con acceso autorizado desde puestos y móvil tras el piloto F05.",
+        "acceptance": null
+      },
+      {
+        "id": "F06-06",
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "branch-sync-worker",
+          "country-api",
+          "erp-worker",
+          "device-agent"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: El país restante entre Chile, Perú y España tiene perfil, contratos y casos locales aceptados; ningún país queda implícito por haber probado solo dos.",
+        "acceptance": null
+      },
+      {
+        "id": "F06-07",
+        "apps": [
+          "branch-api",
+          "branch-sync-worker",
+          "country-api",
+          "erp-worker"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Los componentes legacy sustituidos se retiran solo después de demostrar ausencia de dependencias activas, conciliación y conservación del histórico necesario.",
+        "acceptance": null
+      },
+      {
+        "id": "F06-08",
+        "apps": [
+          "pos-desktop",
+          "pos-mobile",
+          "branch-api",
+          "branch-sync-worker",
+          "country-api",
+          "erp-worker",
+          "device-agent"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: Puestos, móviles, servicios y periféricos se enrolan, inventarían, actualizan, revocan y retiran con identidad y configuración trazables.",
+        "acceptance": null
+      },
+      {
+        "id": "F06-09",
+        "apps": [
+          "branch-api",
+          "branch-sync-worker",
+          "country-api",
+          "erp-worker"
+        ],
+        "status": "not_started",
+        "summary": "Pendiente de implementar y aceptar: La operación simultánea de países y sociedades mantiene aislamiento de datos, identidad, destinos, recursos y fallos con capacidad y recuperación medidas.",
         "acceptance": null
       }
     ]
