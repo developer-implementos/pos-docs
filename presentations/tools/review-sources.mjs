@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
-import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { canonicalSourceText, sourceDigest } from './source-text.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const git = (...args) => execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim();
@@ -17,10 +17,10 @@ assert.equal(sources.schemaVersion, 1, 'Unsupported presentation source manifest
 assert.equal(new Set(sources.inputs.map(input => input.path)).size, sources.inputs.length, 'Duplicate source paths.');
 sources.inputs = sources.inputs.map(input => {
   assert.ok(tracked.has(input.path) && !input.path.split('/').includes('..'), 'Source must be a tracked repository file.');
-  const committed = execFileSync('git', ['show', `${revision}:${input.path}`], { cwd: root });
-  const current = fs.readFileSync(path.join(root, input.path));
-  assert.ok(committed.equals(current), `Working source differs from its commit: ${input.path}`);
-  return { path: input.path, sha256: createHash('sha256').update(committed).digest('hex') };
+  const committed = execFileSync('git', ['show', `${revision}:${input.path}`], { cwd: root, encoding: 'utf8' });
+  const current = fs.readFileSync(path.join(root, input.path), 'utf8');
+  assert.equal(canonicalSourceText(current), canonicalSourceText(committed), `Working source differs from its commit: ${input.path}`);
+  return { path: input.path, sha256: sourceDigest(committed) };
 });
 sources.revision = revision;
 sources.reviewedOn = new Date().toISOString().slice(0, 10);
