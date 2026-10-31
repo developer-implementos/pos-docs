@@ -5,7 +5,7 @@
   "status": "proposed",
   "statusLabel": "Secuencia propuesta",
   "notice": "Propuesta para acordar con producto, operaciones y desarrollo. No hay fechas, recursos ni habilitaciones productivas aprobadas. Los criterios de aceptación determinan el avance.",
-  "baseline": "La evidencia documentada del producto acredita una interfaz con adaptadores mock y una base técnica de APIs y workers. La persistencia comercial, la autenticación del backend y las integraciones de negocio siguen pendientes; el scaffold no acredita una fase completada. La séptima aplicación objetivo, device-agent en C#/.NET Windows, está pendiente de implementación; el diario SQLite será exclusivamente técnico.",
+  "baseline": "El producto en revisión incorpora operación transaccional de laboratorio con PostgreSQL real y un incremento para Chile con usuarios/permisos propios POS, provisión persistente, HTTPS y consultas legacy acotadas. El perfil operativo mantiene cerrados cobros y precios no verificados; la CLI legacy aún no alimenta el espejo ni la UI. No se acredita integración en main, aceptación de fase ni habilitación productiva. Hay seis apps y device-agent en C#/.NET Windows sigue pendiente; su SQLite será técnico.",
   "phases": [
     {
       "id": "phase-01",
@@ -14,7 +14,7 @@
       "summary": "Abrir caja, vender en efectivo y recuperar la operación.",
       "delivery": {
         "entry": [
-          "Acordar país, entidad legal, tienda, canal y operaciones del laboratorio. Chile y escritorio siguen como hipótesis inicial, sin habilitación productiva.",
+          "Partir de Chile con usuarios y permisos propios POS; acordar entidad legal, sucursal, puestos y operaciones habilitadas. Separar instalación operativa y laboratorio sin inferir habilitación productiva.",
           "Disponer de casos aprobados de apertura, venta en efectivo, impuestos, redondeo y cierre de consulta, con datos sintéticos y resultados esperados.",
           "Definir identidad de usuario y puesto, permisos mínimos de servidor y aislamiento entre países, entidades y sucursales; las cuentas mock no acreditan estos controles.",
           "Identificar propietarios de datos y contratos públicos de ventas, caja, pagos, catálogo, precios y sincronización.",
@@ -23,7 +23,7 @@
         "work": [
           {
             "id": "F01-01",
-            "title": "Identidad, permisos y apertura de turno de laboratorio",
+            "title": "Identidad propia POS, permisos y apertura de turno",
             "apps": [
               "pos-desktop",
               "branch-api"
@@ -36,10 +36,11 @@
             ],
             "deliverable": "Un operador y puesto identificados abren un turno único en su ámbito; toda autorización y exclusión se comprueba en branch-api.",
             "tasks": [
-              "Implementar autenticación de laboratorio segregada del perfil corporativo, sesión caducable y cierre de sesión, sin credenciales embebidas en Angular.",
+              "Implementar usuarios y permisos propios POS para Chile, sesión caducable, cierre de sesión y cambios de contraseña; conservar el laboratorio segregado y sin credenciales embebidas en Angular.",
+              "Administrar operadores, roles y asignaciones a puestos con control de versión, permisos otorgables y revocación; proteger al último administrador y no conceder permisos por incorporar una constante nueva.",
               "Definir permisos por acción, objeto, entidad, sucursal y caja; comprobarlos antes de leer o modificar datos, incluso con acceso directo a la API.",
               "Implementar apertura de turno con monto inicial autorizado, exclusión de caja ocupada y consulta de turno/operador; devolver conflictos sin efectos parciales.",
-              "Registrar decisiones de autorización y apertura con identidad y política, sin tokens ni datos personales en logs; impedir que fixtures de laboratorio arranquen como producción."
+              "Registrar decisiones de autorización y apertura con identidad y política, sin tokens ni datos personales en logs; impedir que fixtures de laboratorio habiliten capacidades comerciales en una instalación operativa."
             ]
           },
           {
@@ -89,6 +90,7 @@
             "title": "Recorrido integrado y recuperación visible",
             "apps": [
               "pos-desktop",
+              "pos-mobile",
               "branch-api"
             ],
             "modules": [
@@ -100,7 +102,9 @@
             ],
             "deliverable": "Una prueba de sistema usa API y PostgreSQL reales para abrir caja, vender y recuperar una operación sin depender del adaptador mock.",
             "tasks": [
-              "Conectar los puertos del recorrido con branch-api y retirar el mock de ese flujo sin presentar otros recorridos simulados como reales.",
+              "Conectar los puertos del recorrido con branch-api mediante perfiles branch, branch-lab y demo explícitos, sin fallback a mocks; bloquear acceso hasta configurar un puesto.",
+              "Fijar el origen HTTPS autorizado del paquete Tauri/Capacitor, importar sólo configuración pública de puesto y aplicar CSP/permisos nativos exactos, sin comodines ni evasión de certificados.",
+              "Aplicar capacidades efectivas del servidor: administración y presupuesto local en el incremento operativo, sin mostrar caja, efectivo o precios no verificados como disponibles.",
               "Implementar estados de espera, rechazo, conflicto y resultado desconocido con consulta por commandId; conservar cesta y contexto al fallar.",
               "Crear un entorno de pruebas repetible con migraciones y datos sintéticos, ejecutando cliente, API y PostgreSQL con versiones identificadas.",
               "Verificar teclado, foco, feedback y reconexión; registrar correlación técnica y evidencia de persistencia sin PII."
@@ -171,7 +175,8 @@
             "tasks": [
               "Definir IDs y relaciones de país, entidad legal, sucursal, caja, instalación y canal, separando configuración de negocio de secretos de despliegue.",
               "Resolver herencia corporativa, país, sucursal y caja con versión y procedencia; rechazar combinaciones incompatibles de moneda, documento, pago o dispositivo.",
-              "Proveer bootstrap de laboratorio con datos sintéticos y consulta autorizada de capacidades efectivas y motivos de restricción.",
+              "Proveer una sucursal Chile con documento explícito, puestos e identidad inicial persistentes, configuración versionada y credenciales externas; separar este procedimiento de las semillas del laboratorio.",
+              "Configurar HTTPS del servidor, confianza del cliente, orígenes CORS exactos y credenciales SQL separadas; consultar capacidades efectivas y motivos de restricción sin conceder operaciones comerciales no validadas.",
               "Registrar versión de configuración en operaciones; un cambio posterior no redirige pendientes ni altera historial."
             ]
           },
@@ -245,20 +250,24 @@
             "title": "Consulta de catálogo, códigos, unidades y disponibilidad",
             "apps": [
               "pos-desktop",
-              "branch-api"
+              "branch-api",
+              "erp-worker"
             ],
             "modules": [
               "libs/features",
               "libs/backend/catalog",
               "libs/backend/pricing",
-              "libs/country-policies"
+              "libs/country-policies",
+              "libs/backend/erp"
             ],
             "deliverable": "El cliente consulta un catálogo autorizado con códigos, unidades y disponibilidad informativa, sin convertir al POS en autoridad de inventario.",
             "tasks": [
               "Implementar búsqueda paginada por código, nombre, familia y marca con límites, orden estable y selección de productos vigentes.",
               "Resolver múltiples códigos de barra y unidades/empaques con conversión explícita, bajas y referencias de impuestos/precios válidas.",
               "Mostrar disponibilidad por bodega como consulta con origen y antigüedad; bloquear la interpretación de cero datos como stock cero.",
-              "Probar búsqueda con códigos duplicados, productos descontinuados y referencias faltantes; la venta persiste el snapshot utilizado."
+              "Probar búsqueda con códigos duplicados, productos descontinuados y referencias faltantes; la venta persiste el snapshot utilizado.",
+              "Implementar un conector HTTPS y CLI de lectura de referencias Mountain dentro de erp-worker, con origen/rutas autorizados, token técnico propio, consultas acotadas, validación estricta y errores sin datos personales; no consumir feeds ni modificar el legacy.",
+              "Distinguir referencias observadas de maestros publicados: la CLI no alimenta aún la UI ni el espejo, no transforma precio mínimo en precio vendible y requiere acceso corporativo autorizado para verificar el contrato desplegado."
             ]
           },
           {
@@ -382,8 +391,8 @@
         ],
         "deferred": [
           "Cobros externos, documentos fiscales válidos y registro ERP se aceptan en sus fases; un ticket de laboratorio no los acredita.",
-          "El abastecimiento comercial real y la sincronización durable quedan para F03; esta fase utiliza conjuntos versionados de prueba.",
-          "La autonomía sin LAN o servidor, el despliegue productivo y el canal móvil no forman parte de este primer recorrido."
+          "El abastecimiento comercial completo y la sincronización durable quedan para F03. La CLI acotada de consultas no acredita publicación, cotización ni un espejo consistente; las pruebas monetarias mantienen conjuntos versionados sintéticos.",
+          "La autonomía sin LAN o servidor y la habilitación productiva requieren su aceptación específica. Compilar los canales nativos y configurar un origen no acredita instalación, distribución firmada ni homologación de dispositivos."
         ],
         "evidence": [
           "Revisión del producto, migraciones, instrucciones de arranque y datos de prueba que permiten repetir la demostración.",
@@ -401,8 +410,8 @@
       "operation": {
         "title": "Venta en efectivo",
         "summary": "Abrir caja, vender en efectivo y consultar el ticket después de reiniciar.",
-        "slideDetail": "En laboratorio, identificar al operador, abrir caja y vender con datos de prueba. Consultar la operación tras reiniciar; el ticket de prueba no habilita venta productiva.",
-        "detail": "Recorrido de laboratorio con datos comerciales versionados de prueba: identificar al operador, abrir caja, buscar productos, vender en efectivo y consultar la operación después de reiniciar. Chile y escritorio son la hipótesis inicial de priorización, pendiente de confirmar con producto y operaciones. Los documentos de prueba no habilitan venta fiscal ni productiva."
+        "slideDetail": "Usuarios propios POS, puestos persistentes y HTTPS en Chile. El laboratorio prueba venta y recuperación; el perfil operativo no cobra sin precios y contratos validados.",
+        "detail": "Implementar identidad, permisos y provisión persistente para Chile, con operación por capacidades y clientes configurados para un origen HTTPS exacto. Validar apertura, efectivo y recuperación con datos comerciales sintéticos segregados. El conector legacy permite consultas puntuales autorizadas, aún separado del espejo y la UI. No acredita venta fiscal ni habilitación productiva."
       },
       "construction": {
         "title": "Transacción local",

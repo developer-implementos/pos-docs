@@ -1,6 +1,6 @@
 # Monorepo POS Platform
 
-> **Alcance del código en revisión:** **pos-platform** reúne los clientes Angular/PrimeNG para escritorio (Tauri) y móvil (Capacitor), las APIs NestJS/Fastify y sus workers. F01 conecta el cliente con operación de sucursal persistida en PostgreSQL bajo un perfil de laboratorio. El perfil demo permanece explícito. La documentación se publica en [POS Docs](https://github.com/developer-implementos/pos-docs); la aceptación y las capacidades productivas no se deducen del inventario.
+> **Alcance del código en revisión:** **pos-platform** reúne los clientes Angular/PrimeNG para escritorio (Tauri) y móvil (Capacitor), las APIs NestJS/Fastify y sus workers. F01 combina el laboratorio transaccional con un incremento operativo Chile de usuarios/permisos propios POS, provisión persistente y HTTPS. La consulta legacy acotada todavía no alimenta el espejo ni la UI. La documentación se publica en [POS Docs](https://github.com/developer-implementos/pos-docs); la aceptación, integración en `main` y capacidades productivas no se deducen del inventario.
 
 POS Platform es la base de un producto corporativo para varios países. El monorepo reúne clientes de escritorio y móvil, backend de sucursal, backend de país y workers con ciclos de ejecución propios. La demostración funcional actual cubre Chile; la estructura multipaís permite organizar la evolución sin afirmar que las reglas fiscales o integraciones de otros países estén implementadas.
 
@@ -76,7 +76,7 @@ tools/                          # Herramientas de build, lint y pruebas del prod
 
 ## Estado de implementación
 
-El producto contiene seis aplicaciones; `apps/device-agent` está acordada y pendiente de implementación. `branch-api` compone identidad de laboratorio, configuración, apertura, catálogo, clientes, cestas, cotización y efectivo. `country-api` comprueba su PostgreSQL y ámbito sin recibir ventas. Los workers todavía no ejecutan sincronización ni integración ERP. El [recorrido F01](phase-1-laboratory.md) distingue lo implementado en laboratorio de las capacidades posteriores.
+El producto contiene seis aplicaciones; `apps/device-agent` está acordada y pendiente de implementación. `branch-api` compone identidad, configuración y contextos transaccionales. El perfil `operational` añade usuarios, roles, asignaciones y provisión Chile; el laboratorio prueba catálogo, cestas, cotización y efectivo con datos sintéticos. `country-api` comprueba su PostgreSQL y ámbito sin recibir ventas. Los workers no sincronizan ni registran operaciones ERP; la CLI separada de `erp-worker` consulta referencias Mountain por HTTPS. El [recorrido F01](phase-1-laboratory.md) detalla esos límites.
 
 La [guía de API](api.md), la [guía de pruebas](testing.md) y la [evidencia del producto](product-repository.md) delimitan el código revisado. El árbol conserva el estado pendiente de los componentes futuros; una carpeta no acredita operación o aceptación.
 
@@ -90,7 +90,7 @@ Las bibliotecas se consumen por entradas públicas `@pos-platform/<nombre>`; las
 
 La UI reutilizable pertenece a `shared/frontend/ui`. Los contratos puros pueden ser consumidos por ambos clientes; las implementaciones Nest, SQL y SDK de servidor permanecen fuera de sus dependencias.
 
-El perfil `branch-lab` compone `libs/data-access/branch-api` y `libs/features/branch-operation`: gateway tipado, sesión en memoria y stores separados de caja, catálogo, venta y comprobantes. Las rutas de acceso, caja y venta se cargan bajo ese perfil. `demo` compone sus propios adaptadores y funcionalidades; un fallo de API no cambia de perfil. El cliente muestra cotizaciones de servidor y conserva referencias de operaciones pendientes, sin asumir autoridad sobre importes.
+Los perfiles `branch` y `branch-lab` componen `libs/data-access/branch-api` y `libs/features/branch-operation`: gateway tipado, sesión en memoria y stores separados. `branch` usa el perfil API `operational`, administración de usuarios/roles y capacidades efectivas; no habilita caja o cobros sin contratos comerciales verificados. `branch-lab` conserva el recorrido sintético de pruebas. `unconfigured` bloquea login hasta configurar un puesto; `demo` compone sus propios adaptadores y un fallo de API no cambia de perfil. El cliente conserva referencias de operaciones pendientes y muestra los importes del servidor sin asumir autoridad comercial.
 
 ## Límites DDD de shared
 
@@ -121,7 +121,7 @@ Los límites se comprueban mediante tags Nx, restricciones de importación y pru
 
 ### Infraestructura y propiedad de datos
 
-F01 incorpora identidad de laboratorio, autorización, PostgreSQL, migraciones y resultados durables de comandos. La identidad corporativa, entrega de outbox, recepción de país y jobs externos siguen sus fases. Caché, alertas y controles operativos se incorporan con un consumidor, contrato y criterio de aceptación concretos.
+F01 incorpora usuarios/permisos propios POS para Chile, provisión operativa segregada del laboratorio, PostgreSQL, migraciones y resultados durables de comandos. La entrega de outbox, recepción de país y jobs externos siguen sus fases. Caché, alertas y controles operativos se incorporan con un consumidor, contrato y criterio de aceptación concretos.
 
 La conexión y el ejecutor técnico de transacciones pueden compartirse; las tablas, repositorios y migraciones de ventas siguen perteneciendo a ventas. La escritura comercial y su outbox deben compartir la transacción correspondiente. Una utilidad de reintentos no decide repetir un pago de resultado desconocido: esa política pertenece a pagos.
 
@@ -192,26 +192,29 @@ Esta tabla fija la responsabilidad de los contextos, incluidos los pendientes de
 | `sync`           | Inbox/outbox, cursor, intento, entrega, programación y acuses                                  | Los productores insertan outbox en la transacción de negocio; el worker no escribe tablas ajenas           |
 | `erp`            | Traducciones, referencias externas, entrega y resultado del ERP                                | DTO y estados externos quedan detrás de ACL/adaptadores; un acuse de transporte no equivale a registro ERP |
 | `reporting`      | Proyecciones y consultas para indicadores, reportes y exportaciones                            | No modifica operaciones de origen; distingue información incompleta o pendiente                            |
-| `administration` | Ámbito empresa/país/sucursal/caja, módulos, políticas y asignaciones                           | Identidad y autorización necesitan integración real; configuración no reemplaza controles de servidor      |
+| `administration` | Ámbito empresa/país/sucursal/caja, identidad propia POS, roles, políticas y asignaciones       | Autoriza en servidor; un rol o capacidad del cliente no concede acceso                                      |
 
-PostgreSQL de sucursal conserva la operación F01 de laboratorio y su outbox. La base de país tiene ámbito y esquema independientes; sus recepciones comerciales están pendientes. Los clientes no acceden a SQL. La migración usa otro rol y el runtime recibe grants explícitos; el [ADR-19](decisions/postgresql-unit-of-work.md) concreta esa frontera.
+PostgreSQL de sucursal conserva identidades, configuración y operación de su perfil; una instalación operativa no incorpora semillas comerciales de laboratorio. La base de país tiene ámbito y esquema independientes y sus recepciones comerciales están pendientes. Los clientes no acceden a SQL. La migración usa otro rol y el runtime recibe grants explícitos; el [ADR-19](decisions/postgresql-unit-of-work.md) concreta esa frontera.
 
 BullMQ se integra como mecanismo técnico de `shared/backend` compuesto por `country-api` y `erp-worker`, con puertos y handlers propiedad de sus contextos. Los jobs no contienen reglas comerciales en una biblioteca genérica. `country-api` programa solicitudes breves con Redis de trabajos de país; `erp-worker` ejecuta operaciones, lotes y conciliación con Redis de trabajos en la red ERP. Son instancias separadas y sin conexión Redis/SQL WAN. PostgreSQL conserva autoridad y recuperación; `branch-sync-worker` permanece en PostgreSQL/HTTPS. Este alcance del [ADR-18](decisions/job-processing.md) no acredita nuevos proyectos o dependencias ya instalados.
 
 En la composición objetivo, `country-api` expone trabajo y resultados de integración mediante contratos y casos de uso públicos del contexto `erp`; ese contexto conserva la propiedad de destinos, referencias y estados ERP en PostgreSQL de país. `sync` gobierna el transporte, los acuses y la deduplicación técnica. La ACL y los adaptadores de proveedor se ejecutan dentro de `erp-worker`, que inicia HTTPS autenticado hacia `country-api` desde la red autorizada del ERP. Estos casos de uso y su persistencia están pendientes; el scaffold actual no implementa ese circuito. El [C3 de país y de ERP](c4-arquitectura-propuesta.md#c3-de-país-recepción-consulta-y-entrega-de-trabajo) detalla los límites.
 
+El primer adaptador Mountain vive en `libs/backend/erp` y se ejecuta mediante `legacy-read.js`, entrada separada de `erp-worker`. Consulta exclusivamente búsquedas simples de productos/clientes con credencial técnica propia, origen aprobado y límites. Devuelve referencias observadas, sin precio vendible, versión ERP ni garantía de snapshot. La UI y el espejo no consumen aún estos resultados; su cableado exige contratos y validación propios. Este cliente HTTP no equivale al circuito durable de F03.
+
 ```mermaid
 flowchart LR
-    Client["pos-desktop / pos-mobile"] -->|"API v1 · laboratorio"| Branch["branch-api"]
-    Branch -->|"Transacción local F01"| Local[("PostgreSQL sucursal")]
+    Client["pos-desktop / pos-mobile"] -->|"API v1 · perfil explícito"| Branch["branch-api"]
+    Branch -->|"Persistencia del perfil F01"| Local[("PostgreSQL sucursal")]
     Sync["branch-sync-worker"] -.->|"Entrega / recepción pendiente"| Country["country-api"]
     Sync -.->|"Entrega de outbox pendiente"| Local
     Country -->|"Sonda y ámbito de base"| Central[("PostgreSQL país")]
     ERP["erp-worker"] -.->|"Trabajo y resultados pendientes · HTTPS"| Country
     ERP -.->|"ACL + adaptador pendientes"| External["ERP externo"]
+    ERP -->|"CLI HTTPS acotada · acceso por verificar"| Mountain["Referencias Mountain"]
 ```
 
-Las líneas continuas muestran el recorrido de laboratorio; las discontinuas, integraciones pendientes. La continuidad ante caída de WAN depende de la LAN y del servidor de sucursal. La autonomía ante caída de ambos sería otro perfil con decisiones y pruebas propias.
+Las líneas continuas muestran capacidades implementadas en revisión, limitadas por perfil; las discontinuas, integraciones pendientes. La CLI Mountain tiene pruebas HTTPS locales, no validación del servicio corporativo ni conexión al espejo. La continuidad ante caída de WAN depende de la LAN y del servidor de sucursal. La autonomía ante caída de ambos sería otro perfil con decisiones y pruebas propias.
 
 ## Capas y reutilización interna
 
@@ -279,8 +282,9 @@ En esta revisión también se contrastó el checkout `desarrollo` del sincroniza
 | Estado       | Alcance                                                                                                                                                    |
 | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Laboratorio en revisión | Angular conectado, identidad y permisos de servidor sintéticos, configuración, caja, catálogo, clientes, cestas, precios y efectivo en PostgreSQL |
+| Incremento operativo en revisión | Usuarios y roles propios POS Chile, asignaciones, provisión persistente, HTTPS y clientes con origen aprobado; CLI de referencias legacy separada del espejo y la UI |
 | Base técnica | HTTP, Pino/Sentry opcional, migraciones, roles separados, unidad de trabajo, artefactos y comprobaciones de ámbito/esquema |
-| Pendiente | Identidad corporativa, capacidades completas de país, entrega de outbox, jobs, ERP, proveedores, hardware y homologación operativa |
+| Pendiente | Contratos comerciales de fuentes reales, enrolamiento de identidades de servicio, capacidades de país, entrega de outbox, jobs, ERP, proveedores, hardware y homologación operativa |
 
 Los [criterios técnicos de la base](implementation-plan.md#organización-y-criterios-de-aceptación) definen las comprobaciones para la estructura y sus dependencias.
 
