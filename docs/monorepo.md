@@ -138,10 +138,10 @@ Una suite `pos-system-e2e` requerirá un recorrido real sucursal–persistencia�
 <!-- monorepo:applications:start -->
 | Aplicación | Lugar previsto | Responsabilidad | Estado revisado |
 | --- | --- | --- | --- |
-| `pos-desktop` | Puesto Windows | Aplicación completa: shell nativa Tauri y frontend Angular | Cliente conectado con registro del puesto y administración POS; demo y laboratorio explícitos. Instalación y confianza TLS del WebView requieren validación nativa |
-| `pos-mobile` | Dispositivo Android/iOS | Aplicación completa: shell nativa Capacitor y frontend Angular | Cliente conectado compartido con política HTTPS y registro de puesto; distribución y capacidades nativas por homologar |
+| `pos-desktop` | Puesto Windows | Aplicación completa: shell nativa Tauri y frontend Angular | Cliente conectado con administración POS, frescura del cliente y recotización con consentimiento; demo y laboratorio explícitos. Paquete Tauri y política embebida pendientes en F01-04 |
+| `pos-mobile` | Dispositivo Android/iOS | Aplicación completa: shell nativa Capacitor y frontend Angular | Cliente conectado compartido; dos APK Android y política HTTPS embebida comprobados. Instalación, distribución y capacidades nativas se homologan en sus fases |
 | `device-agent` | PC Windows de cada puesto (F02/F05); estación de red compartida posterior (F06) | Agente C#/.NET por puesto; trabajos HTTPS con branch-api y diario SQLite; perfil de red compartido en F06 | Decisión acordada; app, protocolo y adaptadores pendientes de implementación y homologación |
-| `branch-api` | Sucursal | API y composición de negocio de sucursal | Identidad y administración propias del POS para Chile con HTTPS/PostgreSQL; motor comercial probado en laboratorio. Cotización requiere fuente completa y caja operativa permanece cerrada |
+| `branch-api` | Sucursal | API y composición de negocio de sucursal | Identidad y administración POS Chile, configuración compatible, cestas y motor comercial técnicamente verificados con PostgreSQL; pruebas comerciales sintéticas. Precios y cobros operativos sujetos a fuente validada |
 | `branch-sync-worker` | Sucursal | Proceso de entrega y recepción de sucursal | Esqueleto local; sin jobs ni sincronización real |
 | `country-api` | País | API de recepción y capacidades de país | Base HTTP y PostgreSQL por ámbito con comprobación de esquema; sin recepción comercial |
 | `erp-worker` | Red autorizada del ERP | Proceso de integración, traducción y conciliación ERP | CLI de lectura Mountain para productos/clientes con transporte HTTPS acotado; acceso corporativo pendiente, sin publicación de espejos ni procesamiento de jobs |
@@ -281,8 +281,8 @@ En esta revisión también se contrastó el checkout `desarrollo` del sincroniza
 
 | Estado       | Alcance                                                                                                                                                    |
 | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Laboratorio en revisión | Angular conectado, identidad y permisos de servidor sintéticos, configuración, caja, catálogo, clientes, cestas, precios y efectivo en PostgreSQL |
-| Incremento operativo en revisión | Usuarios y roles propios POS Chile, asignaciones, provisión persistente, HTTPS y clientes con origen aprobado; CLI de referencias legacy separada del espejo y la UI |
+| Laboratorio integrado | Angular conectado, identidad y permisos de servidor sintéticos, configuración, caja, catálogo, clientes, cestas, precios y efectivo en PostgreSQL; evidencia técnica por entregable |
+| Incremento operativo integrado | Usuarios y roles propios POS Chile, asignaciones, provisión persistente, HTTPS y clientes con origen aprobado; CLI de referencias legacy separada del espejo y la UI |
 | Base técnica | HTTP, Pino/Sentry opcional, migraciones, roles separados, unidad de trabajo, artefactos y comprobaciones de ámbito/esquema |
 | Pendiente | Contratos comerciales de fuentes reales, enrolamiento de identidades de servicio, capacidades de país, entrega de outbox, jobs, ERP, proveedores, hardware y homologación operativa |
 

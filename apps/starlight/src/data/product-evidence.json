@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "repository": "https://github.com/developer-implementos/pos-platform",
-  "revision": "f0346ed7819185edf0a0e09000227f9a95f5b697",
+  "revision": "59faab09cac416c2d9894522b32f7df9db356043",
   "reviewedOn": "2026-10-31",
   "notice": "Reviewed clean product revision. The documentation repository builds from this metadata without accessing the product checkout.",
   "productGuide": {
     "source": "docs/product-repository.md",
     "relationship": "Editorial synthesis adapted from the product README; it is not a byte-for-byte snapshot.",
     "upstreamPath": "README.md",
-    "upstreamSha256": "dd6893c8337ed49ee1aa94d5c68c620bd00b1fec6955b49f9e672746af4579cb"
+    "upstreamSha256": "09346ee79b164475ff93da8941523ccdb5bd2467539e19d40bf87df85a33d8a1"
   },
   "references": [
     {
@@ -16,7 +16,19 @@
       "kind": "blob"
     },
     {
+      "path": "delivery/evidence/f01-android-package.json",
+      "kind": "blob"
+    },
+    {
+      "path": "delivery/evidence/f01-portable-ci.json",
+      "kind": "blob"
+    },
+    {
       "path": "delivery/reviews/F01-operational-increment.md",
+      "kind": "blob"
+    },
+    {
+      "path": "delivery/reviews/F01-technical-verification.md",
       "kind": "blob"
     },
     {

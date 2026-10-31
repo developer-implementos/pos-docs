@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "f0346ed7819185edf0a0e09000227f9a95f5b697",
+    "revision": "59faab09cac416c2d9894522b32f7df9db356043",
     "path": "delivery/progress.json",
-    "sha256": "ca096b48d1fc2e183d697655de30ccecce5bfefeb6b1af17b51335d4d8c2431a"
+    "sha256": "f1fa607b1cdc0b8b9dd15bf4e61945155fd5f17d1b7695342ef46dbee118ec30"
   },
   "content": {
     "schemaVersion": 2,
@@ -16,13 +16,13 @@
       "path": "docs/roadmap.json",
       "sha256": "701dc03f2fbfdc8637f6b1ace5a3825705930e749fdab50d808061ba3f1ce9f9"
     },
-    "summary": "Implementación técnica y aceptación manual se registran por separado. Hay administración POS sobre HTTPS/PostgreSQL y escenarios comerciales persistidos de laboratorio. Cada entregable verificado suma al avance; las revisiones de negocio, la compilación nativa actual y la conexión corporativa conservan su estado pendiente.",
+    "summary": "Diez entregables de F01 están técnicamente verificados con evidencia por criterio y PostgreSQL real. Implementación y aceptación manual se cuentan por separado. Los escenarios comerciales conservan datos sintéticos segregados; siguen pendientes empaquetado Tauri, PR policy alojada y acceso autorizado a Mountain.",
     "applications": [
       {
         "id": "pos-desktop",
         "stage": "functional",
-        "summary": "Cliente Angular conectado a branch-api para administrar usuarios, roles y asignaciones. Exige registro del puesto y origen HTTPS; la demo es explícita y la venta comercial conserva sus gates. Tauri requiere validación funcional nativa.",
-        "nextStep": "Aceptar el incremento de accesos y validar instalación nativa, certificados y recorrido comercial con fuentes autorizadas.",
+        "summary": "Cliente Angular conectado con administración POS, fichas con frescura, cestas recuperables y recotización con consentimiento. Exige registro y origen HTTPS; la demo es explícita. Falta comprobar empaquetado Tauri real; venta operativa conserva sus gates.",
+        "nextStep": "Comprobar el artefacto Tauri conectado y su política; continuar validación comercial con fuentes autorizadas sin confundirla con los datos de prueba.",
         "evidence": [
           {
             "path": "apps/pos-desktop/src/main.ts",
@@ -41,8 +41,8 @@
       {
         "id": "pos-mobile",
         "stage": "foundation",
-        "summary": "Host Capacitor con cliente Angular compartido, administración de accesos y origen HTTPS autorizado en el paquete. Builds Android/iOS separados; sin validación funcional instalada en dispositivos.",
-        "nextStep": "Validar el recorrido integrado móvil, identidad, conectividad autorizada y capacidades en dispositivos elegidos.",
+        "summary": "Host Capacitor con Angular compartido y política de origen HTTPS. La evidencia de empaquetado Android se registra por separado; el CI portable no acredita ejecución instalada, dispositivos ni iOS.",
+        "nextStep": "Conservar evidencia del APK y política del paquete; validar los dispositivos y recorridos nativos del canal seleccionado en su fase correspondiente.",
         "evidence": [
           {
             "path": "apps/pos-mobile/src/main.ts",
@@ -55,14 +55,18 @@
           {
             "path": "libs/data-access/branch-api",
             "label": "Contratos y transporte del perfil conectado"
+          },
+          {
+            "path": "delivery/evidence/f01-android-package.json",
+            "label": "Dos APK Android compilados y política embebida comprobada; sin instalación ni homologación"
           }
         ]
       },
       {
         "id": "branch-api",
         "stage": "functional",
-        "summary": "API NestJS/Fastify con provisión, HTTPS y usuarios/permisos POS sobre PostgreSQL. Administración utilizable y perfil comercial de laboratorio segregados; precios operativos y venta diaria requieren sus fuentes y criterios completos.",
-        "nextStep": "Aceptar accesos y provisión, integrar la publicación comercial real y completar la operación diaria acordada.",
+        "summary": "API NestJS/Fastify sobre PostgreSQL con administración POS, HTTPS, configuración compatible, clientes, cestas y transacción de venta verificadas técnicamente. Los escenarios comerciales usan datos sintéticos segregados; precio y venta operativos continúan sujetos a fuentes y políticas aprobadas.",
+        "nextStep": "Integrar la publicación comercial autorizada y avanzar en sincronización/operación diaria, manteniendo permisos mínimos y capacidades cerradas cuando falte evidencia.",
         "evidence": [
           {
             "path": "apps/branch-api/src/app.module.ts",
@@ -81,8 +85,8 @@
       {
         "id": "branch-sync-worker",
         "stage": "foundation",
-        "summary": "Proceso y módulos preparados; el procesamiento de sincronización permanece deshabilitado.",
-        "nextStep": "Implementar entrega de outbox, recepción de paquetes y recuperación durable por HTTPS.",
+        "summary": "Proceso y módulos preparados; el procesamiento de sincronización permanece deshabilitado. No se atribuyen entregas ni actualización real de espejos a F01.",
+        "nextStep": "Implementar entrega de outbox, recepción de publicaciones y recuperación durable por HTTPS en F03.",
         "evidence": [
           {
             "path": "apps/branch-sync-worker/src/app.module.ts",
@@ -97,7 +101,7 @@
       {
         "id": "country-api",
         "stage": "foundation",
-        "summary": "Base HTTP de país con PostgreSQL, migraciones y readiness por ámbito; recepción de ventas, publicaciones y trabajos comerciales pendientes.",
+        "summary": "Base HTTP de país con PostgreSQL, migraciones y readiness por ámbito. Recepción de operaciones, publicaciones y trabajos comerciales aún pendientes.",
         "nextStep": "Implementar inbox de país, contratos de trabajo y publicación comercial en la fase de sincronización.",
         "evidence": [
           {
@@ -113,8 +117,8 @@
       {
         "id": "erp-worker",
         "stage": "foundation",
-        "summary": "Base del worker y CLI separada de lectura Mountain para productos/clientes, probada con HTTPS local. Sin validación corporativa, alimentación del espejo, ejecución ERP o colas operativas.",
-        "nextStep": "Confirmar origen y acceso por VPN, homologar contratos comerciales e implementar publicación y trabajos durables con BullMQ.",
+        "summary": "Worker y CLI separada de lectura Mountain con consultas acotadas y HTTPS controlado. El código identifica configuraciones legacy, pero no acredita acceso corporativo, alimentación de espejos, procesamiento ERP ni colas operativas.",
+        "nextStep": "Confirmar instancia, acceso y permisos efectivos; validar consultas autorizadas y después implementar publicación y trabajos durables con BullMQ.",
         "evidence": [
           {
             "path": "apps/erp-worker/src/app.module.ts",
@@ -141,10 +145,32 @@
           "pos-desktop",
           "branch-api"
         ],
-        "status": "in_progress",
-        "summary": "Identidad, sesiones, permisos y apertura persistente probados. Falta la prueba específica de revocaciones concurrentes que intentan eliminar al último administrador. Revisión manual de permisos y exclusión de turnos pendiente.",
+        "status": "verified",
+        "summary": "Verificados identidad POS, permisos y apertura persistente: provisión, roles, revocación, último administrador concurrente, exclusión de turno e idempotencia. Revisión manual de la matriz de acciones pendiente; caja operativa conserva sus gates comerciales.",
         "acceptance": null,
-        "verification": null
+        "verification": {
+          "revision": "8b4a776f277743868013ad91315f0c0754837cad",
+          "reviewedOn": "2026-10-31",
+          "reviewer": "Codex · revisión técnica automatizada",
+          "evidence": [
+            {
+              "path": "apps/branch-api/integration/identity-cash.test.ts",
+              "label": "Sesiones, ámbitos, apertura concurrente, idempotencia, logout y reinicio"
+            },
+            {
+              "path": "libs/backend/administration/integration/operational-identity.test.ts",
+              "label": "Usuarios, roles, asignaciones, revocación y provisión operativa"
+            },
+            {
+              "path": "libs/backend/administration/integration/last-administrator.test.ts",
+              "label": "Protección del último administrador entre instancias concurrentes"
+            },
+            {
+              "path": "tests/pos-clients-e2e/operational/administration.spec.ts",
+              "label": "Administración POS contra HTTPS y PostgreSQL reales"
+            }
+          ]
+        }
       },
       {
         "id": "F01-02",
@@ -152,10 +178,32 @@
           "pos-desktop",
           "branch-api"
         ],
-        "status": "in_progress",
-        "summary": "Motor decimal y cotizaciones probados. Falta conservar y explicar la diferencia entre la cotización anterior y la nueva al cambiar cliente o cantidad. Revisión manual de ejemplos monetarios y reglas del perfil pendiente.",
+        "status": "verified",
+        "summary": "Verificados cálculo decimal, cotización reproducible y comparación con consentimiento o rechazo de recotización. Datos comerciales sintéticos segregados; ejemplos monetarios y reglas requieren revisión de Finanzas antes de habilitación operativa.",
         "acceptance": null,
-        "verification": null
+        "verification": {
+          "revision": "8b4a776f277743868013ad91315f0c0754837cad",
+          "reviewedOn": "2026-10-31",
+          "reviewer": "Codex · revisión técnica automatizada",
+          "evidence": [
+            {
+              "path": "libs/backend/pricing/test/pricing-engine.test.ts",
+              "label": "Precisión decimal, listas por cliente/cantidad, impuestos y redondeo"
+            },
+            {
+              "path": "apps/branch-api/test/commercial.integration.test.ts",
+              "label": "Cotización persistida, vigencia y rechazo de versiones incompatibles"
+            },
+            {
+              "path": "libs/data-access/branch-api/src/lib/quote-comparison.spec.ts",
+              "label": "Comparación de snapshots sin recalcular importes en el cliente"
+            },
+            {
+              "path": "libs/data-access/branch-api/src/lib/branch-sale.spec.ts",
+              "label": "Consentimiento o rechazo explícito de recotización"
+            }
+          ]
+        }
       },
       {
         "id": "F01-03",
@@ -163,10 +211,10 @@
           "branch-api"
         ],
         "status": "verified",
-        "summary": "Verificación técnica completada de la venta atómica e idempotente con PostgreSQL real, concurrencia, rollback y recuperación. Usa datos comerciales sintéticos segregados; Operaciones debe revisar el significado funcional de la confirmación. No habilita por sí sola venta operativa.",
+        "summary": "Revalidada la venta atómica e idempotente con PostgreSQL real, concurrencia, rollback y recuperación. Usa datos comerciales sintéticos; no acredita contabilización ERP ni habilita por sí sola venta operativa.",
         "acceptance": null,
         "verification": {
-          "revision": "f08442279796f110dea23904ffe2350a758845d1",
+          "revision": "8b4a776f277743868013ad91315f0c0754837cad",
           "reviewedOn": "2026-10-31",
           "reviewer": "Codex · revisión técnica automatizada",
           "evidence": [
@@ -193,7 +241,7 @@
           "branch-api"
         ],
         "status": "in_progress",
-        "summary": "Recorrido de navegador contra API y PostgreSQL comprobado. Pendiente compilar y verificar el paquete nativo actual y su configuración sin fallback a demo. Revisión manual del recorrido pendiente.",
+        "summary": "Recorrido conectado contra API y PostgreSQL comprobado. Dos APK Android reales verificados sin configuración y con origen HTTPS de prueba, incluido rechazo de una política incompatible. Falta verificar el artefacto Tauri y su política; no se atribuyen firma, hardware ni operación nativa.",
         "acceptance": null,
         "verification": null
       },
@@ -209,7 +257,7 @@
           "device-agent"
         ],
         "status": "in_progress",
-        "summary": "Gobernanza integrada, reglas activas y bypass administrativo mediante PR comprobados. Pendiente la ejecución efectiva de PR policy en GitHub y la revisión manual de colaboración del equipo.",
+        "summary": "Gobernanza integrada y bypass administrativo mediante PR comprobados. Sigue pendiente observar PR policy desde la base confiable en GitHub, actualmente bloqueado por facturación; no se sustituye con checks locales.",
         "acceptance": null,
         "verification": null
       },
@@ -220,16 +268,16 @@
           "country-api"
         ],
         "status": "verified",
-        "summary": "Verificación técnica completada con PostgreSQL real: migraciones, permisos, readiness, concurrencia y recuperación. Revisión manual de Arquitectura y Plataforma pendiente; no bloquea este avance técnico.",
+        "summary": "Revalidada persistencia PostgreSQL: migraciones concurrentes, actualización 070 a 100, datos históricos, permisos mínimos, readiness y recuperación. Revisión manual de Arquitectura/Plataforma separada; HA/PITR corresponden a F05.",
         "acceptance": null,
         "verification": {
-          "revision": "f08442279796f110dea23904ffe2350a758845d1",
+          "revision": "8b4a776f277743868013ad91315f0c0754837cad",
           "reviewedOn": "2026-10-31",
           "reviewer": "Codex · revisión técnica automatizada",
           "evidence": [
             {
               "path": "apps/branch-api/test/migration-upgrade.integration.test.ts",
-              "label": "Actualización 070 a 080 y equivalencia con instalación nueva"
+              "label": "Actualización 070 a 100 y equivalencia de datos, esquema y permisos"
             },
             {
               "path": "libs/shared/backend/persistence/test/persistence.test.ts",
@@ -237,7 +285,7 @@
             },
             {
               "path": "tools/database/README.operational.md",
-              "label": "Procedimiento de provisión y actualización"
+              "label": "Procedimiento separado de provisión, migración y runtime"
             }
           ]
         }
@@ -249,10 +297,32 @@
           "country-api",
           "pos-desktop"
         ],
-        "status": "in_progress",
-        "summary": "Configuración, ámbitos, aprovisionamiento y capacidades probados. Falta representar y probar el rechazo de publicación de una configuración de dispositivo incompatible. Revisión manual de jerarquía y responsables pendiente.",
+        "status": "verified",
+        "summary": "Verificados ámbitos, herencia, provisión, TLS y configuración inmutable. Publicación y alta/reactivación de dispositivos serializan la compatibilidad por puesto; las operaciones conservan su versión y el runtime no publica configuraciones.",
         "acceptance": null,
-        "verification": null
+        "verification": {
+          "revision": "8b4a776f277743868013ad91315f0c0754837cad",
+          "reviewedOn": "2026-10-31",
+          "reviewer": "Codex · revisión técnica automatizada",
+          "evidence": [
+            {
+              "path": "libs/backend/administration/integration/configuration-device.test.ts",
+              "label": "Publicación compatible, snapshots y carreras con alta/reactivación de dispositivos"
+            },
+            {
+              "path": "libs/backend/administration/test/configuration.test.ts",
+              "label": "Herencia, procedencia y capacidades explícitas"
+            },
+            {
+              "path": "apps/branch-api/test/operational.integration.test.ts",
+              "label": "Ámbito provisionado, HTTPS y capacidades comerciales cerradas"
+            },
+            {
+              "path": "libs/data-access/branch-api/src/lib/client-registration.spec.ts",
+              "label": "Registro por URL e IDs dentro de la política del paquete"
+            }
+          ]
+        }
       },
       {
         "id": "F01-08",
@@ -260,10 +330,32 @@
           "pos-desktop",
           "branch-api"
         ],
-        "status": "in_progress",
-        "summary": "Clientes, solicitudes de alta y actualización y snapshots probados. Falta mostrar la fecha o versión de frescura del cliente en la interfaz. Revisión manual de autoridad del maestro y reglas por país pendiente.",
+        "status": "verified",
+        "summary": "Verificados consulta por ámbito, solicitudes de cliente idempotentes, precedencia de versiones, receptor y snapshot de venta. La UI muestra frescura y revalida sin perder la cesta; consulta local no significa actualización del ERP.",
         "acceptance": null,
-        "verification": null
+        "verification": {
+          "revision": "8b4a776f277743868013ad91315f0c0754837cad",
+          "reviewedOn": "2026-10-31",
+          "reviewer": "Codex · revisión técnica automatizada",
+          "evidence": [
+            {
+              "path": "libs/backend/catalog/test/catalog.integration.test.ts",
+              "label": "Clientes por ámbito, solicitudes idempotentes y precedencia de versiones"
+            },
+            {
+              "path": "apps/branch-api/test/cash-sale.integration.test.ts",
+              "label": "Receptor validado y snapshot histórico inmutable"
+            },
+            {
+              "path": "libs/features/branch-operation/src/lib/customer-freshness.spec.ts",
+              "label": "Fecha/versión, revalidación explícita y conservación de cesta"
+            },
+            {
+              "path": "apps/branch-api/test/http.test.ts",
+              "label": "Límites de frecuencia y almacenamiento de admisión real"
+            }
+          ]
+        }
       },
       {
         "id": "F01-09",
@@ -271,10 +363,32 @@
           "pos-desktop",
           "branch-api"
         ],
-        "status": "in_progress",
-        "summary": "Borradores y presupuestos persistidos con versión, pausa y bloqueo durante pago. Falta acordar y probar recuperación entre puestos y el caso de escaneo repetido con intención de cantidad. Revisión manual de propiedad y caducidad pendiente.",
+        "status": "verified",
+        "summary": "Verificados borradores y presupuestos persistidos, captura por código/unidad, cantidad repetida, pausa y recuperación explícita entre puestos con CAS. Se preserva el origen y no se permite modificar una cesta con pago pendiente.",
         "acceptance": null,
-        "verification": null
+        "verification": {
+          "revision": "8b4a776f277743868013ad91315f0c0754837cad",
+          "reviewedOn": "2026-10-31",
+          "reviewer": "Codex · revisión técnica automatizada",
+          "evidence": [
+            {
+              "path": "apps/branch-api/test/commercial.integration.test.ts",
+              "label": "Recuperación entre puestos, CAS, rollback y exclusión con pago"
+            },
+            {
+              "path": "libs/data-access/branch-api/src/lib/product-capture.spec.ts",
+              "label": "Cantidad explícita y escaneo repetido sin duplicar la línea"
+            },
+            {
+              "path": "tests/pos-clients-e2e/branch/draft-capture.spec.ts",
+              "label": "Captura y pausa/retoma con API y PostgreSQL"
+            },
+            {
+              "path": "libs/data-access/branch-api/src/lib/branch-sale.spec.ts",
+              "label": "Bloqueo de cambios mientras el resultado del pago está pendiente"
+            }
+          ]
+        }
       },
       {
         "id": "F01-10",
@@ -283,10 +397,10 @@
           "branch-api"
         ],
         "status": "verified",
-        "summary": "Verificación técnica completada de reglas deterministas, cupones y autorizaciones de descuento. Pendiente revisión manual de Comercial sobre acumulación, mínimos, exclusión y autoridad de cupones.",
+        "summary": "Revalidadas reglas deterministas, cupones y autorizaciones de descuento. Comercial mantiene su revisión de acumulación, mínimos, exclusión y autoridad; no se simula consumo global de cupones.",
         "acceptance": null,
         "verification": {
-          "revision": "f08442279796f110dea23904ffe2350a758845d1",
+          "revision": "8b4a776f277743868013ad91315f0c0754837cad",
           "reviewedOn": "2026-10-31",
           "reviewer": "Codex · revisión técnica automatizada",
           "evidence": [
@@ -309,7 +423,7 @@
           "erp-worker"
         ],
         "status": "blocked",
-        "summary": "Consulta de catálogo y CLI Mountain implementadas con transporte HTTPS local controlado. Pendiente validar acceso y contratos contra la instancia autorizada. La sincronización completa de espejos corresponde a F03.",
+        "summary": "Conector Mountain y consultas de catálogo implementados y probados con HTTPS local controlado. Pendiente validar instancia autorizada, VPN/DNS/TLS, permisos efectivos y resultados reales. Los espejos completos corresponden a F03.",
         "acceptance": null,
         "verification": null
       },
@@ -321,10 +435,10 @@
           "country-api"
         ],
         "status": "verified",
-        "summary": "Verificación técnica completada de contratos v1, errores, límites, idempotencia y fronteras. Revisión manual de convenciones y matriz inicial de consumidores pendiente.",
+        "summary": "Revalidados contratos v1, errores, límites, idempotencia y consumidores. La revisión manual de convenciones y matriz de consumidores permanece separada del avance técnico.",
         "acceptance": null,
         "verification": {
-          "revision": "f08442279796f110dea23904ffe2350a758845d1",
+          "revision": "8b4a776f277743868013ad91315f0c0754837cad",
           "reviewedOn": "2026-10-31",
           "reviewer": "Codex · revisión técnica automatizada",
           "evidence": [
@@ -358,10 +472,10 @@
           "erp-worker"
         ],
         "status": "verified",
-        "summary": "Verificación técnica completada de estructura, builds independientes, artefactos y fronteras. Revisión manual de propietarios y reglas de integración pendiente. No acredita instalación nativa ni funcionalidades futuras.",
+        "summary": "Revalidados estructura, fronteras, builds independientes, artefactos y E2E compartido. No acredita funcionalidades futuras ni instalación/homologación nativa; propietarios e integración mantienen su revisión manual.",
         "acceptance": null,
         "verification": {
-          "revision": "f08442279796f110dea23904ffe2350a758845d1",
+          "revision": "8b4a776f277743868013ad91315f0c0754837cad",
           "reviewedOn": "2026-10-31",
           "reviewer": "Codex · revisión técnica automatizada",
           "evidence": [
@@ -379,7 +493,7 @@
             },
             {
               "path": "tests/pos-clients-e2e/project.json",
-              "label": "Proyecto E2E compartido con alcance de navegador"
+              "label": "Proyecto E2E compartido y alcance de los recorridos"
             }
           ]
         }

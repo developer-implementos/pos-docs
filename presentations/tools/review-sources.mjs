@@ -24,6 +24,6 @@ sources.inputs = sources.inputs.map(input => {
 });
 sources.revision = revision;
 sources.reviewedOn = new Date().toISOString().slice(0, 10);
-sources.sourceStatus = 'Fuentes documentales verificadas en la revisión indicada; F01 combina administración POS en revisión y pruebas monetarias de laboratorio, sin aceptación de fase ni habilitación productiva.';
+sources.sourceStatus = 'Fuentes documentales verificadas en la revisión indicada; F01 incluye administración POS integrada y entregables técnicamente verificados con pruebas comerciales de laboratorio. La aceptación manual y la habilitación productiva se mantienen separadas.';
 fs.writeFileSync(manifestPath, `${JSON.stringify(sources, null, 2)}\n`);
 console.log(`Presentation source review: ${revision.slice(0, 12)}; ${sources.inputs.length} tracked inputs.`);

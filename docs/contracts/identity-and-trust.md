@@ -1,6 +1,6 @@
 # Identidad y confianza entre fronteras
 
-**Estado: propuesta de implementación — ADR-16.** Precisa autenticación, autorización y continuidad para las siete aplicaciones. No selecciona un proveedor de identidad, PKI ni plataforma de dispositivos; no acredita integración corporativa. F01 prueba el alcance de autorización en laboratorio; F03/F05 deben comprobar identidades y ciclo de vida reales antes de una habilitación productiva.
+**Estado: propuesta de implementación — ADR-16.** Precisa autenticación, autorización y continuidad para las siete aplicaciones. F01 utiliza usuarios, roles y asignaciones propios del POS para Chile, además del laboratorio segregado. La federación, PKI e identidad criptográfica de dispositivos descritas aquí siguen siendo propuestas; no se ha seleccionado ni integrado un proveedor corporativo. F03/F05 deben comprobar sus fronteras y ciclo de vida antes de una habilitación productiva.
 
 ## Identidades distintas
 
@@ -11,7 +11,9 @@
 | Sucursal | Instalación y escritor autorizado del backend local, con época de recuperación | Registro de instalaciones en país; restaurar una copia no crea otro escritor autorizado |
 | Workload | Instancia/capacidad de `branch-sync-worker`, `erp-worker`, `device-agent` y de las APIs | API receptora valida audiencia, identidad, ámbito y capacidades; un worker no usa la sesión personal de un administrador |
 
-`country-api` mantiene el registro POS de instalaciones, workloads, ámbitos y revocaciones. El proveedor de identidad corporativo propuesto autentica personas; `branch-api` decide la autorización del comando POS mediante políticas y asignaciones del producto. La operación de PKI y la integración con ese proveedor deben asignarse a plataforma/seguridad. No se añade una aplicación `identity-api` ni se atribuye ese servicio al legacy.
+En F01, `branch-api` administra las identidades propias del POS y verifica las asignaciones persistidas de operador a puesto e instalación. Recuperar una cesta propia pausada en otro puesto requiere una asignación válida en el destino y conserva la misma sucursal; conocer sus identificadores no concede acceso. El [recorrido F01](../phase-1-laboratory.md) distingue ese control de una identidad criptográfica de dispositivo.
+
+En la arquitectura propuesta, `country-api` mantendrá el registro POS de instalaciones, workloads, ámbitos y revocaciones. Si se incorpora un proveedor corporativo, autenticará personas; `branch-api` seguirá decidiendo la autorización del comando mediante políticas y asignaciones del producto. La operación de PKI y esa integración deben asignarse a plataforma/seguridad. No se añade una aplicación `identity-api` ni se atribuye ese servicio al legacy.
 
 ## Autenticación por frontera
 
@@ -70,7 +72,7 @@ Al reconectar se actualizan políticas, revocaciones y hora antes de renovar adm
 | IDN-05 | Dos equipos restaurados con la misma identidad de sucursal | Sólo el escritor con época vigente admite negocio; el otro conserva evidencia para recuperación |
 | IDN-06 | Worker de maestros intenta reclamar o finalizar trabajo financiero | Denegación por capacidad/ámbito, incluso si la conexión mTLS es válida; [F03-V08](/guide/roadmap/phase-03/#f03-v08) |
 
-Los resultados humanos y las pruebas del producto siguen pendientes. El laboratorio de [F01-01](/guide/roadmap/phase-01/#work-f01-01) no acredita federación corporativa. [F03-01](/guide/roadmap/phase-03/#work-f03-01), [F03-03](/guide/roadmap/phase-03/#work-f03-03) y [F05-03](/guide/roadmap/phase-05/#work-f05-03) deben incorporar estas fronteras; el móvil requiere además sus pruebas nativas en F06.
+Los resultados de estas pruebas de federación y confianza siguen pendientes. La identidad propia POS y el laboratorio de [F01-01](/guide/roadmap/phase-01/#work-f01-01) no acreditan federación corporativa. [F03-01](/guide/roadmap/phase-03/#work-f03-01), [F03-03](/guide/roadmap/phase-03/#work-f03-03) y [F05-03](/guide/roadmap/phase-05/#work-f05-03) deben incorporar estas fronteras; el móvil requiere además sus pruebas nativas en F06.
 
 ## Referencias del perfil propuesto
 

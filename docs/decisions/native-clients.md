@@ -63,7 +63,7 @@ Los dos clientes consumirán la API autorizada de sucursal; PostgreSQL conserva 
 
 El cliente móvil depende de la conectividad autorizada al backend para las operaciones que la requieran. Compartir interfaz no habilita venta fuera de la sucursal, operación sin LAN, acceso remoto público ni permisos adicionales. Esos recorridos necesitan una decisión y pruebas propias.
 
-Ambos clientes seleccionan explícitamente `demo` o `branch-lab`. El primero utiliza adaptadores sintéticos; el segundo conecta acceso, caja y venta de laboratorio con `branch-api` y PostgreSQL, sin fallback a mocks. La [guía F01](../phase-1-laboratory.md) delimita la evidencia en navegador y los controles de sesión en memoria. La autenticación corporativa, el almacenamiento seguro de credenciales nativas y la homologación de los recorridos en cada shell siguen pendientes. Tauri utiliza el identificador `com.floxcristian.corporatepos`, cuya estabilidad debe respetarse por compatibilidad; Capacitor utiliza `com.implementos.posplatform.mobile`. Sus almacenes locales son independientes: compartir código no sincroniza datos ni sesiones entre dispositivos.
+Ambos clientes parten sin registrar (`unconfigured`) y utilizan `branch` para conectarse al perfil operativo con identidad propia POS. `branch-lab` conecta el recorrido comercial de laboratorio con `branch-api` y PostgreSQL; `demo` utiliza adaptadores sintéticos. Un fallo de API no cambia de perfil. La [guía F01](../phase-1-laboratory.md) delimita la evidencia en navegador, la configuración del origen HTTPS y los controles de sesión en memoria. La federación corporativa, las credenciales criptográficas nativas y la homologación de los recorridos en cada shell siguen pendientes. Tauri utiliza el identificador `com.floxcristian.corporatepos`, cuya estabilidad debe respetarse por compatibilidad; Capacitor utiliza `com.implementos.posplatform.mobile`. Sus almacenes locales son independientes: compartir código no sincroniza datos ni sesiones entre dispositivos.
 
 ## Entrega y verificación
 
@@ -74,6 +74,8 @@ Ambos clientes seleccionan explícitamente `demo` o `branch-lab`. El primero uti
 | Sincronización Capacitor | Copia del bundle y actualización de dependencias del proyecto nativo | Compilación e instalación Android/iOS |
 | Empaquetado Tauri o compilación móvil | Generación del artefacto en la plataforma usada | Firma, distribución, instalación, operación y recuperación sobre equipos reales |
 | Homologación | Comportamiento observado para el dispositivo, versión y proveedor probados | Plataformas o capacidades fuera de ese alcance |
+
+Estas etapas distinguen tipos de evidencia, no una lista de bloqueantes de F01. F01-04 comprueba el recorrido integrado y que el paquete conserve su perfil y política de conexión; firma, hardware y funcionamiento nativo se validan en F02/F05. El [estado del corte F01](../phase-1-laboratory.md#perfiles-del-cliente) identifica la comprobación de empaquetado pendiente; la ficha no exige completar iOS ni disponer de macOS para cerrarla.
 
 Las guías de [escritorio](../desktop.md) y [móvil](../mobile.md) mantienen los comandos y prerrequisitos, sin duplicarlos aquí. El [catálogo del monorepo](../monorepo.md) registra siete aplicaciones objetivo. La guía Starlight se mantiene por separado en el repositorio editorial [POS Docs](https://github.com/developer-implementos/pos-docs).
 

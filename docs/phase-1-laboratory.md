@@ -12,7 +12,7 @@ Los puestos se aprovisionan con identidad de caja e instalación. El cliente sel
 
 `erp-worker` incorpora una CLI separada de consultas HTTPS a Mountain para buscar referencias de productos y clientes. Es un adaptador de lectura real con configuración externa, token técnico propio, rutas permitidas y validación de respuesta; **todavía no alimenta el espejo de sucursal ni la UI**. Las pruebas HTTPS locales no acreditan conectividad con la empresa. La ejecución corporativa espera origen aprobado, VPN/DNS/TLS y cuenta restringida; el precio mínimo del resultado no se interpreta como precio de venta.
 
-El código de este incremento está integrado en `main` en la [revisión 2bca6df](https://github.com/developer-implementos/pos-platform/commit/2bca6dff9150a54dcbeb7c72e8744211790af677). La aceptación de los entregables F01 sigue pendiente y se registra por separado; integrar código no habilita una caja productiva.
+El código de este incremento está integrado en `main` en la [revisión 8b4a776](https://github.com/developer-implementos/pos-platform/commit/8b4a776f277743868013ad91315f0c0754837cad). La [matriz de verificación técnica](../delivery/reviews/F01-technical-verification.md) acredita diez entregables de F01; la aceptación manual sigue pendiente. El [registro de avance](project-progress.md) conserva ambas mediciones por separado; integrar código no habilita una caja productiva.
 
 La [guía de puesta en marcha](../tools/database/README.operational.md) detalla infraestructura, certificados, provisión y registro de puestos. La [matriz del incremento](../delivery/reviews/F01-operational-increment.md) enlaza las pruebas y los pendientes de aceptación. El recorrido automatizado `npm run test:e2e:operational` usa cliente, API HTTPS y PostgreSQL reales con identidades efímeras de prueba: administra un usuario, concede acceso, lo revoca y lo reactiva. No utiliza mocks HTTP ni consulta servicios corporativos.
 
@@ -45,7 +45,25 @@ flowchart LR
 | Recuperación | Consulta por el mismo `commandId`; respuesta perdida y solicitud no recibida siguen caminos explícitos |
 | Comprobante | Detalle histórico de productos, cliente, operador, reglas e importes guardados al confirmar |
 
-Cambiar cliente, líneas, documento o reglas invalida la cotización. Una cesta fija la versión de configuración con la que nació: una versión incompatible exige resolver el conflicto, no recalcular silenciosamente. Un cliente solicitado no se convierte automáticamente en maestro aprobado; se consulta el estado y luego se recupera el maestro autorizado.
+Cambiar cliente, líneas, documento o reglas invalida la cotización. La versión de configuración que autorizó una operación no se sustituye silenciosamente: una incompatibilidad exige resolver el conflicto. Un cliente solicitado no se convierte automáticamente en maestro aprobado; se consulta el estado y luego se recupera el maestro autorizado.
+
+## Revisión de datos y recuperación entre puestos
+
+Estos comportamientos están integrados y técnicamente verificados en [F01-02](https://github.com/developer-implementos/pos-platform/issues/11), [F01-08](https://github.com/developer-implementos/pos-platform/issues/17) y [F01-09](https://github.com/developer-implementos/pos-platform/issues/18). La matriz del producto identifica pruebas, revisión y límites; la aceptación manual permanece separada.
+
+**Recotización.** La interfaz compara dos respuestas del servidor: total anterior y actual, cantidades, unidades, precios, descuentos, impuestos, reglas y versiones. No recalcula dinero. Una nueva cotización exige aceptar o rechazar antes de confirmar, incluso si sólo se renueva su vigencia. Rechazar conserva la cesta; una consulta fallida no convierte el precio anterior en un precio vigente. La aceptación deja de servir si cambia la cesta o vence la cotización.
+
+**Cliente.** La ficha muestra la versión y el instante observado que entrega la API. «Volver a consultar cliente» lee la copia autorizada de sucursal; no dispara una actualización del ERP ni acredita una antigüedad máxima de negocio. Una respuesta anterior no reemplaza la ficha conocida y una búsqueda no cambia silenciosamente el cliente activo. Si cambia su versión, se revalida la cesta con control de versión y se requiere cotizar de nuevo. Un fallo conserva la operación y muestra el motivo; consultar al cliente bloquea temporalmente la edición, cotización y confirmación de esa cesta.
+
+**Cesta pausada en otro puesto.** El operador puede recuperar una cesta propia de la misma sucursal desde una instalación a la que tenga acceso. El servidor verifica estado pausado, vencimiento, dueño, permisos, compatibilidad de la configuración destino y versión esperada. La toma cambia el contexto de edición, conserva el puesto y la configuración de creación, e invalida cotización y descuento autorizado. Dos tomas concurrentes no sobrescriben la cesta: una gana y la otra recibe conflicto. Una venta confirmada o un cobro pendiente no se recuperan como borrador.
+
+**Captura repetida.** Cada confirmación de «Agregar» expresa una cantidad. Repetir el mismo código de barras para el mismo producto y unidad acumula esa cantidad de forma decimal exacta; otro código o presentación conserva su propia línea. Leer un código sin confirmar no agrega productos. El servidor vuelve a validar unidad, cantidad y versión de la cesta.
+
+## Compatibilidad de la configuración de puesto
+
+El incremento de [F01-07](https://github.com/developer-implementos/pos-platform/issues/16) comprueba la configuración efectiva de todas las instalaciones activas de un puesto antes de publicar una cadena de revisiones. La jerarquía es corporación → país → sucursal → puesto, con revisiones inmutables y procedencia por campo. La publicación, el alta o reactivación de una instalación y el cambio de sus capacidades se serializan por puesto; también se comprueba la configuración heredada programada.
+
+La publicación utiliza el puerto administrativo del aprovisionador, con credenciales separadas del runtime. No hay un editor público de configuración ni un nuevo endpoint para modificarla. Las operaciones conservan su versión fijada y una revisión técnica compatible no habilita precios comerciales, pagos o fiscalización. La matriz de verificación incluye las pruebas PostgreSQL de publicaciones incompatibles, instalaciones y concurrencia.
 
 ## Perfiles del cliente
 
@@ -58,9 +76,11 @@ El cliente selecciona una composición explícita:
 
 No hay fallback desde un fallo de API a la demostración. Un perfil inválido bloquea el arranque. La URL exige HTTPS salvo loopback local, incluye `/api/v1` y no admite credenciales, query, fragmentos o comodines. CORS de la API y CSP del cliente deben permitir únicamente los orígenes configurados.
 
-La UI conserva el diseño Angular/PrimeNG. Presenta los importes enviados por el servidor; no usa el store mock como autoridad comercial. Los binarios Tauri/Capacitor y la homologación de dispositivos requieren sus pruebas nativas; pasar Playwright en navegador no acredita esas capacidades.
+La UI conserva el diseño Angular/PrimeNG. Presenta los importes enviados por el servidor; no usa el store mock como autoridad comercial. F01-04 exige comprobar que el empaquetado conserva el perfil conectado y la política de origen autorizada, además del recorrido con API y PostgreSQL. Pasar Playwright en navegador no demuestra qué configuración contiene el paquete.
 
 El paquete nativo fija un origen HTTPS permitido mediante su configuración de despliegue. La configuración pública del puesto contiene `mode: branch`, `apiBaseUrl`, `registerId` e `installationId`; no contiene contraseñas ni tokens. Debe coincidir con el origen aprobado del paquete. CSP y la configuración Tauri se generan para ese origen exacto, sin comodines ni proxy que evite la validación TLS.
+
+La [evidencia Android](../delivery/evidence/f01-android-package.json) registra dos APK reales del código integrado: sin configuración inicial y con una política de origen exacto. También comprueba el rechazo de una política distinta. El pendiente de empaquetado de F01-04 es generar el artefacto Tauri real y comprobar su política embebida. Firma, hardware y funcionamiento nativo sobre equipos reales pertenecen a F02/F05; disponer de macOS o completar iOS no añade un criterio de cierre a esta ficha F01.
 
 El laboratorio HTTP permanece en loopback. El perfil operativo requiere TLS explícito, CORS limitado y confianza en el certificado del servidor. Las pruebas de navegador y compilación no acreditan distribución firmada, instalación en terminales, certificados desplegados ni validación de dispositivos.
 
@@ -76,6 +96,8 @@ npm run test:e2e:branch
 El runner recibe `POS_TEST_ADMIN_URL` para un servidor de pruebas aislado. Crea bases y roles sintéticos, construye artefactos, ejecuta migración, seed y comprobación con credenciales separadas, inicia API y cliente, ejecuta Playwright y limpia sus recursos. El seed crea operador y supervisor independientes; sus contraseñas se generan para la ejecución. No apunta a una base de sucursal existente.
 
 Las pruebas de navegador recorren la API y PostgreSQL reales: pérdida de respuesta después del commit, interrupción antes de enviar con reintento idéntico, y descuento autorizado por una segunda persona. Verifican además la consulta del comprobante persistido. Las trazas de Playwright están deshabilitadas en esta suite para no capturar bearer o contraseñas de laboratorio.
+
+La [evidencia de CI portable](../delivery/evidence/f01-portable-ci.json) conserva sus 25 pasos aprobados, versiones, exclusiones y equivalencia exacta del árbol probado con el integrado. El squash no se presenta como una nueva ejecución de pruebas. La compilación Android tiene evidencia independiente; las comprobaciones alojadas de GitHub y el empaquetado Tauri conservan sus pendientes explícitos.
 
 El laboratorio incluye un aprovisionador de pruebas y semillas sintéticas. La provisión operativa usa un documento explícito de sucursal/puestos y credenciales externas, separado de las semillas; no convierte una base con datos de laboratorio en una instalación comercial. El CLI de base ejecuta migraciones y comprobaciones con credenciales separadas del runtime. El README del producto conserva los comandos exactos y la configuración del artefacto; esta guía concentra el recorrido y sus límites.
 
