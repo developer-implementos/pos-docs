@@ -53,6 +53,146 @@ function derive(fixture, mutate = () => {}) {
   return deriveProgress(fixture.snapshot, fixture.roadmapSource);
 }
 
+function technicalFixture(current = fixture()) {
+  current.snapshot.content.schemaVersion = 2;
+  for (const work of current.snapshot.content.workPackages) work.verification = null;
+  return current;
+}
+
+function verify(work) {
+  work.status = 'verified';
+  work.verification = acceptance();
+}
+
+test('schema 2 counts technical verification independently of manual acceptance in project, phases and apps', () => {
+  const current = technicalFixture();
+  const result = derive(current, content => { verify(content.workPackages[0]); });
+  assert.equal(result.measurement, 'verification');
+  assert.equal(result.total, 3);
+  assert.equal(result.verified, 1);
+  assert.equal(result.completed, 1);
+  assert.equal(result.percent, 33.3);
+  assert.equal(result.accepted, 0);
+  assert.equal(result.pendingAcceptance, 1);
+  assert.deepEqual(result.counts, { not_started: 2, in_progress: 0, blocked: 0, verified: 1 });
+  assert.deepEqual(result.applications.map(app => [app.id, app.completed, app.verified, app.accepted, app.percent]), [
+    ['pos-desktop', 1, 1, 0, 100], ['branch-api', 1, 1, 0, 50], ['country-api', 0, 0, 0, 0],
+  ]);
+  assert.deepEqual(result.phases.map(phase => [phase.id, phase.total, phase.verified, phase.percent]), [
+    ['phase-01', 2, 1, 50], ['phase-02', 1, 0, 0],
+  ]);
+  const accepted = derive(current, content => { content.workPackages[0].acceptance = acceptance(); });
+  assert.equal(accepted.accepted, 1);
+  assert.equal(accepted.pendingAcceptance, 0);
+  assert.equal(accepted.verified, result.verified);
+  assert.equal(accepted.percent, result.percent, 'Manual acceptance never changes technical completion');
+  assert.equal(accepted.workPackages[0].status, 'verified');
+});
+
+test('schema 1 retains the acceptance metric without manufacturing verification', () => {
+  const result = derive(fixture(), content => {
+    content.workPackages[0].status = 'accepted';
+    content.workPackages[0].acceptance = acceptance();
+  });
+  assert.equal(result.measurement, 'acceptance');
+  assert.equal(result.completed, 1);
+  assert.equal(result.percent, 33);
+  assert.equal(result.verified, null);
+  assert.equal(result.pendingAcceptance, null);
+  assert.ok(result.applications.every(app => app.verified === null));
+  assert.ok(result.phases.every(phase => phase.verified === null));
+  assert.equal(result.workPackages[0].verification, undefined);
+});
+
+test('schema 2 uses the complete roadmap denominator with one decimal and equal weight', () => {
+  const roadmap = { schemaVersion: 3, phases: [1, 2].map(phase => ({
+    id: `phase-0${phase}`, title: `Fase ${phase}`, delivery: { work: Array.from({ length: phase === 1 ? 13 : 58 }, (_, index) => ({
+      id: `F0${phase}-${String(index + 1).padStart(2, '0')}`, title: `Entrega ${index + 1}`, apps: ['branch-api'],
+    })) },
+  })) };
+  const result = derive(technicalFixture(createSnapshot(roadmap)), content => { content.workPackages.slice(0, 3).forEach(verify); });
+  assert.equal(result.total, 71);
+  assert.equal(result.percent, 4.2);
+  assert.equal(result.phases[0].total, 13);
+  assert.equal(result.phases[0].percent, 23.1);
+  assert.equal(result.applications[0].percent, 4.2);
+  assert.equal(result.accepted, 0);
+  assert.equal(result.pendingAcceptance, 3);
+});
+
+test('phase summaries follow the canonical roadmap order even if the product registry is reordered', () => {
+  const result = derive(technicalFixture(), content => { content.workPackages.reverse(); });
+  assert.deepEqual(result.phases.map(phase => phase.id), ['phase-01', 'phase-02']);
+});
+
+test('schema 2 never rounds incomplete work to 100 percent', () => {
+  const roadmap = { schemaVersion: 3, phases: Array.from({ length: 30 }, (_, index) => ({
+    id: `phase-${String(index + 1).padStart(2, '0')}`, title: `Fase ${index + 1}`, delivery: { work: Array.from({ length: 99 }, (_, work) => ({
+      id: `F${String(index + 1).padStart(2, '0')}-${String(work + 1).padStart(2, '0')}`, title: `Entrega ${work + 1}`, apps: ['branch-api'],
+    })) },
+  })) };
+  const current = technicalFixture(createSnapshot(roadmap));
+  const incomplete = derive(current, content => { content.workPackages.slice(0, -1).forEach(verify); });
+  assert.equal(incomplete.percent, 99.9);
+  const complete = derive(current, content => { verify(content.workPackages.at(-1)); });
+  assert.equal(complete.percent, 100);
+  assert.equal(complete.accepted, 0);
+});
+
+test('schema 2 requires complete immutable verification and rejects premature or inconsistent acceptance', () => {
+  const mutations = [
+    work => { work.verification = null; },
+    work => { delete work.verification; },
+    work => { work.verification.revision = 'source'; },
+    work => { work.verification.revision = 'main'; },
+    work => { work.verification.reviewer = ''; },
+    work => { work.verification.reviewedOn = '2026-02-30'; },
+    work => { work.verification.reviewedOn = '2026-10-31'; },
+    work => { work.verification.evidence = []; },
+    work => { work.verification.evidence[0].path = '../secret'; },
+    work => { work.verification.extra = true; },
+    work => { work.status = 'accepted'; },
+    work => { work.acceptance = {}; },
+    work => { work.acceptance = { ...acceptance(), revision: 'source' }; },
+    work => { work.acceptance = { ...acceptance(), reviewedOn: '2026-10-29' }; },
+    work => { delete work.acceptance; },
+  ];
+  for (const mutate of mutations) {
+    assert.throws(() => derive(technicalFixture(), content => {
+      const work = content.workPackages[0];
+      verify(work);
+      mutate(work);
+    }));
+  }
+  for (const status of ['not_started', 'in_progress', 'blocked']) {
+    for (const field of ['verification', 'acceptance']) {
+      assert.throws(() => derive(technicalFixture(), content => {
+        content.workPackages[0].status = status;
+        content.workPackages[0][field] = acceptance();
+      }));
+    }
+  }
+});
+
+test('schema 2 retains exact scope and rejects omitted, reassigned or duplicate work', () => {
+  for (const mutate of [
+    content => { content.workPackages.pop(); },
+    content => { content.workPackages.push(structuredClone(content.workPackages[0])); },
+    content => { content.workPackages[0].apps = ['branch-api']; },
+    content => { content.workPackages[0].id = 'F99-01'; },
+    content => { content.applications.pop(); },
+    content => { content.schemaVersion = 3; },
+  ]) assert.throws(() => derive(technicalFixture(), mutate));
+  const result = derive(technicalFixture(), content => {
+    content.productRevision = 'source';
+    content.workPackages[0].status = 'in_progress';
+    content.workPackages[1].status = 'blocked';
+  });
+  assert.equal(result.completed, 0);
+  assert.equal(result.productRevision, revision);
+  assert.equal(result.workPackages[0].verification, null);
+});
+
 test('baseline derives zero accepted work while retaining implementation summaries and pinned provenance', () => {
   const current = fixture();
   const result = derive(current);

@@ -5,7 +5,8 @@ import path from 'node:path';
 
 const productRepository = 'https://github.com/developer-implementos/pos-platform';
 const documentationRepository = 'https://github.com/developer-implementos/pos-docs';
-const statuses = ['not_started', 'in_progress', 'blocked', 'accepted'];
+const legacyStatuses = ['not_started', 'in_progress', 'blocked', 'accepted'];
+const technicalStatuses = ['not_started', 'in_progress', 'blocked', 'verified'];
 const stages = ['prototype', 'foundation', 'planned', 'functional', 'validated'];
 const sha = /^[a-f0-9]{40}$/;
 const digest = /^[a-f0-9]{64}$/;
@@ -39,6 +40,15 @@ function evidence(entries, label, required) {
     assert.ok(!paths.has(entry.path), `${label} repeats a path`);
     paths.add(entry.path);
   }
+}
+
+function review(value, label, reviewedOn) {
+  shape(value, ['revision', 'reviewedOn', 'reviewer', 'evidence'], label);
+  assert.match(value.revision, sha, `${label} requires an immutable revision`);
+  date(value.reviewedOn, `${label} review`);
+  assert.ok(value.reviewedOn <= reviewedOn, `${label} cannot follow the snapshot review`);
+  text(value.reviewer, `${label} reviewer`, 300);
+  evidence(value.evidence, `${label} evidence`, true);
 }
 
 function roadmapScope(source) {
@@ -76,7 +86,7 @@ export function progressContentHash(content) {
   return createHash('sha256').update(JSON.stringify(content), 'utf8').digest('hex');
 }
 
-/** Validate a pinned snapshot and derive percentages from unique accepted packages. */
+/** Derive technical completion from schema 2; retain schema 1's acceptance measurement. */
 export function deriveProgress(snapshot, roadmapSource) {
   shape(snapshot, ['schemaVersion', 'source', 'content'], 'Progress snapshot');
   assert.equal(snapshot.schemaVersion, 1, 'Unsupported progress snapshot schema');
@@ -89,7 +99,10 @@ export function deriveProgress(snapshot, roadmapSource) {
 
   const content = snapshot.content;
   shape(content, ['schemaVersion', 'reviewedOn', 'productRevision', 'scope', 'summary', 'applications', 'workPackages'], 'Progress content');
-  assert.equal(content.schemaVersion, 1, 'Unsupported product progress schema');
+  assert.ok([1, 2].includes(content.schemaVersion), 'Unsupported product progress schema');
+  const technical = content.schemaVersion === 2;
+  const statuses = technical ? technicalStatuses : legacyStatuses;
+  const measurement = technical ? 'verification' : 'acceptance';
   date(content.reviewedOn, 'Progress review');
   assert.ok(content.productRevision === 'source' || (typeof content.productRevision === 'string' && sha.test(content.productRevision)), 'Progress requires source or an immutable audited product revision');
   const productRevision = content.productRevision === 'source' ? snapshot.source.revision : content.productRevision;
@@ -119,7 +132,7 @@ export function deriveProgress(snapshot, roadmapSource) {
   const workIds = new Set();
   const counts = Object.fromEntries(statuses.map(status => [status, 0]));
   const workPackages = content.workPackages.map(entry => {
-    shape(entry, ['id', 'apps', 'status', 'summary', 'acceptance'], 'Progress work package');
+    shape(entry, technical ? ['id', 'apps', 'status', 'summary', 'verification', 'acceptance'] : ['id', 'apps', 'status', 'summary', 'acceptance'], 'Progress work package');
     assert.ok(scope.work.has(entry.id) && !workIds.has(entry.id), `Unknown or duplicate progress work package: ${entry.id}`);
     workIds.add(entry.id);
     const definition = scope.work.get(entry.id);
@@ -127,13 +140,19 @@ export function deriveProgress(snapshot, roadmapSource) {
     assert.deepEqual([...entry.apps].sort(), [...definition.apps].sort(), `${entry.id} app assignment differs from the roadmap`);
     assert.ok(statuses.includes(entry.status), `Unknown progress status: ${entry.status}`);
     text(entry.summary, `${entry.id} summary`);
-    if (entry.status === 'accepted') {
-      shape(entry.acceptance, ['revision', 'reviewedOn', 'reviewer', 'evidence'], `${entry.id} acceptance`);
-      assert.match(entry.acceptance.revision, sha, `${entry.id} acceptance requires an immutable revision`);
-      date(entry.acceptance.reviewedOn, `${entry.id} acceptance review`);
-      assert.ok(entry.acceptance.reviewedOn <= content.reviewedOn, `${entry.id} acceptance cannot follow the snapshot review`);
-      text(entry.acceptance.reviewer, `${entry.id} reviewer`, 300);
-      evidence(entry.acceptance.evidence, `${entry.id} acceptance evidence`, true);
+    if (technical) {
+      if (entry.status === 'verified') {
+        review(entry.verification, `${entry.id} verification`, content.reviewedOn);
+        if (entry.acceptance !== null) {
+          review(entry.acceptance, `${entry.id} acceptance`, content.reviewedOn);
+          assert.ok(entry.verification.reviewedOn <= entry.acceptance.reviewedOn, `${entry.id} acceptance cannot precede technical verification`);
+        }
+      } else {
+        assert.equal(entry.verification, null, `${entry.id} cannot claim verification before it is verified`);
+        assert.equal(entry.acceptance, null, `${entry.id} cannot claim acceptance before it is verified`);
+      }
+    } else if (entry.status === 'accepted') {
+      review(entry.acceptance, `${entry.id} acceptance`, content.reviewedOn);
     } else {
       assert.equal(entry.acceptance, null, `${entry.id} cannot claim acceptance before it is accepted`);
     }
@@ -142,16 +161,26 @@ export function deriveProgress(snapshot, roadmapSource) {
   });
   assert.deepEqual([...workIds].sort(), [...scope.work.keys()].sort(), 'Progress must cover every roadmap work package');
 
-  const total = workPackages.length;
-  const accepted = counts.accepted;
-  const percent = (complete, size) => Math.floor(complete / size * 100);
+  const percent = (complete, size) => technical
+    ? (complete === size ? 100 : Math.min(99.9, Math.round(complete / size * 1000) / 10))
+    : Math.floor(complete / size * 100);
+  const totals = assigned => {
+    const total = assigned.length;
+    const accepted = assigned.filter(entry => entry.acceptance !== null).length;
+    const verified = technical ? assigned.filter(entry => entry.status === 'verified').length : null;
+    const completed = technical ? verified : accepted;
+    return { total, completed, verified, accepted, pendingAcceptance: technical ? verified - accepted : null, percent: percent(completed, total) };
+  };
   const applications = content.applications.map(app => {
     const assigned = workPackages.filter(entry => entry.apps.includes(app.id));
-    const complete = assigned.filter(entry => entry.status === 'accepted').length;
     assert.ok(assigned.length > 0, `${app.id} must have assigned work`);
-    return { ...app, total: assigned.length, accepted: complete, percent: percent(complete, assigned.length) };
+    return { ...app, ...totals(assigned) };
   });
-  return { total, accepted, percent: percent(accepted, total), applications, workPackages, counts, source: snapshot.source, scope: content.scope, reviewedOn: content.reviewedOn, productRevision, summary: content.summary };
+  const phases = [...new Set([...scope.work.values()].map(entry => entry.phase))].map(id => {
+    const assigned = workPackages.filter(entry => entry.phase === id);
+    return { id, title: assigned[0].phaseTitle, href: `/guide/roadmap/${id}/`, ...totals(assigned) };
+  });
+  return { measurement, ...totals(workPackages), applications, phases, workPackages, counts, source: snapshot.source, scope: content.scope, reviewedOn: content.reviewedOn, productRevision, summary: content.summary };
 }
 
 export function loadProgress(root) {

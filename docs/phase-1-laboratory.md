@@ -101,4 +101,4 @@ Tampoco se ejecutan pagos con tarjeta, emisión fiscal, hardware, cierre de caja
 
 Para cotizar desde fuentes chilenas deben confirmarse moneda, naturaleza neta/bruta del precio, impuestos, unidades, redondeos, contexto de vendedor/sucursal, vigencia y tratamiento de precio ausente. La fuente legacy puede devolver un importe sustituto ante ausencia de precio: un número positivo no acredita un precio cobrable. No se completa el cálculo con ceros, IVA supuesto o datos sintéticos cuando falla una consulta real.
 
-La estructura y el contrato técnico se describen en [monorepo](monorepo.md) y [API](api.md). El [roadmap](roadmap.md) define el alcance de las siguientes fases; la existencia de archivos, endpoints o pruebas no equivale por sí sola a un porcentaje aceptado.
+La estructura y el contrato técnico se describen en [monorepo](monorepo.md) y [API](api.md). El [roadmap](roadmap.md) define el alcance de las siguientes fases; el avance exige verificar los criterios completos de cada entregable con evidencia. La aceptación manual del equipo se registra por separado.

@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { docsOrigin } from '../apps/starlight/site-config.mjs';
 import { loadCatalog } from './catalog.mjs';
 import { loadProgress } from './progress.mjs';
+import { formatProgressPercent } from './progress-view.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const require = createRequire(path.join(root, 'apps/starlight/package.json'));
@@ -101,15 +102,31 @@ try {
 
   const progressSection = page.locator('#progress');
   assert.equal(await progressSection.getByRole('heading', { name: 'Avance del proyecto', exact: true }).count(), 1);
-  const overall = progressSection.getByRole('progressbar', { name: 'Entregables aceptados del proyecto', exact: true });
+  const measured = progress.measurement === 'verification' ? 'verificados' : 'aceptados';
+  assert.equal(await progressSection.getAttribute('data-measurement'), progress.measurement);
+  const overall = progressSection.getByRole('progressbar', { name: `Entregables ${measured} del proyecto`, exact: true });
   assert.equal(await overall.getAttribute('max'), String(progress.total));
-  assert.equal(await overall.getAttribute('value'), String(progress.accepted));
+  assert.equal(await overall.getAttribute('value'), String(progress.completed));
   assert.equal(await progressSection.locator('[data-progress-app]').count(), progress.applications.length);
   for (const app of progress.applications) {
     const row = progressSection.locator(`[data-progress-app="${app.id}"]`);
-    assert.equal(await row.getByRole('progressbar').getAttribute('value'), String(app.accepted));
+    assert.equal(await row.getByRole('progressbar').getAttribute('value'), String(app.completed));
     assert.equal(await row.getByRole('progressbar').getAttribute('max'), String(app.total));
-    assert.equal((await row.locator('.progress-app-value strong').textContent()).trim(), `${app.percent} %`);
+    assert.equal((await row.locator('.progress-app-value strong').textContent()).trim(), `${formatProgressPercent(app.percent)} %`);
+  }
+  assert.equal(await progressSection.locator('[data-progress-phase]').count(), progress.phases.length);
+  for (const phase of progress.phases) {
+    const row = progressSection.locator(`[data-progress-phase="${phase.id}"]`);
+    assert.equal(await row.locator('a').getAttribute('href'), phase.href);
+    assert.equal((await row.locator('strong').textContent()).trim(), `${formatProgressPercent(phase.percent)} %`);
+    assert.equal((await row.locator('div>span').textContent()).trim(), `${phase.completed} de ${phase.total} ${measured}`);
+  }
+  if (progress.measurement === 'verification') {
+    assert.deepEqual(await progressSection.locator('.progress-manual strong').allTextContents(), [String(progress.accepted), String(progress.pendingAcceptance)]);
+    assert.equal(await progressSection.locator('.progress-manual progress').count(), 0, 'Manual review is not a second completion bar');
+  } else {
+    assert.equal(await progressSection.locator('.progress-manual').count(), 0);
+    assert.match(await progressSection.locator('.progress-legacy-note').textContent(), /esquema 1/);
   }
   const method = progressSection.locator('summary');
   await method.focus();
@@ -118,7 +135,7 @@ try {
   assert.equal(await progressSection.locator('.progress-work-list>li').count(), progress.total);
   await page.keyboard.press('Enter');
   assert.ok(await progressSection.locator('.progress-work-list').isHidden());
-  report.checks.push('Pinned project/app progress, acceptance counts and keyboard-operated methodology');
+  report.checks.push('Pinned project/app/phase progress, independent manual acceptance and keyboard-operated methodology');
 
   const references = await page.locator('a[href], link[href], script[src], img[src]').evaluateAll(nodes => nodes.map(node => ({
     tag: node.tagName,
