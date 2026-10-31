@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "reviewedOn": "2026-10-31",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "1d8d7bc26fd8de41d9ea3f0d956594d69d2d34f9",
+  "revision": "22c4842302a3e327b75e6c1d4ba1759f1b3fa468",
   "sourceStatus": "Fuentes documentales verificadas en la revisión indicada; F01 en revisión de laboratorio, sin aceptación productiva.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "inputs": [
@@ -16,7 +16,7 @@
     },
     {
       "path": "docs/implementation-plan.md",
-      "sha256": "c2109b023250b5f1b84eda48f3e856a145cc211ee4064730737a16b0c9f368de"
+      "sha256": "b16d61e2e7ccebf4a312a000ba61496de825b293e0fd022b49e6f2c98359286a"
     },
     {
       "path": "docs/validacion-y-decisiones.md",
@@ -36,7 +36,7 @@
     },
     {
       "path": "docs/c4-arquitectura-propuesta.md",
-      "sha256": "fdccae303af2e8d9a96c6289530297e121108999e8f8458863b15d4bb33bed4e"
+      "sha256": "7bed3236c6b773f2fb56a367bb5e8e1a6f5704998f1ac71898dcd441ba77d3d9"
     },
     {
       "path": "docs/contracts/master-data-publication.md",
@@ -64,7 +64,7 @@
     },
     {
       "path": "docs/decisions/native-clients.md",
-      "sha256": "42942ca61de880726e6ba9c0a7f90b941a4bda0078b49de9ee6f2dda4ad5f36f"
+      "sha256": "e9fedd2014cfac6f9b746622eeb7d28b126930d3687359096e4d115e5e7c17cc"
     },
     {
       "path": "apps/starlight/src/data/monorepo-catalog.json",
