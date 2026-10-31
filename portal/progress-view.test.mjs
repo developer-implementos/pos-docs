@@ -18,6 +18,7 @@ test('publishes project and application acceptance counts with accessible native
   assert.match(html, /max="26" value="2" aria-label="Entregables aceptados del proyecto"/);
   assert.match(html, /<strong>4 %<\/strong><progress max="22" value="1"/);
   assert.match(html, /data-status="blocked">Bloqueado/);
+  assert.match(html, /<strong>1<\/strong> bloqueado<\/li>/);
   assert.match(html, /Falta acordar el contrato/);
   assert.match(html, /<details class="progress-method"><summary>/);
   assert.match(html, /no consulta el repositorio en tiempo real/);
