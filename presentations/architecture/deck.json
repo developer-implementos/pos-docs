@@ -1796,7 +1796,7 @@
       "id": "slide-4",
       "title": "Estructura objetivo del monorepo",
       "background": "#FFFFFF",
-      "notes": "Estructura objetivo de POS Platform: siete aplicaciones objetivo con arranque propio. pos-desktop y pos-mobile son aplicaciones completas: Tauri y Capacitor son sus shells nativas y alojan el frontend Angular compartido; branch-api atiende la operación de sucursal, branch-sync-worker intercambia información con país, country-api recibe operaciones y ofrece capacidades nacionales, erp-worker integra el ERP, y device-agent ejecuta trabajos autorizados desde cada puesto Windows .NET/C#: periféricos locales en F02 y modalidad compartida de red/móvil en F06, después del piloto F05. libs/backend organiza trece contextos de negocio; libs/shared reúne mecanismos técnicos y conceptos mínimos. libs/client-shell compone el frontend Angular: componente raíz, configuración, rutas, guards y layout. Cada biblioteca ofrece una entrada pública y dependencias explícitas. tests/pos-clients-e2e agrupa las pruebas de clientes; shared/backend/testing conserva los fixtures PostgreSQL aislados. device-agent es una aplicación propuesta pendiente de implementación; el producto revisado contiene seis aplicaciones con base técnica. Nx coordina tareas del agente, pero su compilación, pruebas Windows y firma corresponden a .NET. F01 conecta Angular, branch-api y PostgreSQL para acceso, turno y venta en efectivo en laboratorio, con recuperación verificable. La demo permanece separada. La sincronización, los proveedores y la operación productiva siguen en sus fases; ningún entregable se declara aceptado por esta presentación. POS Docs tiene repositorio y entrega independientes. Core es una referencia de organización y convenciones.",
+      "notes": "Estructura objetivo de POS Platform: siete aplicaciones objetivo con arranque propio. pos-desktop y pos-mobile son aplicaciones completas: Tauri y Capacitor son sus shells nativas y alojan el frontend Angular compartido; branch-api atiende la operación de sucursal, branch-sync-worker intercambia información con país, country-api recibe operaciones y ofrece capacidades nacionales, erp-worker integra el ERP, y device-agent ejecuta trabajos autorizados desde cada puesto Windows .NET/C#: periféricos locales en F02 y modalidad compartida de red/móvil en F06, después del piloto F05. libs/backend organiza trece contextos de negocio; libs/shared reúne mecanismos técnicos y conceptos mínimos. libs/client-shell compone el frontend Angular: componente raíz, configuración, rutas, guards y layout. Cada biblioteca ofrece una entrada pública y dependencias explícitas. tests/pos-clients-e2e agrupa las pruebas de clientes; shared/backend/testing conserva los fixtures PostgreSQL aislados. device-agent es una aplicación propuesta pendiente de implementación; el producto revisado contiene seis aplicaciones con base técnica. Nx coordina tareas del agente, pero su compilación, pruebas Windows y firma corresponden a .NET. F01 incorpora administración propia POS para Chile y puestos persistentes en PostgreSQL; Angular consume branch-api por HTTPS. Los perfiles branch y branch-lab distinguen administración operativa y pruebas monetarias sintéticas; la demo permanece separada. La CLI de erp-worker consulta referencias Mountain, sin alimentar la UI ni el espejo y con acceso corporativo aún pendiente. La sincronización, los proveedores y la operación productiva siguen en sus fases; ningún entregable se declara aceptado por esta presentación. POS Docs tiene repositorio y entrega independientes. Core es una referencia de organización y convenciones.",
       "sources": [
         {
           "label": "monorepo",
@@ -2521,7 +2521,7 @@
         },
         {
           "type": "text",
-          "text": "F01 en laboratorio: Angular, API y PostgreSQL. Integraciones posteriores pendientes.",
+          "text": "F01 en revisión: administración POS y HTTPS; venta sintética. Integraciones pendientes.",
           "position": {
             "left": 64,
             "top": 644,
@@ -7172,7 +7172,7 @@
       "id": "slide-11",
       "title": "De la demostración al producto",
       "background": "#FFFFFF",
-      "notes": "F01 dispone de un recorrido Angular, NestJS/Fastify y PostgreSQL real en revisión, con datos sintéticos y perfil de laboratorio. La demo usa adaptadores separados. El acceso, la configuración, la apertura de turno, la cotización y la venta en efectivo tienen implementación y pruebas; la aceptación técnica y funcional sigue pendiente. Primera fase usa efectivo en laboratorio; los documentos son de prueba y no habilitan venta legal/productiva. Autorización básica y aislamiento se implementan desde el primer incremento. Chile/escritorio es una hipótesis de priorización basada en el prototipo existente, sujeta a confirmación. No se asignan plazos ni recursos sin información de capacidad y dependencias. Roadmap propuesto para revisión con desarrollo y producto. El orden y los criterios son una propuesta editorial para esta presentación, no un calendario aprobado.",
+      "notes": "F01 incorpora usuarios, roles y permisos propios POS para Chile, provisión persistente de sucursal y puestos, y HTTPS entre clientes Angular y branch-api sobre PostgreSQL. La administración operativa está implementada y en revisión; no implica aceptación de fase ni habilitación productiva. Los clientes branch aplican las capacidades del servidor y parten sin configurar; branch-lab y demo permanecen separados. Apertura, cotización, efectivo y recuperación se prueban con datos comerciales sintéticos: el perfil operativo no cobra ni cotiza con fuentes incompletas. Los documentos de prueba no tienen validez fiscal. La CLI Mountain consulta referencias por HTTPS, pero falta validar el acceso corporativo y no abastece la UI ni el espejo. Chile con identidad propia POS es el alcance inicial acordado; la instalación y distribución nativa de escritorio y móvil requieren validación específica. No se asignan plazos ni recursos sin información de capacidad y dependencias. Roadmap propuesto para revisión con desarrollo y producto. El orden y los criterios son una propuesta editorial para esta presentación, no un calendario aprobado.",
       "sources": [
         {
           "label": "Base técnica y demostración",
@@ -7342,7 +7342,7 @@
         },
         {
           "type": "text",
-          "text": "Angular con perfiles explícitos\nAcceso y caja en laboratorio\nVenta PostgreSQL recuperable\nIntegraciones aún pendientes",
+          "text": "Usuarios y roles propios POS\nPuestos y HTTPS de sucursal\nVenta sintética recuperable\nIntegración externa pendiente",
           "position": {
             "left": 78,
             "top": 296,
@@ -7592,7 +7592,7 @@
         },
         {
           "type": "text",
-          "text": "Hipótesis inicial: Chile y escritorio. Alcance móvil, primer local y orden de países se acuerdan con producto y operaciones.",
+          "text": "Inicio acordado: Chile con usuarios propios POS. Instalación nativa, primer local y expansión requieren validación.",
           "position": {
             "left": 64,
             "top": 644,
@@ -7616,7 +7616,7 @@
       "id": "slide-12",
       "title": "Roadmap por funcionalidades",
       "background": "#FFFFFF",
-      "notes": "Secuencia propuesta: F1 venta local persistida, F2 primer proveedor de pago y fiscalidad, F3 sincronización/ERP y continuidad WAN, F4 jornada operativa completa en alcance priorizado, F5 piloto, F6 expansión. Las fases representan hitos de producto, no departamentos ni sprints de duración fija. Preparación de contratos y acceso a proveedores empieza desde F1 en paralelo; no espera a la fase de integración. Fases previas al piloto usan datos sintéticos y ambientes autorizados. Una fase puede requerir varias iteraciones; los criterios de salida gobiernan el avance. Roadmap propuesto para revisión con desarrollo y producto. El orden y los criterios son una propuesta editorial para esta presentación, no un calendario aprobado.",
+      "notes": "Secuencia propuesta: F1 venta local persistida, F2 primer proveedor de pago y fiscalidad, F3 sincronización/ERP y continuidad WAN, F4 jornada operativa completa en alcance priorizado, F5 piloto, F6 expansión. Las fases representan hitos de producto, no departamentos ni sprints de duración fija. Preparación de contratos y acceso a proveedores empieza desde F1 en paralelo; no espera a la fase de integración. Las pruebas monetarias previas al piloto usan datos sintéticos y ambientes autorizados; el incremento de administración POS no habilita cobros. Una fase puede requerir varias iteraciones; los criterios de salida gobiernan el avance. Roadmap propuesto para revisión con desarrollo y producto. El orden y los criterios son una propuesta editorial para esta presentación, no un calendario aprobado.",
       "sources": [
         {
           "label": "Roadmap de producto y criterios de avance",
