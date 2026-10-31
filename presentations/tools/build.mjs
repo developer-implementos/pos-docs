@@ -10,6 +10,7 @@ import {roadmapView,roadmapPairView} from './roadmap.mjs';
 import {buildNavigation} from './navigation.mjs';
 import {presentationColor,renderPaletteCss} from './palette.mjs';
 import {prepareDeck} from './architecture.mjs';
+import {sourceDigest} from './source-text.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const source = path.join(root, 'presentations/architecture');
@@ -31,7 +32,7 @@ function roadmapPair(slide) {
 assert.equal(deck.schemaVersion, 1);
 assert.equal(deck.slides.length, 18);
 assert.equal(new Set(deck.slides.map(s => s.id)).size, deck.slides.length);
-for (const input of sources.inputs) assert.equal(hash(path.join(root,input.path)), input.sha256, `Review the deck and refresh sources.json after editing ${input.path}`);
+for (const input of sources.inputs) assert.equal(sourceDigest(fs.readFileSync(path.join(root,input.path),'utf8')), input.sha256, `Review the deck and refresh sources.json after editing ${input.path}`);
 const vendorRoot = path.join(root,'presentations/vendor/reveal');
 const vendor = JSON.parse(fs.readFileSync(path.join(vendorRoot,'manifest.json'),'utf8'));
 for (const file of vendor.files) assert.equal(hash(path.join(vendorRoot,file.path)),file.sha256,`Invalid Reveal.js file: ${file.path}`);

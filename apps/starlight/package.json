@@ -11,6 +11,7 @@
     "dev": "node scripts/prepare-content.mjs && astro dev --host 127.0.0.1 --port 4207",
     "build": "node scripts/build.mjs",
     "validate": "node scripts/validate-content.mjs",
+    "test:search": "node --test scripts/build-search.test.mjs",
     "typecheck": "node scripts/prepare-content.mjs && astro check",
     "check": "node scripts/check.cjs",
     "preview": "node scripts/serve.cjs",
@@ -29,6 +30,7 @@
     "fontkit": "2.0.4",
     "mermaid": "12.2.0",
     "pdfjs-dist": "6.4.299",
+    "pagefind": "1.5.2",
     "playwright": "1.59.1",
     "typescript": "5.9.3"
   }

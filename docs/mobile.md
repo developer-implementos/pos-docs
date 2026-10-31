@@ -1,6 +1,6 @@
 # Cliente móvil Angular y Capacitor
 
-`apps/pos-mobile` contiene la aplicación cliente móvil: un frontend Angular/PrimeNG con arranque propio, alojado en la shell nativa (host) Capacitor para Android e iOS. Consume `libs/client-shell` y los componentes, estilos y activos de `libs/ui`; no depende del build de escritorio. La [decisión de clientes nativos](decisions/native-clients.md) explica la separación y sus límites.
+`apps/pos-mobile` contiene la aplicación cliente móvil: un frontend Angular/PrimeNG con arranque propio, alojado en la shell nativa (host) Capacitor para Android e iOS. Consume `libs/client-shell` y los componentes, estilos y activos de `libs/shared/frontend/ui`; no depende del build de escritorio. La [decisión de clientes nativos](decisions/native-clients.md) explica la separación y sus límites.
 
 La estructura objetivo define `libs/shared/frontend/ui` para la presentación transversal y `libs/client-shell` para la composición Angular de raíz, configuración, rutas, guards y layout; esta librería no es el host nativo. El [catálogo del monorepo](monorepo.md) distingue esa organización del código revisado al que corresponden los comandos de esta guía.
 
@@ -35,7 +35,7 @@ La alerta sigue pendiente: esta revisión de la llamada no significa que el paqu
 
 ## Alcance comprobable
 
-El cliente conserva el login y los recorridos de datos sintéticos del prototipo. No agrega autenticación real, un almacén seguro de credenciales, persistencia transaccional móvil ni sincronización de ventas en segundo plano. Tampoco habilita pagos, cámara, lectores, impresoras u otras capacidades nativas sin sus contratos, permisos e integración específica.
+El cliente selecciona `demo` o `branch-lab`. El segundo utiliza identidad de laboratorio y operaciones de servidor con sesión en memoria; la [guía F01](phase-1-laboratory.md) define su alcance. No incorpora un almacén seguro de credenciales nativas, persistencia transaccional móvil ni sincronización en segundo plano. Tampoco habilita pagos, cámara, lectores, impresoras u otras capacidades nativas sin sus contratos, permisos e integración específica.
 
 La verificación del bundle y los recorridos de navegador se distingue de la apertura en Android/iOS. Antes de afirmar soporte nativo deben probarse instalación, acceso, teclado, orientación, áreas seguras, suspensión/reanudación, pérdida de conectividad y recuperación en dispositivos representativos. Los permisos, firma y distribución se validan por plataforma. La prueba de un viewport móvil en Chromium no cubre esas condiciones.
 

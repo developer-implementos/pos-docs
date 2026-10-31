@@ -1796,7 +1796,7 @@
       "id": "slide-4",
       "title": "Estructura objetivo del monorepo",
       "background": "#FFFFFF",
-      "notes": "Estructura objetivo de POS Platform: siete aplicaciones objetivo con arranque propio. pos-desktop y pos-mobile son aplicaciones completas: Tauri y Capacitor son sus shells nativas y alojan el frontend Angular compartido; branch-api atiende la operación de sucursal, branch-sync-worker intercambia información con país, country-api recibe operaciones y ofrece capacidades nacionales, erp-worker integra el ERP, y device-agent ejecuta trabajos autorizados desde cada puesto Windows .NET/C#: periféricos locales en F02 y modalidad compartida de red/móvil en F06, después del piloto F05. libs/backend organiza trece contextos de negocio; libs/shared reúne mecanismos técnicos y conceptos mínimos. libs/client-shell compone el frontend Angular: componente raíz, configuración, rutas, guards y layout. Cada biblioteca ofrece una entrada pública y dependencias explícitas. pos-clients-e2e es el proyecto de pruebas de los clientes y shared/testing el soporte técnico de pruebas previsto. device-agent es una aplicación propuesta pendiente de implementación; el producto revisado contiene seis aplicaciones con base técnica. Nx coordina tareas del agente, pero su compilación, pruebas Windows y firma corresponden a .NET. La base actual incluye una UI demostrativa y estructura técnica de APIs, workers y contextos; persistencia, sincronización y operaciones comerciales forman parte del roadmap. POS Docs tiene repositorio y entrega independientes. Core es una referencia de organización y convenciones.",
+      "notes": "Estructura objetivo de POS Platform: siete aplicaciones objetivo con arranque propio. pos-desktop y pos-mobile son aplicaciones completas: Tauri y Capacitor son sus shells nativas y alojan el frontend Angular compartido; branch-api atiende la operación de sucursal, branch-sync-worker intercambia información con país, country-api recibe operaciones y ofrece capacidades nacionales, erp-worker integra el ERP, y device-agent ejecuta trabajos autorizados desde cada puesto Windows .NET/C#: periféricos locales en F02 y modalidad compartida de red/móvil en F06, después del piloto F05. libs/backend organiza trece contextos de negocio; libs/shared reúne mecanismos técnicos y conceptos mínimos. libs/client-shell compone el frontend Angular: componente raíz, configuración, rutas, guards y layout. Cada biblioteca ofrece una entrada pública y dependencias explícitas. tests/pos-clients-e2e agrupa las pruebas de clientes; shared/backend/testing conserva los fixtures PostgreSQL aislados. device-agent es una aplicación propuesta pendiente de implementación; el producto revisado contiene seis aplicaciones con base técnica. Nx coordina tareas del agente, pero su compilación, pruebas Windows y firma corresponden a .NET. F01 conecta Angular, branch-api y PostgreSQL para acceso, turno y venta en efectivo en laboratorio, con recuperación verificable. La demo permanece separada. La sincronización, los proveedores y la operación productiva siguen en sus fases; ningún entregable se declara aceptado por esta presentación. POS Docs tiene repositorio y entrega independientes. Core es una referencia de organización y convenciones.",
       "sources": [
         {
           "label": "monorepo",
@@ -2466,7 +2466,7 @@
         },
         {
           "type": "text",
-          "text": "testing/",
+          "text": "backend/testing/",
           "position": {
             "left": 862,
             "top": 539,
@@ -2521,7 +2521,7 @@
         },
         {
           "type": "text",
-          "text": "Estructura objetivo. UI demostrativa y base técnica; negocio e integraciones pendientes.",
+          "text": "F01 en laboratorio: Angular, API y PostgreSQL. Integraciones posteriores pendientes.",
           "position": {
             "left": 64,
             "top": 644,
@@ -2821,7 +2821,7 @@
         },
         {
           "type": "text",
-          "text": "pos-clients-e2e/",
+          "text": "tests/pos-clients-e2e/",
           "position": {
             "left": 78,
             "top": 567,
@@ -2865,7 +2865,7 @@
       "id": "slide-5",
       "title": "Responsabilidad de las bibliotecas",
       "background": "#FFFFFF",
-      "notes": "Shared agrupa mecanismos técnicos y conceptos mínimos. libs/client-shell compone el frontend Angular: componente raíz, configuración, rutas, guards y layout. Tauri y Capacitor son las shells nativas que alojan ese frontend en pos-desktop y pos-mobile. Country-policies define perfiles y selección de políticas por país; domain contiene reglas puras del prototipo y data-access su estado y adaptadores mock. Las reglas comerciales definitivas pertenecen a los contextos de negocio. Las carpetas de shared/backend describen responsabilidades; el número de bibliotecas Nx se determina por sus límites y consumidores. Los contratos de negocio pertenecen a su contexto, por ejemplo SaleConfirmedV1 en ventas; shared/contracts contiene sobres y metadatos técnicos. Shared/testing es soporte exclusivo de pruebas. Los clientes ofrecen puertos de acceso a capacidades nativas para las features. Los trabajos de periféricos del puesto se solicitan a branch-api y los ejecuta su device-agent; la modalidad compartida de red/móvil queda para F06 después del piloto F05; las features no llaman directamente a drivers de la caja. El host .NET conserva código y adaptadores privados propios: comparte esquemas de red y fixtures con el contexto devices, no importa bibliotecas NestJS ni Pino de Node.",
+      "notes": "Shared agrupa mecanismos técnicos y conceptos mínimos. libs/client-shell compone el frontend Angular: componente raíz, configuración, rutas, guards y layout. Tauri y Capacitor son las shells nativas que alojan ese frontend en pos-desktop y pos-mobile. Country-policies define perfiles y selección de políticas por país; domain contiene reglas puras del prototipo. data-access separa el estado de la demo del gateway HTTP y stores de branch-api, sin fallback entre perfiles. Las reglas comerciales definitivas pertenecen a los contextos de negocio. shared/backend agrupa runtime, persistence y testing: arranque y HTTP, unidad de trabajo PostgreSQL y fixtures aislados. Los contratos de negocio pertenecen a su contexto, por ejemplo SaleConfirmedV1 en ventas; shared/contracts contiene sobres y metadatos técnicos. Shared/backend/testing es soporte exclusivo de pruebas. Los clientes ofrecen puertos de acceso a capacidades nativas para las features. Los trabajos de periféricos del puesto se solicitan a branch-api y los ejecuta su device-agent; la modalidad compartida de red/móvil queda para F06 después del piloto F05; las features no llaman directamente a drivers de la caja. El host .NET conserva código y adaptadores privados propios: comparte esquemas de red y fixtures con el contexto devices, no importa bibliotecas NestJS ni Pino de Node.",
       "sources": [
         {
           "label": "monorepo",
@@ -3060,7 +3060,7 @@
             "left": 64,
             "top": 291,
             "width": 556,
-            "height": 45
+            "height": 96
           },
           "fill": "#EDF4F8",
           "line": {
@@ -3070,67 +3070,12 @@
         },
         {
           "type": "text",
-          "text": "bootstrap/",
+          "text": "runtime/",
           "position": {
-            "left": 76,
-            "top": 300,
-            "width": 183,
-            "height": 29
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 21,
-            "color": "#34383E",
-            "bold": true,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "Creación, arranque y cierre del proceso",
-          "position": {
-            "left": 263,
+            "left": 80,
             "top": 301,
-            "width": 345,
-            "height": 33
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 18,
-            "color": "#34383E",
-            "bold": false,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
-          }
-        },
-        {
-          "type": "shape",
-          "geometry": "rect",
-          "position": {
-            "left": 64,
-            "top": 342,
-            "width": 556,
-            "height": 45
-          },
-          "fill": "#EDF4F8",
-          "line": {
-            "fill": "none",
-            "width": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "config/",
-          "position": {
-            "left": 76,
-            "top": 351,
-            "width": 183,
-            "height": 29
+            "width": 524,
+            "height": 30
           },
           "style": {
             "typeface": "Inter",
@@ -3145,12 +3090,12 @@
         },
         {
           "type": "text",
-          "text": "Configuración validada e inyectable",
+          "text": "Arranque, HTTP, configuración, salud y observabilidad",
           "position": {
-            "left": 263,
-            "top": 352,
-            "width": 345,
-            "height": 33
+            "left": 80,
+            "top": 336,
+            "width": 524,
+            "height": 42
           },
           "style": {
             "typeface": "Inter",
@@ -3168,9 +3113,9 @@
           "geometry": "rect",
           "position": {
             "left": 64,
-            "top": 393,
+            "top": 399,
             "width": 556,
-            "height": 45
+            "height": 96
           },
           "fill": "#EDF4F8",
           "line": {
@@ -3180,12 +3125,12 @@
         },
         {
           "type": "text",
-          "text": "http/",
+          "text": "persistence/",
           "position": {
-            "left": 76,
-            "top": 402,
-            "width": 183,
-            "height": 29
+            "left": 80,
+            "top": 409,
+            "width": 524,
+            "height": 30
           },
           "style": {
             "typeface": "Inter",
@@ -3200,67 +3145,12 @@
         },
         {
           "type": "text",
-          "text": "HTTP, errores y contrato técnico",
+          "text": "Driver pg, transacciones y migraciones PostgreSQL",
           "position": {
-            "left": 263,
-            "top": 403,
-            "width": 345,
-            "height": 33
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 18,
-            "color": "#34383E",
-            "bold": false,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
-          }
-        },
-        {
-          "type": "shape",
-          "geometry": "rect",
-          "position": {
-            "left": 64,
+            "left": 80,
             "top": 444,
-            "width": 556,
-            "height": 45
-          },
-          "fill": "#EDF4F8",
-          "line": {
-            "fill": "none",
-            "width": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "observability/",
-          "position": {
-            "left": 76,
-            "top": 453,
-            "width": 183,
-            "height": 29
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 21,
-            "color": "#34383E",
-            "bold": true,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "Pino, correlación y Sentry opcional",
-          "position": {
-            "left": 263,
-            "top": 454,
-            "width": 345,
-            "height": 33
+            "width": 524,
+            "height": 42
           },
           "style": {
             "typeface": "Inter",
@@ -3278,9 +3168,9 @@
           "geometry": "rect",
           "position": {
             "left": 64,
-            "top": 495,
+            "top": 507,
             "width": 556,
-            "height": 45
+            "height": 96
           },
           "fill": "#EDF4F8",
           "line": {
@@ -3290,12 +3180,12 @@
         },
         {
           "type": "text",
-          "text": "health/",
+          "text": "testing/",
           "position": {
-            "left": 76,
-            "top": 504,
-            "width": 183,
-            "height": 29
+            "left": 80,
+            "top": 517,
+            "width": 524,
+            "height": 30
           },
           "style": {
             "typeface": "Inter",
@@ -3310,67 +3200,12 @@
         },
         {
           "type": "text",
-          "text": "Sondas del proceso y disponibilidad",
+          "text": "Fixtures aislados y soporte para pruebas de servidor",
           "position": {
-            "left": 263,
-            "top": 505,
-            "width": 345,
-            "height": 33
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 18,
-            "color": "#34383E",
-            "bold": false,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
-          }
-        },
-        {
-          "type": "shape",
-          "geometry": "rect",
-          "position": {
-            "left": 64,
-            "top": 546,
-            "width": 556,
-            "height": 45
-          },
-          "fill": "#EDF4F8",
-          "line": {
-            "fill": "none",
-            "width": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "worker/",
-          "position": {
-            "left": 76,
-            "top": 555,
-            "width": 183,
-            "height": 29
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 21,
-            "color": "#34383E",
-            "bold": true,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "Ciclo de vida de los procesos de trabajo",
-          "position": {
-            "left": 263,
-            "top": 556,
-            "width": 345,
-            "height": 33
+            "left": 80,
+            "top": 552,
+            "width": 524,
+            "height": 42
           },
           "style": {
             "typeface": "Inter",
@@ -3640,7 +3475,7 @@
         },
         {
           "type": "text",
-          "text": "Estado y adaptadores mock de la demo",
+          "text": "Adaptadores separados: demo y branch-api",
           "position": {
             "left": 674,
             "top": 590,
@@ -5690,7 +5525,7 @@
       "diagram": true,
       "title": "Desacoplamiento del ERP",
       "background": "#FFFFFF",
-      "notes": "Diagrama lógico de la integración ERP de POS Platform. El commit local confirma únicamente las operaciones habilitadas por la matriz offline y las políticas vigentes. La entrega agrupa branch-sync-worker y country-api sin fusionarlos en un único proceso. Negocio/outbox local y recepción durable de país requieren implementación transaccional. La fachada ofrece contratos del POS; la ACL traduce identidades, unidades, importes, estados y errores; el adaptador implementa el protocolo. No se obliga a tres servicios distintos. Pagos/fiscalidad tienen protocolos propios. No se afirma que todo el legacy escriba directamente en AX ni se incorporan VTEX u otros canales como consumidores existentes del POS. Ejemplo ilustrativo: el POS solicita registrar una venta con una identidad estable; la ACL traduce esa identidad al identificador externo del cliente y el resultado del proveedor al estado ERP del POS. La respuesta conserva la referencia del documento; un timeout conserva resultado incierto y exige consulta o conciliación. Los campos y estados definitivos se pactan con cada proveedor.",
+      "notes": "Diagrama lógico de la integración ERP de POS Platform. El commit local confirma únicamente las operaciones habilitadas por la matriz offline y las políticas vigentes. La entrega agrupa branch-sync-worker y country-api sin fusionarlos en un único proceso. F01 implementa negocio y outbox local en la transacción de laboratorio; recepción durable de país y entrega ERP permanecen pendientes. La fachada ofrece contratos del POS; la ACL traduce identidades, unidades, importes, estados y errores; el adaptador implementa el protocolo. No se obliga a tres servicios distintos. Pagos/fiscalidad tienen protocolos propios. No se afirma que todo el legacy escriba directamente en AX ni se incorporan VTEX u otros canales como consumidores existentes del POS. Ejemplo ilustrativo: el POS solicita registrar una venta con una identidad estable; la ACL traduce esa identidad al identificador externo del cliente y el resultado del proveedor al estado ERP del POS. La respuesta conserva la referencia del documento; un timeout conserva resultado incierto y exige consulta o conciliación. Los campos y estados definitivos se pactan con cada proveedor.",
       "sources": [
         {
           "label": "contracts",
@@ -7337,7 +7172,7 @@
       "id": "slide-11",
       "title": "De la demostración al producto",
       "background": "#FFFFFF",
-      "notes": "La UI actual ofrece una demostración con datos sintéticos. La base NestJS/Fastify no equivale a persistencia ni operaciones de negocio. Se propone sustituir adaptadores mock por recorridos verticales verificables. Primera fase usa efectivo en laboratorio; los documentos son de prueba y no habilitan venta legal/productiva. Autorización básica y aislamiento se implementan desde el primer incremento. Chile/escritorio es una hipótesis de priorización basada en el prototipo existente, sujeta a confirmación. No se asignan plazos ni recursos sin información de capacidad y dependencias. Roadmap propuesto para revisión con desarrollo y producto. El orden y los criterios son una propuesta editorial para esta presentación, no un calendario aprobado.",
+      "notes": "F01 dispone de un recorrido Angular, NestJS/Fastify y PostgreSQL real en revisión, con datos sintéticos y perfil de laboratorio. La demo usa adaptadores separados. El acceso, la configuración, la apertura de turno, la cotización y la venta en efectivo tienen implementación y pruebas; la aceptación técnica y funcional sigue pendiente. Primera fase usa efectivo en laboratorio; los documentos son de prueba y no habilitan venta legal/productiva. Autorización básica y aislamiento se implementan desde el primer incremento. Chile/escritorio es una hipótesis de priorización basada en el prototipo existente, sujeta a confirmación. No se asignan plazos ni recursos sin información de capacidad y dependencias. Roadmap propuesto para revisión con desarrollo y producto. El orden y los criterios son una propuesta editorial para esta presentación, no un calendario aprobado.",
       "sources": [
         {
           "label": "Base técnica y demostración",
@@ -7507,7 +7342,7 @@
         },
         {
           "type": "text",
-          "text": "Interfaz con adaptadores mock\nClientes desktop y mobile\nBase técnica de APIs y workers\nNegocio real por implementar",
+          "text": "Angular con perfiles explícitos\nAcceso y caja en laboratorio\nVenta PostgreSQL recuperable\nIntegraciones aún pendientes",
           "position": {
             "left": 78,
             "top": 296,

@@ -2,7 +2,7 @@
 
 <span id="caja-corporativa--plan-de-entrega"></span>
 
-El monorepo dispone de clientes con datos sintéticos y bases técnicas de APIs y workers. Esta página describe ese punto de partida, los recorridos de la interfaz y los controles para trabajar en el código. La [evidencia del producto](product-repository.md) identifica la revisión y los límites de lo disponible.
+El monorepo dispone de un perfil demo con datos sintéticos y un perfil F01 conectado a PostgreSQL en laboratorio. Esta página distingue los recorridos de la interfaz, las bases de APIs y workers y los controles para trabajar en el código. La [guía F01](phase-1-laboratory.md) delimita la implementación; la [evidencia del producto](product-repository.md) identifica su revisión y sus límites.
 
 El [roadmap de POS Platform](roadmap.md) define la secuencia de entrega funcional, con un plan detallado por fase. Sus entregables, dependencias y pruebas de aceptación son la referencia para desarrollar el producto; la organización del código y los controles técnicos de esta página no acreditan esos resultados.
 
@@ -20,11 +20,11 @@ El producto revisado tiene seis puntos de entrada. La estructura objetivo añade
 
 | Aplicación | Base disponible | Capacidad que requiere implementación y aceptación |
 | --- | --- | --- |
-| `pos-desktop` | Aplicación cliente de escritorio: frontend Angular/PrimeNG con arranque propio y shell nativa Tauri | Conexión con las APIs reales, identidad y permisos efectivos, periféricos y distribución nativa verificados para el alcance elegido |
-| `pos-mobile` | Aplicación cliente móvil: frontend Angular/PrimeNG con arranque propio y shell nativa Capacitor | Integración real y verificación del recorrido, dispositivos y entrega en Android/iOS |
-| `branch-api` | Base HTTP NestJS/Fastify, configuración, sondas y OpenAPI de desarrollo | Casos de uso de sucursal, autorización de servidor y persistencia transaccional de negocio |
+| `pos-desktop` | Angular/PrimeNG, shell Tauri y perfil F01 conectado a API/PostgreSQL verificado en navegador | Homologación del recorrido nativo, periféricos y distribución; aceptación funcional del alcance |
+| `pos-mobile` | Angular/PrimeNG, shell Capacitor y composición de perfiles demo/branch-lab | Verificación del recorrido nativo, dispositivos y entrega en Android/iOS |
+| `branch-api` | NestJS/Fastify, OpenAPI JSON y F01 en PostgreSQL: acceso, configuración, caja, catálogo, clientes, cotización y venta recuperable | Aceptación funcional y controles productivos; recorridos posteriores según roadmap |
 | `branch-sync-worker` | Composición técnica de un proceso independiente | Entrega y recepción durables, reintentos y recuperación con los datos reales de sucursal |
-| `country-api` | Composición técnica de la API de país | Recepción durable, consolidación y contratos de trabajo/resultados; BullMQ + Redis de trabajos de país para disparos y solicitudes breves, con calendario e identidad durables |
+| `country-api` | Composición técnica, persistencia y sonda PostgreSQL por ámbito | Recepción durable, consolidación y contratos de trabajo/resultados; BullMQ + Redis de trabajos de país para disparos y solicitudes breves, con calendario e identidad durables |
 | `erp-worker` | Composición técnica del proceso de integración | BullMQ + Redis de trabajos en red ERP para ejecución, preparación de maestros y consulta/conciliación; contratos, reconstrucción e idempotencia comprobados |
 | `device-agent` | Decisión acordada; proyecto aún no incorporado | Host C#/.NET en cada puesto Windows (F02/F05), diario SQLite y protocolo HTTPS LAN con `branch-api`; red compartida y móvil en F06 tras homologación |
 

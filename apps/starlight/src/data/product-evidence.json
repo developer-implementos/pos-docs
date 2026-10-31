@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "repository": "https://github.com/developer-implementos/pos-platform",
-  "revision": "4f914ca422ca3c5db0a900c5dc616fd48260fb62",
-  "reviewedOn": "2026-10-21",
+  "revision": "d32dfae98943309e55dea33813bad11833f0bed2",
+  "reviewedOn": "2026-10-31",
   "notice": "Reviewed clean product revision. The documentation repository builds from this metadata without accessing the product checkout.",
   "productGuide": {
     "source": "docs/product-repository.md",
     "relationship": "Editorial synthesis adapted from the product README; it is not a byte-for-byte snapshot.",
     "upstreamPath": "README.md",
-    "upstreamSha256": "b797c4c6587d1f7847b614fc9a5a393309168b287dd6aaad9234ed15915900b8"
+    "upstreamSha256": "593bc432f9c2091d99b74bd635276e0d7aa78f489e72b9a229a55e532934353e"
   },
   "references": [
     {

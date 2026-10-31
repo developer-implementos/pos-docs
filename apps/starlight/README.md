@@ -26,7 +26,7 @@ npm --prefix apps/starlight run check
 npm --prefix apps/starlight run preview
 ```
 
-El build usa este repositorio y sus dependencias fijadas. No importa bibliotecas del producto ni forma parte de los procesos de caja, sucursal o país. El catálogo describe siete aplicaciones objetivo de **pos-platform**: escritorio, móvil, cuatro entradas backend y `device-agent` para periféricos. Starlight pertenece a otro repositorio y queda fuera del producto operativo. El catálogo distingue la demostración frontend, la base HTTP, los esqueletos de workers y el agente pendiente; disponer de un proyecto no acredita capacidades productivas ni integraciones.
+El build usa este repositorio y sus dependencias fijadas. No importa bibliotecas del producto ni forma parte de los procesos de caja, sucursal o país. El catálogo describe siete aplicaciones objetivo de **pos-platform**: escritorio, móvil, cuatro entradas backend y `device-agent` para periféricos. Starlight pertenece a otro repositorio y queda fuera del producto operativo. El catálogo distingue la demo, F01 conectado en laboratorio, la base de país, los esqueletos de workers y el agente pendiente; disponer de un proyecto no acredita capacidades productivas ni integraciones.
 
 <span id="fuente-de-cada-contenido"></span>
 <span id="diagramas-e-interacción"></span>
@@ -38,13 +38,19 @@ El build usa este repositorio y sus dependencias fijadas. No importa bibliotecas
 - Los documentos técnicos de `docs/` son fuentes editables. El generador divide las fuentes extensas sin perder ni duplicar líneas, mantiene anclas y comprueba referencias.
 - Los catálogos en `src/data/` conservan el snapshot revisado, las descripciones de endpoints y la configuración del legacy, sin valores de despliegue.
 - `monorepo-catalog.json` registra el inventario físico verificado y `targetStructure`, la organización acordada con `shared/`. `npm --prefix apps/starlight run sync:catalog` genera las vistas de estructura y aplicaciones para la síntesis del producto, la guía del monorepo y las opciones tecnológicas. El README de POS Docs describe el portal y no se genera desde ese catálogo.
-- `product-evidence.json` identifica el repositorio y la revisión del producto usados como evidencia. Al actualizar el catálogo, contrastar esa revisión con `node apps/starlight/scripts/sync-monorepo-catalog.mjs --check --workspace <ruta-al-checkout-pos-platform>`; esta comprobación es deliberada y no participa en el build público. Las rutas futuras de `shared/` y E2E no se presentan como ya creadas.
+- `product-evidence.json` identifica el repositorio y la revisión del producto usados como evidencia. Al actualizar el catálogo, contrastar esa revisión con `node apps/starlight/scripts/sync-monorepo-catalog.mjs --check --workspace <ruta-al-checkout-pos-platform>`; esta comprobación es deliberada y no participa en el build público. El inventario distingue rutas creadas de capacidades futuras.
 - `docs/diagramas-excalidraw/` conserva las escenas editables y sus derivados. Los modelos y generadores canónicos están en `tools/diagrams/`.
 - Las carpetas generadas de `src/content/docs/` no se editan ni se versionan. Los componentes Astro, estilos y páginas de entrada se mantienen a mano.
 - La búsqueda usa `search-profile.mjs`, derivado de los tipos de `content-map.mjs`: cada resultado expone su alcance y permite filtrar propuesta, implementación, fuentes/legado, evaluación, referencias y antecedentes. Los antecedentes conservan acceso, con menor ponderación; las pruebas consultan el índice real de Pagefind.
 - El mapa general abre `/architecture/`, con vistas por zona y enlaces a recorridos/pasos. Los SVG estáticos y Mermaid comparten `src/scripts/diagram-viewport.ts`: ajuste al espacio disponible, tamaño real, zoom, teclado y desplazamiento, sin duplicar el controlador.
 
 Actualizar fuentes y sus síntesis en el mismo cambio editorial. Cuando un cambio de código afecte la documentación, enlazar las revisiones de ambos repositorios y actualizar la evidencia del producto; no convertir el estado de `main` en una dependencia del build. Conservar la distinción entre propuesta, implementación, evidencia e historia. Una prueba de enlaces no acredita funcionamiento productivo ni comprensión por parte del equipo. La [auditoría documental](../../docs/auditoria-documentacion.md) describe esos límites.
+
+### Generación del índice de búsqueda
+
+`scripts/build-search.mjs` es el único indexador después del build Astro. Utiliza la API pública de Pagefind: `createIndex`, `addDirectory` y `getFiles`; recibe los bytes completos y espera cada escritura de Node antes de cerrar Pagefind. Valida rutas, archivos no vacíos, metadatos españoles y artefactos referenciados. El guard de publicación y las pruebas del buscador real permanecen activos. `pagefind: false` deshabilita únicamente la indexación automática; `DocsSearch.astro` conserva el componente público de búsqueda de Starlight y su CSP existente. [API oficial de Pagefind](https://pagefind.app/docs/node-api/), [configuración de Starlight](https://starlight.astro.build/reference/configuration/#pagefind).
+
+Esta integración evita depender de la finalización de escrituras del proceso nativo tras `writeFiles()` y `close()`: en Windows se observó `pagefind-entry.json` vacío aun con salida exitosa de Astro. Starlight 0.42.8 mantiene ese recorrido y Pagefind 1.5.2 es la versión publicada revisada. Se usan extensiones públicas, sin modificar dependencias, reintentar un índice incompleto ni mantener un segundo índice. `npm --prefix apps/starlight run test:search` prueba rechazos y una indexación real; `npm run check` prueba consultas, filtros y navegación bajo CSP.
 
 <span id="publicación-y-controles"></span>
 

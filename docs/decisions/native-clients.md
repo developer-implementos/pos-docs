@@ -46,11 +46,14 @@ flowchart TB
     Shell --> Features["features · pantallas y recorridos"]
     Shell --> UI["ui · componentes, tokens, assets y estilos"]
     Features --> UI
-    Features --> Data["data-access · adaptadores mock actuales"]
-    Data --> Domain["domain · reglas actuales del prototipo"]
+    Features --> Data["data-access · perfiles explícitos"]
+    Data --> Demo["Demo · adaptadores sintéticos"]
+    Demo --> Domain["domain · reglas del prototipo"]
+    Data --> API["branch-api · gateway HTTP y stores"]
+    API --> Contracts["Contratos puros de los contextos"]
 ```
 
-Las flechas representan imports de código. `libs/ui/assets` y `libs/ui/src/styles.css` sirven a ambos builds. La composición Angular reutiliza las mismas features y adaptadores; no se crean copias de ventas, pagos o permisos por sistema operativo. `libs/client-shell` es código del frontend incluido en cada aplicación, sin proceso ni despliegue adicional. Su composición pertenece a la interfaz del producto, fuera de la infraestructura técnica genérica de `shared`.
+Las flechas representan imports de código. `libs/shared/frontend/ui/assets` y `libs/shared/frontend/ui/src/styles.css` sirven a ambos builds. La composición Angular reutiliza las mismas features y adaptadores; no se crean copias de ventas, pagos o permisos por sistema operativo. `libs/client-shell` es código del frontend incluido en cada aplicación, sin proceso ni despliegue adicional. Su composición pertenece a la interfaz del producto, fuera de la infraestructura técnica genérica de `shared`.
 
 El código nativo y sus permisos pertenecen al host correspondiente. Una integración de periféricos requiere un contrato de capacidad y un adaptador homologado; añadir Tauri o Capacitor no habilita por sí solo impresoras, lectores ni cobros. Las features compartidas no deben depender directamente de SDK de Tauri o Capacitor.
 
@@ -60,7 +63,7 @@ Los dos clientes consumirán la API autorizada de sucursal; PostgreSQL conserva 
 
 El cliente móvil depende de la conectividad autorizada al backend para las operaciones que la requieran. Compartir interfaz no habilita venta fuera de la sucursal, operación sin LAN, acceso remoto público ni permisos adicionales. Esos recorridos necesitan una decisión y pruebas propias.
 
-Actualmente ambos clientes utilizan datos sintéticos y adaptadores mock. La autenticación corporativa, el almacenamiento seguro de credenciales y las operaciones comerciales contra el backend están pendientes. Tauri utiliza el identificador `com.floxcristian.corporatepos`, cuya estabilidad debe respetarse por compatibilidad; Capacitor utiliza `com.implementos.posplatform.mobile`. Sus almacenes locales son independientes: compartir código no sincroniza datos ni sesiones entre dispositivos.
+Ambos clientes seleccionan explícitamente `demo` o `branch-lab`. El primero utiliza adaptadores sintéticos; el segundo conecta acceso, caja y venta de laboratorio con `branch-api` y PostgreSQL, sin fallback a mocks. La [guía F01](../phase-1-laboratory.md) delimita la evidencia en navegador y los controles de sesión en memoria. La autenticación corporativa, el almacenamiento seguro de credenciales nativas y la homologación de los recorridos en cada shell siguen pendientes. Tauri utiliza el identificador `com.floxcristian.corporatepos`, cuya estabilidad debe respetarse por compatibilidad; Capacitor utiliza `com.implementos.posplatform.mobile`. Sus almacenes locales son independientes: compartir código no sincroniza datos ni sesiones entre dispositivos.
 
 ## Entrega y verificación
 

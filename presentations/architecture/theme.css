@@ -130,8 +130,8 @@ html.print-pdf .monorepo-tour{display:none!important}html.print-pdf .monorepo-st
 .roadmap-tour .roadmap-cell-summary{margin:0;padding:0;font:400 18px/20.5px Inter,Arial,sans-serif;color:var(--muted)}
 [data-row=operation]{--roadmap-lane:var(--primary)}[data-row=construction]{--roadmap-lane:var(--accent)}[data-row=acceptance]{--roadmap-lane:#916313}
 .reveal .roadmap-fragment{position:absolute;width:0;height:0;opacity:0!important;visibility:hidden!important;pointer-events:none}
-.roadmap-print{display:none;position:absolute;left:64px;top:228px;width:1152px;height:392px;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:16px}
-.roadmap-print-phase{padding:16px;background:var(--page);border-left:4px solid var(--primary);border-radius:3px}
+.roadmap-print{display:none;position:absolute;left:64px;top:228px;width:1152px;height:392px;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,auto);gap:16px}
+.roadmap-print-phase{padding:12px;background:var(--page);border-left:4px solid var(--primary);border-radius:3px}
 .roadmap-print-number{color:var(--primary);font:700 16px/1.2 Inter,Arial,sans-serif}
 .roadmap-print h3{margin:8px 0 10px;color:var(--primary-hover);font:700 23px/1.15 Inter,Arial,sans-serif;text-transform:none;letter-spacing:0}
 .roadmap-print p{margin:0;color:var(--muted);font:400 20px/1.35 Inter,Arial,sans-serif}

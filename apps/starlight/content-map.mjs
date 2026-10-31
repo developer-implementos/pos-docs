@@ -55,6 +55,7 @@ const reference = (route, source, title, description, kind = 'reference') => ({ 
 const phaseHeading = phase => `F${String(phase.number).padStart(2, '0')} · ${phase.title}`;
 
 export const generatedPages = [
+  reference('roadmap/coverage', 'docs/roadmap-coverage.md', 'Cobertura y criterios de finalización', 'Capacidades, límites del 100 %, dependencias externas y aceptación del alcance de entrega.', 'proposal'),
   { ...reference('proposal/roadmap', 'docs/roadmap.md', roadmap.title, 'Punto de partida, secuencia de seis fases y acceso a sus entregables, aplicaciones y pruebas de aceptación.', 'proposal'), range: { from: null, to: phaseHeading(roadmap.phases[0]) }, roadmap: true },
   ...roadmap.phases.map((phase, index) => ({
     ...reference(`roadmap/${phase.id}`, 'docs/roadmap.md', phaseHeading(phase), phase.summary, 'proposal'),
@@ -81,6 +82,7 @@ export const generatedPages = [
   reference('architecture/c4-model', 'docs/c4-arquitectura-propuesta.md', 'Modelo C4 y contratos', 'Alcance, notación y responsabilidades de las vistas C1, C2, C3 y despliegue.', 'design'),
   reference('architecture/master-data-publication', 'docs/contracts/master-data-publication.md', 'Publicación de maestros y precios', 'Responsabilidades, contratos, preparación y activación de versiones comerciales por país.', 'design'),
   { ...reference('architecture/job-processing', 'docs/decisions/job-processing.md', 'Procesamiento de trabajos con BullMQ', 'Colas seleccionadas, Redis dedicado por entorno, recuperación desde PostgreSQL y reintentos seguros.', 'design'), labs: ['laboratorio-bullmq'] },
+  reference('architecture/postgresql-transactions', 'docs/decisions/postgresql-unit-of-work.md', 'PostgreSQL y transacciones', 'Unidad de trabajo, comandos durables, commit incierto, migraciones y roles separados en F01.', 'design'),
   reference('architecture/identity', 'docs/contracts/identity-and-trust.md', 'Identidad y fronteras de confianza', 'Identidades de operador, puesto, sucursal y workers; enrolamiento, autorización, rotación y revocación.', 'design'),
   reference('architecture/drawio', 'docs/diagramas-drawio/README.md', 'Diagramas editables en draw.io', 'Atlas de siete vistas, archivos individuales y conversión desde las fuentes de Excalidraw.', 'reference'),
   { ...reference('architecture/technologies', 'docs/opciones-tecnologicas.md', 'Evaluación tecnológica', 'NestJS, Fastify, PostgreSQL, observabilidad y shells nativas Tauri/Capacitor: razones y condiciones de adopción.', 'design'), range: { from: null, to: '5. Monorepo con Nx' } },
@@ -131,7 +133,8 @@ export const generatedPages = [
   reference('implementation/architecture', 'docs/architecture.md', 'Arquitectura de la implementación', 'Límites y dependencias de la base de código actual, diferenciados de la arquitectura objetivo.', 'implementation'),
   reference('implementation/monorepo', 'docs/monorepo.md', 'Estructura del monorepo', 'Estructura objetivo con shared, límites DDD, proyectos de pruebas y correspondencia con las rutas físicas actuales.', 'implementation'),
   reference('implementation/testing', 'docs/testing.md', 'Pruebas y proyectos E2E', 'Cobertura disponible, organización de los proyectos E2E y soporte compartido de pruebas.', 'implementation'),
-  reference('implementation/api', 'docs/api.md', 'Base de API NestJS', 'Arranque, configuración, sondas, OpenAPI, Pino y Sentry opcional de la base backend; sin operaciones comerciales ni persistencia.', 'implementation'),
+  reference('implementation/api', 'docs/api.md', 'API de sucursal y persistencia', 'Contratos HTTP, operación de laboratorio, PostgreSQL, configuración, sondas y observabilidad del backend.', 'implementation'),
+  reference('implementation/phase-1', 'docs/phase-1-laboratory.md', 'F01: operación en laboratorio', 'Recorrido Angular → API → PostgreSQL, perfiles, recuperación y límites de la implementación en revisión.', 'implementation'),
   reference('implementation/mock-api', 'docs/mock-api.md', 'Adaptadores de la demostración', 'Contratos mock, datos sintéticos y límites de los flujos del frontend.', 'implementation'),
   reference('implementation/desktop', 'docs/desktop.md', 'Cliente de escritorio', 'Empaquetado Tauri, comandos y alcance del contenedor de demostración.', 'implementation'),
   reference('implementation/mobile', 'docs/mobile.md', 'Cliente móvil', 'Cliente Angular y Capacitor, builds propios y límites de verificación nativa en Android e iOS.', 'implementation'),
@@ -157,11 +160,11 @@ export const sidebar = [
   { label: 'Inicio', link: '/' },
   { label: 'Visión general de la solución', link: '/overview/' },
   { label: 'Mapa general y diagramas C4', link: '/diagrams/' },
-  { label: 'Roadmap de entrega', collapsed: false, items: [item('proposal/roadmap', 'Visión general'), ...roadmap.phases.map(phase => item(`roadmap/${phase.id}`))] },
+  { label: 'Roadmap de entrega', collapsed: false, items: [item('proposal/roadmap', 'Visión general'), item('roadmap/coverage'), ...roadmap.phases.map(phase => item(`roadmap/${phase.id}`))] },
   { label: 'Mapa de contenidos', link: '/contents/' },
   { label: 'Glosario del POS', link: '/glossary/' },
   { label: 'Producto y alcance', collapsed: true, items: ['product', 'evolution', 'corporate-reuse'].map(route => item(`proposal/${route}`)) },
-  { label: 'Arquitectura y estructura', collapsed: true, items: [item('proposal/architecture'), item('architecture/c4-model'), item('architecture/master-data-publication'), item('architecture/job-processing'), item('architecture/identity'), item('architecture/monorepo'), item('architecture/native-clients'), item('architecture/device-agent'), item('architecture/drawio'), item('proposal/contracts'), item('proposal/technology'), item('architecture/technologies'), item('architecture/providers'), item('architecture/messaging')] },
+  { label: 'Arquitectura y estructura', collapsed: true, items: [item('proposal/architecture'), item('architecture/c4-model'), item('architecture/master-data-publication'), item('architecture/job-processing'), item('architecture/postgresql-transactions'), item('architecture/identity'), item('architecture/monorepo'), item('architecture/native-clients'), item('architecture/device-agent'), item('architecture/drawio'), item('proposal/contracts'), item('proposal/technology'), item('architecture/technologies'), item('architecture/providers'), item('architecture/messaging')] },
   { label: 'Flujos del producto', collapsed: true, items: ['continuity', 'pricing-promotions', 'synchronization', 'integration', 'erp-migration', 'fiscal-compliance', 'access-operations'].map(route => item(`proposal/${route}`)).concat([item('operations/cash-management')]) },
   { label: 'Decisiones y validación', collapsed: true, items: [item('proposal/decisions'), ...['validation', 'resilience', 'open-items'].map(route => item(`operations/${route}`))] },
   { label: 'Implementación y desarrollo', collapsed: true, items: generatedPages.filter(page => page.route.startsWith('implementation/')).map(page => item(page.route)) },

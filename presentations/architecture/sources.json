@@ -1,22 +1,22 @@
 {
   "schemaVersion": 1,
-  "reviewedOn": "2026-10-30",
+  "reviewedOn": "2026-10-31",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "e2554fb4949e38d1a5c4930794560b1217e738fb",
-  "sourceStatus": "Fuentes documentales verificadas en la revisión indicada.",
+  "revision": "45f722e23305ffd60b00db98a526b673f4cf3788",
+  "sourceStatus": "Fuentes documentales verificadas en la revisión indicada; F01 en revisión de laboratorio, sin aceptación productiva.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "inputs": [
     {
       "path": "docs/monorepo.md",
-      "sha256": "66487391c30225b132c62844f98041be287a8552ee136e9a261db5b631e273c3"
+      "sha256": "5e883e8ac7bfdd8e4a9180f5e07c63303be8d7eb5a92bdb303c6252b17eed718"
     },
     {
       "path": "docs/propuesta-arquitectura.md",
-      "sha256": "69adf04e2e197bfe29c0a0239b6300958efe0278b872e9c08e723ab4259a9138"
+      "sha256": "207c3b807886f088c5bf00f1ee9ed896784ceba40f906f0cbb071e461b417a38"
     },
     {
       "path": "docs/implementation-plan.md",
-      "sha256": "c2109b023250b5f1b84eda48f3e856a145cc211ee4064730737a16b0c9f368de"
+      "sha256": "b16d61e2e7ccebf4a312a000ba61496de825b293e0fd022b49e6f2c98359286a"
     },
     {
       "path": "docs/validacion-y-decisiones.md",
@@ -24,19 +24,19 @@
     },
     {
       "path": "apps/starlight/src/data/product-evidence.json",
-      "sha256": "43241d7a74babdefdf386e505635aadc7baf3aeed6b38215a78352798ec7cbd3"
+      "sha256": "ccb8e41c0adccab3f58c50b384594f8ce56c7a5c9136b93d11ee864bc7c0be32"
     },
     {
       "path": "docs/roadmap.md",
-      "sha256": "ae7c691f67807ab14fdfa70f772a99f46e98025772487048fc324ebe01ab8fb6"
+      "sha256": "8facf072a38c4780a3193161f4bada8bc36042b10ffe3964231a71d27b34d765"
     },
     {
       "path": "docs/roadmap.json",
-      "sha256": "cdbc145cf883f855302ff29b68f6a8c9604513cfbd1784fb016b3fca9a7c2379"
+      "sha256": "6b4f54498d21cd06cb3e376168d5fd19d6cdfcfd4eb1c10bc06d651494adb5ee"
     },
     {
       "path": "docs/c4-arquitectura-propuesta.md",
-      "sha256": "fdccae303af2e8d9a96c6289530297e121108999e8f8458863b15d4bb33bed4e"
+      "sha256": "7bed3236c6b773f2fb56a367bb5e8e1a6f5704998f1ac71898dcd441ba77d3d9"
     },
     {
       "path": "docs/contracts/master-data-publication.md",
@@ -64,11 +64,11 @@
     },
     {
       "path": "docs/decisions/native-clients.md",
-      "sha256": "42942ca61de880726e6ba9c0a7f90b941a4bda0078b49de9ee6f2dda4ad5f36f"
+      "sha256": "e9fedd2014cfac6f9b746622eeb7d28b126930d3687359096e4d115e5e7c17cc"
     },
     {
       "path": "apps/starlight/src/data/monorepo-catalog.json",
-      "sha256": "eae7079f3407713e76faae072e176b0d08779ad16ab67e517c42620738a4b34a"
+      "sha256": "2091388fd85e9035c2d77072ff4e666ab48ea29a7f00b4fecd1eb765018fe745"
     },
     {
       "path": "docs/decisions/device-agent.md",

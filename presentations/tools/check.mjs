@@ -604,7 +604,7 @@ try{
   }
   assert.ok(await reading.locator('h1').isVisible());
   const readingTree=await reading.locator('.tree-reading').textContent();
-  assert.ok(['branch-api/','branch-sync-worker/','shared/','Base técnica del servidor'].every(value=>readingTree.includes(value)),'Continuous reading presents the target names and responsibilities');
+  assert.ok(['branch-api/','branch-sync-worker/','shared/','runtime/','persistence/','testing/','Driver pg, unidad de trabajo','Recorridos Angular → API → PostgreSQL'].every(value=>readingTree.includes(value)),'Continuous reading presents application names, implemented shared libraries and their responsibilities');
   for(const slide of diagramSlides){
     const illustration=reading.locator(`article#${slide.id} figure img`);
     assert.equal(await illustration.count(),1,`${slide.id}: continuous reading includes the diagram`);

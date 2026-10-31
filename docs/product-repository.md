@@ -2,7 +2,7 @@
 
 Esta página es una síntesis editorial del repositorio del producto, mantenida en POS Docs. La evidencia de código se identifica en `apps/starlight/src/data/product-evidence.json`; la revisión de esta guía es independiente de esa revisión de POS Platform. Los comandos de desarrollo de esta página se ejecutan en un checkout del producto, salvo la sección de documentación técnica.
 
-Plataforma POS corporativa preparada para evolucionar a varios países: monorepo Nx con clientes de escritorio y móvil, backend de sucursal, backend de país y workers. Incluye una demostración funcional de Chile con datos sintéticos y una base técnica NestJS/Fastify; las operaciones de negocio del backend y las integraciones están pendientes. Conserva el lenguaje visual de **prime-showcase** (PrimeNG, Aura corporativo, Inter, tablas y navegación).
+Plataforma POS corporativa preparada para evolucionar a varios países: monorepo Nx con clientes de escritorio y móvil, backend de sucursal, backend de país y workers. Incluye una demostración sintética y una composición F01 en revisión que conecta Angular, NestJS/Fastify y PostgreSQL real en laboratorio. Conserva el lenguaje visual de **prime-showcase** (PrimeNG, Aura corporativo, Inter, tablas y navegación). El estado de laboratorio no habilita producción ni acredita aceptación de fase.
 
 Producto y repositorio: [POS Platform](https://github.com/developer-implementos/pos-platform). Los aliases internos usan `@pos-platform/*`. La [guía del monorepo](monorepo.md) explica aplicaciones, propietarios de datos, estructura por contexto y configuración del workspace.
 
@@ -15,16 +15,16 @@ Los clientes Angular con PrimeNG para escritorio (Tauri) y móvil (Capacitor) y 
 | `apps/pos-desktop` | Cliente Angular propio para escritorio, alojado en Tauri |
 | `apps/pos-mobile` | Cliente Angular propio para Android/iOS, alojado en Capacitor |
 | `libs/client-shell` | Composición Angular compartida: rutas, configuración y shell |
-| `apps/branch-api` | Base HTTP NestJS/Fastify de sucursal |
-| `apps/country-api` | Base HTTP de país |
+| `apps/branch-api` | Operación de sucursal F01 con PostgreSQL y perfil de laboratorio |
+| `apps/country-api` | Base HTTP y sonda de PostgreSQL por ámbito; sin recepción comercial |
 | `apps/branch-sync-worker`, `apps/erp-worker` | Composición de workers; procesamiento de jobs pendiente |
 | `libs/` | Features del frontend, contextos del backend y contratos compartidos, con límites de importación |
 
-Las aplicaciones comparten repositorio y contratos, con builds independientes. El cliente conserva sus datos de demostración; la conexión con los casos de uso del backend se implementará a medida que existan esos contratos.
+Las aplicaciones comparten repositorio y contratos, con builds independientes. `client-profile.json` selecciona `demo` o `branch-lab`, sin fallback automático. La [guía F01](phase-1-laboratory.md) describe el acceso, caja, catálogo, clientes, cestas, cotización, efectivo y recuperación del perfil conectado.
 
 ![Centro de operación con indicadores, gráficos y pendientes](screenshots/dashboard.png)
 
-## Iniciar
+## Iniciar la demostración
 
 Requiere Node.js 22.19 o posterior en la rama 22, o Node.js 24, y npm 11.6.0.
 
@@ -43,7 +43,7 @@ Abre **http://127.0.0.1:4300** para desarrollar la interfaz del cliente de escri
 
 Hay una caja abierta con datos de ejemplo. El menú de usuario permite cambiar el perfil de demostración, simular desconexión, cambiar el tema y **Cerrar sesión**. La sesión se conserva en la pestaña; **Mantener sesión en este equipo** permite restaurarla al volver a abrir el navegador. Cerrar sesión elimina ese acceso, sin cerrar el turno ni borrar la venta en curso. Para comenzar de nuevo con los datos de ejemplo: **Módulos y configuración → Demostración → Restablecer**.
 
-Todos los RUT, clientes, usuarios y operaciones son ejemplos sintéticos. No hay autenticación real, cargos bancarios, DTE válidos ni conexiones a sistemas corporativos. No ingreses información de producción.
+En este perfil todos los RUT, clientes, usuarios y operaciones son sintéticos; los permisos y efectos se simulan en el cliente. No hay cargos bancarios, DTE válidos ni conexiones corporativas. El perfil de laboratorio tiene otro acceso, validado por servidor con credenciales independientes; no usa las cuentas demo.
 
 ## API de sucursal
 
@@ -51,7 +51,7 @@ Todos los RUT, clientes, usuarios y operaciones son ejemplos sintéticos. No hay
 npm run api:dev
 ```
 
-La API escucha en **http://127.0.0.1:3000**. Expone información de la base en `/api/v1`, sondas en `/health/live` y `/health/ready`, y OpenAPI en `/api/docs` durante el desarrollo. Usa NestJS con Fastify como un proyecto Nx independiente: `apps/branch-api`.
+La API requiere configuración explícita de laboratorio y PostgreSQL migrado con su rol runtime. Escucha por defecto en **http://127.0.0.1:3000**, publica contratos en `/api/v1`, sondas en `/health/live` y `/health/ready`, y OpenAPI JSON en `/api/openapi.json` cuando está habilitado. La [guía de laboratorio](phase-1-laboratory.md) describe la ejecución aislada; `api:dev` no crea una base automáticamente.
 
 Los nombres backend expresan ámbito y proceso: `branch-api`, `branch-sync-worker`, `country-api` y `erp-worker`. La [configuración de las aplicaciones](api.md#configuración) identifica sus rutas, artefactos y variables de entorno. Los comandos `api:*` operan sobre la API de sucursal; `sync:check` verifica la composición y cierre del worker de sincronización.
 
@@ -61,7 +61,7 @@ El reporte de errores con Sentry es opcional y está deshabilitado en los ejempl
 
 La [decisión BullMQ + Redis de trabajos](decisions/job-processing.md) pertenece a la arquitectura objetivo: programación breve en `country-api` y ejecución/lotes/conciliación en `erp-worker`. El snapshot no acredita su instalación ni funcionamiento; los Redis de trabajos por entorno y la recuperación desde PostgreSQL siguen pendientes de implementar y probar.
 
-Los puntos de entrada `country-api`, `branch-sync-worker` y `erp-worker` preparan los procesos de país, sincronización y ERP. Comparten la base técnica de `libs/platform/backend`; los contextos de `libs/backend` delimitan dónde implementar las capacidades. Rspack/SWC empaqueta las aplicaciones Node y sus librerías fuente; TSC verifica tipos. Crear estas fronteras no conecta bases, colas ni proveedores.
+Las apps backend comparten `libs/shared/backend/runtime`; la persistencia transaccional pertenece a `libs/shared/backend/persistence` y el negocio a sus contextos. `country-api` tiene base y sonda propias. `branch-sync-worker` y `erp-worker` conservan su composición sin trabajos operativos. Rspack/SWC empaqueta las apps Node y TSC comprueba tipos.
 
 ```sh
 npm run api:check
@@ -73,13 +73,13 @@ Para comprobar el scaffold completo: `npm run backend:check`, `npm run backend:s
 
 El backend y las librerías puras tienen lint con información de tipos para detectar promesas sin manejar y usos inseguros, además de fronteras Nx verificadas. Las [reglas y su alcance](monorepo.md#reglas-de-código-y-fronteras) distinguen esos controles de los del frontend; no sustituyen pruebas de comportamiento ni los requisitos pendientes de producción.
 
-El frontend sigue usando sus adaptadores mock. Esta base de API aún no implementa autenticación, base de datos, operaciones de negocio ni sincronizadores; la sonda de readiness comprueba únicamente la aplicación. Consulta [configuración, contratos y despliegue de la API](api.md).
+El perfil conectado utiliza identidad de laboratorio y permisos de servidor, PostgreSQL, configuración y operaciones F01; readiness comprueba conexión, ámbito y esquema. La entrega de outbox, ERP, fiscalidad, tarjetas y hardware siguen pendientes. Consulta [configuración, contratos y límites de la API](api.md).
 
 ## Publicar la documentación en Vercel
 
 La configuración `vercel.json` del repositorio **pos-docs** publica el portal de recursos en `/`, la guía Starlight en `/guide/` y las presentaciones en `/presentations/`. Los clientes y el backend tienen sus artefactos y entregas en POS Platform. Consulta la [guía de publicación documental](vercel.md).
 
-## Recorridos
+## Recorridos de demostración
 
 | Área              | Qué puedes probar                                                                                                                                                                              |
 | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -101,7 +101,7 @@ El inventario consultivo no cambia al vender: la caja de Chile no es la autorida
 
 ## Arquitectura
 
-La organización acordada agrupa lo transversal en `libs/shared/` y los contextos de negocio en `libs/backend/`. El árbol siguiente describe esa estructura. La implementación de `shared/` y del proyecto E2E está pendiente; la [guía del monorepo](monorepo.md#estado-de-implementación) delimita las capacidades disponibles y las pendientes.
+Lo transversal se agrupa en `libs/shared/`, el negocio en `libs/backend/` y las pruebas de cliente en `tests/pos-clients-e2e`. El árbol conserva explícitamente los componentes futuros. La [guía del monorepo](monorepo.md#estado-de-implementación) delimita sus responsabilidades y estado.
 
 <!-- monorepo:target:start -->
 ```text
@@ -113,8 +113,6 @@ apps/
   branch-sync-worker/           # Proceso de entrega y recepción de sucursal
   country-api/                  # API de recepción y capacidades de país
   erp-worker/                   # Proceso de integración, traducción y conciliación ERP
-  pos-clients-e2e/              # Pruebas de la UI; proyecto Nx de pruebas, sin despliegue
-    mobile/                     # Suite Angular móvil; no prueba el host Capacitor
 libs/
   backend/
     sales/                      # Ventas y documentos comerciales
@@ -132,22 +130,24 @@ libs/
     administration/             # Configuración y ámbito organizacional
   client-shell/                 # Composición Angular compartida; no es una aplicación desplegable
   features/                     # Funcionalidades de la interfaz
+    branch-operation/           # Login, caja y venta conectados con componentes PrimeNG
   shared/
-    backend/                    # Base técnica del servidor; división de proyectos por definir
-      bootstrap/                # Creación, arranque y cierre
-      config/                   # Configuración validada e inyectable
-      http/                     # Adaptación HTTP, errores y contrato técnico
-      observability/            # Pino, correlación y Sentry opcional
-      health/                   # Sondas del proceso y disponibilidad comprobada
-      worker/                   # Ciclo de vida de procesos de trabajo
     frontend/
       ui/                       # Preset, tokens y componentes de presentación
     kernel/                     # Modelo mínimo acordado entre contextos; sin frameworks
     contracts/                  # Sobres y metadatos técnicos comunes; no todos los DTO de negocio
-    testing/                    # Soporte técnico extraído cuando existan consumidores comunes
+    backend/
+      runtime/                  # Bootstrap, configuración, HTTP, observabilidad, sondas y ciclo de vida
+      persistence/              # Driver pg, unidad de trabajo, migraciones y comandos durables
+      testing/                  # Bases/roles sintéticos para integración real
   country-policies/             # Perfiles nacionales; reglas específicas bajo su contexto
   domain/                       # Reglas puras del prototipo frontend
-  data-access/                  # Estado y adaptadores mock de las funcionalidades
+  data-access/                  # Adaptadores demo y gateway branch-api en proyectos separados
+    branch-api/                 # HTTP y estado de la operación conectada
+tests/
+  pos-clients-e2e/              # Playwright demo y API real; proyecto Nx sin despliegue
+    mobile/                     # Suite Angular móvil; no homologa Capacitor
+    branch/                     # Recorridos Angular → API → PostgreSQL con recuperación
 tools/                          # Herramientas de build, lint y pruebas del producto
 .github/
   workflows/                    # Validaciones y entrega
@@ -156,7 +156,7 @@ tools/                          # Herramientas de build, lint y pruebas del prod
 
 Core es solo referencia de organización y convenciones; no es dependencia ni servicio del POS. Las bibliotecas backend no importan Angular ni los adaptadores mock. Las carpetas compartidas conservan responsabilidades independientes y entradas públicas explícitas.
 
-Las features consumen `PosStore`; no escriben en `localStorage`. Los permisos y módulos se validan en rutas **y comandos**. El estado se publica como snapshots inmutables. Las transacciones guardan primero el snapshot y publican el resultado solo si la persistencia tuvo éxito. Las ventas y eventos conservan identificadores para evitar duplicados. Pago, fiscalidad y ERP tienen ciclos separados.
+En `demo`, las features consumen `PosStore`; no escriben en `localStorage`. Los permisos y módulos se validan en rutas **y comandos**. El estado se publica como snapshots inmutables. Las transacciones guardan primero el snapshot y publican el resultado solo si la persistencia tuvo éxito. Las ventas y eventos conservan identificadores para evitar duplicados. Pago, fiscalidad y ERP tienen ciclos separados.
 
 La identidad de acceso se guarda por ID de usuario en `corporate-pos:auth:v1`, separada de los datos de negocio y del turno de caja. Usa `sessionStorage` o `localStorage` según la opción de permanencia; nunca guarda la contraseña. Las rutas protegidas redirigen al login y la autorización consulta el rol del usuario activo. Son controles de demostración locales: el adaptador debe sustituirse por autenticación y autorización corporativas para producción.
 
@@ -190,7 +190,7 @@ El escritorio necesita Rust, MSVC/Windows SDK y WebView2. Consulta [preparación
 
 ## De maqueta a producto
 
-Esta entrega permite validar la UX y las reglas mock; **no es una caja certificada ni lista para operar en producción**. El adaptador local del navegador y la base HTTP no sustituyen la persistencia transaccional de sucursal, autenticación corporativa, permisos verificados por servidor, conciliación bancaria ni homologación fiscal. Esas fronteras y el diseño para evolucionarlas se describen en [arquitectura](architecture.md), [seguridad](security.md), [base de API](api.md) y [contratos mock](mock-api.md).
+El perfil demo valida UX con datos sintéticos; F01 verifica operación y recuperación con API y PostgreSQL reales en laboratorio. **Ninguno acredita una caja habilitada para producción.** Permanecen pendientes identidad corporativa, conciliación bancaria, homologación fiscal, hardware y aceptación operativa. Los límites se describen en [arquitectura](architecture.md), [seguridad](security.md), [API](api.md) y [guía F01](phase-1-laboratory.md).
 
 La cobertura de Chile y las referencias revisadas están en [inventario de la caja actual](audit-chile-for-product.md). Ese inventario distingue la funcionalidad de referencia, la simulación y lo que necesita integración real.
 

@@ -6,6 +6,8 @@ La arquitectura objetivo incluye `device-agent` en C#/.NET Windows, todavía sin
 
 Cada fase tiene una página con **condiciones de entrada, entregables por aplicación y módulo, tareas, pruebas de aceptación y evidencia de cierre**. Esta visión general conecta esos planes y sus dependencias. El avance se decide por resultados verificados; las fechas y la capacidad del equipo deben acordarse antes de estimar el calendario.
 
+La [cobertura y los criterios de finalización](/guide/roadmap/coverage/) explican qué debe quedar implementado, aceptado, homologado y habilitado. Cada paquete enlaza su issue en POS Platform, con ficha técnica, contratos, modelo lógico, dependencias y pruebas. Los issues organizan la ejecución; su cierre no sustituye la aceptación funcional ni completa automáticamente el porcentaje público.
+
 F03 implementa **BullMQ con Redis dedicado a trabajos**: programación de publicaciones en `country-api` y ejecución de tareas en `erp-worker`. Cada entorno autorizado conserva su propio Redis de trabajos, separado de la caché opcional; la comunicación entre redes continúa por HTTPS. El [ADR-18](decisions/job-processing.md) define la recuperación desde PostgreSQL, la idempotencia y los límites de reintento que deben probarse antes del piloto. Esta elección es parte del alcance comprometido de la propuesta, no una capacidad ya implementada.
 
 <!-- roadmap:board -->
