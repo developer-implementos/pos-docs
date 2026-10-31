@@ -1,6 +1,6 @@
 # Seguimiento del avance
 
-La [portada de POS Docs](/#progress) muestra el avance técnico verificado del proyecto, de cada fase y de cada aplicación. La aceptación manual del equipo se informa por separado y no condiciona ese porcentaje. La fuente de seguimiento es [`delivery/progress.json` en la revisión publicada de POS Platform](https://github.com/developer-implementos/pos-platform/blob/2bca6dff9150a54dcbeb7c72e8744211790af677/delivery/progress.json). El roadmap define el alcance; el registro del producto conserva su estado y evidencia. No se editan porcentajes en la portada.
+La [portada de POS Docs](/#progress) muestra el avance técnico verificado del proyecto, de cada fase y de cada aplicación. La aceptación manual del equipo se informa por separado y no condiciona ese porcentaje. La fuente de seguimiento es [`delivery/progress.json` en la revisión publicada de POS Platform](https://github.com/developer-implementos/pos-platform/blob/ffce41fcd2bf32674a16af65d325f2fbc556a03b/delivery/progress.json). El roadmap define el alcance; el registro del producto conserva su estado y evidencia. No se editan porcentajes en la portada.
 
 ## Qué significa el porcentaje
 

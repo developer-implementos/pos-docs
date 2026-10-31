@@ -2,21 +2,21 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "2bca6dff9150a54dcbeb7c72e8744211790af677",
+    "revision": "ffce41fcd2bf32674a16af65d325f2fbc556a03b",
     "path": "delivery/progress.json",
-    "sha256": "3079e01162dc1cb9ad0e8d269b445eec55bf6a10331fe93a258049d86305df05"
+    "sha256": "ca096b48d1fc2e183d697655de30ccecce5bfefeb6b1af17b51335d4d8c2431a"
   },
   "content": {
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "reviewedOn": "2026-10-31",
     "productRevision": "source",
     "scope": {
       "repository": "https://github.com/developer-implementos/pos-docs",
-      "revision": "1773204724a00d3a4e2dacee988aa1b6152efe3a",
+      "revision": "ba94052cb0cd10658c5e2ad98b43f6be48ccfddc",
       "path": "docs/roadmap.json",
-      "sha256": "3a09855c055970ff7c11d8943e2375e078504f0a8a67d8d48f06bdd1e83495f9"
+      "sha256": "701dc03f2fbfdc8637f6b1ace5a3825705930e749fdab50d808061ba3f1ce9f9"
     },
-    "summary": "F01 incorpora administración de usuarios, roles y puestos de Chile mediante cliente, API HTTPS y PostgreSQL reales. El motor comercial conserva pruebas segregadas de laboratorio; la fuente legacy y el espejo operativo siguen pendientes. Los trece paquetes permanecen en curso y requieren revisión y aceptación.",
+    "summary": "Implementación técnica y aceptación manual se registran por separado. Hay administración POS sobre HTTPS/PostgreSQL y escenarios comerciales persistidos de laboratorio. Cada entregable verificado suma al avance; las revisiones de negocio, la compilación nativa actual y la conexión corporativa conservan su estado pendiente.",
     "applications": [
       {
         "id": "pos-desktop",
@@ -142,8 +142,9 @@
           "branch-api"
         ],
         "status": "in_progress",
-        "summary": "Usuarios y permisos POS de Chile, sesiones, roles y asignaciones persistentes implementados. Apertura de caja verificada en laboratorio; falta aceptación de accesos y operación diaria.",
-        "acceptance": null
+        "summary": "Identidad, sesiones, permisos y apertura persistente probados. Falta la prueba específica de revocaciones concurrentes que intentan eliminar al último administrador. Revisión manual de permisos y exclusión de turnos pendiente.",
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F01-02",
@@ -152,17 +153,37 @@
           "branch-api"
         ],
         "status": "in_progress",
-        "summary": "Motor decimal y cotizaciones inmutables con versiones, impuestos, redondeo y decisiones comerciales implementados. Pendiente de validación de las políticas por Comercial.",
-        "acceptance": null
+        "summary": "Motor decimal y cotizaciones probados. Falta conservar y explicar la diferencia entre la cotización anterior y la nueva al cambiar cliente o cantidad. Revisión manual de ejemplos monetarios y reglas del perfil pendiente.",
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F01-03",
         "apps": [
           "branch-api"
         ],
-        "status": "in_progress",
-        "summary": "Confirmación atómica de venta, pago, caja, auditoría y outbox implementada; probada frente a concurrencia, rollback y resultado desconocido. Pendiente de aceptación.",
-        "acceptance": null
+        "status": "verified",
+        "summary": "Verificación técnica completada de la venta atómica e idempotente con PostgreSQL real, concurrencia, rollback y recuperación. Usa datos comerciales sintéticos segregados; Operaciones debe revisar el significado funcional de la confirmación. No habilita por sí sola venta operativa.",
+        "acceptance": null,
+        "verification": {
+          "revision": "f08442279796f110dea23904ffe2350a758845d1",
+          "reviewedOn": "2026-10-31",
+          "reviewer": "Codex · revisión técnica automatizada",
+          "evidence": [
+            {
+              "path": "apps/branch-api/test/cash-sale.integration.test.ts",
+              "label": "Venta atómica, 100 duplicados concurrentes, rollback y recuperación"
+            },
+            {
+              "path": "libs/shared/backend/persistence/test/persistence.test.ts",
+              "label": "Pérdida real del acuse de COMMIT y resultado recuperable"
+            },
+            {
+              "path": "tests/pos-clients-e2e/branch/cash-recovery.spec.ts",
+              "label": "Recuperación visible sin duplicar la venta"
+            }
+          ]
+        }
       },
       {
         "id": "F01-04",
@@ -172,8 +193,9 @@
           "branch-api"
         ],
         "status": "in_progress",
-        "summary": "Cliente conectado con configuración explícita y administración por API HTTPS/PostgreSQL; el laboratorio conserva venta, supervisor y recuperación. Pendientes revisión funcional, fuentes comerciales y validación nativa.",
-        "acceptance": null
+        "summary": "Recorrido de navegador contra API y PostgreSQL comprobado. Pendiente compilar y verificar el paquete nativo actual y su configuración sin fallback a demo. Revisión manual del recorrido pendiente.",
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F01-05",
@@ -187,8 +209,9 @@
           "device-agent"
         ],
         "status": "in_progress",
-        "summary": "Fichas, issues y controles de colaboración preparados; las PR de gobernanza requieren revisión ajena y activación verificada desde main antes de aceptar este paquete.",
-        "acceptance": null
+        "summary": "Gobernanza integrada, reglas activas y bypass administrativo mediante PR comprobados. Pendiente la ejecución efectiva de PR policy en GitHub y la revisión manual de colaboración del equipo.",
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F01-06",
@@ -196,9 +219,28 @@
           "branch-api",
           "country-api"
         ],
-        "status": "in_progress",
-        "summary": "Bases por ámbito, roles separados, migraciones con checksum, admisión y transacciones recuperables implementados y probados en PostgreSQL. Pendiente de aceptación.",
-        "acceptance": null
+        "status": "verified",
+        "summary": "Verificación técnica completada con PostgreSQL real: migraciones, permisos, readiness, concurrencia y recuperación. Revisión manual de Arquitectura y Plataforma pendiente; no bloquea este avance técnico.",
+        "acceptance": null,
+        "verification": {
+          "revision": "f08442279796f110dea23904ffe2350a758845d1",
+          "reviewedOn": "2026-10-31",
+          "reviewer": "Codex · revisión técnica automatizada",
+          "evidence": [
+            {
+              "path": "apps/branch-api/test/migration-upgrade.integration.test.ts",
+              "label": "Actualización 070 a 080 y equivalencia con instalación nueva"
+            },
+            {
+              "path": "libs/shared/backend/persistence/test/persistence.test.ts",
+              "label": "Migración concurrente, permisos, desconexión e idempotencia PostgreSQL"
+            },
+            {
+              "path": "tools/database/README.operational.md",
+              "label": "Procedimiento de provisión y actualización"
+            }
+          ]
+        }
       },
       {
         "id": "F01-07",
@@ -208,8 +250,9 @@
           "pos-desktop"
         ],
         "status": "in_progress",
-        "summary": "Provisión idempotente, ámbito y configuración versionada, HTTPS y perfiles segregados implementados. Pendientes certificados del entorno, políticas y aceptación de operación.",
-        "acceptance": null
+        "summary": "Configuración, ámbitos, aprovisionamiento y capacidades probados. Falta representar y probar el rechazo de publicación de una configuración de dispositivo incompatible. Revisión manual de jerarquía y responsables pendiente.",
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F01-08",
@@ -218,8 +261,9 @@
           "branch-api"
         ],
         "status": "in_progress",
-        "summary": "Consulta autorizada, receptor de laboratorio, snapshot histórico y solicitudes versionadas de cliente implementados. Pendiente de aceptación y homologación de autoridad del maestro.",
-        "acceptance": null
+        "summary": "Clientes, solicitudes de alta y actualización y snapshots probados. Falta mostrar la fecha o versión de frescura del cliente en la interfaz. Revisión manual de autoridad del maestro y reglas por país pendiente.",
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F01-09",
@@ -228,8 +272,9 @@
           "branch-api"
         ],
         "status": "in_progress",
-        "summary": "Borradores y presupuestos persistidos con versión, pausa, recuperación y cancelación implementados. Los cambios invalidan cotizaciones; pendiente de aceptación funcional.",
-        "acceptance": null
+        "summary": "Borradores y presupuestos persistidos con versión, pausa y bloqueo durante pago. Falta acordar y probar recuperación entre puestos y el caso de escaneo repetido con intención de cantidad. Revisión manual de propiedad y caducidad pendiente.",
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F01-10",
@@ -237,9 +282,24 @@
           "pos-desktop",
           "branch-api"
         ],
-        "status": "in_progress",
-        "summary": "Reglas comerciales y autorización independiente de descuento implementadas; consumo atómico y rechazo de cupones globales sin autoridad. Pendiente de aceptación por Comercial.",
-        "acceptance": null
+        "status": "verified",
+        "summary": "Verificación técnica completada de reglas deterministas, cupones y autorizaciones de descuento. Pendiente revisión manual de Comercial sobre acumulación, mínimos, exclusión y autoridad de cupones.",
+        "acceptance": null,
+        "verification": {
+          "revision": "f08442279796f110dea23904ffe2350a758845d1",
+          "reviewedOn": "2026-10-31",
+          "reviewer": "Codex · revisión técnica automatizada",
+          "evidence": [
+            {
+              "path": "libs/backend/pricing/test/pricing-engine.test.ts",
+              "label": "Prioridad, exclusión, mínimos, retirada de cupón y autoridad"
+            },
+            {
+              "path": "apps/branch-api/test/commercial.integration.test.ts",
+              "label": "Autorización ligada a cesta e importe, consumo y rechazo de reutilización"
+            }
+          ]
+        }
       },
       {
         "id": "F01-11",
@@ -248,9 +308,10 @@
           "branch-api",
           "erp-worker"
         ],
-        "status": "in_progress",
-        "summary": "Catálogo consultivo y CLI de consultas Mountain implementados con contratos acotados. Pendientes acceso corporativo, homologación de datos/precios y publicación del espejo consumido por la sucursal.",
-        "acceptance": null
+        "status": "blocked",
+        "summary": "Consulta de catálogo y CLI Mountain implementadas con transporte HTTPS local controlado. Pendiente validar acceso y contratos contra la instancia autorizada. La sincronización completa de espejos corresponde a F03.",
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F01-12",
@@ -259,9 +320,32 @@
           "branch-api",
           "country-api"
         ],
-        "status": "in_progress",
-        "summary": "Contratos Zod puros, errores estables, OpenAPI JSON, idempotencia y concurrencia implementados y probados en HTTP. Pendiente de revisión independiente de aceptación.",
-        "acceptance": null
+        "status": "verified",
+        "summary": "Verificación técnica completada de contratos v1, errores, límites, idempotencia y fronteras. Revisión manual de convenciones y matriz inicial de consumidores pendiente.",
+        "acceptance": null,
+        "verification": {
+          "revision": "f08442279796f110dea23904ffe2350a758845d1",
+          "reviewedOn": "2026-10-31",
+          "reviewer": "Codex · revisión técnica automatizada",
+          "evidence": [
+            {
+              "path": "libs/shared/backend/runtime/test/http-contracts.test.ts",
+              "label": "Contratos estrictos, precisión, límites y canonicalización"
+            },
+            {
+              "path": "libs/shared/backend/runtime/test/http-boundary.test.ts",
+              "label": "Frontera HTTP y rechazo antes del caso de uso"
+            },
+            {
+              "path": "libs/data-access/branch-api/src/lib/branch-transport.spec.ts",
+              "label": "Consumidor HTTP y errores por código"
+            },
+            {
+              "path": "tools/eslint/architecture-boundaries.spec.ts",
+              "label": "Pruebas negativas de imports entre capas"
+            }
+          ]
+        }
       },
       {
         "id": "F01-13",
@@ -273,9 +357,32 @@
           "country-api",
           "erp-worker"
         ],
-        "status": "in_progress",
-        "summary": "Runtime, persistencia, testing, kernel y contratos separados con fronteras Nx/ESLint y builds independientes. Pendiente de integrar y aceptar la estructura revisada.",
-        "acceptance": null
+        "status": "verified",
+        "summary": "Verificación técnica completada de estructura, builds independientes, artefactos y fronteras. Revisión manual de propietarios y reglas de integración pendiente. No acredita instalación nativa ni funcionalidades futuras.",
+        "acceptance": null,
+        "verification": {
+          "revision": "f08442279796f110dea23904ffe2350a758845d1",
+          "reviewedOn": "2026-10-31",
+          "reviewer": "Codex · revisión técnica automatizada",
+          "evidence": [
+            {
+              "path": "tools/eslint/architecture-boundaries.spec.ts",
+              "label": "Fronteras Nx y ESLint"
+            },
+            {
+              "path": "tools/eslint/backend-quality.spec.ts",
+              "label": "Reglas de calidad y límites backend"
+            },
+            {
+              "path": "tools/verify-api-artifact.mjs",
+              "label": "Instalación independiente de los cuatro artefactos backend"
+            },
+            {
+              "path": "tests/pos-clients-e2e/project.json",
+              "label": "Proyecto E2E compartido con alcance de navegador"
+            }
+          ]
+        }
       },
       {
         "id": "F02-01",
@@ -286,7 +393,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: El primer medio externo ejecuta un cobro con intención durable, destino fijo y consulta de resultado, sin reintentos financieros ciegos.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F02-02",
@@ -296,7 +404,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: El primer documento fiscal conserva identidad y estados separados de venta, transmisión, aceptación y rechazo, según régimen homologado.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F02-03",
@@ -307,7 +416,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: device-agent C#/.NET se ejecuta independientemente de la ventana POS y conserva recepción, intentos y evidencia técnica de los periféricos del puesto.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F02-04",
@@ -318,7 +428,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: El operador puede consultar excepciones por efecto y solicitar sólo acciones de recuperación autorizadas con evidencia auditada.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F02-05",
@@ -328,7 +439,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Una venta admite la combinación de medios aprobada y concilia asignaciones exactas, pendientes y vuelto sin confirmar importes insuficientes o duplicados.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F02-06",
@@ -338,7 +450,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Transferencias, vouchers y medios manuales conservan evidencia y estados de verificación que impiden tratar una declaración o captura como dinero confirmado.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F02-07",
@@ -350,7 +463,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Una configuración aprobada selecciona adaptadores y capacidades por ámbito y conserva el destino de toda operación iniciada.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F02-08",
@@ -360,7 +474,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: El primer perfil controla numeración, material fiscal, vigencia y consumo concurrente sin reutilizar identidades ni habilitar contingencias no autorizadas.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F02-09",
@@ -371,7 +486,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: branch-api admite trabajos de dispositivos autorizados y el host .NET intercambia comandos/resultados versionados sin acceso SQL ni rutas arbitrarias.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F02-10",
@@ -382,7 +498,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Recibos y etiquetas del alcance se renderizan con plantillas versionadas y se imprimen mediante adaptadores homologados sin volver a cobrar o emitir.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F02-11",
@@ -393,7 +510,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: El perfil de cheque elegido captura datos con sesión acotada y verifica el instrumento mediante el contrato vigente de Orsan, conservando incertidumbre y privacidad.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F02-12",
@@ -403,7 +521,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Los operadores autorizados encuentran comprobantes y sus representaciones con filtros, estados y trazabilidad, sin exponer documentos de otro ámbito.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F02-13",
@@ -413,7 +532,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Un cobro aprobado que no logra completar la venta tiene un procedimiento durable de recuperación o reversa sin duplicar cargo ni devolución.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F02-14",
@@ -424,7 +544,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Un operador autorizado consulta y mantiene el terminal homologado con operaciones auditadas, diferenciando cierre de terminal y cierre de caja.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F03-01",
@@ -435,7 +556,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: La outbox de sucursal se entrega por HTTPS con ACK posterior al commit de inbox, efecto local y siguiente trabajo durable de país.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F03-02",
@@ -447,7 +569,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: country-api coordina publicaciones comerciales inmutables y verificadas por ámbito, activadas por eventos, calendario o solicitud manual controlada.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F03-03",
@@ -457,7 +580,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: erp-worker integra una operación con el primer ERP desde su red autorizada y conserva identidad, destino, lease y resultado verificable en país.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F03-04",
@@ -469,7 +593,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: El equipo observa pendientes y drena colas sin saturar destinos; decide y prueba por separado si una caché de lectura aporta valor medido.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F03-05",
@@ -479,7 +604,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Los trabajos BullMQ se reconstruyen desde PostgreSQL y contratos de país tras interrupciones o pérdida de Redis sin duplicar solicitudes ni efectos inciertos.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F03-06",
@@ -492,7 +618,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Cada instalación y workload se autentica con su propia identidad, ámbito y capacidades; alta, rotación, revocación y restore no clonan autoridad.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F03-07",
@@ -503,7 +630,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: El operador usa identidad corporativa homologada y la sucursal aplica autorizaciones de continuidad firmadas y acotadas durante cortes de WAN.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F03-08",
@@ -514,7 +642,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Antes de admitir cada operación, branch-api verifica que datos, permisos, reloj, material fiscal y medio permiten ejecutarla bajo el perfil de continuidad vigente.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F03-09",
@@ -524,7 +653,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: erp-worker prepara catálogo, clientes y precios desde sus fuentes autorizadas con un punto de corte consistente y manifiesto verificable.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F03-10",
@@ -534,7 +664,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: La sucursal descarga y valida candidatas sin alterar el conjunto activo; sólo cambia versión, inbox y cursor aplicado en un commit completo.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F03-11",
@@ -548,7 +679,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Las versiones de cliente, sucursal, país, ERP y dispositivo pueden coexistir dentro de una matriz declarada sin interpretar incorrectamente mensajes persistidos.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F03-12",
@@ -560,7 +692,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Una operación puede seguirse desde la sucursal hasta país y ERP; las diferencias se detectan y recuperan con acciones acotadas y evidencia durable.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F04-01",
@@ -572,7 +705,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Devolución autorizada ligada a las líneas originales, con nota de crédito y devolución de dinero identificadas como efectos independientes.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F04-02",
@@ -583,7 +717,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Aplicaciones de cobro y anticipo con reserva o exclusión autorizada, referencias durables y protección frente al doble consumo.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F04-03",
@@ -593,7 +728,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Jornada con ingresos, retiros, arqueos, custodia y depósito trazables; cierre parcial, traspaso y cierre final sujetos a reglas y corte transaccional aprobados.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F04-04",
@@ -605,7 +741,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Revisión de jornada que explica diferencias entre caja, pagos, documentos y ERP, con excepciones y aprobaciones auditadas.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F04-05",
@@ -616,7 +753,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Reportes de ventas, medios de pago, cierres, cobranzas y devoluciones consultables y exportables con permisos, corte y frescura visibles.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F04-06",
@@ -627,7 +765,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Administración real de asignaciones y configuración autorizada, con versiones, aprobación y propagación comprobable por sucursal.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F04-07",
@@ -639,7 +778,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Cada maestro u oferta visible tiene autoridad declarada y flujo de consulta o modificación aprobado, sin editar directamente el espejo de venta.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F04-08",
@@ -651,7 +791,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Una orden, nota de venta o documento externo autorizado puede recuperarse y consumirse en caja con propietario, versión y exclusión verificables.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F04-09",
@@ -663,7 +804,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Un depósito verificado se imputa una sola vez a documentos y conserva parciales, excedentes y excepciones según la autoridad financiera.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F04-10",
@@ -675,7 +817,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Soporte y operaciones consultan el estado completo de una operación y gestionan excepciones con permisos y evidencia, cubriendo la administración central necesaria.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F04-11",
@@ -687,7 +830,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Venta financiada contra cupo autorizado, con bloqueos, condiciones, cuotas, consumo y deuda vinculados; una consulta de saldo no concede crédito offline.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F05-01",
@@ -701,7 +845,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Una revisión identificada e instalable del alcance piloto, con integridad comprobable y procedimiento de actualización compatible.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F05-02",
@@ -714,7 +859,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Procedimientos ensayados para recuperar sucursal y país con evidencia de pérdida de datos, tiempo de recuperación y conciliación.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F05-03",
@@ -728,7 +874,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Operadores y soporte pueden detectar, clasificar y atender los incidentes previstos para la configuración piloto.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F05-04",
@@ -742,7 +889,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Expediente del piloto con configuración, conciliación, incidencias y decisión explícita de continuar, corregir o detener.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F05-05",
@@ -756,7 +904,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Entorno piloto reproducible con PostgreSQL, Redis de trabajos separados, TLS, mínimo privilegio y configuración identificable por ámbito.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F05-06",
@@ -770,7 +919,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Se detectan fallos y degradación del recorrido mediante métricas y alertas accionables con responsables y objetivos medidos.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F05-07",
@@ -784,7 +934,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: El alcance piloto cumple objetivos de latencia, volumen y recuperación medidos con carga representativa, límites y backpressure verificables.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F05-08",
@@ -799,7 +950,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Modelo de amenazas y revisión técnica/operativa del alcance piloto con hallazgos tratados y decisiones de riesgo explícitas.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F05-09",
@@ -814,7 +966,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Datos personales, auditoría, documentos y evidencias técnicas tienen propiedad, retención y acceso aprobados y mecanismos comprobables.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F05-10",
@@ -827,7 +980,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Datos y referencias necesarios para el piloto se migran mediante un corte reproducible, conciliado y compatible con los consumidores autorizados.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F05-11",
@@ -842,7 +996,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Cada release piloto tiene procedencia, inventario de dependencias/licencias y vulnerabilidades revisadas, sin excepciones silenciosas.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F05-12",
@@ -853,7 +1008,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Los recorridos del piloto se pueden ejecutar en los puestos elegidos con teclado, ayudas accesibles, errores comprensibles y periféricos homologados.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F06-01",
@@ -866,7 +1022,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: El recorrido priorizado se demuestra en otro país reutilizando el núcleo y delimitando sus reglas, datos y adaptadores propios.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F06-02",
@@ -877,7 +1034,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Un uso móvil delimitado funciona en Capacitor con permisos, conectividad y capacidades nativas verificadas en los dispositivos elegidos.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F06-03",
@@ -892,7 +1050,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Configuraciones aceptadas se habilitan gradualmente con versiones compatibles y criterios explícitos de avance o detención.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F06-04",
@@ -903,7 +1062,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Cada país conserva su aceptación y puede coordinar cambios de ERP sin redirigir pendientes ni repetir efectos.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F06-05",
@@ -915,7 +1075,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Perfil de red homologado para impresoras de recibos o etiquetas seleccionadas, atendidas por una instancia compartida de device-agent, con acceso autorizado desde puestos y móvil tras el piloto F05.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F06-06",
@@ -929,7 +1090,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: El país restante entre Chile, Perú y España tiene perfil, contratos y casos locales aceptados; ningún país queda implícito por haber probado solo dos.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F06-07",
@@ -941,7 +1103,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Los componentes legacy sustituidos se retiran solo después de demostrar ausencia de dependencias activas, conciliación y conservación del histórico necesario.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F06-08",
@@ -956,7 +1119,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: Puestos, móviles, servicios y periféricos se enrolan, inventarían, actualizan, revocan y retiran con identidad y configuración trazables.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       },
       {
         "id": "F06-09",
@@ -968,7 +1132,8 @@
         ],
         "status": "not_started",
         "summary": "Pendiente de implementar y aceptar: La operación simultánea de países y sociedades mantiene aislamiento de datos, identidad, destinos, recursos y fallos con capacidad y recuperación medidas.",
-        "acceptance": null
+        "acceptance": null,
+        "verification": null
       }
     ]
   }
