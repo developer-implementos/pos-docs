@@ -91,7 +91,8 @@ export function deriveProgress(snapshot, roadmapSource) {
   shape(content, ['schemaVersion', 'reviewedOn', 'productRevision', 'scope', 'summary', 'applications', 'workPackages'], 'Progress content');
   assert.equal(content.schemaVersion, 1, 'Unsupported product progress schema');
   date(content.reviewedOn, 'Progress review');
-  assert.match(content.productRevision, sha, 'Progress requires the audited product revision');
+  assert.ok(content.productRevision === 'source' || (typeof content.productRevision === 'string' && sha.test(content.productRevision)), 'Progress requires source or an immutable audited product revision');
+  const productRevision = content.productRevision === 'source' ? snapshot.source.revision : content.productRevision;
   text(content.summary, 'Progress summary');
   shape(content.scope, ['repository', 'revision', 'path', 'sha256'], 'Progress scope');
   assert.equal(content.scope.repository, documentationRepository, 'Progress scope must reference POS Docs');
@@ -150,7 +151,7 @@ export function deriveProgress(snapshot, roadmapSource) {
     assert.ok(assigned.length > 0, `${app.id} must have assigned work`);
     return { ...app, total: assigned.length, accepted: complete, percent: percent(complete, assigned.length) };
   });
-  return { total, accepted, percent: percent(accepted, total), applications, workPackages, counts, source: snapshot.source, scope: content.scope, reviewedOn: content.reviewedOn, productRevision: content.productRevision, summary: content.summary };
+  return { total, accepted, percent: percent(accepted, total), applications, workPackages, counts, source: snapshot.source, scope: content.scope, reviewedOn: content.reviewedOn, productRevision, summary: content.summary };
 }
 
 export function loadProgress(root) {

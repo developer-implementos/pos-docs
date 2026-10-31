@@ -19,12 +19,12 @@ function git(cwd, ...args) {
   return gitRaw(cwd, ...args).trimEnd();
 }
 
-function verifyEvidence(workspace, content, sourceRevision) {
-  const revisions = new Map([[content.productRevision, content.applications.flatMap(app => app.evidence)]]);
+function verifyEvidence(workspace, content, sourceRevision, productRevision) {
+  const revisions = new Map([[productRevision, content.applications.flatMap(app => app.evidence)]]);
   for (const work of content.workPackages) {
     if (work.acceptance) {
       try {
-        git(workspace, 'merge-base', '--is-ancestor', work.acceptance.revision, content.productRevision);
+        git(workspace, 'merge-base', '--is-ancestor', work.acceptance.revision, productRevision);
       } catch {
         throw new Error(`Acceptance revision must belong to the audited product history: ${work.acceptance.revision}`);
       }
@@ -85,7 +85,7 @@ export function syncProjectProgress({ root = repositoryRoot, workspace, check = 
   const metrics = deriveProgress(snapshot, roadmapSource);
   const pinnedRoadmap = gitRaw(docsRoot, 'show', `${content.scope.revision}:${content.scope.path}`).replaceAll('\r\n', '\n');
   assert.equal(createHash('sha256').update(pinnedRoadmap, 'utf8').digest('hex'), content.scope.sha256, 'The pinned roadmap commit does not match the reviewed scope');
-  verifyEvidence(productRoot, content, revision);
+  verifyEvidence(productRoot, content, revision, metrics.productRevision);
 
   // Check the source again before replacing the public snapshot, including untracked files.
   assert.equal(git(productRoot, 'rev-parse', 'HEAD'), revision, 'Product revision changed while importing progress');

@@ -1,6 +1,6 @@
 # Monorepo POS Platform
 
-> **Alcance del código en revisión:** **pos-platform** reúne los clientes Angular/PrimeNG para escritorio (Tauri) y móvil (Capacitor), las APIs NestJS/Fastify y sus workers. F01 combina el laboratorio transaccional con un incremento operativo Chile de usuarios/permisos propios POS, provisión persistente y HTTPS. La consulta legacy acotada todavía no alimenta el espejo ni la UI. La documentación se publica en [POS Docs](https://github.com/developer-implementos/pos-docs); la aceptación, integración en `main` y capacidades productivas no se deducen del inventario.
+> **Alcance del código integrado en `main`:** **pos-platform** reúne los clientes Angular/PrimeNG para escritorio (Tauri) y móvil (Capacitor), las APIs NestJS/Fastify y sus workers. F01 combina el laboratorio transaccional con un incremento operativo Chile de usuarios/permisos propios POS, provisión persistente y HTTPS. La consulta legacy acotada todavía no alimenta el espejo ni la UI. La documentación se publica en [POS Docs](https://github.com/developer-implementos/pos-docs); la aceptación de los entregables y las capacidades productivas no se deducen del inventario.
 
 POS Platform es la base de un producto corporativo para varios países. El monorepo reúne clientes de escritorio y móvil, backend de sucursal, backend de país y workers con ciclos de ejecución propios. La demostración funcional actual cubre Chile; la estructura multipaís permite organizar la evolución sin afirmar que las reglas fiscales o integraciones de otros países estén implementadas.
 

@@ -1,10 +1,10 @@
 # F01 · Operación incremental de sucursal
 
-La implementación en revisión conecta Angular, `branch-api` y PostgreSQL real. El incremento para Chile incorpora usuarios y permisos propios del POS, provisión persistente de puestos, HTTPS y administración de accesos. Conserva un laboratorio segregado para validar la venta completa con datos sintéticos. El perfil operativo no habilita cobros, precios no verificados ni emisión fiscal.
+El código integrado en `main` conecta Angular, `branch-api` y PostgreSQL real. El incremento para Chile incorpora usuarios y permisos propios del POS, provisión persistente de puestos, HTTPS y administración de accesos. Conserva un laboratorio segregado para validar la venta completa con datos sintéticos. El perfil operativo no habilita cobros, precios no verificados ni emisión fiscal.
 
 La evidencia del código se fija en POS Docs mediante la revisión del producto indicada en la [guía del repositorio](product-repository.md). El [issue de la fase F01](https://github.com/developer-implementos/pos-platform/issues/4) reúne sus entregables: [F01-04](https://github.com/developer-implementos/pos-platform/issues/13) cubre el recorrido integrado y la recuperación visible, [F01-06](https://github.com/developer-implementos/pos-platform/issues/15) la persistencia y [F01-13](https://github.com/developer-implementos/pos-platform/issues/22) la estructura compartida y sus fronteras. Los checks y decisiones se registran en esos issues y sus PR. Esta página no sustituye las fichas F01 ni declara la fase aceptada.
 
-## Incremento operativo en revisión
+## Incremento operativo integrado
 
 El perfil `operational` de `branch-api` utiliza una base de sucursal aprovisionada con identidades y configuración explícitas. No instala usuarios de demostración ni semillas comerciales. Permite crear y deshabilitar operadores, administrar roles y asignaciones, cambiar contraseñas y revocar sesiones. El servidor controla permisos otorgables, ámbito, versiones y conservación del último administrador. La identidad propia POS es la decisión inicial de Chile; no depende de disponer de un proveedor corporativo de login.
 
@@ -12,7 +12,7 @@ Los puestos se aprovisionan con identidad de caja e instalación. El cliente sel
 
 `erp-worker` incorpora una CLI separada de consultas HTTPS a Mountain para buscar referencias de productos y clientes. Es un adaptador de lectura real con configuración externa, token técnico propio, rutas permitidas y validación de respuesta; **todavía no alimenta el espejo de sucursal ni la UI**. Las pruebas HTTPS locales no acreditan conectividad con la empresa. La ejecución corporativa espera origen aprobado, VPN/DNS/TLS y cuenta restringida; el precio mínimo del resultado no se interpreta como precio de venta.
 
-Este incremento y su documentación están en revisión. No equivalen a integración en `main`, aceptación de F01 ni habilitación productiva; esas evidencias se registran por separado en el producto.
+El código de este incremento está integrado en `main` en la [revisión 2bca6df](https://github.com/developer-implementos/pos-platform/commit/2bca6dff9150a54dcbeb7c72e8744211790af677). La aceptación de los entregables F01 sigue pendiente y se registra por separado; integrar código no habilita una caja productiva.
 
 La [guía de puesta en marcha](../tools/database/README.operational.md) detalla infraestructura, certificados, provisión y registro de puestos. La [matriz del incremento](../delivery/reviews/F01-operational-increment.md) enlaza las pruebas y los pendientes de aceptación. El recorrido automatizado `npm run test:e2e:operational` usa cliente, API HTTPS y PostgreSQL reales con identidades efímeras de prueba: administra un usuario, concede acceso, lo revoca y lo reactiva. No utiliza mocks HTTP ni consulta servicios corporativos.
 
