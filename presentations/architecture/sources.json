@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "reviewedOn": "2026-10-31",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "efa7fa345a9348118747ffc939d4ceda05ba1b78",
+  "revision": "3198aa641bb2e90d30cde2786b9b26ea5cb2b1cb",
   "sourceStatus": "Fuentes documentales verificadas en la revisión indicada; F01 combina administración POS en revisión y pruebas monetarias de laboratorio, sin aceptación de fase ni habilitación productiva.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "inputs": [
     {
       "path": "docs/monorepo.md",
-      "sha256": "82bee728a8805eed9b7c87e6c04ac010517ee770ad9113ff1639f933be857126"
+      "sha256": "4804bec5ee6e1d887320b42b8fa362e55b91343ecfbac3e59c305750d8878d69"
     },
     {
       "path": "docs/propuesta-arquitectura.md",
@@ -24,7 +24,7 @@
     },
     {
       "path": "apps/starlight/src/data/product-evidence.json",
-      "sha256": "eafaf791f918a7e35ba9e6d272c769be7008b5e84110b78636c508be548de5c8"
+      "sha256": "43a69dc259659ee5e04ff4b448edb266cfae89041c642f180b69e73fbea74f38"
     },
     {
       "path": "docs/roadmap.md",
@@ -68,7 +68,7 @@
     },
     {
       "path": "apps/starlight/src/data/monorepo-catalog.json",
-      "sha256": "189829eaa37bf7ef10c1d7dcd781f1746daf7dedee81ebe20b9cfc93219135d8"
+      "sha256": "7259c86a1ace622c6d89fc704c8db41816b5411b9506e2bb742afa5a09e2574e"
     },
     {
       "path": "docs/decisions/device-agent.md",
