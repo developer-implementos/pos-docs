@@ -2,21 +2,21 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "295e169fcf828e6f8939c836ce795afbcc2e5013",
+    "revision": "2bca6dff9150a54dcbeb7c72e8744211790af677",
     "path": "delivery/progress.json",
-    "sha256": "4571ea12d4e8c303c071992047df8cbe56295c4d57b167bd707f5fdffbc52d9a"
+    "sha256": "3079e01162dc1cb9ad0e8d269b445eec55bf6a10331fe93a258049d86305df05"
   },
   "content": {
     "schemaVersion": 1,
     "reviewedOn": "2026-10-31",
-    "productRevision": "d0b27583a3e78bef90691f7e26ca1c79bb7a6eb6",
+    "productRevision": "source",
     "scope": {
       "repository": "https://github.com/developer-implementos/pos-docs",
       "revision": "1773204724a00d3a4e2dacee988aa1b6152efe3a",
       "path": "docs/roadmap.json",
       "sha256": "3a09855c055970ff7c11d8943e2375e078504f0a8a67d8d48f06bdd1e83495f9"
     },
-    "summary": "F01 incorpora administración de usuarios, roles y puestos de Chile mediante cliente, API HTTPS y PostgreSQL reales. El motor comercial conserva pruebas segregadas de laboratorio; la fuente legacy y el espejo operativo siguen pendientes. Los trece paquetes permanecen en curso y requieren revisión y aceptación; el código aún no está integrado en main.",
+    "summary": "F01 incorpora administración de usuarios, roles y puestos de Chile mediante cliente, API HTTPS y PostgreSQL reales. El motor comercial conserva pruebas segregadas de laboratorio; la fuente legacy y el espejo operativo siguen pendientes. Los trece paquetes permanecen en curso y requieren revisión y aceptación.",
     "applications": [
       {
         "id": "pos-desktop",

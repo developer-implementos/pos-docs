@@ -2,7 +2,7 @@
 
 **Implementación en revisión:** F01 conecta Angular con `branch-api` y PostgreSQL. El incremento operativo Chile incorpora identidad propia POS, administración de accesos, provisión y HTTPS, separado del laboratorio transaccional. La infraestructura técnica pertenece a `libs/shared/backend/runtime`, `persistence` y `testing`; los casos de uso conservan su contexto de negocio. La [guía F01](phase-1-laboratory.md) distingue ambos perfiles y sus límites.
 
-> **Alcance:** el perfil operativo administra usuarios, roles, puestos y configuración persistentes. El laboratorio valida apertura, catálogo, clientes, cestas, cotización y efectivo con datos sintéticos. No se habilitan cobros operativos sin precios verificados, emisión fiscal, tarjetas ni envío ERP. La aceptación de F01 se registra en el producto; esta documentación y la CI no acreditan integración en `main` ni habilitación productiva.
+> **Alcance:** el perfil operativo administra usuarios, roles, puestos y configuración persistentes. El laboratorio valida apertura, catálogo, clientes, cestas, cotización y efectivo con datos sintéticos. No se habilitan cobros operativos sin precios verificados, emisión fiscal, tarjetas ni envío ERP. El código está integrado en `main`; la aceptación de F01 se registra por separado en el producto. Esta documentación y la CI no acreditan habilitación productiva.
 
 `apps/branch-api` compone el backend modular de sucursal con NestJS 12, Fastify 5 y TypeScript. Publica contratos HTTP v1 desde las bibliotecas de cada contexto, valida solicitudes con Zod y ejecuta los casos de uso mediante puertos. PostgreSQL 18.6 y `pg` 8.23.1 conservan la operación y su resultado durable. El [ADR-19](decisions/postgresql-unit-of-work.md) fija transacciones, migraciones y privilegios.
 
