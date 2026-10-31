@@ -39,6 +39,7 @@ if (fs.existsSync(output)) {
 fs.mkdirSync(output, {recursive: true});
 fs.writeFileSync(path.join(output, marker), 'Generated from apps/starlight and docs/ in POS Docs.\n');
 run(path.resolve(path.dirname(astroPackage), typeof astro.bin === 'string' ? astro.bin : astro.bin.astro), ['build']);
+run(path.join(app, 'scripts/build-search.mjs'), [path.join(output, 'guide')]);
 
 // A successful compiler exit must also produce a usable Spanish search index.
 const searchDirectory = path.join(output, 'guide/pagefind');
