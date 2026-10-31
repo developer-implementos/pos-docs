@@ -76,9 +76,11 @@ El cliente selecciona una composición explícita:
 
 No hay fallback desde un fallo de API a la demostración. Un perfil inválido bloquea el arranque. La URL exige HTTPS salvo loopback local, incluye `/api/v1` y no admite credenciales, query, fragmentos o comodines. CORS de la API y CSP del cliente deben permitir únicamente los orígenes configurados.
 
-La UI conserva el diseño Angular/PrimeNG. Presenta los importes enviados por el servidor; no usa el store mock como autoridad comercial. Los binarios Tauri/Capacitor y la homologación de dispositivos requieren sus pruebas nativas; pasar Playwright en navegador no acredita esas capacidades.
+La UI conserva el diseño Angular/PrimeNG. Presenta los importes enviados por el servidor; no usa el store mock como autoridad comercial. F01-04 exige comprobar que el empaquetado conserva el perfil conectado y la política de origen autorizada, además del recorrido con API y PostgreSQL. Pasar Playwright en navegador no demuestra qué configuración contiene el paquete.
 
 El paquete nativo fija un origen HTTPS permitido mediante su configuración de despliegue. La configuración pública del puesto contiene `mode: branch`, `apiBaseUrl`, `registerId` e `installationId`; no contiene contraseñas ni tokens. Debe coincidir con el origen aprobado del paquete. CSP y la configuración Tauri se generan para ese origen exacto, sin comodines ni proxy que evite la validación TLS.
+
+En el corte en revisión ya se compiló e inspeccionó un APK Android real; su evidencia debe renovarse para la revisión final del código. El pendiente de empaquetado de F01-04 es generar el artefacto Tauri real y comprobar su política embebida. Firma, hardware y funcionamiento nativo sobre equipos reales pertenecen a F02/F05; disponer de macOS o completar iOS no añade un criterio de cierre a esta ficha F01.
 
 El laboratorio HTTP permanece en loopback. El perfil operativo requiere TLS explícito, CORS limitado y confianza en el certificado del servidor. Las pruebas de navegador y compilación no acreditan distribución firmada, instalación en terminales, certificados desplegados ni validación de dispositivos.
 
