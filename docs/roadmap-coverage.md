@@ -70,6 +70,6 @@ Para autorizar una entrega, el equipo debe poder demostrar que no quedan criteri
 
 ## Coordinación entre repositorios y agentes
 
-POS Docs mantiene la propuesta, el alcance y su explicación pública. POS Platform mantiene las fichas de implementación, los issues, los PR y la evidencia del producto. El [procedimiento de contribución](https://github.com/developer-implementos/pos-platform/blob/main/CONTRIBUTING.md) es la referencia para el equipo y los agentes; no se mantiene una segunda copia de ese procedimiento aquí.
+POS Docs mantiene la propuesta, el alcance y su explicación pública. POS Platform mantiene las fichas de implementación, los issues, los PR y la evidencia del producto. El [procedimiento de contribución de la revisión publicada](https://github.com/developer-implementos/pos-platform/blob/d32dfae98943309e55dea33813bad11833f0bed2/CONTRIBUTING.md) es la referencia para el equipo y los agentes; no se mantiene una segunda copia de ese procedimiento aquí.
 
 Las instrucciones versionadas orientan a Codex y Claude Code. Los controles de GitHub, CI y revisión humana verifican condiciones de integración independientemente de la máquina o conversación utilizada. Los cambios de contrato coordinan los dos repositorios mediante un mismo issue del producto y PR enlazados.

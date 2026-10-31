@@ -50,7 +50,7 @@ La API F01 sólo escucha en una dirección literal de loopback (`127.0.0.1` o `:
 
 ## Ejecutar las comprobaciones del laboratorio
 
-Desde el checkout de POS Platform se utiliza Node compatible con su `engines`, npm 11.6.0 y PostgreSQL 18.6 aislado en loopback. Las URLs administrativas y credenciales se suministran al proceso por un medio local protegido; no se publican ni se copian a ejemplos versionados.
+Utiliza un checkout de la revisión de POS Platform identificada en la [guía del repositorio](product-repository.md), no una versión distinta de `main` por defecto. Publicar esta guía o un resultado de CI no implica que el código ya se haya integrado en esa rama. Se requiere Node compatible con su `engines`, npm 11.6.0 y PostgreSQL 18.6 aislado en loopback. Las URLs administrativas y credenciales se suministran al proceso por un medio local protegido; no se publican ni se copian a ejemplos versionados.
 
 ```sh
 npm ci

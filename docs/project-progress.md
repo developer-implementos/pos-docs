@@ -1,6 +1,6 @@
 # Seguimiento del avance
 
-La [portada de POS Docs](/#progress) muestra el porcentaje de entregables del alcance aceptados del proyecto y de cada aplicación. La fuente de seguimiento es [`delivery/progress.json` en POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/progress.json). El roadmap define el alcance; el registro del producto conserva su estado y evidencia. No se editan porcentajes en la portada.
+La [portada de POS Docs](/#progress) muestra el porcentaje de entregables del alcance aceptados del proyecto y de cada aplicación. La fuente de seguimiento es [`delivery/progress.json` en la revisión publicada de POS Platform](https://github.com/developer-implementos/pos-platform/blob/d32dfae98943309e55dea33813bad11833f0bed2/delivery/progress.json). El roadmap define el alcance; el registro del producto conserva su estado y evidencia. No se editan porcentajes en la portada.
 
 ## Qué significa el porcentaje
 
@@ -13,7 +13,7 @@ Un paquete compartido cuenta una sola vez en el total del proyecto. Aparece tamb
 
 Esta medida expresa aceptación de los entregables acordados, que incluyen capacidades funcionales, infraestructura, gobierno del desarrollo y validaciones. No expresa esfuerzo consumido, tiempo restante, cantidad de código ni preparación para producción. Cada paquete debe satisfacer sus propios criterios: las capacidades requieren aceptación funcional y las validaciones requieren la evidencia correspondiente. Un paquete compartido se acepta cuando cumple su entrega integrada. Para medir independientemente contribuciones parciales de cada aplicación habría que acordar criterios adicionales en el alcance.
 
-La revisión inicial acredita una demostración de interfaz y una base técnica de APIs y workers, pero todavía no acredita la aceptación completa de esos paquetes. Por eso puede aparecer **0 % de entregables aceptados** junto con capacidades técnicas disponibles. El resumen de cada app distingue ambos hechos.
+La revisión publicada incluye F01 en laboratorio: cliente Angular, API y PostgreSQL con venta recuperable, además de la demo separada y las bases de país y workers. Los trece entregables F01 figuran en desarrollo y todavía requieren su aceptación completa. Por eso puede aparecer **0 % de entregables aceptados** junto con capacidades funcionales probadas. El resumen y la etapa de cada app distinguen ambos hechos; no se atribuye a `main` una implementación por estar publicada su evidencia.
 
 ## Estados y evidencia
 
