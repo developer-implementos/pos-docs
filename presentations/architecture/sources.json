@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "reviewedOn": "2026-10-31",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "45f722e23305ffd60b00db98a526b673f4cf3788",
-  "sourceStatus": "Fuentes documentales verificadas en la revisión indicada; F01 en revisión de laboratorio, sin aceptación productiva.",
+  "revision": "8f6cdf443fe018339de4ad58634b3fabc8403c37",
+  "sourceStatus": "Fuentes documentales verificadas en la revisión indicada; F01 combina administración POS en revisión y pruebas monetarias de laboratorio, sin aceptación de fase ni habilitación productiva.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "inputs": [
     {
       "path": "docs/monorepo.md",
-      "sha256": "5e883e8ac7bfdd8e4a9180f5e07c63303be8d7eb5a92bdb303c6252b17eed718"
+      "sha256": "82bee728a8805eed9b7c87e6c04ac010517ee770ad9113ff1639f933be857126"
     },
     {
       "path": "docs/propuesta-arquitectura.md",
@@ -24,7 +24,7 @@
     },
     {
       "path": "apps/starlight/src/data/product-evidence.json",
-      "sha256": "ccb8e41c0adccab3f58c50b384594f8ce56c7a5c9136b93d11ee864bc7c0be32"
+      "sha256": "b29e2fae4317f5da2de577f9960b533acae7599b7bf5672585f17614064c7426"
     },
     {
       "path": "docs/roadmap.md",
@@ -32,7 +32,7 @@
     },
     {
       "path": "docs/roadmap.json",
-      "sha256": "6b4f54498d21cd06cb3e376168d5fd19d6cdfcfd4eb1c10bc06d651494adb5ee"
+      "sha256": "3a09855c055970ff7c11d8943e2375e078504f0a8a67d8d48f06bdd1e83495f9"
     },
     {
       "path": "docs/c4-arquitectura-propuesta.md",
@@ -68,7 +68,7 @@
     },
     {
       "path": "apps/starlight/src/data/monorepo-catalog.json",
-      "sha256": "2091388fd85e9035c2d77072ff4e666ab48ea29a7f00b4fecd1eb765018fe745"
+      "sha256": "189829eaa37bf7ef10c1d7dcd781f1746daf7dedee81ebe20b9cfc93219135d8"
     },
     {
       "path": "docs/decisions/device-agent.md",
