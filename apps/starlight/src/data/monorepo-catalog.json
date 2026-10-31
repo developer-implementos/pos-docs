@@ -228,16 +228,6 @@
         "state": "conservado"
       },
       {
-        "path": "tests/pos-clients-e2e",
-        "description": "Playwright demo y API real; proyecto Nx sin despliegue",
-        "state": "conservado"
-      },
-      {
-        "path": "tests/pos-clients-e2e/mobile",
-        "description": "Suite Angular móvil; no homologa Capacitor",
-        "state": "conservado"
-      },
-      {
         "path": "libs/backend/sales",
         "description": "Ventas y documentos comerciales",
         "state": "conservado"
@@ -343,6 +333,21 @@
         "state": "conservado"
       },
       {
+        "path": "tests/pos-clients-e2e",
+        "description": "Playwright demo y API real; proyecto Nx sin despliegue",
+        "state": "conservado"
+      },
+      {
+        "path": "tests/pos-clients-e2e/mobile",
+        "description": "Suite Angular móvil; no homologa Capacitor",
+        "state": "conservado"
+      },
+      {
+        "path": "tests/pos-clients-e2e/branch",
+        "description": "Recorridos Angular → API → PostgreSQL con recuperación",
+        "state": "conservado"
+      },
+      {
         "path": "tools",
         "description": "Herramientas de build, lint y pruebas del producto",
         "state": "conservado"
@@ -375,11 +380,6 @@
       {
         "path": "libs/features/branch-operation",
         "description": "Login, caja y venta conectados con componentes PrimeNG",
-        "state": "conservado"
-      },
-      {
-        "path": "tests/pos-clients-e2e/branch",
-        "description": "Recorridos Angular → API → PostgreSQL con recuperación",
         "state": "conservado"
       }
     ]

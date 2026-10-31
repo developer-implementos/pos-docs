@@ -28,10 +28,6 @@ apps/
   branch-sync-worker/           # Proceso de entrega y recepción de sucursal
   country-api/                  # API de recepción y capacidades de país
   erp-worker/                   # Proceso de integración, traducción y conciliación ERP
-tests/
-  pos-clients-e2e/              # Playwright demo y API real; proyecto Nx sin despliegue
-    mobile/                     # Suite Angular móvil; no homologa Capacitor
-    branch/                     # Recorridos Angular → API → PostgreSQL con recuperación
 libs/
   backend/
     sales/                      # Ventas y documentos comerciales
@@ -63,6 +59,10 @@ libs/
   domain/                       # Reglas puras del prototipo frontend
   data-access/                  # Adaptadores demo y gateway branch-api en proyectos separados
     branch-api/                 # HTTP y estado de la operación conectada
+tests/
+  pos-clients-e2e/              # Playwright demo y API real; proyecto Nx sin despliegue
+    mobile/                     # Suite Angular móvil; no homologa Capacitor
+    branch/                     # Recorridos Angular → API → PostgreSQL con recuperación
 tools/                          # Herramientas de build, lint y pruebas del producto
 .github/
   workflows/                    # Validaciones y entrega
