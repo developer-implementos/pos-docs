@@ -69,7 +69,7 @@ Las páginas distinguen propuesta, implementación, investigación e historia. L
 
 La actualización de evidencia es una operación explícita sobre un checkout limpio del producto. Revisar los cambios del catálogo, los documentos afectados y los diagramas antes de registrar una nueva revisión. Los detalles están en [mantenimiento](apps/starlight/README.md).
 
-El registro de avance pertenece a `delivery/progress.json` en POS Platform. El portal calcula sus porcentajes a partir de entregables aceptados y publica un snapshot revisado; no estima avances desde commits o carpetas ni accede al repositorio privado desde el navegador. Tras actualizar y confirmar el registro del producto, ejecutar `npm run progress:sync -- --workspace ../pos-platform`, validar y publicar el cambio en POS Docs. La metodología, evidencia requerida y actualización están en [Seguimiento del avance](docs/project-progress.md).
+El registro de avance pertenece a `delivery/progress.json` en POS Platform. El portal calcula sus porcentajes a partir de entregables técnicamente verificados y muestra la aceptación manual por separado. Publica un snapshot revisado; no estima avances desde commits o carpetas ni accede al repositorio privado desde el navegador. Los registros antiguos de esquema 1 conservan su medición de aceptación hasta importar el esquema 2. Tras actualizar y confirmar el registro del producto, ejecutar `npm run progress:sync -- --workspace ../pos-platform`, validar y publicar el cambio en POS Docs. La metodología, evidencia requerida y actualización están en [Seguimiento del avance](docs/project-progress.md).
 
 ## Vercel
 

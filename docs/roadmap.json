@@ -133,7 +133,7 @@
               "Publicar un backlog trazable por fase, app y módulo, con fichas técnicas, dependencias y códigos estables sin duplicar issues.",
               "Configurar AGENTS.md, CLAUDE.md, CONTRIBUTING.md y plantillas para ramas aisladas, coordinación, revisiones y traspasos reproducibles entre máquinas.",
               "Comprobar metadatos de PR contra issues reales y activar protección de main, revisiones, CODEOWNERS y checks de integración sin ejecutar texto ni código no confiables.",
-              "Validar dos sesiones coordinadas, PR parcial, rechazo de metadatos inválidos, publicación idempotente y aceptación documentada antes de actualizar el avance."
+              "Validar dos sesiones coordinadas, PR parcial, rechazo de metadatos inválidos y publicación idempotente; documentar la verificación técnica para actualizar el avance y registrar la aceptación manual por separado."
             ]
           },
           {

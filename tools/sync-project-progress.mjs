@@ -22,14 +22,23 @@ function git(cwd, ...args) {
 function verifyEvidence(workspace, content, sourceRevision, productRevision) {
   const revisions = new Map([[productRevision, content.applications.flatMap(app => app.evidence)]]);
   for (const work of content.workPackages) {
-    if (work.acceptance) {
+    for (const kind of ['verification', 'acceptance']) {
+      const review = work[kind];
+      if (!review) continue;
       try {
-        git(workspace, 'merge-base', '--is-ancestor', work.acceptance.revision, productRevision);
+        git(workspace, 'merge-base', '--is-ancestor', review.revision, productRevision);
       } catch {
-        throw new Error(`Acceptance revision must belong to the audited product history: ${work.acceptance.revision}`);
+        throw new Error(`${kind === 'verification' ? 'Verification' : 'Acceptance'} revision must belong to the audited product history: ${review.revision}`);
       }
-      const entries = revisions.get(work.acceptance.revision) || [];
-      revisions.set(work.acceptance.revision, [...entries, ...work.acceptance.evidence]);
+      const entries = revisions.get(review.revision) || [];
+      revisions.set(review.revision, [...entries, ...review.evidence]);
+    }
+    if (work.verification && work.acceptance) {
+      try {
+        git(workspace, 'merge-base', '--is-ancestor', work.verification.revision, work.acceptance.revision);
+      } catch {
+        throw new Error(`Acceptance must include the verified product revision: ${work.id}`);
+      }
     }
   }
   for (const [revision, entries] of revisions) {
@@ -112,7 +121,7 @@ export function syncProjectProgress({ root = repositoryRoot, workspace, check = 
       if (fs.existsSync(temporary)) fs.unlinkSync(temporary);
     }
   }
-  return { changed, revision, destination, accepted: metrics.accepted, total: metrics.total };
+  return { changed, revision, destination, measurement: metrics.measurement, verified: metrics.verified, accepted: metrics.accepted, total: metrics.total };
 }
 
 export function parseProgressArguments(args) {
@@ -130,5 +139,6 @@ export function parseProgressArguments(args) {
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const result = syncProjectProgress(parseProgressArguments(process.argv.slice(2)));
-  console.log(`Product progress: ${result.accepted}/${result.total} accepted; revision ${result.revision.slice(0, 12)}; ${result.changed ? 'snapshot updated' : 'snapshot current'}.`);
+  const measured = result.measurement === 'verification' ? `${result.verified}/${result.total} technically verified; ${result.accepted} manually accepted` : `${result.accepted}/${result.total} accepted (schema 1)`;
+  console.log(`Product progress: ${measured}; revision ${result.revision.slice(0, 12)}; ${result.changed ? 'snapshot updated' : 'snapshot current'}.`);
 }

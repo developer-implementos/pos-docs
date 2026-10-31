@@ -30,12 +30,13 @@ El plan mantiene seis fases, con entregables identificados por códigos estables
 
 La cobertura se contrasta con la arquitectura, el inventario funcional de Chile, los catálogos de integración, los contratos de identidad y maestros, y las fuentes de reuniones de Perú y España. Las afirmaciones recibidas en una reunión siguen siendo evidencia de levantamiento: la implementación no debe convertir una referencia fiscal, una marca de dispositivo o una interfaz desconocida en un contrato inventado.
 
-## Cuatro resultados que deben distinguirse
+## Resultados que deben distinguirse
 
 1. **Implementado:** existe código integrado para el comportamiento, con pruebas y límites conocidos. Un scaffold no satisface este estado.
-2. **Aceptado:** una revisión identifica la versión, escenarios, datos, configuración y evidencia que cumplen el entregable. Es lo que cuenta en el [porcentaje de avance](/guide/implementation/progress/).
-3. **Homologado:** el proveedor, hardware o responsable correspondiente valida una combinación concreta. Un simulador o sandbox no homologa producción.
-4. **Habilitado:** operaciones autoriza el despliegue en un alcance concreto después de comprobar identidad, permisos, respaldo, recuperación, soporte, datos y preparación de la tienda.
+2. **Verificado técnicamente:** se contrastan los criterios completos con la versión implementada, escenarios, datos, configuración y evidencia. Es lo que cuenta en el [porcentaje de avance](/guide/implementation/progress/).
+3. **Aceptado manualmente:** el equipo registra una decisión humana independiente sobre una entrega verificada. Su ausencia no impide reflejar el avance técnico.
+4. **Homologado:** el proveedor, hardware o responsable correspondiente valida una combinación concreta. Un simulador o sandbox no homologa producción.
+5. **Habilitado:** operaciones autoriza el despliegue en un alcance concreto después de comprobar identidad, permisos, respaldo, recuperación, soporte, datos y preparación de la tienda.
 
 Un build verde acredita compilación y las comprobaciones que realmente se ejecutaron. El cierre de una issue acredita una decisión de cierre en GitHub. Ninguno sustituye automáticamente los otros resultados.
 
@@ -62,7 +63,7 @@ Estas decisiones forman parte de los entregables y sus condiciones de entrada. U
 
 ## Límites del 100 %
 
-El porcentaje expresa **entregables aceptados del alcance versionado**. Si cambia ese alcance, se revisan el roadmap, las fichas, los issues y el denominador juntos. No se mantiene artificialmente un 100 % después de incorporar países, canales o capacidades nuevas.
+El porcentaje expresa **entregables técnicamente verificados del alcance versionado**. La aceptación manual del equipo se registra por separado y no condiciona ese avance. Si cambia el alcance, se revisan el roadmap, las fichas, los issues y el denominador juntos. No se mantiene artificialmente un 100 % después de incorporar países, canales o capacidades nuevas.
 
 La habilitación inicial no incluye por defecto todos los modelos de periféricos, proveedores alternativos ni futuros países. La IA y RFID documentados como extensiones opcionales, un programa de sustitución del ERP y una comercialización SaaS para terceros necesitan alcance, decisiones y criterios propios. Tampoco terminan la operación continua, las actualizaciones de seguridad, las incidencias y los cambios normativos al completar un roadmap.
 
