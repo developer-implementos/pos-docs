@@ -1,6 +1,6 @@
 # Seguimiento del avance
 
-La [portada de POS Docs](/#progress) muestra el porcentaje de entregables del alcance aceptados del proyecto y de cada aplicación. La fuente de seguimiento es [`delivery/progress.json` en la revisión publicada de POS Platform](https://github.com/developer-implementos/pos-platform/blob/d32dfae98943309e55dea33813bad11833f0bed2/delivery/progress.json). El roadmap define el alcance; el registro del producto conserva su estado y evidencia. No se editan porcentajes en la portada.
+La [portada de POS Docs](/#progress) muestra el porcentaje de entregables del alcance aceptados del proyecto y de cada aplicación. La fuente de seguimiento es [`delivery/progress.json` en la revisión publicada de POS Platform](https://github.com/developer-implementos/pos-platform/blob/bc1af955a9609cb3368f144e08905edebcf6cea0/delivery/progress.json). El roadmap define el alcance; el registro del producto conserva su estado y evidencia. No se editan porcentajes en la portada.
 
 ## Qué significa el porcentaje
 
@@ -13,7 +13,9 @@ Un paquete compartido cuenta una sola vez en el total del proyecto. Aparece tamb
 
 Esta medida expresa aceptación de los entregables acordados, que incluyen capacidades funcionales, infraestructura, gobierno del desarrollo y validaciones. No expresa esfuerzo consumido, tiempo restante, cantidad de código ni preparación para producción. Cada paquete debe satisfacer sus propios criterios: las capacidades requieren aceptación funcional y las validaciones requieren la evidencia correspondiente. Un paquete compartido se acepta cuando cumple su entrega integrada. Para medir independientemente contribuciones parciales de cada aplicación habría que acordar criterios adicionales en el alcance.
 
-La revisión publicada incluye F01 en laboratorio: cliente Angular, API y PostgreSQL con venta recuperable, además de la demo separada y las bases de país y workers. Los trece entregables F01 figuran en desarrollo y todavía requieren su aceptación completa. Por eso puede aparecer **0 % de entregables aceptados** junto con capacidades funcionales probadas. El resumen y la etapa de cada app distinguen ambos hechos; no se atribuye a `main` una implementación por estar publicada su evidencia.
+F01 combina dos alcances en revisión: un incremento operativo para Chile con usuarios y permisos propios POS, provisión persistente, HTTPS y administración desde Angular contra API y PostgreSQL reales; y un laboratorio separado que prueba venta en efectivo y recuperación con datos comerciales sintéticos. El conector Mountain permite consultas HTTPS acotadas, todavía sin validación contra la instancia corporativa ni conexión al espejo o a la UI. El perfil operativo mantiene deshabilitados los cobros y precios sin fuente comercial verificada.
+
+Los trece entregables F01 siguen en desarrollo y requieren su aceptación completa. Por eso el registro conserva **0 entregables aceptados** y la portada puede mostrar **0 %** junto con capacidades implementadas y pruebas satisfactorias. El resumen de cada app debe señalar el alcance comprobado y sus límites: una prueba de navegador no acredita instalación nativa, una consulta local de contrato no acredita el proveedor y una CI verde no acredita aceptación funcional. La revisión publicada y la integración en `main` se identifican por separado.
 
 ## Estados y evidencia
 

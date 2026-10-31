@@ -2,27 +2,27 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "d32dfae98943309e55dea33813bad11833f0bed2",
+    "revision": "bc1af955a9609cb3368f144e08905edebcf6cea0",
     "path": "delivery/progress.json",
-    "sha256": "90a65f737c8da4714d5820e80af1fe431fa2e0d26d85033a0de02a680f0c34f2"
+    "sha256": "55066584dcb2d5a7593417229f8ccfa691ef3dff2b76b4d8c787a4799f7e1aa9"
   },
   "content": {
     "schemaVersion": 1,
-    "reviewedOn": "2026-10-30",
-    "productRevision": "91de6d737b89adaeb7db2aa75d3bd03504fdabb4",
+    "reviewedOn": "2026-10-31",
+    "productRevision": "9ee87273b0b2ad94bfc51d5236671bc824663c2a",
     "scope": {
       "repository": "https://github.com/developer-implementos/pos-docs",
-      "revision": "7f29e2cef103aee4d7e470baf19178e7f03fcf92",
+      "revision": "1773204724a00d3a4e2dacee988aa1b6152efe3a",
       "path": "docs/roadmap.json",
-      "sha256": "6b4f54498d21cd06cb3e376168d5fd19d6cdfcfd4eb1c10bc06d651494adb5ee"
+      "sha256": "3a09855c055970ff7c11d8943e2375e078504f0a8a67d8d48f06bdd1e83495f9"
     },
-    "summary": "F01 dispone de una implementación de laboratorio en revisión: identidad, configuración, catálogo, cálculo comercial y venta en efectivo persistida con recuperación. Los trece paquetes siguen en curso hasta su aceptación técnica y funcional; no se habilita operación productiva.",
+    "summary": "F01 incorpora administración de usuarios, roles y puestos de Chile mediante cliente, API HTTPS y PostgreSQL reales. El motor comercial conserva pruebas segregadas de laboratorio; la fuente legacy y el espejo operativo siguen pendientes. Los trece paquetes permanecen en curso y requieren revisión y aceptación; el código aún no está integrado en main.",
     "applications": [
       {
         "id": "pos-desktop",
         "stage": "functional",
-        "summary": "Cliente Angular de laboratorio conectado a branch-api, con venta en efectivo y recuperación probadas en navegador; host Tauri compilable, sin acreditar operación nativa o productiva.",
-        "nextStep": "Revisión funcional del laboratorio y validación nativa de conectividad, enrolamiento y periféricos en sus fases.",
+        "summary": "Cliente Angular conectado a branch-api para administrar usuarios, roles y asignaciones. Exige registro del puesto y origen HTTPS; la demo es explícita y la venta comercial conserva sus gates. Tauri requiere validación funcional nativa.",
+        "nextStep": "Aceptar el incremento de accesos y validar instalación nativa, certificados y recorrido comercial con fuentes autorizadas.",
         "evidence": [
           {
             "path": "apps/pos-desktop/src/main.ts",
@@ -30,18 +30,18 @@
           },
           {
             "path": "libs/features/branch-operation",
-            "label": "Interfaz de operación de laboratorio"
+            "label": "Interfaz conectada de administración y operación"
           },
           {
-            "path": "tests/pos-clients-e2e/branch/cash-recovery.spec.ts",
-            "label": "Recorrido real de venta y recuperación en navegador"
+            "path": "tests/pos-clients-e2e/operational/administration.spec.ts",
+            "label": "Administración, revocación y reactivación contra API HTTPS y PostgreSQL"
           }
         ]
       },
       {
         "id": "pos-mobile",
         "stage": "foundation",
-        "summary": "Host Capacitor con cliente Angular compartido y perfil explícito de API de sucursal; compilaciones Android e iOS separadas, sin validación funcional en dispositivos.",
+        "summary": "Host Capacitor con cliente Angular compartido, administración de accesos y origen HTTPS autorizado en el paquete. Builds Android/iOS separados; sin validación funcional instalada en dispositivos.",
         "nextStep": "Validar el recorrido integrado móvil, identidad, conectividad autorizada y capacidades en dispositivos elegidos.",
         "evidence": [
           {
@@ -61,20 +61,20 @@
       {
         "id": "branch-api",
         "stage": "functional",
-        "summary": "API NestJS/Fastify de laboratorio con identidad, configuración, catálogo, precios, borradores y venta en efectivo atómica sobre PostgreSQL; sin proveedores productivos.",
-        "nextStep": "Revisión técnica y funcional de F01; integrar políticas corporativas y efectos externos en las fases siguientes.",
+        "summary": "API NestJS/Fastify con provisión, HTTPS y usuarios/permisos POS sobre PostgreSQL. Administración utilizable y perfil comercial de laboratorio segregados; precios operativos y venta diaria requieren sus fuentes y criterios completos.",
+        "nextStep": "Aceptar accesos y provisión, integrar la publicación comercial real y completar la operación diaria acordada.",
         "evidence": [
           {
             "path": "apps/branch-api/src/app.module.ts",
             "label": "Composición de la API de sucursal"
           },
           {
-            "path": "apps/branch-api/test/cash-sale.integration.test.ts",
-            "label": "Venta atómica, fallos y concurrencia en PostgreSQL"
+            "path": "apps/branch-api/test/operational.integration.test.ts",
+            "label": "Provisión, separación de perfiles, HTTPS y persistencia real"
           },
           {
-            "path": "apps/branch-api/test/http.test.ts",
-            "label": "Contratos HTTP y recuperación persistida"
+            "path": "libs/backend/administration/integration/operational-identity.test.ts",
+            "label": "Permisos, concurrencia, sesiones y protección administrativa"
           }
         ]
       },
@@ -113,16 +113,16 @@
       {
         "id": "erp-worker",
         "stage": "foundation",
-        "summary": "Proceso de integración preparado; ejecución ERP, preparación de maestros y colas pendientes.",
-        "nextStep": "Implementar el contrato de trabajo, BullMQ y el primer adaptador ERP con recuperación.",
+        "summary": "Base del worker y CLI separada de lectura Mountain para productos/clientes, probada con HTTPS local. Sin validación corporativa, alimentación del espejo, ejecución ERP o colas operativas.",
+        "nextStep": "Confirmar origen y acceso por VPN, homologar contratos comerciales e implementar publicación y trabajos durables con BullMQ.",
         "evidence": [
           {
             "path": "apps/erp-worker/src/app.module.ts",
             "label": "Composición del integrador ERP"
           },
           {
-            "path": "apps/erp-worker/test/composition.test.ts",
-            "label": "Procesamiento deshabilitado y ciclo de vida"
+            "path": "libs/backend/erp/test/legacy-read.test.ts",
+            "label": "Consultas acotadas y transporte HTTPS con contratos estrictos"
           }
         ]
       },
@@ -142,7 +142,7 @@
           "branch-api"
         ],
         "status": "in_progress",
-        "summary": "Identidad de laboratorio, sesión caducable, permisos, auditoría y apertura única por caja implementados. Pendiente de aceptación del equipo.",
+        "summary": "Usuarios y permisos POS de Chile, sesiones, roles y asignaciones persistentes implementados. Apertura de caja verificada en laboratorio; falta aceptación de accesos y operación diaria.",
         "acceptance": null
       },
       {
@@ -168,10 +168,11 @@
         "id": "F01-04",
         "apps": [
           "pos-desktop",
+          "pos-mobile",
           "branch-api"
         ],
         "status": "in_progress",
-        "summary": "Recorrido de navegador contra API y PostgreSQL reales implementado, con recuperación, supervisor independiente, teclado y comprobante persistido. Pendiente de revisión funcional.",
+        "summary": "Cliente conectado con configuración explícita y administración por API HTTPS/PostgreSQL; el laboratorio conserva venta, supervisor y recuperación. Pendientes revisión funcional, fuentes comerciales y validación nativa.",
         "acceptance": null
       },
       {
@@ -207,7 +208,7 @@
           "pos-desktop"
         ],
         "status": "in_progress",
-        "summary": "Ámbito operativo y configuración efectiva versionada implementados, con procedencia y capacidades comprobadas por el servidor. Pendiente de confirmar políticas de operación.",
+        "summary": "Provisión idempotente, ámbito y configuración versionada, HTTPS y perfiles segregados implementados. Pendientes certificados del entorno, políticas y aceptación de operación.",
         "acceptance": null
       },
       {
@@ -244,10 +245,11 @@
         "id": "F01-11",
         "apps": [
           "pos-desktop",
-          "branch-api"
+          "branch-api",
+          "erp-worker"
         ],
         "status": "in_progress",
-        "summary": "Catálogo paginado, códigos ambiguos, unidades y disponibilidad consultiva implementados. Pendiente de aceptación del alcance operativo.",
+        "summary": "Catálogo consultivo y CLI de consultas Mountain implementados con contratos acotados. Pendientes acceso corporativo, homologación de datos/precios y publicación del espejo consumido por la sucursal.",
         "acceptance": null
       },
       {

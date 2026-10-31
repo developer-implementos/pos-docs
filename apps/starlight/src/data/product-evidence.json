@@ -1,18 +1,26 @@
 {
   "schemaVersion": 1,
   "repository": "https://github.com/developer-implementos/pos-platform",
-  "revision": "d32dfae98943309e55dea33813bad11833f0bed2",
+  "revision": "bc1af955a9609cb3368f144e08905edebcf6cea0",
   "reviewedOn": "2026-10-31",
   "notice": "Reviewed clean product revision. The documentation repository builds from this metadata without accessing the product checkout.",
   "productGuide": {
     "source": "docs/product-repository.md",
     "relationship": "Editorial synthesis adapted from the product README; it is not a byte-for-byte snapshot.",
     "upstreamPath": "README.md",
-    "upstreamSha256": "593bc432f9c2091d99b74bd635276e0d7aa78f489e72b9a229a55e532934353e"
+    "upstreamSha256": "9ae7ec40b310347ec1c3f1dc4289c6c5f3fb3b794d360110eb6bbbfedff98825"
   },
   "references": [
     {
       "path": "README.md",
+      "kind": "blob"
+    },
+    {
+      "path": "delivery/reviews/F01-operational-increment.md",
+      "kind": "blob"
+    },
+    {
+      "path": "tools/database/README.operational.md",
       "kind": "blob"
     }
   ]

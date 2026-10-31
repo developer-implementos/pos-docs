@@ -248,13 +248,13 @@ El prototipo utiliza `libs/domain` y `libs/data-access` para reglas y adaptadore
 <!-- monorepo:applications:start -->
 | Aplicación | Lugar previsto | Responsabilidad | Estado revisado |
 | --- | --- | --- | --- |
-| `pos-desktop` | Puesto Windows | Aplicación completa: shell nativa Tauri y frontend Angular | Composiciones Angular demo y branch-lab explícitas; pruebas de navegador no acreditan homologación nativa |
-| `pos-mobile` | Dispositivo Android/iOS | Aplicación completa: shell nativa Capacitor y frontend Angular | Composiciones Angular demo y branch-lab explícitas; distribución y capacidades nativas por homologar |
+| `pos-desktop` | Puesto Windows | Aplicación completa: shell nativa Tauri y frontend Angular | Cliente conectado con registro del puesto y administración POS; demo y laboratorio explícitos. Instalación y confianza TLS del WebView requieren validación nativa |
+| `pos-mobile` | Dispositivo Android/iOS | Aplicación completa: shell nativa Capacitor y frontend Angular | Cliente conectado compartido con política HTTPS y registro de puesto; distribución y capacidades nativas por homologar |
 | `device-agent` | PC Windows de cada puesto (F02/F05); estación de red compartida posterior (F06) | Agente C#/.NET por puesto; trabajos HTTPS con branch-api y diario SQLite; perfil de red compartido en F06 | Decisión acordada; app, protocolo y adaptadores pendientes de implementación y homologación |
-| `branch-api` | Sucursal | API y composición de negocio de sucursal | Operación F01 en laboratorio con identidad, configuración, caja, catálogo, clientes, cestas, precios y efectivo en PostgreSQL; producción cerrada |
+| `branch-api` | Sucursal | API y composición de negocio de sucursal | Identidad y administración propias del POS para Chile con HTTPS/PostgreSQL; motor comercial probado en laboratorio. Cotización requiere fuente completa y caja operativa permanece cerrada |
 | `branch-sync-worker` | Sucursal | Proceso de entrega y recepción de sucursal | Esqueleto local; sin jobs ni sincronización real |
 | `country-api` | País | API de recepción y capacidades de país | Base HTTP y PostgreSQL por ámbito con comprobación de esquema; sin recepción comercial |
-| `erp-worker` | Red autorizada del ERP | Proceso de integración, traducción y conciliación ERP | Esqueleto local; sin conexión a ERP |
+| `erp-worker` | Red autorizada del ERP | Proceso de integración, traducción y conciliación ERP | CLI de lectura Mountain para productos/clientes con transporte HTTPS acotado; acceso corporativo pendiente, sin publicación de espejos ni procesamiento de jobs |
 <!-- monorepo:applications:end -->
 
 F01 implementa casos de uso de sucursal y persistencia PostgreSQL en laboratorio; el estado canónico se describe en la [guía F01](phase-1-laboratory.md). Los módulos de fases posteriores conservan su estructura sin operaciones reales. `shared/contracts`, `shared/kernel` y `country-policies` mantienen contratos y reglas puras; no acreditan homologación productiva. La base técnica de Node incorpora configuración, logging con `nestjs-pino` y reporte opcional de errores a Sentry; su política exacta se mantiene junto al código del producto.

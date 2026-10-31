@@ -1,12 +1,12 @@
 # API de sucursal y persistencia
 
-**Implementación en revisión:** F01 conecta Angular con `branch-api` y PostgreSQL en un perfil de laboratorio. La infraestructura técnica se encuentra en `libs/shared/backend/runtime`, `persistence` y `testing`; los casos de uso pertenecen a sus contextos de negocio. La [guía F01](phase-1-laboratory.md) describe el recorrido operativo y sus límites.
+**Implementación en revisión:** F01 conecta Angular con `branch-api` y PostgreSQL. El incremento operativo Chile incorpora identidad propia POS, administración de accesos, provisión y HTTPS, separado del laboratorio transaccional. La infraestructura técnica pertenece a `libs/shared/backend/runtime`, `persistence` y `testing`; los casos de uso conservan su contexto de negocio. La [guía F01](phase-1-laboratory.md) distingue ambos perfiles y sus límites.
 
-> **Alcance:** identidad sintética, configuración, apertura, catálogo, clientes, cestas, cotización y venta en efectivo persistida. La composición de laboratorio no admite arranque productivo, emisión fiscal, tarjetas o envío ERP. La aceptación de F01 se registra en el producto; publicar esta guía no la acredita.
+> **Alcance:** el perfil operativo administra usuarios, roles, puestos y configuración persistentes. El laboratorio valida apertura, catálogo, clientes, cestas, cotización y efectivo con datos sintéticos. No se habilitan cobros operativos sin precios verificados, emisión fiscal, tarjetas ni envío ERP. La aceptación de F01 se registra en el producto; esta documentación y la CI no acreditan integración en `main` ni habilitación productiva.
 
 `apps/branch-api` compone el backend modular de sucursal con NestJS 12, Fastify 5 y TypeScript. Publica contratos HTTP v1 desde las bibliotecas de cada contexto, valida solicitudes con Zod y ejecuta los casos de uso mediante puertos. PostgreSQL 18.6 y `pg` 8.23.1 conservan la operación y su resultado durable. El [ADR-19](decisions/postgresql-unit-of-work.md) fija transacciones, migraciones y privilegios.
 
-Los clientes `pos-desktop` y `pos-mobile` seleccionan explícitamente `demo` o `branch-lab`. El perfil conectado usa la API; no cambia a mocks cuando ocurre un fallo. `country-api` tiene persistencia y sonda de ámbito propias, todavía sin recepción comercial. Los workers conservan su composición técnica sin jobs operativos.
+Los clientes `pos-desktop` y `pos-mobile` distinguen `branch`, `branch-lab`, `demo` y el estado inicial `unconfigured`. El perfil conectado usa la API; no cambia a mocks ante un fallo. `country-api` tiene persistencia y sonda de ámbito propias, todavía sin recepción comercial. Los workers no procesan jobs de negocio; `erp-worker` incorpora una CLI separada de consultas Mountain que aún no alimenta el espejo ni la UI.
 
 ## Referencia Core
 
@@ -59,7 +59,7 @@ npm ci
 npm run api:dev
 ```
 
-El servidor escucha por defecto en `http://127.0.0.1:3000`. Requiere el perfil, base migrada y credencial runtime de laboratorio antes de arrancar. Nx recompila cambios y reinicia la API; no aprovisiona una base automáticamente.
+El laboratorio utiliza HTTP en loopback. La operación requiere perfil `operational`, HTTPS explícito, base migrada/aprovisionada y credencial runtime independiente de migración. Nx recompila cambios y reinicia la API; no aprovisiona una base automáticamente.
 
 `npm run country:dev` inicia la base HTTP de país en `http://127.0.0.1:3001`. Las aplicaciones tienen identidades y composición separadas; iniciar ambas no establece una conexión entre ellas. Los [comandos del workspace](monorepo.md#comandos-del-workspace) también incluyen las verificaciones de los workers, que componen y cierran su contexto sin ejecutar trabajos de negocio.
 
@@ -70,15 +70,15 @@ La validación ocurre antes de escuchar conexiones. `RuntimeConfigModule` regist
 | Variable               | Valor por defecto                                | Uso                                                                                            |
 | ---------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
 | `NODE_ENV`             | `development`                                    | `development`, `test` o `production`                                                           |
-| `BRANCH_API_HOST`         | `127.0.0.1`                                      | F01 sólo admite loopback literal `127.0.0.1` o `::1`; no escucha en LAN |
+| `BRANCH_API_HOST`         | `127.0.0.1`                                      | Dirección de escucha explícita; laboratorio HTTP sólo en loopback, operación con TLS configurado |
 | `BRANCH_API_PORT`         | `3000`                                           | Puerto TCP del servicio                                                                        |
 | `BRANCH_API_LOG_LEVEL`    | `info`                                           | `trace`, `debug`, `info`, `warn`, `error`, `fatal` o `silent`                                  |
 | `BRANCH_API_DOCS_ENABLED` | `true` en desarrollo/test; `false` en producción | Habilita el documento OpenAPI JSON                                                     |
 | `BRANCH_API_CORS_ORIGINS` | vacío                                            | Orígenes HTTP/HTTPS exactos separados por comas; sin permisos entre orígenes por defecto       |
 
-Para el cliente conectado, `BRANCH_API_CORS_ORIGINS` admite orígenes exactos, por ejemplo `http://127.0.0.1:4302` para el runner. CORS no constituye autenticación ni autorización. También se requiere `BRANCH_API_PROFILE=laboratory`, `BRANCH_API_BRANCH_ID` y `BRANCH_API_DATABASE_URL`. La migración usa `BRANCH_API_MIGRATION_DATABASE_URL` con otra credencial. Las URLs nunca se publican en la documentación ni se registran en logs.
+Para el cliente conectado, `BRANCH_API_CORS_ORIGINS` admite únicamente orígenes autorizados exactos, incluidos los de los canales nativos configurados. CORS no constituye autenticación ni autorización. Se requieren `BRANCH_API_PROFILE` (`laboratory` u `operational`), `BRANCH_API_BRANCH_ID` y `BRANCH_API_DATABASE_URL`. La migración usa `BRANCH_API_MIGRATION_DATABASE_URL` con otra credencial. Las URLs y credenciales de instalaciones nunca se publican ni se registran en logs.
 
-`BRANCH_API_DATABASE_TLS_MODE` usa `verify-full`; `disable-local` sólo se admite en loopback de laboratorio. Los límites de sesión y búsqueda se configuran mediante `BRANCH_API_LAB_SESSION_TTL_MS`, `BRANCH_API_CATALOG_BURST` y `BRANCH_API_CATALOG_REFILL_PER_SECOND`. Los ejemplos del producto son la referencia de claves y defaults; la guía no conserva secretos ni replica la configuración de una instalación.
+`BRANCH_API_DATABASE_TLS_MODE` usa `verify-full`; `disable-local` sólo se admite para una base en loopback, nunca para SQL remoto. HTTPS de la API utiliza `BRANCH_API_TLS_ENABLED`, `BRANCH_API_TLS_CERT_FILE` y `BRANCH_API_TLS_KEY_FILE`, con archivos externos protegidos. La sesión operativa usa `BRANCH_API_SESSION_TTL_MS`; el laboratorio conserva `BRANCH_API_LAB_SESSION_TTL_MS`. Los límites de búsqueda se configuran mediante `BRANCH_API_CATALOG_BURST` y `BRANCH_API_CATALOG_REFILL_PER_SECOND`. Los ejemplos del producto son la referencia de claves y defaults; la guía no conserva secretos ni replica la configuración de una instalación.
 
 Estas variables corresponden a `branch-api`. `country-api` usa el prefijo `COUNTRY_API_` para las mismas opciones HTTP, con puerto predeterminado 3001. Los workers consumen `NODE_ENV`, su nivel de log (`BRANCH_SYNC_WORKER_LOG_LEVEL` o `ERP_WORKER_LOG_LEVEL`) y las opciones de reporte de errores descritas abajo; no configuran listener HTTP, CORS ni OpenAPI.
 
@@ -98,11 +98,17 @@ curl http://127.0.0.1:3000/health/ready
 
 Readiness de sucursal y país consulta su PostgreSQL correspondiente. Un esquema o ámbito incompatible impide declarar disponibilidad. La sonda no acredita ERP, dispositivos, pagos, permisos del operador o caja abierta; esas condiciones se validan en el caso de uso.
 
-Las siguientes rutas pertenecen al perfil de laboratorio y llevan el prefijo `/api/v1`. Los contratos compartidos son la fuente de sus DTO; OpenAPI se genera desde esa misma definición.
+Las rutas llevan el prefijo `/api/v1`; cada perfil y capacidad limita su ejecución. El recorrido comercial completo siguiente está verificado con datos de laboratorio; la presencia de una ruta no habilita su uso comercial operativo. Los contratos de cada contexto son la fuente de sus DTO; OpenAPI se genera desde esa misma definición.
 
 | Rutas | Responsabilidad |
 | --- | --- |
 | `POST /auth/lab/login`, `GET /auth/session`, `POST /auth/logout` | Crear, consultar y revocar una sesión limitada a actor, caja e instalación |
+| `POST /auth/login`, `POST /auth/password` | Acceso operativo con usuario propio POS y cambio de contraseña; no acepta identidad de laboratorio |
+| `GET /administration/access-options` | Consultar puestos autorizados y permisos otorgables |
+| `GET/POST /administration/operators`, `PUT /administration/operators/:operatorId` | Consultar, crear y actualizar operadores propios del POS con permisos y versiones |
+| `POST /administration/operators/:operatorId/password`, `/revoke-sessions` | Restablecer contraseña o revocar sesiones autorizadamente |
+| `GET/POST /administration/roles`, `PUT /administration/roles/:roleId` | Administrar roles sin conceder privilegios superiores a los del administrador actuante |
+| `GET /administration/operators/:operatorId/assignments`, `POST /administration/assignments`, `PUT /administration/assignments/:assignmentId` | Consultar y administrar asignaciones a puestos del ámbito |
 | `GET /configuration/effective` | Recuperar configuración efectiva, procedencia, versión y capacidades |
 | `GET /cash/shifts/current`, `POST /cash/shifts` | Consultar y abrir el turno autorizado |
 | `GET /catalog/products`, `/catalog/product-codes/:code`, `/catalog/products/:productId/availability` | Buscar productos, resolver captura y consultar disponibilidad informativa |
@@ -198,7 +204,7 @@ npm ci --omit=dev
 node --env-file=/ruta/api.env main.js
 ```
 
-En F01 este comando utiliza exclusivamente el perfil de laboratorio, sus credenciales runtime y una base previamente migrada. No debe usarse `NODE_ENV=production` para intentar habilitarlo: la composición rechaza ese entorno mientras la identidad corporativa y los gates de operación no estén implementados. El archivo de configuración es externo al artefacto y no se versiona. El CLI `database.js` ejecuta migraciones con la credencial separada; el servidor no hace auto-migraciones.
+El comando requiere una base previamente migrada, credenciales runtime y un perfil explícito. `operational` usa la provisión de sucursal y usuarios propios POS; `laboratory` conserva sus semillas y restricciones de prueba. Cambiar `NODE_ENV` no habilita capacidades comerciales: las controla la configuración efectiva y sus contratos. El archivo de configuración es externo al artefacto y no se versiona. El CLI `database.js` ejecuta migraciones con la credencial separada; el servidor no hace auto-migraciones.
 
 Esta API es un proceso Node independiente dentro de **pos-platform**. La configuración `vercel.json` del repositorio editorial **pos-docs** publica únicamente Starlight; no publica `branch-api` ni las demás aplicaciones backend. El despliegue del backend de sucursal necesita su propia supervisión de proceso, terminación TLS, identidad y política de acceso antes de incorporar operaciones reales.
 
@@ -206,7 +212,7 @@ Esta API es un proceso Node independiente dentro de **pos-platform**. La configu
 
 La organización distingue infraestructura compartida de propiedad de negocio: conexiones y ejecutores técnicos en `shared/backend`; modelos, repositorios y migraciones en cada contexto. Los contratos comerciales se publican desde su contexto; `shared/contracts` contiene sobres, metadatos y errores transversales, no un catálogo global de DTO de negocio.
 
-La venta en efectivo de laboratorio tiene autenticación, autorización, PostgreSQL, migraciones y una unidad de trabajo que conserva sus efectos y outbox. La entrega de ese outbox, recepción de país, maestros desde fuentes reales, jobs BullMQ, ERP, fiscalidad y dispositivos permanecen en las fases correspondientes. Las reglas del perfil CL sintético no homologan Chile, Perú o España. Los clientes hablan con la API y nunca consultan SQL directamente.
+La venta en efectivo de laboratorio tiene autenticación, autorización, PostgreSQL, migraciones y una unidad de trabajo que conserva sus efectos y outbox. El incremento operativo añade identidades propias y provisión real, sin reutilizar las semillas como fuente comercial. La CLI legacy de `erp-worker` consulta referencias puntuales mediante HTTPS y cuenta técnica propia; no publica maestros ni cotiza. La entrega de outbox, recepción de país, espejos completos, jobs BullMQ, ERP, fiscalidad y dispositivos permanecen en sus fases. Las reglas CL sintéticas no homologan Chile, Perú o España. Los clientes hablan con la API y nunca consultan SQL directamente.
 
 La [propuesta de arquitectura](propuesta-arquitectura.md) y las [opciones tecnológicas](opciones-tecnologicas.md) explican la ubicación del backend y los límites del perfil sin WAN. El servicio no promete autonomía de una caja ante caída de la LAN o del servidor de sucursal.
 
