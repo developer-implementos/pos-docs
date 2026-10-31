@@ -11,7 +11,7 @@ flowchart LR
   UI[Angular compartido<br/>pos-desktop / pos-mobile]
   API[branch-api<br/>NestJS + Fastify]
   DB[(PostgreSQL de sucursal)]
-  UI -->|HTTPS LAN · comandos y consultas<br/>HTTP sólo en loopback de laboratorio| API
+  UI -->|HTTP loopback · comandos y consultas<br/>laboratorio local autorizado| API
   API -->|Una transacción por operación<br/>venta, caja, auditoría, outbox y resultado| DB
   DB -->|Resultado durable por commandId| API
   API -->|Cotización y comprobante calculados en servidor| UI
@@ -45,6 +45,8 @@ Cambiar cliente, líneas, documento o reglas invalida la cotización. Una cesta 
 No hay fallback desde un fallo de API a la demostración. Un perfil inválido bloquea el arranque. La URL exige HTTPS salvo loopback local, incluye `/api/v1` y no admite credenciales, query, fragmentos o comodines. CORS de la API y CSP del cliente deben permitir únicamente los orígenes configurados.
 
 La UI conserva el diseño Angular/PrimeNG. Presenta los importes enviados por el servidor; no usa el store mock como autoridad comercial. Los binarios Tauri/Capacitor y la homologación de dispositivos requieren sus pruebas nativas; pasar Playwright en navegador no acredita esas capacidades.
+
+La API F01 sólo escucha en una dirección literal de loopback (`127.0.0.1` o `::1`). El despliegue HTTPS LAN pertenece al perfil futuro de sucursal y requiere terminación TLS, identidad y controles de operación aprobados; no se acredita con este laboratorio.
 
 ## Ejecutar las comprobaciones del laboratorio
 

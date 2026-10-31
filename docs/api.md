@@ -70,7 +70,7 @@ La validación ocurre antes de escuchar conexiones. `RuntimeConfigModule` regist
 | Variable               | Valor por defecto                                | Uso                                                                                            |
 | ---------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
 | `NODE_ENV`             | `development`                                    | `development`, `test` o `production`                                                           |
-| `BRANCH_API_HOST`         | `127.0.0.1`                                      | Interfaz de escucha; usar `0.0.0.0` solo cuando el despliegue deba aceptar conexiones externas |
+| `BRANCH_API_HOST`         | `127.0.0.1`                                      | F01 sólo admite loopback literal `127.0.0.1` o `::1`; no escucha en LAN |
 | `BRANCH_API_PORT`         | `3000`                                           | Puerto TCP del servicio                                                                        |
 | `BRANCH_API_LOG_LEVEL`    | `info`                                           | `trace`, `debug`, `info`, `warn`, `error`, `fatal` o `silent`                                  |
 | `BRANCH_API_DOCS_ENABLED` | `true` en desarrollo/test; `false` en producción | Habilita el documento OpenAPI JSON                                                     |
