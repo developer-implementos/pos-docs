@@ -123,6 +123,8 @@ Las rutas llevan el prefijo `/api/v1`; cada perfil y capacidad limita su ejecuci
 
 Los comandos usan `contractVersion`, `commandId` y versión esperada cuando existe un agregado. Los importes viajan como cadenas decimales; UUID y fechas se normalizan en contrato. La identidad, permisos y capacidades se verifican en el servidor, independientemente de lo que muestre la UI. Los tokens de sesión se conservan en memoria en el cliente; el servidor guarda su hash y vencimiento.
 
+El incremento F01-09 en revisión añade dos rutas v1 sin cambiar el DTO de cesta existente: `GET /sales/drafts/recoverable` lista las cestas propias pausadas en otros puestos de la misma sucursal; `POST /sales/drafts/:cartId/recover` toma una mediante `commandId` y `expectedVersion`. El destino se deriva de la sesión, no del cuerpo. La operación conserva el origen, valida la configuración de la instalación destino y exige una nueva cotización. La [guía F01](phase-1-laboratory.md#revisión-de-datos-y-recuperación-entre-puestos) explica la interacción, los conflictos y la frescura de clientes; la evidencia de este corte se registra en el producto.
+
 Las rutas de negocio usan el prefijo `api` y el versionado URI nativo de Nest, con versión inicial `1`. Las sondas se declaran neutrales a versión y quedan fuera de ese prefijo. OpenAPI describe operaciones y DTO en español y usa `operationId` explícitos y estables para los consumidores del contrato.
 
 ## Logging, errores y límites HTTP

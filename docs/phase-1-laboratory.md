@@ -45,7 +45,25 @@ flowchart LR
 | Recuperación | Consulta por el mismo `commandId`; respuesta perdida y solicitud no recibida siguen caminos explícitos |
 | Comprobante | Detalle histórico de productos, cliente, operador, reglas e importes guardados al confirmar |
 
-Cambiar cliente, líneas, documento o reglas invalida la cotización. Una cesta fija la versión de configuración con la que nació: una versión incompatible exige resolver el conflicto, no recalcular silenciosamente. Un cliente solicitado no se convierte automáticamente en maestro aprobado; se consulta el estado y luego se recupera el maestro autorizado.
+Cambiar cliente, líneas, documento o reglas invalida la cotización. La versión de configuración que autorizó una operación no se sustituye silenciosamente: una incompatibilidad exige resolver el conflicto. Un cliente solicitado no se convierte automáticamente en maestro aprobado; se consulta el estado y luego se recupera el maestro autorizado.
+
+## Revisión de datos y recuperación entre puestos
+
+Estos comportamientos forman parte del incremento en revisión de [F01-02](https://github.com/developer-implementos/pos-platform/issues/11), [F01-08](https://github.com/developer-implementos/pos-platform/issues/17) y [F01-09](https://github.com/developer-implementos/pos-platform/issues/18). Su incorporación y evidencia se registran en el producto; esta descripción no declara completos los entregables.
+
+**Recotización.** La interfaz compara dos respuestas del servidor: total anterior y actual, cantidades, unidades, precios, descuentos, impuestos, reglas y versiones. No recalcula dinero. Una nueva cotización exige aceptar o rechazar antes de confirmar, incluso si sólo se renueva su vigencia. Rechazar conserva la cesta; una consulta fallida no convierte el precio anterior en un precio vigente. La aceptación deja de servir si cambia la cesta o vence la cotización.
+
+**Cliente.** La ficha muestra la versión y el instante observado que entrega la API. «Volver a consultar cliente» lee la copia autorizada de sucursal; no dispara una actualización del ERP ni acredita una antigüedad máxima de negocio. Una respuesta anterior no reemplaza la ficha conocida y una búsqueda no cambia silenciosamente el cliente activo. Si cambia su versión, se revalida la cesta con control de versión y se requiere cotizar de nuevo. Un fallo conserva la operación y muestra el motivo; consultar al cliente bloquea temporalmente la edición, cotización y confirmación de esa cesta.
+
+**Cesta pausada en otro puesto.** El operador puede recuperar una cesta propia de la misma sucursal desde una instalación a la que tenga acceso. El servidor verifica estado pausado, vencimiento, dueño, permisos, compatibilidad de la configuración destino y versión esperada. La toma cambia el contexto de edición, conserva el puesto y la configuración de creación, e invalida cotización y descuento autorizado. Dos tomas concurrentes no sobrescriben la cesta: una gana y la otra recibe conflicto. Una venta confirmada o un cobro pendiente no se recuperan como borrador.
+
+**Captura repetida.** Cada confirmación de «Agregar» expresa una cantidad. Repetir el mismo código de barras para el mismo producto y unidad acumula esa cantidad de forma decimal exacta; otro código o presentación conserva su propia línea. Leer un código sin confirmar no agrega productos. El servidor vuelve a validar unidad, cantidad y versión de la cesta.
+
+## Compatibilidad de la configuración de puesto
+
+El incremento de [F01-07](https://github.com/developer-implementos/pos-platform/issues/16) comprueba la configuración efectiva de todas las instalaciones activas de un puesto antes de publicar una cadena de revisiones. La jerarquía es corporación → país → sucursal → puesto, con revisiones inmutables y procedencia por campo. La publicación, el alta o reactivación de una instalación y el cambio de sus capacidades se serializan por puesto; también se comprueba la configuración heredada programada.
+
+La publicación utiliza el puerto administrativo del aprovisionador, con credenciales separadas del runtime. No hay un editor público de configuración ni un nuevo endpoint para modificarla. Las operaciones conservan su versión fijada y una revisión técnica compatible no habilita precios comerciales, pagos o fiscalización. Las pruebas de este incremento siguen sujetas a su evidencia de integración.
 
 ## Perfiles del cliente
 
