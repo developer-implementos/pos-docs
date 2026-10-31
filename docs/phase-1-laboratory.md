@@ -2,7 +2,7 @@
 
 La implementación en revisión conecta el frontend Angular de `pos-desktop` y `pos-mobile` con `branch-api` y PostgreSQL real. Permite validar acceso, configuración, apertura de turno, catálogo, clientes, cestas, cotización y confirmación en efectivo con datos sintéticos. No habilita operación comercial real: el perfil de identidad es de laboratorio y el arranque productivo de esta composición está cerrado.
 
-La evidencia del código se fija en POS Docs mediante la revisión del producto indicada en la [guía del repositorio](product-repository.md). Los checks y la aceptación se registran en los issues y PR de [POS Platform](https://github.com/developer-implementos/pos-platform). Esta página no sustituye las fichas F01 ni declara la fase aceptada.
+La evidencia del código se fija en POS Docs mediante la revisión del producto indicada en la [guía del repositorio](product-repository.md). El [issue de la fase F01](https://github.com/developer-implementos/pos-platform/issues/4) reúne sus entregables; [F01-06](https://github.com/developer-implementos/pos-platform/issues/15) cubre la persistencia y [F01-13](https://github.com/developer-implementos/pos-platform/issues/22) reúne las pruebas de aceptación. Los checks y decisiones se registran en esos issues y sus PR. Esta página no sustituye las fichas F01 ni declara la fase aceptada.
 
 ## Recorrido disponible
 
