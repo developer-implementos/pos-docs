@@ -32,7 +32,7 @@
               "libs/client-shell",
               "libs/backend/administration",
               "libs/backend/cash",
-              "libs/shared/backend/http"
+              "libs/shared/backend/runtime"
             ],
             "deliverable": "Un operador y puesto identificados abren un turno único en su ámbito; toda autorización y exclusión se comprueba en branch-api.",
             "tasks": [
@@ -98,7 +98,7 @@
               "libs/data-access",
               "libs/backend/sales",
               "libs/backend/reporting",
-              "libs/shared/backend/observability"
+              "libs/shared/backend/runtime"
             ],
             "deliverable": "Una prueba de sistema usa API y PostgreSQL reales para abrir caja, vender y recuperar una operación sin depender del adaptador mock.",
             "tasks": [
@@ -144,9 +144,10 @@
               "country-api"
             ],
             "modules": [
-              "libs/shared/backend/config",
-              "libs/shared/backend/worker",
-              "libs/backend/administration"
+              "libs/shared/backend/runtime",
+              "libs/backend/administration",
+              "libs/shared/backend/persistence",
+              "libs/shared/backend/testing"
             ],
             "deliverable": "Las bases de sucursal y país tienen propietarios, credenciales separadas, migraciones reproducibles y transacciones probadas antes de recibir negocio.",
             "tasks": [
@@ -169,7 +170,7 @@
               "libs/backend/administration",
               "libs/country-policies",
               "libs/shared/contracts",
-              "libs/shared/backend/config"
+              "libs/shared/backend/runtime"
             ],
             "deliverable": "País, entidad, sucursal, caja y puesto tienen identidad estable y una configuración efectiva validada que el servidor aplica a cada operación.",
             "tasks": [
@@ -281,8 +282,7 @@
             "modules": [
               "libs/shared/contracts",
               "libs/shared/kernel",
-              "libs/shared/backend/http",
-              "libs/shared/backend/config"
+              "libs/shared/backend/runtime"
             ],
             "deliverable": "Los clientes y APIs comparten contratos versionados verificables, errores previsibles y reglas de idempotencia/concurrencia sin importar implementación privada.",
             "tasks": [
@@ -307,10 +307,10 @@
               "libs/shared/contracts",
               "libs/shared/kernel",
               "libs/shared/frontend/ui",
-              "libs/shared/frontend/data-access",
-              "libs/shared/backend/http",
-              "libs/shared/backend/config",
-              "libs/shared/backend/worker"
+              "libs/data-access",
+              "libs/shared/backend/runtime",
+              "libs/shared/backend/persistence",
+              "libs/shared/backend/testing"
             ],
             "deliverable": "La estructura compartida acordada organiza responsabilidades y puntos de entrada sin dependencias entre aplicaciones ni mezcla de frontend, dominio y servidor.",
             "tasks": [
@@ -542,7 +542,7 @@
               "libs/backend/fiscal",
               "libs/backend/devices",
               "libs/backend/reporting",
-              "libs/shared/backend/observability"
+              "libs/shared/backend/runtime"
             ],
             "deliverable": "El operador puede consultar excepciones por efecto y solicitar sólo acciones de recuperación autorizadas con evidencia auditada.",
             "tasks": [
@@ -933,7 +933,7 @@
               "libs/backend/sync",
               "libs/backend/sales",
               "libs/backend/administration",
-              "libs/shared/backend/worker"
+              "libs/shared/backend/runtime"
             ],
             "deliverable": "La outbox de sucursal se entrega por HTTPS con ACK posterior al commit de inbox, efecto local y siguiente trabajo durable de país.",
             "tasks": [
@@ -978,7 +978,7 @@
               "libs/backend/erp",
               "libs/backend/sync",
               "libs/backend/administration",
-              "libs/shared/backend/worker"
+              "libs/shared/backend/runtime"
             ],
             "deliverable": "erp-worker integra una operación con el primer ERP desde su red autorizada y conserva identidad, destino, lease y resultado verificable en país.",
             "tasks": [
@@ -1002,7 +1002,7 @@
               "libs/backend/erp",
               "libs/backend/reporting",
               "libs/features",
-              "libs/shared/backend/observability"
+              "libs/shared/backend/runtime"
             ],
             "deliverable": "El equipo observa pendientes y drena colas sin saturar destinos; decide y prueba por separado si una caché de lectura aporta valor medido.",
             "tasks": [
@@ -1022,8 +1022,7 @@
             "modules": [
               "libs/backend/sync",
               "libs/backend/erp",
-              "libs/shared/backend/worker",
-              "libs/shared/backend/observability"
+              "libs/shared/backend/runtime"
             ],
             "deliverable": "Los trabajos BullMQ se reconstruyen desde PostgreSQL y contratos de país tras interrupciones o pérdida de Redis sin duplicar solicitudes ni efectos inciertos.",
             "tasks": [
@@ -1045,8 +1044,7 @@
             ],
             "modules": [
               "libs/backend/administration",
-              "libs/shared/backend/http",
-              "libs/shared/backend/config",
+              "libs/shared/backend/runtime",
               "libs/shared/contracts"
             ],
             "deliverable": "Cada instalación y workload se autentica con su propia identidad, ámbito y capacidades; alta, rotación, revocación y restore no clonan autoridad.",
@@ -1780,9 +1778,7 @@
             ],
             "modules": [
               "libs/client-shell",
-              "libs/shared/backend/bootstrap",
-              "libs/shared/backend/config",
-              "libs/shared/backend/worker"
+              "libs/shared/backend/runtime"
             ],
             "deliverable": "Una revisión identificada e instalable del alcance piloto, con integridad comprobable y procedimiento de actualización compatible.",
             "tasks": [
@@ -1805,8 +1801,7 @@
             "modules": [
               "libs/backend/sync",
               "libs/backend/erp",
-              "libs/shared/backend/config",
-              "libs/shared/backend/health"
+              "libs/shared/backend/runtime"
             ],
             "deliverable": "Procedimientos ensayados para recuperar sucursal y país con evidencia de pérdida de datos, tiempo de recuperación y conciliación.",
             "tasks": [
@@ -1831,8 +1826,7 @@
               "libs/features",
               "libs/backend/administration",
               "libs/backend/reporting",
-              "libs/shared/backend/observability",
-              "libs/shared/backend/health"
+              "libs/shared/backend/runtime"
             ],
             "deliverable": "Operadores y soporte pueden detectar, clasificar y atender los incidentes previstos para la configuración piloto.",
             "tasks": [
@@ -1879,8 +1873,7 @@
               "device-agent"
             ],
             "modules": [
-              "libs/shared/backend/config",
-              "libs/shared/backend/health",
+              "libs/shared/backend/runtime",
               "libs/backend/administration",
               "libs/backend/sync"
             ],
@@ -1904,8 +1897,7 @@
               "device-agent"
             ],
             "modules": [
-              "libs/shared/backend/observability",
-              "libs/shared/backend/health",
+              "libs/shared/backend/runtime",
               "libs/backend/reporting",
               "libs/backend/sync",
               "libs/backend/erp"
@@ -1934,7 +1926,7 @@
               "libs/backend/pricing",
               "libs/backend/sync",
               "libs/backend/erp",
-              "libs/shared/backend/worker"
+              "libs/shared/backend/runtime"
             ],
             "deliverable": "El alcance piloto cumple objetivos de latencia, volumen y recuperación medidos con carga representativa, límites y backpressure verificables.",
             "tasks": [
@@ -1960,7 +1952,7 @@
               "libs/backend/administration",
               "libs/backend/payments",
               "libs/backend/devices",
-              "libs/shared/backend/config",
+              "libs/shared/backend/runtime",
               "libs/shared/contracts",
               "libs/client-shell"
             ],
@@ -1989,7 +1981,7 @@
               "libs/backend/reporting",
               "libs/backend/fiscal",
               "libs/backend/sync",
-              "libs/shared/backend/observability"
+              "libs/shared/backend/runtime"
             ],
             "deliverable": "Datos personales, auditoría, documentos y evidencias técnicas tienen propiedad, retención y acceso aprobados y mecanismos comprobables.",
             "tasks": [
@@ -2039,7 +2031,7 @@
             ],
             "modules": [
               "libs/client-shell",
-              "libs/shared/backend/bootstrap",
+              "libs/shared/backend/runtime",
               "libs/shared/contracts",
               "libs/backend/devices"
             ],
@@ -2294,8 +2286,7 @@
               "libs/backend/administration",
               "libs/backend/sync",
               "libs/shared/contracts",
-              "libs/shared/backend/config",
-              "libs/shared/backend/worker"
+              "libs/shared/backend/runtime"
             ],
             "deliverable": "Configuraciones aceptadas se habilitan gradualmente con versiones compatibles y criterios explícitos de avance o detención.",
             "tasks": [
@@ -2339,7 +2330,7 @@
               "libs/backend/devices",
               "libs/backend/administration",
               "libs/shared/contracts",
-              "libs/shared/backend/observability"
+              "libs/shared/backend/runtime"
             ],
             "deliverable": "Perfil de red homologado para impresoras de recibos o etiquetas seleccionadas, atendidas por una instancia compartida de device-agent, con acceso autorizado desde puestos y móvil tras el piloto F05.",
             "tasks": [
@@ -2418,7 +2409,7 @@
               "libs/backend/administration",
               "libs/backend/devices",
               "libs/shared/contracts",
-              "libs/shared/backend/config",
+              "libs/shared/backend/runtime",
               "libs/client-shell"
             ],
             "deliverable": "Puestos, móviles, servicios y periféricos se enrolan, inventarían, actualizan, revocan y retiran con identidad y configuración trazables.",
@@ -2443,8 +2434,7 @@
               "libs/backend/reporting",
               "libs/backend/sync",
               "libs/backend/erp",
-              "libs/shared/backend/config",
-              "libs/shared/backend/worker"
+              "libs/shared/backend/runtime"
             ],
             "deliverable": "La operación simultánea de países y sociedades mantiene aislamiento de datos, identidad, destinos, recursos y fallos con capacidad y recuperación medidas.",
             "tasks": [
