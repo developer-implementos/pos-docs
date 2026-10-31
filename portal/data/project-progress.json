@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "bc1af955a9609cb3368f144e08905edebcf6cea0",
+    "revision": "295e169fcf828e6f8939c836ce795afbcc2e5013",
     "path": "delivery/progress.json",
-    "sha256": "55066584dcb2d5a7593417229f8ccfa691ef3dff2b76b4d8c787a4799f7e1aa9"
+    "sha256": "4571ea12d4e8c303c071992047df8cbe56295c4d57b167bd707f5fdffbc52d9a"
   },
   "content": {
     "schemaVersion": 1,
     "reviewedOn": "2026-10-31",
-    "productRevision": "9ee87273b0b2ad94bfc51d5236671bc824663c2a",
+    "productRevision": "d0b27583a3e78bef90691f7e26ca1c79bb7a6eb6",
     "scope": {
       "repository": "https://github.com/developer-implementos/pos-docs",
       "revision": "1773204724a00d3a4e2dacee988aa1b6152efe3a",
