@@ -2466,7 +2466,7 @@
         },
         {
           "type": "text",
-          "text": "testing/",
+          "text": "backend/testing/",
           "position": {
             "left": 862,
             "top": 539,
@@ -2521,7 +2521,7 @@
         },
         {
           "type": "text",
-          "text": "Estructura objetivo. UI demostrativa y base técnica; negocio e integraciones pendientes.",
+          "text": "F01 en laboratorio: Angular, API y PostgreSQL. Integraciones posteriores pendientes.",
           "position": {
             "left": 64,
             "top": 644,
@@ -2821,7 +2821,7 @@
         },
         {
           "type": "text",
-          "text": "pos-clients-e2e/",
+          "text": "tests/pos-clients-e2e/",
           "position": {
             "left": 78,
             "top": 567,
@@ -2865,7 +2865,7 @@
       "id": "slide-5",
       "title": "Responsabilidad de las bibliotecas",
       "background": "#FFFFFF",
-      "notes": "Shared agrupa mecanismos técnicos y conceptos mínimos. libs/client-shell compone el frontend Angular: componente raíz, configuración, rutas, guards y layout. Tauri y Capacitor son las shells nativas que alojan ese frontend en pos-desktop y pos-mobile. Country-policies define perfiles y selección de políticas por país; domain contiene reglas puras del prototipo y data-access su estado y adaptadores mock. Las reglas comerciales definitivas pertenecen a los contextos de negocio. Las carpetas de shared/backend describen responsabilidades; el número de bibliotecas Nx se determina por sus límites y consumidores. Los contratos de negocio pertenecen a su contexto, por ejemplo SaleConfirmedV1 en ventas; shared/contracts contiene sobres y metadatos técnicos. Shared/testing es soporte exclusivo de pruebas. Los clientes ofrecen puertos de acceso a capacidades nativas para las features. Los trabajos de periféricos del puesto se solicitan a branch-api y los ejecuta su device-agent; la modalidad compartida de red/móvil queda para F06 después del piloto F05; las features no llaman directamente a drivers de la caja. El host .NET conserva código y adaptadores privados propios: comparte esquemas de red y fixtures con el contexto devices, no importa bibliotecas NestJS ni Pino de Node.",
+      "notes": "Shared agrupa mecanismos técnicos y conceptos mínimos. libs/client-shell compone el frontend Angular: componente raíz, configuración, rutas, guards y layout. Tauri y Capacitor son las shells nativas que alojan ese frontend en pos-desktop y pos-mobile. Country-policies define perfiles y selección de políticas por país; domain contiene reglas puras del prototipo. data-access separa el estado de la demo del gateway HTTP y stores de branch-api, sin fallback entre perfiles. Las reglas comerciales definitivas pertenecen a los contextos de negocio. shared/backend agrupa runtime, persistence y testing: arranque y HTTP, unidad de trabajo PostgreSQL y fixtures aislados. Los contratos de negocio pertenecen a su contexto, por ejemplo SaleConfirmedV1 en ventas; shared/contracts contiene sobres y metadatos técnicos. Shared/backend/testing es soporte exclusivo de pruebas. Los clientes ofrecen puertos de acceso a capacidades nativas para las features. Los trabajos de periféricos del puesto se solicitan a branch-api y los ejecuta su device-agent; la modalidad compartida de red/móvil queda para F06 después del piloto F05; las features no llaman directamente a drivers de la caja. El host .NET conserva código y adaptadores privados propios: comparte esquemas de red y fixtures con el contexto devices, no importa bibliotecas NestJS ni Pino de Node.",
       "sources": [
         {
           "label": "monorepo",
@@ -3060,7 +3060,7 @@
             "left": 64,
             "top": 291,
             "width": 556,
-            "height": 45
+            "height": 96
           },
           "fill": "#EDF4F8",
           "line": {
@@ -3070,67 +3070,12 @@
         },
         {
           "type": "text",
-          "text": "bootstrap/",
+          "text": "runtime/",
           "position": {
-            "left": 76,
-            "top": 300,
-            "width": 183,
-            "height": 29
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 21,
-            "color": "#34383E",
-            "bold": true,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "Creación, arranque y cierre del proceso",
-          "position": {
-            "left": 263,
+            "left": 80,
             "top": 301,
-            "width": 345,
-            "height": 33
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 18,
-            "color": "#34383E",
-            "bold": false,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
-          }
-        },
-        {
-          "type": "shape",
-          "geometry": "rect",
-          "position": {
-            "left": 64,
-            "top": 342,
-            "width": 556,
-            "height": 45
-          },
-          "fill": "#EDF4F8",
-          "line": {
-            "fill": "none",
-            "width": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "config/",
-          "position": {
-            "left": 76,
-            "top": 351,
-            "width": 183,
-            "height": 29
+            "width": 524,
+            "height": 30
           },
           "style": {
             "typeface": "Inter",
@@ -3145,12 +3090,12 @@
         },
         {
           "type": "text",
-          "text": "Configuración validada e inyectable",
+          "text": "Arranque, HTTP, configuración, salud y observabilidad",
           "position": {
-            "left": 263,
-            "top": 352,
-            "width": 345,
-            "height": 33
+            "left": 80,
+            "top": 336,
+            "width": 524,
+            "height": 42
           },
           "style": {
             "typeface": "Inter",
@@ -3168,9 +3113,9 @@
           "geometry": "rect",
           "position": {
             "left": 64,
-            "top": 393,
+            "top": 399,
             "width": 556,
-            "height": 45
+            "height": 96
           },
           "fill": "#EDF4F8",
           "line": {
@@ -3180,12 +3125,12 @@
         },
         {
           "type": "text",
-          "text": "http/",
+          "text": "persistence/",
           "position": {
-            "left": 76,
-            "top": 402,
-            "width": 183,
-            "height": 29
+            "left": 80,
+            "top": 409,
+            "width": 524,
+            "height": 30
           },
           "style": {
             "typeface": "Inter",
@@ -3200,67 +3145,12 @@
         },
         {
           "type": "text",
-          "text": "HTTP, errores y contrato técnico",
+          "text": "Driver pg, transacciones y migraciones PostgreSQL",
           "position": {
-            "left": 263,
-            "top": 403,
-            "width": 345,
-            "height": 33
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 18,
-            "color": "#34383E",
-            "bold": false,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
-          }
-        },
-        {
-          "type": "shape",
-          "geometry": "rect",
-          "position": {
-            "left": 64,
+            "left": 80,
             "top": 444,
-            "width": 556,
-            "height": 45
-          },
-          "fill": "#EDF4F8",
-          "line": {
-            "fill": "none",
-            "width": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "observability/",
-          "position": {
-            "left": 76,
-            "top": 453,
-            "width": 183,
-            "height": 29
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 21,
-            "color": "#34383E",
-            "bold": true,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "Pino, correlación y Sentry opcional",
-          "position": {
-            "left": 263,
-            "top": 454,
-            "width": 345,
-            "height": 33
+            "width": 524,
+            "height": 42
           },
           "style": {
             "typeface": "Inter",
@@ -3278,9 +3168,9 @@
           "geometry": "rect",
           "position": {
             "left": 64,
-            "top": 495,
+            "top": 507,
             "width": 556,
-            "height": 45
+            "height": 96
           },
           "fill": "#EDF4F8",
           "line": {
@@ -3290,12 +3180,12 @@
         },
         {
           "type": "text",
-          "text": "health/",
+          "text": "testing/",
           "position": {
-            "left": 76,
-            "top": 504,
-            "width": 183,
-            "height": 29
+            "left": 80,
+            "top": 517,
+            "width": 524,
+            "height": 30
           },
           "style": {
             "typeface": "Inter",
@@ -3310,67 +3200,12 @@
         },
         {
           "type": "text",
-          "text": "Sondas del proceso y disponibilidad",
+          "text": "Fixtures aislados y soporte para pruebas de servidor",
           "position": {
-            "left": 263,
-            "top": 505,
-            "width": 345,
-            "height": 33
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 18,
-            "color": "#34383E",
-            "bold": false,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
-          }
-        },
-        {
-          "type": "shape",
-          "geometry": "rect",
-          "position": {
-            "left": 64,
-            "top": 546,
-            "width": 556,
-            "height": 45
-          },
-          "fill": "#EDF4F8",
-          "line": {
-            "fill": "none",
-            "width": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "worker/",
-          "position": {
-            "left": 76,
-            "top": 555,
-            "width": 183,
-            "height": 29
-          },
-          "style": {
-            "typeface": "Inter",
-            "fontSize": 21,
-            "color": "#34383E",
-            "bold": true,
-            "verticalAlignment": "top",
-            "autoFit": "none",
-            "wrap": "square",
-            "insets": 0
-          }
-        },
-        {
-          "type": "text",
-          "text": "Ciclo de vida de los procesos de trabajo",
-          "position": {
-            "left": 263,
-            "top": 556,
-            "width": 345,
-            "height": 33
+            "left": 80,
+            "top": 552,
+            "width": 524,
+            "height": 42
           },
           "style": {
             "typeface": "Inter",
@@ -3640,7 +3475,7 @@
         },
         {
           "type": "text",
-          "text": "Estado y adaptadores mock de la demo",
+          "text": "Adaptadores separados: demo y branch-api",
           "position": {
             "left": 674,
             "top": 590,

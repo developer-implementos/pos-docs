@@ -37,7 +37,7 @@ La ventana `main` tiene una capability explícita sin permisos nativos. No se re
 
 El almacenamiento de esta maqueta sigue siendo el adaptador local del frontend. El host no transforma localStorage en una base transaccional ni implementa un servicio de sincronización cuando la aplicación está cerrada. La impresión, terminal de pago, Orsan, fiscalidad, ERP y actualización siguen simulados.
 
-Antes de distribuir a sucursales faltan la persistencia transaccional de sucursal, integración nativa con dispositivos probados, identidad real, firma de instaladores, manejo del cierre con operaciones pendientes y pruebas sobre los equipos objetivo. Un updater futuro debe validar firmas, usar un canal autenticado de distribución, controlar el despliegue gradual y definir recuperación. No hay endpoints de actualización ni claves privadas en este scaffold; la pantalla de actualizaciones es una simulación.
+La persistencia transaccional y la recuperación de F01 están implementadas y probadas en laboratorio. Antes de distribuir a sucursales faltan su aceptación, integración nativa con dispositivos homologados, identidad corporativa, firma de instaladores, manejo del cierre nativo con operaciones pendientes y pruebas sobre los equipos objetivo. Un updater futuro debe validar firmas, usar un canal autenticado de distribución, controlar el despliegue gradual y definir recuperación. No hay endpoints de actualización ni claves privadas en este scaffold; la pantalla de actualizaciones es una simulación.
 
 ## Verificación y límite actual
 

@@ -297,15 +297,15 @@ Las vistas [C4](c4-arquitectura-propuesta.md) representan responsabilidades y to
 
 ### Recorrido de una solicitud por el código
 
-Ejemplo **propuesto**, pendiente de implementar en el backend: confirmar una venta en efectivo con una versión de precios válida y una modalidad fiscal permitida.
+Recorrido implementado en **F01 de laboratorio**: confirmar una venta en efectivo con una versión de precios válida y una intención documental permitida. No emite un documento fiscal ni acredita operación productiva.
 
 1. El cliente autorizado (`pos-desktop` o `pos-mobile`) recoge la confirmación del operador y envía un comando identificado a `branch-api`. Su shell nativa, Tauri o Capacitor, aloja el frontend Angular/PrimeNG; el cliente no escribe SQL ni decide otro importe.
 2. La entrada HTTP valida contrato e identidad. El caso de uso de `sales` comprueba ámbito, turno y condiciones comerciales mediante interfaces de los módulos propietarios.
 3. `pricing` aporta un resultado y una versión; `cash` controla su estado. El caso de uso coordina sus efectos locales por una unidad de trabajo: compartir una transacción no permite acceder libremente a tablas ajenas.
-4. Los adaptadores de persistencia escriben la venta, los cambios asociados, auditoría y outbox en **la misma transacción PostgreSQL**. Esa infraestructura aún no existe en el scaffold. No se llama al ERP dentro de la transacción.
+4. Los adaptadores de persistencia escriben la venta, los cambios asociados, auditoría y outbox en **la misma transacción PostgreSQL**, utilizando la unidad de trabajo de [ADR-19](decisions/postgresql-unit-of-work.md). No se llama al ERP dentro de la transacción.
 5. Tras el commit, la API devuelve la confirmación local. `branch-sync-worker` entregará el evento posteriormente; la recepción de país y la confirmación ERP mantendrán estados independientes.
 
-El flujo fija dirección de dependencia y autoridad. Los [contratos de confirmación](propuesta-arquitectura.md#confirmación-local-de-una-venta) y la [recuperación ante fallos](revision-resiliencia-datos-pos.md) definen qué ocurre si se pierde una respuesta o falla una dependencia. En la demostración actual este recorrido usa adaptadores mock; no está conectado a la base HTTP.
+El flujo fija dirección de dependencia y autoridad. Los [contratos de confirmación](propuesta-arquitectura.md#confirmación-local-de-una-venta) y la [recuperación ante fallos](revision-resiliencia-datos-pos.md) definen qué ocurre si se pierde una respuesta o falla una dependencia. El perfil `branch-lab` prueba este recorrido con Angular, HTTP y PostgreSQL reales; el perfil demo utiliza adaptadores sintéticos independientes. La [guía F01](phase-1-laboratory.md) delimita la recuperación verificada y las integraciones posteriores pendientes.
 
 La disposición de carpetas no crea por sí sola proyectos Nx ni límites verificables. Se definirán proyectos en las fronteras que deban controlarse. Cada módulo puede separar dominio, aplicación e infraestructura sin generar una biblioteca por cada clase o función. Evitar una librería `shared` que exponga todos los modelos ORM y reglas de todos los dominios.
 
