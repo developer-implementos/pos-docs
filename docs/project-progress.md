@@ -30,7 +30,11 @@ Para aceptar un paquete, el equipo registra `acceptance` con el commit del produ
 
 Las validaciones comprueban el formato, las referencias y la correspondencia con el roadmap. **No determinan automáticamente que el comportamiento esté implementado correctamente.** La revisión técnica y funcional sigue siendo responsabilidad del equipo.
 
-El registro separa tres revisiones: el commit de código revisado (`productRevision`), el commit del roadmap que define el alcance (`scope.revision`) y el commit que contiene el registro importado (`source.revision` en POS Docs). Una actualización de la portada no cambia por sí sola la fecha de revisión de los entregables.
+El registro separa tres revisiones: el código al que se refiere la evidencia de las aplicaciones (`productRevision`), el commit del roadmap que define el alcance (`scope.revision`) y el commit que contiene el registro importado (`source.revision` en POS Docs). `productRevision` admite un SHA completo o el valor exacto `source`: este último significa **la revisión fuente del registro, resuelta al SHA publicado**. La importación fija ese SHA inmutable en `source.revision` y comprueba los paths de evidencia en ese árbol Git; no consulta después una rama mutable.
+
+El snapshot conserva el contenido original, incluido `productRevision: "source"`, para comprobar su hash contra el JSON del producto. Las salidas derivadas resuelven ese valor al SHA de `source.revision`; los snapshots anteriores con SHA explícito siguen siendo válidos. Así, un squash puede cambiar el SHA del registro sin dejar la evidencia de aplicaciones apuntando a un commit de rama que ya no pertenece al historial integrado.
+
+`acceptance.revision` y `scope.revision` siempre requieren un SHA completo; no admiten `source`. La aceptación debe pertenecer al historial del producto efectivo y sus evidencias deben existir en el commit aceptado. Si un squash deja una aceptación fuera de ese historial, la importación la rechaza; no la reubica ni la convierte en aceptada automáticamente. Actualizar la portada o resolver `source` tampoco cambia por sí solo el revisor, la fecha de revisión o los estados de los entregables.
 
 ## Actualizar el panel
 

@@ -97,6 +97,75 @@ test('imports only reviewed metadata from the immutable clean product commit', t
   assert.equal(syncProjectProgress(item).changed, false);
 });
 
+test('source verifies evidence in the committed source tree and preserves its original content hash', t => {
+  const item = fixture(t);
+  write(item.workspace, 'delivery/evidence/current.md', 'Evidence introduced with this source revision\n');
+  item.content.productRevision = 'source';
+  item.content.applications[0].evidence[0].path = 'delivery/evidence/current.md';
+  const sourceRevision = item.update();
+  const result = syncProjectProgress(item);
+  const snapshot = JSON.parse(fs.readFileSync(item.destination, 'utf8'));
+  assert.equal(result.revision, sourceRevision);
+  assert.equal(snapshot.source.revision, sourceRevision);
+  assert.equal(snapshot.content.productRevision, 'source');
+  assert.deepEqual(snapshot.content, item.content);
+  assert.equal(snapshot.source.sha256, createHash('sha256').update(JSON.stringify(item.content)).digest('hex'));
+  assert.equal(result.accepted, 0);
+  assert.equal(syncProjectProgress({ ...item, check: true }).changed, false);
+});
+
+test('source survives a squash without accepting discarded product or acceptance revisions', t => {
+  const item = fixture(t);
+  const baseRevision = item.revision;
+  git(item.workspace, 'switch', '-c', 'fixture-feature');
+  write(item.workspace, 'delivery/evidence/feature.md', 'Evidence in the feature tree\n');
+  item.content.productRevision = 'source';
+  item.content.applications[0].evidence[0].path = 'delivery/evidence/feature.md';
+  const featureRevision = item.update();
+  git(item.workspace, 'switch', '-c', 'fixture-integrated', baseRevision);
+  git(item.workspace, 'merge', '--squash', 'fixture-feature');
+  git(item.workspace, 'commit', '-qm', 'Squashed fixture evidence');
+  const integratedRevision = git(item.workspace, 'rev-parse', 'HEAD');
+  assert.notEqual(featureRevision, integratedRevision);
+  assert.throws(() => git(item.workspace, 'merge-base', '--is-ancestor', featureRevision, integratedRevision));
+  assert.equal(syncProjectProgress(item).revision, integratedRevision);
+  const previous = fs.readFileSync(item.destination, 'utf8');
+  const snapshot = JSON.parse(previous);
+  assert.equal(snapshot.content.productRevision, 'source');
+  assert.equal(snapshot.source.revision, integratedRevision);
+
+  item.content.productRevision = featureRevision;
+  item.update();
+  assert.throws(() => syncProjectProgress(item), /Evidence revision must belong to the imported product history/);
+  assert.equal(fs.readFileSync(item.destination, 'utf8'), previous);
+
+  item.content.productRevision = 'source';
+  item.content.workPackages[0].status = 'accepted';
+  item.content.workPackages[0].acceptance = {
+    revision: featureRevision, reviewedOn: '2026-10-30', reviewer: 'Revisión de prueba', evidence: [{ path: 'delivery/evidence/feature.md', label: 'Evidencia de la rama' }],
+  };
+  item.update();
+  assert.throws(() => syncProjectProgress(item), /Acceptance revision must belong to the audited product history/);
+  assert.equal(fs.readFileSync(item.destination, 'utf8'), previous);
+
+  item.content.workPackages[0].acceptance.revision = baseRevision;
+  item.content.workPackages[0].acceptance.evidence[0].path = 'delivery/evidence/acceptance.md';
+  item.update();
+  assert.equal(syncProjectProgress(item).accepted, 1, 'Only acceptance in the actual source history is retained');
+});
+
+test('source still rejects missing evidence before replacing a published snapshot', t => {
+  const item = fixture(t);
+  item.content.productRevision = 'source';
+  item.update();
+  syncProjectProgress(item);
+  const previous = fs.readFileSync(item.destination, 'utf8');
+  item.content.applications[0].evidence[0].path = 'does-not-exist.md';
+  item.update();
+  assert.throws(() => syncProjectProgress(item), /Missing evidence/);
+  assert.equal(fs.readFileSync(item.destination, 'utf8'), previous);
+});
+
 test('--check rejects a missing or stale snapshot without writing it', t => {
   const item = fixture(t);
   assert.throws(() => syncProjectProgress({ ...item, check: true }), /snapshot is stale/);
@@ -198,6 +267,10 @@ test('a tracked symlink cannot serve as reviewed evidence even when its target e
   item.update();
   assert.equal(git(item.workspace, 'status', '--porcelain'), '');
   assert.match(git(item.workspace, 'ls-tree', item.content.productRevision, '--', 'linked-evidence.md'), /^120000 blob/);
+  assert.throws(() => syncProjectProgress(item), /unsupported Git object/);
+  assert.equal(fs.readFileSync(item.destination, 'utf8'), previous);
+  item.content.productRevision = 'source';
+  item.update();
   assert.throws(() => syncProjectProgress(item), /unsupported Git object/);
   assert.equal(fs.readFileSync(item.destination, 'utf8'), previous);
 });

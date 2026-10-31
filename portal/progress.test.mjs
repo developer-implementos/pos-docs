@@ -69,6 +69,33 @@ test('baseline derives zero accepted work while retaining implementation summari
   assert.equal(result.workPackages[0].href, '/guide/roadmap/phase-01/#work-f01-01');
 });
 
+test('source resolves to the immutable imported revision without rewriting the hashed source content', () => {
+  const current = fixture();
+  current.snapshot.source.revision = 'b'.repeat(40);
+  const result = derive(current, content => { content.productRevision = 'source'; });
+  assert.equal(result.productRevision, 'b'.repeat(40));
+  assert.equal(current.snapshot.content.productRevision, 'source');
+  assert.equal(current.snapshot.source.sha256, progressContentHash(current.snapshot.content));
+  assert.equal(result.percent, 0);
+  current.snapshot.content.productRevision = result.productRevision;
+  assert.throws(() => deriveProgress(current.snapshot, current.roadmapSource), /source content hash mismatch/);
+});
+
+test('source is an exact product reference, never an acceptance or scope revision', () => {
+  for (const invalid of ['Source', 'SOURCE', ' source', 'source ', 'HEAD', 'main', '', null, 1, {}]) {
+    assert.throws(() => derive(fixture(), content => { content.productRevision = invalid; }));
+  }
+  assert.throws(() => derive(fixture(), content => { content.scope.revision = 'source'; }));
+  assert.throws(() => derive(fixture(), content => {
+    content.productRevision = 'source';
+    content.workPackages[0].status = 'accepted';
+    content.workPackages[0].acceptance = { ...acceptance(), revision: 'source' };
+  }));
+  const current = fixture();
+  current.snapshot.source.revision = 'source';
+  assert.throws(() => derive(current, content => { content.productRevision = 'source'; }), /immutable revision/);
+});
+
 test('global counts a shared package once and does not average application percentages', () => {
   const result = derive(fixture(), content => {
     content.workPackages[0].status = 'accepted';
