@@ -2,47 +2,47 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "bf98c2f8822897c2aa98dc33ab3fd609ff5d3e9e",
+    "revision": "d32dfae98943309e55dea33813bad11833f0bed2",
     "path": "delivery/progress.json",
-    "sha256": "246acb957370dd604b290f74d3fc0b76023f839757c79819c88f2dea76c619d7"
+    "sha256": "90a65f737c8da4714d5820e80af1fe431fa2e0d26d85033a0de02a680f0c34f2"
   },
   "content": {
     "schemaVersion": 1,
     "reviewedOn": "2026-10-30",
-    "productRevision": "bc0365188fa5ea47d9b87bdc23d8278143863b55",
+    "productRevision": "91de6d737b89adaeb7db2aa75d3bd03504fdabb4",
     "scope": {
       "repository": "https://github.com/developer-implementos/pos-docs",
       "revision": "7f29e2cef103aee4d7e470baf19178e7f03fcf92",
       "path": "docs/roadmap.json",
       "sha256": "6b4f54498d21cd06cb3e376168d5fd19d6cdfcfd4eb1c10bc06d651494adb5ee"
     },
-    "summary": "La interfaz demostrativa y la base técnica están disponibles. La revisión del producto no acredita entregables funcionales completos del roadmap; persistencia comercial, identidad del backend e integraciones siguen pendientes.",
+    "summary": "F01 dispone de una implementación de laboratorio en revisión: identidad, configuración, catálogo, cálculo comercial y venta en efectivo persistida con recuperación. Los trece paquetes siguen en curso hasta su aceptación técnica y funcional; no se habilita operación productiva.",
     "applications": [
       {
         "id": "pos-desktop",
-        "stage": "prototype",
-        "summary": "Interfaz Angular compartida en host Tauri, con recorridos y persistencia de demostración.",
-        "nextStep": "Conectar identidad, turno y venta con branch-api y PostgreSQL; comprobar el recorrido integrado.",
+        "stage": "functional",
+        "summary": "Cliente Angular de laboratorio conectado a branch-api, con venta en efectivo y recuperación probadas en navegador; host Tauri compilable, sin acreditar operación nativa o productiva.",
+        "nextStep": "Revisión funcional del laboratorio y validación nativa de conectividad, enrolamiento y periféricos en sus fases.",
         "evidence": [
           {
             "path": "apps/pos-desktop/src/main.ts",
             "label": "Entrada del cliente de escritorio"
           },
           {
-            "path": "apps/pos-desktop/src-tauri/tauri.conf.json",
-            "label": "Configuración del host Tauri"
+            "path": "libs/features/branch-operation",
+            "label": "Interfaz de operación de laboratorio"
           },
           {
-            "path": "libs/data-access/src/lib/ports.ts",
-            "label": "Adaptadores locales de demostración"
+            "path": "tests/pos-clients-e2e/branch/cash-recovery.spec.ts",
+            "label": "Recorrido real de venta y recuperación en navegador"
           }
         ]
       },
       {
         "id": "pos-mobile",
-        "stage": "prototype",
-        "summary": "Interfaz Angular compartida en host Capacitor, con proyectos Android e iOS y adaptadores de demostración.",
-        "nextStep": "Conectar el backend y validar permisos, conectividad y capacidades en dispositivos elegidos.",
+        "stage": "foundation",
+        "summary": "Host Capacitor con cliente Angular compartido y perfil explícito de API de sucursal; compilaciones Android e iOS separadas, sin validación funcional en dispositivos.",
+        "nextStep": "Validar el recorrido integrado móvil, identidad, conectividad autorizada y capacidades en dispositivos elegidos.",
         "evidence": [
           {
             "path": "apps/pos-mobile/src/main.ts",
@@ -53,28 +53,28 @@
             "label": "Build y comandos nativos móviles"
           },
           {
-            "path": "libs/data-access/src/lib/ports.ts",
-            "label": "Adaptadores locales de demostración"
+            "path": "libs/data-access/branch-api",
+            "label": "Contratos y transporte del perfil conectado"
           }
         ]
       },
       {
         "id": "branch-api",
-        "stage": "foundation",
-        "summary": "Base NestJS/Fastify con configuración, observabilidad y sondas; contextos de negocio sin implementar.",
-        "nextStep": "Implementar identidad y permisos, persistencia PostgreSQL y la primera venta transaccional.",
+        "stage": "functional",
+        "summary": "API NestJS/Fastify de laboratorio con identidad, configuración, catálogo, precios, borradores y venta en efectivo atómica sobre PostgreSQL; sin proveedores productivos.",
+        "nextStep": "Revisión técnica y funcional de F01; integrar políticas corporativas y efectos externos en las fases siguientes.",
         "evidence": [
           {
             "path": "apps/branch-api/src/app.module.ts",
-            "label": "Composición de contextos de sucursal"
+            "label": "Composición de la API de sucursal"
+          },
+          {
+            "path": "apps/branch-api/test/cash-sale.integration.test.ts",
+            "label": "Venta atómica, fallos y concurrencia en PostgreSQL"
           },
           {
             "path": "apps/branch-api/test/http.test.ts",
-            "label": "Comprobaciones de la base HTTP"
-          },
-          {
-            "path": "libs/backend/sales/src/lib/sales.module.ts",
-            "label": "Límite actual del módulo de ventas"
+            "label": "Contratos HTTP y recuperación persistida"
           }
         ]
       },
@@ -97,8 +97,8 @@
       {
         "id": "country-api",
         "stage": "foundation",
-        "summary": "Base HTTP de país con módulos compuestos; recepción, publicaciones y trabajo durable pendientes.",
-        "nextStep": "Implementar persistencia de país, inbox, contratos de trabajo y publicación comercial.",
+        "summary": "Base HTTP de país con PostgreSQL, migraciones y readiness por ámbito; recepción de ventas, publicaciones y trabajos comerciales pendientes.",
+        "nextStep": "Implementar inbox de país, contratos de trabajo y publicación comercial en la fase de sincronización.",
         "evidence": [
           {
             "path": "apps/country-api/src/app.module.ts",
@@ -141,8 +141,8 @@
           "pos-desktop",
           "branch-api"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Un operador y puesto identificados abren un turno único en su ámbito; toda autorización y exclusión se comprueba en branch-api.",
+        "status": "in_progress",
+        "summary": "Identidad de laboratorio, sesión caducable, permisos, auditoría y apertura única por caja implementados. Pendiente de aceptación del equipo.",
         "acceptance": null
       },
       {
@@ -151,8 +151,8 @@
           "pos-desktop",
           "branch-api"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Una cotización conserva versión comercial y desglose verificable de importes, impuestos y redondeos del alcance inicial.",
+        "status": "in_progress",
+        "summary": "Motor decimal y cotizaciones inmutables con versiones, impuestos, redondeo y decisiones comerciales implementados. Pendiente de validación de las políticas por Comercial.",
         "acceptance": null
       },
       {
@@ -160,8 +160,8 @@
         "apps": [
           "branch-api"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Una venta en efectivo confirma cabecera, líneas, pago, movimiento, auditoría y outbox en una única transacción PostgreSQL recuperable.",
+        "status": "in_progress",
+        "summary": "Confirmación atómica de venta, pago, caja, auditoría y outbox implementada; probada frente a concurrencia, rollback y resultado desconocido. Pendiente de aceptación.",
         "acceptance": null
       },
       {
@@ -170,8 +170,8 @@
           "pos-desktop",
           "branch-api"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Una prueba de sistema usa API y PostgreSQL reales para abrir caja, vender y recuperar una operación sin depender del adaptador mock.",
+        "status": "in_progress",
+        "summary": "Recorrido de navegador contra API y PostgreSQL reales implementado, con recuperación, supervisor independiente, teclado y comprobante persistido. Pendiente de revisión funcional.",
         "acceptance": null
       },
       {
@@ -186,7 +186,7 @@
           "device-agent"
         ],
         "status": "in_progress",
-        "summary": "Controles de colaboración y fichas en preparación; pendiente de revisión del equipo y evidencia de aceptación.",
+        "summary": "Fichas, issues y controles de colaboración preparados; las PR de gobernanza requieren revisión ajena y activación verificada desde main antes de aceptar este paquete.",
         "acceptance": null
       },
       {
@@ -195,8 +195,8 @@
           "branch-api",
           "country-api"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Las bases de sucursal y país tienen propietarios, credenciales separadas, migraciones reproducibles y transacciones probadas antes de recibir negocio.",
+        "status": "in_progress",
+        "summary": "Bases por ámbito, roles separados, migraciones con checksum, admisión y transacciones recuperables implementados y probados en PostgreSQL. Pendiente de aceptación.",
         "acceptance": null
       },
       {
@@ -206,8 +206,8 @@
           "country-api",
           "pos-desktop"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: País, entidad, sucursal, caja y puesto tienen identidad estable y una configuración efectiva validada que el servidor aplica a cada operación.",
+        "status": "in_progress",
+        "summary": "Ámbito operativo y configuración efectiva versionada implementados, con procedencia y capacidades comprobadas por el servidor. Pendiente de confirmar políticas de operación.",
         "acceptance": null
       },
       {
@@ -216,8 +216,8 @@
           "pos-desktop",
           "branch-api"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: El operador busca clientes autorizados, identifica al receptor del documento y gestiona un alta express sin inventar autoridad sobre el maestro corporativo.",
+        "status": "in_progress",
+        "summary": "Consulta autorizada, receptor de laboratorio, snapshot histórico y solicitudes versionadas de cliente implementados. Pendiente de aceptación y homologación de autoridad del maestro.",
         "acceptance": null
       },
       {
@@ -226,8 +226,8 @@
           "pos-desktop",
           "branch-api"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: La cesta puede editarse, pausarse, retomarse o cancelarse con versión y permisos, sin duplicar ventas ni recuperar cobros como si fueran borradores.",
+        "status": "in_progress",
+        "summary": "Borradores y presupuestos persistidos con versión, pausa, recuperación y cancelación implementados. Los cambios invalidan cotizaciones; pendiente de aceptación funcional.",
         "acceptance": null
       },
       {
@@ -236,8 +236,8 @@
           "pos-desktop",
           "branch-api"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: El cálculo aplica reglas comerciales versionadas y explica promociones, límites y descuentos autorizados sin permitir rebajas arbitrarias desde el cliente.",
+        "status": "in_progress",
+        "summary": "Reglas comerciales y autorización independiente de descuento implementadas; consumo atómico y rechazo de cupones globales sin autoridad. Pendiente de aceptación por Comercial.",
         "acceptance": null
       },
       {
@@ -246,8 +246,8 @@
           "pos-desktop",
           "branch-api"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: El cliente consulta un catálogo autorizado con códigos, unidades y disponibilidad informativa, sin convertir al POS en autoridad de inventario.",
+        "status": "in_progress",
+        "summary": "Catálogo paginado, códigos ambiguos, unidades y disponibilidad consultiva implementados. Pendiente de aceptación del alcance operativo.",
         "acceptance": null
       },
       {
@@ -257,8 +257,8 @@
           "branch-api",
           "country-api"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Los clientes y APIs comparten contratos versionados verificables, errores previsibles y reglas de idempotencia/concurrencia sin importar implementación privada.",
+        "status": "in_progress",
+        "summary": "Contratos Zod puros, errores estables, OpenAPI JSON, idempotencia y concurrencia implementados y probados en HTTP. Pendiente de revisión independiente de aceptación.",
         "acceptance": null
       },
       {
@@ -271,8 +271,8 @@
           "country-api",
           "erp-worker"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: La estructura compartida acordada organiza responsabilidades y puntos de entrada sin dependencias entre aplicaciones ni mezcla de frontend, dominio y servidor.",
+        "status": "in_progress",
+        "summary": "Runtime, persistencia, testing, kernel y contratos separados con fronteras Nx/ESLint y builds independientes. Pendiente de integrar y aceptar la estructura revisada.",
         "acceptance": null
       },
       {

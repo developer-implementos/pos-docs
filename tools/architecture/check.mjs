@@ -215,13 +215,29 @@ async function capture(page, name) {
 }
 
 async function assertActiveStepVisible(page,label) {
+  // renderState reveals the active step on its next animation frame. DOM/URL
+  // updates happen synchronously and are not a barrier for the inspector scroll.
+  await page.waitForFunction(() => {
+    const node = document.querySelector('[data-scenario-panel]:not([hidden]) [aria-current="step"]');
+    if (!node) return false;
+    const box = node.getBoundingClientRect();
+    const outer = document.querySelector('#inspector').getBoundingClientRect();
+    const toolbar = document.querySelector('.inspector-tools').getBoundingClientRect();
+    return box.top >= Math.max(outer.top, toolbar.bottom) - 2 && box.bottom <= outer.bottom + 2 && scrollY === 0;
+  }, undefined, { polling: 'raf', timeout: 3000 }).catch(async cause => {
+    const geometry = await page.locator('[data-scenario-panel]:visible [aria-current="step"]').evaluate(node => {
+      const box = node.getBoundingClientRect(), outer = document.querySelector('#inspector').getBoundingClientRect();
+      return { top: box.top, bottom: box.bottom, panelTop: outer.top, panelBottom: outer.bottom, toolbarBottom: document.querySelector('.inspector-tools').getBoundingClientRect().bottom, scrollY };
+    });
+    throw new Error(`${label}: active step did not become visible (${JSON.stringify(geometry)})`, { cause });
+  });
   const geometry=await page.locator('[data-scenario-panel]:visible [aria-current="step"]').evaluate(node=>{
     const panel=document.querySelector('#inspector');
     const box=node.getBoundingClientRect(),outer=panel.getBoundingClientRect();
     const toolbar=document.querySelector('.inspector-tools').getBoundingClientRect();
     return {top:box.top,bottom:box.bottom,visibleTop:Math.max(outer.top,toolbar.bottom),visibleBottom:outer.bottom,scrollY};
   });
-  assert.ok(geometry.top>=geometry.visibleTop-2&&geometry.bottom<=geometry.visibleBottom+2,`${label}: the active step is visible in its inspector`);
+  assert.ok(geometry.top>=geometry.visibleTop-2&&geometry.bottom<=geometry.visibleBottom+2,`${label}: the active step is visible in its inspector (${JSON.stringify(geometry)})`);
   assert.equal(geometry.scrollY,0,`${label}: revealing a step does not scroll the desktop document`);
 }
 

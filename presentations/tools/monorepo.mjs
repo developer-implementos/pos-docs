@@ -21,32 +21,34 @@ export function monorepoView(source, escape) {
     'apps/country-api':'API y capacidades de país',
     'apps/erp-worker':'Integración y conciliación ERP',
     'apps/device-agent':'.NET / Windows · agente por puesto',
-    'apps/pos-clients-e2e':'Pruebas UI; sin despliegue comercial',
-    'apps/pos-clients-e2e/mobile':'Suite Angular; sin probar shell nativa',
+    'tests/pos-clients-e2e':'Pruebas UI y API; sin despliegue comercial',
+    'tests/pos-clients-e2e/branch':'Venta y recuperación con PostgreSQL real',
+    'tests/pos-clients-e2e/mobile':'Suite Angular; sin probar shell nativa',
     'libs/backend/returns':'Devoluciones y documento de origen',
     'libs/backend/payments':'Intentos, resultados y conciliación de pagos',
     'libs/backend/fiscal':'Documentos y estados fiscales por país',
     'libs/client-shell':'Composición Angular, rutas y navegación',
     'libs/features':'Funcionalidades y pantallas de la interfaz',
     'libs/shared/backend':'Base técnica del servidor',
-    'libs/shared/backend/health':'Sondas y disponibilidad comprobada',
+    'libs/shared/backend/runtime':'HTTP, configuración y observabilidad',
+    'libs/shared/backend/persistence':'PostgreSQL, transacciones y migraciones',
+    'libs/shared/backend/testing':'Fixtures PostgreSQL aislados',
     'libs/shared/frontend/ui':'Preset, tokens y componentes visuales',
     'libs/shared/kernel':'Conceptos mínimos entre contextos',
     'libs/shared/contracts':'Sobres y metadatos técnicos comunes',
-    'libs/shared/testing':'Soporte técnico de pruebas',
     'libs/country-policies':'Perfiles y selección de políticas',
     'libs/domain':'Reglas puras del prototipo',
-    'libs/data-access':'Estado y adaptadores mock',
+    'libs/data-access':'Adaptadores explícitos demo y branch-api',
     'tools':'Build, lint y pruebas del producto'
   };
   const zones=[
-    {id:'apps',label:'Aplicaciones',title:'Entradas del producto',detail:'Siete aplicaciones objetivo. device-agent usa .NET en cada puesto Windows; F02 cubre periféricos locales.',status:'Seis apps con base técnica; agente pendiente. Red y móvil compartido: F06, tras el piloto.',paths:['apps']},
-    {id:'business',label:'Negocio',title:'Contextos de negocio',detail:'Trece contextos con responsabilidad propia. Las aplicaciones componen sus casos de uso.',status:'Base estructural disponible; lógica comercial pendiente.',paths:['libs/backend']},
-    {id:'frontend',label:'Interfaz',title:'Composición y pantallas',detail:'libs/client-shell compone la interfaz Angular compartida. Cada aplicación conserva su arranque y aloja el frontend en su shell nativa Tauri o Capacitor.',status:'UI demostrativa con datos sintéticos. Operaciones reales pendientes.',paths:['libs/client-shell','libs/features']},
-    {id:'backend',label:'Shared / backend',title:'Mecanismos del servidor',detail:'Arranque, configuración, HTTP, observabilidad, sondas y ciclo de vida de los workers.',status:'La organización en shared/backend es el objetivo arquitectónico.',paths:['libs/shared/backend']},
-    {id:'shared',label:'Shared / común',title:'Soporte técnico común',detail:'UI reutilizable, conceptos mínimos, sobres técnicos y soporte de pruebas.',status:'Organización objetivo. Testing requiere consumidores comunes.',paths:['libs/shared/frontend','libs/shared/kernel','libs/shared/contracts','libs/shared/testing']},
-    {id:'transition',label:'Prototipo',title:'Perfiles y datos de prueba',detail:'Perfiles por país, reglas puras y adaptadores mock de la demostración.',status:'Las reglas de ventas, caja y pagos pertenecen a sus contextos de negocio.',paths:['libs/country-policies','libs/domain','libs/data-access']},
-    {id:'delivery',label:'Entrega',title:'Herramientas y validación',detail:'Las herramientas y workflows validan y construyen los artefactos del producto.',status:'POS Docs publica documentación y presentaciones desde su repositorio editorial.',paths:['tools','.github']}
+    {id:'apps',label:'Aplicaciones',title:'Entradas del producto',detail:'Siete aplicaciones objetivo. device-agent usa .NET en cada puesto Windows; F02 cubre periféricos locales.',status:'F01 conecta escritorio y sucursal en laboratorio. Agente e integraciones pendientes.',paths:['apps']},
+    {id:'business',label:'Negocio',title:'Contextos de negocio',detail:'Trece contextos con responsabilidad propia. Las aplicaciones componen sus casos de uso.',status:'F01 implementa acceso, caja y venta en efectivo; los demás recorridos siguen por fase.',paths:['libs/backend']},
+    {id:'frontend',label:'Interfaz',title:'Composición y pantallas',detail:'libs/client-shell compone Angular compartido dentro de las shells Tauri o Capacitor.',status:'Perfiles demo y branch-lab explícitos. La venta conectada se verifica en navegador.',paths:['libs/client-shell','libs/features']},
+    {id:'backend',label:'Shared / backend',title:'Mecanismos del servidor',detail:'Runtime HTTP, observabilidad, PostgreSQL, unidad de trabajo y fixtures aislados.',status:'Implementado para el laboratorio; cada contexto conserva sus datos y SQL.',paths:['libs/shared/backend']},
+    {id:'shared',label:'Shared / común',title:'Soporte técnico común',detail:'UI reutilizable, conceptos mínimos y sobres técnicos sin negocio compartido.',status:'Contratos de negocio en su contexto; shared no concentra los DTO comerciales.',paths:['libs/shared/frontend','libs/shared/kernel','libs/shared/contracts']},
+    {id:'transition',label:'Perfiles',title:'Políticas y acceso a datos',detail:'Políticas por país y adaptadores separados para la demo y branch-api.',status:'No hay fallback a mocks. El perfil de laboratorio no habilita producción.',paths:['libs/country-policies','libs/domain','libs/data-access']},
+    {id:'delivery',label:'Entrega',title:'Herramientas y validación',detail:'Build, lint y pruebas. E2E de sucursal usa Angular, API y PostgreSQL reales.',status:'Pruebas aprobadas no equivalen a aceptación funcional ni homologación nativa.',paths:['tests','tools','.github']}
   ];
   const inZone=(row,zone)=>zone.paths.some(p=>row.path===p||row.path.startsWith(p+'/'));
   for(const zone of zones) assert.ok(rows.some(r=>inZone(r,zone)),`Empty monorepo zone: ${zone.id}`);
@@ -63,6 +65,6 @@ export function monorepoView(source, escape) {
     <aside class="zone-detail" aria-live="polite" aria-atomic="true">${zones.map((z,i)=>`<div data-zone-detail="${i}"${i?' hidden':''}><p class="zone-count">ZONA ${i+1} / ${zones.length}</p><h3>${escape(z.title)}</h3><p>${escape(z.detail)}</p><p class="zone-state">${escape(z.status)}</p></div>`).join('')}<p class="zone-hint">↑ ↓ o Espacio: recorrer zonas</p></aside>
     ${zones.slice(1).map((z,i)=>`<span class="fragment custom zone-fragment" data-fragment-index="${i}" aria-hidden="true"></span>`).join('')}
   </div>`;
-  const reading=`<p>Estructura objetivo y responsabilidades del monorepo. La base actual combina una UI demostrativa y scaffolds de servidor; las operaciones comerciales se implementan por fases. El árbol describe la organización propuesta, no acredita funcionalidades productivas.</p><pre class="tree-reading">${escape('pos-platform/\n'+rows.map(r=>'  '.repeat(r.depth+1)+r.name+(r.description?'  # '+r.description:'')).join('\n'))}</pre>`;
+  const reading=`<p>Estructura y responsabilidades del monorepo. F01 conecta Angular, branch-api y PostgreSQL en laboratorio; la demo permanece separada. País, workers, proveedores y dispositivos conservan sus fases de implementación. El árbol incluye la estructura objetivo y no acredita operación productiva.</p><pre class="tree-reading">${escape('pos-platform/\n'+rows.map(r=>'  '.repeat(r.depth+1)+r.name+(r.description?'  # '+r.description:'')).join('\n'))}</pre>`;
   return {markup,reading};
 }

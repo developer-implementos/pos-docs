@@ -2,6 +2,8 @@
 
 `apps/pos-desktop` contiene la aplicación cliente de escritorio: un frontend Angular/PrimeNG con arranque y build propios, alojado en la shell nativa (host) Tauri 2 para Windows. Comparte composición y funcionalidades con `pos-mobile` mediante `libs/client-shell`, la librería de composición Angular de raíz, configuración, rutas, guards y layout; esta librería no es el host nativo. Cada aplicación conserva su arranque independiente. La [decisión de clientes nativos](decisions/native-clients.md) delimita ambos clientes. El resultado histórico de un instalador no acredita el nuevo artefacto hasta comprobar su build y ejecución.
 
+El frontend permite perfiles explícitos `demo` y `branch-lab`. El perfil conectado tiene login, caja y venta contra PostgreSQL mediante `branch-api`; la [guía F01](phase-1-laboratory.md) distingue laboratorio y producción. El perfil y CSP deben quedar configurados para el origen autorizado del artefacto antes de probar el host. Un build Angular no homologa el binario Tauri.
+
 ## Prerrequisitos Windows
 
 - Node.js compatible con `package.json` y dependencias instaladas con `npm ci`.
@@ -35,7 +37,7 @@ La ventana `main` tiene una capability explícita sin permisos nativos. No se re
 
 El almacenamiento de esta maqueta sigue siendo el adaptador local del frontend. El host no transforma localStorage en una base transaccional ni implementa un servicio de sincronización cuando la aplicación está cerrada. La impresión, terminal de pago, Orsan, fiscalidad, ERP y actualización siguen simulados.
 
-Antes de distribuir a sucursales faltan la persistencia transaccional de sucursal, integración nativa con dispositivos probados, identidad real, firma de instaladores, manejo del cierre con operaciones pendientes y pruebas sobre los equipos objetivo. Un updater futuro debe validar firmas, usar un canal autenticado de distribución, controlar el despliegue gradual y definir recuperación. No hay endpoints de actualización ni claves privadas en este scaffold; la pantalla de actualizaciones es una simulación.
+La persistencia transaccional y la recuperación de F01 están implementadas y probadas en laboratorio. Antes de distribuir a sucursales faltan su aceptación, integración nativa con dispositivos homologados, identidad corporativa, firma de instaladores, manejo del cierre nativo con operaciones pendientes y pruebas sobre los equipos objetivo. Un updater futuro debe validar firmas, usar un canal autenticado de distribución, controlar el despliegue gradual y definir recuperación. No hay endpoints de actualización ni claves privadas en este scaffold; la pantalla de actualizaciones es una simulación.
 
 ## Verificación y límite actual
 

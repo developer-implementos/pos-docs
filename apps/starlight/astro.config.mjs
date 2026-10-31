@@ -20,9 +20,12 @@ export default defineConfig({
     title: 'POS Platform',
     description: 'Arquitectura, implementación y evidencia técnica del POS corporativo multipaís.',
     locales: { root: { label: 'Español', lang: 'es' } },
+    // The build owns indexing through Pagefind's public getFiles API and awaited Node writes.
+    pagefind: false,
     sidebar,
     customCss: ['./src/styles/custom.css'],
     components: {
+      Search: './src/components/DocsSearch.astro',
       Footer: './src/components/DocsFooter.astro', Head: './src/components/DocsHead.astro',
       MarkdownContent: './src/components/DocsMarkdown.astro', PageTitle: './src/components/DocsTitle.astro',
     },

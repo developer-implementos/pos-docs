@@ -1,15 +1,16 @@
 # Pruebas del monorepo
 
-La organización del producto separa aplicaciones operativas y proyectos de pruebas en **pos-platform**. Define `apps/pos-clients-e2e` para los recorridos Angular de escritorio y móvil y `libs/shared/testing` para el soporte técnico reutilizable. La documentación se valida desde **pos-docs**. La cobertura revisada y los proyectos previstos se presentan por separado: describir una suite no acredita su implementación. El [mapa del monorepo](monorepo.md) detalla responsabilidades y estado del producto.
+La organización del producto separa aplicaciones operativas y proyectos de pruebas en **pos-platform**. Define `tests/pos-clients-e2e` para los recorridos Angular de escritorio y móvil y `libs/shared/backend/testing` para el soporte técnico reutilizable. La documentación se valida desde **pos-docs**. La cobertura revisada y los proyectos previstos se presentan por separado: describir una suite no acredita su implementación. El [mapa del monorepo](monorepo.md) detalla responsabilidades y estado del producto.
 
 ## Cobertura existente y ubicación
 
 | Comprobación | Ruta en el snapshot revisado | Qué verifica | Límite |
 | --- | --- | --- | --- |
-| Playwright web | `e2e/`, `e2e-mobile/` y sus configuraciones Playwright | Acceso, checkout, administración, navegación y comportamiento visual con datos sintéticos | No recorre una venta persistida en PostgreSQL ni sincronizada con país |
-| HTTP de sucursal y país | `apps/branch-api/test` y `apps/country-api/test` | Composición Nest/Fastify, sondas, errores y políticas HTTP mediante la aplicación real | No hay operaciones comerciales ni persistencia |
-| Base técnica común | `libs/platform/backend/test` | Logging, Sentry y ciclo de vida de workers | No acredita colas ni integraciones operativas |
-| Reglas puras y mock | Tests junto a las bibliotecas | Invariantes y comportamiento local implementado | No sustituye pruebas del backend futuro |
+| Playwright demo | `tests/pos-clients-e2e/` y `mobile/` | Acceso, checkout y navegación con datos sintéticos | No acredita operación real o capacidades nativas |
+| Playwright conectado | `tests/pos-clients-e2e/branch/` | Angular → API → PostgreSQL: confirmación, recuperación y supervisor separado | Laboratorio, sin fiscalidad, ERP ni periféricos |
+| HTTP de sucursal y país | `apps/branch-api/test` y `apps/country-api/test` | Composición Nest/Fastify, identidad, permisos, caja y operación comercial de laboratorio con PostgreSQL | No acredita homologación ni producción |
+| Base técnica común | `libs/shared/backend/runtime/test` | Logging, Sentry y ciclo de vida de workers | No acredita colas ni integraciones operativas |
+| Reglas puras y mock | Tests junto a las bibliotecas | Invariantes y comportamiento local implementado | No sustituye pruebas HTTP/PostgreSQL o de los hosts nativos |
 | Fronteras arquitectónicas | `tools/eslint` | Reglas de imports y calidad existentes | La organización objetivo requiere comprobar todos sus límites con casos negativos |
 | Artefactos backend | `tools/verify-api-artifact.mjs` | Arranque fuera del workspace con dependencias de producción | No acredita recuperación comercial |
 | Documentación, en POS Docs | `apps/starlight/scripts` | Fuentes, catálogo, build, enlaces, búsqueda y navegador | Se ejecuta en otro repositorio; no acredita funcionamiento del POS |
@@ -17,13 +18,13 @@ La organización del producto separa aplicaciones operativas y proyectos de prue
 
 ## Proyecto E2E de clientes objetivo
 
-`apps/pos-clients-e2e` será un proyecto de pruebas Nx vinculado a `pos-desktop` y `pos-mobile` mediante dependencias explícitas, porque visitar una URL no permite inferir el vínculo por imports. No se añade a las siete aplicaciones objetivo ni se publica como servicio.
+`tests/pos-clients-e2e` es un proyecto de pruebas Nx vinculado a `pos-desktop`, `pos-mobile` y `branch-api` mediante dependencias explícitas, porque visitar una URL no permite inferir el vínculo por imports. No se añade a las siete aplicaciones objetivo ni se publica como servicio.
 
 Los recorridos de escritorio y móvil tienen configuración, fixtures, control de tiempo, reportes y capturas de fallos propios. Los comandos son `npm run test:e2e` y `npm run test:e2e:mobile`. Localmente las suites pueden iniciar el servidor de desarrollo; CI debe probar el build de producción. Si se activa caché o ejecución affected, sus entradas deben incluir la configuración, fixtures y aplicación probada; entornos externos mutables no se consideran reproducibles por defecto.
 
 ## Soporte compartido de pruebas
 
-`shared/testing` será una agrupación de utilidades de pruebas con entradas explícitas según consumidor. No se mezclan fixtures de navegador, configuración Vitest y dependencias de base de datos en un único barrel obligatorio.
+`shared/backend/testing` aporta infraestructura sintética PostgreSQL con bases y roles aislados. Los escenarios comerciales permanecen en cada contexto. No se mezclan fixtures de navegador, configuración Vitest y dependencias de base de datos en un único barrel obligatorio.
 
 Su alcance son mecanismos técnicos usados por varias suites: relojes controlables, capturadores de logs, preparación de infraestructura o simuladores de transporte. Las fábricas y escenarios comerciales de ventas, caja o pagos permanecen cerca del contexto propietario. Producción no puede importar soporte de pruebas; esa prohibición requiere reglas y casos negativos.
 
@@ -48,10 +49,13 @@ Desde la raíz del repositorio del producto:
 npm test
 npm run test:e2e
 npm run test:e2e:mobile
+npm run test:e2e:branch
 npm run backend:check
 npm run backend:smoke
 npm run structure:check
 ```
+
+El runner `test:e2e:branch` requiere `POS_TEST_ADMIN_URL` de laboratorio loopback; aprovisiona, migra, siembra datos sintéticos, arranca artefactos y ejecuta la suite real. La [guía F01](phase-1-laboratory.md) detalla condiciones y recuperación. Los resultados se registran como evidencia de ejecución, sin aprobar automáticamente entregables.
 
 Para la documentación se ejecutan `validate`, `typecheck`, `build` y `check` desde `apps/starlight` en **pos-docs**. El build documental usa una revisión identificada del producto y no requiere instalar sus dependencias. Los [criterios técnicos de la base](implementation-plan.md) incluyen imports, empaquetado, comportamiento de los clientes y correspondencia entre catálogo y código verificado.
 

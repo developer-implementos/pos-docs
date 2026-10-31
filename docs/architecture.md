@@ -6,9 +6,9 @@
 
 Un producto multipaís con siete aplicaciones objetivo: `pos-desktop`, `pos-mobile`, `branch-api`, `branch-sync-worker`, `country-api`, `erp-worker` y `device-agent`. Las apps componen librerías por responsabilidad; seis tienen proyecto en la revisión del producto y `device-agent` está pendiente de implementación. La documentación Starlight pertenece al repositorio editorial [POS Docs](https://github.com/developer-implementos/pos-docs), separado del código operativo. La [guía del monorepo](monorepo.md) detalla el scaffold, su propiedad de datos y la evidencia del legado que orienta las fronteras.
 
-Las aplicaciones cliente `pos-desktop` y `pos-mobile` tienen entradas independientes. Cada una incluye un frontend Angular/PrimeNG alojado en una shell nativa (host): Tauri en escritorio y Capacitor en Android/iOS. Comparten `libs/client-shell`, la composición Angular de raíz, configuración, rutas, guards y layout, y `ui`, que concentra componentes, activos y estilos. La [decisión de clientes nativos](decisions/native-clients.md) fija sus límites. Vercel publica el portal, la documentación y las presentaciones desde POS Docs.
+Las aplicaciones cliente `pos-desktop` y `pos-mobile` tienen entradas independientes. Cada una incluye un frontend Angular/PrimeNG alojado en una shell nativa (host): Tauri en escritorio y Capacitor en Android/iOS. Comparten `libs/client-shell`, la composición Angular de raíz, configuración, rutas, guards y layout, y `shared/frontend/ui`, que concentra componentes, activos y estilos. La [decisión de clientes nativos](decisions/native-clients.md) fija sus límites. Vercel publica el portal, la documentación y las presentaciones desde POS Docs.
 
-El frontend conserva `domain`, que no importa Angular, y `data-access`, que implementa las mutaciones mock. Las features no se importan entre sí; `libs/client-shell` compone sus rutas y no es el host nativo. `ui` contiene presentación y formatos, sin acceso a persistencia ni reglas de operación. El backend dispone de contextos en `libs/backend`, contratos y políticas puras en `contracts`, `shared-kernel` y `country-policies`, y reutiliza la infraestructura técnica de `platform/backend`. ESLint verifica las direcciones de importación y Nx conoce los proyectos.
+El perfil demo conserva `domain`, que no importa Angular, y `data-access`, que implementa las mutaciones mock. El perfil conectado utiliza `data-access/branch-api` y `features/branch-operation`, con contratos puros y sin importar el store demo. Las features no se importan entre sí; `libs/client-shell` compone sus rutas y no es el host nativo. `ui` contiene presentación y formatos, sin acceso a persistencia ni reglas de operación. El backend dispone de contextos en `libs/backend`, contratos y políticas puras en `shared/contracts`, `shared/kernel` y `country-policies`, y reutiliza la infraestructura técnica de `shared/backend/runtime`. ESLint verifica las direcciones de importación y Nx conoce los proyectos.
 
 Las aplicaciones Node se empaquetan con Rspack/SWC y el plugin oficial de Nx para incluir las librerías fuente internas; TSC conserva la comprobación de tipos. Las dependencias externas se instalan desde el manifiesto y lockfile de cada artefacto, cuya ejecución se verifica fuera del workspace. Las bibliotecas internas se consumen desde el monorepo y no requieren publicación como paquetes independientes.
 
@@ -16,7 +16,7 @@ Prime-showcase aporta la referencia visual. Los formularios utilizan componentes
 
 ### Organización compartida objetivo
 
-`shared/backend` agrupa mecanismos del servidor; `shared/frontend/ui`, presentación; `shared/kernel`, el modelo mínimo acordado; `shared/contracts`, sobres y metadatos comunes; `shared/testing`, soporte exclusivamente de pruebas. Los contratos de ventas, pagos o caja pertenecen a su contexto. No existe un barrel universal ni se centralizan entidades de negocio.
+`shared/backend` agrupa mecanismos del servidor; `shared/frontend/ui`, presentación; `shared/kernel`, el modelo mínimo acordado; `shared/contracts`, sobres y metadatos comunes; `shared/backend/testing`, soporte exclusivamente de pruebas. Los contratos de ventas, pagos o caja pertenecen a su contexto. No existe un barrel universal ni se centralizan entidades de negocio.
 
 El diagrama expresa **dependencias objetivo de código**. No representa nuevas conexiones de red ni reglas ya instaladas.
 
@@ -31,10 +31,10 @@ flowchart TB
     Shell --> Web["Features del frontend"]
     Web --> UI["shared/frontend/ui"]
     Web --> Contracts
-    Tests["Suites de pruebas"] --> Support["shared/testing"]
+    Tests["Suites de pruebas"] --> Support["shared/backend/testing"]
 ```
 
-Las dependencias de servidor se limitan a adaptación/composición; el dominio permanece puro. Estos límites requieren reglas Nx/ESLint y pruebas negativas que rechacen imports prohibidos. El diseño incluye `apps/pos-clients-e2e` como proyecto de pruebas vinculado a ambas aplicaciones cliente; no amplía las siete aplicaciones objetivo. Su estado se detalla en la [guía de pruebas](testing.md).
+Las dependencias de servidor se limitan a adaptación/composición; el dominio permanece puro. Estos límites requieren reglas Nx/ESLint y pruebas negativas que rechacen imports prohibidos. El diseño incluye `tests/pos-clients-e2e` como proyecto de pruebas vinculado a ambas aplicaciones cliente; no amplía las siete aplicaciones objetivo. Su estado se detalla en la [guía de pruebas](testing.md).
 
 ## 2. Estado y puertos
 
@@ -44,11 +44,11 @@ Las dependencias de servidor se limitan a adaptación/composición; el dominio p
 
 La dirección de producto propone un backend de sucursal NestJS/Fastify compartido por las cajas y conectado a PostgreSQL de sucursal. Ambas aplicaciones cliente consumen su API, sin acceso SQL directo ni una base transaccional por terminal en el perfil de continuidad ante caída de WAN. La LAN y el servidor de sucursal siguen siendo dependencias de ese perfil. La sincronización duradera y el planificador pasarían a procesos supervisados que no dependan de la pestaña abierta. SQLite por terminal es una alternativa del perfil adicional sin LAN/servidor, pendiente de validación; no es la persistencia seleccionada por defecto. Esta dirección sigue la [propuesta de arquitectura](propuesta-arquitectura.md) y sus [opciones tecnológicas](opciones-tecnologicas.md).
 
-`apps/branch-api` incorpora la [base HTTP de ese backend](api.md): NestJS/Fastify, configuración y sondas de aplicación. Aún no tiene persistencia ni casos de uso de negocio, y no sustituye los adaptadores mock actuales del frontend. Instalar un framework no acredita las garantías transaccionales, de seguridad o continuidad de la propuesta.
+`apps/branch-api` compone la [API F01](api.md) con identidad de laboratorio, configuración, caja, catálogo, clientes, cestas, precios y confirmación en efectivo en PostgreSQL. `branch-lab` conecta Angular con esos contratos; `demo` conserva sus adaptadores sintéticos. La [guía F01](phase-1-laboratory.md) delimita el recorrido en revisión y la recuperación; la producción permanece cerrada.
 
 El [ADR-18](decisions/job-processing.md) selecciona BullMQ con Redis exclusivo para programación breve en `country-api` y ejecución, preparación de lotes y conciliación en `erp-worker`. Son dominios de cola aislados; PostgreSQL conserva solicitudes/resultados y permite reconstruir jobs. No añade Redis a sucursal ni cambia el protocolo PostgreSQL/HTTPS de `branch-sync-worker`. Colas, relay, consumidores y recuperación están pendientes de implementación.
 
-`country-api` prepara la composición del backend de país; `branch-sync-worker` y `erp-worker` preparan procesos separados para entrega y adaptadores. Son puntos de implementación, no sincronizadores reales. Los contextos scaffold no exponen fachadas que simulen una operación exitosa: deben incorporar casos de uso y pruebas antes de habilitar endpoints o jobs comerciales.
+`country-api` tiene base HTTP, PostgreSQL y comprobación de ámbito/esquema, sin recepción comercial; `branch-sync-worker` y `erp-worker` preparan procesos separados para entrega y adaptadores. Son puntos de implementación, no sincronizadores reales. Los contextos scaffold no exponen fachadas que simulen una operación exitosa: deben incorporar casos de uso y pruebas antes de habilitar endpoints o jobs comerciales.
 
 ## 3. Cuatro estados distintos
 
@@ -71,7 +71,7 @@ La cola de salida conserva la identidad de la operación y del evento durante lo
 
 Los perfiles Administrador, Supervisor, Cajero y Auditor tienen políticas explícitas. La navegación, las rutas y los comandos verifican permiso y disponibilidad del módulo. Deshabilitar una capacidad conserva su historial. Los registros de auditoría incluyen actor, rol, acción y entidad.
 
-El selector de perfil es una herramienta de demostración. No constituye autenticación ni una barrera contra alguien que controle el navegador. En producción se necesita identidad verificable, sesiones y autorización de servidor por empresa/sucursal/caja. La auditoría local mock tampoco sustituye un registro remoto inmutable.
+En `demo`, el selector de perfil es una herramienta de demostración. No constituye autenticación ni una barrera contra alguien que controle el navegador. En producción se necesita identidad verificable, sesiones y autorización de servidor por empresa/sucursal/caja. La auditoría local mock tampoco sustituye un registro remoto inmutable.
 
 ## 6. Multisucursal y producto comercial
 

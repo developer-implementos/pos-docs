@@ -1,6 +1,6 @@
 # Monorepo POS Platform
 
-> **Alcance del código:** el monorepo **pos-platform** reúne los clientes Angular/PrimeNG para escritorio (Tauri) y móvil (Capacitor) y la base NestJS/Fastify. La documentación Starlight se mantiene en [POS Docs](https://github.com/developer-implementos/pos-docs), con una referencia identificada al estado del producto. La interfaz mantiene adaptadores mock; la base backend aporta configuración, observabilidad, sondas y puntos de composición. Los módulos comerciales y workers todavía no ejecutan operaciones reales.
+> **Alcance del código en revisión:** **pos-platform** reúne los clientes Angular/PrimeNG para escritorio (Tauri) y móvil (Capacitor), las APIs NestJS/Fastify y sus workers. F01 conecta el cliente con operación de sucursal persistida en PostgreSQL bajo un perfil de laboratorio. El perfil demo permanece explícito. La documentación se publica en [POS Docs](https://github.com/developer-implementos/pos-docs); la aceptación y las capacidades productivas no se deducen del inventario.
 
 POS Platform es la base de un producto corporativo para varios países. El monorepo reúne clientes de escritorio y móvil, backend de sucursal, backend de país y workers con ciclos de ejecución propios. La demostración funcional actual cubre Chile; la estructura multipaís permite organizar la evolución sin afirmar que las reglas fiscales o integraciones de otros países estén implementadas.
 
@@ -28,8 +28,6 @@ apps/
   branch-sync-worker/           # Proceso de entrega y recepción de sucursal
   country-api/                  # API de recepción y capacidades de país
   erp-worker/                   # Proceso de integración, traducción y conciliación ERP
-  pos-clients-e2e/              # Pruebas de la UI; proyecto Nx de pruebas, sin despliegue
-    mobile/                     # Suite Angular móvil; no prueba el host Capacitor
 libs/
   backend/
     sales/                      # Ventas y documentos comerciales
@@ -47,38 +45,40 @@ libs/
     administration/             # Configuración y ámbito organizacional
   client-shell/                 # Composición Angular compartida; no es una aplicación desplegable
   features/                     # Funcionalidades de la interfaz
+    branch-operation/           # Login, caja y venta conectados con componentes PrimeNG
   shared/
-    backend/                    # Base técnica del servidor; división de proyectos por definir
-      bootstrap/                # Creación, arranque y cierre
-      config/                   # Configuración validada e inyectable
-      http/                     # Adaptación HTTP, errores y contrato técnico
-      observability/            # Pino, correlación y Sentry opcional
-      health/                   # Sondas del proceso y disponibilidad comprobada
-      worker/                   # Ciclo de vida de procesos de trabajo
     frontend/
       ui/                       # Preset, tokens y componentes de presentación
     kernel/                     # Modelo mínimo acordado entre contextos; sin frameworks
     contracts/                  # Sobres y metadatos técnicos comunes; no todos los DTO de negocio
-    testing/                    # Soporte técnico extraído cuando existan consumidores comunes
+    backend/
+      runtime/                  # Bootstrap, configuración, HTTP, observabilidad, sondas y ciclo de vida
+      persistence/              # Driver pg, unidad de trabajo, migraciones y comandos durables
+      testing/                  # Bases/roles sintéticos para integración real
   country-policies/             # Perfiles nacionales; reglas específicas bajo su contexto
   domain/                       # Reglas puras del prototipo frontend
-  data-access/                  # Estado y adaptadores mock de las funcionalidades
+  data-access/                  # Adaptadores demo y gateway branch-api en proyectos separados
+    branch-api/                 # HTTP y estado de la operación conectada
+tests/
+  pos-clients-e2e/              # Playwright demo y API real; proyecto Nx sin despliegue
+    mobile/                     # Suite Angular móvil; no homologa Capacitor
+    branch/                     # Recorridos Angular → API → PostgreSQL con recuperación
 tools/                          # Herramientas de build, lint y pruebas del producto
 .github/
   workflows/                    # Validaciones y entrega
 ```
 <!-- monorepo:target:end -->
 
-Las carpetas internas de `shared/backend` representan responsabilidades; la separación en proyectos Nx depende de sus consumidores y límites de dependencia.
+`shared/backend/runtime`, `persistence` y `testing` son proyectos con fronteras propias. Los contratos HTTP puros se publican desde cada contexto y pueden ser consumidos por los clientes.
 
 <span id="correspondencia-con-el-checkout-actual"></span>
 <span id="inventario-físico-actual"></span>
 
 ## Estado de implementación
 
-La revisión del producto contiene seis aplicaciones; `apps/device-agent` está acordada y pendiente de implementación. Los clientes funcionan con adaptadores mock. El backend dispone de arranque, configuración, observabilidad y sondas; los contextos comerciales y workers son scaffolds sin operación real. La organización completa de `libs/shared/` y el proyecto `pos-clients-e2e` están pendientes.
+El producto contiene seis aplicaciones; `apps/device-agent` está acordada y pendiente de implementación. `branch-api` compone identidad de laboratorio, configuración, apertura, catálogo, clientes, cestas, cotización y efectivo. `country-api` comprueba su PostgreSQL y ámbito sin recibir ventas. Los workers todavía no ejecutan sincronización ni integración ERP. El [recorrido F01](phase-1-laboratory.md) distingue lo implementado en laboratorio de las capacidades posteriores.
 
-La [guía de API](api.md), la [guía de pruebas](testing.md) y la [evidencia del producto](product-repository.md) describen las rutas y comandos disponibles en la revisión verificada. El árbol objetivo no acredita nuevos imports ni capacidades ya implementadas.
+La [guía de API](api.md), la [guía de pruebas](testing.md) y la [evidencia del producto](product-repository.md) delimitan el código revisado. El árbol conserva el estado pendiente de los componentes futuros; una carpeta no acredita operación o aceptación.
 
 Las bibliotecas se consumen por entradas públicas `@pos-platform/<nombre>`; las pantallas usan `@pos-platform/features/<nombre>`. El grafo Nx y las reglas de importación expresan sus fronteras. Una carpeta no equivale a un servicio desplegado.
 
@@ -90,9 +90,11 @@ Las bibliotecas se consumen por entradas públicas `@pos-platform/<nombre>`; las
 
 La UI reutilizable pertenece a `shared/frontend/ui`. Los contratos puros pueden ser consumidos por ambos clientes; las implementaciones Nest, SQL y SDK de servidor permanecen fuera de sus dependencias.
 
+El perfil `branch-lab` compone `libs/data-access/branch-api` y `libs/features/branch-operation`: gateway tipado, sesión en memoria y stores separados de caja, catálogo, venta y comprobantes. Las rutas de acceso, caja y venta se cargan bajo ese perfil. `demo` compone sus propios adaptadores y funcionalidades; un fallo de API no cambia de perfil. El cliente muestra cotizaciones de servidor y conserva referencias de operaciones pendientes, sin asumir autoridad sobre importes.
+
 ## Límites DDD de shared
 
-`shared/` agrupa bibliotecas con responsabilidades independientes. No será una biblioteca universal ni tendrá un barrel `@pos-platform/shared` que exporte todo. Cada biblioteca tendrá una entrada pública y dependencias verificables; un proyecto Nx adicional se justifica por su responsabilidad, consumidores o aislamiento, no por el número de carpetas.
+`shared/` agrupa bibliotecas con responsabilidades independientes. No tiene un barrel `@pos-platform/shared` que exporte todo. Cada proyecto expone una entrada pública y dependencias verificables; un proyecto adicional se justifica por su responsabilidad, consumidores o aislamiento.
 
 | Grupo objetivo | Contenido permitido | Propietario y límite |
 | --- | --- | --- |
@@ -100,11 +102,11 @@ La UI reutilizable pertenece a `shared/frontend/ui`. Los contratos puros pueden 
 | `shared/frontend/ui` | Tokens, preset y componentes de presentación | No accede a persistencia ni decide descuentos, permisos comerciales o pagos |
 | `shared/kernel` | Conceptos mínimos con semántica e invariantes acordadas entre contextos | TypeScript puro; cambios coordinados con sus consumidores; no un modelo global de entidades |
 | `shared/contracts` | Sobres de mensajes y metadatos transversales de intercambio | Sin Nest, Angular ni modelos ORM; no absorbe todos los contratos de negocio |
-| `shared/testing` | Relojes controlables, fixtures técnicas y soporte reutilizable | Solo consumidores de pruebas; producción no puede importarlo |
+| `shared/backend/testing` | Fixtures de PostgreSQL, bases y roles aislados para pruebas | Solo consumidores de pruebas; producción no puede importarlo |
 
 Un contrato como `SaleConfirmedV1` pertenece a ventas y se expone desde una entrada pública de contratos del contexto, independiente de Nest y de sus entidades internas. El sobre técnico puede pertenecer a `shared/contracts`. Compartir un contrato no transfiere la propiedad del negocio al grupo compartido.
 
-Un tipo `Money` solo pertenece al kernel si sus consumidores acuerdan la misma semántica. Los tipos iniciales actuales no implementan por sí solos validación de importes, redondeo o políticas comerciales. `Customer`, `Product` y `Sale` no se centralizan porque compartan nombres o campos: cada contexto conserva el modelo que necesita.
+Un tipo monetario sólo pertenece al kernel cuando sus consumidores comparten semántica. La cotización F01 implementa precisión decimal y política de redondeo en `pricing`, con DTO puros para los consumidores. `Customer`, `Product` y `Sale` no se centralizan por compartir nombres: cada contexto conserva el modelo que necesita.
 
 ### Direcciones de dependencia objetivo
 
@@ -113,21 +115,21 @@ Un tipo `Money` solo pertenece al kernel si sus consumidores acuerdan la misma s
 - Aplicación define los puertos; infraestructura los implementa con mecanismos de `shared/backend`. La composición conecta esas piezas.
 - Los contextos colaboran mediante contratos públicos y puertos explícitos; no importan repositorios, tablas ni implementaciones privadas ajenas.
 - El frontend consume contratos públicos y presentación; no importa bibliotecas de servidor.
-- Las bibliotecas de producción no importan `shared/testing` ni proyectos E2E. Las pruebas pueden consumir sus APIs públicas.
+- Las bibliotecas de producción no importan soporte de testing ni proyectos E2E. Las pruebas pueden consumir sus APIs públicas.
 
-Los límites se comprueban mediante tags Nx, restricciones de importación y pruebas de arquitectura. Las reglas actuales separan navegador, servidor y bibliotecas puras; la cobertura completa de la clasificación objetivo está pendiente.
+Los límites se comprueban mediante tags Nx, restricciones de importación y pruebas de arquitectura. Se separan navegador, servidor, contratos puros, contextos y soporte de pruebas. Una colaboración se habilita mediante el contrato público correspondiente, no por imports de infraestructura ajena.
 
-### Infraestructura pendiente y propiedad de datos
+### Infraestructura y propiedad de datos
 
-Autenticación/autorización, persistencia, migraciones, mensajería durable, idempotencia y resiliencia requieren implementación. No se crean módulos vacíos para dar por resueltas esas capacidades. Caché, alertas y controles operativos se incorporan con un consumidor, contrato y criterio de aceptación concretos.
+F01 incorpora identidad de laboratorio, autorización, PostgreSQL, migraciones y resultados durables de comandos. La identidad corporativa, entrega de outbox, recepción de país y jobs externos siguen sus fases. Caché, alertas y controles operativos se incorporan con un consumidor, contrato y criterio de aceptación concretos.
 
 La conexión y el ejecutor técnico de transacciones pueden compartirse; las tablas, repositorios y migraciones de ventas siguen perteneciendo a ventas. La escritura comercial y su outbox deben compartir la transacción correspondiente. Una utilidad de reintentos no decide repetir un pago de resultado desconocido: esa política pertenece a pagos.
 
 ## Proyectos de pruebas y herramientas
 
-`apps/pos-clients-e2e/` agrupa las pruebas Playwright de las interfaces Angular, con dependencias explícitas de `pos-desktop` y `pos-mobile`. Incluye fixtures, reportes, arranque local y ejecución contra el build de producción en CI. Es un proyecto de pruebas; no cuenta como aplicación operativa.
+`tests/pos-clients-e2e/` agrupa Playwright de las interfaces Angular con dependencias explícitas de clientes y `branch-api`. La carpeta `branch/` contiene recorridos contra API y PostgreSQL reales, incluidas respuestas perdidas y aprobación secundaria. Las suites demo y móvil mantienen su composición específica. Es un proyecto de pruebas, sin artefacto de despliegue.
 
-Las pruebas HTTP permanecen junto a cada API; las pruebas unitarias y de integración se mantienen cerca de su código. `shared/testing` solo extrae soporte técnico compartido: las fábricas de ventas o pagos conservan su propietario. `tools/backend` sigue siendo herramienta del workspace, no una dependencia de runtime.
+Las pruebas HTTP permanecen junto a cada API; unitarias e integración quedan cerca de su código. `shared/backend/testing` aporta fixtures técnicas; los datos comerciales conservan su contexto dueño. `tools/backend` y los runners de laboratorio son herramientas del workspace, no dependencias del runtime.
 
 Una suite `pos-system-e2e` requerirá un recorrido real sucursal–persistencia–país. `pos-desktop-e2e` se justificará con capacidades nativas de Tauri: probar Angular en Chromium no verifica instalación ni periféricos. Esas suites son futuras y no forman parte del inventario existente. La [guía de pruebas](testing.md) detalla alcances y criterios.
 
@@ -136,12 +138,12 @@ Una suite `pos-system-e2e` requerirá un recorrido real sucursal–persistencia�
 <!-- monorepo:applications:start -->
 | Aplicación | Lugar previsto | Responsabilidad | Estado revisado |
 | --- | --- | --- | --- |
-| `pos-desktop` | Puesto Windows | Aplicación completa: shell nativa Tauri y frontend Angular | Frontend con adaptadores mock; integración nativa real pendiente |
-| `pos-mobile` | Dispositivo Android/iOS | Aplicación completa: shell nativa Capacitor y frontend Angular | Frontend con adaptadores mock; ejecución y distribución nativas por verificar |
+| `pos-desktop` | Puesto Windows | Aplicación completa: shell nativa Tauri y frontend Angular | Composiciones Angular demo y branch-lab explícitas; pruebas de navegador no acreditan homologación nativa |
+| `pos-mobile` | Dispositivo Android/iOS | Aplicación completa: shell nativa Capacitor y frontend Angular | Composiciones Angular demo y branch-lab explícitas; distribución y capacidades nativas por homologar |
 | `device-agent` | PC Windows de cada puesto (F02/F05); estación de red compartida posterior (F06) | Agente C#/.NET por puesto; trabajos HTTPS con branch-api y diario SQLite; perfil de red compartido en F06 | Decisión acordada; app, protocolo y adaptadores pendientes de implementación y homologación |
-| `branch-api` | Sucursal | API y composición de negocio de sucursal | Base HTTP local; sin persistencia ni operaciones comerciales |
+| `branch-api` | Sucursal | API y composición de negocio de sucursal | Operación F01 en laboratorio con identidad, configuración, caja, catálogo, clientes, cestas, precios y efectivo en PostgreSQL; producción cerrada |
 | `branch-sync-worker` | Sucursal | Proceso de entrega y recepción de sucursal | Esqueleto local; sin jobs ni sincronización real |
-| `country-api` | País | API de recepción y capacidades de país | Base HTTP local; sin recepción de ventas ni consolidación |
+| `country-api` | País | API de recepción y capacidades de país | Base HTTP y PostgreSQL por ámbito con comprobación de esquema; sin recepción comercial |
 | `erp-worker` | Red autorizada del ERP | Proceso de integración, traducción y conciliación ERP | Esqueleto local; sin conexión a ERP |
 <!-- monorepo:applications:end -->
 
@@ -174,7 +176,7 @@ Estos comandos se ejecutan desde **pos-platform**. Los comandos `api:*` trabajan
 
 ## Propiedad de datos por contexto
 
-Esta tabla fija la responsabilidad propuesta para implementar los módulos. No describe tablas o repositorios ya creados. La misma librería puede aportar contratos y casos de uso a más de una aplicación, pero una operación conserva una autoridad de escritura definida.
+Esta tabla fija la responsabilidad de los contextos, incluidos los pendientes de fases posteriores. La misma librería puede aportar contratos y casos de uso a más de una app, pero cada operación conserva una autoridad de escritura. El estado implementado se detalla en la guía F01, no se infiere del nombre del contexto.
 
 | Contexto         | Datos y decisiones bajo su responsabilidad                                                     | Frontera que debe conservar                                                                                |
 | ---------------- | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
@@ -192,7 +194,7 @@ Esta tabla fija la responsabilidad propuesta para implementar los módulos. No d
 | `reporting`      | Proyecciones y consultas para indicadores, reportes y exportaciones                            | No modifica operaciones de origen; distingue información incompleta o pendiente                            |
 | `administration` | Ámbito empresa/país/sucursal/caja, módulos, políticas y asignaciones                           | Identidad y autorización necesitan integración real; configuración no reemplaza controles de servidor      |
 
-PostgreSQL de sucursal es la persistencia recomendada para negocio y mensajes durables del perfil sin WAN. PostgreSQL operativo por país mantiene sus propias recepciones y proyecciones. Los clientes no acceden a SQL directamente. Esos motores y migraciones están pendientes; no se instala una base por caja como consecuencia de crear el monorepo.
+PostgreSQL de sucursal conserva la operación F01 de laboratorio y su outbox. La base de país tiene ámbito y esquema independientes; sus recepciones comerciales están pendientes. Los clientes no acceden a SQL. La migración usa otro rol y el runtime recibe grants explícitos; el [ADR-19](decisions/postgresql-unit-of-work.md) concreta esa frontera.
 
 BullMQ se integra como mecanismo técnico de `shared/backend` compuesto por `country-api` y `erp-worker`, con puertos y handlers propiedad de sus contextos. Los jobs no contienen reglas comerciales en una biblioteca genérica. `country-api` programa solicitudes breves con Redis de trabajos de país; `erp-worker` ejecuta operaciones, lotes y conciliación con Redis de trabajos en la red ERP. Son instancias separadas y sin conexión Redis/SQL WAN. PostgreSQL conserva autoridad y recuperación; `branch-sync-worker` permanece en PostgreSQL/HTTPS. Este alcance del [ADR-18](decisions/job-processing.md) no acredita nuevos proyectos o dependencias ya instalados.
 
@@ -200,24 +202,25 @@ En la composición objetivo, `country-api` expone trabajo y resultados de integr
 
 ```mermaid
 flowchart LR
-    Client["pos-desktop / pos-mobile"] -->|"API propuesta"| Branch["branch-api"]
-    Branch -->|"Transacción propuesta"| Local[("PostgreSQL sucursal")]
-    Sync["branch-sync-worker"] -->|"Entrega / recepción propuesta"| Country["country-api"]
-    Sync -->|"Inbox / outbox"| Local
-    Country --> Central[("PostgreSQL país")]
-    ERP["erp-worker"] -->|"Trabajo y resultados · HTTPS saliente"| Country
-    ERP -->|"ACL + adaptador"| External["ERP externo"]
+    Client["pos-desktop / pos-mobile"] -->|"API v1 · laboratorio"| Branch["branch-api"]
+    Branch -->|"Transacción local F01"| Local[("PostgreSQL sucursal")]
+    Sync["branch-sync-worker"] -.->|"Entrega / recepción pendiente"| Country["country-api"]
+    Sync -.->|"Entrega de outbox pendiente"| Local
+    Country -->|"Sonda y ámbito de base"| Central[("PostgreSQL país")]
+    ERP["erp-worker"] -.->|"Trabajo y resultados pendientes · HTTPS"| Country
+    ERP -.->|"ACL + adaptador pendientes"| External["ERP externo"]
 ```
 
-El diagrama muestra la topología objetivo. En esta entrega no existen las conexiones entre aplicaciones, bases y proveedores. El frontend sigue usando el mock. La continuidad ante caída de WAN depende de la LAN y del servidor de sucursal; autonomía ante caída de ambos sería un perfil adicional con decisiones propias.
+Las líneas continuas muestran el recorrido de laboratorio; las discontinuas, integraciones pendientes. La continuidad ante caída de WAN depende de la LAN y del servidor de sucursal. La autonomía ante caída de ambos sería otro perfil con decisiones y pruebas propias.
 
 ## Capas y reutilización interna
 
-Los contextos se crean como un esqueleto explícito para dar ubicación y propietario al trabajo. Sus módulos y contratos iniciales no constituyen una implementación de negocio. No se añaden fachadas que devuelvan éxitos ficticios, repositorios vacíos presentados como persistencia ni endpoints de mutación sin casos de uso.
+Los contextos implementados conservan reglas, casos de uso y adaptadores propios. Los contextos pendientes sólo fijan ubicación y propietario; no devuelven éxitos ficticios. La profundidad de las capas sigue la responsabilidad real de cada capacidad.
 
-Cuando se implemente una capacidad, la organización interna sigue su complejidad:
+La organización interna distingue:
 
 - `api`: controladores, DTO y validación del contrato de entrada.
+- `contracts`: schemas y puertos públicos puros, utilizables por clientes y otros contextos autorizados.
 - `application`: casos de uso, coordinación y puertos requeridos.
 - `domain`: reglas e invariantes puras cuando exista dominio que lo justifique.
 - `infrastructure`: adaptadores de datos, proveedores o dispositivos.
@@ -238,7 +241,7 @@ ESLint tiene alcances explícitos; una comprobación sintáctica no se presenta 
 | Alcance                                                                                                      | Controles                                                                                                                                                                      |
 | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Aplicaciones y librerías TypeScript                                                                          | Sin `any` explícito, `console`, `debugger`, evaluación dinámica ni supresiones de tipos sin justificar; imports y variables comprobados                                        |
-| Cuatro apps Node, `libs/backend`, `libs/platform/backend`, `contracts`, `shared-kernel` y `country-policies` | Lint con tipos mediante `tsconfig.eslint.backend.json`, incluyendo sus tests y configuración: promesas, uso inseguro de valores, manejo de errores y exhaustividad de `switch` |
+| Cuatro apps Node, `libs/backend`, `libs/shared/backend/runtime`, `contracts`, `shared-kernel` y `country-policies` | Lint con tipos mediante `tsconfig.eslint.backend.json`, incluyendo sus tests y configuración: promesas, uso inseguro de valores, manejo de errores y exhaustividad de `switch` |
 | Aplicaciones y contextos backend                                                                             | Configuración de entorno en la frontera de arranque/configuración; logging por inyección de `nestjs-pino`; sin SDK Sentry ni creación de loggers propios                       |
 | Interfaz Angular                                                                                             | Contratos visuales y reglas Angular existentes, junto con las reglas sintácticas comunes; el análisis tipado anterior no cubre el frontend                                     |
 
@@ -258,11 +261,11 @@ Los clientes tienen bundles Angular independientes y empaquetado nativo por plat
 
 ## Evidencia que orienta los límites
 
-Core se inspeccionó en el commit `531f9aa80bc0f9b60ca29bfa38e6694453af99ba`. Las evidencias del legado provienen del [inventario de repositorios](analisis-repositorios/README.md) de la propuesta. Es un análisis de código; no certifica qué artefactos están desplegados. Los enlaces de los repositorios corporativos requieren sus permisos habituales y no incluyen valores de configuración sensibles.
+Core se inspeccionó en el commit `b25164a50375845989a671cdc8e13360866c76af`. Las evidencias del legado provienen del [inventario de repositorios](analisis-repositorios/README.md) de la propuesta. Es un análisis de código; no certifica qué artefactos están desplegados. Los enlaces de los repositorios corporativos requieren sus permisos habituales y no incluyen valores de configuración sensibles.
 
 | Fuente y snapshot                                              | Rutas de evidencia                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Decisión que informa                                                                                                                                  |
 | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Core · `531f9aa80bc0f9b60ca29bfa38e6694453af99ba`              | [`apps/core-api/src/bootstrap`](https://github.com/developer-implementos/core/tree/531f9aa80bc0f9b60ca29bfa38e6694453af99ba/apps/core-api/src/bootstrap), [`apps/core-api/rspack.config.js`](https://github.com/developer-implementos/core/blob/531f9aa80bc0f9b60ca29bfa38e6694453af99ba/apps/core-api/rspack.config.js), [`libs/ecommerce-payment`](https://github.com/developer-implementos/core/tree/531f9aa80bc0f9b60ca29bfa38e6694453af99ba/libs/ecommerce-payment) | Apps que componen módulos, librerías por contexto y empaquetado de código interno; convenciones de API detalladas en [api.md](api.md#referencia-core) |
+| Core · `b25164a50375845989a671cdc8e13360866c76af`              | [`apps/core-api/src/bootstrap`](https://github.com/developer-implementos/core/tree/b25164a50375845989a671cdc8e13360866c76af/apps/core-api/src/bootstrap), [`apps/core-api/rspack.config.js`](https://github.com/developer-implementos/core/blob/b25164a50375845989a671cdc8e13360866c76af/apps/core-api/rspack.config.js), [`libs/ecommerce-payment`](https://github.com/developer-implementos/core/tree/b25164a50375845989a671cdc8e13360866c76af/libs/ecommerce-payment) | Apps que componen módulos, librerías por contexto y empaquetado de código interno; convenciones de API detalladas en [api.md](api.md#referencia-core) |
 | Mountain · `711f97fd7948c696bf45c992c5b121683bdbacd7`          | [`backend/app/Controllers/Http/PuntoDeVentaController.js`](https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend/app/Controllers/Http/PuntoDeVentaController.js#L152-L233), [`backend/app/Services/ProductosService.js`](https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend/app/Services/ProductosService.js#L134-L205)                   | Conservar transacción comercial y separar fiscalidad; sustituir dependencia online del cálculo de precio mediante una capacidad local validada        |
 | Sincronizador · `540ab9a70e7befbca27a2f7eb88b87b25109e4d1`     | [`app/Services/ColaMensajeService.js`](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/app/Services/ColaMensajeService.js#L17-L199), [`app/Services/MensajeDetalleService.js`](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/app/Services/MensajeDetalleService.js#L79-L780)                                                               | Separar entrega, aplicación y confirmación, con recuperación durable y autoridad de cada módulo                                                       |
 | APIs corporativas · `8fbe2f1b4d4e464a403aa3daca63ffe712a9dd70` | [`apiMountainPosCaja/Controllers/CajaController.cs`](https://github.com/developer-implementos/apis-implementos/blob/8fbe2f1b4d4e464a403aa3daca63ffe712a9dd70/apiMountainPosCaja/Controllers/CajaController.cs#L164-L304), [`ServiciosAX/mountainPosCajaServices/RespuestaAx.cs`](https://github.com/developer-implementos/apis-implementos/blob/8fbe2f1b4d4e464a403aa3daca63ffe712a9dd70/ServiciosAX/mountainPosCajaServices/RespuestaAx.cs#L9-L50)                      | Mantener traducción semántica de resultados ERP en `erp`, sin exponer `RecId` o resultados por tabla como estados propios del POS                     |
@@ -275,22 +278,13 @@ En esta revisión también se contrastó el checkout `desarrollo` del sincroniza
 
 | Estado       | Alcance                                                                                                                                                    |
 | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Implementado | UI mock de Chile compartida por Tauri/Capacitor, base técnica Nest/Fastify, configuración validada, logging y errores comunes, pruebas y empaquetado                    |
-| Scaffold     | Aplicaciones y librerías por responsabilidad, puntos de composición, contratos y perfiles iniciales sin operación comercial real                           |
-| Pendiente    | Identidad y permisos de servidor, PostgreSQL/migraciones, transacciones, reglas completas de país, protocolos, jobs durables, integraciones y homologación |
+| Laboratorio en revisión | Angular conectado, identidad y permisos de servidor sintéticos, configuración, caja, catálogo, clientes, cestas, precios y efectivo en PostgreSQL |
+| Base técnica | HTTP, Pino/Sentry opcional, migraciones, roles separados, unidad de trabajo, artefactos y comprobaciones de ámbito/esquema |
+| Pendiente | Identidad corporativa, capacidades completas de país, entrega de outbox, jobs, ERP, proveedores, hardware y homologación operativa |
 
 Los [criterios técnicos de la base](implementation-plan.md#organización-y-criterios-de-aceptación) definen las comprobaciones para la estructura y sus dependencias.
 
-La implementación comercial avanza por recorridos comprobables:
-
-1. Acordar contrato, propietario de datos y criterios de aceptación de una capacidad; contrastar casos de Chile con el legado sin ejecutar efectos externos duplicados.
-2. Implementar identidad/ámbito y persistencia de sucursal con migraciones y recuperación; probar una transacción de negocio y su outbox en la misma conexión.
-3. Reemplazar un adaptador mock del frontend por la API autorizada, manteniendo los demás recorridos explícitamente mock hasta completar sus contratos.
-4. Implementar precio local reproducible: paquetes versionados, eventos incrementales, carga masiva programada, ejecución manual controlada y activación atómica.
-5. Conectar recepción de país y ERP con inbox/efecto atómicos, deduplicación, acuses precisos y conciliación; verificar reinicios, duplicados, backlog y respuestas inciertas.
-6. Homologar un segundo perfil nacional mediante políticas/adaptadores y pruebas de compatibilidad, sin duplicar el producto. Habilitar cada capacidad mediante criterios de piloto y operación acordados.
-
-La ordenación no obliga a completar un módulo entero antes de probar una capacidad; cada incremento debe atravesar contrato, caso de uso, persistencia, interfaz y recuperación cuando correspondan.
+Los entregables, dependencias y criterios de aceptación se mantienen en el [roadmap](roadmap.md) y sus fichas de producto. La [guía F01](phase-1-laboratory.md) explica el recorrido disponible. Cada incremento atraviesa contrato, caso de uso, persistencia, interfaz y recuperación cuando corresponde; tener scaffolding o checks no equivale a aceptación de fase.
 
 <span id="nombre-y-compatibilidad"></span>
 
