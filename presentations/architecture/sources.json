@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "reviewedOn": "2026-10-31",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "2924a75d0cf850b0710eaf162043602cc119eb57",
+  "revision": "22d86b6bacaaa0eb5bd2bcdd0250f4b0859e3a98",
   "sourceStatus": "Fuentes documentales verificadas en la revisión indicada; F01 combina administración POS en revisión y pruebas monetarias de laboratorio, sin aceptación de fase ni habilitación productiva.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "inputs": [
@@ -24,7 +24,7 @@
     },
     {
       "path": "apps/starlight/src/data/product-evidence.json",
-      "sha256": "ea0469c9317d35dc7d5eda6379d8a8276e41557b83ba0e922bc15caab7778086"
+      "sha256": "7b4b048dc7859a810d6f5a9a81ce0601cc7ae06d82048fde692cd613d8a21461"
     },
     {
       "path": "docs/roadmap.md",
