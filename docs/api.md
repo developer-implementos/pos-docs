@@ -1,31 +1,31 @@
-# Base de API de sucursal
+# API de sucursal y persistencia
 
-**Código disponible:** la base técnica de estas aplicaciones está en `libs/platform/backend`. Los comandos, imports y rutas de esta guía describen la implementación disponible. La organización acordada en `libs/shared/` está pendiente; consulta el [estado de implementación del monorepo](monorepo.md#estado-de-implementación).
+**Implementación en revisión:** F01 conecta Angular con `branch-api` y PostgreSQL en un perfil de laboratorio. La infraestructura técnica se encuentra en `libs/shared/backend/runtime`, `persistence` y `testing`; los casos de uso pertenecen a sus contextos de negocio. La [guía F01](phase-1-laboratory.md) describe el recorrido operativo y sus límites.
 
-> **Alcance de esta base:** el monorepo incluye el frontend Angular/PrimeNG y las entradas backend con su configuración, dependencias y comprobaciones. La API ofrece información del servicio y sondas; los módulos comerciales siguen siendo estructuras iniciales. Compartir repositorio no conecta automáticamente la interfaz a la API ni habilita una caja real.
+> **Alcance:** identidad sintética, configuración, apertura, catálogo, clientes, cestas, cotización y venta en efectivo persistida. La composición de laboratorio no admite arranque productivo, emisión fiscal, tarjetas o envío ERP. La aceptación de F01 se registra en el producto; publicar esta guía no la acredita.
 
-`apps/branch-api` es el punto de entrada HTTP del backend de sucursal propuesto. Usa NestJS 12, Fastify 5 y TypeScript dentro del monorepo Nx. Su alcance actual es una base ejecutable y verificable: arranque, configuración, información del servicio, sondas y contrato OpenAPI. La composición de `country-api`, `branch-sync-worker` y `erp-worker` reutiliza la base técnica de `libs/platform/backend`; la [guía del monorepo](monorepo.md) delimita esos procesos y los contextos de negocio.
+`apps/branch-api` compone el backend modular de sucursal con NestJS 12, Fastify 5 y TypeScript. Publica contratos HTTP v1 desde las bibliotecas de cada contexto, valida solicitudes con Zod y ejecuta los casos de uso mediante puertos. PostgreSQL 18.6 y `pg` 8.23.1 conservan la operación y su resultado durable. El [ADR-19](decisions/postgresql-unit-of-work.md) fija transacciones, migraciones y privilegios.
 
-Las aplicaciones cliente `pos-desktop` y `pos-mobile` conservan sus datos sintéticos y adaptadores mock en el frontend Angular/PrimeNG, alojado en las shells nativas Tauri y Capacitor, respectivamente. Esta API no tiene autenticación, base de datos, ventas, precios ni sincronizadores implementados. Los endpoints disponibles no habilitan operaciones de caja.
+Los clientes `pos-desktop` y `pos-mobile` seleccionan explícitamente `demo` o `branch-lab`. El perfil conectado usa la API; no cambia a mocks cuando ocurre un fallo. `country-api` tiene persistencia y sonda de ámbito propias, todavía sin recepción comercial. Los workers conservan su composición técnica sin jobs operativos.
 
 ## Referencia Core
 
-Las convenciones se contrastaron con [developer-implementos/core](https://github.com/developer-implementos/core/tree/531f9aa80bc0f9b60ca29bfa38e6694453af99ba), commit `531f9aa80bc0f9b60ca29bfa38e6694453af99ba`. La referencia es su código de arranque y sus contratos; no se incorpora Core como dependencia ni se conectan sus servicios.
+Las convenciones se contrastaron con [developer-implementos/core](https://github.com/developer-implementos/core/tree/b25164a50375845989a671cdc8e13360866c76af), commit `b25164a50375845989a671cdc8e13360866c76af`. La referencia es su código de arranque y sus contratos; no se incorpora Core como dependencia ni se conectan sus servicios.
 
 | Referencia verificada en Core                                                                                                                                                                                                                                                                        | Aplicación en POS                                                                                                                  |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| [Bootstrap y fábricas Nest/Fastify](https://github.com/developer-implementos/core/tree/531f9aa80bc0f9b60ca29bfa38e6694453af99ba/apps/core-api/src/bootstrap)                                                                                                                                         | Separar creación, configuración HTTP/OpenAPI y listener en `platform/backend`; cada aplicación conserva su identidad y composición |
-| [Módulo y servicio de configuración](https://github.com/developer-implementos/core/tree/531f9aa80bc0f9b60ca29bfa38e6694453af99ba/apps/core-api/src/config)                                                                                                                                           | Validar una vez y publicar un snapshot inmutable mediante `RuntimeConfigModule` y `RuntimeConfigService`                           |
-| [Logging con Pino](https://github.com/developer-implementos/core/tree/531f9aa80bc0f9b60ca29bfa38e6694453af99ba/libs/shared/backend/observability/src/lib/logging)                                                                                                                                    | Unificar Nest y HTTP mediante `nestjs-pino`, conservar correlación y limitar los datos registrados                                 |
-| [Filtro global de excepciones](https://github.com/developer-implementos/core/blob/531f9aa80bc0f9b60ca29bfa38e6694453af99ba/apps/core-api/src/common/filters/global-exception.filter.ts)                                                                                                              | Respuesta plana con `code`, `message`, `category` y `timestamp`; la base POS omite `details` y oculta errores internos             |
-| [Versionado URI del bootstrap](https://github.com/developer-implementos/core/blob/531f9aa80bc0f9b60ca29bfa38e6694453af99ba/apps/core-api/src/bootstrap/bootstrap.ts) y [convenciones OpenAPI](https://github.com/developer-implementos/core/blob/531f9aa80bc0f9b60ca29bfa38e6694453af99ba/AGENTS.md) | Prefijo `api`, versión URI `1`, sondas neutrales y documentación en español con `operationId` estables                             |
-| [Helper Vitest/SWC](https://github.com/developer-implementos/core/blob/531f9aa80bc0f9b60ca29bfa38e6694453af99ba/libs/shared/testing/src/config/vitest.helper.ts)                                                                                                                                     | Vitest con transformación SWC y metadata de decoradores para probar la inyección real de Nest                                      |
+| [Bootstrap y fábricas Nest/Fastify](https://github.com/developer-implementos/core/tree/b25164a50375845989a671cdc8e13360866c76af/apps/core-api/src/bootstrap)                                                                                                                                         | Separar creación, configuración HTTP/OpenAPI y listener en `shared/backend/runtime`; cada aplicación conserva su identidad y composición |
+| [Módulo y servicio de configuración](https://github.com/developer-implementos/core/tree/b25164a50375845989a671cdc8e13360866c76af/apps/core-api/src/config)                                                                                                                                           | Validar una vez y publicar un snapshot inmutable mediante `RuntimeConfigModule` y `RuntimeConfigService`                           |
+| [Logging con Pino](https://github.com/developer-implementos/core/tree/b25164a50375845989a671cdc8e13360866c76af/libs/shared/backend/observability/src/lib/logging)                                                                                                                                    | Unificar Nest y HTTP mediante `nestjs-pino`, conservar correlación y limitar los datos registrados                                 |
+| [Filtro global de excepciones](https://github.com/developer-implementos/core/blob/b25164a50375845989a671cdc8e13360866c76af/apps/core-api/src/common/filters/global-exception.filter.ts)                                                                                                              | Respuesta plana con `code`, `message`, `category` y `timestamp`; la base POS omite `details` y oculta errores internos             |
+| [Versionado URI del bootstrap](https://github.com/developer-implementos/core/blob/b25164a50375845989a671cdc8e13360866c76af/apps/core-api/src/bootstrap/bootstrap.ts) y [convenciones OpenAPI](https://github.com/developer-implementos/core/blob/b25164a50375845989a671cdc8e13360866c76af/AGENTS.md) | Prefijo `api`, versión URI `1`, sondas neutrales y documentación en español con `operationId` estables                             |
+| [Helper Vitest/SWC](https://github.com/developer-implementos/core/blob/b25164a50375845989a671cdc8e13360866c76af/libs/shared/testing/src/config/vitest.helper.ts)                                                                                                                                     | Vitest con transformación SWC y metadata de decoradores para probar la inyección real de Nest                                      |
 
-POS conserva npm, Nx 23 y NestJS 12. La incorporación de varias aplicaciones backend y librerías compartidas justifica Rspack/SWC con el plugin oficial de Nx para empaquetar fuentes internas, manteniendo TSC para comprobar tipos. Los artefactos incluyen manifiesto y lockfile de distribución; no necesitan resolver aliases desde el workspace. Se adapta el [empaquetado de Core](https://github.com/developer-implementos/core/blob/531f9aa80bc0f9b60ca29bfa38e6694453af99ba/apps/core-api/rspack.config.js) sin copiar sus plugins correctivos ni su lista de dependencias cloud.
+POS conserva npm, Nx 23 y NestJS 12. La incorporación de varias aplicaciones backend y librerías compartidas justifica Rspack/SWC con el plugin oficial de Nx para empaquetar fuentes internas, manteniendo TSC para comprobar tipos. Los artefactos incluyen manifiesto y lockfile de distribución; no necesitan resolver aliases desde el workspace. Se adapta el [empaquetado de Core](https://github.com/developer-implementos/core/blob/b25164a50375845989a671cdc8e13360866c76af/apps/core-api/rspack.config.js) sin copiar sus plugins correctivos ni su lista de dependencias cloud.
 
-Para Sentry se toma como referencia la [inicialización y cierre de Core](https://github.com/developer-implementos/core/tree/531f9aa80bc0f9b60ca29bfa38e6694453af99ba/apps/core-api/src/common/sentry), con una integración más acotada: un `NodeClient` privado de `@sentry/node` por aplicación, captura explícita y filtrado por campos permitidos. No se copia la inicialización global de `@sentry/nestjs`, el profiling ni las integraciones automáticas de Core. Pino sigue siendo el logger de Nest y HTTP; Sentry es un destino opcional para errores seleccionados.
+Para Sentry se toma como referencia la [inicialización y cierre de Core](https://github.com/developer-implementos/core/tree/b25164a50375845989a671cdc8e13360866c76af/apps/core-api/src/common/sentry), con una integración más acotada: un `NodeClient` privado de `@sentry/node` por aplicación, captura explícita y filtrado por campos permitidos. No se copia la inicialización global de `@sentry/nestjs`, el profiling ni las integraciones automáticas de Core. Pino sigue siendo el logger de Nest y HTTP; Sentry es un destino opcional para errores seleccionados.
 
-El scaffold no incorpora MongoDB, Redis, servicios cloud, OpenTelemetry ni la autenticación ecommerce de Core: no tiene esos consumidores ni contratos, y el backend de sucursal conserva el alcance de la propuesta POS. El [ADR-18](decisions/job-processing.md) selecciona BullMQ + Redis propio para trabajos de país y ERP, pendiente de implementación; no añade esa dependencia al backend de sucursal ni importa infraestructura de Core.
+La composición F01 no incorpora MongoDB, Redis, servicios cloud, OpenTelemetry ni la autenticación ecommerce de Core: no tiene esos consumidores ni contratos, y el backend de sucursal conserva el alcance de la propuesta POS. El [ADR-18](decisions/job-processing.md) selecciona BullMQ + Redis propio para trabajos de país y ERP, pendiente de implementación; no añade esa dependencia al backend de sucursal ni importa infraestructura de Core.
 
 <span id="actualización-de-nombres-y-configuración"></span>
 
@@ -44,9 +44,9 @@ El campo `service` de `GET /api/v1`, logs y eventos Sentry de sucursal identific
 
 ## Organización del runtime
 
-La fábrica de aplicación compone módulos y permite crear el servidor sin abrir un puerto, para probarlo con Fastify. El arranque del proceso agrega escucha y cierre; la configuración HTTP y OpenAPI permanece separada de los módulos de negocio. La base de `platform/backend` valida configuración, la expone mediante inyección y concentra logging, errores, sondas y ciclo de vida reutilizados por las aplicaciones. Cada app conserva su punto de entrada y composición.
+La fábrica compone módulos y permite crear el servidor sin abrir un puerto para probarlo con Fastify. El arranque agrega escucha y cierre. `shared/backend/runtime` concentra configuración, HTTP/OpenAPI, logging, errores, sondas y ciclo de vida; `shared/backend/persistence` implementa conexiones y unidad de trabajo. Cada app conserva su identidad y manifiesto de migraciones.
 
-Las librerías de `libs/backend` establecen un scaffold explícito por contexto. Los casos de uso se implementarán progresivamente, con `api`, `application`, `domain`, `infrastructure` y `config` cuando sus responsabilidades lo justifiquen. Las comunicaciones entre módulos pasan por interfaces o fachadas públicas cuando exista esa capacidad; los esqueletos no devuelven éxitos comerciales ficticios ni sustituyen persistencia o integración real.
+Las librerías de `libs/backend` separan contratos, aplicación, dominio, infraestructura y adaptación HTTP donde existen esas responsabilidades. Las colaboraciones entre contextos usan contratos públicos; las apps componen sus adaptadores. La operación en efectivo coordina venta, caja y registro durable con la misma transacción. Los módulos de fases posteriores no devuelven éxitos comerciales ficticios.
 
 ## Desarrollo
 
@@ -59,7 +59,7 @@ npm ci
 npm run api:dev
 ```
 
-El servidor escucha por defecto en `http://127.0.0.1:3000`. El proceso de desarrollo de Nx recompila los cambios y reinicia la API.
+El servidor escucha por defecto en `http://127.0.0.1:3000`. Requiere el perfil, base migrada y credencial runtime de laboratorio antes de arrancar. Nx recompila cambios y reinicia la API; no aprovisiona una base automáticamente.
 
 `npm run country:dev` inicia la base HTTP de país en `http://127.0.0.1:3001`. Las aplicaciones tienen identidades y composición separadas; iniciar ambas no establece una conexión entre ellas. Los [comandos del workspace](monorepo.md#comandos-del-workspace) también incluyen las verificaciones de los workers, que componen y cierran su contexto sin ejecutar trabajos de negocio.
 
@@ -73,10 +73,12 @@ La validación ocurre antes de escuchar conexiones. `RuntimeConfigModule` regist
 | `BRANCH_API_HOST`         | `127.0.0.1`                                      | Interfaz de escucha; usar `0.0.0.0` solo cuando el despliegue deba aceptar conexiones externas |
 | `BRANCH_API_PORT`         | `3000`                                           | Puerto TCP del servicio                                                                        |
 | `BRANCH_API_LOG_LEVEL`    | `info`                                           | `trace`, `debug`, `info`, `warn`, `error`, `fatal` o `silent`                                  |
-| `BRANCH_API_DOCS_ENABLED` | `true` en desarrollo/test; `false` en producción | Habilita Swagger UI y el documento OpenAPI                                                     |
+| `BRANCH_API_DOCS_ENABLED` | `true` en desarrollo/test; `false` en producción | Habilita el documento OpenAPI JSON                                                     |
 | `BRANCH_API_CORS_ORIGINS` | vacío                                            | Orígenes HTTP/HTTPS exactos separados por comas; sin permisos entre orígenes por defecto       |
 
-Ejemplo de un origen de desarrollo, cuando se incorpore un consumidor HTTP: `BRANCH_API_CORS_ORIGINS=http://127.0.0.1:4300`. Habilitar CORS no conecta el frontend ni constituye autenticación o autorización.
+Para el cliente conectado, `BRANCH_API_CORS_ORIGINS` admite orígenes exactos, por ejemplo `http://127.0.0.1:4302` para el runner. CORS no constituye autenticación ni autorización. También se requiere `BRANCH_API_PROFILE=laboratory`, `BRANCH_API_BRANCH_ID` y `BRANCH_API_DATABASE_URL`. La migración usa `BRANCH_API_MIGRATION_DATABASE_URL` con otra credencial. Las URLs nunca se publican en la documentación ni se registran en logs.
+
+`BRANCH_API_DATABASE_TLS_MODE` usa `verify-full`; `disable-local` sólo se admite en loopback de laboratorio. Los límites de sesión y búsqueda se configuran mediante `BRANCH_API_LAB_SESSION_TTL_MS`, `BRANCH_API_CATALOG_BURST` y `BRANCH_API_CATALOG_REFILL_PER_SECOND`. Los ejemplos del producto son la referencia de claves y defaults; la guía no conserva secretos ni replica la configuración de una instalación.
 
 Estas variables corresponden a `branch-api`. `country-api` usa el prefijo `COUNTRY_API_` para las mismas opciones HTTP, con puerto predeterminado 3001. Los workers consumen `NODE_ENV`, su nivel de log (`BRANCH_SYNC_WORKER_LOG_LEVEL` o `ERP_WORKER_LOG_LEVEL`) y las opciones de reporte de errores descritas abajo; no configuran listener HTTP, CORS ni OpenAPI.
 
@@ -86,8 +88,7 @@ Estas variables corresponden a `branch-api`. `country-api` usa el prefijo `COUNT
 | ----------------------- | ------------------------------------------------------ |
 | `GET /api/v1`           | Identifica el servicio y el alcance de esta base       |
 | `GET /health/live`      | Comprueba que la aplicación responde                   |
-| `GET /health/ready`     | Indica que la aplicación terminó su inicialización     |
-| `GET /api/docs`         | Interfaz Swagger, solo con `BRANCH_API_DOCS_ENABLED=true` |
+| `GET /health/ready`     | Comprueba PostgreSQL, ámbito y migraciones/checksums compatibles |
 | `GET /api/openapi.json` | Contrato OpenAPI, solo con `BRANCH_API_DOCS_ENABLED=true` |
 
 ```sh
@@ -95,7 +96,26 @@ curl http://127.0.0.1:3000/api/v1
 curl http://127.0.0.1:3000/health/ready
 ```
 
-Las sondas no consultan PostgreSQL, ERP, dispositivos ni medios de pago. Un resultado saludable expresa disponibilidad de esta aplicación; no demuestra que una sucursal pueda vender. Al incorporar dependencias reales, readiness debe comprobar las necesarias para el tráfico admitido y distinguirlas de integraciones que puedan quedar pendientes.
+Readiness de sucursal y país consulta su PostgreSQL correspondiente. Un esquema o ámbito incompatible impide declarar disponibilidad. La sonda no acredita ERP, dispositivos, pagos, permisos del operador o caja abierta; esas condiciones se validan en el caso de uso.
+
+Las siguientes rutas pertenecen al perfil de laboratorio y llevan el prefijo `/api/v1`. Los contratos compartidos son la fuente de sus DTO; OpenAPI se genera desde esa misma definición.
+
+| Rutas | Responsabilidad |
+| --- | --- |
+| `POST /auth/lab/login`, `GET /auth/session`, `POST /auth/logout` | Crear, consultar y revocar una sesión limitada a actor, caja e instalación |
+| `GET /configuration/effective` | Recuperar configuración efectiva, procedencia, versión y capacidades |
+| `GET /cash/shifts/current`, `POST /cash/shifts` | Consultar y abrir el turno autorizado |
+| `GET /catalog/products`, `/catalog/product-codes/:code`, `/catalog/products/:productId/availability` | Buscar productos, resolver captura y consultar disponibilidad informativa |
+| `GET /customers`, `/customers/:customerId` | Buscar y consultar clientes del maestro autorizado |
+| `POST /customers/requests`, `GET /customers/requests/:requestId` | Solicitar alta/actualización y consultar su resultado durable |
+| `GET/POST /sales/drafts`, `GET/PUT /sales/drafts/:cartId` | Listar, crear, recuperar y editar cestas con control de versión |
+| `POST /sales/drafts/:cartId/pause`, `/resume`, `/cancel` | Gestionar la continuidad o cancelación de la cesta |
+| `POST /pricing/quotes`, `/pricing/discount-authorizations` | Cotizar y registrar aprobación separada para un descuento limitado |
+| `POST /sales/cash-confirmations` | Confirmar efectivo con identidad de comando, versión y cotización vigente |
+| `GET /commands/:commandId` | Recuperar el resultado terminal `completed` o `rejected` de la confirmación |
+| `GET /sales/:saleId` | Consultar el comprobante histórico de laboratorio, con detalle y reglas conservadas |
+
+Los comandos usan `contractVersion`, `commandId` y versión esperada cuando existe un agregado. Los importes viajan como cadenas decimales; UUID y fechas se normalizan en contrato. La identidad, permisos y capacidades se verifican en el servidor, independientemente de lo que muestre la UI. Los tokens de sesión se conservan en memoria en el cliente; el servidor guarda su hash y vencimiento.
 
 Las rutas de negocio usan el prefijo `api` y el versionado URI nativo de Nest, con versión inicial `1`. Las sondas se declaran neutrales a versión y quedan fuera de ese prefijo. OpenAPI describe operaciones y DTO en español y usa `operationId` explícitos y estables para los consumidores del contrato.
 
@@ -153,9 +173,9 @@ npm run api:smoke
 
 `api:check` ejecuta los targets Nx `lint`, `typecheck`, `test` y `build` de `branch-api`.
 
-Las pruebas usan Vitest y SWC con metadata de decoradores, siguiendo el mecanismo utilizado por Core para inyección de Nest. Cubren configuración y comportamiento HTTP de la aplicación con Fastify, sin requerir servicios externos. Rspack/SWC genera el bundle distribuible; TSC comprueba tipos por separado. Ni la transformación de pruebas ni el empaquetado sustituyen esa comprobación.
+Las pruebas usan Vitest y SWC con metadata de decoradores para la inyección de Nest. Los casos HTTP de laboratorio y persistencia requieren PostgreSQL real aislado mediante `POS_TEST_ADMIN_URL`; las pruebas puras no requieren ese servicio. Se verifican permisos, ámbitos, versiones, concurrencia y recuperación. Rspack/SWC genera el bundle distribuible; TSC comprueba tipos por separado.
 
-`api:smoke` compila y copia el artefacto a una carpeta temporal fuera del monorepo, instala allí sus dependencias con `npm ci --omit=dev` y arranca la aplicación compilada en modo producción, con un puerto efímero de loopback. Comprueba por HTTP la información del servicio, las sondas y que la documentación devuelve 404; también instancia el SDK Sentry del artefacto con un transporte en memoria y comprueba el filtrado de canarios sintéticos. Después cierra la aplicación y elimina la copia temporal. Así verifica que la API funciona con sus propias dependencias, sin resolver paquetes desde el `node_modules` del workspace ni enviar eventos a un servicio Sentry real. La instalación requiere acceso al registro npm.
+El smoke del artefacto lo instala fuera del monorepo con `npm ci --omit=dev`, para detectar dependencias resueltas accidentalmente desde el workspace. La composición de laboratorio usa base, roles y seed sintéticos; verifica los comandos de migración/comprobación y el arranque configurado. También comprueba que el perfil no abra operación productiva. La instalación requiere acceso al registro npm. Los checks de Sentry usan transporte en memoria y canarios sintéticos, sin enviar eventos a un servicio real.
 
 El job `api` de CI ejecuta `backend:check`, `structure:check` y `backend:smoke`, separado de los jobs del frontend y escritorio. Cubre las cuatro aplicaciones backend y sus librerías; los comandos `api:*` siguen disponibles para trabajar solo sobre `branch-api`.
 
@@ -178,15 +198,15 @@ npm ci --omit=dev
 node --env-file=/ruta/api.env main.js
 ```
 
-El archivo del despliegue o el entorno del proceso debe definir `NODE_ENV=production`. Configure host, puerto y orígenes según el servicio que reciba tráfico. Mantenga OpenAPI deshabilitado salvo habilitación deliberada. El archivo de entorno del ejemplo es externo al artefacto y no se incluye en el repositorio.
+En F01 este comando utiliza exclusivamente el perfil de laboratorio, sus credenciales runtime y una base previamente migrada. No debe usarse `NODE_ENV=production` para intentar habilitarlo: la composición rechaza ese entorno mientras la identidad corporativa y los gates de operación no estén implementados. El archivo de configuración es externo al artefacto y no se versiona. El CLI `database.js` ejecuta migraciones con la credencial separada; el servidor no hace auto-migraciones.
 
 Esta API es un proceso Node independiente dentro de **pos-platform**. La configuración `vercel.json` del repositorio editorial **pos-docs** publica únicamente Starlight; no publica `branch-api` ni las demás aplicaciones backend. El despliegue del backend de sucursal necesita su propia supervisión de proceso, terminación TLS, identidad y política de acceso antes de incorporar operaciones reales.
 
 ## Evolución prevista
 
-La organización objetivo distingue infraestructura compartida de propiedad de negocio: conexiones y ejecutores técnicos en `shared/backend`; modelos, repositorios y migraciones en cada contexto. Los contratos comerciales se publican desde su contexto; `shared/contracts` no contiene un catálogo global de DTO de negocio.
+La organización distingue infraestructura compartida de propiedad de negocio: conexiones y ejecutores técnicos en `shared/backend`; modelos, repositorios y migraciones en cada contexto. Los contratos comerciales se publican desde su contexto; `shared/contracts` contiene sobres, metadatos y errores transversales, no un catálogo global de DTO de negocio.
 
-La propuesta usa un backend modular de sucursal y PostgreSQL como persistencia compartida por sus cajas. Los clientes hablan con la API; no consultan tablas directamente. Las librerías `contracts`, `shared-kernel` y `country-policies` fijan la ubicación de contratos y reglas puras; los adaptadores HTTP y de persistencia permanecen en su frontera. Los contextos de negocio ya tienen ubicación en el scaffold, pero autenticación, autorización, persistencia, migraciones, transacciones e inbox/outbox se incorporarán con pruebas de sus garantías, sin presentarlos como implementados por esta base.
+La venta en efectivo de laboratorio tiene autenticación, autorización, PostgreSQL, migraciones y una unidad de trabajo que conserva sus efectos y outbox. La entrega de ese outbox, recepción de país, maestros desde fuentes reales, jobs BullMQ, ERP, fiscalidad y dispositivos permanecen en las fases correspondientes. Las reglas del perfil CL sintético no homologan Chile, Perú o España. Los clientes hablan con la API y nunca consultan SQL directamente.
 
 La [propuesta de arquitectura](propuesta-arquitectura.md) y las [opciones tecnológicas](opciones-tecnologicas.md) explican la ubicación del backend y los límites del perfil sin WAN. El servicio no promete autonomía de una caja ante caída de la LAN o del servidor de sucursal.
 

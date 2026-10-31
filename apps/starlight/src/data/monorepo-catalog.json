@@ -1,22 +1,22 @@
 {
   "schemaVersion": 1,
   "product": "POS Platform",
-  "reviewedOn": "2026-10-29",
+  "reviewedOn": "2026-10-30",
   "repository": "https://github.com/developer-implementos/pos-platform",
-  "evidence": "Siete aplicaciones en la arquitectura objetivo. La revisión del producto acredita seis proyectos: dos clientes con shells Tauri/Capacitor y frontend Angular compartido, y cuatro entradas backend con base técnica. device-agent es una aplicación C#/.NET para Windows acordada, todavía sin proyecto ni adaptadores implementados. Starlight pertenece a POS Docs. Ningún scaffold acredita operación productiva ni homologación de hardware.",
+  "evidence": "Siete aplicaciones en la arquitectura objetivo y seis proyectos de aplicación en el código revisado. F01 incorpora operación de laboratorio Angular → branch-api → PostgreSQL; no acredita aceptación de fase ni habilitación productiva. country-api comprueba su base/ámbito; workers y device-agent conservan los límites indicados. Starlight pertenece a POS Docs.",
   "applications": [
     {
       "name": "pos-desktop",
       "location": "Puesto Windows",
       "description": "Aplicación completa: shell nativa Tauri y frontend Angular",
-      "state": "Frontend con adaptadores mock; integración nativa real pendiente",
+      "state": "Composiciones Angular demo y branch-lab explícitas; pruebas de navegador no acreditan homologación nativa",
       "inReviewedWorkspace": true
     },
     {
       "name": "pos-mobile",
       "location": "Dispositivo Android/iOS",
       "description": "Aplicación completa: shell nativa Capacitor y frontend Angular",
-      "state": "Frontend con adaptadores mock; ejecución y distribución nativas por verificar",
+      "state": "Composiciones Angular demo y branch-lab explícitas; distribución y capacidades nativas por homologar",
       "inReviewedWorkspace": true
     },
     {
@@ -30,7 +30,7 @@
       "name": "branch-api",
       "location": "Sucursal",
       "description": "API y composición de negocio de sucursal",
-      "state": "Base HTTP local; sin persistencia ni operaciones comerciales",
+      "state": "Operación F01 en laboratorio con identidad, configuración, caja, catálogo, clientes, cestas, precios y efectivo en PostgreSQL; producción cerrada",
       "inReviewedWorkspace": true
     },
     {
@@ -44,7 +44,7 @@
       "name": "country-api",
       "location": "País",
       "description": "API de recepción y capacidades de país",
-      "state": "Base HTTP local; sin recepción de ventas ni consolidación",
+      "state": "Base HTTP y PostgreSQL por ámbito con comprobación de esquema; sin recepción comercial",
       "inReviewedWorkspace": true
     },
     {
@@ -122,12 +122,12 @@
       "kind": "backend-context"
     },
     {
-      "path": "contracts",
+      "path": "shared/contracts",
       "description": "Contratos versionados entre aplicaciones",
       "kind": "pure"
     },
     {
-      "path": "shared-kernel",
+      "path": "shared/kernel",
       "description": "Primitivas puras comunes: identidad, dinero y moneda",
       "kind": "pure"
     },
@@ -137,8 +137,18 @@
       "kind": "pure"
     },
     {
-      "path": "platform/backend",
+      "path": "shared/backend/runtime",
       "description": "Arranque, configuración, HTTP, logging y errores",
+      "kind": "platform"
+    },
+    {
+      "path": "shared/backend/persistence",
+      "description": "PostgreSQL, unidad de trabajo, migraciones y comandos durables",
+      "kind": "platform"
+    },
+    {
+      "path": "shared/backend/testing",
+      "description": "Fixtures aislados de PostgreSQL y soporte de integración",
       "kind": "platform"
     },
     {
@@ -148,7 +158,7 @@
     },
     {
       "path": "data-access",
-      "description": "Estado y adaptadores mock del frontend",
+      "description": "Estado y adaptadores de demostración; el gateway conectado tiene proyecto propio",
       "kind": "frontend"
     },
     {
@@ -157,13 +167,18 @@
       "kind": "frontend"
     },
     {
-      "path": "ui",
+      "path": "shared/frontend/ui",
       "description": "Componentes, tokens, estilos y activos visuales compartidos",
       "kind": "frontend"
     },
     {
       "path": "features",
       "description": "Pantallas de acceso, caja, análisis y administración",
+      "kind": "frontend"
+    },
+    {
+      "path": "data-access/branch-api",
+      "description": "Gateway HTTP y stores de sesión, caja, catálogo, venta y comprobantes",
       "kind": "frontend"
     }
   ],
@@ -174,7 +189,7 @@
   "documentationApplications": [],
   "targetStructure": {
     "decidedOn": "2026-10-29",
-    "status": "Estructura objetivo acordada; consultar la evidencia del producto para el alcance implementado.",
+    "status": "Estructura aplicada a F01 en revisión; aplicaciones posteriores conservan sus estados explícitos.",
     "coreRelationship": "Core es únicamente referencia de organización y convenciones; no es dependencia, proveedor de paquetes ni servicio del POS.",
     "entries": [
       {
@@ -213,16 +228,14 @@
         "state": "conservado"
       },
       {
-        "path": "apps/pos-clients-e2e",
-        "description": "Pruebas de la UI; proyecto Nx de pruebas, sin despliegue",
-        "state": "mover",
-        "currentPath": "e2e"
+        "path": "tests/pos-clients-e2e",
+        "description": "Playwright demo y API real; proyecto Nx sin despliegue",
+        "state": "conservado"
       },
       {
-        "path": "apps/pos-clients-e2e/mobile",
-        "description": "Suite Angular móvil; no prueba el host Capacitor",
-        "state": "mover",
-        "currentPath": "e2e-mobile"
+        "path": "tests/pos-clients-e2e/mobile",
+        "description": "Suite Angular móvil; no homologa Capacitor",
+        "state": "conservado"
       },
       {
         "path": "libs/backend/sales",
@@ -300,69 +313,19 @@
         "state": "conservado"
       },
       {
-        "path": "libs/shared/backend",
-        "description": "Base técnica del servidor; división de proyectos por definir",
-        "state": "mover",
-        "currentPath": "libs/platform/backend"
-      },
-      {
-        "path": "libs/shared/backend/bootstrap",
-        "description": "Creación, arranque y cierre",
-        "state": "mover",
-        "currentPath": "libs/platform/backend/src/bootstrap"
-      },
-      {
-        "path": "libs/shared/backend/config",
-        "description": "Configuración validada e inyectable",
-        "state": "mover",
-        "currentPath": "libs/platform/backend/src/config"
-      },
-      {
-        "path": "libs/shared/backend/http",
-        "description": "Adaptación HTTP, errores y contrato técnico",
-        "state": "mover",
-        "currentPath": "libs/platform/backend/src/common/http"
-      },
-      {
-        "path": "libs/shared/backend/observability",
-        "description": "Pino, correlación y Sentry opcional",
-        "state": "mover",
-        "currentPath": "libs/platform/backend/src/common/observability"
-      },
-      {
-        "path": "libs/shared/backend/health",
-        "description": "Sondas del proceso y disponibilidad comprobada",
-        "state": "mover",
-        "currentPath": "libs/platform/backend/src/health"
-      },
-      {
-        "path": "libs/shared/backend/worker",
-        "description": "Ciclo de vida de procesos de trabajo",
-        "state": "mover",
-        "currentPath": "libs/platform/backend/src/worker"
-      },
-      {
         "path": "libs/shared/frontend/ui",
         "description": "Preset, tokens y componentes de presentación",
-        "state": "mover",
-        "currentPath": "libs/ui"
+        "state": "conservado"
       },
       {
         "path": "libs/shared/kernel",
         "description": "Modelo mínimo acordado entre contextos; sin frameworks",
-        "state": "mover",
-        "currentPath": "libs/shared-kernel"
+        "state": "conservado"
       },
       {
         "path": "libs/shared/contracts",
         "description": "Sobres y metadatos técnicos comunes; no todos los DTO de negocio",
-        "state": "mover",
-        "currentPath": "libs/contracts"
-      },
-      {
-        "path": "libs/shared/testing",
-        "description": "Soporte técnico extraído cuando existan consumidores comunes",
-        "state": "por incorporar"
+        "state": "conservado"
       },
       {
         "path": "libs/country-policies",
@@ -376,8 +339,8 @@
       },
       {
         "path": "libs/data-access",
-        "description": "Estado y adaptadores mock de las funcionalidades",
-        "state": "transitorio"
+        "description": "Adaptadores demo y gateway branch-api en proyectos separados",
+        "state": "conservado"
       },
       {
         "path": "tools",
@@ -388,21 +351,47 @@
         "path": ".github/workflows",
         "description": "Validaciones y entrega",
         "state": "conservado"
+      },
+      {
+        "path": "libs/shared/backend/runtime",
+        "description": "Bootstrap, configuración, HTTP, observabilidad, sondas y ciclo de vida",
+        "state": "conservado"
+      },
+      {
+        "path": "libs/shared/backend/persistence",
+        "description": "Driver pg, unidad de trabajo, migraciones y comandos durables",
+        "state": "conservado"
+      },
+      {
+        "path": "libs/shared/backend/testing",
+        "description": "Bases/roles sintéticos para integración real",
+        "state": "conservado"
+      },
+      {
+        "path": "libs/data-access/branch-api",
+        "description": "HTTP y estado de la operación conectada",
+        "state": "conservado"
+      },
+      {
+        "path": "libs/features/branch-operation",
+        "description": "Login, caja y venta conectados con componentes PrimeNG",
+        "state": "conservado"
+      },
+      {
+        "path": "tests/pos-clients-e2e/branch",
+        "description": "Recorridos Angular → API → PostgreSQL con recuperación",
+        "state": "conservado"
       }
     ]
   },
   "workspaceSupport": [
     {
-      "path": "e2e",
-      "description": "Playwright del cliente de escritorio en navegador"
-    },
-    {
-      "path": "e2e-mobile",
-      "description": "Playwright del cliente móvil en navegador"
+      "path": "tests/pos-clients-e2e",
+      "description": "Playwright de los clientes demo y laboratorio conectado"
     },
     {
       "path": "tools",
-      "description": "Build, pruebas de arquitectura y verificación de artefactos del producto"
+      "description": "Build, pruebas de arquitectura, laboratorio y verificación de artefactos"
     },
     {
       "path": ".github/workflows",

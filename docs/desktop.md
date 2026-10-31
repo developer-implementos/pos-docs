@@ -2,6 +2,8 @@
 
 `apps/pos-desktop` contiene la aplicación cliente de escritorio: un frontend Angular/PrimeNG con arranque y build propios, alojado en la shell nativa (host) Tauri 2 para Windows. Comparte composición y funcionalidades con `pos-mobile` mediante `libs/client-shell`, la librería de composición Angular de raíz, configuración, rutas, guards y layout; esta librería no es el host nativo. Cada aplicación conserva su arranque independiente. La [decisión de clientes nativos](decisions/native-clients.md) delimita ambos clientes. El resultado histórico de un instalador no acredita el nuevo artefacto hasta comprobar su build y ejecución.
 
+El frontend permite perfiles explícitos `demo` y `branch-lab`. El perfil conectado tiene login, caja y venta contra PostgreSQL mediante `branch-api`; la [guía F01](phase-1-laboratory.md) distingue laboratorio y producción. El perfil y CSP deben quedar configurados para el origen autorizado del artefacto antes de probar el host. Un build Angular no homologa el binario Tauri.
+
 ## Prerrequisitos Windows
 
 - Node.js compatible con `package.json` y dependencias instaladas con `npm ci`.
