@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "reviewedOn": "2026-10-31",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "a2ecc5ac51d81fca2bf36c395f71a6f7978262fb",
+  "revision": "1d8d7bc26fd8de41d9ea3f0d956594d69d2d34f9",
   "sourceStatus": "Fuentes documentales verificadas en la revisión indicada; F01 en revisión de laboratorio, sin aceptación productiva.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "inputs": [
     {
       "path": "docs/monorepo.md",
-      "sha256": "49800199057ec82fd9dc647717b87e5f527a74c42d8c9225aea442abf4595199"
+      "sha256": "5e883e8ac7bfdd8e4a9180f5e07c63303be8d7eb5a92bdb303c6252b17eed718"
     },
     {
       "path": "docs/propuesta-arquitectura.md",
@@ -68,7 +68,7 @@
     },
     {
       "path": "apps/starlight/src/data/monorepo-catalog.json",
-      "sha256": "f70c4e14bb6451c3e0be0de0cfc2a7ec1233ecf2215a899db1882a51556b87b5"
+      "sha256": "2091388fd85e9035c2d77072ff4e666ab48ea29a7f00b4fecd1eb765018fe745"
     },
     {
       "path": "docs/decisions/device-agent.md",
