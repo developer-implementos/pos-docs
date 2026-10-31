@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "reviewedOn": "2026-10-31",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "3198aa641bb2e90d30cde2786b9b26ea5cb2b1cb",
+  "revision": "2924a75d0cf850b0710eaf162043602cc119eb57",
   "sourceStatus": "Fuentes documentales verificadas en la revisión indicada; F01 combina administración POS en revisión y pruebas monetarias de laboratorio, sin aceptación de fase ni habilitación productiva.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "inputs": [
@@ -24,15 +24,15 @@
     },
     {
       "path": "apps/starlight/src/data/product-evidence.json",
-      "sha256": "43a69dc259659ee5e04ff4b448edb266cfae89041c642f180b69e73fbea74f38"
+      "sha256": "ea0469c9317d35dc7d5eda6379d8a8276e41557b83ba0e922bc15caab7778086"
     },
     {
       "path": "docs/roadmap.md",
-      "sha256": "8facf072a38c4780a3193161f4bada8bc36042b10ffe3964231a71d27b34d765"
+      "sha256": "ea502e3e4dcf92c62727207312fd2ed4cd6693aa43324363d11416d60bc464e1"
     },
     {
       "path": "docs/roadmap.json",
-      "sha256": "3a09855c055970ff7c11d8943e2375e078504f0a8a67d8d48f06bdd1e83495f9"
+      "sha256": "701dc03f2fbfdc8637f6b1ace5a3825705930e749fdab50d808061ba3f1ce9f9"
     },
     {
       "path": "docs/c4-arquitectura-propuesta.md",
