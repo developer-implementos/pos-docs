@@ -1,22 +1,22 @@
 {
   "schemaVersion": 1,
   "product": "POS Platform",
-  "reviewedOn": "2026-10-30",
+  "reviewedOn": "2026-10-31",
   "repository": "https://github.com/developer-implementos/pos-platform",
-  "evidence": "Siete aplicaciones en la arquitectura objetivo y seis proyectos de aplicación en el código revisado. F01 incorpora operación de laboratorio Angular → branch-api → PostgreSQL; no acredita aceptación de fase ni habilitación productiva. country-api comprueba su base/ámbito; workers y device-agent conservan los límites indicados. Starlight pertenece a POS Docs.",
+  "evidence": "Siete aplicaciones objetivo y seis proyectos de aplicación revisados. F01 incorpora administración POS Chile sobre HTTPS/PostgreSQL y clientes conectados; su motor comercial conserva pruebas sintéticas segregadas. El conector de lectura ERP no materializa espejos ni valida aún un proveedor corporativo. No acredita aceptación de fase ni habilitación de caja productiva. Starlight pertenece a POS Docs.",
   "applications": [
     {
       "name": "pos-desktop",
       "location": "Puesto Windows",
       "description": "Aplicación completa: shell nativa Tauri y frontend Angular",
-      "state": "Composiciones Angular demo y branch-lab explícitas; pruebas de navegador no acreditan homologación nativa",
+      "state": "Cliente conectado con registro del puesto y administración POS; demo y laboratorio explícitos. Instalación y confianza TLS del WebView requieren validación nativa",
       "inReviewedWorkspace": true
     },
     {
       "name": "pos-mobile",
       "location": "Dispositivo Android/iOS",
       "description": "Aplicación completa: shell nativa Capacitor y frontend Angular",
-      "state": "Composiciones Angular demo y branch-lab explícitas; distribución y capacidades nativas por homologar",
+      "state": "Cliente conectado compartido con política HTTPS y registro de puesto; distribución y capacidades nativas por homologar",
       "inReviewedWorkspace": true
     },
     {
@@ -30,7 +30,7 @@
       "name": "branch-api",
       "location": "Sucursal",
       "description": "API y composición de negocio de sucursal",
-      "state": "Operación F01 en laboratorio con identidad, configuración, caja, catálogo, clientes, cestas, precios y efectivo en PostgreSQL; producción cerrada",
+      "state": "Identidad y administración propias del POS para Chile con HTTPS/PostgreSQL; motor comercial probado en laboratorio. Cotización requiere fuente completa y caja operativa permanece cerrada",
       "inReviewedWorkspace": true
     },
     {
@@ -51,7 +51,7 @@
       "name": "erp-worker",
       "location": "Red autorizada del ERP",
       "description": "Proceso de integración, traducción y conciliación ERP",
-      "state": "Esqueleto local; sin conexión a ERP",
+      "state": "CLI de lectura Mountain para productos/clientes con transporte HTTPS acotado; acceso corporativo pendiente, sin publicación de espejos ni procesamiento de jobs",
       "inReviewedWorkspace": true
     }
   ],

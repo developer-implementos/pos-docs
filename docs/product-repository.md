@@ -2,7 +2,7 @@
 
 Esta página es una síntesis editorial del repositorio del producto, mantenida en POS Docs. La evidencia de código se identifica en `apps/starlight/src/data/product-evidence.json`; la revisión de esta guía es independiente de esa revisión de POS Platform. Los comandos de desarrollo de esta página se ejecutan en un checkout del producto, salvo la sección de documentación técnica.
 
-Plataforma POS corporativa preparada para evolucionar a varios países: monorepo Nx con clientes de escritorio y móvil, backend de sucursal, backend de país y workers. Incluye una demostración sintética y una composición F01 en revisión que conecta Angular, NestJS/Fastify y PostgreSQL real en laboratorio. Conserva el lenguaje visual de **prime-showcase** (PrimeNG, Aura corporativo, Inter, tablas y navegación). El estado de laboratorio no habilita producción ni acredita aceptación de fase.
+Plataforma POS corporativa preparada para evolucionar a varios países: monorepo Nx con clientes de escritorio y móvil, backend de sucursal, backend de país y workers. El incremento operativo de Chile está en revisión: conecta Angular, NestJS/Fastify y PostgreSQL real para administrar usuarios, roles y asignaciones propios de POS mediante HTTPS. También conserva una demostración sintética y el recorrido F01 de laboratorio. Conserva el lenguaje visual de **prime-showcase** (PrimeNG, Aura corporativo, Inter, tablas y navegación). Este estado no implica integración en `main`, aceptación de fase ni habilitación de una caja productiva.
 
 Producto y repositorio: [POS Platform](https://github.com/developer-implementos/pos-platform). Los aliases internos usan `@pos-platform/*`. La [guía del monorepo](monorepo.md) explica aplicaciones, propietarios de datos, estructura por contexto y configuración del workspace.
 
@@ -15,12 +15,12 @@ Los clientes Angular con PrimeNG para escritorio (Tauri) y móvil (Capacitor) y 
 | `apps/pos-desktop` | Cliente Angular propio para escritorio, alojado en Tauri |
 | `apps/pos-mobile` | Cliente Angular propio para Android/iOS, alojado en Capacitor |
 | `libs/client-shell` | Composición Angular compartida: rutas, configuración y shell |
-| `apps/branch-api` | Operación de sucursal F01 con PostgreSQL y perfil de laboratorio |
+| `apps/branch-api` | Identidad y administración POS Chile mediante HTTPS/PostgreSQL; motor comercial en validación |
 | `apps/country-api` | Base HTTP y sonda de PostgreSQL por ámbito; sin recepción comercial |
-| `apps/branch-sync-worker`, `apps/erp-worker` | Composición de workers; procesamiento de jobs pendiente |
+| `apps/branch-sync-worker`, `apps/erp-worker` | Composición de workers; CLI ERP de lectura independiente, procesamiento de jobs pendiente |
 | `libs/` | Features del frontend, contextos del backend y contratos compartidos, con límites de importación |
 
-Las aplicaciones comparten repositorio y contratos, con builds independientes. `client-profile.json` selecciona `demo` o `branch-lab`, sin fallback automático. La [guía F01](phase-1-laboratory.md) describe el acceso, caja, catálogo, clientes, cestas, cotización, efectivo y recuperación del perfil conectado.
+Las aplicaciones comparten repositorio y contratos, con builds independientes. El cliente normal comienza en `unconfigured` y bloquea el acceso hasta recibir la configuración del puesto para el origen HTTPS autorizado en su paquete. `branch` usa el perfil operativo con identidad y permisos del servidor; `branch-lab` mantiene las pruebas sintéticas y `demo` se selecciona explícitamente. Ningún fallo de conexión o configuración activa la demostración. La [guía F01](phase-1-laboratory.md) distingue el incremento operativo en revisión del recorrido de laboratorio y enlaza sus instrucciones de aprovisionamiento.
 
 ![Centro de operación con indicadores, gráficos y pendientes](screenshots/dashboard.png)
 
@@ -34,16 +34,16 @@ Si tu instalación usa otra versión de npm, instala las dependencias con `npx -
 git clone https://github.com/developer-implementos/pos-platform.git
 cd pos-platform
 npm ci
-npm start
+npm run demo:start
 ```
 
-Abre **http://127.0.0.1:4300** para desarrollar la interfaz del cliente de escritorio. Este servidor local no es una aplicación web independiente ni un despliegue público. `npm run desktop:dev` abre Tauri; `npm run mobile:start` sirve la interfaz móvil para desarrollo. La [decisión de clientes nativos](decisions/native-clients.md) explica la separación y los límites.
+Abre **http://127.0.0.1:4300** para desarrollar la interfaz demo del cliente de escritorio. Este servidor local no es una aplicación web independiente ni un despliegue público. `npm start`, `npm run desktop:dev` y `npm run mobile:start` conservan el comportamiento normal sin configurar; no seleccionan la demo. La [decisión de clientes nativos](decisions/native-clients.md) explica la separación y los límites.
 
  La pantalla de acceso permite iniciar sesión con cuentas de demostración. Puedes completar el formulario desde **Accesos de demostración** o usar `admin@example.test` y la contraseña pública `Demo123!`. También están disponibles `supervisor@example.test`, `caja@example.test` y `auditor@example.test`, con la misma contraseña.
 
 Hay una caja abierta con datos de ejemplo. El menú de usuario permite cambiar el perfil de demostración, simular desconexión, cambiar el tema y **Cerrar sesión**. La sesión se conserva en la pestaña; **Mantener sesión en este equipo** permite restaurarla al volver a abrir el navegador. Cerrar sesión elimina ese acceso, sin cerrar el turno ni borrar la venta en curso. Para comenzar de nuevo con los datos de ejemplo: **Módulos y configuración → Demostración → Restablecer**.
 
-En este perfil todos los RUT, clientes, usuarios y operaciones son sintéticos; los permisos y efectos se simulan en el cliente. No hay cargos bancarios, DTE válidos ni conexiones corporativas. El perfil de laboratorio tiene otro acceso, validado por servidor con credenciales independientes; no usa las cuentas demo.
+En este perfil todos los RUT, clientes, usuarios y operaciones son sintéticos; los permisos y efectos se simulan en el cliente. No hay cargos bancarios, DTE válidos ni conexiones corporativas. Los perfiles operativo y de laboratorio tienen accesos propios validados por el servidor; no usan las cuentas demo.
 
 ## API de sucursal
 
@@ -51,7 +51,7 @@ En este perfil todos los RUT, clientes, usuarios y operaciones son sintéticos; 
 npm run api:dev
 ```
 
-La API requiere configuración explícita de laboratorio y PostgreSQL migrado con su rol runtime. Escucha por defecto en **http://127.0.0.1:3000**, publica contratos en `/api/v1`, sondas en `/health/live` y `/health/ready`, y OpenAPI JSON en `/api/openapi.json` cuando está habilitado. La [guía de laboratorio](phase-1-laboratory.md) describe la ejecución aislada; `api:dev` no crea una base automáticamente.
+La API requiere un perfil explícito y PostgreSQL migrado con su rol de ejecución. El perfil `operational` de Chile incorpora cuentas POS, roles y asignaciones persistidos, con HTTPS y orígenes de cliente autorizados individualmente. El perfil `laboratory` conserva el recorrido sintético en loopback. La API publica contratos en `/api/v1`, sondas en `/health/live` y `/health/ready`, y OpenAPI JSON en `/api/openapi.json` cuando está habilitado. La [guía F01](phase-1-laboratory.md) distingue ambos perfiles y enlaza el procedimiento de configuración; `api:dev` no crea una base ni usuarios automáticamente.
 
 Los nombres backend expresan ámbito y proceso: `branch-api`, `branch-sync-worker`, `country-api` y `erp-worker`. La [configuración de las aplicaciones](api.md#configuración) identifica sus rutas, artefactos y variables de entorno. Los comandos `api:*` operan sobre la API de sucursal; `sync:check` verifica la composición y cierre del worker de sincronización.
 
@@ -61,7 +61,7 @@ El reporte de errores con Sentry es opcional y está deshabilitado en los ejempl
 
 La [decisión BullMQ + Redis de trabajos](decisions/job-processing.md) pertenece a la arquitectura objetivo: programación breve en `country-api` y ejecución/lotes/conciliación en `erp-worker`. El snapshot no acredita su instalación ni funcionamiento; los Redis de trabajos por entorno y la recuperación desde PostgreSQL siguen pendientes de implementar y probar.
 
-Las apps backend comparten `libs/shared/backend/runtime`; la persistencia transaccional pertenece a `libs/shared/backend/persistence` y el negocio a sus contextos. `country-api` tiene base y sonda propias. `branch-sync-worker` y `erp-worker` conservan su composición sin trabajos operativos. Rspack/SWC empaqueta las apps Node y TSC comprueba tipos.
+Las apps backend comparten `libs/shared/backend/runtime`; la persistencia transaccional pertenece a `libs/shared/backend/persistence` y el negocio a sus contextos. `country-api` tiene base y sonda propias. `branch-sync-worker` y `erp-worker` conservan su composición sin trabajos operativos. El conector de lectura ERP es independiente: su contrato no acredita que los maestros o precios ya estén publicados en el POS ni que exista sincronización de extremo a extremo. Rspack/SWC empaqueta las apps Node y TSC comprueba tipos.
 
 ```sh
 npm run api:check
@@ -73,7 +73,7 @@ Para comprobar el scaffold completo: `npm run backend:check`, `npm run backend:s
 
 El backend y las librerías puras tienen lint con información de tipos para detectar promesas sin manejar y usos inseguros, además de fronteras Nx verificadas. Las [reglas y su alcance](monorepo.md#reglas-de-código-y-fronteras) distinguen esos controles de los del frontend; no sustituyen pruebas de comportamiento ni los requisitos pendientes de producción.
 
-El perfil conectado utiliza identidad de laboratorio y permisos de servidor, PostgreSQL, configuración y operaciones F01; readiness comprueba conexión, ámbito y esquema. La entrega de outbox, ERP, fiscalidad, tarjetas y hardware siguen pendientes. Consulta [configuración, contratos y límites de la API](api.md).
+El incremento operativo permite gestionar cuentas, permisos y puestos en la sucursal, con autorización del servidor y PostgreSQL real; readiness comprueba conexión, ámbito y esquema. Catálogo, clientes y presupuestos permanecen sujetos a las capacidades informadas por el backend: sin maestros y publicación de precios verificados no se habilita cotización ni se sustituyen datos por fixtures. La entrega de outbox, contabilización ERP, fiscalidad, tarjetas y hardware siguen pendientes. Consulta [configuración, contratos y límites de la API](api.md).
 
 ## Publicar la documentación en Vercel
 
@@ -158,7 +158,7 @@ Core es solo referencia de organización y convenciones; no es dependencia ni se
 
 En `demo`, las features consumen `PosStore`; no escriben en `localStorage`. Los permisos y módulos se validan en rutas **y comandos**. El estado se publica como snapshots inmutables. Las transacciones guardan primero el snapshot y publican el resultado solo si la persistencia tuvo éxito. Las ventas y eventos conservan identificadores para evitar duplicados. Pago, fiscalidad y ERP tienen ciclos separados.
 
-La identidad de acceso se guarda por ID de usuario en `corporate-pos:auth:v1`, separada de los datos de negocio y del turno de caja. Usa `sessionStorage` o `localStorage` según la opción de permanencia; nunca guarda la contraseña. Las rutas protegidas redirigen al login y la autorización consulta el rol del usuario activo. Son controles de demostración locales: el adaptador debe sustituirse por autenticación y autorización corporativas para producción.
+En la demostración, la identidad de acceso se guarda por ID de usuario en `corporate-pos:auth:v1`, separada de los datos de negocio y del turno de caja. Usa `sessionStorage` o `localStorage` según la opción de permanencia; nunca guarda la contraseña. Son controles locales del perfil demo. El cliente `branch` utiliza cuentas y asignaciones propias de POS comprobadas por el servidor, mantiene el token sólo en memoria y conserva únicamente la configuración pública del puesto para el siguiente inicio.
 
 Los límites de importación se verifican con Nx/ESLint. Se usan Angular con detección de cambios OnPush y signals, TypeScript estricto, carga diferida por área y componentes PrimeNG. La tipografía y los iconos se sirven localmente. No se utilizan `patch-package`, dependencias privadas de fuentes, telemetría ni servicios del proyecto de referencia.
 
@@ -173,7 +173,7 @@ npm run test:e2e
 npm run desktop:info
 ```
 
-Las pruebas cubren políticas, montos, persistencia, permisos, reintentos, calendarios y recorridos de navegador. CI está configurada para compilar y empaquetar la demostración para Windows; las nuevas ejecuciones publican el artefacto `pos-platform-windows-demo` durante siete días. Las acciones de CI están fijadas por commit y tienen permisos de lectura.
+Las pruebas cubren políticas, montos, persistencia, permisos, reintentos, calendarios y recorridos de navegador. La verificación de la demo se solicita explícitamente; los builds normales conectados comienzan sin configurar cuando no reciben una política de despliegue. CI comprueba compilación y empaquetado nativo, sin acreditar por ello instalación, firma de distribución ni aceptación operativa. Las acciones de CI están fijadas por commit y tienen permisos de lectura.
 
 Validación tras la revisión de calidad (3 de octubre de 2026): **144 pruebas de lógica e infraestructura y 37 recorridos de navegador pasan**, junto con lint, formato y compilación web de producción. Los recorridos ejecutan el bundle productivo con la CSP de Tauri, incluyen tamaños de 375 y 1440 px y verifican controles de prime-showcase y accesibilidad del dashboard/reportes en claro y oscuro. El [informe de revisión](quality-review.md) detalla correcciones y condiciones pendientes para producción.
 
@@ -186,11 +186,11 @@ npm run desktop:dev
 npm run desktop:build
 ```
 
-El escritorio necesita Rust, MSVC/Windows SDK y WebView2. Consulta [preparación de Tauri](desktop.md). Para Android/iOS consulta [preparación de Capacitor](mobile.md); su compilación Angular no acredita apertura, permisos, periféricos ni distribución nativa. `npm run build` compila los dos clientes Angular secuencialmente; `desktop:build` empaqueta Tauri y los comandos móviles sincronizan o ejecutan sus proyectos nativos. El contenedor no tiene comandos para cobrar, imprimir físicamente o acceder libremente al sistema. El instalador de CI es una demostración sin firma comercial.
+El escritorio necesita Rust, MSVC/Windows SDK y WebView2. Consulta [preparación de Tauri](desktop.md). Para Android/iOS consulta [preparación de Capacitor](mobile.md); su compilación Angular no acredita apertura, permisos, periféricos ni distribución nativa. `npm run build` compila los dos clientes Angular secuencialmente; `desktop:build` empaqueta Tauri y los comandos móviles sincronizan o ejecutan sus proyectos nativos. La [guía F01](phase-1-laboratory.md) enlaza la preparación del paquete con su origen HTTPS exacto y el registro público del puesto. El contenedor no tiene comandos para cobrar, imprimir físicamente o acceder libremente al sistema; no se acredita una distribución firmada para operación productiva.
 
 ## De maqueta a producto
 
-El perfil demo valida UX con datos sintéticos; F01 verifica operación y recuperación con API y PostgreSQL reales en laboratorio. **Ninguno acredita una caja habilitada para producción.** Permanecen pendientes identidad corporativa, conciliación bancaria, homologación fiscal, hardware y aceptación operativa. Los límites se describen en [arquitectura](architecture.md), [seguridad](security.md), [API](api.md) y [guía F01](phase-1-laboratory.md).
+El perfil demo valida UX con datos sintéticos; el laboratorio F01 verifica operación y recuperación con API y PostgreSQL reales. El incremento operativo de Chile añade administración de identidad propia de POS y configuración segura del cliente, todavía en revisión. **Estos estados no acreditan una caja habilitada para producción ni aceptación del roadmap.** Permanecen pendientes la integración verificada de maestros y precios, la contabilización ERP, conciliación bancaria, homologación fiscal, hardware y aceptación operativa. Los límites se describen en [arquitectura](architecture.md), [seguridad](security.md), [API](api.md) y [guía F01](phase-1-laboratory.md).
 
 La cobertura de Chile y las referencias revisadas están en [inventario de la caja actual](audit-chile-for-product.md). Ese inventario distingue la funcionalidad de referencia, la simulación y lo que necesita integración real.
 

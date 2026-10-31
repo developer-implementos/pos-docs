@@ -14,6 +14,8 @@ Los puestos se aprovisionan con identidad de caja e instalación. El cliente sel
 
 Este incremento y su documentación están en revisión. No equivalen a integración en `main`, aceptación de F01 ni habilitación productiva; esas evidencias se registran por separado en el producto.
 
+La [guía de puesta en marcha](../tools/database/README.operational.md) detalla infraestructura, certificados, provisión y registro de puestos. La [matriz del incremento](../delivery/reviews/F01-operational-increment.md) enlaza las pruebas y los pendientes de aceptación. El recorrido automatizado `npm run test:e2e:operational` usa cliente, API HTTPS y PostgreSQL reales con identidades efímeras de prueba: administra un usuario, concede acceso, lo revoca y lo reactiva. No utiliza mocks HTTP ni consulta servicios corporativos.
+
 ## Recorrido del laboratorio transaccional
 
 ```mermaid
