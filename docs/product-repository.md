@@ -190,7 +190,7 @@ El escritorio necesita Rust, MSVC/Windows SDK y WebView2. Consulta [preparación
 
 ## De maqueta a producto
 
-Esta entrega permite validar la UX y las reglas mock; **no es una caja certificada ni lista para operar en producción**. El adaptador local del navegador y la base HTTP no sustituyen la persistencia transaccional de sucursal, autenticación corporativa, permisos verificados por servidor, conciliación bancaria ni homologación fiscal. Esas fronteras y el diseño para evolucionarlas se describen en [arquitectura](architecture.md), [seguridad](security.md), [base de API](api.md) y [contratos mock](mock-api.md).
+El perfil demo valida UX con datos sintéticos; F01 verifica operación y recuperación con API y PostgreSQL reales en laboratorio. **Ninguno acredita una caja habilitada para producción.** Permanecen pendientes identidad corporativa, conciliación bancaria, homologación fiscal, hardware y aceptación operativa. Los límites se describen en [arquitectura](architecture.md), [seguridad](security.md), [API](api.md) y [guía F01](phase-1-laboratory.md).
 
 La cobertura de Chile y las referencias revisadas están en [inventario de la caja actual](audit-chile-for-product.md). Ese inventario distingue la funcionalidad de referencia, la simulación y lo que necesita integración real.
 
