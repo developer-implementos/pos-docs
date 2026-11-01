@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "repository": "https://github.com/developer-implementos/pos-platform",
-  "revision": "59faab09cac416c2d9894522b32f7df9db356043",
-  "reviewedOn": "2026-10-31",
+  "revision": "54331b738b1ea197abebeddd4a6b73f18ef016a6",
+  "reviewedOn": "2026-11-01",
   "notice": "Reviewed clean product revision. The documentation repository builds from this metadata without accessing the product checkout.",
   "productGuide": {
     "source": "docs/product-repository.md",
@@ -12,6 +12,14 @@
   },
   "references": [
     {
+      "path": ".github/rulesets/README.md",
+      "kind": "blob"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "kind": "blob"
+    },
+    {
       "path": "README.md",
       "kind": "blob"
     },
@@ -20,7 +28,19 @@
       "kind": "blob"
     },
     {
+      "path": "delivery/evidence/f01-governance.json",
+      "kind": "blob"
+    },
+    {
       "path": "delivery/evidence/f01-portable-ci.json",
+      "kind": "blob"
+    },
+    {
+      "path": "delivery/evidence/f01-tauri-package.json",
+      "kind": "blob"
+    },
+    {
+      "path": "delivery/reviews/F01-governance-verification.md",
       "kind": "blob"
     },
     {

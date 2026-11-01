@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "reviewedOn": "2026-10-31",
+  "reviewedOn": "2026-11-01",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "f0a5b50923ff241dfff2818521bc8b42f7a8b746",
+  "revision": "9eacaf2f78e0107a41cb830b5dfd742769944382",
   "sourceStatus": "Fuentes documentales verificadas en la revisión indicada; F01 incluye administración POS integrada y entregables técnicamente verificados con pruebas comerciales de laboratorio. La aceptación manual y la habilitación productiva se mantienen separadas.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "inputs": [
     {
       "path": "docs/monorepo.md",
-      "sha256": "9dde7f05c180145817674b6db24d224d0ccc4a0ee53b7ebeeb259193e12afa83"
+      "sha256": "ce16c22247d8d2d72aa9000ee370a76a08f7892ec036a2be8994cee2bf39d85e"
     },
     {
       "path": "docs/propuesta-arquitectura.md",
@@ -24,7 +24,7 @@
     },
     {
       "path": "apps/starlight/src/data/product-evidence.json",
-      "sha256": "4baf3826f0354da5dc0bfdb51d488e29ccb880445156cc34402a42c4c351397e"
+      "sha256": "7f85856a2e7bc0c6f433468309d19f5b36868716d489fe4a81f42631a2dc882d"
     },
     {
       "path": "docs/roadmap.md",
@@ -64,11 +64,11 @@
     },
     {
       "path": "docs/decisions/native-clients.md",
-      "sha256": "a1f89a628bd4b56bc22fe75eec1deba20a0c11a7bc9f3cd4cb992c41e6ff5d8a"
+      "sha256": "3c5535d8a00312bdc3781074fdd7c4a17507f780143cfc46035dbf7524dd77b0"
     },
     {
       "path": "apps/starlight/src/data/monorepo-catalog.json",
-      "sha256": "d144ee6adc5eb6f4fee2a087a1cf4a9ffbeb5e07374bd1ecede59eaa6ace72ac"
+      "sha256": "f140709c2dff3b0e9b0baa55c0d5f611da6a3b936c7d3155a218bbd7315e6a34"
     },
     {
       "path": "docs/decisions/device-agent.md",

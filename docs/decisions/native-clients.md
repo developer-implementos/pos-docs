@@ -75,7 +75,7 @@ Ambos clientes parten sin registrar (`unconfigured`) y utilizan `branch` para co
 | Empaquetado Tauri o compilación móvil | Generación del artefacto en la plataforma usada | Firma, distribución, instalación, operación y recuperación sobre equipos reales |
 | Homologación | Comportamiento observado para el dispositivo, versión y proveedor probados | Plataformas o capacidades fuera de ese alcance |
 
-Estas etapas distinguen tipos de evidencia, no una lista de bloqueantes de F01. F01-04 comprueba el recorrido integrado y que el paquete conserve su perfil y política de conexión; firma, hardware y funcionamiento nativo se validan en F02/F05. El [estado del corte F01](../phase-1-laboratory.md#perfiles-del-cliente) identifica la comprobación de empaquetado pendiente; la ficha no exige completar iOS ni disponer de macOS para cerrarla.
+Estas etapas distinguen tipos de evidencia, no una lista de bloqueantes de F01. F01-04 comprueba el recorrido integrado y que el paquete conserve su perfil y política de conexión; firma, hardware y funcionamiento nativo se validan en F02/F05. El [estado del corte F01](../phase-1-laboratory.md#perfiles-del-cliente) enlaza las comprobaciones de los paquetes Windows Tauri y Android, con revisiones y límites propios; la ficha no exige completar iOS ni disponer de macOS para cerrarla.
 
 Las guías de [escritorio](../desktop.md) y [móvil](../mobile.md) mantienen los comandos y prerrequisitos, sin duplicarlos aquí. El [catálogo del monorepo](../monorepo.md) registra siete aplicaciones objetivo. La guía Starlight se mantiene por separado en el repositorio editorial [POS Docs](https://github.com/developer-implementos/pos-docs).
 

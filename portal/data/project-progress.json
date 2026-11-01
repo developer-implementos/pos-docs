@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "59faab09cac416c2d9894522b32f7df9db356043",
+    "revision": "54331b738b1ea197abebeddd4a6b73f18ef016a6",
     "path": "delivery/progress.json",
-    "sha256": "f1fa607b1cdc0b8b9dd15bf4e61945155fd5f17d1b7695342ef46dbee118ec30"
+    "sha256": "129c68afef64524fa77099074f7db3fd85745c30e60b53d44e0ac23346b38814"
   },
   "content": {
     "schemaVersion": 2,
@@ -16,13 +16,13 @@
       "path": "docs/roadmap.json",
       "sha256": "701dc03f2fbfdc8637f6b1ace5a3825705930e749fdab50d808061ba3f1ce9f9"
     },
-    "summary": "Diez entregables de F01 están técnicamente verificados con evidencia por criterio y PostgreSQL real. Implementación y aceptación manual se cuentan por separado. Los escenarios comerciales conservan datos sintéticos segregados; siguen pendientes empaquetado Tauri, PR policy alojada y acceso autorizado a Mountain.",
+    "summary": "Doce entregables de F01 están técnicamente verificados. El recorrido persistido, los paquetes Android y Tauri y el gobierno de PR cuentan con evidencia propia. Las once verificaciones anteriores conservan sus revisiones; la aceptación manual permanece separada. Sólo F01-11 mantiene pendiente la validación autorizada de Mountain; los escenarios comerciales siguen usando datos sintéticos segregados.",
     "applications": [
       {
         "id": "pos-desktop",
         "stage": "functional",
-        "summary": "Cliente Angular conectado con administración POS, fichas con frescura, cestas recuperables y recotización con consentimiento. Exige registro y origen HTTPS; la demo es explícita. Falta comprobar empaquetado Tauri real; venta operativa conserva sus gates.",
-        "nextStep": "Comprobar el artefacto Tauri conectado y su política; continuar validación comercial con fuentes autorizadas sin confundirla con los datos de prueba.",
+        "summary": "Cliente Angular conectado con administración POS, cestas recuperables y recotización con consentimiento. Ejecutables Tauri Windows reales verificados con cliente cerrado sin política y con origen exacto, incluido rechazo de política incompatible. La demo es explícita; venta operativa conserva sus gates.",
+        "nextStep": "Continuar la validación comercial con fuentes autorizadas y los alcances de instalación, firma, WebView/periféricos de F02/F05; el paquete comprobado no los sustituye.",
         "evidence": [
           {
             "path": "apps/pos-desktop/src/main.ts",
@@ -240,10 +240,52 @@
           "pos-mobile",
           "branch-api"
         ],
-        "status": "in_progress",
-        "summary": "Recorrido conectado contra API y PostgreSQL comprobado. Dos APK Android reales verificados sin configuración y con origen HTTPS de prueba, incluido rechazo de una política incompatible. Falta verificar el artefacto Tauri y su política; no se atribuyen firma, hardware ni operación nativa.",
+        "status": "verified",
+        "summary": "Verificados el recorrido Angular/API/PostgreSQL y la recuperación visible, junto con paquetes reales Android y Tauri Windows en ambos modos de política y rechazo de origen incompatible. No acredita instalación, firma, funcionamiento nativo, periféricos ni habilitación productiva.",
         "acceptance": null,
-        "verification": null
+        "verification": {
+          "revision": "a603a770c8c950dd1499158606b0ff72801d1f45",
+          "reviewedOn": "2026-10-31",
+          "reviewer": "Codex · revisión técnica automatizada",
+          "evidence": [
+            {
+              "path": "tools/verify-tauri-artifact.mjs",
+              "label": "Inspección del ejecutable Windows real y su política embebida"
+            },
+            {
+              "path": "tools/verify-tauri-artifact.test.mjs",
+              "label": "Validadores de formato, contexto, política y casos de rechazo"
+            },
+            {
+              "path": "tools/connected-client-policy.test.mjs",
+              "label": "Regresiones versionadas de política compartida y ruta Tauri en Windows"
+            },
+            {
+              "path": "apps/pos-desktop/README.md",
+              "label": "Procedimiento de compilación e inspección reproducible sin WebView"
+            },
+            {
+              "path": "tools/verify-android-artifact.mjs",
+              "label": "Inspección independiente del APK Android y sus assets"
+            },
+            {
+              "path": "tests/pos-clients-e2e/branch/cash-recovery.spec.ts",
+              "label": "API/PG reales, respuesta perdida, reapertura, teclado y rechazo visible"
+            },
+            {
+              "path": "tests/pos-clients-e2e/operational/administration.spec.ts",
+              "label": "Cliente operativo con permisos y revocación sobre HTTPS/PostgreSQL"
+            },
+            {
+              "path": "tests/pos-clients-e2e/README.md",
+              "label": "Entorno repetible, perfiles y límites de la evidencia de navegador"
+            },
+            {
+              "path": "apps/branch-api/test/cash-sale.integration.test.ts",
+              "label": "Confirmación durable, recibo y recuperación sin duplicar efectos"
+            }
+          ]
+        }
       },
       {
         "id": "F01-05",
@@ -256,10 +298,68 @@
           "erp-worker",
           "device-agent"
         ],
-        "status": "in_progress",
-        "summary": "Gobernanza integrada y bypass administrativo mediante PR comprobados. Sigue pendiente observar PR policy desde la base confiable en GitHub, actualmente bloqueado por facturación; no se sustituye con checks locales.",
+        "status": "verified",
+        "summary": "Verificados el inventario, las instrucciones compartidas y la política alojada de PR con cuatro rechazos y restauración válida. Las reglas efectivas conservan revisión y siete checks, con bypass administrativo sólo mediante PR. No registra una práctica humana del equipo ni aceptación manual.",
         "acceptance": null,
-        "verification": null
+        "verification": {
+          "revision": "4cfd5c8bd2b4c6c40ec1578c3ea52116112f5aea",
+          "reviewedOn": "2026-10-31",
+          "reviewer": "Codex · revisión técnica automatizada",
+          "evidence": [
+            {
+              "path": ".github/workflows/pr-policy.yml",
+              "label": "Política alojada desde la base confiable y token de lectura"
+            },
+            {
+              "path": "tools/check-pr-policy.mjs",
+              "label": "Validación de issue, alcance, metadatos y vínculos de cierre"
+            },
+            {
+              "path": "tools/check-pr-policy.test.mjs",
+              "label": "Casos positivos y negativos del contrato de PR"
+            },
+            {
+              "path": ".github/rulesets/main.json",
+              "label": "Siete checks, revisión y bypass administrativo limitado a PR"
+            },
+            {
+              "path": ".github/rulesets/README.md",
+              "label": "Procedimiento de aplicación y comprobación de reglas efectivas"
+            },
+            {
+              "path": "CONTRIBUTING.md",
+              "label": "Flujo común de tareas, revisión, traspaso y excepciones explícitas"
+            },
+            {
+              "path": "AGENTS.md",
+              "label": "Entrada común de instrucciones de agentes"
+            },
+            {
+              "path": "CLAUDE.md",
+              "label": "Importación de instrucciones compartidas para Claude Code"
+            },
+            {
+              "path": "delivery/backlog.json",
+              "label": "Alcance, códigos, fases y dependencias del inventario"
+            },
+            {
+              "path": "delivery/github-issues.json",
+              "label": "Identidades estables de issues de fase y entregables"
+            },
+            {
+              "path": "tools/publish-delivery-issues.mjs",
+              "label": "Publicador idempotente y comprobación remota del inventario"
+            },
+            {
+              "path": "delivery/evidence/f01-governance.json",
+              "label": "Resultados alojados, reglas efectivas y alcance de la evidencia remota"
+            },
+            {
+              "path": "delivery/reviews/F01-governance-verification.md",
+              "label": "Matriz de criterios técnicos y límites de la revisión humana"
+            }
+          ]
+        }
       },
       {
         "id": "F01-06",
