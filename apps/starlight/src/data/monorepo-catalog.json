@@ -3,7 +3,7 @@
   "product": "POS Platform",
   "reviewedOn": "2026-11-01",
   "repository": "https://github.com/developer-implementos/pos-platform",
-  "evidence": "Siete aplicaciones revisadas en el corte F02 1987588dc114b82d90d75e687f0cc19cdeb03040, rama codex/f02-cobro-documento; no implica integración en main. F01 incorpora administración POS Chile sobre HTTPS/PostgreSQL y clientes conectados. F02 añade pagos/fiscalidad persistentes y el host .NET/SQLite con protocolo real; sin proveedores operativos ni driver físico habilitado. El conector ERP no materializa espejos ni valida un proveedor corporativo. No acredita aceptación de fase ni habilitación de caja productiva. Starlight pertenece a POS Docs.",
+  "evidence": "Siete aplicaciones revisadas en el corte F02 2a651af9b15ffba0ae1f983e55cb4f71f4c722ca, rama codex/f02-cobro-documento; no implica integración en main. F01 incorpora administración POS Chile sobre HTTPS/PostgreSQL y clientes conectados. F02 añade pagos/fiscalidad persistentes y el host .NET/SQLite con protocolo real; sin proveedores operativos ni driver físico habilitado. El conector ERP no materializa espejos ni valida un proveedor corporativo. No acredita aceptación de fase ni habilitación de caja productiva. Starlight pertenece a POS Docs.",
   "applications": [
     {
       "name": "pos-desktop",
