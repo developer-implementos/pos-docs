@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "product": "POS Platform",
-  "reviewedOn": "2026-10-31",
+  "reviewedOn": "2026-11-01",
   "repository": "https://github.com/developer-implementos/pos-platform",
   "evidence": "Siete aplicaciones objetivo y seis proyectos de aplicación revisados en main. F01 incorpora administración POS Chile sobre HTTPS/PostgreSQL y clientes conectados; su motor comercial conserva pruebas sintéticas segregadas. El conector de lectura ERP no materializa espejos ni valida aún un proveedor corporativo. No acredita aceptación de fase ni habilitación de caja productiva. Starlight pertenece a POS Docs.",
   "applications": [
@@ -9,7 +9,7 @@
       "name": "pos-desktop",
       "location": "Puesto Windows",
       "description": "Aplicación completa: shell nativa Tauri y frontend Angular",
-      "state": "Cliente conectado con administración POS, frescura del cliente y recotización con consentimiento; demo y laboratorio explícitos. Paquete Tauri y política embebida pendientes en F01-04",
+      "state": "Cliente conectado con administración POS, frescura del cliente y recotización con consentimiento; demo y laboratorio explícitos. Dos ejecutables Windows Tauri y política HTTPS embebida comprobados; instalación y capacidades nativas se homologan en sus fases",
       "inReviewedWorkspace": true
     },
     {
@@ -51,7 +51,7 @@
       "name": "erp-worker",
       "location": "Red autorizada del ERP",
       "description": "Proceso de integración, traducción y conciliación ERP",
-      "state": "CLI de lectura Mountain para productos/clientes con transporte HTTPS acotado; acceso corporativo pendiente, sin publicación de espejos ni procesamiento de jobs",
+      "state": "CLI de lectura Mountain para productos/clientes con transporte HTTPS acotado; VPN activa y resolución de nombre comprobada, conexión HTTPS rechazada antes de TLS; sin consulta corporativa, publicación de espejos ni procesamiento de jobs",
       "inReviewedWorkspace": true
     }
   ],
