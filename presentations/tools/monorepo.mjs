@@ -42,7 +42,7 @@ export function monorepoView(source, escape) {
     'tools':'Build, lint y pruebas del producto'
   };
   const zones=[
-    {id:'apps',label:'Aplicaciones',title:'Entradas del producto',detail:'Siete aplicaciones objetivo. device-agent usa .NET en cada puesto Windows; F02 cubre periféricos locales.',status:'F01 conecta clientes y administración POS Chile. Sincronización y periféricos pendientes.',paths:['apps']},
+    {id:'apps',label:'Aplicaciones',title:'Entradas del producto',detail:'Siete aplicaciones objetivo. device-agent usa .NET en cada puesto Windows; F02 cubre periféricos locales.',status:'F01 conecta clientes y administración POS. F02 añade host y protocolo; drivers e integración pendientes.',paths:['apps']},
     {id:'business',label:'Negocio',title:'Contextos de negocio',detail:'Trece contextos con responsabilidad propia. Las aplicaciones componen sus casos de uso.',status:'Usuarios y permisos propios POS; caja y efectivo probados con datos sintéticos. Sin aceptación de fase.',paths:['libs/backend']},
     {id:'frontend',label:'Interfaz',title:'Composición y pantallas',detail:'libs/client-shell compone Angular compartido dentro de las shells Tauri o Capacitor.',status:'branch aplica capacidades operativas; branch-lab y demo están separados. Sin configurar, no hay login.',paths:['libs/client-shell','libs/features']},
     {id:'backend',label:'Shared / backend',title:'Mecanismos del servidor',detail:'Runtime HTTPS, observabilidad, PostgreSQL, unidad de trabajo y fixtures aislados.',status:'Perfiles operativo y laboratorio separados; cada contexto conserva sus datos y SQL.',paths:['libs/shared/backend']},

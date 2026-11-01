@@ -191,7 +191,7 @@ Nx tiene integraciones para Angular y NestJS. Para Rust/Tauri y otros componente
 apps/
   pos-desktop/                  # Aplicación completa: shell Tauri + frontend Angular
   pos-mobile/                   # Aplicación completa: shell Capacitor + frontend Angular
-  device-agent/                 # Agente C#/.NET Windows por puesto; red compartida en F06; implementación pendiente
+  device-agent/                 # Host .NET 10/SQLite por puesto; driver físico pendiente; red compartida en F06
   branch-api/                   # API y composición de negocio de sucursal
   branch-sync-worker/           # Proceso de entrega y recepción de sucursal
   country-api/                  # API de recepción y capacidades de país
@@ -228,6 +228,7 @@ libs/
   data-access/                  # Adaptadores demo y gateway branch-api en proyectos separados
     branch-api/                 # HTTP y estado de la operación conectada
 tests/
+  device-agent/                 # Pruebas .NET/SQLite, recuperación y helper de interoperabilidad HTTPS
   pos-clients-e2e/              # Playwright demo y API real; proyecto Nx sin despliegue
     mobile/                     # Suite Angular móvil; no homologa Capacitor
     branch/                     # Recorridos Angular → API → PostgreSQL con recuperación
@@ -250,8 +251,8 @@ El prototipo utiliza `libs/domain` y `libs/data-access` para reglas y adaptadore
 | --- | --- | --- | --- |
 | `pos-desktop` | Puesto Windows | Aplicación completa: shell nativa Tauri y frontend Angular | Cliente conectado con administración POS, frescura del cliente y recotización con consentimiento; demo y laboratorio explícitos. Dos ejecutables Windows Tauri y política HTTPS embebida comprobados; instalación y capacidades nativas se homologan en sus fases |
 | `pos-mobile` | Dispositivo Android/iOS | Aplicación completa: shell nativa Capacitor y frontend Angular | Cliente conectado compartido; dos APK Android y política HTTPS embebida comprobados. Instalación, distribución y capacidades nativas se homologan en sus fases |
-| `device-agent` | PC Windows de cada puesto (F02/F05); estación de red compartida posterior (F06) | Agente C#/.NET por puesto; trabajos HTTPS con branch-api y diario SQLite; perfil de red compartido en F06 | Decisión acordada; app, protocolo y adaptadores pendientes de implementación y homologación |
-| `branch-api` | Sucursal | API y composición de negocio de sucursal | Identidad y administración POS Chile, configuración compatible, cestas y motor comercial técnicamente verificados con PostgreSQL; pruebas comerciales sintéticas. Precios y cobros operativos sujetos a fuente validada |
+| `device-agent` | PC Windows de cada puesto (F02/F05); estación de red compartida posterior (F06) | Host C#/.NET por puesto; trabajos HTTPS con branch-api y registro SQLite; perfil de red compartido en F06 | Host .NET 10/SQLite y protocolo durable implementados en revisión F02; publicación Windows x64 e interoperabilidad HTTPS/PostgreSQL comprobadas. Driver no disponible; instalación de servicio y hardware pendientes |
+| `branch-api` | Sucursal | API y composición de negocio de sucursal | Identidad y administración POS Chile, configuración compatible, cestas y motor comercial con PostgreSQL. F02 añade persistencia de pagos, fiscalidad y dispositivos en revisión; sin proveedores operativos. Precios y cobros sujetos a fuente validada |
 | `branch-sync-worker` | Sucursal | Proceso de entrega y recepción de sucursal | Esqueleto local; sin jobs ni sincronización real |
 | `country-api` | País | API de recepción y capacidades de país | Base HTTP y PostgreSQL por ámbito con comprobación de esquema; sin recepción comercial |
 | `erp-worker` | Red autorizada del ERP | Proceso de integración, traducción y conciliación ERP | CLI de lectura Mountain para productos/clientes con transporte HTTPS acotado; VPN activa y resolución de nombre comprobada, conexión HTTPS rechazada antes de TLS; sin consulta corporativa, publicación de espejos ni procesamiento de jobs |

@@ -1,6 +1,6 @@
 # ADR-17 · Agente autónomo de periféricos
 
-**Decisión acordada; implementación pendiente.** `apps/device-agent` es la séptima aplicación de la arquitectura objetivo de POS Platform. Se desarrolla en **C#/.NET para Windows**, con ciclo de vida independiente de `pos-desktop` y `pos-mobile`. La revisión de producto contiene seis aplicaciones con interfaz mock o base técnica; todavía no contiene este agente, su protocolo ni sus adaptadores homologados.
+**Decisión acordada; host y protocolo implementados en revisión F02.** `apps/device-agent` es la séptima aplicación de POS Platform. Se desarrolla en **C#/.NET para Windows**, con ciclo de vida independiente de `pos-desktop` y `pos-mobile`. La [guía F02](../phase-2-payments-documents.md) distingue el host durable, la interoperabilidad real comprobada y los adaptadores físicos aún pendientes. El runtime declara el driver no disponible; no simula impresiones exitosas.
 
 ## Responsabilidad y ubicación
 
@@ -16,14 +16,14 @@ El agente recibe trabajo de `branch-api`, conserva recepción e intentos, ejecut
 | `pos-mobile` | Angular/PrimeNG dentro de Capacitor; Android/iOS | Acceso a periféricos compartidos previsto para F06, con destinos permitidos y aceptación propia |
 | `branch-api` / `libs/backend/devices` | NestJS/Fastify; servidor de sucursal | Autorización, registro de dispositivos, asignación, trabajo y auditoría en PostgreSQL |
 | `device-agent` | C#/.NET; PC Windows de cada puesto en F02/F05 | Recepción durable, ejecución exclusiva, adaptadores locales y evidencia; estación compartida como perfil posterior en F06 |
-| Diario técnico del agente | SQLite local, privado del agente | Identidades, hashes, intentos y resultados pendientes; sin tablas de ventas, precios o credenciales SQL de sucursal |
+| Registro de trabajos del host | SQLite local, privado del agente | Identidades, hashes, intentos y resultados pendientes; separado de logs, sin tablas de ventas, precios o credenciales SQL de sucursal |
 | Periférico | Driver/SDK/protocolo del modelo homologado | Efecto físico y capacidades de consulta realmente disponibles |
 
 El backend usa su módulo `devices` para coordinar. Ese módulo no es otro proceso ni contiene los drivers Windows. La aplicación C# conserva sus adaptadores privados; se extraen bibliotecas cuando exista reutilización comprobada. Los contratos públicos de `devices` usan esquemas versionados y fixtures para validar TypeScript y C#; compartir repositorio no permite importar tipos TypeScript desde .NET. Los sobres técnicos comunes pertenecen a `shared/contracts` en la estructura objetivo. Cambiar de perfil o instalar varias instancias no crea otra aplicación del monorepo.
 
 ## Tecnología y ejecución nativa
 
-La base del agente será .NET en una versión soportada, seleccionada junto con la matriz de SDK, sistema operativo y arquitectura del dispositivo. El host supervisado conserva el trabajo aunque se cierre la ventana del POS. Su compilación y pruebas nativas se ejecutan en Windows; Nx coordina las tareas .NET sin convertirlas en proyectos NestJS. El artefacto firmado se instala en los equipos autorizados de sucursal.
+El host utiliza .NET 10 LTS, SDK fijado a 10.0.403 y dependencias con lockfile. Conserva trabajo e intentos aunque se cierre la ventana del POS. Nx coordina compilación, pruebas y publicación .NET sin convertirlas en proyectos NestJS. El corte F02 publica un ejecutable Windows x64 dependiente del runtime .NET 10; la instalación como Windows Service, firma, cuenta y privilegios deben verificarse con el entorno y hardware seleccionados antes de una entrega operativa.
 
 El legacy depende de .NET Framework 4.7.2, Microsoft POS for .NET, APIs Win32 y una referencia x86. Esto no demuestra compatibilidad con .NET moderno, x64 o un servicio sin sesión de usuario. En particular, **Microsoft no soporta `System.Drawing.Printing` dentro de servicios Windows/ASP.NET**. No se traslada `PrintDocument` al nuevo host sin cambiar y validar la vía de impresión.
 
@@ -38,7 +38,7 @@ flowchart TB
     subgraph Puesto["F02 / F05 · mismo puesto Windows"]
         Desktop["pos-desktop · Angular + Tauri"]
         Agent["device-agent · C#/.NET<br/>Instancia asignada al puesto"]
-        Journal[("Diario técnico SQLite local")]
+        Journal[("Trabajos e intentos · SQLite local")]
         Hardware["Periféricos locales del puesto<br/>Impresora · Zebra · lector MICR"]
         Agent -->|"SQLite: recepción e intentos durables"| Journal
         Agent -->|"USB / serie / driver / SDK homologado"| Hardware
@@ -52,16 +52,18 @@ flowchart TB
 | --- | --- | --- |
 | `pos-desktop` → `branch-api` | Solicitar impresión/lectura del puesto y consultar estado | HTTPS autenticado por LAN; backend valida operador, puesto, ámbito, destino y capacidad; F02 no habilita uso compartido entre puestos |
 | `branch-api` → PostgreSQL de sucursal | Guardar trabajo, autorización y auditoría | SQL/PostgreSQL; commit anterior a declarar aceptada la solicitud |
-| `device-agent` → `branch-api` | Obtener trabajos asignados | HTTPS LAN saliente, inicialmente consulta prolongada; respuesta contiene el comando autorizado, no una nueva conexión entrante al puesto |
+| `device-agent` → `branch-api` | Obtener trabajos asignados | HTTPS LAN saliente, consulta periódica acotada en F02; respuesta contiene el trabajo autorizado, no una nueva conexión entrante al puesto |
 | `device-agent` → SQLite | Guardar recepción, intento y evidencia | Transacción local antes del acuse durable; no hay transacción distribuida con PostgreSQL o hardware |
+| `device-agent` → `branch-api` | Obtener permiso antes del efecto | Permiso de un uso persistido en PostgreSQL; reentrega, reinicio o restauración de SQLite no conceden otro permiso |
 | `device-agent` → periférico | Ejecutar capacidad física | Driver/SDK del modelo; serialización por dispositivo físico y grupos excluyentes |
 | `device-agent` → `branch-api` | Reportar recepción y resultado identificado | HTTPS LAN autenticado; agente conserva evidencia hasta acuse posterior a persistencia del backend |
 
 1. El cliente solicita imprimir un documento existente en un destino asignado a su puesto. El backend deriva identidad y ámbito de la sesión autenticada; F02 rechaza destinos de otro puesto, aunque su agente esté conectado a la misma LAN.
-2. `branch-api` guarda `jobId`, documento/versión, hash, capacidad, agente/dispositivo asignados y autorización. Una copia intencional requiere permiso y motivo propios.
+2. `branch-api` guarda `jobId`, documento/versión, hash, capacidad, agente/dispositivo asignados y autorización. El corte del protocolo conserva documento e indicador de copia; el permiso específico, motivo y vínculo al trabajo original de una reimpresión forman parte de la entrega pendiente F02-10.
 3. El agente solicita trabajo con su identidad de instalación. Guarda recepción y hash antes de acusar; un duplicado idéntico obtiene el estado existente, un contenido distinto con el mismo ID se rechaza.
-4. El agente registra el intento antes de ejecutar el adaptador. Conserva identificador del spooler, bytes/resultado y evidencia que ofrezca el dispositivo, sin inferir salida física por aceptación de software.
-5. El backend persiste el resultado y confirma su recepción. El cliente consulta ese estado aunque se haya cerrado la ventana que originó el trabajo.
+4. El agente registra el intento y solicita un permiso de ejecución de un uso. El backend lo consume antes de responder. Sólo una respuesta nueva `authorized`, dentro de vigencia, permite el efecto; una respuesta perdida o un permiso consumido no se reintentan físicamente. El vencimiento usa hora autoritativa del servidor y presupuesto monotónico, descontando tránsito y espera de exclusión.
+5. Un adaptador habilitado conserva identificador del spooler y evidencia compatible con su contrato, sin inferir salida física por aceptación de software. El runtime actual responde `DRIVER_UNAVAILABLE` sin efecto; no acredita impresión física.
+6. El backend persiste resultados identificados, conserva evidencia tardía sin degradar el estado y confirma recepción durable. El host conserva intentos y resolución remota; no borra incertidumbre para repetir el trabajo. El cliente consulta el estado aunque se haya cerrado la ventana que originó la solicitud; la UX completa de F02 conserva su entrega pendiente.
 
 <span id="network-expansion"></span>
 
@@ -76,7 +78,7 @@ flowchart TB
     API["branch-api · devices<br/>Asignación y permisos por destino"] -->|"Trabajo y auditoría · PostgreSQL"| DB[("PostgreSQL de sucursal")]
     subgraph Estacion["F06 · estación Windows compartida por homologar"]
         Agent["device-agent · misma aplicación .NET<br/>Instancia con dispositivos asignados"]
-        Journal[("Diario técnico SQLite")]
+        Journal[("Trabajos e intentos · SQLite")]
         Agent -->|"Recepción y evidencia · SQLite"| Journal
     end
     Agent -.->|"Obtener trabajos / reportar · HTTPS LAN"| API
@@ -102,20 +104,20 @@ F06 exige comprobar concurrencia entre puestos, orden y exclusión por dispositi
 | Incierto | El efecto pudo ocurrir; consultar/conciliar o resolver autorizadamente, sin repetición ciega |
 | Cancelado / vencido | Se impidió la ejecución antes del efecto; cancelar una solicitud no deshace un efecto ya iniciado |
 
-La recepción, la entrega al spooler y la salida física son hitos diferentes. Un registro local no puede hacer atómica una llamada al hardware. Si se pierde energía después del envío y antes de guardar su resultado, se recupera evidencia del dispositivo/spooler cuando sea posible; si no alcanza, se conserva incertidumbre. Una reimpresión es otro trabajo autorizado que referencia el documento y trabajo originales, sin nuevo pago o emisión fiscal.
+La recepción, la entrega al spooler y la salida física son hitos diferentes. Un registro local no puede hacer atómica una llamada al hardware. Si se pierde energía después del envío y antes de guardar su resultado, se recupera evidencia del dispositivo/spooler cuando sea posible; si no alcanza, se conserva incertidumbre. La reimpresión prevista en F02-10 será otro trabajo autorizado que referencie documento y trabajo originales, sin nuevo pago o emisión fiscal; el indicador de copia del protocolo actual no acredita ese flujo completo.
 
 La asignación a otro agente requiere excluir al dueño anterior y resolver intentos en curso. El vencimiento de un lease no prueba que el proceso anterior dejó de imprimir. Las lecturas de cheque requieren sesión de interacción acotada, cancelación, liberación de recursos y exclusión compatible con la impresión/endoso del mismo equipo; no se ejecutan lecturas antiguas al reaparecer un agente.
 
-SQLite conserva un diario técnico recuperable y acotado. Los payloads necesarios para el trabajo tienen retención y acceso restringidos; los resultados MICR no se vuelcan en logs. Después del acuse de backend se aplica la retención acordada, conservando deduplicación durante toda la ventana de reentrega. PostgreSQL es la autoridad de trabajos y auditoría de sucursal; el agente no modifica ventas por SQL ni mantiene un espejo de negocio.
+SQLite conserva trabajos e intentos recuperables, con WAL y sincronización `FULL`. La identidad local está ligada a instalación, puesto, dispositivos y época; no se reutiliza para otro ámbito silenciosamente. La retención y purga operativas deben conservar deduplicación durante toda la ventana de reentrega; el corte actual no elimina automáticamente las filas al recibir un acuse. Los resultados MICR no deben volcarse en logs. PostgreSQL es la autoridad de trabajos y auditoría de sucursal; el agente no modifica ventas por SQL ni mantiene un espejo de negocio.
 
 El recorrido de periféricos utiliza SQLite y HTTPS LAN; no utiliza BullMQ. La decisión de [BullMQ y Redis para país e integración ERP](job-processing.md) no cambia estas garantías de identidad, custodia e incertidumbre física ni añade una cola Redis al puesto.
 
 ## Identidad y operación
 
-- El agente tiene identidad propia de instalación, credencial protegida y capacidades limitadas a sus dispositivos/sucursal. Usa HTTPS con autenticación mutua según el [contrato de identidad](../contracts/identity-and-trust.md); la identidad del móvil no se convierte en credencial del agente.
+- El agente tiene identidad propia de instalación, credencial protegida y capacidades limitadas a sus dispositivos/sucursal. F02 usa HTTPS con validación TLS del sistema y una credencial de instalación separada de la sesión POS; no sigue redirecciones. La autenticación mutua del [contrato objetivo de identidad](../contracts/identity-and-trust.md) requiere su implementación posterior; este transporte no la acredita. La identidad del móvil no se convierte en credencial del agente.
 - El backend verifica permiso sobre documento, dispositivo y operación. El agente valida contrato, integridad, destino, vigencia y asignación antes del efecto. Una dirección IP conocida o CORS no concede autoridad.
 - Los comandos permiten capacidades concretas. No aceptan desde la UI rutas arbitrarias, instrucciones shell, URLs de descarga libres ni RAW sin validación. Contenido y plantillas están versionados y vinculados al trabajo autorizado.
-- Sin WAN puede continuar el perfil local autorizado si LAN, sucursal y dispositivos están disponibles. Sin LAN se conserva evidencia; sólo se completan trabajos ya autorizados cuya vigencia, estado y política permitan ejecución. No se habilitan nuevas ventas autónomas en el agente.
+- Sin WAN puede continuar el perfil local autorizado si LAN, sucursal y dispositivos están disponibles. Sin LAN se conserva evidencia; un trabajo recibido sin permiso de ejecución no puede iniciar el efecto. Un permiso ya recibido sólo permite continuar dentro de su vigencia y política. No se habilitan nuevas ventas autónomas en el agente.
 - La salud distingue proceso vivo, configuración válida y capacidad del dispositivo. Una prueba que imprime o mueve hardware es un comando explícito, nunca una sonda GET.
 - Instalación, actualización y rollback preservan diario e identidad; se detiene admisión, se drena con límite y se conservan estados inciertos. Versiones de protocolo y esquema admitidas se comprueban antes del despliegue.
 
@@ -137,6 +139,8 @@ La primera entrega corresponde a [F02: agente por puesto](/guide/roadmap/phase-0
 ## Evidencia y referencias
 
 La [auditoría de api-impresion-caja](../analisis-repositorios/api-impresion-caja.md) sustenta las capacidades y riesgos actuales. La revisión estática corresponde a `2e74b2d64985902f5fdfb52902016a5f65d7b577`; no acredita el binario instalado ni homologación productiva.
+
+La [implementación F02](../phase-2-payments-documents.md) documenta SQLite real, recuperación tras caída, fixtures TypeScript/C#, transporte TLS e interoperabilidad entre procesos. La evidencia técnica de software y la homologación del dispositivo son comprobaciones diferentes.
 
 - [Microsoft: restricciones de System.Drawing.Printing](https://learn.microsoft.com/en-us/dotnet/api/system.drawing.printing?view=windowsdesktop-9.0).
 - [Microsoft: host Windows Service con .NET](https://learn.microsoft.com/en-us/dotnet/core/extensions/windows-service).

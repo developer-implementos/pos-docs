@@ -787,7 +787,7 @@
     "summary": "F02: ejecuta periféricos del puesto Windows.",
     "ownership": "F02: agente dedicado al puesto y sus dispositivos; branch-api autoriza sólo trabajos del puesto asignado. F06 amplía a una estación compartida homologada con un único controlador por dispositivo físico.",
     "offline": "Sin LAN no obtiene trabajos nuevos. Conserva evidencia del trabajo en curso para reanudar su reporte; un resultado incierto no autoriza repetir el efecto.",
-    "detail": "Aplicación objetivo apps/device-agent, aún no implementada. Primera entrega F02: proceso autónomo instalado en el mismo puesto Windows que pos-desktop; controla periféricos USB/serie mediante drivers o SDK homologados y conserva allí su journal SQLite. El piloto F05 valida ese perfil dedicado. Opera sin la ventana de pos-desktop abierta e inicia HTTPS LAN autenticado hacia branch-api para obtener trabajos del puesto y reportar evidencia. Cada trabajo conserva jobId, hash, destino y autorización; spool aceptado no acredita impresión física. F06 incorpora impresoras de recibos y etiquetas en red y una estación compartida certificada, con la misma aplicación y contratos de propiedad; no habilita automáticamente MICR, cajón, pagos ni acceso móvil a cualquier caja. El servidor de sucursal no aloja el agente por defecto.",
+    "detail": "apps/device-agent implementa el host .NET 10/SQLite y protocolo durable en revisión F02; el driver físico está no disponible. El perfil inicial es el mismo puesto Windows que pos-desktop, con proceso independiente y HTTPS saliente hacia branch-api. Conserva recepción, intento y evidencia; consume un permiso de ejecución de un uso antes del efecto y no repite un trabajo al restaurar SQLite. La interoperabilidad real no homologa instalación, SDK ni hardware. F05 valida el perfil dedicado. F06 incorpora impresoras de recibos y etiquetas en red y una estación compartida certificada, con la misma aplicación y contratos de propiedad; no habilita automáticamente MICR, cajón, pagos ni acceso móvil a cualquier caja. El servidor de sucursal no aloja el agente por defecto. Spool aceptado no acredita impresión física.",
     "sources": [
       {
         "label": "Agente autónomo de dispositivos",
@@ -808,8 +808,8 @@
     ],
     "appId": "device-agent",
     "projectPath": "apps/device-agent",
-    "appState": "Propuesta; no implementada",
-    "inReviewedWorkspace": false
+    "appState": "Host y protocolo en revisión F02; driver físico pendiente",
+    "inReviewedWorkspace": true
   },
   "backup": {
     "id": "backup",
@@ -1471,8 +1471,8 @@
     "key": "c4-containers",
     "level": "C2 · Contenedores",
     "title": "Aplicaciones, procesos y datos",
-    "scope": "Siete aplicaciones objetivo de POS Platform, sus datos y sistemas externos. Seis apps tienen base técnica o scaffold; device-agent se incorpora como propuesta, aún no implementada.",
-    "note": "Siete apps objetivo; seis tienen base técnica. device-agent y SQLite: propuesta pendiente. F02: puesto Windows dedicado; F05: piloto del mismo perfil. F06: red y estación compartida por homologar; no agrega otra app. PostgreSQL conserva el negocio. BullMQ y dos Redis de trabajos son obligatorios en el diseño elegido, aún no implementados; caché país opcional separada. Entre redes sólo HTTPS.",
+    "scope": "Siete aplicaciones de POS Platform, sus datos y sistemas externos. F02 incorpora el host .NET/SQLite y protocolo durable en revisión; drivers físicos pendientes.",
+    "note": "Siete apps con estados distintos: F01 operativo/laboratorio; F02 host y protocolo en revisión, sin hardware habilitado. F05 valida el puesto dedicado. F06: red y estación compartida por homologar. PostgreSQL conserva el negocio. BullMQ y dos Redis de trabajos son obligatorios en el diseño elegido, aún no implementados; caché país opcional separada. Entre redes sólo HTTPS.",
     "nodeIds": [
       "cashier",
       "client",
@@ -1904,7 +1904,7 @@
     "level": "Complemento · Despliegue",
     "title": "Sucursal, país y red autorizada del ERP",
     "scope": "F02/F05: pos-desktop, device-agent, journal SQLite y hardware local comparten el puesto Windows. Backend y PostgreSQL viven en el servidor de sucursal. Red, estación compartida y acceso móvil a periféricos son expansión F06.",
-    "note": "Siete apps objetivo; seis tienen base técnica. device-agent y SQLite: propuesta pendiente. F02: puesto Windows dedicado; F05: piloto del mismo perfil. F06: red y estación compartida por homologar; no agrega otra app. PostgreSQL conserva el negocio. BullMQ y dos Redis de trabajos son obligatorios en el diseño elegido, aún no implementados; caché país opcional separada. Entre redes sólo HTTPS.",
+    "note": "Siete apps con estados distintos: F01 operativo/laboratorio; F02 host y protocolo en revisión, sin hardware habilitado. F05 valida el puesto dedicado. F06: red y estación compartida por homologar. PostgreSQL conserva el negocio. BullMQ y dos Redis de trabajos son obligatorios en el diseño elegido, aún no implementados; caché país opcional separada. Entre redes sólo HTTPS.",
     "nodeIds": [
       "client",
       "mobileClient",

@@ -22,7 +22,8 @@ function validateModelSemantics(){
  }
  const device=model.nodes.device;
  assert.equal(device.appId,'device-agent','The device host must identify its target application');
- assert.equal(device.inReviewedWorkspace,false,'The proposed device agent must not be reported as an existing scaffold');
+ assert.equal(device.inReviewedWorkspace,catalog.applications.find(app=>app.name===device.appId).inReviewedWorkspace,'Device host implementation state must match the reviewed application catalog');
+ assert.match(device.appState,/driver físico pendiente/,'Host implementation must not imply physical driver homologation');
  assert.equal(model.nodes.deviceJournal.technology,'SQLite','The technical journal must remain separate from business PostgreSQL');
  assert.ok(containers.relationships.some(edge=>edge.from==='device'&&edge.to==='branchApi'&&edge.label.includes('HTTPS/LAN saliente')),'Device agent must initiate the authenticated LAN connection');
  assert.ok(containers.relationships.some(edge=>edge.from==='device'&&edge.to==='deviceJournal'),'Device agent must own its technical journal');

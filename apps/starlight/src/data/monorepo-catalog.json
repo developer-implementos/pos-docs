@@ -3,7 +3,7 @@
   "product": "POS Platform",
   "reviewedOn": "2026-11-01",
   "repository": "https://github.com/developer-implementos/pos-platform",
-  "evidence": "Siete aplicaciones objetivo y seis proyectos de aplicación revisados en main. F01 incorpora administración POS Chile sobre HTTPS/PostgreSQL y clientes conectados; su motor comercial conserva pruebas sintéticas segregadas. El conector de lectura ERP no materializa espejos ni valida aún un proveedor corporativo. No acredita aceptación de fase ni habilitación de caja productiva. Starlight pertenece a POS Docs.",
+  "evidence": "Siete aplicaciones revisadas en el corte F02 c23f1e4cb692c3640d78f017aad1122435ed37f1, rama codex/f02-cobro-documento; no implica integración en main. F01 incorpora administración POS Chile sobre HTTPS/PostgreSQL y clientes conectados. F02 añade pagos/fiscalidad persistentes y el host .NET/SQLite con protocolo real; sin proveedores operativos ni driver físico habilitado. El conector ERP no materializa espejos ni valida un proveedor corporativo. No acredita aceptación de fase ni habilitación de caja productiva. Starlight pertenece a POS Docs.",
   "applications": [
     {
       "name": "pos-desktop",
@@ -22,15 +22,15 @@
     {
       "name": "device-agent",
       "location": "PC Windows de cada puesto (F02/F05); estación de red compartida posterior (F06)",
-      "description": "Agente C#/.NET por puesto; trabajos HTTPS con branch-api y diario SQLite; perfil de red compartido en F06",
-      "state": "Decisión acordada; app, protocolo y adaptadores pendientes de implementación y homologación",
-      "inReviewedWorkspace": false
+      "description": "Host C#/.NET por puesto; trabajos HTTPS con branch-api y registro SQLite; perfil de red compartido en F06",
+      "state": "Host .NET 10/SQLite y protocolo durable implementados en revisión F02; publicación Windows x64 e interoperabilidad HTTPS/PostgreSQL comprobadas. Driver no disponible; instalación de servicio y hardware pendientes",
+      "inReviewedWorkspace": true
     },
     {
       "name": "branch-api",
       "location": "Sucursal",
       "description": "API y composición de negocio de sucursal",
-      "state": "Identidad y administración POS Chile, configuración compatible, cestas y motor comercial técnicamente verificados con PostgreSQL; pruebas comerciales sintéticas. Precios y cobros operativos sujetos a fuente validada",
+      "state": "Identidad y administración POS Chile, configuración compatible, cestas y motor comercial con PostgreSQL. F02 añade persistencia de pagos, fiscalidad y dispositivos en revisión; sin proveedores operativos. Precios y cobros sujetos a fuente validada",
       "inReviewedWorkspace": true
     },
     {
@@ -189,7 +189,7 @@
   "documentationApplications": [],
   "targetStructure": {
     "decidedOn": "2026-10-29",
-    "status": "Estructura aplicada a F01 en revisión; aplicaciones posteriores conservan sus estados explícitos.",
+    "status": "Estructura aplicada a F01 y al corte parcial F02 en revisión; capacidades posteriores conservan sus estados explícitos.",
     "coreRelationship": "Core es únicamente referencia de organización y convenciones; no es dependencia, proveedor de paquetes ni servicio del POS.",
     "entries": [
       {
@@ -204,8 +204,8 @@
       },
       {
         "path": "apps/device-agent",
-        "description": "Agente C#/.NET Windows por puesto; red compartida en F06; implementación pendiente",
-        "state": "por incorporar"
+        "description": "Host .NET 10/SQLite por puesto; driver físico pendiente; red compartida en F06",
+        "state": "conservado"
       },
       {
         "path": "apps/branch-api",
@@ -333,6 +333,11 @@
         "state": "conservado"
       },
       {
+        "path": "tests/device-agent",
+        "description": "Pruebas .NET/SQLite, recuperación y helper de interoperabilidad HTTPS",
+        "state": "conservado"
+      },
+      {
         "path": "tests/pos-clients-e2e",
         "description": "Playwright demo y API real; proyecto Nx sin despliegue",
         "state": "conservado"
@@ -385,6 +390,10 @@
     ]
   },
   "workspaceSupport": [
+    {
+      "path": "tests/device-agent",
+      "description": "Pruebas nativas del host y protocolo de dispositivos"
+    },
     {
       "path": "tests/pos-clients-e2e",
       "description": "Playwright de los clientes demo y laboratorio conectado"
