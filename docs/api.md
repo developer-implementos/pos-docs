@@ -14,7 +14,7 @@ Los clientes `pos-desktop` y `pos-mobile` distinguen `branch`, `branch-lab`, `de
 
 El protocolo de dispositivos incorpora recepción durable, permiso de ejecución de un uso y resultados identificados. El host .NET lo consume por HTTPS saliente y conserva su parte en SQLite; no accede a SQL de sucursal. La [guía F02](phase-2-payments-documents.md) detalla el recorrido, los estados y la interoperabilidad comprobada.
 
-Los adaptadores de pagos y fiscalidad de las pruebas son controlados. La composición operativa no habilita un proveedor ni un numerador fiscal; el driver runtime de dispositivos declara capacidad no disponible. Estas APIs y sus pruebas no completan la UX de cobro, resolución, impresión o entrega de documentos prevista por el roadmap.
+Los adaptadores de pagos y fiscalidad son exclusivos de pruebas, sin conexión a proveedores. La composición operativa no habilita un proveedor ni un numerador fiscal; el driver runtime de dispositivos declara capacidad no disponible. Estas APIs y sus pruebas no completan la UX de cobro, resolución, impresión o entrega de documentos prevista por el roadmap.
 
 ## Referencia Core
 
