@@ -1,6 +1,6 @@
 flowchart TB
     accTitle: C2 · Contenedores — Aplicaciones, procesos y datos
-    accDescr: Siete aplicaciones objetivo de POS Platform, sus datos y sistemas externos. Seis apps tienen base técnica o scaffold; device-agent se incorpora como propuesta, aún no implementada. Siete apps objetivo; seis tienen base técnica. device-agent y SQLite: propuesta pendiente. F02: puesto Windows dedicado; F05: piloto del mismo perfil. F06: red y estación compartida por homologar; no agrega otra app. PostgreSQL conserva el negocio. BullMQ y dos Redis de trabajos son obligatorios en el diseño elegido, aún no implementados; caché país opcional separada. Entre redes sólo HTTPS.
+    accDescr: Siete aplicaciones de POS Platform, sus datos y sistemas externos. F02 incorpora el host .NET/SQLite y protocolo durable en revisión; drivers físicos pendientes. Siete apps con estados distintos: F01 operativo/laboratorio; F02 host y protocolo en revisión, sin hardware habilitado. F05 valida el puesto dedicado. F06: red y estación compartida por homologar. PostgreSQL conserva el negocio. BullMQ y dos Redis de trabajos son obligatorios en el diseño elegido, aún no implementados; caché país opcional separada. Entre redes sólo HTTPS.
     subgraph systemScope["POS Platform · aplicaciones y datos propuestos"]
         direction TB
         client["pos-desktop<br/>«Contenedor»<br/>Angular (frontend) ·<br/>Tauri (shell nativa)<br/>Aplicación completa para caja y comandos."]:::pos

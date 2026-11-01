@@ -16,11 +16,14 @@ Los clientes Angular con PrimeNG para escritorio (Tauri) y móvil (Capacitor) y 
 | `apps/pos-mobile` | Cliente Angular propio para Android/iOS, alojado en Capacitor |
 | `libs/client-shell` | Composición Angular compartida: rutas, configuración y shell |
 | `apps/branch-api` | Identidad y administración POS Chile mediante HTTPS/PostgreSQL; motor comercial en validación |
+| `apps/device-agent` | Host .NET 10 por puesto, recepción e intentos en SQLite; protocolo en revisión F02 y driver físico pendiente |
 | `apps/country-api` | Base HTTP y sonda de PostgreSQL por ámbito; sin recepción comercial |
 | `apps/branch-sync-worker`, `apps/erp-worker` | Composición de workers; CLI ERP de lectura independiente, procesamiento de jobs pendiente |
 | `libs/` | Features del frontend, contextos del backend y contratos compartidos, con límites de importación |
 
 Las aplicaciones comparten repositorio y contratos, con builds independientes. El cliente normal comienza en `unconfigured` y bloquea el acceso hasta recibir la configuración del puesto para el origen HTTPS autorizado en su paquete. `branch` usa el perfil operativo con identidad y permisos del servidor; `branch-lab` mantiene las pruebas sintéticas y `demo` se selecciona explícitamente. Ningún fallo de conexión o configuración activa la demostración. La [guía F01](phase-1-laboratory.md) distingue el incremento operativo integrado del recorrido de laboratorio y enlaza sus instrucciones de aprovisionamiento.
+
+El [corte F02 en revisión](phase-2-payments-documents.md) incorpora persistencia de pagos/fiscalidad y el host de dispositivos con protocolo HTTPS y SQLite reales. La compilación y las pruebas no habilitan proveedores, numeración fiscal o hardware: esas capacidades conservan su homologación y entrega pendientes.
 
 ![Centro de operación con indicadores, gráficos y pendientes](screenshots/dashboard.png)
 
@@ -108,7 +111,7 @@ Lo transversal se agrupa en `libs/shared/`, el negocio en `libs/backend/` y las 
 apps/
   pos-desktop/                  # Aplicación completa: shell Tauri + frontend Angular
   pos-mobile/                   # Aplicación completa: shell Capacitor + frontend Angular
-  device-agent/                 # Agente C#/.NET Windows por puesto; red compartida en F06; implementación pendiente
+  device-agent/                 # Host .NET 10/SQLite por puesto; driver físico pendiente; red compartida en F06
   branch-api/                   # API y composición de negocio de sucursal
   branch-sync-worker/           # Proceso de entrega y recepción de sucursal
   country-api/                  # API de recepción y capacidades de país
@@ -145,6 +148,7 @@ libs/
   data-access/                  # Adaptadores demo y gateway branch-api en proyectos separados
     branch-api/                 # HTTP y estado de la operación conectada
 tests/
+  device-agent/                 # Pruebas .NET/SQLite, recuperación y helper de interoperabilidad HTTPS
   pos-clients-e2e/              # Playwright demo y API real; proyecto Nx sin despliegue
     mobile/                     # Suite Angular móvil; no homologa Capacitor
     branch/                     # Recorridos Angular → API → PostgreSQL con recuperación

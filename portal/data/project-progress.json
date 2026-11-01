@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "54331b738b1ea197abebeddd4a6b73f18ef016a6",
+    "revision": "2a651af9b15ffba0ae1f983e55cb4f71f4c722ca",
     "path": "delivery/progress.json",
-    "sha256": "129c68afef64524fa77099074f7db3fd85745c30e60b53d44e0ac23346b38814"
+    "sha256": "502bd746a27ad9d70c66c575a896457342ed3b32ae14761df98fa3237ab1fb66"
   },
   "content": {
     "schemaVersion": 2,
-    "reviewedOn": "2026-10-31",
+    "reviewedOn": "2026-11-01",
     "productRevision": "source",
     "scope": {
       "repository": "https://github.com/developer-implementos/pos-docs",
@@ -16,13 +16,13 @@
       "path": "docs/roadmap.json",
       "sha256": "701dc03f2fbfdc8637f6b1ace5a3825705930e749fdab50d808061ba3f1ce9f9"
     },
-    "summary": "Doce entregables de F01 están técnicamente verificados. El recorrido persistido, los paquetes Android y Tauri y el gobierno de PR cuentan con evidencia propia. Las once verificaciones anteriores conservan sus revisiones; la aceptación manual permanece separada. Sólo F01-11 mantiene pendiente la validación autorizada de Mountain; los escenarios comerciales siguen usando datos sintéticos segregados.",
+    "summary": "Catorce entregables están técnicamente verificados: doce de F01 y los pagos combinados y el protocolo de dispositivos de F02. El cobro conectado combina efectivo y transferencia manual con importes exactos y recuperación; tarjeta y fiscalidad conservan contratos sin proveedor operativo. La evidencia separa verificación técnica, integración y aceptación humana; no acredita hardware ni liquidación bancaria.",
     "applications": [
       {
         "id": "pos-desktop",
         "stage": "functional",
-        "summary": "Cliente Angular conectado con administración POS, cestas recuperables y recotización con consentimiento. Ejecutables Tauri Windows reales verificados con cliente cerrado sin política y con origen exacto, incluido rechazo de política incompatible. La demo es explícita; venta operativa conserva sus gates.",
-        "nextStep": "Continuar la validación comercial con fuentes autorizadas y los alcances de instalación, firma, WebView/periféricos de F02/F05; el paquete comprobado no los sustituye.",
+        "summary": "Cliente Angular conectado con administración POS, cestas recuperables, recotización y cobro combinado de efectivo y transferencia manual. Recupera planes y comandos sin duplicar dinero; el verificador dispone de una bandeja con permisos propios. Conserva el empaquetado Tauri Windows verificado en F01. Tarjetas, guardado real de archivos en WebView y periféricos mantienen sus límites.",
+        "nextStep": "Completar los flujos de excepción y medios pendientes, validar exportación nativa y enlazar fuentes comerciales autorizadas; la evidencia de navegador no acredita proveedores ni hardware.",
         "evidence": [
           {
             "path": "apps/pos-desktop/src/main.ts",
@@ -35,6 +35,10 @@
           {
             "path": "tests/pos-clients-e2e/operational/administration.spec.ts",
             "label": "Administración, revocación y reactivación contra API HTTPS y PostgreSQL"
+          },
+          {
+            "path": "delivery/evidence/f02-checkout-browser.json",
+            "label": "Cobro combinado conectado, verificación independiente y recuperación comprobados"
           }
         ]
       },
@@ -65,8 +69,8 @@
       {
         "id": "branch-api",
         "stage": "functional",
-        "summary": "API NestJS/Fastify sobre PostgreSQL con administración POS, HTTPS, configuración compatible, clientes, cestas y transacción de venta verificadas técnicamente. Los escenarios comerciales usan datos sintéticos segregados; precio y venta operativos continúan sujetos a fuentes y políticas aprobadas.",
-        "nextStep": "Integrar la publicación comercial autorizada y avanzar en sincronización/operación diaria, manteniendo permisos mínimos y capacidades cerradas cuando falte evidencia.",
+        "summary": "API NestJS/Fastify sobre PostgreSQL con administración, HTTPS y venta local. Los planes congelan el importe y finalizan venta, caja por su fracción y outbox en la misma transacción. Transferencias conservan autoridad manual y evidencia privada. El protocolo de dispositivos está verificado con .NET/SQLite/HTTPS; no habilita cobros, fiscalidad o drivers externos por defecto.",
+        "nextStep": "Completar la fuente comercial autorizada, los adaptadores y flujos de excepción pendientes; mantener activación explícita, permisos actuales e incertidumbre durable cuando falta una respuesta externa.",
         "evidence": [
           {
             "path": "apps/branch-api/src/app.module.ts",
@@ -79,6 +83,10 @@
           {
             "path": "libs/backend/administration/integration/operational-identity.test.ts",
             "label": "Permisos, concurrencia, sesiones y protección administrativa"
+          },
+          {
+            "path": "delivery/evidence/f02-checkout-browser.json",
+            "label": "Cobro combinado conectado, verificación independiente y recuperación comprobados"
           }
         ]
       },
@@ -132,10 +140,27 @@
       },
       {
         "id": "device-agent",
-        "stage": "planned",
-        "summary": "Aplicación objetivo C#/.NET Windows todavía ausente del monorepo revisado.",
-        "nextStep": "Crear el servicio por puesto, recepción durable de comandos y primer periférico homologado.",
-        "evidence": []
+        "stage": "foundation",
+        "summary": "Host .NET 10 con transporte HTTPS saliente, identidad de instalación y SQLite. El protocolo de recepción durable, permiso único y reporte está técnicamente verificado con interoperabilidad real y recuperación sin repetir efectos. El driver runtime permanece no disponible.",
+        "nextStep": "Implementar y homologar el primer adaptador físico, su SDK/modelo/firmware y el despliegue de servicio; el protocolo verificado no acredita impresión ni cobros.",
+        "evidence": [
+          {
+            "path": "apps/device-agent",
+            "label": "Host .NET y configuración reproducible"
+          },
+          {
+            "path": "tests/device-agent",
+            "label": "SQLite, contratos y recuperación ante caída"
+          },
+          {
+            "path": "apps/branch-api/native-integration/device-host.test.ts",
+            "label": "Interoperabilidad HTTPS con PostgreSQL y host .NET reales"
+          },
+          {
+            "path": "delivery/evidence/f02-device-protocol-ci.json",
+            "label": "Pruebas del host e interoperabilidad HTTPS/.NET/PostgreSQL/SQLite aprobadas"
+          }
+        ]
       }
     ],
     "workPackages": [
@@ -605,8 +630,8 @@
           "branch-api",
           "device-agent"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: El primer medio externo ejecuta un cobro con intención durable, destino fijo y consulta de resultado, sin reintentos financieros ciegos.",
+        "status": "in_progress",
+        "summary": "Intenciones, intentos y destinos durables, reserva de venta y recuperación implementados y probados en PostgreSQL. Pendientes adaptador Transbank POS integrado, evidencia del proveedor y UX conectada.",
         "acceptance": null,
         "verification": null
       },
@@ -616,8 +641,8 @@
           "pos-desktop",
           "branch-api"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: El primer documento fiscal conserva identidad y estados separados de venta, transmisión, aceptación y rechazo, según régimen homologado.",
+        "status": "in_progress",
+        "summary": "Solicitud fiscal, identidad autorizada y estados persistidos con envío único y consulta; almacenamiento y descarga protegida del original implementados. Pendientes contrato/adapter Acepta o Ingydev, régimen/material habilitados e interfaz de emisión.",
         "acceptance": null,
         "verification": null
       },
@@ -628,8 +653,8 @@
           "branch-api",
           "device-agent"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: device-agent C#/.NET se ejecuta independientemente de la ventana POS y conserva recepción, intentos y evidencia técnica de los periféricos del puesto.",
+        "status": "in_progress",
+        "summary": "Host .NET, SQLite, HTTPS, deduplicación y recuperación implementados. Pendientes SDK/driver, arquitectura y cuenta/sesión homologadas; la publicación win-x64 no acredita operación física.",
         "acceptance": null,
         "verification": null
       },
@@ -640,8 +665,8 @@
           "branch-api",
           "device-agent"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: El operador puede consultar excepciones por efecto y solicitar sólo acciones de recuperación autorizadas con evidencia auditada.",
+        "status": "in_progress",
+        "summary": "Seguimiento de pagos, documentos fiscales y trabajos con listados paginados, filtro de estado y detalle conectado, verificado mediante API HTTPS y PostgreSQL. Faltan historial y resolución de excepciones por operación, responsables y recorridos completos.",
         "acceptance": null,
         "verification": null
       },
@@ -651,10 +676,48 @@
           "pos-desktop",
           "branch-api"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Una venta admite la combinación de medios aprobada y concilia asignaciones exactas, pendientes y vuelto sin confirmar importes insuficientes o duplicados.",
+        "status": "verified",
+        "summary": "Verificados el plan de cobro congelado, las asignaciones exactas, el bloqueo del saldo incierto, los reintentos y el vuelto sólo de efectivo. Venta, fracción de caja y outbox se confirman atómicamente. La interfaz conectada opera efectivo y transferencia manual; el contrato de tarjeta se prueba con adaptador controlado y no acredita un proveedor operativo.",
         "acceptance": null,
-        "verification": null
+        "verification": {
+          "revision": "804ef2bb1cc168bb8b9bfe721fc64402dc0c7a08",
+          "reviewedOn": "2026-11-01",
+          "reviewer": "Codex · revisión técnica automatizada",
+          "evidence": [
+            {
+              "path": "libs/backend/payments/contracts/src/plans.ts",
+              "label": "Contrato de plan, asignaciones, transferencias y estado financiero"
+            },
+            {
+              "path": "libs/backend/payments/integration/payment-plans.test.ts",
+              "label": "Suma exacta, tarjeta incierta, duplicados, vuelto, permisos y resolución de fondos existentes"
+            },
+            {
+              "path": "libs/backend/sales/contracts/src/payment-plan.ts",
+              "label": "Contrato entre pagos y el propietario de la venta congelada"
+            },
+            {
+              "path": "apps/branch-api/test/paid-sale-owner.integration.test.ts",
+              "label": "Finalización atómica, caja por su fracción, recuperación y rollback de venta/outbox"
+            },
+            {
+              "path": "apps/branch-api/test/payment-plan-http.integration.test.ts",
+              "label": "Frontera HTTP Nest/Fastify inject y PostgreSQL con dos actores autorizados"
+            },
+            {
+              "path": "tests/pos-clients-e2e/operational/combined-checkout.spec.ts",
+              "label": "Recorrido conectado de cobro combinado, cambio de actor y recuperación del plan"
+            },
+            {
+              "path": "delivery/reviews/F02-verification.md",
+              "label": "Matriz de criterios, contratos estables, pruebas y límites de proveedores"
+            },
+            {
+              "path": "delivery/evidence/f02-checkout-browser.json",
+              "label": "Ejecución aprobada en Chromium/HTTPS/PostgreSQL, fuente limpia y artefactos estables"
+            }
+          ]
+        }
       },
       {
         "id": "F02-06",
@@ -662,8 +725,8 @@
           "pos-desktop",
           "branch-api"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Transferencias, vouchers y medios manuales conservan evidencia y estados de verificación que impiden tratar una declaración o captura como dinero confirmado.",
+        "status": "in_progress",
+        "summary": "Implementadas transferencias manuales con cuenta autorizada, referencia única entre ventas de la sucursal, aprobación independiente, bandeja por permisos y PDF opcional privado e inmutable. La confirmación manual no acredita liquidación bancaria. Faltan los perfiles de otros medios/vouchers y sus controles de seguridad y retención; cuentas compartidas entre sucursales necesitan una autoridad de deduplicación común. Los adjuntos permanecen not-scanned.",
         "acceptance": null,
         "verification": null
       },
@@ -675,8 +738,8 @@
           "pos-desktop",
           "device-agent"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Una configuración aprobada selecciona adaptadores y capacidades por ámbito y conserva el destino de toda operación iniciada.",
+        "status": "in_progress",
+        "summary": "Perfiles de pago versionados, destino fiscal congelado y asignación de instalación/época implementados. Contrato estable del protocolo de dispositivos; matriz y conformidad de proveedores/SDK pendientes.",
         "acceptance": null,
         "verification": null
       },
@@ -686,8 +749,8 @@
           "branch-api",
           "country-api"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: El primer perfil controla numeración, material fiscal, vigencia y consumo concurrente sin reutilizar identidades ni habilitar contingencias no autorizadas.",
+        "status": "in_progress",
+        "summary": "Puerto de identidad autorizada y unicidad por emisor/tipo/folio persistidos. Sin asignación fiscal por defecto; pendientes autoridad, material/custodia, restore y contingencia aprobados.",
         "acceptance": null,
         "verification": null
       },
@@ -698,10 +761,56 @@
           "device-agent",
           "pos-desktop"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: branch-api admite trabajos de dispositivos autorizados y el host .NET intercambia comandos/resultados versionados sin acceso SQL ni rutas arbitrarias.",
+        "status": "verified",
+        "summary": "Verificados el contrato TypeScript/.NET, inscripción y ámbito, recepción durable, permiso de ejecución de un uso, vigencia, deduplicación y recuperación. Fixtures comunes, PostgreSQL, SQLite y HTTPS reales comprueban el intercambio y rechazo de identidad/TLS inválidos. Driver físico, instalación productiva y mTLS conservan sus entregables propios.",
         "acceptance": null,
-        "verification": null
+        "verification": {
+          "revision": "804ef2bb1cc168bb8b9bfe721fc64402dc0c7a08",
+          "reviewedOn": "2026-11-01",
+          "reviewer": "Codex · revisión técnica automatizada",
+          "evidence": [
+            {
+              "path": "libs/backend/devices/contracts/fixtures/device-wire.v1.json",
+              "label": "Fixtures comunes versionados TypeScript y C#"
+            },
+            {
+              "path": "libs/backend/devices/test/wire.test.ts",
+              "label": "Validación TypeScript de los mismos mensajes y límites"
+            },
+            {
+              "path": "tests/device-agent/DeviceWireTests.cs",
+              "label": "Validación C# de los fixtures comunes"
+            },
+            {
+              "path": "libs/backend/devices/integration/device-jobs.test.ts",
+              "label": "PostgreSQL: identidad, ámbito, deduplicación, capacidad, vigencia y permiso único"
+            },
+            {
+              "path": "tests/device-agent/DeviceJournalTests.cs",
+              "label": "SQLite: recepción y resultado durables, duplicados y recuperación"
+            },
+            {
+              "path": "tests/device-agent/ExecutionPermissionTests.cs",
+              "label": "Permiso de un uso, presupuesto monotónico y restauración sin repetir efectos"
+            },
+            {
+              "path": "tests/device-agent/TransportTests.cs",
+              "label": "Transporte y rechazo TLS antes de transmitir credenciales"
+            },
+            {
+              "path": "apps/branch-api/native-integration/device-host.test.ts",
+              "label": "Interoperabilidad real .NET, SQLite, HTTPS/Nest y PostgreSQL entre procesos"
+            },
+            {
+              "path": "delivery/reviews/F02-verification.md",
+              "label": "Dictamen técnico y límites de driver, hardware e instalación productiva"
+            },
+            {
+              "path": "delivery/evidence/f02-device-protocol-ci.json",
+              "label": "Trabajos API y Windows aprobados con interoperabilidad y pruebas del host"
+            }
+          ]
+        }
       },
       {
         "id": "F02-10",
@@ -710,8 +819,8 @@
           "branch-api",
           "device-agent"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Recibos y etiquetas del alcance se renderizan con plantillas versionadas y se imprimen mediante adaptadores homologados sin volver a cobrar o emitir.",
+        "status": "in_progress",
+        "summary": "Contrato de recibo no fiscal existente, payload/hash y distinción spool/efecto implementados. Pendientes plantilla comercial completa, driver homologado y prueba física de impresión.",
         "acceptance": null,
         "verification": null
       },
@@ -733,8 +842,8 @@
           "pos-desktop",
           "branch-api"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Los operadores autorizados encuentran comprobantes y sus representaciones con filtros, estados y trazabilidad, sin exponer documentos de otro ámbito.",
+        "status": "in_progress",
+        "summary": "Búsqueda fiscal por fecha UTC, cliente, folio, tipo y estado; originales PDF inmutables en PostgreSQL, disponibilidad y descarga autenticada con integridad verificada. Pendientes guardado real en Windows, exportador nativo móvil y validación operativa del proveedor; envío y reimpresión permanecen separados. No hay recuperación programada de originales ausentes.",
         "acceptance": null,
         "verification": null
       },
@@ -744,8 +853,8 @@
           "branch-api",
           "pos-desktop"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Un cobro aprobado que no logra completar la venta tiene un procedimiento durable de recuperación o reversa sin duplicar cargo ni devolución.",
+        "status": "in_progress",
+        "summary": "Compensación durable separada, reserva de importe, destino original y consulta implementados. Pendientes orquestación tras fallo comercial, adapter de reversa/refund y UX/runbook.",
         "acceptance": null,
         "verification": null
       },

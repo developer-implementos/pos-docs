@@ -8,6 +8,14 @@
 
 Los clientes `pos-desktop` y `pos-mobile` distinguen `branch`, `branch-lab`, `demo` y el estado inicial `unconfigured`. El perfil conectado usa la API; no cambia a mocks ante un fallo. `country-api` tiene persistencia y sonda de ámbito propias, todavía sin recepción comercial. Los workers no procesan jobs de negocio; `erp-worker` incorpora una CLI separada de consultas Mountain que aún no alimenta el espejo ni la UI.
 
+## Corte F02 en revisión
+
+`branch-api` añade los contextos persistentes `payments`, `fiscal` y `devices`. Conservan intenciones, intentos, evidencia y destino bajo sus propias transacciones; no declaran un efecto externo a partir de un timeout o de un acuse técnico. Las rutas de operador y de host usan audiencias autenticadas distintas: una sesión POS no sustituye la credencial de instalación del dispositivo.
+
+El protocolo de dispositivos incorpora recepción durable, permiso de ejecución de un uso y resultados identificados. El host .NET lo consume por HTTPS saliente y conserva su parte en SQLite; no accede a SQL de sucursal. La [guía F02](phase-2-payments-documents.md) detalla el recorrido, los estados y la interoperabilidad comprobada.
+
+Los adaptadores de pagos y fiscalidad son exclusivos de pruebas, sin conexión a proveedores. La composición operativa no habilita un proveedor ni un numerador fiscal; el driver runtime de dispositivos declara capacidad no disponible. Estas APIs y sus pruebas no completan la UX de cobro, resolución, impresión o entrega de documentos prevista por el roadmap.
+
 ## Referencia Core
 
 Las convenciones se contrastaron con [developer-implementos/core](https://github.com/developer-implementos/core/tree/b25164a50375845989a671cdc8e13360866c76af), commit `b25164a50375845989a671cdc8e13360866c76af`. La referencia es su código de arranque y sus contratos; no se incorpora Core como dependencia ni se conectan sus servicios.
@@ -214,7 +222,7 @@ Esta API es un proceso Node independiente dentro de **pos-platform**. La configu
 
 La organización distingue infraestructura compartida de propiedad de negocio: conexiones y ejecutores técnicos en `shared/backend`; modelos, repositorios y migraciones en cada contexto. Los contratos comerciales se publican desde su contexto; `shared/contracts` contiene sobres, metadatos y errores transversales, no un catálogo global de DTO de negocio.
 
-La venta en efectivo de laboratorio tiene autenticación, autorización, PostgreSQL, migraciones y una unidad de trabajo que conserva sus efectos y outbox. El incremento operativo añade identidades propias y provisión real, sin reutilizar las semillas como fuente comercial. La CLI legacy de `erp-worker` consulta referencias puntuales mediante HTTPS y cuenta técnica propia; no publica maestros ni cotiza. La entrega de outbox, recepción de país, espejos completos, jobs BullMQ, ERP, fiscalidad y dispositivos permanecen en sus fases. Las reglas CL sintéticas no homologan Chile, Perú o España. Los clientes hablan con la API y nunca consultan SQL directamente.
+La venta en efectivo de laboratorio tiene autenticación, autorización, PostgreSQL, migraciones y una unidad de trabajo que conserva sus efectos y outbox. El incremento operativo añade identidades propias y provisión real, sin reutilizar las semillas como fuente comercial. La CLI legacy de `erp-worker` consulta referencias puntuales mediante HTTPS y cuenta técnica propia; no publica maestros ni cotiza. La entrega de outbox, recepción de país, espejos completos, jobs BullMQ y ERP permanecen en sus fases. F02 añade persistencia y protocolo de pagos, fiscalidad y dispositivos, sin acreditar sus proveedores ni hardware operativos. Las reglas CL sintéticas no homologan Chile, Perú o España. Los clientes hablan con la API y nunca consultan SQL directamente.
 
 La [propuesta de arquitectura](propuesta-arquitectura.md) y las [opciones tecnológicas](opciones-tecnologicas.md) explican la ubicación del backend y los límites del perfil sin WAN. El servicio no promete autonomía de una caja ante caída de la LAN o del servidor de sucursal.
 

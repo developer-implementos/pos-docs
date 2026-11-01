@@ -2,21 +2,21 @@
   "schemaVersion": 1,
   "reviewedOn": "2026-11-01",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "9eacaf2f78e0107a41cb830b5dfd742769944382",
-  "sourceStatus": "Fuentes documentales verificadas en la revisión indicada; F01 incluye administración POS integrada y entregables técnicamente verificados con pruebas comerciales de laboratorio. La aceptación manual y la habilitación productiva se mantienen separadas.",
+  "revision": "91cbb43951703c8ce4a96fba56ff293a96df6fe1",
+  "sourceStatus": "Fuentes documentales verificadas en la revisión indicada; F01 incluye administración POS y entregables técnicamente verificados. F02 incluye cobro combinado y protocolo de dispositivos técnicamente verificados, junto con persistencia fiscal y host .NET/SQLite; no habilita proveedores operativos ni drivers físicos. La aceptación manual y la habilitación productiva se mantienen separadas.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "inputs": [
     {
       "path": "docs/monorepo.md",
-      "sha256": "ce16c22247d8d2d72aa9000ee370a76a08f7892ec036a2be8994cee2bf39d85e"
+      "sha256": "db636405bf193d6a22f143d5a32c0ac474d5d074065ad54bb9f815cb7e38db1f"
     },
     {
       "path": "docs/propuesta-arquitectura.md",
-      "sha256": "207c3b807886f088c5bf00f1ee9ed896784ceba40f906f0cbb071e461b417a38"
+      "sha256": "4f4d692a56e2a0677b6ad36bdf7bece09a88dae131d9ad7f6b60a99d94f1d95e"
     },
     {
       "path": "docs/implementation-plan.md",
-      "sha256": "517849bc07f6f91d42ebcf732d8e87d0330d3fcce05b67a926378dbda85c86d9"
+      "sha256": "05df0a7f0a89e78b2909e760ca3243a38de8ff7e6e045b13a5d6dd4783bd3516"
     },
     {
       "path": "docs/validacion-y-decisiones.md",
@@ -24,7 +24,7 @@
     },
     {
       "path": "apps/starlight/src/data/product-evidence.json",
-      "sha256": "7f85856a2e7bc0c6f433468309d19f5b36868716d489fe4a81f42631a2dc882d"
+      "sha256": "874cb3e6ad5bb01d60a87f4c265adaaee8b5d1a69a61343415312010bca6c0fd"
     },
     {
       "path": "docs/roadmap.md",
@@ -36,7 +36,7 @@
     },
     {
       "path": "docs/c4-arquitectura-propuesta.md",
-      "sha256": "7bed3236c6b773f2fb56a367bb5e8e1a6f5704998f1ac71898dcd441ba77d3d9"
+      "sha256": "25f159e6fd0b5c5efb91ec2440dcf9c107717e885d795c46f0147cf5b939ef00"
     },
     {
       "path": "docs/contracts/master-data-publication.md",
@@ -48,7 +48,7 @@
     },
     {
       "path": "tools/architecture/model.mjs",
-      "sha256": "f76b8045993d3d28bbb2654ab5cd88c5cfb5b48f59a7e9090bccfcb24e8921f9"
+      "sha256": "15b23c1bd7524cc8c131e224e5106ed1f5afb839b12991265ec49780ccff3efd"
     },
     {
       "path": "tools/architecture/views.mjs",
@@ -56,11 +56,11 @@
     },
     {
       "path": "tools/diagrams/models/c4-data.js",
-      "sha256": "060a0f190c8c385c4a55a0a8bbc7cc951784c1f81ee66da729fc9ba81b52eaca"
+      "sha256": "b5ae82d6a154b4504f1cebe4e6087c8b790cc2348ccaeb62b244435e88cf530c"
     },
     {
       "path": "docs/extensibilidad-proveedores-dispositivos.md",
-      "sha256": "bde22e49608a3e8d660baa5ac78530b76052f378f0b3d6eb0598c244829c7e83"
+      "sha256": "151e6a76ade434b102d9c427c50fa28012dbd661deaccc75534ee61ac66ff7e7"
     },
     {
       "path": "docs/decisions/native-clients.md",
@@ -68,11 +68,11 @@
     },
     {
       "path": "apps/starlight/src/data/monorepo-catalog.json",
-      "sha256": "f140709c2dff3b0e9b0baa55c0d5f611da6a3b936c7d3155a218bbd7315e6a34"
+      "sha256": "51b7764b296343f67fda2eb92104e2eaeb1584f2b39e3b4653158b7cd44f154d"
     },
     {
       "path": "docs/decisions/device-agent.md",
-      "sha256": "53dc5b9424f0ca035ee341fc1b60b02ab7f662f39c07d930a5055623c6443305"
+      "sha256": "69965f3905505703e219683c226da94953ba4e5b8736d35e1dc4f6324ec661c6"
     },
     {
       "path": "docs/decisions/job-processing.md",

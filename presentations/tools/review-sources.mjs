@@ -24,6 +24,6 @@ sources.inputs = sources.inputs.map(input => {
 });
 sources.revision = revision;
 sources.reviewedOn = new Date().toISOString().slice(0, 10);
-sources.sourceStatus = 'Fuentes documentales verificadas en la revisión indicada; F01 incluye administración POS integrada y entregables técnicamente verificados con pruebas comerciales de laboratorio. La aceptación manual y la habilitación productiva se mantienen separadas.';
+sources.sourceStatus = 'Fuentes documentales verificadas en la revisión indicada; F01 incluye administración POS y entregables técnicamente verificados. F02 incluye cobro combinado y protocolo de dispositivos técnicamente verificados, junto con persistencia fiscal y host .NET/SQLite; no habilita proveedores operativos ni drivers físicos. La aceptación manual y la habilitación productiva se mantienen separadas.';
 fs.writeFileSync(manifestPath, `${JSON.stringify(sources, null, 2)}\n`);
 console.log(`Presentation source review: ${revision.slice(0, 12)}; ${sources.inputs.length} tracked inputs.`);

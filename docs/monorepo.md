@@ -16,14 +16,14 @@ La [guía de API](api.md#configuración) detalla los artefactos, prefijos de ent
 
 El código transversal se agrupa en `libs/shared/` y los contextos de negocio en `libs/backend/`. Core es una referencia de organización y convenciones; POS Platform es independiente y no consume su código, paquetes ni servicios.
 
-La estructura define siete aplicaciones objetivo y el proyecto de pruebas `pos-clients-e2e`, sin artefacto de despliegue. La documentación se publica desde POS Docs. El [estado de implementación](#estado-de-implementación) indica el alcance disponible.
+La estructura define siete aplicaciones y proyectos de pruebas separados: `pos-clients-e2e` para los clientes y `device-agent-tests` para el host nativo. Esos proyectos de pruebas no son servicios desplegables. La documentación se publica desde POS Docs. El [estado de implementación](#estado-de-implementación) indica el alcance disponible.
 
 <!-- monorepo:target:start -->
 ```text
 apps/
   pos-desktop/                  # Aplicación completa: shell Tauri + frontend Angular
   pos-mobile/                   # Aplicación completa: shell Capacitor + frontend Angular
-  device-agent/                 # Agente C#/.NET Windows por puesto; red compartida en F06; implementación pendiente
+  device-agent/                 # Host .NET 10/SQLite por puesto; driver físico pendiente; red compartida en F06
   branch-api/                   # API y composición de negocio de sucursal
   branch-sync-worker/           # Proceso de entrega y recepción de sucursal
   country-api/                  # API de recepción y capacidades de país
@@ -60,6 +60,7 @@ libs/
   data-access/                  # Adaptadores demo y gateway branch-api en proyectos separados
     branch-api/                 # HTTP y estado de la operación conectada
 tests/
+  device-agent/                 # Pruebas .NET/SQLite, recuperación y helper de interoperabilidad HTTPS
   pos-clients-e2e/              # Playwright demo y API real; proyecto Nx sin despliegue
     mobile/                     # Suite Angular móvil; no homologa Capacitor
     branch/                     # Recorridos Angular → API → PostgreSQL con recuperación
@@ -76,7 +77,9 @@ tools/                          # Herramientas de build, lint y pruebas del prod
 
 ## Estado de implementación
 
-El producto contiene seis aplicaciones; `apps/device-agent` está acordada y pendiente de implementación. `branch-api` compone identidad, configuración y contextos transaccionales. El perfil `operational` añade usuarios, roles, asignaciones y provisión Chile; el laboratorio prueba catálogo, cestas, cotización y efectivo con datos sintéticos. `country-api` comprueba su PostgreSQL y ámbito sin recibir ventas. Los workers no sincronizan ni registran operaciones ERP; la CLI separada de `erp-worker` consulta referencias Mountain por HTTPS. El [recorrido F01](phase-1-laboratory.md) detalla esos límites.
+El corte F02 contiene siete aplicaciones, con `apps/device-agent` implementado en C#/.NET 10 y SQLite. `branch-api` compone identidad, configuración y contextos transaccionales; añade persistencia y contratos de pagos, fiscalidad y dispositivos en revisión. El host y su protocolo están probados entre procesos, con driver runtime no disponible y sin proveedores fiscales o de pago operativos. La [guía F02](phase-2-payments-documents.md) distingue esas garantías de la homologación pendiente.
+
+El perfil `operational` conserva usuarios, roles, asignaciones y provisión Chile; el laboratorio prueba catálogo, cestas, cotización y efectivo con datos sintéticos. `country-api` comprueba su PostgreSQL y ámbito sin recibir ventas. Los workers no sincronizan ni registran operaciones ERP; la CLI separada de `erp-worker` consulta referencias Mountain por HTTPS. El [recorrido F01](phase-1-laboratory.md) detalla esos límites.
 
 La [guía de API](api.md), la [guía de pruebas](testing.md) y la [evidencia del producto](product-repository.md) delimitan el código revisado. El árbol conserva el estado pendiente de los componentes futuros; una carpeta no acredita operación o aceptación.
 
@@ -129,6 +132,8 @@ La conexión y el ejecutor técnico de transacciones pueden compartirse; las tab
 
 `tests/pos-clients-e2e/` agrupa Playwright de las interfaces Angular con dependencias explícitas de clientes y `branch-api`. La carpeta `branch/` contiene recorridos contra API y PostgreSQL reales, incluidas respuestas perdidas y aprobación secundaria. Las suites demo y móvil mantienen su composición específica. Es un proyecto de pruebas, sin artefacto de despliegue.
 
+`tests/device-agent/` prueba contratos y persistencia SQLite, reinicios, transporte y límites del host .NET. El helper de interoperabilidad ejecuta el coordinador y transporte reales contra la API HTTPS en `apps/branch-api/native-integration/`; no incluye un driver físico simulado en el artefacto del producto. Nx coordina las tareas y el SDK .NET se fija mediante `global.json`.
+
 Las pruebas HTTP permanecen junto a cada API; unitarias e integración quedan cerca de su código. `shared/backend/testing` aporta fixtures técnicas; los datos comerciales conservan su contexto dueño. `tools/backend` y los runners de laboratorio son herramientas del workspace, no dependencias del runtime.
 
 Una suite `pos-system-e2e` requerirá un recorrido real sucursal–persistencia–país. `pos-desktop-e2e` se justificará con capacidades nativas de Tauri: probar Angular en Chromium no verifica instalación ni periféricos. Esas suites son futuras y no forman parte del inventario existente. La [guía de pruebas](testing.md) detalla alcances y criterios.
@@ -140,8 +145,8 @@ Una suite `pos-system-e2e` requerirá un recorrido real sucursal–persistencia�
 | --- | --- | --- | --- |
 | `pos-desktop` | Puesto Windows | Aplicación completa: shell nativa Tauri y frontend Angular | Cliente conectado con administración POS, frescura del cliente y recotización con consentimiento; demo y laboratorio explícitos. Dos ejecutables Windows Tauri y política HTTPS embebida comprobados; instalación y capacidades nativas se homologan en sus fases |
 | `pos-mobile` | Dispositivo Android/iOS | Aplicación completa: shell nativa Capacitor y frontend Angular | Cliente conectado compartido; dos APK Android y política HTTPS embebida comprobados. Instalación, distribución y capacidades nativas se homologan en sus fases |
-| `device-agent` | PC Windows de cada puesto (F02/F05); estación de red compartida posterior (F06) | Agente C#/.NET por puesto; trabajos HTTPS con branch-api y diario SQLite; perfil de red compartido en F06 | Decisión acordada; app, protocolo y adaptadores pendientes de implementación y homologación |
-| `branch-api` | Sucursal | API y composición de negocio de sucursal | Identidad y administración POS Chile, configuración compatible, cestas y motor comercial técnicamente verificados con PostgreSQL; pruebas comerciales sintéticas. Precios y cobros operativos sujetos a fuente validada |
+| `device-agent` | PC Windows de cada puesto (F02/F05); estación de red compartida posterior (F06) | Host C#/.NET por puesto; trabajos HTTPS con branch-api y registro SQLite; perfil de red compartido en F06 | Host .NET 10/SQLite y protocolo durable implementados en revisión F02; publicación Windows x64 e interoperabilidad HTTPS/PostgreSQL comprobadas. Driver no disponible; instalación de servicio y hardware pendientes |
+| `branch-api` | Sucursal | API y composición de negocio de sucursal | Identidad y administración POS Chile, configuración compatible, cestas y motor comercial con PostgreSQL. F02 añade persistencia de pagos, fiscalidad y dispositivos en revisión; sin proveedores operativos. Precios y cobros sujetos a fuente validada |
 | `branch-sync-worker` | Sucursal | Proceso de entrega y recepción de sucursal | Esqueleto local; sin jobs ni sincronización real |
 | `country-api` | País | API de recepción y capacidades de país | Base HTTP y PostgreSQL por ámbito con comprobación de esquema; sin recepción comercial |
 | `erp-worker` | Red autorizada del ERP | Proceso de integración, traducción y conciliación ERP | CLI de lectura Mountain para productos/clientes con transporte HTTPS acotado; VPN activa y resolución de nombre comprobada, conexión HTTPS rechazada antes de TLS; sin consulta corporativa, publicación de espejos ni procesamiento de jobs |
