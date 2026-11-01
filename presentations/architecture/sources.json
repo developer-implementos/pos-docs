@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "reviewedOn": "2026-11-01",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "5083440aa58d1034fee9be9941bfcf6a524b782d",
+  "revision": "77c7a9b4b84d1542a839c8fb33aa39a3302bd512",
   "sourceStatus": "Fuentes documentales verificadas en la revisión indicada; F01 incluye administración POS y entregables técnicamente verificados. F02 incorpora persistencia de pagos/fiscalidad y host .NET/SQLite con protocolo durable en revisión, sin proveedores operativos ni drivers físicos habilitados. La aceptación manual y la habilitación productiva se mantienen separadas.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "inputs": [
@@ -68,7 +68,7 @@
     },
     {
       "path": "apps/starlight/src/data/monorepo-catalog.json",
-      "sha256": "bc6c44831a873ce374478d0fd55d5fd2772922ae8b6a1a924cfc82850e4b0173"
+      "sha256": "7220bb8c79230f7566ad6dedcdc9f765d38d94ff37b842c72d08aa934624e6bf"
     },
     {
       "path": "docs/decisions/device-agent.md",
