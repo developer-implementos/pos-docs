@@ -2,7 +2,7 @@
 
 `apps/pos-desktop` contiene la aplicación cliente de escritorio: un frontend Angular/PrimeNG con arranque y build propios, alojado en la shell nativa (host) Tauri 2 para Windows. Comparte composición y funcionalidades con `pos-mobile` mediante `libs/client-shell`, la librería de composición Angular de raíz, configuración, rutas, guards y layout; esta librería no es el host nativo. Cada aplicación conserva su arranque independiente. La [decisión de clientes nativos](decisions/native-clients.md) delimita ambos clientes. El resultado histórico de un instalador no acredita el nuevo artefacto hasta comprobar su build y ejecución.
 
-El frontend permite perfiles explícitos `demo` y `branch-lab`. El perfil conectado tiene login, caja y venta contra PostgreSQL mediante `branch-api`; la [guía F01](phase-1-laboratory.md) distingue laboratorio y producción. El perfil y CSP deben quedar configurados para el origen autorizado del artefacto antes de probar el host. Un build Angular no homologa el binario Tauri.
+El cliente distingue `unconfigured`, `branch`, `branch-lab` y `demo`. El perfil operativo `branch` usa identidad propia POS y servicios persistidos de `branch-api`; el laboratorio y la demo mantienen sus fuentes aisladas. La [guía F01](phase-1-laboratory.md) identifica qué recorridos están comprobados en cada perfil. El perfil y CSP deben quedar configurados para el origen autorizado del artefacto antes de probar el host. Un build Angular no homologa el binario Tauri.
 
 ## Prerrequisitos Windows
 
@@ -31,13 +31,17 @@ Nx ejecuta Tauri desde `apps/pos-desktop`. Los hooks `beforeDevCommand` y `befor
 
 La navegación usa hash para que las rutas funcionen dentro del protocolo local del host. El enlace de salto al contenido enfoca la región principal sin cambiar ese hash.
 
-## Frontera del prototipo
+<span id="frontera-del-prototipo"></span>
 
-La ventana `main` tiene una capability explícita sin permisos nativos. No se registran comandos Rust ni plugins de archivos, shell, HTTP, impresoras, pagos o dispositivos. La CSP productiva admite assets incorporados y el transporte interno de Tauri; la política de desarrollo permite además el servidor y WebSocket local de Angular. PrimeNG y Angular necesitan estilos dinámicos, por eso `style-src` conserva `unsafe-inline`; `script-src` productivo no lo admite. Referencia: [capabilities de Tauri](https://v2.tauri.app/security/capabilities/).
+## Capacidades nativas
 
-El almacenamiento de esta maqueta sigue siendo el adaptador local del frontend. El host no transforma localStorage en una base transaccional ni implementa un servicio de sincronización cuando la aplicación está cerrada. La impresión, terminal de pago, Orsan, fiscalidad, ERP y actualización siguen simulados.
+En la [revisión integrada `a98f08e`](https://github.com/developer-implementos/pos-platform/tree/a98f08e3223abe95f12a4ea4f0de9bcde5c15865), la ventana `main` no tiene permisos de integración nativa. La [PR #94 · F02-12](https://github.com/developer-implementos/pos-platform/pull/94), **en revisión**, incorpora únicamente `save_protected_pdf` para guardar un original validado mediante un diálogo de Windows. El permiso se restringe a ese comando y a la ventana local; no habilita una API genérica de archivos, comandos shell, pagos o periféricos.
 
-La persistencia transaccional y la recuperación de F01 están implementadas y probadas en laboratorio. Antes de distribuir a sucursales faltan su aceptación, integración nativa con dispositivos homologados, identidad corporativa, firma de instaladores, manejo del cierre nativo con operaciones pendientes y pruebas sobre los equipos objetivo. Un updater futuro debe validar firmas, usar un canal autenticado de distribución, controlar el despliegue gradual y definir recuperación. No hay endpoints de actualización ni claves privadas en este scaffold; la pantalla de actualizaciones es una simulación.
+La [guía F02](phase-2-payments-documents.md#guardado-nativo-en-revisión) describe validación binaria, límite de 10 MiB, SHA-256, creación sin sobrescritura y resultados separados de guardado, cancelación y descarga iniciada en navegador. El frontend no elige rutas ni usa el navegador como fallback de un error nativo. Su evidencia de compilación y uso real se informa por revisión; la PR no habilita emisión fiscal, impresión o tarjeta.
+
+La CSP productiva admite assets incorporados y el transporte interno de Tauri; la política de desarrollo permite además el servidor y WebSocket local de Angular. PrimeNG y Angular necesitan estilos dinámicos, por eso `style-src` conserva `unsafe-inline`; `script-src` productivo no lo admite. Referencia: [capabilities de Tauri](https://v2.tauri.app/security/capabilities/).
+
+Los perfiles conectados usan la autoridad transaccional de `branch-api` y PostgreSQL. El almacenamiento local de la demo no es esa autoridad ni implementa sincronización con la aplicación cerrada. La distribución productiva conserva sus comprobaciones de instalador, firma, cierre con operaciones pendientes y equipos objetivo. Un updater futuro debe validar firmas, usar un canal autenticado de distribución, controlar el despliegue gradual y definir recuperación; no hay un canal de actualización productiva habilitado.
 
 ## Verificación y límite actual
 
@@ -50,10 +54,10 @@ El artefacto **`corporate-pos-windows-demo`** contiene `Corporate POS_0.1.0_x64-
 | `Corporate POS_0.1.0_x64-setup.exe` | `77b0a0a71ac10856c77a439e7970fdea48af64f1c212281a3d31ce59f013b1d4` |
 | `Cargo.lock`                        | `d0de437f15583981a9420589b81eafdf0c746048a78aeed3d4a6d698f3d941e2` |
 
-**El instalador no se ha ejecutado ni instalado en el equipo local.** La evidencia confirma compilación y empaquetado en CI, no una prueba de apertura o uso del programa nativo. El entorno local sigue sin Cargo/Rust ni MSVC. Falta comprobar la interfaz dentro de WebView2 y su comportamiento en los equipos objetivo. El instalador de demostración no tiene firma comercial.
+Ese artefacto de demostración constituye **evidencia histórica de compilación y empaquetado**, sin firma comercial ni prueba de instalación o uso nativo asociada. La [evidencia de paquetes F01](phase-1-laboratory.md#perfiles-del-cliente) y el [incremento nativo F02 en revisión](phase-2-payments-documents.md#guardado-nativo-en-revisión) se identifican por sus propias revisiones; no heredan una homologación de ese instalador.
 
 Las versiones directas de Tauri están fijadas en `Cargo.toml`. Los iconos pertenecen al proyecto, se generan desde una figura geométrica propia y no incluyen Font Awesome Pro.
 
 ## Acceso a periféricos de sucursal
 
-En F02, `device-agent` (C#/.NET Windows) se instala en el mismo puesto que `pos-desktop` y controla sus periféricos locales asignados. F05 pilota ese perfil; dispositivos de red y uso compartido se homologan después, en F06. El cliente solicita y consulta trabajos en `branch-api`; el agente inicia HTTPS LAN al backend, ejecuta el driver/SDK y conserva evidencia en SQLite técnico. No necesita que `pos-desktop` permanezca abierto. Esta capacidad está pendiente de implementación y homologación. El [ADR-17](decisions/device-agent.md) describe acceso móvil, seguridad, estados y recuperación; los dispositivos conectados directamente al móvil requieren una integración Capacitor específica.
+En F02, `device-agent` (C#/.NET Windows) se ubica en el mismo puesto que `pos-desktop` para controlar sus periféricos locales asignados. F05 pilota ese perfil; dispositivos de red y uso compartido se homologan después, en F06. El cliente solicita y consulta trabajos en `branch-api`; el agente inicia HTTPS LAN y conserva evidencia en SQLite técnico, sin depender de que `pos-desktop` permanezca abierto. El protocolo y la persistencia del host están comprobados en el [corte F02](phase-2-payments-documents.md#recorrido-durable-del-host); el runtime no contiene un driver físico habilitado. El [ADR-17](decisions/device-agent.md) describe acceso móvil, seguridad, estados y recuperación; los dispositivos conectados directamente al móvil requieren una integración Capacitor específica.
