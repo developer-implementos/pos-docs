@@ -2,6 +2,8 @@
 
 Fecha: 1 de octubre de 2026. Complementa la [propuesta de arquitectura](propuesta-arquitectura.md) y la [revisión corporativa](revision-arquitectura-corporativa.md). Define un diseño para incorporar proveedores y dispositivos sin crear una aplicación POS distinta por país o tienda; no acredita soporte ya implementado.
 
+La [guía de implementación F02](phase-2-payments-documents.md) documenta el corte parcial de contratos persistentes, host .NET/SQLite y protocolo entre procesos. Esa evidencia de software no demuestra compatibilidad con un proveedor o modelo físico; la matriz de homologación de esta página conserva su alcance.
+
 ## 1. Requisito y evidencia disponible
 
 | Estado | Antecedente y alcance |

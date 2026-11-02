@@ -135,6 +135,7 @@ export const generatedPages = [
   reference('implementation/testing', 'docs/testing.md', 'Pruebas y proyectos E2E', 'Cobertura disponible, organización de los proyectos E2E y soporte compartido de pruebas.', 'implementation'),
   reference('implementation/api', 'docs/api.md', 'API de sucursal y persistencia', 'Contratos HTTP, operación de laboratorio, PostgreSQL, configuración, sondas y observabilidad del backend.', 'implementation'),
   reference('implementation/phase-1', 'docs/phase-1-laboratory.md', 'F01: operación en laboratorio', 'Recorrido Angular → API → PostgreSQL, perfiles, recuperación y límites de la implementación en revisión.', 'implementation'),
+  reference('implementation/phase-2', 'docs/phase-2-payments-documents.md', 'F02: cobros, documentos y dispositivos', 'Persistencia de pagos/fiscalidad, host .NET/SQLite y protocolo durable; evidencia de software y capacidades operativas pendientes.', 'implementation'),
   reference('implementation/mock-api', 'docs/mock-api.md', 'Adaptadores de la demostración', 'Contratos mock, datos sintéticos y límites de los flujos del frontend.', 'implementation'),
   reference('implementation/desktop', 'docs/desktop.md', 'Cliente de escritorio', 'Empaquetado Tauri, comandos y alcance del contenedor de demostración.', 'implementation'),
   reference('implementation/mobile', 'docs/mobile.md', 'Cliente móvil', 'Cliente Angular y Capacitor, builds propios y límites de verificación nativa en Android e iOS.', 'implementation'),
