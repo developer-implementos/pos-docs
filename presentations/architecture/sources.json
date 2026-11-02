@@ -2,21 +2,21 @@
   "schemaVersion": 1,
   "reviewedOn": "2026-11-02",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "a2ea7fc9539e9478af21bd531310589e5df468d4",
+  "revision": "9fa9b7e9400dab55e09bd48d68a1aae375500e1f",
   "sourceStatus": "Fuentes documentales verificadas en la revisión indicada; F01 incluye administración POS y entregables técnicamente verificados. F02 incluye cobro combinado y protocolo de dispositivos técnicamente verificados, junto con persistencia fiscal y host .NET/SQLite; no habilita proveedores operativos ni drivers físicos. La aceptación manual y la habilitación productiva se mantienen separadas.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "inputs": [
     {
       "path": "docs/monorepo.md",
-      "sha256": "f370bbb03c3dd37c576aae9a631ee812fddcccb115fb7effa2473a83976a8a03"
+      "sha256": "fb3857f5d036dda25b205d274b83493b1c45e9ed9560a94dc72c70dc680ed464"
     },
     {
       "path": "docs/propuesta-arquitectura.md",
-      "sha256": "4f4d692a56e2a0677b6ad36bdf7bece09a88dae131d9ad7f6b60a99d94f1d95e"
+      "sha256": "3bd7227a6ec15f18cd71d8c7982c328b16d4bd85822df6e0d42c308fd420db08"
     },
     {
       "path": "docs/implementation-plan.md",
-      "sha256": "05df0a7f0a89e78b2909e760ca3243a38de8ff7e6e045b13a5d6dd4783bd3516"
+      "sha256": "bcaecfc7e0393b937edecf320b2f908fe81908c458083b0e1eb17e0f4cad6f2d"
     },
     {
       "path": "docs/validacion-y-decisiones.md",
@@ -48,7 +48,7 @@
     },
     {
       "path": "tools/architecture/model.mjs",
-      "sha256": "15b23c1bd7524cc8c131e224e5106ed1f5afb839b12991265ec49780ccff3efd"
+      "sha256": "50fec84545adbcbef19df4c1511fbf10ec815a2efea5fc141c0a9c087436c725"
     },
     {
       "path": "tools/architecture/views.mjs",
@@ -56,7 +56,7 @@
     },
     {
       "path": "tools/diagrams/models/c4-data.js",
-      "sha256": "b5ae82d6a154b4504f1cebe4e6087c8b790cc2348ccaeb62b244435e88cf530c"
+      "sha256": "1d3c1d97176f3a56a84fa68941138cab8244064737c4b56e6b61f8a8852bb2a4"
     },
     {
       "path": "docs/extensibilidad-proveedores-dispositivos.md",
@@ -72,7 +72,7 @@
     },
     {
       "path": "docs/decisions/device-agent.md",
-      "sha256": "69965f3905505703e219683c226da94953ba4e5b8736d35e1dc4f6324ec661c6"
+      "sha256": "e811e7ebda91ffd94b207fcec12fd9919470e16c6a5e9ee06c94382f885a9a6b"
     },
     {
       "path": "docs/decisions/job-processing.md",
