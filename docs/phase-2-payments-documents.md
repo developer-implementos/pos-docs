@@ -116,7 +116,41 @@ El seguimiento permite conocer el estado persistido, con estos límites:
 - **Documento fiscal:** el estado aceptado o rechazado puede coexistir con evidencia contradictoria posterior. El listado no expone todavía ese historial completo ni acredita que no existan incidentes. Los metadatos y la disponibilidad del PDF original son datos separados; la descarga exige contenido conservado y autorización adicional.
 - **Dispositivo:** `spooled` acredita recepción por el spooler, no salida física del papel. Consultar un resultado incierto no vuelve a ejecutar el trabajo.
 
-Este incremento aporta parte de **F02-04** y **F02-12**. Quedan por implementar la vista de excepciones por operación, historial, responsables y acciones permitidas de resolución. La búsqueda y descarga fiscal amplían el software disponible; no acreditan por sí solas un proveedor fiscal operativo ni el guardado del archivo desde las WebView nativas.
+Este incremento integrado aporta parte de **F02-04** y **F02-12**. Quedan por completar la vista integral de excepciones por operación, el historial de evidencias, los responsables y las acciones de resolución de cada efecto. La búsqueda y descarga fiscal amplían el software disponible; no acreditan por sí solas un proveedor fiscal operativo ni el guardado del archivo desde las WebView nativas.
+
+### Historial de compensaciones y consulta del resultado
+
+**Incremento en revisión de [F02-13](https://github.com/developer-implementos/pos-platform/issues/35), relacionado con [F02-04](https://github.com/developer-implementos/pos-platform/issues/26).** Amplía el detalle de un pago en `/operations` con sus anulaciones y reembolsos registrados. La lectura funciona aunque el adaptador del proveedor no esté disponible. No habilita la creación o ejecución de una devolución desde esta pantalla ni acredita una integración bancaria operativa.
+
+La [PR #95](https://github.com/developer-implementos/pos-platform/pull/95), en la [revisión `0a7f720`](https://github.com/developer-implementos/pos-platform/tree/0a7f720f7cf769b1225705906af36b58e0725207), conserva el cambio y la evidencia de cada revisión comprobada. Está separado del corte integrado identificado al inicio de esta guía; no modifica todavía el snapshot de avance del portal. La PR registra 444 pruebas aprobadas del cliente y arquitectura, 37 tareas de tipos y compilación aprobadas y pruebas focales del backend sobre PostgreSQL real. La matriz ampliada del backend y los recorridos integrados conservan su resultado específico en la PR; estas comprobaciones no se presentan como una verificación completa de F02-13. El proveedor de las pruebas es contractual y aislado: no acredita un adquirente real.
+
+| Acción del operador | Contrato y permiso | Qué hace |
+| --- | --- | --- |
+| Abrir el historial, actualizar o cargar otra página | `GET /api/v1/payment-intents/:paymentIntentId/compensations`, `payment.read` | Lee PostgreSQL sin llamar al proveedor. Devuelve compensaciones, acciones disponibles y motivos de indisponibilidad. |
+| Consultar resultado al proveedor | `POST /api/v1/payment-compensations/:compensationId/reconcile`, `payment.reconcile` | Consulta la compensación original por su identidad; no vuelve a enviarla ni crea otra devolución. |
+| Recuperar una consulta cuya respuesta no llegó | El mismo POST, con el mismo `commandId`, compensación y `expectedVersion` | Recupera la solicitud durable sin sustituirla por una nueva identidad. Requiere autorización vigente. |
+
+Cada registro muestra tipo, importe, estado, fecha, identificador y referencia confirmada cuando existe. El importe del pago original permanece separado: una página de compensaciones no permite calcular un saldo neto. Este historial reúne **compensaciones**, no todas las observaciones o intentos internos del proveedor.
+
+El servidor ofrece `inquire` sólo para estados `dispatching`, `uncertain` o `reconciliation-required`, con permiso efectivo y consulta por `operation-key` declarada en el contrato original. También exige que esté registrado el adaptador de ese proveedor con las mismas versiones de adaptador y contrato, y que implemente la consulta. El POST vuelve a comprobar estas condiciones y la versión del registro: `allowedActions` describe la disponibilidad al leer, no es una autorización que pueda reutilizarse indefinidamente. Cambiar el perfil vigente no cambia el destino de una compensación existente.
+
+| Estado mostrado | Interpretación operativa |
+| --- | --- |
+| Pendiente de envío | La compensación está reservada; esta pantalla no la despacha. |
+| Envío en curso / Resultado desconocido | No hay confirmación suficiente para afirmar que se devolvió dinero. Consultar sólo cuando el servidor lo permita. |
+| Anulación confirmada / Reembolso confirmado | Existe evidencia confirmada de esa compensación; no implica una nueva venta ni una nota de crédito. |
+| Rechazada por el proveedor | Se conserva el rechazo registrado, separado del estado del pago original. |
+| Requiere conciliación | Existe un conflicto que mantiene la cuarentena. Una consulta puede añadir evidencia, pero no levanta esa cuarentena automáticamente. |
+
+**Recuperación:** ante una respuesta perdida, el operador puede actualizar los registros o recuperar explícitamente la misma consulta. El cliente conserva sólo la referencia mínima del comando, aislada por API, usuario, puesto, instalación y pago; no almacena token, credenciales ni respuesta del proveedor. Bloquea otra consulta del mismo pago mientras el pendiente no se recupere. Una recarga no ejecuta POST automáticamente. Los cambios de selección, sesión o permisos invalidan respuestas tardías y limpian los datos visibles; la API sigue siendo la autoridad de acceso y estado.
+
+Si falta permiso, capacidad de consulta o adaptador, el historial explica el motivo. No ofrece un botón que marque manualmente dinero devuelto. Si la consulta devuelve incertidumbre o falla la actualización del historial, no se presenta una confirmación ficticia. El índice aditivo `240_compensation_lookup_index` permite recorrer las compensaciones por pago, fecha e identificador; el cursor mantiene la precisión temporal de PostgreSQL y queda ligado al pago y al ámbito autorizado. La migración no cambia estados ni concede permisos.
+
+**Despliegue y reversión:** programar una ventana controlada y pausar nuevas admisiones durante la actualización. Ejecutar primero el migrador con el rol propietario y el manifiesto de la nueva versión; después iniciar `branch-api` compatible y comprobar su readiness antes de reabrir el tráfico. La 240 usa `CREATE INDEX` dentro de la transacción de migración, sin `CONCURRENTLY`, y puede bloquear escrituras de compensaciones mientras se construye. Este procedimiento no acredita una actualización gradual sin interrupción. La sonda exige coincidencia exacta de IDs y checksums de todas las migraciones: el binario anterior cuyo manifiesto termina en la 239 no queda listo sobre esa base actualizada. Para retirar el comportamiento nuevo se necesita una compilación de reversión que conserve el manifiesto hasta la 240 y los contratos ya persistidos. No borrar el registro de la migración, alterar checksums ni eliminar evidencia para forzar la aceptación de un binario antiguo.
+
+La recuperación comercial ya dispone de `finalize`, recibos durables de comando y la transacción que confirma venta y outbox. Esos mecanismos permiten recuperar el mismo plan y comando sin volver a cobrar; este incremento no requiere inventar otro orquestador. Para completar F02-13 falta verificar conjuntamente **tarjeta aprobada, fallo real de la finalización comercial y reinicio**, y entregar el flujo del operador para solicitar una compensación o escalar un pago aprobado cuya venta no pueda recuperarse, incluso si todavía no tiene compensaciones registradas.
+
+La homologación del adquirente es una condición operativa separada; no sustituye esa prueba de recuperación ni justifica duplicar los mecanismos existentes. La vista integral de incidentes fiscales/dispositivos conserva su propio alcance. Las devoluciones comerciales de ventas finalizadas y sus notas de crédito pertenecen a **F04**. F02-13 mantiene sus criterios de verificación; el porcentaje no aumenta por publicar este historial parcial.
 
 ### Búsqueda y original fiscal protegido
 
