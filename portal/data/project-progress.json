@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "a98f08e3223abe95f12a4ea4f0de9bcde5c15865",
+    "revision": "98f8987bfa8764ab77f6a55a7686f2ed7884d541",
     "path": "delivery/progress.json",
-    "sha256": "5a72194da1f495c5da9c85dc6030cbd520511c3f594836549ba16d7c2ba918ff"
+    "sha256": "1f53cff4d12a99f075d50c05255dbedf4406a0e656324f86bd51de840ef5a9ac"
   },
   "content": {
     "schemaVersion": 2,
@@ -16,12 +16,12 @@
       "path": "docs/roadmap.json",
       "sha256": "701dc03f2fbfdc8637f6b1ace5a3825705930e749fdab50d808061ba3f1ce9f9"
     },
-    "summary": "Catorce entregables están técnicamente verificados: doce de F01 y los pagos combinados y el protocolo de dispositivos de F02. El cobro conectado combina efectivo y transferencia manual con importes exactos y recuperación; tarjeta y fiscalidad conservan contratos sin proveedor operativo. La evidencia separa verificación técnica, integración y aceptación humana; no acredita hardware ni liquidación bancaria.",
+    "summary": "Quince entregables están técnicamente verificados: doce de F01 y los pagos combinados, el protocolo de dispositivos y la recuperación de cobros de F02. El cliente recupera ventas y registra revisiones durables sin duplicar efectos. Efectivo y transferencia manual están conectados; tarjeta y fiscalidad conservan sus pendientes de proveedor operativo. La aceptación humana y la habilitación productiva se registran por separado.",
     "applications": [
       {
         "id": "pos-desktop",
         "stage": "functional",
-        "summary": "Cliente Angular conectado con administración POS, cestas recuperables, recotización y cobro combinado de efectivo y transferencia manual. Recupera planes y comandos sin duplicar dinero; el verificador dispone de una bandeja con permisos propios. Conserva el empaquetado Tauri Windows verificado en F01. Tarjetas, guardado real de archivos en WebView y periféricos mantienen sus límites.",
+        "summary": "Cliente Angular conectado con administración POS, cestas recuperables, recotización y cobro combinado de efectivo y transferencia manual. Recupera planes y comandos sin duplicar dinero; el verificador dispone de una bandeja con permisos propios. Conserva el empaquetado Tauri Windows verificado en F01. Tarjetas, guardado real de archivos en WebView y periféricos mantienen sus límites. Incluye recuperación comercial y revisión operativa durable de pagos.",
         "nextStep": "Completar los flujos de excepción y medios pendientes, validar exportación nativa y enlazar fuentes comerciales autorizadas; la evidencia de navegador no acredita proveedores ni hardware.",
         "evidence": [
           {
@@ -43,6 +43,14 @@
           {
             "path": "delivery/evidence/f02-main-integration.json",
             "label": "Integración squash comprobada: fuentes equivalentes y referencias de CI identificadas"
+          },
+          {
+            "path": "delivery/reviews/F02-13-verification.md",
+            "label": "Recuperación de cobros y solicitud de revisión verificadas con API y PostgreSQL"
+          },
+          {
+            "path": "delivery/evidence/f02-commercial-recovery-integration.json",
+            "label": "Equivalencia entre código probado y commit integrado mediante squash"
           }
         ]
       },
@@ -73,7 +81,7 @@
       {
         "id": "branch-api",
         "stage": "functional",
-        "summary": "API NestJS/Fastify sobre PostgreSQL con administración, HTTPS y venta local. Los planes congelan el importe y finalizan venta, caja por su fracción y outbox en la misma transacción. Transferencias conservan autoridad manual y evidencia privada. El protocolo de dispositivos está verificado con .NET/SQLite/HTTPS; no habilita cobros, fiscalidad o drivers externos por defecto.",
+        "summary": "API NestJS/Fastify sobre PostgreSQL con administración, HTTPS y venta local. Los planes congelan el importe y finalizan venta, caja por su fracción y outbox en la misma transacción. Transferencias conservan autoridad manual y evidencia privada. El protocolo de dispositivos está verificado con .NET/SQLite/HTTPS; no habilita cobros, fiscalidad o drivers externos por defecto. Incluye recuperación comercial y revisión operativa durable de pagos.",
         "nextStep": "Completar la fuente comercial autorizada, los adaptadores y flujos de excepción pendientes; mantener activación explícita, permisos actuales e incertidumbre durable cuando falta una respuesta externa.",
         "evidence": [
           {
@@ -95,6 +103,14 @@
           {
             "path": "delivery/evidence/f02-main-integration.json",
             "label": "Integración squash comprobada: fuentes equivalentes y referencias de CI identificadas"
+          },
+          {
+            "path": "delivery/reviews/F02-13-verification.md",
+            "label": "Recuperación de cobros y solicitud de revisión verificadas con API y PostgreSQL"
+          },
+          {
+            "path": "delivery/evidence/f02-commercial-recovery-integration.json",
+            "label": "Equivalencia entre código probado y commit integrado mediante squash"
           }
         ]
       },
@@ -855,7 +871,7 @@
           "branch-api"
         ],
         "status": "in_progress",
-        "summary": "Búsqueda fiscal por fecha UTC, cliente, folio, tipo y estado; originales PDF inmutables en PostgreSQL, disponibilidad y descarga autenticada con integridad verificada. Pendientes guardado real en Windows, exportador nativo móvil y validación operativa del proveedor; envío y reimpresión permanecen separados. No hay recuperación programada de originales ausentes.",
+        "summary": "Búsqueda fiscal, originales PDF inmutables en PostgreSQL y descarga autorizada con integridad verificada. Implementado guardado nativo Windows con diálogo, cancelación, escritura exclusiva y resultado confirmado; su evidencia se describe en apps/pos-desktop/README.md. Falta el vínculo consultable a correcciones posteriores, cuyo productor pertenece a F04; envío y reimpresión son capacidades separadas. La exportación móvil y un planificador de captura no son criterios de este entregable de escritorio.",
         "acceptance": null,
         "verification": null
       },
@@ -865,10 +881,36 @@
           "branch-api",
           "pos-desktop"
         ],
-        "status": "in_progress",
-        "summary": "Compensación durable separada, reserva de importe, destino original y consulta implementados. Pendientes orquestación tras fallo comercial, adapter de reversa/refund y UX/runbook.",
+        "status": "verified",
+        "summary": "Recuperación comercial y compensación verificadas con PostgreSQL y cliente conectado: mismo comando tras respuesta perdida, venta/outbox únicos, límite de compensación concurrente, destino original y permisos vigentes. El operador reserva y ejecuta por separado o registra revisión durable sin mover dinero. La evidencia usa un proveedor contractual controlado; no acredita homologación bancaria.",
         "acceptance": null,
-        "verification": null
+        "verification": {
+          "revision": "23a1cb80c3db4ac010ce7aba93132da3025c3877",
+          "reviewedOn": "2026-11-02",
+          "reviewer": "Codex · verificación técnica del commit integrado",
+          "evidence": [
+            {
+              "path": "delivery/reviews/F02-13-verification.md",
+              "label": "Matriz completa de criterios, contratos estables, revisión independiente, resultados y límites"
+            },
+            {
+              "path": "delivery/evidence/f02-commercial-recovery-browser.json",
+              "label": "Recorrido limpio de cliente/API HTTPS/PostgreSQL, pérdida de respuesta y revisión persistida"
+            },
+            {
+              "path": "apps/branch-api/test/commercial-recovery.integration.test.ts",
+              "label": "Rollback real, pérdida de acuse COMMIT, concurrencia, permisos, inmutabilidad y recuperación"
+            },
+            {
+              "path": "libs/backend/payments/integration/payment-intents.test.ts",
+              "label": "Consulta de reversa incierta, saldo reservado, destino original y exclusión de devolución duplicada"
+            },
+            {
+              "path": "libs/data-access/branch-api/src/lib/branch-payment-recovery.spec.ts",
+              "label": "Journal de comando original, cambios de identidad, locks y decisiones explícitas del operador"
+            }
+          ]
+        }
       },
       {
         "id": "F02-14",
