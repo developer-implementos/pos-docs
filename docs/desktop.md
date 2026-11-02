@@ -35,9 +35,9 @@ La navegación usa hash para que las rutas funcionen dentro del protocolo local 
 
 ## Capacidades nativas
 
-En la [revisión integrada `a98f08e`](https://github.com/developer-implementos/pos-platform/tree/a98f08e3223abe95f12a4ea4f0de9bcde5c15865), la ventana `main` no tiene permisos de integración nativa. La [PR #94 · F02-12](https://github.com/developer-implementos/pos-platform/pull/94), **en revisión**, incorpora únicamente `save_protected_pdf` para guardar un original validado mediante un diálogo de Windows. El permiso se restringe a ese comando y a la ventana local; no habilita una API genérica de archivos, comandos shell, pagos o periféricos.
+La [PR #94 · F02-12](https://github.com/developer-implementos/pos-platform/pull/94), integrada en [`d5d5e5f`](https://github.com/developer-implementos/pos-platform/commit/d5d5e5f30fe44f2c2c64fec3e45ba3fe7e3b6d01), incorpora únicamente `save_protected_pdf` para guardar un original validado mediante un diálogo de Windows. El permiso se restringe a ese comando y a la ventana local `main`; no habilita una API genérica de archivos, comandos shell, pagos o periféricos.
 
-La [guía F02](phase-2-payments-documents.md#guardado-nativo-en-revisión) describe validación binaria, límite de 10 MiB, SHA-256, creación sin sobrescritura y resultados separados de guardado, cancelación y descarga iniciada en navegador. El frontend no elige rutas ni usa el navegador como fallback de un error nativo. Su evidencia de compilación y uso real se informa por revisión; la PR no habilita emisión fiscal, impresión o tarjeta.
+La [guía F02](phase-2-payments-documents.md#guardado-nativo-en-windows) describe validación binaria, límite de 10 MiB, SHA-256, creación sin sobrescritura y resultados separados de guardado, cancelación y descarga iniciada en navegador. El frontend no elige rutas ni usa el navegador como fallback de un error nativo. Su evidencia de compilación y uso real se informa por revisión; la interacción dentro de Tauri sigue pendiente de comprobación. La integración no habilita emisión fiscal, impresión o tarjeta.
 
 La CSP productiva admite assets incorporados y el transporte interno de Tauri; la política de desarrollo permite además el servidor y WebSocket local de Angular. PrimeNG y Angular necesitan estilos dinámicos, por eso `style-src` conserva `unsafe-inline`; `script-src` productivo no lo admite. Referencia: [capabilities de Tauri](https://v2.tauri.app/security/capabilities/).
 
@@ -54,7 +54,7 @@ El artefacto **`corporate-pos-windows-demo`** contiene `Corporate POS_0.1.0_x64-
 | `Corporate POS_0.1.0_x64-setup.exe` | `77b0a0a71ac10856c77a439e7970fdea48af64f1c212281a3d31ce59f013b1d4` |
 | `Cargo.lock`                        | `d0de437f15583981a9420589b81eafdf0c746048a78aeed3d4a6d698f3d941e2` |
 
-Ese artefacto de demostración constituye **evidencia histórica de compilación y empaquetado**, sin firma comercial ni prueba de instalación o uso nativo asociada. La [evidencia de paquetes F01](phase-1-laboratory.md#perfiles-del-cliente) y el [incremento nativo F02 en revisión](phase-2-payments-documents.md#guardado-nativo-en-revisión) se identifican por sus propias revisiones; no heredan una homologación de ese instalador.
+Ese artefacto de demostración constituye **evidencia histórica de compilación y empaquetado**, sin firma comercial ni prueba de instalación o uso nativo asociada. La [evidencia de paquetes F01](phase-1-laboratory.md#perfiles-del-cliente) y el [guardado nativo F02](phase-2-payments-documents.md#guardado-nativo-en-windows) se identifican por sus propias revisiones; no heredan una homologación de ese instalador.
 
 Las versiones directas de Tauri están fijadas en `Cargo.toml`. Los iconos pertenecen al proyecto, se generan desde una figura geométrica propia y no incluyen Font Awesome Pro.
 

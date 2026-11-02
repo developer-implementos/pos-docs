@@ -10,16 +10,17 @@ La revisión fijada incorpora el seguimiento conectado, la búsqueda y descarga 
 
 El [roadmap F02](/guide/roadmap/phase-02/) conserva los catorce entregables y sus criterios. La implementación de un contrato, una prueba o un binario no completa por sí sola toda la fase. La revisión técnica y el avance se registran en POS Platform; la publicación de esta guía no implica aceptación humana.
 
-## Cambios en revisión
+## Incrementos integrados
 
-Dos incrementos tienen código en PR y **todavía no forman parte de la revisión integrada que alimenta el porcentaje del portal**:
+Los siguientes incrementos están integrados en `main`, hasta la [revisión `afdd23b`](https://github.com/developer-implementos/pos-platform/tree/afdd23b0e52cd205ea16bc0b39f6bd557dc79e02). El porcentaje del portal sigue procediendo del snapshot identificado arriba; integrar una PR parcial no verifica automáticamente su entregable.
 
 | Incremento | Revisión de producto | Resultado acotado |
 | --- | --- | --- |
-| F02-07 · Admisión de proveedores | [PR #93](https://github.com/developer-implementos/pos-platform/pull/93), commit [`b3aae07`](https://github.com/developer-implementos/pos-platform/commit/b3aae077a2af46f85e2a586732bd567d5d70359d) | Rechazar perfiles incompatibles antes de reservar saldo, conservando el destino de los pagos pendientes |
-| F02-12 · Exportación de originales en Windows | [PR #94](https://github.com/developer-implementos/pos-platform/pull/94), commit [`7f09c63`](https://github.com/developer-implementos/pos-platform/commit/7f09c635ecbdaeb0dd6501e5d05fdf0e0a02aa79) | Guardado mediante un comando Tauri restringido y un diálogo del sistema, con resultados de guardado y cancelación diferenciados |
+| F02-07 · Admisión de proveedores | [PR #93](https://github.com/developer-implementos/pos-platform/pull/93), commit [`1350ad6`](https://github.com/developer-implementos/pos-platform/commit/1350ad626d0acb3dacc576aa8378fff5ab6fad42) | Rechazar perfiles incompatibles antes de reservar saldo, conservando el destino de los pagos pendientes |
+| F02-12 · Exportación de originales en Windows | [PR #94](https://github.com/developer-implementos/pos-platform/pull/94), commit [`d5d5e5f`](https://github.com/developer-implementos/pos-platform/commit/d5d5e5f30fe44f2c2c64fec3e45ba3fe7e3b6d01) | Guardado mediante un comando Tauri restringido y un diálogo del sistema, con resultados de guardado y cancelación diferenciados |
+| F02-13 · Historial y consulta de compensaciones | [PR #95](https://github.com/developer-implementos/pos-platform/pull/95), commit [`afdd23b`](https://github.com/developer-implementos/pos-platform/commit/afdd23b0e52cd205ea16bc0b39f6bd557dc79e02) | Consultar el historial y recuperar el resultado de una compensación existente sin volver a despacharla |
 
-Las secciones que indican **en revisión** describen estos incrementos. Las pruebas del código nativo, la verificación del artefacto y el recorrido dentro de Tauri conservan evidencia separada; no se deducen de las pruebas del frontend. Ninguna de estas PR completa por sí sola F02-07 o F02-12.
+Las PR conservan sus comprobaciones y límites. Las pruebas del código nativo, la verificación del artefacto y el recorrido dentro de Tauri conservan evidencia separada; no se deducen de las pruebas del frontend. Ninguna de estas PR completa por sí sola F02-07, F02-12 o F02-13. El flujo de recuperación comercial descrito más adelante corresponde a un incremento posterior en validación.
 
 ## Aplicaciones y autoridad
 
@@ -41,7 +42,7 @@ Las secciones que indican **en revisión** describen estos incrementos. Las prue
 
 **Dispositivos:** PostgreSQL es la autoridad de asignación, trabajo y permiso de ejecución. SQLite conserva recepción, intento y evidencia pendiente en el puesto. No contiene ventas ni un espejo comercial y no se usa como archivo de logs. Los logs diagnósticos del servicio son separados y no incluyen credenciales o payloads completos.
 
-### Admisión de proveedores en revisión
+### Admisión de proveedores
 
 La [PR #93](https://github.com/developer-implementos/pos-platform/pull/93) comprueba que el perfil de un pago nuevo coincida con un adaptador compuesto en **proveedor, versión de adaptador y versión de contrato**. Exige cobro habilitado y los métodos de consulta o compensación que el perfil declara. Lo hace antes de reservar el presupuesto del plan o la venta y antes de crear la intención. Una configuración por sí sola no instala un adaptador; la composición operativa de `branch-api` mantiene el registro bancario vacío.
 
@@ -120,9 +121,9 @@ Este incremento integrado aporta parte de **F02-04** y **F02-12**. Quedan por co
 
 ### Historial de compensaciones y consulta del resultado
 
-**Incremento en revisión de [F02-13](https://github.com/developer-implementos/pos-platform/issues/35), relacionado con [F02-04](https://github.com/developer-implementos/pos-platform/issues/26).** Amplía el detalle de un pago en `/operations` con sus anulaciones y reembolsos registrados. La lectura funciona aunque el adaptador del proveedor no esté disponible. No habilita la creación o ejecución de una devolución desde esta pantalla ni acredita una integración bancaria operativa.
+**Incremento integrado de [F02-13](https://github.com/developer-implementos/pos-platform/issues/35), relacionado con [F02-04](https://github.com/developer-implementos/pos-platform/issues/26).** Amplía el detalle de un pago en `/operations` con sus anulaciones y reembolsos registrados. La lectura funciona aunque el adaptador del proveedor no esté disponible. La creación y ejecución tienen contratos separados, descritos en el incremento de recuperación comercial; consultar no acredita una integración bancaria operativa.
 
-La [PR #95](https://github.com/developer-implementos/pos-platform/pull/95), en la [revisión `0a7f720`](https://github.com/developer-implementos/pos-platform/tree/0a7f720f7cf769b1225705906af36b58e0725207), conserva el cambio y la evidencia de cada revisión comprobada. Está separado del corte integrado identificado al inicio de esta guía; no modifica todavía el snapshot de avance del portal. La PR registra 444 pruebas aprobadas del cliente y arquitectura, 37 tareas de tipos y compilación aprobadas y pruebas focales del backend sobre PostgreSQL real. La matriz ampliada del backend y los recorridos integrados conservan su resultado específico en la PR; estas comprobaciones no se presentan como una verificación completa de F02-13. El proveedor de las pruebas es contractual y aislado: no acredita un adquirente real.
+La [PR #95](https://github.com/developer-implementos/pos-platform/pull/95), integrada en [`afdd23b`](https://github.com/developer-implementos/pos-platform/commit/afdd23b0e52cd205ea16bc0b39f6bd557dc79e02), conserva la evidencia de cliente, arquitectura, tipos, compilación, PostgreSQL y recorridos integrados. Estas comprobaciones no se presentan como una verificación completa de F02-13. El proveedor de las pruebas es contractual y aislado: no acredita un adquirente real.
 
 | Acción del operador | Contrato y permiso | Qué hace |
 | --- | --- | --- |
@@ -136,7 +137,7 @@ El servidor ofrece `inquire` sólo para estados `dispatching`, `uncertain` o `re
 
 | Estado mostrado | Interpretación operativa |
 | --- | --- |
-| Pendiente de envío | La compensación está reservada; esta pantalla no la despacha. |
+| Pendiente de envío | La compensación está reservada; consultar su historial no la despacha. La ejecución requiere el flujo explícito de recuperación. |
 | Envío en curso / Resultado desconocido | No hay confirmación suficiente para afirmar que se devolvió dinero. Consultar sólo cuando el servidor lo permita. |
 | Anulación confirmada / Reembolso confirmado | Existe evidencia confirmada de esa compensación; no implica una nueva venta ni una nota de crédito. |
 | Rechazada por el proveedor | Se conserva el rechazo registrado, separado del estado del pago original. |
@@ -148,9 +149,38 @@ Si falta permiso, capacidad de consulta o adaptador, el historial explica el mot
 
 **Despliegue y reversión:** programar una ventana controlada y pausar nuevas admisiones durante la actualización. Ejecutar primero el migrador con el rol propietario y el manifiesto de la nueva versión; después iniciar `branch-api` compatible y comprobar su readiness antes de reabrir el tráfico. La 240 usa `CREATE INDEX` dentro de la transacción de migración, sin `CONCURRENTLY`, y puede bloquear escrituras de compensaciones mientras se construye. Este procedimiento no acredita una actualización gradual sin interrupción. La sonda exige coincidencia exacta de IDs y checksums de todas las migraciones: el binario anterior cuyo manifiesto termina en la 239 no queda listo sobre esa base actualizada. Para retirar el comportamiento nuevo se necesita una compilación de reversión que conserve el manifiesto hasta la 240 y los contratos ya persistidos. No borrar el registro de la migración, alterar checksums ni eliminar evidencia para forzar la aceptación de un binario antiguo.
 
-La recuperación comercial ya dispone de `finalize`, recibos durables de comando y la transacción que confirma venta y outbox. Esos mecanismos permiten recuperar el mismo plan y comando sin volver a cobrar; este incremento no requiere inventar otro orquestador. Para completar F02-13 falta verificar conjuntamente **tarjeta aprobada, fallo real de la finalización comercial y reinicio**, y entregar el flujo del operador para solicitar una compensación o escalar un pago aprobado cuya venta no pueda recuperarse, incluso si todavía no tiene compensaciones registradas.
+La recuperación comercial reutiliza `finalize`, recibos durables de comando y la transacción que confirma venta y outbox. El incremento siguiente reúne la prueba conjunta de tarjeta aprobada, fallo real de finalización y reinicio, y el flujo del operador para recuperar, compensar o solicitar revisión aunque el pago todavía no tenga compensaciones registradas.
 
 La homologación del adquirente es una condición operativa separada; no sustituye esa prueba de recuperación ni justifica duplicar los mecanismos existentes. La vista integral de incidentes fiscales/dispositivos conserva su propio alcance. Las devoluciones comerciales de ventas finalizadas y sus notas de crédito pertenecen a **F04**. F02-13 mantiene sus criterios de verificación; el porcentaje no aumenta por publicar este historial parcial.
+
+### Recuperación de venta y compensación explícita
+
+**Incremento en validación de [F02-13](https://github.com/developer-implementos/pos-platform/issues/35).** Amplía el detalle del pago con un flujo para completar la venta existente o solicitar y ejecutar una compensación autorizada. La aprobación del cobro y la confirmación de la venta siguen siendo hechos diferentes. Las devoluciones de una venta ya confirmada pertenecen a F04.
+
+| Acción del operador | Contrato y permiso | Resultado |
+| --- | --- | --- |
+| Consultar recuperación | `GET /api/v1/payment-intents/:paymentIntentId/recovery`, `payment.read` | Lee plan, versiones, importes y decisiones disponibles sin ejecutar efectos. |
+| Completar venta | `POST /api/v1/payment-plans/:planId/finalize`, `sale.confirm` | Reutiliza el plan y los fondos confirmados; confirma venta y outbox en la misma transacción sin realizar otro cobro. |
+| Reservar compensación | `POST /api/v1/payment-intents/:paymentIntentId/compensations`, `payment.compensate` | Persiste tipo, importe, motivo y destino original. Todavía no envía la anulación o el reembolso al proveedor. |
+| Revisar una reserva | `GET /api/v1/payment-compensations/:compensationId/execution-options`, `payment.read` | Consulta si la reserva sigue pendiente de envío y puede ejecutarse. No despacha dinero. |
+| Ejecutar compensación | `POST /api/v1/payment-compensations/:compensationId/execute`, `payment.compensate` | Despacha la reserva tras otra confirmación explícita del operador y una nueva validación del servidor. |
+| Solicitar revisión operativa | `POST /api/v1/payment-intents/:paymentIntentId/recovery-review`, `payment.reconcile` | Conserva una solicitud por pago con motivo y evidencia calculada por el servidor; no devuelve dinero ni libera reservas. |
+
+El cliente exige también lectura del pago para operar este panel. Las consultas revalidan la autorización vigente y devuelven motivos cuando una decisión no está disponible. Un operador puede consultar pagos del mismo puesto e instalación, pero el plan comercial de otro operador permanece oculto y sus acciones bloqueadas; el permiso de compensación no elimina la propiedad del plan. Un pago histórico sin plan no adquiere un contexto comercial por inferencia.
+
+El saldo ofrecido para reservar procede del agregado completo en PostgreSQL, descontando compensaciones pendientes o confirmadas; no se calcula con la página visible del historial. Antes de una reserva nueva se comprueban el adaptador exacto del destino original, las capacidades y las restricciones de importe, tipo de tarjeta y lote. La referencia de un lote no demuestra que siga abierto: el adaptador debe verificar la condición del proveedor al ejecutar. Cambiar el perfil vigente no redirige un pago o una reserva anteriores.
+
+**Reservar y ejecutar son dos decisiones distintas.** Cada una requiere revisar la información y confirmar expresamente. Cerrar el diálogo no cancela una reserva durable. Si después falta el adaptador, la reserva permanece y el saldo no queda disponible para otra devolución. Este corte no implementa cancelación de reservas anteriores al envío ni marca una devolución manual para desbloquearlas. La finalización y la reserva se serializan mediante el plan: una reserva pendiente impide completar la venta y una venta finalizada rechaza la compensación F02.
+
+**Respuesta perdida:** el cliente conserva el comando completo necesario para recuperarlo, incluido el motivo cuando corresponde, aislado por API, usuario, puesto, instalación y pago. No conserva credenciales ni respuestas del proveedor. El operador recupera explícitamente la misma identidad y payload; recargar o consultar no envía un comando automáticamente ni borra un pendiente. Si la venta ya figura confirmada, todavía puede recuperarse el recibo del comando original. Los errores de lectura bloquean acciones basadas en una consulta anterior y los cambios de sesión o selección invalidan respuestas tardías.
+
+Las pruebas de composición de este incremento unen propietarios reales de identidad, pagos, planes, ventas y outbox sobre PostgreSQL. Incluyen cobro aprobado, fallo después de escribir el outbox y reinicio, pérdida real del acuse de `COMMIT`, carrera entre finalización y reserva y recuperación de la reserva antes de ejecutar. El proveedor externo usado para esas pruebas es un simulador contractual aislado; no se instala en la API operativa ni acredita homologación bancaria.
+
+Si el proveedor no permite compensar o consultar, se mantienen el pago y la evidencia originales sin afirmar que se devolvió dinero. El operador puede registrar una **solicitud de revisión operativa** con motivo. El servidor conserva identidad, pago, plan, solicitante y fecha, junto con el estado, importes, destino original y decisiones disponibles en ese momento. La solicitud es inmutable y única por pago; se puede consultar después de recargar y recuperar con el mismo comando si se pierde la respuesta. El cliente no puede aportar ni sobrescribir esa evidencia.
+
+Registrar la revisión no modifica estados financieros, ni marca dinero devuelto ni cancela una reserva. Tampoco impide completar después una venta que vuelva a cumplir sus condiciones; la solicitud conserva su evidencia histórica y no pasa por ello a presentarse como resuelta. El alcance es la revisión de este pago, sin asignación automática, SLA o bandeja integral de incidentes; esas capacidades pertenecen a F02-04.
+
+La migración aditiva `241_payment_recovery_review_requests` conserva esas solicitudes en `payments.payment_recovery_review_request`, con unicidad por pago, protección contra actualización y borrado y permisos runtime de lectura/inserción. Ejecutar el migrador propietario y comprobar la API con manifiesto compatible antes de desplegar el cliente; conservar la ventana controlada indicada arriba. El manifiesto exacto también exige una compilación compatible con la 241 para revertir comportamiento. No se eliminan comandos, solicitudes, reservas ni evidencia para permitir otra operación. La verificación técnica y el porcentaje siguen el registro del producto, sin aceptación humana implícita.
 
 ### Búsqueda y original fiscal protegido
 
@@ -164,13 +194,13 @@ La incorporación se realiza mediante el adaptador fiscal autorizado, después d
 
 El servidor valida firma y terminador PDF, tamaño y hash sin modificar el original; no se presenta como análisis antimalware. Lo entrega como `attachment`, con nombre derivado del identificador, `no-store`, `nosniff` y CSP `sandbox`, sin exponer rutas o URLs del proveedor. El cliente comprueba MIME, tamaño y hash antes de preparar la descarga. Descargar, copiar, enviar y reimprimir son acciones diferentes: ninguna lectura crea otro documento fiscal y el envío externo sigue deshabilitado.
 
-En la revisión integrada `a98f08e`, el adaptador de escritorio inicia una descarga mediante un `Blob` local. La URL temporal se libera al terminar su ventana de uso o al destruir la vista; no incluye credenciales ni una dirección del proveedor. Iniciar esa descarga no acredita que el operador haya guardado el archivo. El guardado nativo explícito pertenece al incremento en revisión descrito a continuación.
+En navegador, el adaptador de escritorio inicia una descarga mediante un `Blob` local. La URL temporal se libera al terminar su ventana de uso o al destruir la vista; no incluye credenciales ni una dirección del proveedor. Iniciar esa descarga no acredita que el operador haya guardado el archivo. El host Tauri usa el guardado nativo explícito descrito a continuación.
 
 La composición móvil de Capacitor mantiene la exportación **no disponible**. Puede consultar el estado y los metadatos autorizados, pero bloquea la descarga antes del GET de contenido; no descarga bytes para intentar guardarlos por un mecanismo no habilitado. La ausencia de un adaptador también conserva ese bloqueo. Compartir o guardar desde la plataforma móvil exige su adaptador y comprobación propios. **Móvil queda fuera de las aplicaciones de F02-12**, cuya ficha comprende `pos-desktop` y `branch-api`; no se añade como requisito artificial para cerrar ese entregable.
 
-### Guardado nativo en revisión
+### Guardado nativo en Windows
 
-La [PR #94](https://github.com/developer-implementos/pos-platform/pull/94) compone `save_protected_pdf` en el host Tauri de **POS Desktop para Windows**. El frontend obtiene el original mediante la API autorizada y transmite bytes binarios, un nombre sugerido limitado y SHA-256. Rust vuelve a comprobar la envoltura PDF, el hash y el máximo de **10 MiB** antes de abrir el diálogo. No recibe una ruta elegida por JavaScript ni credenciales de sesión o del proveedor.
+La [PR #94](https://github.com/developer-implementos/pos-platform/pull/94), integrada en [`d5d5e5f`](https://github.com/developer-implementos/pos-platform/commit/d5d5e5f30fe44f2c2c64fec3e45ba3fe7e3b6d01), compone `save_protected_pdf` en el host Tauri de **POS Desktop para Windows**. El frontend obtiene el original mediante la API autorizada y transmite bytes binarios, un nombre sugerido limitado y SHA-256. Rust vuelve a comprobar la envoltura PDF, el hash y el máximo de **10 MiB** antes de abrir el diálogo. No recibe una ruta elegida por JavaScript ni credenciales de sesión o del proveedor. La prueba de interacción dentro de la aplicación nativa conserva su estado pendiente; los builds y las pruebas automáticas no la sustituyen.
 
 El operador elige el destino mediante el diálogo de Windows. La creación del archivo impide sobrescribir un destino existente, incluso si aparece entre la elección y la escritura. El host devuelve `saved` únicamente después de escribir y sincronizar el contenido; cerrar el diálogo devuelve `cancelled`. Un error se muestra como error, sin anunciar que el PDF quedó guardado. Estas comprobaciones preservan el original y no sustituyen un análisis antimalware.
 
