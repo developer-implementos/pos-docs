@@ -9,11 +9,11 @@ const size = bytes => {
 const countryNames = {chile:'Chile',peru:'Perú',spain:'España',regional:'Multipaís'};
 const kindNames = {historical:'Antecedente recibido',proposal:'Documento de propuesta',meeting:'Registro de reunión',questionnaire:'Cuestionario'};
 const teamMembers = [
-  { name: 'Cristian Flores', role: 'Arquitectura' },
-  { name: 'Jose Espinoza', role: 'Arquitectura' },
-  { name: 'Javier Uribe', role: 'Desarrollador' },
-  { name: 'Jesus Abdul', role: 'Desarrollador' },
-  { name: 'Pedro Yañez', role: 'Líder de equipo' },
+  { name: 'Cristian Flores', role: 'Arquitectura', github: 'floxcristian' },
+  { name: 'Jose Espinoza', role: 'Arquitectura', github: 'mrcoto' },
+  { name: 'Javier Uribe', role: 'Desarrollador', github: 'javieruribe89' },
+  { name: 'Jesus Abdul', role: 'Desarrollador', github: 'JesusAbdul' },
+  { name: 'Pedro Yañez', role: 'Líder de equipo', github: 'pymimtos' },
 ];
 
 function downloadItem(item, proposal = false) {
@@ -60,6 +60,6 @@ ${proposalFiles.length ? `<ul class="proposal-downloads" aria-label="Documentos 
 <div class="empty-state" data-empty hidden><h3>No hay fuentes con esos filtros</h3><p>Prueba otra búsqueda o limpia los filtros.</p></div>
 <div class="contribute"><div><h3>¿Un nuevo documento del equipo?</h3><p>Identifica su país, contexto y fecha conocida, y clasifícalo como fuente original, síntesis o propuesta, independientemente de su formato.</p></div><a class="text-link" href="${escape(repository)}/blob/main/materials/README.md">Cómo añadir materiales</a></div></section>
 <section id="team" class="resource-section" aria-labelledby="team-title"><div class="section-heading"><span class="section-number" aria-hidden="true">04</span><h2 id="team-title">Equipo de trabajo</h2></div>
-<ul class="team-list" role="list">${teamMembers.map(member => `<li><p class="team-name">${escape(member.name)}</p><p class="team-role">${escape(member.role)}</p></li>`).join('')}</ul></section>
+<ul class="team-list" role="list">${teamMembers.map(member => `<li><p class="team-name">${escape(member.name)}</p><p class="team-role">${escape(member.role)}</p><p class="team-profile"><a class="text-link" href="https://github.com/${escape(member.github)}" aria-label="GitHub de ${escape(member.name)}: @${escape(member.github)}">@${escape(member.github)}</a></p></li>`).join('')}</ul></section>
 </main><footer><div class="footer-inner"><p><strong>POS Platform</strong><span>Documentación de Implementos</span></p><a class="text-link" href="${escape(repository)}">Repositorio pos-docs</a></div></footer></body></html>`;
 }
