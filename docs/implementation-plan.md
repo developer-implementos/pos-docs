@@ -16,7 +16,7 @@ La interfaz permite recorrer una caja corporativa para Chile con datos sintétic
 
 ## Aplicaciones y estado actual
 
-El corte F02 contiene siete aplicaciones y añade `device-agent` con persistencia SQLite y protocolo HTTPS. La [guía F02](phase-2-payments-documents.md) delimita la implementación parcial en revisión. Sus nombres delimitan responsabilidades; disponer de un proyecto compilable no implica tener su comportamiento operativo completo ni su homologación.
+El corte F02 contiene siete aplicaciones y añade `device-agent` con persistencia SQLite y protocolo HTTPS. La [guía F02](phase-2-payments-documents.md) delimita la implementación parcial integrada. Sus nombres delimitan responsabilidades; disponer de un proyecto compilable no implica tener su comportamiento operativo completo ni su homologación.
 
 | Aplicación | Base disponible | Capacidad que requiere implementación y aceptación |
 | --- | --- | --- |

@@ -16,14 +16,14 @@ Los clientes Angular con PrimeNG para escritorio (Tauri) y móvil (Capacitor) y 
 | `apps/pos-mobile` | Cliente Angular propio para Android/iOS, alojado en Capacitor |
 | `libs/client-shell` | Composición Angular compartida: rutas, configuración y shell |
 | `apps/branch-api` | Identidad y administración POS Chile mediante HTTPS/PostgreSQL; motor comercial en validación |
-| `apps/device-agent` | Host .NET 10 por puesto, recepción e intentos en SQLite; protocolo en revisión F02 y driver físico pendiente |
+| `apps/device-agent` | Host .NET 10 por puesto, recepción e intentos en SQLite; protocolo integrado en el corte parcial F02 y driver físico pendiente |
 | `apps/country-api` | Base HTTP y sonda de PostgreSQL por ámbito; sin recepción comercial |
 | `apps/branch-sync-worker`, `apps/erp-worker` | Composición de workers; CLI ERP de lectura independiente, procesamiento de jobs pendiente |
 | `libs/` | Features del frontend, contextos del backend y contratos compartidos, con límites de importación |
 
 Las aplicaciones comparten repositorio y contratos, con builds independientes. El cliente normal comienza en `unconfigured` y bloquea el acceso hasta recibir la configuración del puesto para el origen HTTPS autorizado en su paquete. `branch` usa el perfil operativo con identidad y permisos del servidor; `branch-lab` mantiene las pruebas sintéticas y `demo` se selecciona explícitamente. Ningún fallo de conexión o configuración activa la demostración. La [guía F01](phase-1-laboratory.md) distingue el incremento operativo integrado del recorrido de laboratorio y enlaza sus instrucciones de aprovisionamiento.
 
-El [corte F02 en revisión](phase-2-payments-documents.md) incorpora persistencia de pagos/fiscalidad y el host de dispositivos con protocolo HTTPS y SQLite reales. La compilación y las pruebas no habilitan proveedores, numeración fiscal o hardware: esas capacidades conservan su homologación y entrega pendientes.
+El [corte parcial F02 integrado](phase-2-payments-documents.md) incorpora persistencia de pagos/fiscalidad y el host de dispositivos con protocolo HTTPS y SQLite reales. La compilación y las pruebas no habilitan proveedores, numeración fiscal o hardware: esas capacidades conservan su homologación y entrega pendientes.
 
 ![Centro de operación con indicadores, gráficos y pendientes](screenshots/dashboard.png)
 

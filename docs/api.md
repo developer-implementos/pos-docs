@@ -8,7 +8,7 @@
 
 Los clientes `pos-desktop` y `pos-mobile` distinguen `branch`, `branch-lab`, `demo` y el estado inicial `unconfigured`. El perfil conectado usa la API; no cambia a mocks ante un fallo. `country-api` tiene persistencia y sonda de ámbito propias, todavía sin recepción comercial. Los workers no procesan jobs de negocio; `erp-worker` incorpora una CLI separada de consultas Mountain que aún no alimenta el espejo ni la UI.
 
-## Corte F02 en revisión
+## Corte parcial F02 integrado
 
 `branch-api` añade los contextos persistentes `payments`, `fiscal` y `devices`. Conservan intenciones, intentos, evidencia y destino bajo sus propias transacciones; no declaran un efecto externo a partir de un timeout o de un acuse técnico. Las rutas de operador y de host usan audiencias autenticadas distintas: una sesión POS no sustituye la credencial de instalación del dispositivo.
 

@@ -1,6 +1,6 @@
 # ADR-17 · Agente autónomo de periféricos
 
-**Decisión acordada; host y protocolo implementados en revisión F02.** `apps/device-agent` es la séptima aplicación de POS Platform. Se desarrolla en **C#/.NET para Windows**, con ciclo de vida independiente de `pos-desktop` y `pos-mobile`. La [guía F02](../phase-2-payments-documents.md) distingue el host durable, la interoperabilidad real comprobada y los adaptadores físicos aún pendientes. El runtime declara el driver no disponible; no simula impresiones exitosas.
+**Decisión acordada; host y protocolo integrados en el corte parcial F02.** `apps/device-agent` es la séptima aplicación de POS Platform. Se desarrolla en **C#/.NET para Windows**, con ciclo de vida independiente de `pos-desktop` y `pos-mobile`. La [guía F02](../phase-2-payments-documents.md) distingue el host durable, la interoperabilidad real comprobada y los adaptadores físicos aún pendientes. El runtime declara el driver no disponible; no simula impresiones exitosas.
 
 ## Responsabilidad y ubicación
 

@@ -77,7 +77,7 @@ tools/                          # Herramientas de build, lint y pruebas del prod
 
 ## Estado de implementación
 
-El corte F02 contiene siete aplicaciones, con `apps/device-agent` implementado en C#/.NET 10 y SQLite. `branch-api` compone identidad, configuración y contextos transaccionales; añade persistencia y contratos de pagos, fiscalidad y dispositivos en revisión. El host y su protocolo están probados entre procesos, con driver runtime no disponible y sin proveedores fiscales o de pago operativos. La [guía F02](phase-2-payments-documents.md) distingue esas garantías de la homologación pendiente.
+El corte F02 contiene siete aplicaciones, con `apps/device-agent` implementado en C#/.NET 10 y SQLite. `branch-api` compone identidad, configuración y contextos transaccionales; añade persistencia y contratos de pagos, fiscalidad y dispositivos en el corte parcial integrado. El host y su protocolo están probados entre procesos, con driver runtime no disponible y sin proveedores fiscales o de pago operativos. La [guía F02](phase-2-payments-documents.md) distingue esas garantías de la homologación pendiente.
 
 El perfil `operational` conserva usuarios, roles, asignaciones y provisión Chile; el laboratorio prueba catálogo, cestas, cotización y efectivo con datos sintéticos. `country-api` comprueba su PostgreSQL y ámbito sin recibir ventas. Los workers no sincronizan ni registran operaciones ERP; la CLI separada de `erp-worker` consulta referencias Mountain por HTTPS. El [recorrido F01](phase-1-laboratory.md) detalla esos límites.
 
