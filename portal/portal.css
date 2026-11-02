@@ -633,6 +633,19 @@ p {
   border-top:1px solid var(--line);
   padding-top:20px
 }
+.team-avatar {
+  display:block;
+  width:56px;
+  height:56px;
+  margin-bottom:16px;
+  border:1px solid var(--line);
+  border-radius:50%;
+  object-fit:cover;
+  background:var(--surface)
+}
+.team-member-info {
+  min-width:0
+}
 .team-name {
   color:var(--ink);
   font-weight:700;
@@ -825,19 +838,19 @@ p {
     gap:0
   }
   .team-list li {
-    display:flex;
-    align-items:baseline;
-    justify-content:space-between;
-    flex-wrap:wrap;
-    gap:4px 16px;
+    display:grid;
+    grid-template-columns:48px minmax(0,1fr);
+    align-items:start;
+    gap:16px;
     padding:16px 0
   }
-  .team-role {
-    margin-top:0
+  .team-avatar {
+    width:48px;
+    height:48px;
+    margin-bottom:0
   }
   .team-profile {
-    flex-basis:100%;
-    margin-top:2px
+    margin-top:4px
   }
   .footer-inner {
     align-items:flex-start;
