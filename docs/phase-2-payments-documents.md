@@ -10,6 +10,17 @@ La revisión fijada incorpora el seguimiento conectado, la búsqueda y descarga 
 
 El [roadmap F02](/guide/roadmap/phase-02/) conserva los catorce entregables y sus criterios. La implementación de un contrato, una prueba o un binario no completa por sí sola toda la fase. La revisión técnica y el avance se registran en POS Platform; la publicación de esta guía no implica aceptación humana.
 
+## Cambios en revisión
+
+Dos incrementos tienen código en PR y **todavía no forman parte de la revisión integrada que alimenta el porcentaje del portal**:
+
+| Incremento | Revisión de producto | Resultado acotado |
+| --- | --- | --- |
+| F02-07 · Admisión de proveedores | [PR #93](https://github.com/developer-implementos/pos-platform/pull/93), commit [`b3aae07`](https://github.com/developer-implementos/pos-platform/commit/b3aae077a2af46f85e2a586732bd567d5d70359d) | Rechazar perfiles incompatibles antes de reservar saldo, conservando el destino de los pagos pendientes |
+| F02-12 · Exportación de originales en Windows | [PR #94](https://github.com/developer-implementos/pos-platform/pull/94), commit [`7f09c63`](https://github.com/developer-implementos/pos-platform/commit/7f09c635ecbdaeb0dd6501e5d05fdf0e0a02aa79) | Guardado mediante un comando Tauri restringido y un diálogo del sistema, con resultados de guardado y cancelación diferenciados |
+
+Las secciones que indican **en revisión** describen estos incrementos. Las pruebas del código nativo, la verificación del artefacto y el recorrido dentro de Tauri conservan evidencia separada; no se deducen de las pruebas del frontend. Ninguna de estas PR completa por sí sola F02-07 o F02-12.
+
 ## Aplicaciones y autoridad
 
 | Pieza | Implementación del corte | Límite |
@@ -29,6 +40,16 @@ El [roadmap F02](/guide/roadmap/phase-02/) conserva los catorce entregables y su
 **Fiscalidad:** la solicitud conserva una fuente comercial inmutable y la identidad fiscal autorizada. Los estados del proveedor y de la autoridad tributaria se distinguen. Consultar no vuelve a emitir; la ausencia o vencimiento de identidad impide el envío. Las restricciones locales de unicidad no acreditan numeración legal global ni sustituyen el material fiscal o las reglas del país. La composición actual no habilita un numerador ni un proveedor productivo.
 
 **Dispositivos:** PostgreSQL es la autoridad de asignación, trabajo y permiso de ejecución. SQLite conserva recepción, intento y evidencia pendiente en el puesto. No contiene ventas ni un espejo comercial y no se usa como archivo de logs. Los logs diagnósticos del servicio son separados y no incluyen credenciales o payloads completos.
+
+### Admisión de proveedores en revisión
+
+La [PR #93](https://github.com/developer-implementos/pos-platform/pull/93) comprueba que el perfil de un pago nuevo coincida con un adaptador compuesto en **proveedor, versión de adaptador y versión de contrato**. Exige cobro habilitado y los métodos de consulta o compensación que el perfil declara. Lo hace antes de reservar el presupuesto del plan o la venta y antes de crear la intención. Una configuración por sí sola no instala un adaptador; la composición operativa de `branch-api` mantiene el registro bancario vacío.
+
+Si la combinación no está soportada, devuelve `PROVIDER_CAPABILITY_UNAVAILABLE` y el diario conserva el rechazo sin intención ni saldo reservado. Repetir ese `commandId` devuelve el mismo rechazo, incluso después de corregir la composición. Un nuevo intento de admisión necesita un comando nuevo y explícito. Esta regla no autoriza repetir un cobro externo incierto.
+
+Un recibo de admisión anterior mantiene su resultado. Consultar o recuperar un pago pendiente utiliza su **snapshot original**, incluidas cuenta, terminal, versión y referencia de credencial; no lo redirige al perfil de reemplazo ni vuelve a aplicarle los controles de admisión del perfil nuevo. El proceso necesita conservar el adaptador correspondiente para ejecutar esa consulta.
+
+Esta comprobación es local: no llama al proveedor, no prueba conectividad o credenciales y no homologa la semántica de un método por el hecho de existir. La matriz de proveedores, sus contratos y los canales de evidencia restantes conservan su alcance en F02-07.
 
 ## Cobro combinado y transferencia manual
 
@@ -109,9 +130,26 @@ La incorporación se realiza mediante el adaptador fiscal autorizado, después d
 
 El servidor valida firma y terminador PDF, tamaño y hash sin modificar el original; no se presenta como análisis antimalware. Lo entrega como `attachment`, con nombre derivado del identificador, `no-store`, `nosniff` y CSP `sandbox`, sin exponer rutas o URLs del proveedor. El cliente comprueba MIME, tamaño y hash antes de preparar la descarga. Descargar, copiar, enviar y reimprimir son acciones diferentes: ninguna lectura crea otro documento fiscal y el envío externo sigue deshabilitado.
 
-La composición de escritorio selecciona un adaptador que entrega los bytes verificados mediante un `Blob` local y una descarga del navegador integrado, un mecanismo soportado por Windows WebView2. La URL temporal se libera al terminar su ventana de uso o al destruir la vista; no incluye credenciales ni una dirección del proveedor. Iniciar la descarga no acredita que el operador haya guardado el archivo: esa comprobación real dentro de Tauri sigue pendiente.
+En la revisión integrada `a98f08e`, el adaptador de escritorio inicia una descarga mediante un `Blob` local. La URL temporal se libera al terminar su ventana de uso o al destruir la vista; no incluye credenciales ni una dirección del proveedor. Iniciar esa descarga no acredita que el operador haya guardado el archivo. El guardado nativo explícito pertenece al incremento en revisión descrito a continuación.
 
-La composición móvil de Capacitor mantiene la exportación **no disponible**. Puede consultar el estado y los metadatos autorizados, pero bloquea la descarga antes del GET de contenido; no descarga bytes para intentar guardarlos por un mecanismo no habilitado. La ausencia de un adaptador también conserva ese bloqueo. Compartir o guardar desde la plataforma móvil exige su adaptador y comprobación propios. F02-12 no se declara completo sólo por disponer del backend binario.
+La composición móvil de Capacitor mantiene la exportación **no disponible**. Puede consultar el estado y los metadatos autorizados, pero bloquea la descarga antes del GET de contenido; no descarga bytes para intentar guardarlos por un mecanismo no habilitado. La ausencia de un adaptador también conserva ese bloqueo. Compartir o guardar desde la plataforma móvil exige su adaptador y comprobación propios. **Móvil queda fuera de las aplicaciones de F02-12**, cuya ficha comprende `pos-desktop` y `branch-api`; no se añade como requisito artificial para cerrar ese entregable.
+
+### Guardado nativo en revisión
+
+La [PR #94](https://github.com/developer-implementos/pos-platform/pull/94) compone `save_protected_pdf` en el host Tauri de **POS Desktop para Windows**. El frontend obtiene el original mediante la API autorizada y transmite bytes binarios, un nombre sugerido limitado y SHA-256. Rust vuelve a comprobar la envoltura PDF, el hash y el máximo de **10 MiB** antes de abrir el diálogo. No recibe una ruta elegida por JavaScript ni credenciales de sesión o del proveedor.
+
+El operador elige el destino mediante el diálogo de Windows. La creación del archivo impide sobrescribir un destino existente, incluso si aparece entre la elección y la escritura. El host devuelve `saved` únicamente después de escribir y sincronizar el contenido; cerrar el diálogo devuelve `cancelled`. Un error se muestra como error, sin anunciar que el PDF quedó guardado. Estas comprobaciones preservan el original y no sustituyen un análisis antimalware.
+
+| Entorno o resultado | Qué puede afirmar la interfaz |
+| --- | --- |
+| Tauri · `saved` | El host completó la escritura y sincronización del archivo elegido |
+| Tauri · `cancelled` | El operador canceló el diálogo; el guardado no se realizó |
+| Navegador · `started` | Se inició la descarga; el navegador no confirma al POS que el archivo se guardó |
+| Error o capacidad ausente | La entrega no se confirma; no se usa una descarga del navegador como fallback de un fallo nativo |
+
+El permiso se limita a ese comando y a la ventana local `main`. El frontend no recibe una API genérica de archivos, shell o apertura automática. La exclusión en el cliente y el host evita diálogos simultáneos. Después de una respuesta tardía, el store vuelve a comprobar la vista, sesión y permiso antes de actualizar mensajes o datos visibles. Esa comprobación de interfaz **no cancela una escritura nativa ya iniciada**.
+
+El vínculo con la venta original se conserva en la fuente fiscal inmutable. **La relación con correcciones posteriores sigue pendiente**: el flujo de devolución y sus efectos fiscales corresponde a F04. Mostrar que esa capacidad no está disponible no acredita ese vínculo ni completa literalmente el criterio de F02-12. Descargar, enviar, reimprimir y corregir conservan acciones y permisos diferentes.
 
 ### Migraciones y acceso a las consultas
 
@@ -206,5 +244,11 @@ La ampliación fiscal tiene 33 pruebas focales aprobadas, junto con 39 del front
 Para cerrar los entregables restantes se necesitan los adaptadores y contratos operativos, la matriz de modelos/SDK, instalación y cuenta del host, las interfaces de cobro y excepciones, plantillas completas y pruebas de proveedor/hardware. `api-impresion-caja` aporta evidencia de compatibilidad a analizar; sus dependencias .NET Framework, x86 y `System.Drawing.Printing` no se trasladan a un servicio moderno sin validación. El detalle permanece en el [ADR de dispositivos](decisions/device-agent.md) y la [matriz de extensibilidad](extensibilidad-proveedores-dispositivos.md).
 
 El incremento de **F02-05/06** tiene 18 pruebas PostgreSQL de planes/evidencia, 8 de finalización de venta, 4 HTTP integradas y 47 focales del cliente aprobadas. Incluyen la resolución autorizada de transferencias existentes después de deshabilitar nuevas declaraciones. La compatibilidad de la API reúne 141 casos, incluidos los anteriores que pertenecen a esa suite, y la de configuración/dispositivos 11; no se suman ejecuciones solapadas como pruebas diferentes. El recorrido ampliado E2E aprobó **1/1** sobre `dacccc0ee40ab759595494a823ccda7ed43e122f`, con árbol limpio y revisión estable: dos operadores, bytes del PDF, verificación manual, efectivo, recuperación tras recargar, finalización y comprobante. La corrección del exportador aprobó además 5 pruebas focales. Es una prueba de navegador sobre HTTPS y PostgreSQL reales con datos aislados; no acredita guardado nativo en WebView, recepción bancaria ni hardware. Los resultados se atribuyen a sus revisiones comprobadas, sin trasladarlos a una fuente anterior. Los criterios financieros del plan pueden comprobarse con contratos estables y un proveedor exclusivo de pruebas; eso no acredita la tarjeta real de F02-01. Las cuentas compartidas entre sucursales y otros vouchers conservan contratos y validaciones propios. Estos límites no se sustituyen por un bloqueo genérico de Finanzas ni convierten toda la fase en completa.
+
+### Evidencia de los incrementos en revisión
+
+La admisión de proveedores de la [PR #93, revisión `b3aae07`](https://github.com/developer-implementos/pos-platform/pull/93) aprobó typecheck, lint con fronteras Nx, **14 pruebas unitarias y 30 sobre PostgreSQL real aislado**. El caso concurrente envía doce solicitudes con siete comandos distintos: no crea intenciones ni reservas, conserva siete rechazos y sólo permite una admisión posterior con configuración compatible y un comando nuevo. Otro caso reemplaza el perfil por versiones no registradas y recupera el pago incierto mediante el destino original, sin repetir el cargo. El simulador contractual queda exclusivamente en pruebas; esta evidencia no corresponde a Transbank ni a hardware.
+
+La exportación Windows de la [PR #94, revisión `7f09c63`](https://github.com/developer-implementos/pos-platform/commit/7f09c635ecbdaeb0dd6501e5d05fdf0e0a02aa79) aprobó **14 pruebas Rust con filesystem real en Windows** y Clippy en release con `-D warnings`. La comprobación del artefacto y el recorrido de interfaz nativa siguen en preparación: esas pruebas no acreditan haber utilizado el diálogo real desde WebView2. Su resultado se incorpora sólo con la revisión y evidencia correspondientes.
 
 La guía [F01](phase-1-laboratory.md) sigue describiendo la administración operativa y el laboratorio comercial existentes. F02 los complementa; no activa automáticamente tarjetas, fiscalidad o periféricos por compilar nuevos módulos.
