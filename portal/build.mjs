@@ -7,6 +7,7 @@ import {loadCatalog} from './catalog.mjs';
 import {loadPreviews} from './previews.mjs';
 import {renderMaterialViewer} from './viewer.mjs';
 import {renderPortal} from './render.mjs';
+import {teamMembers} from './team.mjs';
 import {loadProgress} from './progress.mjs';
 import {docsOrigin, repositoryOrigin} from '../apps/starlight/site-config.mjs';
 
@@ -22,6 +23,10 @@ for (const file of ['logo.svg', 'Inter-Regular.ttf', 'Inter-Bold.ttf', 'Inter-LI
   fs.copyFileSync(path.join(root, 'presentations/architecture/assets', file), path.join(assets, file));
 }
 fs.copyFileSync(path.join(root, 'apps/starlight/static/favicon.svg'), path.join(assets, 'favicon.svg'));
+fs.mkdirSync(path.join(assets, 'team'), {recursive:true});
+for (const {avatar} of teamMembers) {
+  fs.copyFileSync(path.join(root, 'portal/assets/team', avatar), path.join(assets, 'team', avatar));
+}
 for (const file of ['portal.css', 'portal.js', 'viewer.css', 'viewer.js']) fs.copyFileSync(path.join(root, 'portal', file), path.join(output, 'portal', file));
 const require = createRequire(path.join(root, 'apps/starlight/package.json'));
 const pdfjs = path.dirname(require.resolve('pdfjs-dist/package.json'));
