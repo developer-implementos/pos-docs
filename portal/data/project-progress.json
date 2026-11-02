@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "2a651af9b15ffba0ae1f983e55cb4f71f4c722ca",
+    "revision": "a98f08e3223abe95f12a4ea4f0de9bcde5c15865",
     "path": "delivery/progress.json",
-    "sha256": "502bd746a27ad9d70c66c575a896457342ed3b32ae14761df98fa3237ab1fb66"
+    "sha256": "5a72194da1f495c5da9c85dc6030cbd520511c3f594836549ba16d7c2ba918ff"
   },
   "content": {
     "schemaVersion": 2,
-    "reviewedOn": "2026-11-01",
+    "reviewedOn": "2026-11-02",
     "productRevision": "source",
     "scope": {
       "repository": "https://github.com/developer-implementos/pos-docs",
@@ -39,6 +39,10 @@
           {
             "path": "delivery/evidence/f02-checkout-browser.json",
             "label": "Cobro combinado conectado, verificación independiente y recuperación comprobados"
+          },
+          {
+            "path": "delivery/evidence/f02-main-integration.json",
+            "label": "Integración squash comprobada: fuentes equivalentes y referencias de CI identificadas"
           }
         ]
       },
@@ -87,6 +91,10 @@
           {
             "path": "delivery/evidence/f02-checkout-browser.json",
             "label": "Cobro combinado conectado, verificación independiente y recuperación comprobados"
+          },
+          {
+            "path": "delivery/evidence/f02-main-integration.json",
+            "label": "Integración squash comprobada: fuentes equivalentes y referencias de CI identificadas"
           }
         ]
       },
@@ -159,6 +167,10 @@
           {
             "path": "delivery/evidence/f02-device-protocol-ci.json",
             "label": "Pruebas del host e interoperabilidad HTTPS/.NET/PostgreSQL/SQLite aprobadas"
+          },
+          {
+            "path": "delivery/evidence/f02-main-integration.json",
+            "label": "Integración squash comprobada: fuentes equivalentes y referencias de CI identificadas"
           }
         ]
       }
@@ -680,9 +692,9 @@
         "summary": "Verificados el plan de cobro congelado, las asignaciones exactas, el bloqueo del saldo incierto, los reintentos y el vuelto sólo de efectivo. Venta, fracción de caja y outbox se confirman atómicamente. La interfaz conectada opera efectivo y transferencia manual; el contrato de tarjeta se prueba con adaptador controlado y no acredita un proveedor operativo.",
         "acceptance": null,
         "verification": {
-          "revision": "804ef2bb1cc168bb8b9bfe721fc64402dc0c7a08",
-          "reviewedOn": "2026-11-01",
-          "reviewer": "Codex · revisión técnica automatizada",
+          "revision": "2f4528fd734f4ba14130a8a6f4e12268ee876afb",
+          "reviewedOn": "2026-11-02",
+          "reviewer": "Codex · verificación técnica del commit integrado",
           "evidence": [
             {
               "path": "libs/backend/payments/contracts/src/plans.ts",
@@ -765,9 +777,9 @@
         "summary": "Verificados el contrato TypeScript/.NET, inscripción y ámbito, recepción durable, permiso de ejecución de un uso, vigencia, deduplicación y recuperación. Fixtures comunes, PostgreSQL, SQLite y HTTPS reales comprueban el intercambio y rechazo de identidad/TLS inválidos. Driver físico, instalación productiva y mTLS conservan sus entregables propios.",
         "acceptance": null,
         "verification": {
-          "revision": "804ef2bb1cc168bb8b9bfe721fc64402dc0c7a08",
-          "reviewedOn": "2026-11-01",
-          "reviewer": "Codex · revisión técnica automatizada",
+          "revision": "2f4528fd734f4ba14130a8a6f4e12268ee876afb",
+          "reviewedOn": "2026-11-02",
+          "reviewer": "Codex · verificación técnica del commit integrado",
           "evidence": [
             {
               "path": "libs/backend/devices/contracts/fixtures/device-wire.v1.json",

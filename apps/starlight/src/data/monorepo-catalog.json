@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "product": "POS Platform",
-  "reviewedOn": "2026-11-01",
+  "reviewedOn": "2026-11-02",
   "repository": "https://github.com/developer-implementos/pos-platform",
-  "evidence": "Siete aplicaciones revisadas en el corte F02 2a651af9b15ffba0ae1f983e55cb4f71f4c722ca, rama codex/f02-cobro-documento; no implica integración en main. F01 incorpora administración POS Chile sobre HTTPS/PostgreSQL y clientes conectados. F02 añade pagos/fiscalidad persistentes y el host .NET/SQLite con protocolo real; sin proveedores operativos ni driver físico habilitado. El conector ERP no materializa espejos ni valida un proveedor corporativo. No acredita aceptación de fase ni habilitación de caja productiva. Starlight pertenece a POS Docs.",
+  "evidence": "Siete aplicaciones revisadas en el corte parcial F02 a98f08e3223abe95f12a4ea4f0de9bcde5c15865, integrado en main. F01 incorpora administración POS Chile sobre HTTPS/PostgreSQL y clientes conectados. F02 añade pagos/fiscalidad persistentes y el host .NET/SQLite con protocolo real; sin proveedores operativos ni driver físico habilitado. El conector ERP no materializa espejos ni valida un proveedor corporativo. No acredita aceptación de fase ni habilitación de caja productiva. Starlight pertenece a POS Docs.",
   "applications": [
     {
       "name": "pos-desktop",
@@ -23,14 +23,14 @@
       "name": "device-agent",
       "location": "PC Windows de cada puesto (F02/F05); estación de red compartida posterior (F06)",
       "description": "Host C#/.NET por puesto; trabajos HTTPS con branch-api y registro SQLite; perfil de red compartido en F06",
-      "state": "Host .NET 10/SQLite y protocolo durable implementados en revisión F02; publicación Windows x64 e interoperabilidad HTTPS/PostgreSQL comprobadas. Driver no disponible; instalación de servicio y hardware pendientes",
+      "state": "Host .NET 10/SQLite y protocolo durable integrados en el corte parcial F02; publicación Windows x64 e interoperabilidad HTTPS/PostgreSQL comprobadas. Driver no disponible; instalación de servicio y hardware pendientes",
       "inReviewedWorkspace": true
     },
     {
       "name": "branch-api",
       "location": "Sucursal",
       "description": "API y composición de negocio de sucursal",
-      "state": "Identidad y administración POS Chile, configuración compatible, cestas y motor comercial con PostgreSQL. F02 añade persistencia de pagos, fiscalidad y dispositivos en revisión; sin proveedores operativos. Precios y cobros sujetos a fuente validada",
+      "state": "Identidad y administración POS Chile, configuración compatible, cestas y motor comercial con PostgreSQL. F02 añade persistencia de pagos, fiscalidad y dispositivos en el corte parcial integrado; sin proveedores operativos. Precios y cobros sujetos a fuente validada",
       "inReviewedWorkspace": true
     },
     {
@@ -189,7 +189,7 @@
   "documentationApplications": [],
   "targetStructure": {
     "decidedOn": "2026-10-29",
-    "status": "Estructura aplicada a F01 y al corte parcial F02 en revisión; capacidades posteriores conservan sus estados explícitos.",
+    "status": "Estructura aplicada a F01 y al corte parcial F02 integrado; capacidades posteriores conservan sus estados explícitos.",
     "coreRelationship": "Core es únicamente referencia de organización y convenciones; no es dependencia, proveedor de paquetes ni servicio del POS.",
     "entries": [
       {
