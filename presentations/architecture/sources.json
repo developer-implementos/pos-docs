@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "reviewedOn": "2026-11-01",
+  "reviewedOn": "2026-11-02",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "91cbb43951703c8ce4a96fba56ff293a96df6fe1",
+  "revision": "a2ea7fc9539e9478af21bd531310589e5df468d4",
   "sourceStatus": "Fuentes documentales verificadas en la revisión indicada; F01 incluye administración POS y entregables técnicamente verificados. F02 incluye cobro combinado y protocolo de dispositivos técnicamente verificados, junto con persistencia fiscal y host .NET/SQLite; no habilita proveedores operativos ni drivers físicos. La aceptación manual y la habilitación productiva se mantienen separadas.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "inputs": [
     {
       "path": "docs/monorepo.md",
-      "sha256": "db636405bf193d6a22f143d5a32c0ac474d5d074065ad54bb9f815cb7e38db1f"
+      "sha256": "f370bbb03c3dd37c576aae9a631ee812fddcccb115fb7effa2473a83976a8a03"
     },
     {
       "path": "docs/propuesta-arquitectura.md",
@@ -24,7 +24,7 @@
     },
     {
       "path": "apps/starlight/src/data/product-evidence.json",
-      "sha256": "874cb3e6ad5bb01d60a87f4c265adaaee8b5d1a69a61343415312010bca6c0fd"
+      "sha256": "eb2cef1d29204035569e225ba40e406e417a5ff2079cc332c73f20e07dbb58ed"
     },
     {
       "path": "docs/roadmap.md",
@@ -68,7 +68,7 @@
     },
     {
       "path": "apps/starlight/src/data/monorepo-catalog.json",
-      "sha256": "51b7764b296343f67fda2eb92104e2eaeb1584f2b39e3b4653158b7cd44f154d"
+      "sha256": "532a1e9bc9cdced03ff77fddd82a9c650a05b6aa69691d298e25d101f0eec44b"
     },
     {
       "path": "docs/decisions/device-agent.md",
