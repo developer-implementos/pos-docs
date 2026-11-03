@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "reviewedOn": "2026-11-03",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "81555000224766a2fb82fb7f8b0bc2c65ce8d1ee",
+  "revision": "3e67697f37b102c37f746b2cf8634bfdc8421170",
   "sourceStatus": "Fuentes documentales verificadas en la revisión indicada; F01 incluye administración POS y entregables técnicamente verificados. F02 incluye cobro combinado y protocolo de dispositivos técnicamente verificados, junto con persistencia fiscal y host .NET/SQLite; no habilita proveedores operativos ni drivers físicos. La aceptación manual y la habilitación productiva se mantienen separadas.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "inputs": [
     {
       "path": "docs/monorepo.md",
-      "sha256": "fb3857f5d036dda25b205d274b83493b1c45e9ed9560a94dc72c70dc680ed464"
+      "sha256": "41c6ff126ab085c7da4924f31ecf5f8d3bb00c1ae52fa5faed9260c22039a172"
     },
     {
       "path": "docs/propuesta-arquitectura.md",
@@ -36,7 +36,7 @@
     },
     {
       "path": "docs/c4-arquitectura-propuesta.md",
-      "sha256": "25f159e6fd0b5c5efb91ec2440dcf9c107717e885d795c46f0147cf5b939ef00"
+      "sha256": "d6857455f8ec2b661fa3d18e8d624256714d82d830631cbc7e57d0d0baf8b156"
     },
     {
       "path": "docs/contracts/master-data-publication.md",
@@ -56,7 +56,7 @@
     },
     {
       "path": "tools/diagrams/models/c4-data.js",
-      "sha256": "1d3c1d97176f3a56a84fa68941138cab8244064737c4b56e6b61f8a8852bb2a4"
+      "sha256": "8517b98c76069fc388aa7ad22a5ef1d607481681acd4309c77cc0f0b5a906780"
     },
     {
       "path": "docs/extensibilidad-proveedores-dispositivos.md",
@@ -68,7 +68,7 @@
     },
     {
       "path": "apps/starlight/src/data/monorepo-catalog.json",
-      "sha256": "532a1e9bc9cdced03ff77fddd82a9c650a05b6aa69691d298e25d101f0eec44b"
+      "sha256": "3c530df6f3b6f9b6dd03114320fe5d6feb2ea5d6a8c8efdda10930dc4a658326"
     },
     {
       "path": "docs/decisions/device-agent.md",
