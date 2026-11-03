@@ -56,6 +56,16 @@ try {
   await page.goto(`${origin}/guide/api/data-model/#${fieldAnchor}`, {waitUntil:'networkidle'});
   assert.equal(await page.locator(`#${fieldAnchor}`).evaluate(element => element.open && element.closest('[data-data-table]').open), true);
   assert.match(await page.locator(`#${fieldAnchor} .field-detail`).innerText(), /no es un contador/);
+  await page.goto(`${origin}/guide/api/data-model/#field-branch-pricing-quote-result`, {waitUntil:'networkidle'});
+  for (const [width, scheme] of [[1440,'light'], [375,'dark'], [320,'light']]) {
+    await page.setViewportSize({width,height:900});
+    await page.emulateMedia({colorScheme:scheme});
+    await page.locator('#field-branch-pricing-quote-result').scrollIntoViewIfNeeded();
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `Expanded JSON field overflows at ${width}`);
+    await page.screenshot({path:path.join(output, `dictionary-field-${width}-${scheme}.png`)});
+  }
+  await page.setViewportSize({width:1440,height:900});
+  await page.emulateMedia({colorScheme:'light'});
   await page.goto(`${origin}/explore/data-branch-devices/`, {waitUntil:'networkidle'});
   await page.locator('[data-node-id="devices__job"]').first().dispatchEvent('click');
   const fieldDefinition = page.locator('[data-pos-detail-schema] details').filter({has:page.locator('summary', {hasText:'execution_attempt_id'})});
@@ -73,7 +83,7 @@ try {
     }
   }
   assert.deepEqual(errors, []);
-  console.log(`Product reference verified: ${total} operations, source-identical downloads, filtering, deep links, CSP and 4 routes at 3 widths.`);
+  console.log(`Product reference verified: ${total} operations, ${tables.length} tables, source-identical downloads, field search/deep links, expanded examples in light/dark, Archify field definitions, CSP and 4 routes at 3 widths.`);
 } finally {
   await browser.close();
   await new Promise(resolve => server.close(resolve));
