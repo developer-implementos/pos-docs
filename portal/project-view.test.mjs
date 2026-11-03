@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { renderProjectPages } from './project-view.mjs';
-import { loadProgress } from './progress.mjs';
+import { deriveProgress, loadProgress, progressContentHash } from './progress.mjs';
 import { loadFollowUp } from './follow-up.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
@@ -36,6 +37,10 @@ test('overview has actionable KPIs, limited execution preview and both no-JS bre
   assert.equal((html.match(/<tbody><tr>/g) || []).length, 1);
   assert.match(html, /Aceptación|aceptación/);
   assert.match(html, /<summary id="state-title">Contexto del avance<\/summary>/);
+  for (const group of [...progress.phases, ...progress.applications]) {
+    const percent = new Intl.NumberFormat('es-CL', {maximumFractionDigits: 1}).format(group.percent);
+    assert.ok(html.includes(`<strong>${percent} %<span>${group.completed} / ${group.total}</span></strong>`), 'Each breakdown exposes its percentage and denominator together');
+  }
   for (const app of progress.applications) {
     assert.ok(html.includes(app.summary), `Preserve the reviewed scope of ${app.id}`);
     assert.ok(html.includes(app.nextStep), `Preserve the next step of ${app.id}`);
@@ -105,4 +110,42 @@ test('fully resolved actions leave no open action or assignment count and remain
   assert.equal((attention.match(/data-state="resolved"/g) || []).length, changed.items.length);
   assert.doesNotMatch(attention, /<strong>Siguiente acción<\/strong>/);
   assert.match(attention, /Decisión registrada con evidencia/);
+});
+
+test('schema 1 acceptance stays historical across summary, breakdowns, dates and work detail', () => {
+  const snapshot = JSON.parse(fs.readFileSync(new URL('./data/project-progress.json', import.meta.url), 'utf8'));
+  snapshot.content.schemaVersion = 1;
+  snapshot.content.summary = 'Aceptaciones registradas en el corte histórico del fixture.';
+  const evidence = [{path: 'delivery/evidence/historical-acceptance.md', label: 'Acta de aceptación del fixture'}];
+  snapshot.content.applications = snapshot.content.applications.map(app => ({...app, summary: 'Alcance del registro histórico del fixture.', nextStep: 'Revisar la siguiente aceptación del fixture.', evidence}));
+  snapshot.content.workPackages = snapshot.content.workPackages.map((entry, index) => {
+    const {verification, ...work} = entry;
+    return {...work, status: index === 0 ? 'accepted' : index === 1 ? 'in_progress' : 'not_started', summary: 'Estado histórico del fixture.', acceptance: index === 0 ? {revision: snapshot.source.revision, reviewedOn: snapshot.content.reviewedOn, reviewer: 'Equipo del fixture histórico', evidence} : null};
+  });
+  snapshot.source.sha256 = progressContentHash(snapshot.content);
+  const historical = deriveProgress(snapshot, fs.readFileSync(new URL('../docs/roadmap.json', import.meta.url), 'utf8'));
+  const historicalFollowUp = loadFollowUp(root, historical);
+  assert.equal(historical.measurement, 'acceptance');
+  assert.equal(historical.accepted, 1);
+  assert.equal(historical.verified, null);
+  assert.ok(historical.workPackages.every(work => work.verification == null));
+  const pages = renderProjectPages(historical, historicalFollowUp);
+  for (const page of pages.values()) {
+    assert.match(page.body, /<strong>Aceptación del alcance<\/strong>/);
+    assert.match(page.body, /registro histórico de esquema 1 mide aceptación del alcance/);
+    assert.match(page.body, /No contiene verificaciones técnicas separadas/);
+    assert.doesNotMatch(page.body, /<strong>Avance técnico<\/strong>|ALCANCE VERIFICADO/);
+  }
+  const summary = pages.get('/project/').body;
+  assert.match(summary, /ALCANCE ACEPTADO/);
+  assert.match(summary, /Según el registro histórico/);
+  assert.doesNotMatch(summary, /Según la revisión técnica|status=verified|status=review/);
+  assert.match(summary, /href="\/project\/work\/\?status=accepted"/);
+  const work = pages.get('/project/work/').body;
+  assert.match(work, /<th scope="col">Estado del entregable<\/th>/);
+  assert.match(work, /Aceptación histórica y ejecución en GitHub/);
+  assert.match(work, /data-status="accepted"/);
+  assert.match(work, /Acta de aceptación del fixture/);
+  assert.doesNotMatch(work, /Estado técnico|Verificación técnica completa|value="verified"|value="review"|Sin verificación completa/);
+  assert.match(work, /Sin aceptación registrada/);
 });

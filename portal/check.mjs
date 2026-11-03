@@ -439,6 +439,9 @@ try {
   await followLegacyRedirect(page, legacyFiltered, `/materials/?country=${intersectionSource.country}`, () => page.goto(origin + legacyFiltered, { waitUntil: 'networkidle' }));
   await assertSources(page, sourceMaterials.filter(item => item.country === intersectionSource.country), 'The legacy material anchor preserves query filters');
   report.checks.push('Legacy catalog anchors redirect with query filters preserved');
+  await page.goto(origin + '/#constructor', {waitUntil:'networkidle'});
+  assert.equal(page.url(), origin + '/#constructor', 'Unknown fragments cannot resolve inherited object properties as redirects');
+  assert.ok(await page.getByRole('heading', {level:1, name:'POS Platform', exact:true}).isVisible());
 
   const noJs = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 375, height: 1000 } });
   const fallback = await noJs.newPage();

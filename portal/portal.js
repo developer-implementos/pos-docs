@@ -1,8 +1,8 @@
 // Old bookmarks remain useful; the landing page also exposes these anchors without JS.
-const legacyDestinations = {progress:'/project/', presentations:'/presentations/', materials:'/materials/', team:'/project/team/'};
+const legacyDestinations = new Map([['progress','/project/'], ['presentations','/presentations/'], ['materials','/materials/'], ['team','/project/team/']]);
 const visitLegacyAnchor = () => {
   if (location.pathname !== '/') return;
-  const target = legacyDestinations[location.hash.slice(1)];
+  const target = legacyDestinations.get(location.hash.slice(1));
   if (target) location.replace(target + location.search);
 };
 visitLegacyAnchor();

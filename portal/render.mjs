@@ -25,7 +25,7 @@ export function renderPortal(catalog, origin, repository, progress, followUp = n
   const technical = progress.measurement === 'verification';
   const body = `<div class="home-intro"><p class="eyebrow">IMPLEMENTOS · PRODUCTO CORPORATIVO</p><h1>POS Platform</h1><p class="lead">Un lugar para entender la plataforma, seguir su avance y consultar las fuentes del proyecto.</p></div>
   <section id="progress" class="home-status" aria-labelledby="home-status-title">
-    <div class="home-status-heading"><h2 id="home-status-title">El proyecto, de un vistazo</h2><p>Revisión: <time datetime="${escape(progress.reviewedOn)}">${date(progress.reviewedOn)}</time></p></div>
+    <div class="home-status-heading"><h2 id="home-status-title">El proyecto, de un vistazo</h2><p>Avance revisado: <time datetime="${escape(progress.reviewedOn)}">${date(progress.reviewedOn)}</time></p></div>
     <div class="home-metrics"><a href="/project/work/?status=${technical ? 'verified' : 'accepted'}"><strong>${percent(progress.percent)} %</strong><span>${progress.completed}/${progress.total} entregables ${technical ? 'verificados' : 'aceptados'}</span></a><a href="/project/work/?status=in_progress"><strong>${progress.counts.in_progress}</strong><span>En desarrollo</span></a><a href="/project/attention/?state=open"><strong>${open}</strong><span>Acciones pendientes</span></a></div>
     <div class="home-status-footer"><p>El avance mide entregables; las revisiones humanas se consultan por separado.</p><a class="button primary" href="/project/">Ver proyecto</a></div>
   </section>
