@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "reviewedOn": "2026-11-03",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "dac6b8fe85f927cc6975f95b55a738efd54b4533",
+  "revision": "a4f0771863c7db3d5ddff699d1797a37aec13b2b",
   "sourceStatus": "Fuentes documentales verificadas en la revisión indicada; F01 incluye administración POS y entregables técnicamente verificados. F02 incluye cobro combinado y protocolo de dispositivos técnicamente verificados, junto con persistencia fiscal y host .NET/SQLite; no habilita proveedores operativos ni drivers físicos. La aceptación manual y la habilitación productiva se mantienen separadas.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "inputs": [
     {
       "path": "docs/monorepo.md",
-      "sha256": "fea469bf0f0bc9f7f709060ff637f03aae9a1d1e95044ab677d153711fe4bf79"
+      "sha256": "ac5af0ee907b0b2869e119fe882d9b69fdce7e33f77099f570cea940a8244bfa"
     },
     {
       "path": "docs/propuesta-arquitectura.md",
@@ -24,7 +24,7 @@
     },
     {
       "path": "apps/starlight/src/data/product-evidence.json",
-      "sha256": "449fd3510de59fc637eadc8211aa0266db4cae54436c03dbf6108f8f2db3693e"
+      "sha256": "8be0aba88b63e800217bb55056bb2c9a980d62cad69aa97829e3d3fe54448164"
     },
     {
       "path": "docs/roadmap.md",
@@ -48,11 +48,11 @@
     },
     {
       "path": "tools/architecture/model.mjs",
-      "sha256": "50fec84545adbcbef19df4c1511fbf10ec815a2efea5fc141c0a9c087436c725"
+      "sha256": "a58e044c7c6ad68c856c206192acd521eb3881f4564f0c146d9e08c5a49a614f"
     },
     {
       "path": "tools/architecture/views.mjs",
-      "sha256": "037c0ed6de582592f9298a636f68413c0460540fb968b1f3a0c63beec3f1eaba"
+      "sha256": "b04745ac782c9d56271e95affb34c13d0187a16e4be199f5da13db91acb19def"
     },
     {
       "path": "tools/diagrams/models/c4-data.js",
@@ -68,7 +68,7 @@
     },
     {
       "path": "apps/starlight/src/data/monorepo-catalog.json",
-      "sha256": "3c530df6f3b6f9b6dd03114320fe5d6feb2ea5d6a8c8efdda10930dc4a658326"
+      "sha256": "78e1aa64ff7552bb5c1470b1da40e8fba25ac3f082f7f77e1903b4739c1e3c08"
     },
     {
       "path": "docs/decisions/device-agent.md",
@@ -81,6 +81,10 @@
     {
       "path": "docs/investigacion-mensajeria-pos.md",
       "sha256": "7cf74bb1e061d1668da5ecf335ac1226c7bdc42a9b27502ba026f59c20b81ce3"
+    },
+    {
+      "path": "tools/diagrams/models/device-execution.cjs",
+      "sha256": "f15f5580cecd256d26def082430b8f7c3d964325d05d14478bc22972bd75658c"
     }
   ]
 }
