@@ -10,6 +10,22 @@ export const digest = bytes => createHash('sha256').update(bytes).digest('hex');
 const expectedApis = ['branch-api', 'country-api'];
 const methods = new Set(['get', 'post', 'put', 'patch', 'delete', 'head', 'options', 'trace']);
 
+function validateDocumentation(documentation, isTable) {
+  assert.ok(documentation && typeof documentation === 'object' && !Array.isArray(documentation), 'Missing semantic data documentation');
+  for (const key of ['description', 'usage']) assert.ok(typeof documentation[key] === 'string' && documentation[key].trim().length >= 15 && documentation[key].length <= 3000, `Invalid data documentation ${key}`);
+  if (isTable) {
+    assert.ok(Array.isArray(documentation.sources) && documentation.sources.length > 0, 'Missing table evidence');
+    for (const source of documentation.sources) {
+      assert.ok(typeof source.path === 'string' && /^(?:libs|apps)\/[a-zA-Z0-9_./-]+\.(?:ts|cs|mjs)$/.test(source.path) && !source.path.split('/').includes('..') && !source.path.includes('//'), 'Unsafe documentation source');
+      assert.ok(source.symbol === undefined || /^[A-Za-z_][A-Za-z0-9_]*$/.test(source.symbol), 'Invalid source symbol');
+    }
+  } else {
+    assert.notEqual(Object.hasOwn(documentation, 'example'), Object.hasOwn(documentation, 'exampleOmittedReason'), 'Field needs one example or an omission reason');
+    if (Object.hasOwn(documentation, 'exampleOmittedReason')) assert.ok(typeof documentation.exampleOmittedReason === 'string' && documentation.exampleOmittedReason.trim().length >= 15, 'Missing example omission reason');
+    else assert.ok(JSON.stringify(documentation.example).length <= 8192, 'Field example exceeds its public budget');
+  }
+}
+
 function readFile(directory, relative) {
   const absolute = path.join(directory, relative);
   const actual = fs.realpathSync(absolute);
@@ -89,11 +105,13 @@ export function loadBundle(directory = snapshotRoot) {
     for (const table of db.tables) {
       assert.ok(table.schema && table.name && table.context && Array.isArray(table.columns), 'Incomplete table reference');
       assert.ok(!Object.hasOwn(table, 'rows') && !Object.hasOwn(table, 'data'), 'Business rows are not documentation');
+      validateDocumentation(table.documentation, true);
       const names = new Set(table.columns.map(column => column.name));
       assert.equal(names.size, table.columns.length, 'Duplicate physical column');
       for (const column of table.columns) {
         assert.ok(typeof column.name === 'string' && typeof column.type === 'string' && typeof column.nullable === 'boolean', 'Invalid column definition');
         for (const field of ['default', 'comment']) assert.ok(column[field] === null || typeof column[field] === 'string', `Invalid column ${field}`);
+        validateDocumentation(column.documentation, false);
       }
       assert.ok(Array.isArray(table.constraints) && Array.isArray(table.indexes), 'Missing table constraints or indexes');
       for (const constraint of table.constraints) {

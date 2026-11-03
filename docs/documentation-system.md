@@ -10,7 +10,7 @@ POS Docs reúne la explicación del sistema y sus fuentes. Starlight organiza la
 | Aplicaciones, relaciones y recorridos propuestos | Modelos compartidos de `tools/diagrams/` y `tools/architecture/` | SVG, Archify y Reveal.js |
 | Estados de operación | Predicados del producto y proyecciones revisadas en `tools/architecture/lifecycles.mjs` | Vistas de estados con revisión, alcance y enlaces a cada predicado |
 | Contratos HTTP implementados | Contratos y controladores de POS Platform | OpenAPI exportado, referencia de APIs y Apidog |
-| Datos físicos implementados | Migraciones aplicadas del producto | Catálogo del esquema y vistas de datos por contexto |
+| Datos físicos implementados y significado | Migraciones aplicadas y `documentation/data-dictionary.json` del contexto propietario en POS Platform | Diccionario de datos de Starlight y fichas de las vistas Archify |
 | Verificación técnica | Código, pruebas y registros de una revisión del producto | Evidencia enlazada y estado del portal |
 | Trabajo y responsables | GitHub Issues de POS Platform | Enlaces desde recorridos y PR |
 | Avance | `delivery/progress.json` del producto | Snapshot revisado del portal |
@@ -24,6 +24,10 @@ Cada publicación distingue **propuesta**, **implementación de una revisión** 
 Los contratos y datos importados conservan repositorio, commit y hashes del artefacto. La documentación pública se construye desde archivos revisados en POS Docs: el build no consulta una rama mutable del producto ni accede a una base operativa. El esquema publicado describe estructura, no filas de clientes u operaciones. Los ejemplos usan datos sintéticos y los entornos/credenciales permanecen fuera del portal público.
 
 Las referencias a una revisión anterior siguen siendo evidencia de esa revisión. Cuando cambia el contrato, se actualiza su snapshot y se revisan los recorridos afectados; no se reemplaza el SHA por el último commit sin verificar su contenido.
+
+El [diccionario de datos](/guide/api/data-model/) reúne propósito de tablas, significado y uso de campos, tipos SQL, nulabilidad, valores predeterminados, ejemplos sintéticos y relaciones. El producto mantiene las descripciones junto a sus escritores y lectores; tipos, restricciones e índices proceden de PostgreSQL después de aplicar las migraciones. La exportación rechaza campos sin documentar y definiciones que ya no existen. Archify consume el mismo diccionario al seleccionar una tabla, sin mantener una segunda explicación.
+
+Los ejemplos son valores por campo, no filas de prueba completas. Su validación comprueba tipos y precisión; no sustituye las pruebas de relaciones, triggers y reglas de negocio. Tokens y credenciales se omiten con una razón explícita. Las fuentes enlazadas permiten revisar el contrato completo de agregados JSON que no conviene abreviar. No editar `data/product-reference/database/schema.json` a mano: actualizar el catálogo de producto, exportar desde una revisión limpia e importar sus hashes.
 
 ## Cambio coordinado
 

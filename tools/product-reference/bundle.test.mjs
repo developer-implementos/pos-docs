@@ -73,3 +73,21 @@ test('rejects dangling local references even if the snapshot hashes are valid', 
   document.components = {schemas: {Broken: {$ref: '#/components/schemas/Missing'}}};
   assert.throws(() => validateOpenApi(document), /Unresolved OpenAPI reference/u);
 });
+
+test('requires complete semantic documentation and safe evidence paths after hash validation', t => {
+  const {root, write, manifest} = fixture(t);
+  const table = {schema:'sales', name:'sale', context:'sales', documentation:{description:'Venta confirmada de la sucursal.',usage:'Conserva el resultado de una confirmación local.',sources:[{path:'libs/backend/sales/src/infrastructure/confirmed-sale.ts'}]}, columns:[{name:'total',type:'numeric(16,4)',nullable:false,default:null,comment:null,documentation:{description:'Importe final de venta en su moneda.',usage:'Permite conciliar el pago con la venta.',example:'2000'}}],constraints:[],indexes:[]};
+  const publish = () => { manifest.database = write('database/schema.json',{schemaVersion:1,databases:[{id:'branch',app:'branch-api',migrations:[],tables:[table]}]}); write('manifest.json',manifest); };
+  publish();
+  assert.equal(loadBundle(root).database.databases[0].tables[0].columns[0].documentation.example, '2000');
+  delete table.columns[0].documentation;
+  publish();
+  assert.throws(() => loadBundle(root), /Missing semantic/);
+  table.columns[0].documentation = {description:'Importe final de venta en su moneda.',usage:'Permite conciliar el pago con la venta.',example:'2000',exampleOmittedReason:'Esta razón contradice el ejemplo.'};
+  publish();
+  assert.throws(() => loadBundle(root), /one example/);
+  delete table.columns[0].documentation.exampleOmittedReason;
+  table.documentation.sources[0].path='libs/../../private.ts';
+  publish();
+  assert.throws(() => loadBundle(root), /Unsafe documentation source/);
+});

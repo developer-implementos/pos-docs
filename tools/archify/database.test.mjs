@@ -16,6 +16,12 @@ test('all physical tables and columns appear in their canonical context with rea
     const projection = diagrams.find(item => item.id === `data-${database.id}-${table.context}`);
     const entity = projection.diagram.entities.find(entity => entity.id === `${table.schema}__${table.name}`);
     assert.deepEqual(entity.attributes.map(attribute => [attribute.name, attribute.type]), table.columns.map(column => [column.name, column.type]));
+    const detail = projection.details.nodes[entity.id];
+    assert.ok(detail.description.includes(table.documentation.description));
+    assert.ok(detail.description.includes(table.documentation.usage));
+    assert.deepEqual(detail.fieldDocumentation.map(field => [field.name, field.description, field.usage, field.example, field.exampleOmittedReason]), table.columns.map(column => [column.name, column.documentation.description, column.documentation.usage, column.documentation.example, column.documentation.exampleOmittedReason]));
+    assert.ok(detail.fieldDocumentation.every(field => field.href.includes(`/guide/api/data-model/#field-${database.id}-`)));
+    assert.deepEqual(detail.fieldDocumentation.map(field => [field.default, field.comment]), table.columns.map(column => [column.default, column.comment]));
     for (const constraint of table.constraints.filter(key => key.type === 'f')) {
       assert.ok(Object.values(projection.details.edges).some(detail => detail.title === constraint.name && detail.description === constraint.definition), `Missing FK ${constraint.name}`);
     }
