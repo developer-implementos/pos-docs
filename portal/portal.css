@@ -895,3 +895,15 @@ p {
     color:var(--muted)
   }
 }
+
+/* Follow-up is visible before application-level statistics. */
+.follow-up-preview {margin:28px 0;padding:24px 0;border-block:1px solid var(--line)}
+.follow-up-preview-heading {display:flex;align-items:center;justify-content:space-between;gap:20px}
+.follow-up-preview h3 {font-size:20px;line-height:1.4}
+.follow-up-preview-heading p,.follow-up-preview-note {font-size:13px;color:var(--muted);margin:8px 0}
+.follow-up-preview ul {list-style:none;padding:0;margin:20px 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.follow-up-preview li {min-width:0}
+.follow-up-preview li>span {display:block;font-size:12px;color:var(--muted);margin-bottom:8px}
+.follow-up-preview li>a {display:block;font-size:16px;line-height:1.5}
+.follow-up-preview li>p {font-size:14px;line-height:1.6;margin-top:8px}
+@media(max-width:850px) {.follow-up-preview ul {grid-template-columns:1fr;gap:20px}.follow-up-preview-heading {align-items:start;flex-direction:column}}

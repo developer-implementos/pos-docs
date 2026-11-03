@@ -16,7 +16,7 @@
     "build": "npm --prefix apps/starlight run build",
     "check": "npm --prefix apps/starlight run check",
     "preview": "npm --prefix apps/starlight run preview",
-    "verify": "npm run portal:test && npm run presentations:test && npm run architecture:test && npm run validate && npm run typecheck && npm run build && npm run check && npm run architecture:check && npm run presentations:check && npm run roadmap:check && npm run portal:check && npm run viewer:check && npm run reference:test && npm run explore:test && npm run reference:check && npm run explore:check",
+    "verify": "npm run portal:test && npm run presentations:test && npm run architecture:test && npm run validate && npm run typecheck && npm run build && npm run check && npm run architecture:check && npm run presentations:check && npm run roadmap:check && npm run portal:check && npm run viewer:check && npm run reference:test && npm run explore:test && npm run reference:check && npm run explore:check && npm run follow-up:check",
     "sync:catalog": "npm --prefix apps/starlight run sync:catalog",
     "evidence:capture": "node tools/capture-product-evidence.mjs",
     "progress:sync": "node tools/sync-project-progress.mjs",
@@ -28,7 +28,7 @@
     "presentations:test": "node --test presentations/tools/diagrams.test.mjs presentations/tools/navigation.test.mjs presentations/tools/source-text.test.mjs tools/roadmap.test.mjs",
     "presentations:check": "node presentations/tools/check.mjs",
     "roadmap:check": "node tools/check-roadmap.mjs",
-    "portal:test": "node --test portal/catalog.test.mjs portal/previews.test.mjs portal/progress.test.mjs portal/progress-view.test.mjs tools/sync-project-progress.test.mjs && npm --prefix apps/starlight run test:search",
+    "portal:test": "node --test portal/catalog.test.mjs portal/previews.test.mjs portal/progress.test.mjs portal/progress-view.test.mjs tools/sync-project-progress.test.mjs portal/follow-up.test.mjs portal/follow-up-view.test.mjs tools/sync-project-follow-up.test.mjs && npm --prefix apps/starlight run test:search",
     "portal:build": "node portal/build.mjs",
     "portal:check": "node portal/check.mjs",
     "viewer:check": "node portal/viewer.check.mjs",
@@ -38,6 +38,9 @@
     "reference:check": "node tools/product-reference/check.mjs",
     "explore:build": "node tools/archify/build.mjs && node tools/product-reference/explore-index.mjs",
     "explore:test": "node --test tools/archify/*.test.mjs",
-    "explore:check": "node tools/archify/check.mjs"
+    "explore:check": "node tools/archify/check.mjs",
+    "follow-up:sync": "node tools/sync-project-follow-up.mjs",
+    "follow-up:test": "node --test portal/follow-up.test.mjs portal/follow-up-view.test.mjs tools/sync-project-follow-up.test.mjs",
+    "follow-up:check": "node portal/follow-up.check.mjs"
   }
 }

@@ -18,7 +18,7 @@ function downloadItem(item, proposal = false) {
   </li>`;
 }
 
-export function renderPortal(catalog, origin, repository, progress) {
+export function renderPortal(catalog, origin, repository, progress, followUp = null) {
   const decks = catalog.presentations.map(deck => `<article class="presentation">
     <div class="presentation-cover" aria-hidden="true"><span>POS PLATFORM</span><strong>${escape(deck.title)}</strong><span>PROPUESTA · REVEAL.JS</span></div>
     <div class="presentation-content"><p class="eyebrow">Presentación web · Reveal.js</p><h3>${escape(deck.title)}</h3><p>${escape(deck.description)}</p>
@@ -36,10 +36,10 @@ export function renderPortal(catalog, origin, repository, progress) {
 <link rel="icon" href="/portal/assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/portal/portal.css"><script type="module" src="/portal/portal.js"></script></head>
 <body><a class="skip-link" href="#main">Saltar al contenido</a>
 <header class="site-header"><div class="header-inner"><a class="brand" href="/" aria-label="POS Platform, inicio"><img src="/portal/assets/logo.svg" width="148" height="50" alt="Implementos"><span>POS Platform</span></a>
-<nav aria-label="Navegación principal"><a href="/guide/">Documentación</a><a href="#presentations">Propuestas</a><a href="#materials">Fuentes</a><a href="#team">Equipo</a></nav></div></header>
+<nav aria-label="Navegación principal"><a href="/guide/">Documentación</a><a href="/guide/project-status/">Estado y pendientes</a><a href="#presentations">Propuestas</a><a href="#materials">Fuentes</a><a href="#team">Equipo</a></nav></div></header>
 <main id="main" tabindex="-1">
 <div class="intro"><p class="eyebrow">IMPLEMENTOS · POS PLATFORM</p><h1>Documentación y recursos</h1><p class="lead">La arquitectura del producto, las propuestas del equipo y las fuentes de reuniones que explican las necesidades de cada país.</p></div>
-${renderProgress(progress)}
+${renderProgress(progress, followUp)}
 <section class="resource-section" aria-labelledby="documentation-title"><div class="section-heading"><span class="section-number" aria-hidden="true">01</span><div><h2 id="documentation-title">Documentación técnica</h2><p>La referencia para entender y desarrollar la plataforma.</p></div></div>
 <div class="documentation"><div class="documentation-intro"><p class="eyebrow">GUÍA STARLIGHT</p><h3>De la propuesta<br>a la implementación.</h3><p>Arquitectura, límites del monorepo, decisiones y evidencia del sistema actual, organizados por tema.</p><a class="button light" href="/guide/">Explorar documentación</a></div>
 <ul class="guide-paths"><li><a href="/guide/overview/">Visión general</a><p>Alcance corporativo y responsabilidades de cada pieza.</p></li><li><a href="/guide/diagrams/">Arquitectura y recorridos interactivos</a><p>Aplicaciones, conexiones y operaciones con detalle bajo demanda.</p></li><li><a href="/guide/implementation/monorepo/">Estructura e implementación</a><p>Aplicaciones, bibliotecas y estado del código.</p></li><li><a href="/guide/api/pos-platform/">Contratos y datos del POS</a><p>APIs y esquemas derivados de una revisión del producto. <a href="/guide/flows/">Seguir una operación</a>.</p></li><li><a href="/guide/proposal/roadmap/">Roadmap detallado de entrega</a><p>Entregables por aplicación, dependencias y pruebas para aceptar cada fase.</p></li></ul></div></section>

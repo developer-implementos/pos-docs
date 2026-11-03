@@ -9,6 +9,7 @@ import {renderMaterialViewer} from './viewer.mjs';
 import {renderPortal} from './render.mjs';
 import {teamMembers} from './team.mjs';
 import {loadProgress} from './progress.mjs';
+import {loadFollowUp} from './follow-up.mjs';
 import {docsOrigin, repositoryOrigin} from '../apps/starlight/site-config.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
@@ -55,5 +56,5 @@ for (const item of catalog.presentations) {
     assert.ok(fs.existsSync(destination), `Presentation was catalogued but not built: ${href}`);
   }
 }
-fs.writeFileSync(path.join(output, 'index.html'), renderPortal(catalog, docsOrigin, repositoryOrigin, progress));
+fs.writeFileSync(path.join(output, 'index.html'), renderPortal(catalog, docsOrigin, repositoryOrigin, progress, loadFollowUp(root, progress)));
 console.log(`Resource portal: / with ${catalog.presentations.length} presentation(s), ${catalog.materials.length} originals and ${previews.size} PDF previews.`);

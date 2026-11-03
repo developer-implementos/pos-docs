@@ -1,0 +1,14 @@
+---
+import {fileURLToPath} from 'node:url';
+import {loadProgress} from '../../../../portal/progress.mjs';
+import {loadFollowUp} from '../../../../portal/follow-up.mjs';
+import {renderFollowUpView} from '../../../../portal/follow-up-view.mjs';
+import '../../../../portal/follow-up.css';
+const root = fileURLToPath(new URL('../../../../', import.meta.url));
+const progress = loadProgress(root);
+const model = loadFollowUp(root, progress);
+---
+<div set:html={renderFollowUpView(model, progress)} />
+<script>
+  import '../../../../portal/follow-up.js';
+</script>
