@@ -27,6 +27,8 @@ jobs:
       - run: npm run setup
       - run: npm run editorial:check
       - run: npm run editorial:test
+      - run: npm run skills:test
+      - run: npm run skills:check
       - run: npm run portal:test
       - run: npm run presentations:test
       - run: npm run architecture:test

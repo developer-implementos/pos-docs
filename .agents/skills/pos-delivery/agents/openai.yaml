@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Entrega de POS'
+  short_description: 'Issues, PR, documentación y avance verificable'
+  default_prompt: 'Usa $pos-delivery para continuar la tarea indicada y actualizar su evidencia, documentación y PR según las fuentes del equipo.'

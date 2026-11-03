@@ -141,6 +141,7 @@ export const generatedPages = [
   reference('reference/video-publication', 'docs/editorial/video-publication.md', 'Video: producción y publicación', 'Antecedentes del video y su procedimiento de producción.', 'historical'),
   reference('implementation/start-a-task', 'docs/start-a-task.md', 'Empezar una tarea', 'Desde la tarea asignada hasta el entorno, la verificación y la PR, enlazando las instrucciones canónicas del producto.'),
   reference('implementation/repository', 'docs/product-repository.md', 'Repositorio POS Platform', 'Entrada al monorepo: aplicaciones, comandos, documentación y límites de implementación.', 'implementation'),
+  reference('implementation/agent-workflow', 'docs/agent-workflow.md', 'Trabajo con Codex y Claude Code', 'Uso y mantenimiento de la skill compartida para issues, PR, evidencia, bloqueos y traspasos.', 'reference'),
   reference('implementation/progress', 'docs/project-progress.md', 'Metodología del avance', 'Fuentes, verificación técnica, aceptación manual y publicación del corte de gestión de POS Platform.', 'reference'),
   reference('implementation/architecture', 'docs/architecture.md', 'Arquitectura de la implementación', 'Límites y dependencias de la base de código actual, diferenciados de la arquitectura objetivo.', 'implementation'),
   reference('implementation/monorepo', 'docs/monorepo.md', 'Estructura del monorepo', 'Estructura objetivo con shared, límites DDD, proyectos de pruebas y correspondencia con las rutas físicas actuales.', 'implementation'),

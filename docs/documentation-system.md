@@ -51,6 +51,8 @@ Las [comprobaciones editoriales](https://github.com/developer-implementos/pos-do
 
 Las entradas de agentes del producto comparten [AGENTS.md](https://github.com/developer-implementos/pos-platform/blob/main/AGENTS.md) y [CONTRIBUTING.md](https://github.com/developer-implementos/pos-platform/blob/main/CONTRIBUTING.md). El repositorio editorial mantiene sus reglas en [AGENTS.md](https://github.com/developer-implementos/pos-docs/blob/main/AGENTS.md). Mantener referencias compartidas evita copiar procedimientos distintos para cada herramienta.
 
+La guía de [trabajo con Codex y Claude Code](agent-workflow.md) explica cómo usar `pos-delivery` para consultar esas fuentes, preparar una PR, registrar un bloqueo y traspasar la sesión. Su procedimiento se mantiene en POS Platform; POS Docs conserva una copia fijada por revisión y hashes, sin otro backlog ni política de avance.
+
 ## Apidog y presentaciones
 
 Apidog consume el OpenAPI exportado en una sola dirección. Los cambios del contrato se revisan en POS Platform antes de sincronizarlo; los ejemplos, entornos internos y credenciales del equipo no se publican por importar una especificación. La conexión al proyecto de Apidog se realiza después de configurar el destino autorizado. Preparar un importador no acredita haber sincronizado una cuenta.
