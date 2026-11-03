@@ -8,9 +8,7 @@ const tableId = (db: string, schema: string, name: string) => `table-${db}-${sch
 const fieldId = (db: string, schema: string, name: string, column: string) => `field-${db}-${schema}-${name}-${column}`;
 const example = (value: unknown) => typeof value === 'string' ? value : JSON.stringify(value, null, 2);
 ---
-<p>Diccionario de <strong>{tables.length} tablas y {totalFields} campos</strong> extraído de la revisión <a href={`${manifest.source.repository}/commit/${manifest.source.commit}`}>{manifest.source.commit.slice(0, 12)}</a> de POS Platform. La estructura procede de migraciones aplicadas a PostgreSQL de pruebas; las descripciones se mantienen junto al código del contexto propietario.</p>
-<p>Los ejemplos son valores sintéticos por campo, no filas listas para insertar. Se verifica su compatibilidad con el tipo SQL; no prueban relaciones entre filas, reglas de negocio o aceptación fiscal. Las credenciales se omiten. Esta referencia describe implementación, no una base productiva.</p>
-<p><a href="/contracts/database/schema.json" download>Descargar diccionario JSON</a> · <a href="/contracts/manifest.json">Revisión y hashes</a> · <a href="/guide/api/pos-platform/">Contratos HTTP</a></p>
+<p><strong>{tables.length} tablas · {totalFields} campos</strong> · PostgreSQL · Revisión <a href={`${manifest.source.repository}/commit/${manifest.source.commit}`}>{manifest.source.commit.slice(0, 12)}</a></p>
 <div class="dictionary" data-dictionary>
   <form class="dictionary-search" role="search" aria-label="Diccionario de datos">
     <label for="dictionary-query">Buscar tabla, campo o descripción</label>
@@ -18,6 +16,11 @@ const example = (value: unknown) => typeof value === 'string' ? value : JSON.str
     <p class="search-count" role="status" aria-live="polite" data-dictionary-count>{tables.length} tablas · {totalFields} campos</p>
   </form>
   <nav aria-label="Contextos de datos" class="context-links">{contexts.map(context => <a href={`#context-${context}`}>{context}</a>)}</nav>
+  <details class="dictionary-method"><summary>Origen, ejemplos y descargas</summary>
+    <p>La estructura procede de migraciones aplicadas a PostgreSQL de pruebas; las descripciones se mantienen junto al código del contexto propietario en POS Platform. Esta referencia describe implementación, no una base productiva. El <a href="/guide/diagrams/">mapa de arquitectura</a> muestra la autoridad de cada almacén; las fichas del roadmap identifican los datos todavía propuestos.</p>
+    <p>Los ejemplos son valores sintéticos por campo, no filas listas para insertar. Se verifica su compatibilidad con el tipo SQL; no prueban relaciones entre filas, reglas de negocio o aceptación fiscal. Las credenciales se omiten.</p>
+    <p><a href="/contracts/database/schema.json" download>Descargar diccionario JSON</a> · <a href="/contracts/manifest.json">Revisión y hashes</a> · <a href="/guide/api/pos-platform/">Contratos HTTP</a></p>
+  </details>
   <p data-dictionary-empty hidden>No hay tablas ni campos con esa búsqueda.</p>
   {contexts.map(context => <section data-data-context>
     <h2 id={`context-${context}`}>{context}</h2>
@@ -110,6 +113,8 @@ const example = (value: unknown) => typeof value === 'string' ? value : JSON.str
   button { font:inherit; font-weight:600; color:var(--sl-color-text-accent); background:var(--sl-color-bg); border:1px solid var(--sl-color-gray-4); border-radius:.35rem; padding:.5rem .75rem; cursor:pointer; }
   .search-count { font-size:.875rem; color:var(--sl-color-gray-2); margin-top:.4rem; }
   .context-links { display:flex; flex-wrap:wrap; gap:.4rem 1rem; padding-block:.5rem 1rem; }
+  .dictionary-method { margin-block:.5rem 1.5rem; }
+  .dictionary-method summary { padding:.35rem 0; font-size:.9rem; }
   .data-table { margin-block:.75rem; border:1px solid var(--sl-color-gray-5); border-radius:.5rem; scroll-margin-top:6rem; }
   summary { padding:.85rem; cursor:pointer; font-weight:600; overflow-wrap:anywhere; }
   :is(summary,input,button,pre):focus-visible { outline:2px solid var(--sl-color-accent); outline-offset:2px; }
