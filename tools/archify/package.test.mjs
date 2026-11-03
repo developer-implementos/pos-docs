@@ -40,3 +40,12 @@ test('detail payload and metadata cannot escape their text or inert JSON contain
   assert.ok(result.html.includes('&lt;img'));
   assert.ok(result.html.includes('&quot;quoted&quot;'));
 });
+
+test('SQL dollar expressions stay literal when inserting JSON into the HTML document', () => {
+  const sql = "CHECK (identifier ~ '^[a-z]+$'::text); $& $` $$";
+  const details = { nodes: { table: { description: sql, constraints: [sql] } }, edges: {} };
+  const result = packageDiagram(page(''), { ...entry, title: sql }, details);
+  const embedded = result.html.match(/<script type="application\/json" id="pos-docs-details">([\s\S]*?)<\/script>/)[1];
+  assert.deepEqual(JSON.parse(embedded), details);
+  assert.equal((result.html.match(/<\/html>/g) || []).length, 1);
+});

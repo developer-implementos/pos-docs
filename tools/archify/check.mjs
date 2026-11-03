@@ -33,11 +33,18 @@ try {
     await page.evaluate(() => document.fonts.ready);
     assert.deepEqual(await page.evaluate(() => window.posCspErrors), [], `${entry.id}: CSP`);
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${entry.id}: desktop horizontal overflow`);
+    for (const selector of ['[data-pos-details-open]', '.pos-docs-context a:last-of-type']) {
+      assert.ok(await page.locator(selector).evaluate(element => {
+        const rect = element.getBoundingClientRect();
+        return element.contains(document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2));
+      }), `${entry.id}: context control must not be covered by native toolbar`);
+    }
     const first = page.locator('svg [data-node-id]').first();
     await first.focus();
     await first.press('Enter');
     assert.ok(await page.locator('#pos-diagram-details').isVisible(), `${entry.id}: keyboard inspector`);
-    const selectedTitle = await first.getAttribute('data-node-label');
+    const selectedId = await first.getAttribute('data-node-id');
+    const selectedTitle = await page.evaluate(id => JSON.parse(document.querySelector('#pos-docs-details').textContent).nodes[id].title, selectedId);
     assert.equal(await page.locator('#pos-detail-title').textContent(), selectedTitle, `${entry.id}: selected node contract`);
     await page.keyboard.press('Escape');
     assert.ok(await first.evaluate(node => node === document.activeElement), `${entry.id}: restores focus`);
@@ -51,10 +58,18 @@ try {
       assert.equal(await page.locator('#pos-detail-title').textContent(), title);
       await page.keyboard.press('Escape');
     }
+    await page.evaluate(() => scrollTo(0, 0));
     if (['applications', 'local-sale', 'state-printing', 'data-branch-sales', 'data-branch-payments'].includes(entry.id)) await page.screenshot({ path: path.join(output, `${entry.id}-desktop.png`) });
-    for (const width of [375, 320]) {
+    for (const width of [1024, 768, 375, 320]) {
       await page.setViewportSize({ width, height: 900 });
+      await page.evaluate(() => { scrollTo(0, 0); return new Promise(requestAnimationFrame); });
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${entry.id}: ${width}px horizontal overflow`);
+      for (const selector of ['[data-pos-details-open]', '.pos-docs-context a:last-of-type']) {
+        assert.ok(await page.locator(selector).evaluate(element => {
+          const rect = element.getBoundingClientRect();
+          return element.contains(document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2));
+        }), `${entry.id}: ${width}px context control must not be covered`);
+      }
       await page.locator('[data-pos-details-open]').click();
       const bounds = await page.locator('#pos-diagram-details').boundingBox();
       assert.ok(bounds.x >= 0 && bounds.x + bounds.width <= width + 1, `${entry.id}: ${width}px inspector fits`);
@@ -76,7 +91,7 @@ try {
   assert.ok(svg.includes('<svg') && svg.includes('@font-face'), 'SVG export retains embedded licensed fonts');
   assert.deepEqual(failures, [], 'No runtime exceptions');
   assert.deepEqual(requests, [], 'No external runtime requests');
-  fs.writeFileSync(path.join(output, 'result.json'), JSON.stringify({ schemaVersion: 1, diagrams: catalog.length, viewports: [1440, 375, 320], csp: 'pass', keyboard: 'pass', svgExport: 'pass', externalRequests: requests }, null, 2) + '\n');
+  fs.writeFileSync(path.join(output, 'result.json'), JSON.stringify({ schemaVersion: 1, diagrams: catalog.length, viewports: [1440, 1024, 768, 375, 320], csp: 'pass', keyboard: 'pass', svgExport: 'pass', externalRequests: requests }, null, 2) + '\n');
   console.log(`Archify browser: ${catalog.length} views passed CSP, keyboard, responsive checks and SVG export.`);
 } finally {
   await browser?.close();

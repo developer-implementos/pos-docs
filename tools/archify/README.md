@@ -23,7 +23,7 @@ node tools/archify/check.mjs
 
 El build es determinista, no descarga paquetes y no necesita una instalación global de Archify ni acceso al repositorio privado del producto. Ejecuta `deliver` y `check --require-provenance` para validar composición y geometría antes de empaquetar cada HTML. Escribe `dist/explore/<id>/`, `source.json`, los recursos locales y `dist/explore/catalog.json`. El build principal compone el índice `/explore/` a partir de ese catálogo.
 
-El test de navegador usa Playwright y el servidor de previsualización con las cabeceras reales de Vercel. Requiere que el build principal haya creado `dist/.pos-docs-build`. Comprueba CSP, ausencia de peticiones externas y errores de consola/red, selección de elementos/conectores por teclado, restauración del foco, pantallas de 1440/375/320 píxeles y exportación SVG con fuentes incluidas. Capturas e informe quedan en `test-results-archify/`.
+El test de navegador usa Playwright y el servidor de previsualización con las cabeceras reales de Vercel. Requiere que el build principal haya creado `dist/.pos-docs-build`. Comprueba CSP, ausencia de peticiones externas y errores de consola/red, selección de elementos/conectores por teclado, restauración del foco, pantallas de 1440/1024/768/375/320 píxeles, controles sin obstrucciones y exportación SVG con fuentes incluidas. Capturas e informe quedan en `test-results-archify/`.
 
 Para revisar cambios de composición con las cuatro puertas nativas de Archify:
 

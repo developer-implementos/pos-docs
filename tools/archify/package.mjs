@@ -27,8 +27,8 @@ export function packageDiagram(html, entry, details) {
   const navigation = `<nav class="pos-docs-context" aria-label="Documentación del diagrama"><a href="/guide/diagrams/">Diagramas del POS</a><span>${evidenceLabel}</span><a href="${escape(entry.source)}">Fuente y alcance</a><button type="button" data-pos-details-open aria-controls="pos-diagram-details" aria-expanded="false">Detalles</button></nav>`;
   const panel = `<aside id="pos-diagram-details" class="pos-diagram-details" aria-labelledby="pos-detail-title" hidden><div class="pos-detail-heading"><h2 id="pos-detail-title">${escape(entry.title)}</h2><button type="button" data-pos-details-close aria-label="Cerrar detalles">×</button></div><p data-pos-detail-description>${escape(entry.description)}</p><p data-pos-detail-technology></p><p data-pos-detail-status>${evidenceNote}</p><a data-pos-detail-link href="${escape(entry.source)}">Consultar contrato y fuentes</a><ul data-pos-detail-links></ul><div data-pos-detail-schema></div></aside>`;
   const noscript = `<noscript><p class="pos-docs-fallback">El diagrama conserva su lectura estática. <a href="${escape(entry.source)}">Consultar explicación y contratos</a>.</p></noscript>`;
-  html = html.replace('</head>', '<link rel="stylesheet" href="/explore/assets/pos-docs.css"></head>')
-    .replace('<body>', `<body>${navigation}${panel}${noscript}`)
-    .replace('</body>', `<script type="application/json" id="pos-docs-details">${json(details)}</script><script src="/explore/assets/pos-docs.js"></script></body>`);
+  html = html.replace('</head>', () => '<link rel="icon" href="/portal/assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/explore/assets/pos-docs.css"></head>')
+    .replace('<body>', () => `<body>${navigation}${panel}${noscript}`)
+    .replace('</body>', () => `<script type="application/json" id="pos-docs-details">${json(details)}</script><script src="/explore/assets/pos-docs.js"></script></body>`);
   return { html, assets };
 }

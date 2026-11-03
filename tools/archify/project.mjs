@@ -45,7 +45,7 @@ export function projectScenario(scenario) {
   }));
   return {
     schema_version: 2, diagram_type: 'workflow',
-    meta: { title: scenario.title, locale: 'es', output: `${scenario.id}.html`, quality_profile: 'showcase', animation: 'none' },
+    meta: { title: scenario.title, locale: 'es', output: `${scenario.id}.html`, quality_profile: 'showcase', animation: 'none', legend: { entries: { backend: { label: 'Paso del proceso' } } } },
     lanes: [{ id: 'journey', label: 'Recorrido propuesto' }], nodes,
     mainPath: nodes.map(node => node.id),
     edges: nodes.slice(1).map((node, index) => ({ id: `next-${index + 1}`, from: nodes[index].id, to: node.id, role: 'main', variant: 'emphasis' })),
