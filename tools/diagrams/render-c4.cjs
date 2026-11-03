@@ -4,6 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const assert = require('node:assert/strict');
+const { parseSelection } = require('./generation-selection.cjs');
 const root = path.resolve(__dirname, '../..');
 const runtime = path.resolve(process.env.EXCALIDRAW_RUNTIME || path.join(__dirname, 'runtime'));
 const output = path.join(__dirname, 'models/c4-layouts.json');
@@ -20,7 +21,8 @@ function playwright() {
 }
 
 async function main() {
-  if (process.argv.includes('--check')) {
+  const { mode, viewId } = parseSelection(process.argv.slice(2), { layout: true });
+  if (mode === 'check') {
     const layouts = JSON.parse(fs.readFileSync(output, 'utf8'));
     assert.deepEqual(Object.keys(layouts).sort(), Array.from(views, view => view.key).sort());
     for (const view of views) {
@@ -33,7 +35,16 @@ async function main() {
     console.log(`${views.length} reviewed C4 layouts match their Mermaid sources and model node contracts.`);
     return;
   }
-  if (!process.argv.includes('--write')) throw new Error('Use --check (read-only) or --write (replace reviewed geometry).');
+  const selected = views.filter(view => !viewId || view.id === viewId);
+  const layouts = viewId ? JSON.parse(fs.readFileSync(output, 'utf8')) : {};
+  if (viewId) {
+    assert.deepEqual(Object.keys(layouts).sort(), Array.from(views, view => view.key).sort(), 'Selective generation requires the complete layout collection.');
+    for (const view of views.filter(view => view.id !== viewId)) {
+      const source = fs.readFileSync(path.join(root, 'docs/diagramas-excalidraw/mermaid', view.key + '.mmd'), 'utf8');
+      assert.equal(normalize(layouts[view.key].source), normalize(source), `Stale retained layout: regenerate ${view.id}.`);
+      assert.deepEqual([...layouts[view.key].nodes].sort(), Array.from(view.nodeIds).sort(), `Stale retained nodes: regenerate ${view.id}.`);
+    }
+  }
   const bundle = path.join(root, 'tmp/diagrams/layout.js');
   fs.mkdirSync(path.dirname(bundle), {recursive: true});
   await require(path.join(runtime, 'node_modules/esbuild')).build({
@@ -46,15 +57,14 @@ async function main() {
     const page = await browser.newPage({viewport: {width: 1100, height: 1100}});
     await page.setContent('<!doctype html><html lang="es"><head><meta charset="utf-8"></head><body></body></html>');
     await page.addScriptTag({path: bundle});
-    const layouts = {};
-    for (const view of views) {
+    for (const view of selected) {
       const source = fs.readFileSync(path.join(root, 'docs/diagramas-excalidraw/mermaid', view.key + '.mmd'), 'utf8');
       const layout = await page.evaluate(payload => window.renderPosC4(payload), {key: view.key, source});
       assert.deepEqual([...layout.nodes].sort(), Array.from(view.nodeIds).sort(), `C4 node contract changed: ${view.key}`);
       layouts[view.key] = layout;
     }
     fs.writeFileSync(output, JSON.stringify(layouts, null, 2) + '\n');
-    console.log(`Updated ${views.length} C4 layouts. Regenerate and verify Excalidraw scenes and previews before publishing.`);
+    console.log(`Updated ${selected.length} C4 layouts. Regenerate and verify Excalidraw scenes and previews before publishing.`);
   } finally { await browser.close(); }
 }
 main().catch(error => { console.error(error); process.exitCode = 1; });

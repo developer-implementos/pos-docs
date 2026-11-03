@@ -36,10 +36,12 @@ Desde la raíz de **pos-docs**, usando Node compatible con el proyecto:
 node tools/diagrams/render-c4.cjs --check
 node tools/diagrams/check-excalidraw.cjs --static
 node tools/diagrams/generate-architecture-previews.cjs --check
-node --test tools/diagrams/route-layout.test.mjs
+npm run diagrams:test
 ```
 
 Estos comandos leen los modelos y artefactos versionados. No regeneran archivos, abren navegadores, descargan paquetes ni contactan sistemas externos. Comprueban inventario, contratos de nodos y relaciones, referencias nativas, bindings, fronteras, colisiones, contenido del atlas y procedencia de los recortes. Las aplicaciones deben coincidir con el catálogo del monorepo y tener su nombre visible; cada C3 identifica una aplicación y un proceso; sus componentes indican responsabilidades de código. Los participantes dinámicos conservan nombre, tipo y tecnología del catálogo C4. Estas comprobaciones no acreditan la ejecución del POS.
+
+`diagrams:test` forma parte de `npm run verify` y del workflow `docs-quality.yml`. Ejecuta las pruebas de rutas y de selección de vistas: argumentos inválidos, colección incompleta y geometrías conservadas obsoletas deben fallar sin sustituir artefactos. Las pruebas usan copias temporales y no requieren el runtime de Excalidraw ni Playwright. El build de Starlight continúa consumiendo los derivados versionados; no instala ni ejecuta los renderizadores.
 
 El ajuste de rutas utiliza una cuadrícula de visibilidad ortogonal alrededor de los nodos. Conserva las geometrías de nodos, identidades, puntos de conexión y bindings; solo desvía conectores que atraviesan nodos ajenos. Las etiquetas conflictivas se sitúan junto a segmentos de su relación y conservan texto y agrupación. El algoritmo no cambia contratos ni sustituye la revisión visual; las pruebas comprueban determinismo, estabilidad y preservación de contenido.
 
@@ -66,6 +68,35 @@ python tools/diagrams/export-drawio.py
 ```
 
 Si solo cambian notas o contratos del modelo y la geometría permanece válida, no hace falta volver a renderizar Mermaid. `EXCALIDRAW_RUNTIME` permite usar otro directorio instalado con el mismo lockfile. La exportación nativa usa Arial para medir el texto de Helvetica; la verificación completa se realizó originalmente en Windows y necesita esas fuentes. No asumir equivalencia visual entre sistemas operativos sin revisar los resultados.
+
+### Regenerar una sola vista
+
+Cuando el cambio afecta únicamente al backend de sucursal, conservar las otras ocho escenas y sus SVG:
+
+```powershell
+node tools/diagrams/render-c4.cjs --write --view backend
+node tools/diagrams/generate-excalidraw.cjs --view backend
+node tools/diagrams/render-c4.cjs --check
+node tools/diagrams/check-excalidraw.cjs
+node tools/diagrams/generate-architecture-previews.cjs --verify
+python tools/diagrams/package-excalidraw.py
+python tools/diagrams/export-drawio.py
+```
+
+`--view` acepta un ID de `collection.json`. El renderizador Mermaid admite las vistas estructurales; las dinámicas se regeneran directamente con `generate-excalidraw.cjs`. Sin `--view`, ambos generadores conservan su comportamiento de regeneración completa. `--check` verifica siempre la colección completa y no se combina con `--view`.
+
+La generación selectiva reemplaza sólo el layout y los archivos individuales de la vista elegida. Antes de generar, carga las escenas conservadas; una colección incompleta o una vista inválida produce un error. El atlas se recompone con las nueve escenas, usando sus dimensiones reales mediante la API oficial de Excalidraw. Los previews, draw.io y ZIP se derivan de esa colección completa. Si cambia un componente compartido o el diseño del renderizador, regenerar todas las vistas afectadas o la colección completa; seleccionar una vista no detecta automáticamente el alcance del cambio.
+
+### Prueba de integración con los renderizadores
+
+Después de instalar el runtime y Chromium indicados arriba, ejecutar:
+
+```powershell
+$env:PLAYWRIGHT_MODULE_PATH = (Resolve-Path apps/starlight/node_modules/playwright).Path
+npm run diagrams:test:integration
+```
+
+Esta prueba ejecuta Mermaid y Excalidraw reales en una copia temporal. Comprueba que el backend se reemplaza, las otras ocho escenas y sus SVG permanecen idénticos byte por byte, los seis layouts ajenos se conservan y el atlas contiene los elementos, textos y bindings de las nueve vistas. No se ejecuta dentro del build de Starlight ni del control estático de CI. Si falta el runtime, el navegador o una dependencia, falla explícitamente; no omite la prueba. Ejecutarla al modificar los generadores, junto con la comprobación completa y la revisión visual de los derivados.
 
 La comprobación completa reimporta cada escena y el atlas en el editor oficial y arrastra un nodo para comprobar sus conectores. El ZIP es una distribución derivada: regenerarlo cuando cambien los documentos incluidos. Incluye las fuentes Mermaid estructurales junto a escenas, SVG y documentos de referencia. La galería HTML y su README se mantienen aparte y no se sobrescriben al generar escenas.
 

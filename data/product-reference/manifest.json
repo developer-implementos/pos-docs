@@ -3,7 +3,7 @@
     {
       "file": "openapi/branch-api.json",
       "id": "branch-api",
-      "sha256": "0039f45611820cb193020b55cdf3bd8125ee43f7d1b3f03a231de0b44afd92c1"
+      "sha256": "7533e4140daaeb0bcf41624a06587425c4b7de0e332cfc57511af4b9e26064c4"
     },
     {
       "file": "openapi/country-api.json",
@@ -13,11 +13,11 @@
   ],
   "database": {
     "file": "database/schema.json",
-    "sha256": "0cb46d3579a95e8264a856725dd22e31e02d00e0febe987bb3368311ca518de4"
+    "sha256": "1e2fc69366d2284a891f6b98adff401bba861d6544631f63c53c0f964a47a701"
   },
   "schemaVersion": 1,
   "source": {
-    "commit": "bbb879ea3682e0bd36c649833d817270acf8545c",
+    "commit": "6e679f692aab1fa5681688f1ffae651a215c2d81",
     "repository": "https://github.com/developer-implementos/pos-platform"
   }
 }

@@ -41,7 +41,7 @@ libs/
     devices/                    # Contratos y coordinación de periféricos
     sync/                       # Protocolo y progreso de sincronización
     erp/                        # Contratos, ACL y adaptadores ERP
-    reporting/                  # Consultas y proyecciones de reportes
+    reporting/                  # Consultas, proyecciones y seguimiento operativo
     administration/             # Configuración y ámbito organizacional
   client-shell/                 # Composición Angular compartida; no es una aplicación desplegable
   features/                     # Funcionalidades de la interfaz
@@ -78,6 +78,8 @@ tools/                          # Herramientas de build, lint y pruebas del prod
 ## Estado de implementación
 
 El corte F02 contiene siete aplicaciones, con `apps/device-agent` implementado en C#/.NET 10 y SQLite. `branch-api` compone identidad, configuración y contextos transaccionales; añade persistencia y contratos de pagos, fiscalidad y dispositivos en el corte parcial integrado. El host y su protocolo están probados entre procesos, con driver runtime no disponible y sin proveedores fiscales o de pago operativos. La [guía F02](phase-2-payments-documents.md) distingue esas garantías de la homologación pendiente.
+
+El historial por operación y los expedientes con responsables se componen en `branch-api`, con contratos y casos de uso en `libs/backend/reporting` y controles de identidad en `administration`; los clientes comparten su interfaz conectada. No añaden una aplicación, no conceden autoridad financiera a `reporting` y no completan por sí solos F02-04. La [guía F02](phase-2-payments-documents.md#historial-de-evidencia-por-operación) identifica su revisión, estado de integración y límites.
 
 El perfil `operational` conserva usuarios, roles, asignaciones y provisión Chile; el laboratorio prueba catálogo, cestas, cotización y efectivo con datos sintéticos. `country-api` comprueba su PostgreSQL y ámbito sin recibir ventas. Los workers no sincronizan ni registran operaciones ERP; la CLI separada de `erp-worker` consulta referencias Mountain por HTTPS. El [recorrido F01](phase-1-laboratory.md) detalla esos límites.
 
@@ -196,7 +198,7 @@ Esta tabla fija la responsabilidad de los contextos, incluidos los pendientes de
 | `devices`        | Configuración y estado de comandos de periféricos a través de puertos                          | SDK, drivers y capacidades nativas quedan en adaptadores; entregar al spooler no prueba impresión física   |
 | `sync`           | Inbox/outbox, cursor, intento, entrega, programación y acuses                                  | Los productores insertan outbox en la transacción de negocio; el worker no escribe tablas ajenas           |
 | `erp`            | Traducciones, referencias externas, entrega y resultado del ERP                                | DTO y estados externos quedan detrás de ACL/adaptadores; un acuse de transporte no equivale a registro ERP |
-| `reporting`      | Proyecciones y consultas para indicadores, reportes y exportaciones                            | No modifica operaciones de origen; distingue información incompleta o pendiente                            |
+| `reporting`      | Proyecciones de consulta y seguimiento de expedientes operativos                               | Las proyecciones se reconstruyen; los expedientes conservan decisiones auditadas. Ninguno modifica los estados financieros de origen. |
 | `administration` | Ámbito empresa/país/sucursal/caja, identidad propia POS, roles, políticas y asignaciones       | Autoriza en servidor; un rol o capacidad del cliente no concede acceso                                      |
 
 PostgreSQL de sucursal conserva identidades, configuración y operación de su perfil; una instalación operativa no incorpora semillas comerciales de laboratorio. La base de país tiene ámbito y esquema independientes y sus recepciones comerciales están pendientes. Los clientes no acceden a SQL. La migración usa otro rol y el runtime recibe grants explícitos; el [ADR-19](decisions/postgresql-unit-of-work.md) concreta esa frontera.
@@ -219,7 +221,7 @@ flowchart LR
     ERP -->|"CLI HTTPS acotada · acceso por verificar"| Mountain["Referencias Mountain"]
 ```
 
-Las líneas continuas muestran capacidades implementadas en revisión, limitadas por perfil; las discontinuas, integraciones pendientes. La CLI Mountain tiene pruebas HTTPS locales, no validación del servicio corporativo ni conexión al espejo. La continuidad ante caída de WAN depende de la LAN y del servidor de sucursal. La autonomía ante caída de ambos sería otro perfil con decisiones y pruebas propias.
+Las líneas continuas muestran capacidades implementadas, limitadas por perfil; las discontinuas, integraciones pendientes. La CLI Mountain tiene pruebas HTTPS locales, no validación del servicio corporativo ni conexión al espejo. La continuidad ante caída de WAN depende de la LAN y del servidor de sucursal. La autonomía ante caída de ambos sería otro perfil con decisiones y pruebas propias.
 
 ## Capas y reutilización interna
 
@@ -289,6 +291,8 @@ En esta revisión también se contrastó el checkout `desarrollo` del sincroniza
 | Laboratorio integrado | Angular conectado, identidad y permisos de servidor sintéticos, configuración, caja, catálogo, clientes, cestas, precios y efectivo en PostgreSQL; evidencia técnica por entregable |
 | Incremento operativo integrado | Usuarios y roles propios POS Chile, asignaciones, provisión persistente, HTTPS y clientes con origen aprobado; CLI de referencias legacy separada del espejo y la UI |
 | Base técnica | HTTP, Pino/Sentry opcional, migraciones, roles separados, unidad de trabajo, artefactos y comprobaciones de ámbito/esquema |
+| Historial integrado | TASK-110: evidencia por operación y estados independientes, integrado mediante la [PR #117](https://github.com/developer-implementos/pos-platform/pull/117) en `3669873`; no completa por sí solo F02-04 |
+| Expedientes integrados | TASK-114: expedientes durables en `reporting`, permisos explícitos y coordinación sin efectos financieros; [PR #118](https://github.com/developer-implementos/pos-platform/pull/118), revisión `6e679f6`. La [guía F02](phase-2-payments-documents.md) identifica la evidencia técnica y los límites de este incremento |
 | Pendiente | Contratos comerciales de fuentes reales, enrolamiento de identidades de servicio, capacidades de país, entrega de outbox, jobs, ERP, proveedores, hardware y homologación operativa |
 
 Los [criterios técnicos de la base](implementation-plan.md#organización-y-criterios-de-aceptación) definen las comprobaciones para la estructura y sus dependencias.
