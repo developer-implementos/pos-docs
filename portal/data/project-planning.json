@@ -280,7 +280,7 @@
     ]
   },
   "issues": {
-    "observedAt": "2026-11-03T17:49:34.589Z",
+    "observedAt": "2026-11-03T17:54:32.789Z",
     "repository": "https://github.com/developer-implementos/pos-platform",
     "entries": [
       {
@@ -324,13 +324,11 @@
         "number": 114,
         "url": "https://github.com/developer-implementos/pos-platform/issues/114",
         "state": "CLOSED",
-        "executionLabels": [
-          "status:review"
-        ],
+        "executionLabels": [],
         "assignees": [
           "floxcristian"
         ],
-        "updatedAt": "2026-11-03T17:46:32Z",
+        "updatedAt": "2026-11-03T17:54:10Z",
         "stateReason": "completed"
       },
       {
