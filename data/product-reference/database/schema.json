@@ -6144,7 +6144,7 @@
                 "path": "libs/backend/devices/src/infrastructure/enroll-device-host.ts"
               }
             ],
-            "usage": "Autentica device-service y vincula sus trabajos a una sucursal, caja e instalación del controlador. No representa una sesión de cajero ni una instalación cliente móvil."
+            "usage": "Autentica apps/device-agent y vincula sus trabajos a una sucursal, caja e instalación del controlador. No representa una sesión de cajero ni una instalación cliente móvil."
           },
           "indexes": [
             {
@@ -6599,7 +6599,7 @@
           ],
           "context": "devices",
           "documentation": {
-            "description": "Trabajo durable de impresión admitido por branch-api para device-service.",
+            "description": "Trabajo durable de impresión admitido por branch-api para apps/device-agent.",
             "sources": [
               {
                 "path": "libs/backend/devices/src/infrastructure/device-migration.ts"
@@ -7067,7 +7067,7 @@
           ],
           "context": "devices",
           "documentation": {
-            "description": "Evidencia técnica inmutable recibida desde device-service.",
+            "description": "Evidencia técnica inmutable recibida desde apps/device-agent.",
             "sources": [
               {
                 "path": "libs/backend/devices/src/infrastructure/device-migration.ts"
