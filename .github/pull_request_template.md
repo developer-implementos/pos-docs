@@ -2,6 +2,19 @@ Issue: https://github.com/developer-implementos/pos-platform/issues/
 
 Documentation-Impact:
 
+<!-- Si el impacto es none, declarar Impact-Reason: motivo concreto en una línea. -->
+
+Sources:
+
+Reader-Journeys:
+
+Review-Evidence:
+
+<!-- Sources: archivos canónicos de este repositorio, separados por coma. -->
+<!-- Reader-Journeys: rutas públicas, por ejemplo /guide/flows/sale/. -->
+<!-- Review-Evidence: evidencia identificada de revisión técnica o pendiente concreto. -->
+<!-- Declarar revisión técnica no acredita aprobación humana ni comprensión del equipo. -->
+
 ## Resultado
 
 <!-- Pregunta que resuelve, recorrido afectado y resultado observable. -->

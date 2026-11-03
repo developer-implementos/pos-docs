@@ -7,9 +7,11 @@ import { loadCatalog } from '../../../portal/catalog.mjs';
 import { loadRoadmap, renderRoadmapDocs, renderRoadmapPhase } from '../../../tools/roadmap.mjs';
 import { exploreCatalog } from '../../../tools/archify/catalog.mjs';
 import { generatedPageFile } from './content-files.mjs';
+import {loadEditorialReviews, editorialReviewStatus, renderEditorialReview} from './editorial-reviews.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const output = path.join(root, 'apps/starlight/src/content/docs');
+const editorialReviews = loadEditorialReviews(root, new Set(generatedPages.map(page => page.source)));
 const sourceCache = new Map();
 const warnings = new Set();
 const routeBySource = new Map();
@@ -207,8 +209,9 @@ const escapeHtml = value => value.replaceAll('&', '&amp;').replaceAll('<', '&lt;
 function pageContext(page) {
   const kind = documentKinds[page.kind];
   if (!kind) throw new Error(`Unknown document kind: ${page.route}: ${page.kind}`);
-  const evidence = page.kind === 'implementation'
-    ? `<p>Referencia del código: <a href="${productEvidence.repository}/tree/${productEvidence.revision}">POS Platform ${productEvidence.revision.slice(0, 12)}</a>, revisada el ${productEvidence.reviewedOn}. Las fuentes editoriales se mantienen por separado en POS Docs.</p>`
+  const hasReview = editorialReviews.reviews.some(review => review.source === page.source);
+  const evidence = page.kind === 'implementation' || hasReview
+    ? `<p>Referencia del código: <a href="${productEvidence.repository}/tree/${productEvidence.revision}">POS Platform ${productEvidence.revision.slice(0, 12)}</a>. Captura automática: <time datetime="${productEvidence.capturedAt}">${productEvidence.capturedAt.slice(0, 10)}</time>. Las fuentes editoriales se mantienen por separado en POS Docs.</p>${renderEditorialReview(editorialReviewStatus(editorialReviews, page.source, fs.readFileSync(path.join(root, page.source), 'utf8'), productEvidence.revision))}`
     : '';
   return `<aside class="doc-context" aria-label="Alcance de esta página" data-document-kind="${page.kind}">\n<p class="doc-context-label">${escapeHtml(kind.label)}</p>\n<p>${escapeHtml(page.description)}</p>\n<details data-pagefind-ignore><summary>Estado y alcance</summary><p>${escapeHtml(kind.detail)} <a href="${siteBase}${kind.link}/">Consultar referencia</a>.</p>${evidence}</details>\n</aside>\n\n`;
 }

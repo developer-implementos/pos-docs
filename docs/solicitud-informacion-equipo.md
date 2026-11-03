@@ -1,6 +1,10 @@
-# Información para cerrar la arquitectura enterprise del POS
+# Cuestionario de levantamiento
 
-Preparado el 1 de octubre de 2026 para responsables de negocio, tecnología y operación de Chile, Perú y España. Complementa la [propuesta de arquitectura](propuesta-arquitectura.md), el [análisis de repositorios](analisis-repositorios/README.md) y las [validaciones](validacion-y-decisiones.md).
+Preparado el 1 de octubre de 2026 para responsables de negocio, tecnología y operación de Chile, Perú y España. Conserva las preguntas, hipótesis y solicitudes de evidencia de ese levantamiento, con sus ampliaciones identificadas. Complementa la [propuesta de arquitectura](propuesta-arquitectura.md), el [análisis de repositorios](analisis-repositorios/README.md) y las [validaciones](validacion-y-decisiones.md).
+
+**Para consultar qué falta resolver hoy, abre [Bloqueos y decisiones](/project/attention/).** Ese panel muestra el corte publicado del seguimiento, responsables, siguiente acción y condición de cierre. Las decisiones de diseño se consultan en el [registro de decisiones](/guide/proposal/decisions/). La presencia de una pregunta en este cuestionario no significa que continúe abierta.
+
+Al reutilizar una pregunta, consulta primero su seguimiento e issue relacionados. Registra allí la respuesta y su evidencia; esta página conserva el instrumento de levantamiento, sin mantener otra lista de estados.
 
 ## 1. Estado real del trabajo
 

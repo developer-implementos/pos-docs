@@ -1,3 +1,5 @@
+const deviceExecution = require('./device-execution.cjs');
+
 module.exports = [
   {
     "id": "prices",
@@ -393,18 +395,7 @@ module.exports = [
         "label": "Entrega trabajo autorizado e identidad estable · HTTPS",
         "note": "Respuesta a la solicitud del agente. Mantiene jobId, hash, destino y autorización; un lease vencido no acredita que el efecto físico no se ejecutó."
       },
-      {
-        "from": "device",
-        "to": "deviceJournal",
-        "label": "Persiste recepción y deduplicación · SQLite",
-        "note": "Antes de ejecutar registra jobId, hash e intento. Mismo jobId y mismo hash recuperan estado; mismo jobId con distinto hash es conflicto. El journal no es una base de ventas."
-      },
-      {
-        "from": "device",
-        "to": "peripherals",
-        "label": "Ejecuta impresión autorizada · driver/SDK homologado",
-        "note": "Un único agente autorizado opera el equipo físico. Las capacidades y drivers requieren homologación; este flujo de impresión no habilita un terminal de pago."
-      },
+      ...deviceExecution.steps.map(({ id, ...step }) => ({ ...step, deviceStep: id })),
       {
         "from": "peripherals",
         "to": "device",
@@ -564,3 +555,5 @@ module.exports = [
     ]
   }
 ];
+
+deviceExecution.assertExecutionOrder(module.exports.find(view => view.id === 'sale').steps.map(step => step.deviceStep), 'sale');

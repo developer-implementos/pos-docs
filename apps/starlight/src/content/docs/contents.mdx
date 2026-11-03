@@ -1,25 +1,32 @@
 ---
 title: Mapa de contenidos
-description: Acceso por tema a la propuesta POS Platform, la arquitectura, los flujos, la validación y la evidencia del legacy.
+description: Acceso por necesidad a la arquitectura, el desarrollo, las APIs y datos, las operaciones, el avance y las fuentes del POS.
 editUrl: false
 ---
 
 import ReadingPath from '../../components/ReadingPath.astro';
 import { generatedPages, siteBase } from '../../../content-map.mjs';
 
-La navegación separa **el diseño objetivo**, **la implementación del monorepo**, **las condiciones para validarlo** y **la evidencia del sistema actual**. Cada decisión tiene una página de referencia; los ejemplos y diagramas enlazan ese detalle.
+Elige una entrada según lo que necesitas resolver. Las páginas distinguen el diseño objetivo, la implementación y la evidencia mediante su alcance y sus fuentes.
 
-Para modificar o revisar una operación, empieza por los [recorridos de operación](/guide/flows/). Desde allí puedes seguir su diseño, los [contratos HTTP](/guide/api/pos-platform/), el [modelo de datos implementado](/guide/api/data-model/) y la evidencia del producto. El [mapa principal](/guide/diagrams/#mapa-general-de-arquitectura) sitúa sus aplicaciones.
+| Necesidad | Entrada |
+| --- | --- |
+| Entender el sistema | [Visión general](/guide/overview/) y [mapa de aplicaciones](/guide/diagrams/#mapa-general-de-arquitectura). |
+| Empezar una tarea | [Guía de trabajo](/guide/implementation/start-a-task/), con instrucciones del producto, entorno y verificaciones. |
+| Consultar APIs y datos | [Contratos HTTP](/guide/api/pos-platform/) y [diccionario de datos con ERD](/guide/api/data-model/). |
+| Seguir una operación | [Recorridos](/guide/flows/) enlazados a diseño, contratos, código y fallos. |
+| Consultar avance y bloqueos | [Panel del proyecto](/project/) y [próximo incremento](/project/plan/). |
+| Consultar fuentes y migración | [Reuniones por país](/guide/evidence/country-comparison/) y [recorrido de migración](/guide/flows/migration/). |
 
 ## Recorrido principal
 
-Esta secuencia conecta el objetivo del producto con las aplicaciones, los flujos y la validación. El detalle del legacy y las extensiones opcionales se consultan por tema, sin interrumpir ese recorrido.
+Para estudiar la propuesta de principio a fin, esta secuencia conecta el objetivo del producto con aplicaciones, flujos y validación. Las tablas siguientes son referencias por tema; para desarrollar una tarea concreta utiliza su recorrido de operación.
 
 <ReadingPath />
 
 ## Roadmap de entrega
 
-La [visión general](/guide/proposal/roadmap/) muestra el punto de partida, la secuencia de entrega y las dependencias. Cada plan desarrolla los entregables por aplicación, las tareas, las pruebas y la evidencia que permiten aceptar la fase:
+La [visión general](/guide/proposal/roadmap/) muestra el punto de partida, la secuencia de entrega y las dependencias. Cada plan desarrolla entregables, pruebas y condiciones de verificación. El [panel del proyecto](/project/) conserva el estado técnico y la aceptación humana por separado:
 
 <ol>
   {generatedPages.filter(page => page.roadmapPhase).map(page => (
@@ -34,7 +41,7 @@ La [visión general](/guide/proposal/roadmap/) muestra el punto de partida, la s
 | Plataforma corporativa | [Producto, alcance y países](/guide/proposal/product/) | [Evolución desde Chile](/guide/proposal/evolution/) |
 | Aplicaciones y datos | [Responsabilidades de los contenedores](/guide/proposal/architecture/) | [Mapa general y vistas C4](/guide/diagrams/#mapa-general-de-arquitectura) · [Contratos del modelo](/guide/architecture/c4-model/) |
 | Backend y persistencia | [Tecnología y despliegue](/guide/proposal/technology/) | [Evaluación de NestJS, PostgreSQL y Tauri](/guide/architecture/technologies/) |
-| Organización del código | [Monorepo y límites de módulos](/guide/architecture/monorepo/) | [Aplicaciones y relaciones](/architecture/?view=base) |
+| Organización del código | [Estructura del monorepo](/guide/implementation/monorepo/) | [Diseño de módulos](/guide/architecture/monorepo/) · [Aplicaciones y relaciones](/architecture/?view=base) |
 | Organización compartida | [Shared y límites DDD](/guide/implementation/monorepo/#límites-ddd-de-shared) | [POS independiente y referencias](/guide/proposal/corporate-reuse/) |
 | Decisiones | [Registro de decisiones](/guide/proposal/decisions/) | [Revisión y alternativas corporativas](/guide/reference/corporate-review/) |
 
@@ -52,14 +59,14 @@ La [visión general](/guide/proposal/roadmap/) muestra el punto de partida, la s
 
 ## Implementación y desarrollo
 
-Estas páginas se generan desde los documentos del producto. Explican el código y los controles que existen en el monorepo, incluyendo sus capacidades pendientes; no sustituyen la arquitectura objetivo.
+Estas guías editoriales relacionan el código y sus controles con una revisión del producto. Los contratos y esquemas exportados conservan su propia procedencia. La [guía para empezar una tarea](/guide/implementation/start-a-task/) indica el orden de consulta según el trabajo.
 
 | Tema | Guía de implementación |
 | --- | --- |
 | Pruebas y soporte compartido | [Cobertura, E2E y testing](/guide/implementation/testing/) |
 | Aplicaciones y dependencias | [Entrada al repositorio](/guide/implementation/repository/) · [Arquitectura del código](/guide/implementation/architecture/) · [Monorepo](/guide/implementation/monorepo/) |
 | Backend | [API NestJS](/guide/implementation/api/) · [API simulada de desarrollo](/guide/implementation/mock-api/) |
-| Incrementos verificados y en revisión | [F01: operación conectada](/guide/implementation/phase-1/) · [F02: cobros, documentos y dispositivos](/guide/implementation/phase-2/) |
+| Incrementos y evidencia | [F01: operación conectada](/guide/implementation/phase-1/) · [F02: cobros, documentos y dispositivos](/guide/implementation/phase-2/) |
 | Cliente | [Escritorio](/guide/implementation/desktop/) · [Iconografía](/guide/implementation/iconography/) |
 | Controles técnicos | [Seguridad](/guide/implementation/security/) · [Revisión de calidad](/guide/implementation/quality-review/) |
 | Base técnica y estado | [Publicación](/guide/implementation/deployment/) · [Base técnica y recorridos de demostración](/guide/implementation/plan/) · [Revisión funcional de Chile](/guide/implementation/product-review/) |
@@ -74,9 +81,11 @@ Los [documentos originales de reuniones](/materials/) se consultan por separado 
 | Fronteras ERP | [Contratos, fachada y ACL](/guide/proposal/contracts/) | [Coexistencia y cambio de ERP](/guide/proposal/erp-migration/) |
 | Documentos fiscales | [Fiscalidad por país](/guide/proposal/fiscal-compliance/) | [Proveedores y capacidades](/guide/architecture/providers/) |
 | Inteligencia artificial | [Servicios propuestos](/guide/proposal/ai/) | [Diseño y controles de IA](/guide/architecture/ai/) |
-| Evolución opcional | [RFID y autoservicio](/guide/architecture/rfid/) | [Información y decisiones pendientes](/guide/operations/open-items/) |
+| Evolución opcional | [RFID y autoservicio](/guide/architecture/rfid/) | [Cuestionario de levantamiento](/guide/operations/open-items/) |
 
 ## Sistema actual y evidencia
+
+Los [bloqueos y decisiones del proyecto](/project/attention/) son el seguimiento vigente. Los documentos de esta sección conservan el contexto y los límites de las fuentes inspeccionadas.
 
 - [Alcance, método y snapshots de la revisión](/guide/evidence/audit/).
 - [Mapa de repositorios](/guide/evidence/repositories/), [vistas y recorridos](/guide/evidence/current-state/), [lecturas y escrituras por tabla](/guide/evidence/data-flows/).
@@ -89,4 +98,6 @@ Los [documentos originales de reuniones](/materials/) se consultan por separado 
 
 ## Referencias y mantenimiento
 
-[Presentación y publicación](/guide/reference/presentation/) · [Visor de interacciones](/guide/reference/explorer/) · [Edición de diagramas](/guide/reference/editable-diagrams/) · [Cobertura de fuentes](/guide/reference/coverage/) · [Notas editoriales](/guide/reference/editorial-notes/) · [Referencia de Integration Platform](/guide/reference/integration-presentations/) · [Repositorio y antecedentes](/guide/reference/repository/) · [Mantenimiento de esta guía](/guide/reference/maintenance/).
+El [procedimiento de fuentes y mantenimiento](/guide/reference/documentation-system/) define dónde se realiza cada cambio. Consulta [publicación de la presentación](/guide/reference/presentation/), [edición de diagramas](/guide/reference/editable-diagrams/) y [mantenimiento de Starlight](/guide/reference/maintenance/) según el artefacto.
+
+Los antecedentes se conservan como referencia: [explorador](/guide/reference/explorer/), [cobertura](/guide/reference/coverage/), [notas editoriales](/guide/reference/editorial-notes/), [Integration Platform](/guide/reference/integration-presentations/) y [repositorios](/guide/reference/repository/).

@@ -20,6 +20,19 @@ Invitar al menos a dos integrantes que no hayan redactado la propuesta y a un re
 
 La revisión amplia usa [recorridos de operación](/guide/flows/) y [mapa de aplicaciones](/guide/diagrams/). El contrato de [publicación de maestros](/guide/architecture/master-data-publication/) y el de [identidad](/guide/architecture/identity/) se consultan para las tareas correspondientes. El facilitador no adelanta las respuestas; anota el camino seguido, la página usada y cualquier contradicción o término que impida continuar.
 
+### Primera sesión preparada
+
+La siguiente sesión puede realizarse en veinte minutos con dos integrantes, por separado, usando la misma revisión publicada. Su coordinación y participantes siguen **por confirmar**. Preparar una issue vigente, un caso de venta con respuesta incierta y un campo del diccionario; conservar sus enlaces en el registro de la sesión. El facilitador verifica antes las respuestas con las fuentes y no las muestra al participante.
+
+| Tarea | Punto de partida | Resultado que debe poder explicar |
+| --- | --- | --- |
+| Localizar el próximo trabajo | [Empezar una tarea](/guide/implementation/start-a-task/) | Encuentra la issue, su alcance y dependencias, instrucciones del repositorio y la comprobación aplicable; no interpreta la posición en el roadmap como preparación acreditada |
+| Seguir una venta con resultado incierto | [Venta](/guide/flows/sale/) y [recuperación](/guide/flows/recovery/) | Distingue operación persistida, efecto externo y consulta/conciliación; encuentra una prueba o identifica que esa capacidad sigue propuesta |
+| Encontrar un dato y su origen | [Diccionario de datos](/guide/api/data-model/) | Localiza tabla, campo, tipo, significado y revisión del producto; llega al ERD y no confunde un ejemplo sintético con una fila real |
+| Separar recepción de impresión | [Impresión](/guide/flows/printing/) | Identifica recepción durable, permiso de ejecución de un uso, efecto físico y resultado incierto; no vuelve a imprimir sólo porque faltó un acuse |
+
+Registrar el tiempo empleado como señal de fricción, no como examen o umbral de aprobación automático. Una tarea no resuelta conserva su enlace, confusión y seguimiento en la issue existente. No reemplazar una sesión pendiente por una respuesta producida por un agente.
+
 ## Tareas y criterio observable
 
 | ID | Tarea de lectura | Evidencia de comprensión |

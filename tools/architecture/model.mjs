@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import vm from 'node:vm';
+import deviceExecution from '../diagrams/models/device-execution.cjs';
 
 // Editorial build input, not browser code. Reuse the canonical C4 responsibility
 // records without changing them or treating a scaffold as a deployed capability.
@@ -59,6 +60,7 @@ const protocolLabels = {
   'payment-api': 'API por homologar',
   'fiscal-api': 'Contrato por validar',
   'device-command': 'HTTPS · LAN saliente',
+  'device-execution-permit': deviceExecution.permission.protocolLabel,
   'device-jobs-local': 'PostgreSQL',
   'agent-journal': 'SQLite · local',
   'hardware-command': 'Driver / SDK',
@@ -88,6 +90,7 @@ function node(id, group, reference, options) {
     kind: options.kind, status: options.status ?? 'proposed',
     ...(options.owner ? { owner: options.owner } : {}),
     ...(reference ? { c4Ref: reference } : {}),
+    ...(base?.appId ? { appId: base.appId, projectPath: base.projectPath } : {}),
     technology: options.technology ?? base?.technology,
     summary: options.summary ?? base?.summary,
     description: options.description ?? base?.detail,
@@ -130,7 +133,7 @@ export const architecture = {
       failure: ['Perder LAN detiene la admisión de nuevos trabajos; conserva intentos y evidencia pendientes.', 'Un reinicio o lease vencido no demuestra que un efecto físico no ocurrió ni autoriza repetirlo.'], sources: ['devices', 'roadmap', 'providers', 'resilience', 'identity', 'monorepo'],
     }),
     node('device-journal', 'clients', 'deviceJournal', {
-      title: 'SQLite · diario del agente', kind: 'data', technology: 'Archivo local · propiedad de device-agent', summary: 'Recepción y evidencia técnica durables.',
+      title: 'SQLite · registro de trabajos', kind: 'data', technology: 'SQLite · archivo local', summary: 'Recepción y evidencia técnica durables.',
       description: 'Persistencia SQLite integrada en el corte parcial F02: registra recepción antes del acuse, intentos y observaciones antes de reportarlos, con WAL y sincronización FULL. No mantiene el registro comercial ni permite operar comercialmente sin branch-api. Hardware y SQLite no comparten una transacción; el registro conserva efectos inciertos. El permiso de ejecución se consume en PostgreSQL, por lo que restaurar SQLite no habilita otro efecto. La purga operativa conserva su implementación pendiente.',
       responsibilities: ['Deduplicar jobId/commandId y hash; rechazar la misma identidad con otro contenido.', 'Conservar observaciones hasta el acuse durable de sucursal y aplicar retención que cubra reentregas y recuperación.'],
       data: ['Identidad, binding, versión de plantilla, intento y estado de entrega.', 'Referencia del spooler/dispositivo, evidencia y acuses; payload mínimo necesario protegido según política.'],
@@ -174,7 +177,7 @@ export const architecture = {
       failure: ['El relay enlaza commit y encolado sin asumir una transacción distribuida.', 'Una caída de Redis retrasa los jobs; no invalida operaciones ya confirmadas en PostgreSQL.'], sources: ['jobs', 'messaging', 'publication', 'resilience'],
     }),
     node('country-redis-jobs', 'country', 'countryJobStore', {
-      title: 'Redis · jobs de país', kind: 'data', technology: 'Instancia dedicada · persistencia · noeviction',
+      title: 'Redis · jobs de país', kind: 'data', technology: 'Redis · persistencia · noeviction',
       summary: 'Almacén técnico obligatorio de BullMQ en país.',
       description: 'Instancia de Redis reservada a los jobs de country-api. Se aísla de Redis caché y del almacén de jobs de la red ERP; no abre conexiones Redis por WAN. Su persistencia, límites y recuperación forman parte de la entrega requerida.',
       responsibilities: ['Conservar jobs, intentos y programación técnica.', 'Aplicar autenticación, persistencia, noeviction y control de capacidad.'],
@@ -199,7 +202,7 @@ export const architecture = {
       failure: ['Un job reintentado o recuperado no autoriza repetir un efecto externo incierto.', 'La entrega requiere probar persistencia, duplicados, cierre y reconstrucción desde el registro de país.'], sources: ['jobs', 'messaging', 'c4', 'resilience'],
     }),
     node('redis-jobs', 'integrations', 'erpJobStore', {
-      title: 'Redis · jobs de ERP', kind: 'data', technology: 'Instancia dedicada · persistencia · noeviction',
+      title: 'Redis · jobs de ERP', kind: 'data', technology: 'Redis · persistencia · noeviction',
       summary: 'Almacén técnico obligatorio de BullMQ en la red ERP.',
       description: 'Dependencia seleccionada junto a erp-worker dentro de su red autorizada, separada del Redis de país y de cualquier caché descartable. Otra base lógica no aísla memoria ni fallos. La asignación y el resultado comercial permanecen en PostgreSQL de país y se intercambian por HTTPS.',
       responsibilities: ['Conservar el estado técnico de los jobs conforme a la política de persistencia elegida.', 'Limitar capacidad, accesos y recuperación sin expulsar silenciosamente trabajos.'],
@@ -303,12 +306,15 @@ export const architecture = {
       payload: ['Documento identificado y datos fiscales autorizados.', 'Estado, referencia y respuesta del emisor.'], guarantees: ['Confirmación local o ACK de sincronización no acreditan aceptación fiscal.'], failure: ['Timeout o rechazo conservan referencia y excepción; no se borra la venta ni se reemite ciegamente.'], sources: ['fiscal', 'providers'],
     }),
     edge('device-jobs-local', 'branch-api', 'branch-db', 'Conservar trabajos y observaciones', 'PostgreSQL · contexto devices de sucursal', 'data', {
-      summary: 'Devices es dueño del trabajo autorizado y su evidencia en sucursal.', description: 'El contexto devices de branch-api persiste jobId/commandId, hash, documento/versión, plantilla, binding, agente/dispositivo asignados y auditoría antes de hacer disponible un trabajo. Al recibir una observación identificada, la valida y confirma en PostgreSQL antes de devolver su acuse al agente. No reabre ventas ni reemite fiscalmente un documento por imprimirlo.',
+      summary: 'Devices es dueño del trabajo autorizado y su evidencia en sucursal.', description: 'El contexto devices de branch-api persiste jobId/commandId, hash, documento/versión, plantilla, binding, agente/dispositivo asignados y auditoría antes de hacer disponible un trabajo. Al recibir una observación identificada, la valida y confirma en PostgreSQL antes de devolver su acuse al agente. No reabre ventas ni reemite fiscalmente un documento por imprimirlo. ' + deviceExecution.steps.find(step => step.id === 'device-permit-consume').note,
       payload: ['Trabajo autorizado, destino, versión y estado de asignación.', 'Observaciones por intento, referencias de dispositivo, certeza y auditoría.'], guarantees: ['Unicidad de trabajo/observación y hash coherente permiten reconocer reentregas.', 'La transacción PostgreSQL no incluye SQLite, spooler ni dispositivo.'], failure: ['Si falla el commit no hay acuse durable ni trabajo disponible para ejecutar.', 'Una copia intencional usa un nuevo jobId autorizado y referencia al documento original.'], sources: ['devices', 'providers', 'resilience'],
     }),
     edge('device-command', 'bridge', 'branch-api', 'Obtener trabajos autorizados', 'HTTPS · LAN · iniciado por device-agent', 'async', {
       summary: 'El agente obtiene trabajo de sucursal con su propia identidad.', description: 'Device-agent inicia el canal autenticado hacia branch-api. La sucursal valida asignación y entrega trabajos persistidos con jobId/commandId, hash y binding fijo. F02 admite dispositivos asignados al puesto solicitante y rechaza destinos de otro puesto; F06 amplía la política a estaciones compartidas y clientes móviles homologados. Ningún cliente actúa como relé obligatorio. El agente registra recepción durable antes del acuse y limita admisión por capacidad y estado del dispositivo.',
       payload: ['Identidad de agente, sucursal y dispositivos asignados.', 'Trabajo autorizado, documento/versión, plantilla, hash, destino e intento.'], guarantees: ['La conexión es saliente desde el agente; no requiere exponer un puerto del PC a móviles.', 'Un solo controlador autorizado por periférico; un lease vencido no habilita otro ejecutor mientras el anterior pueda seguir activo.'], failure: ['Sin LAN no se admiten trabajos nuevos; recuperar el mismo ID no crea una nueva ejecución.', 'Cambiar destino exige resolver el intento previo; no reenrutar automáticamente una impresión incierta.'], sources: ['devices', 'providers', 'identity'],
+    }),
+    edge('device-execution-permit', 'bridge', 'branch-api', deviceExecution.permission.title, deviceExecution.permission.protocol, 'sync', {
+      ...deviceExecution.permission, sources: ['devices', 'resilience', 'identity'],
     }),
     edge('agent-journal', 'bridge', 'device-journal', 'Persistir recepción y evidencia', 'SQLite · acceso local de device-agent', 'data', {
       summary: 'El diario técnico permite reconocer reentregas y recuperar resultados.', description: 'El agente confirma recepción después de persistir jobId/commandId, hash y binding; conserva intentos y observaciones para reenviarlos hasta el acuse durable de branch-api. Una transacción SQLite no incluye spooler, terminal ni efectos físicos. La retención cubre reentrega y recuperación; no se purga inmediatamente al recibir un acuse.',
@@ -384,14 +390,16 @@ export const architecture = {
     ] },
     { id: 'local-printing', title: 'F02 · impresión en el puesto', description: 'Perfil inicial: device-agent C#/.NET y diario SQLite en cada puesto Windows conectado al hardware. F05 pilota este perfil; compartir dispositivos, red y móvil son expansión F06.', steps: [
       { title: 'Autorizar el destino del puesto', description: 'Pos-desktop solicita imprimir un documento existente mediante branch-api. La API valida usuario, turno, sucursal y el dispositivo asignado al puesto; rechaza destinos de otra caja. Devices conserva trabajo, hash y binding antes de entregarlo.', nodes: ['desktop', 'branch-api', 'access', 'branch-db'], edges: ['desktop-api', 'command-access', 'device-jobs-local'] },
-      { title: 'Recibir sin depender de la UI', description: 'El agente del mismo puesto inicia HTTPS LAN a branch-api. Registra jobId, hash y recepción en SQLite antes del acuse. Cerrar la ventana Angular/Tauri no interrumpe su ciclo de recuperación; no se expone una API localhost anónima.', nodes: ['bridge', 'branch-api', 'device-journal'], edges: ['device-command', 'agent-journal'] },
-      { title: 'Ejecutar en el hardware local', description: 'El agente usa el driver o SDK homologado de impresora USB/serie, Zebra o MICR local. Serializa todas las capacidades del mismo dispositivo. La aceptación por el spooler conserva su significado técnico y no acredita papel impreso.', nodes: ['bridge', 'device-journal', 'devices'], edges: ['agent-journal', 'hardware-command'] },
+      { title: deviceExecution.receipt.title, description: 'El agente del puesto inicia HTTPS LAN sin depender de la UI. ' + deviceExecution.receipt.description, deviceSteps: deviceExecution.receipt.steps, nodes: ['bridge', 'branch-api', 'device-journal'], edges: ['device-command', 'agent-journal', 'bridge-evidence'] },
+      { title: deviceExecution.permit.title, description: deviceExecution.permit.description, deviceSteps: deviceExecution.permit.steps, nodes: ['bridge', 'branch-api', 'branch-db'], edges: ['device-execution-permit', 'device-jobs-local'] },
+      { title: 'Ejecutar en el hardware local', description: 'El perfil inicial usa impresora USB/serie, Zebra o MICR local homologados. ' + deviceExecution.effect.description, deviceSteps: deviceExecution.effect.steps, nodes: ['bridge', 'device-journal', 'devices'], edges: ['agent-journal', 'hardware-command'] },
       { title: 'Recuperar y consultar evidencia', description: 'El agente conserva observaciones y las reporta directamente a branch-api; el acuse ocurre después del commit. Una respuesta perdida no provoca otra impresión. Una copia intencional exige un nuevo trabajo autorizado y su motivo.', nodes: ['bridge', 'device-journal', 'branch-api', 'branch-db', 'desktop'], edges: ['agent-journal', 'bridge-evidence', 'device-jobs-local', 'desktop-api'] },
     ] },
     { id: 'shared-printing', title: 'F06 · red, estación compartida y móvil', description: 'Evolución posterior al piloto F05: recibos y etiquetas en red, estación compartida y acceso móvil autorizado, con matriz de hardware y pruebas de concurrencia. Usa la misma aplicación device-agent; no es alcance inicial F02.', steps: [
       { title: 'Autorizar la estación compartida', description: 'Tras homologar F06, móvil o escritorio solicita imprimir un documento existente. Branch-api valida ámbito y permiso del destino compartido; devices conserva jobId, hash, documento/versión, plantilla y binding. MICR, cajón y pagos no se comparten automáticamente.', nodes: ['mobile', 'desktop', 'branch-api', 'access', 'branch-db'], edges: ['mobile-api', 'desktop-api', 'command-access', 'device-jobs-local'] },
-      { title: 'Recibir con el agente asignado', description: 'La misma app device-agent corre en la estación Windows autorizada; sólo puede coincidir con el servidor si sus drivers y operación se homologan. Inicia HTTPS a sucursal y registra trabajo y hash en SQLite. Se conserva el protocolo durable de F02.', nodes: ['bridge', 'branch-api', 'device-journal'], edges: ['device-command', 'agent-journal'] },
-      { title: 'Ejecutar en la impresora de red', description: 'El único controlador activo serializa solicitudes de clientes y utiliza el protocolo LAN/driver homologado para recibos o etiquetas. Registra intento y evidencia. Estar en red no acredita uso compartido ni convierte aceptación del spooler en impresión física.', nodes: ['bridge', 'device-journal', 'network-devices'], edges: ['agent-journal', 'network-hardware-command'] },
+      { title: 'Recibir con el agente asignado', description: 'La misma app device-agent corre en una estación Windows homologada. ' + deviceExecution.receipt.description, deviceSteps: deviceExecution.receipt.steps, nodes: ['bridge', 'branch-api', 'device-journal'], edges: ['device-command', 'agent-journal', 'bridge-evidence'] },
+      { title: deviceExecution.permit.title, description: deviceExecution.permit.description, deviceSteps: deviceExecution.permit.steps, nodes: ['bridge', 'branch-api', 'branch-db'], edges: ['device-execution-permit', 'device-jobs-local'] },
+      { title: 'Ejecutar en la impresora de red', description: 'F06 exige homologar red y uso compartido para recibos o etiquetas. ' + deviceExecution.effect.description, deviceSteps: deviceExecution.effect.steps, nodes: ['bridge', 'device-journal', 'network-devices'], edges: ['agent-journal', 'network-hardware-command'] },
       { title: 'Recuperar evidencia sin reimprimir', description: 'Si se cierra la UI o se pierde LAN, el agente conserva observaciones y las reporta al reconectar. Branch-api acusa después del commit. Ante pérdida del acuse se reenvía la misma observación, nunca se vuelve a imprimir por defecto.', nodes: ['bridge', 'device-journal', 'branch-api', 'branch-db'], edges: ['agent-journal', 'bridge-evidence', 'device-jobs-local'] },
       { title: 'Consultar o solicitar una copia', description: 'Móvil y escritorio consultan el mismo resultado en branch-api. Una copia intencional requiere un nuevo trabajo autorizado con motivo y referencia al documento original. La reasignación de dispositivo exige resolver el efecto anterior.', nodes: ['mobile', 'desktop', 'branch-api'], edges: ['mobile-api', 'desktop-api'] },
     ] },

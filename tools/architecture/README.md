@@ -40,7 +40,8 @@ Las URL conservan la vista, el recorrido y el paso (numeración desde uno). Reca
 - `/architecture/?scenario=commercial-version&step=2`: entrega y finalización de una publicación.
 - `/architecture/?scenario=recovery&step=3`: reconstrucción de custodia y detección de huecos.
 - `/architecture/?scenario=local-printing&step=2`: F02, recepción durable en el agente del puesto Windows.
-- `/architecture/?scenario=shared-printing&step=3`: F06, ejecución en impresora de red tras homologación del perfil compartido.
+- `/architecture/?scenario=local-printing&step=3`: F02, permiso de un uso persistido antes del efecto.
+- `/architecture/?scenario=shared-printing&step=4`: F06, ejecución en impresora de red tras homologación del perfil compartido.
 - `/architecture/?view=full#detail-bullmq`: ejecución ERP con BullMQ.
 - `/architecture/?view=full#detail-country-bullmq`: programación y solicitudes breves en país.
 - `/architecture/?view=options`: caché opcional y destinos de observabilidad.
@@ -88,3 +89,9 @@ La revisión editorial y visual debe comprobar:
 6. **Publicación:** fuentes de detalle alcanzables, descarga idéntica al SVG versionado y recursos locales bajo la política de seguridad del sitio. El explorador no debe ejecutar solicitudes a sistemas corporativos ni presentar una simulación como prueba de operación.
 
 Estas comprobaciones verifican la representación documental. La aceptación del producto requiere las pruebas de los componentes reales descritas en el [roadmap](../../docs/roadmap.md).
+
+## Consistencia entre vistas
+
+`../diagrams/models/c4-data.js` aporta los IDs de aplicación y su ruta técnica a `model.mjs`. La vista general hereda esa identidad y la tecnología; sólo mantiene títulos editoriales, resúmenes y geometría. Sus protocolos proceden de las relaciones que cruzan la frontera de aplicación, omitiendo las llamadas internas colapsadas.
+
+`../diagrams/models/device-execution.cjs` contiene los pasos críticos de recepción, acuse, consumo del permiso único y efecto físico. La secuencia de venta y los recorridos F02/F06 los consumen; las pruebas rechazan omitir o reordenar el permiso. El ciclo de estados conserva su propia revisión inspeccionada del producto: reutilizar una explicación objetivo no cambia esa evidencia.

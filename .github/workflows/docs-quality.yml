@@ -1,6 +1,7 @@
 name: Documentation quality
 on:
   pull_request:
+    types: [opened, reopened, synchronize, edited, ready_for_review]
   push:
     branches: [main, 'codex/**']
   workflow_dispatch:
@@ -24,6 +25,8 @@ jobs:
           cache-dependency-path: apps/starlight/package-lock.json
       - run: npm install --global npm@11.6.0
       - run: npm run setup
+      - run: npm run editorial:check
+      - run: npm run editorial:test
       - run: npm run portal:test
       - run: npm run presentations:test
       - run: npm run architecture:test
@@ -33,6 +36,9 @@ jobs:
       - run: npm run validate
       - run: npm run typecheck
       - run: npm run build
+      - name: Check declared reader journeys in generated HTML
+        if: github.event_name == 'pull_request'
+        run: node tools/editorial/journeys-check.mjs --event-file "$GITHUB_EVENT_PATH"
       - run: npm --prefix apps/starlight exec playwright install --with-deps chromium
       - run: npm run check
       - run: npm run architecture:check

@@ -50,11 +50,11 @@ const references = [...candidates].sort().map(relative => ({
 }));
 const upstreamReadme = execFileSync('git', ['show', `${revision}:README.md`], { cwd: workspace, encoding: 'utf8' }).replaceAll('\r\n', '\n');
 const evidence = {
-  schemaVersion: 1,
+  schemaVersion: 2,
   repository,
   revision,
-  reviewedOn: new Date().toISOString().slice(0, 10),
-  notice: 'Reviewed clean product revision. The documentation repository builds from this metadata without accessing the product checkout.',
+  capturedAt: new Date().toISOString(),
+  notice: 'Automated capture of a clean product revision. It does not certify editorial review, human comprehension or product acceptance.',
   productGuide: {
     source: 'docs/product-repository.md',
     relationship: 'Editorial synthesis adapted from the product README; it is not a byte-for-byte snapshot.',
@@ -64,5 +64,6 @@ const evidence = {
   references,
 };
 const target = path.join(root, 'apps/starlight/src/data/product-evidence.json');
+if (git('rev-parse', 'HEAD') !== revision || git('status', '--porcelain')) throw new Error('Product workspace changed during capture.');
 fs.writeFileSync(target, JSON.stringify(evidence, null, 2) + '\n');
 console.log(`Product evidence: ${revision.slice(0, 12)}; ${references.length} referenced paths; no product source copied.`);

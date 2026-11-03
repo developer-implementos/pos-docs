@@ -1,9 +1,9 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "repository": "https://github.com/developer-implementos/pos-platform",
   "revision": "6e679f692aab1fa5681688f1ffae651a215c2d81",
-  "reviewedOn": "2026-11-03",
-  "notice": "Reviewed clean product revision. The documentation repository builds from this metadata without accessing the product checkout.",
+  "capturedAt": "2026-11-03T18:44:05.477Z",
+  "notice": "Automated capture of a clean product revision. It does not certify editorial review, human comprehension or product acceptance.",
   "productGuide": {
     "source": "docs/product-repository.md",
     "relationship": "Editorial synthesis adapted from the product README; it is not a byte-for-byte snapshot.",

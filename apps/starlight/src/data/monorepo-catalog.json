@@ -51,7 +51,7 @@
       "name": "erp-worker",
       "location": "Red autorizada del ERP",
       "description": "Proceso de integración, traducción y conciliación ERP",
-      "state": "CLI de lectura Mountain para productos/clientes con transporte HTTPS acotado; VPN activa y resolución de nombre comprobada, conexión HTTPS rechazada antes de TLS; sin consulta corporativa, publicación de espejos ni procesamiento de jobs",
+      "state": "CLI de lectura Mountain para productos/clientes con transporte HTTPS acotado; la prueba de red registrada resolvió el nombre con VPN y recibió rechazo antes de TLS. Esa evidencia histórica no acredita acceso actual; sin consulta corporativa, publicación de espejos ni procesamiento de jobs",
       "inReviewedWorkspace": true
     }
   ],
