@@ -6,8 +6,11 @@ El código de las aplicaciones pertenece a [POS Platform](https://github.com/dev
 
 | Acceso público | Contenido |
 | --- | --- |
-| [`/`](https://pos-docs-starlight.vercel.app/) | Punto de entrada y catálogo de materiales |
-| [`/#progress`](https://pos-docs-starlight.vercel.app/#progress) | Avance general y por aplicación, basado en entregables verificados del producto |
+| [`/`](https://pos-docs-starlight.vercel.app/) | Entrada breve a gestión, documentación, presentaciones y fuentes |
+| [`/project/`](https://pos-docs-starlight.vercel.app/project/) | Resumen de avance técnico y aceptación manual, con distribución por fase o aplicación |
+| [`/project/work/`](https://pos-docs-starlight.vercel.app/project/work/) | Entregables, estado técnico, ejecución, asignaciones y evidencia |
+| [`/project/attention/`](https://pos-docs-starlight.vercel.app/project/attention/) | Bloqueos y decisiones con siguiente acción, contraparte, responsable y condición de cierre |
+| [`/project/team/`](https://pos-docs-starlight.vercel.app/project/team/) | Equipo, asignaciones de desarrollo y responsabilidades de seguimiento |
 | [`/guide/`](https://pos-docs-starlight.vercel.app/guide/) | Documentación técnica Starlight |
 | [`/architecture/`](https://pos-docs-starlight.vercel.app/architecture/) | Mapa SVG interactivo de aplicaciones, tecnologías y contratos de integración |
 | [`/guide/flows/`](https://pos-docs-starlight.vercel.app/guide/flows/) | Recorridos de negocio, límites y evidencia enlazada |
@@ -15,7 +18,8 @@ El código de las aplicaciones pertenece a [POS Platform](https://github.com/dev
 | [`/guide/api/pos-platform/`](https://pos-docs-starlight.vercel.app/guide/api/pos-platform/) | Contratos HTTP generados del POS y descargas OpenAPI |
 | [`/guide/api/data-model/`](https://pos-docs-starlight.vercel.app/guide/api/data-model/) | Tablas y restricciones extraídas de las migraciones del producto |
 | [`/presentations/architecture/`](https://pos-docs-starlight.vercel.app/presentations/architecture/) | Arquitectura y roadmap en Reveal.js |
-| [`/#materials`](https://pos-docs-starlight.vercel.app/#materials) | Fuentes de reuniones y cuestionarios, filtrables por país y formato |
+| [`/presentations/`](https://pos-docs-starlight.vercel.app/presentations/) | Catálogo de presentaciones |
+| [`/materials/`](https://pos-docs-starlight.vercel.app/materials/) | Fuentes de reuniones y cuestionarios, filtrables por país y formato |
 | [`/guide/evidence/country-comparison/`](https://pos-docs-starlight.vercel.app/guide/evidence/country-comparison/) | Síntesis comparativa aportada de Chile, Perú y España |
 
 ## Organización
@@ -24,7 +28,7 @@ El código de las aplicaciones pertenece a [POS Platform](https://github.com/dev
 | --- | --- |
 | `docs/` | Fuentes técnicas canónicas en Markdown, decisiones y recursos públicos |
 | `apps/starlight/` | Guía Starlight, navegación, componentes, búsqueda y validaciones |
-| `portal/` | Portada estática, catálogo de recursos, filtros y visor de materiales |
+| `portal/` | Portada, vistas de gestión, catálogos, filtros y visor de materiales |
 | `materials/` | Originales y vistas previas PDF revisadas, publicados sólo mediante el catálogo |
 | `apps/starlight/src/data/` | Catálogos revisados y procedencia de la evidencia |
 | `presentations/` | Organización de presentaciones Reveal.js y referencias vigentes |
@@ -58,15 +62,17 @@ npm run check
 npm run presentations:check
 npm run portal:test
 npm run portal:check
+npm run project:check
+npm run follow-up:check
 npm run viewer:check
 npm run preview
 ```
 
-`dev` sirve la guía Starlight. Para revisar el sitio completo, ejecutar `build` y `preview`, y abrir `http://127.0.0.1:4207/`. `npm run verify` ejecuta la validación completa. Los resultados y capturas se guardan en `test-results-docs/`, `test-results-presentations/`, `test-results-roadmap/`, `test-results-portal/` y `test-results-viewer/`. El artefacto publicable se genera en `dist/`; no se versiona.
+`dev` sirve la guía Starlight. Para revisar el sitio completo, ejecutar `build` y `preview`, y abrir `http://127.0.0.1:4207/`. `npm run verify` ejecuta la validación completa. Los resultados y capturas se guardan en `test-results-docs/`, `test-results-presentations/`, `test-results-roadmap/`, `test-results-portal/`, `test-results-project/`, `test-results-follow-up/` y `test-results-viewer/`. El artefacto publicable se genera en `dist/`; no se versiona.
 
 ## Incorporar fuentes y materiales
 
-Seguir [materials/README.md](materials/README.md): añadir el original y registrar su metadata en `portal/catalog.json`. El catálogo distingue país y función editorial, independientemente del formato. Admite PPTX, DOCX y PDF; no publica carpetas enteras ni inventa fechas de reunión. La presentación Reveal.js de Arquitectura y roadmap aparece sólo bajo **Propuestas**. Las fuentes recibidas se conservan intactas; las síntesis y las decisiones se documentan en `docs/` con su alcance.
+Seguir [materials/README.md](materials/README.md): añadir el original y registrar su metadata en `portal/catalog.json`. El catálogo distingue país y función editorial, independientemente del formato. Admite PPTX, DOCX y PDF; no publica carpetas enteras ni inventa fechas de reunión. Las propuestas se consultan en `/presentations/` y los originales en `/materials/`. Las fuentes recibidas se conservan intactas; las síntesis y las decisiones se documentan en `docs/` con su alcance.
 
 Cada archivo ofrece **Visualizar** y **Descargar**. Las vistas de lectura `/materials/view/<id>/` usan PDF.js local y PDF revisados vinculados al original por SHA-256. La conversión se hace antes de publicar; Vercel sólo construye el sitio y copia los derivados registrados. Para regenerarlos, consultar [los requisitos de conversión](materials/previews/README.md).
 
@@ -96,7 +102,7 @@ El registro de avance pertenece a `delivery/progress.json` en POS Platform. El p
 
 Importar **`developer-implementos/pos-docs`**, usar la raíz del repositorio y preset **Other**. `vercel.json` define instalación, build, salida, cabeceras y rutas. Definir `PUBLIC_SITE_URL` con el origen HTTPS público elegido, sin `/guide/`, para los enlaces canónicos y el snapshot.
 
-Un único proyecto Vercel publica `/`, `/guide/`, `/presentations/` y las descargas en el mismo artefacto. No se requieren proyectos por presentación ni claves del producto, acceso a repositorios legacy o servicios corporativos. Consultar la [guía de publicación](docs/vercel.md).
+Un único proyecto Vercel publica `/`, `/project/`, `/guide/`, `/presentations/`, `/materials/` y las descargas en el mismo artefacto. Los enlaces históricos de la portada y `/guide/project-status/` conservan acceso a sus destinos. No se requieren proyectos por presentación ni claves del producto, acceso a repositorios legacy o servicios corporativos. Consultar la [guía de publicación](docs/vercel.md).
 
 El proyecto documental es `pos-docs-starlight`, con dominio `https://pos-docs-starlight.vercel.app` y rama de producción `main`. Definir `PUBLIC_SITE_URL=https://pos-docs-starlight.vercel.app` en Production y Preview. El monorepo de producto conserva su entrega independiente.
 

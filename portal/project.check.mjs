@@ -1,0 +1,217 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {createRequire} from 'node:module';
+import {loadProgress} from './progress.mjs';
+import {loadFollowUp} from './follow-up.mjs';
+
+const root = fileURLToPath(new URL('../', import.meta.url));
+const require = createRequire(path.join(root, 'apps/starlight/package.json'));
+const {chromium} = require('playwright');
+const {servePublic} = require(path.join(root, 'apps/starlight/scripts/serve.cjs'));
+const progress = loadProgress(root);
+const followUp = loadFollowUp(root, progress);
+const output = path.join(root, 'test-results-project');
+fs.mkdirSync(output, {recursive: true});
+const server = await servePublic(0);
+const origin = `http://127.0.0.1:${server.address().port}`;
+const browser = await chromium.launch({headless: true});
+const routes = ['/project/', '/project/work/', '/project/attention/', '/project/team/'];
+try {
+  const page = await browser.newPage({viewport: {width: 1440, height: 1000}, reducedMotion: 'reduce'});
+  const failures = [], external = [];
+  page.on('pageerror', error => failures.push(error.message));
+  page.on('console', message => { if (message.type() === 'error') failures.push(message.text()); });
+  page.on('request', request => { if (!request.url().startsWith(origin) && !request.url().startsWith('data:')) external.push(request.url()); });
+  const count = () => page.locator('[data-project-item]:visible').count();
+  const form = () => page.locator('[data-project-filters]');
+  const reset = async () => {
+    await form().getByRole('button', {name: 'Limpiar filtros'}).click();
+    await page.waitForFunction(() => !location.search);
+  };
+  const navigate = async route => {
+    const response = await page.goto(origin + route, {waitUntil: 'networkidle'});
+    if (response) assert.equal(response.status(), 200, `${route} is published`);
+    assert.equal(new URL(page.url()).pathname, new URL(route, origin).pathname);
+  };
+  for (const route of routes) {
+    await navigate(route);
+    const nav = page.getByRole('navigation', {name: 'Gestión del proyecto', exact: true});
+    assert.equal(await nav.locator('[aria-current="page"]').getAttribute('href'), route);
+    assert.deepEqual(await nav.locator('a').evaluateAll(links => links.map(link => link.getAttribute('href'))), routes);
+    assert.equal(await page.locator('h1').count(), 1);
+    await page.screenshot({path: path.join(output, `${route.split('/')[2] || 'summary'}-desktop.png`)});
+  }
+
+  await navigate('/project/');
+  for (const [id, entries] of [['phases', progress.phases], ['apps', progress.applications]]) {
+    const bars = page.locator(`#${id} progress`);
+    assert.equal(await bars.count(), entries.length);
+    for (const [index, entry] of entries.entries()) {
+      assert.equal(Number(await bars.nth(index).getAttribute('value')), entry.completed);
+      assert.equal(Number(await bars.nth(index).getAttribute('max')), entry.total);
+    }
+  }
+  const technicalMetric = page.locator('.project-kpis a[href="/project/work/?status=verified"]');
+  assert.ok((await technicalMetric.innerText()).includes(`${new Intl.NumberFormat('es-CL', {maximumFractionDigits: 1}).format(progress.percent)} %`));
+  assert.ok((await technicalMetric.innerText()).includes(`${progress.completed} de ${progress.total}`));
+  const acceptanceMetric = page.locator('.project-kpis a[href="/project/work/?status=review"]');
+  assert.equal(Number(await acceptanceMetric.locator('strong').innerText()), progress.pendingAcceptance);
+  assert.ok((await acceptanceMetric.innerText()).includes(`${progress.accepted} aceptados`), 'Human acceptance stays separate from technical verification');
+  const provenance = page.locator('#project-sources');
+  await page.locator('[data-project-update] summary').click();
+  await page.getByRole('link', {name: 'Ver fuentes', exact: true}).click();
+  assert.notEqual(await provenance.getAttribute('open'), null, 'Source links reveal their disclosure');
+  assert.equal(await provenance.locator('summary').evaluate(element => element === document.activeElement), true);
+  await page.keyboard.press('Enter');
+  await provenance.locator('summary').focus();
+  await page.keyboard.press('Enter');
+  assert.notEqual(await provenance.getAttribute('open'), null, 'Source and methodology details are keyboard accessible');
+  assert.ok(await provenance.locator('a[href="/guide/implementation/progress/"]').isVisible());
+  await page.keyboard.press('Enter');
+  await navigate('/project/#project-sources');
+  await page.reload({waitUntil: 'networkidle'});
+  assert.notEqual(await provenance.getAttribute('open'), null, 'Source permalinks open their disclosure on arrival');
+  await navigate('/project/');
+  const metrics = [
+    ['/project/work/?status=verified', followUp.workPackages.filter(work => work.status === 'verified').length],
+    ['/project/work/?status=in_progress', followUp.workPackages.filter(work => work.status === 'in_progress').length],
+    ['/project/work/?status=review', followUp.workPackages.filter(work => work.status === 'verified' && !work.acceptance).length],
+    ['/project/attention/?state=open', followUp.items.filter(action => action.state === 'open').length],
+  ];
+  for (const [href, expected] of metrics) {
+    await page.locator(`.project-kpis a[href="${href}"]`).click();
+    assert.equal(await count(), expected, `Indicator opens its filtered detail: ${href}`);
+    await page.goBack({waitUntil: 'networkidle'});
+  }
+  const view = page.locator('[data-breakdown-select]');
+  await view.selectOption('apps');
+  assert.equal(new URL(page.url()).searchParams.get('view'), 'apps');
+  assert.ok(await page.locator('#apps').isVisible());
+  assert.ok(await page.locator('#phases').isHidden());
+  await page.reload({waitUntil: 'networkidle'});
+  assert.equal(await view.inputValue(), 'apps');
+  await view.selectOption('phases');
+  await page.goBack({waitUntil: 'networkidle'});
+  assert.equal(await view.inputValue(), 'apps', 'Back restores the distribution view');
+  const appLink = page.locator('#apps a').first();
+  const appHref = new URL(await appLink.getAttribute('href'), origin);
+  await appLink.click();
+  assert.equal(await count(), followUp.workPackages.filter(work => work.apps.includes(appHref.searchParams.get('app'))).length);
+
+  await navigate('/project/work/');
+  assert.equal(await count(), followUp.workPackages.length);
+  const phase = progress.phases[1]?.id || progress.phases[0].id;
+  await form().locator('[name=phase]').selectOption(phase);
+  assert.equal(new URL(page.url()).searchParams.get('phase'), phase);
+  assert.equal(await count(), followUp.workPackages.filter(work => work.phase === phase).length);
+  await form().locator('[name=status]').selectOption('remaining');
+  assert.equal(await count(), followUp.workPackages.filter(work => work.phase === phase && work.status !== 'verified').length);
+  await page.goBack({waitUntil: 'networkidle'});
+  assert.equal(await form().locator('[name=phase]').inputValue(), phase);
+  assert.equal(await form().locator('[name=status]').inputValue(), '', 'Back restores filter controls');
+  await page.goForward({waitUntil: 'networkidle'});
+  assert.equal(await form().locator('[name=status]').inputValue(), 'remaining');
+  await page.reload({waitUntil: 'networkidle'});
+  assert.equal(await form().locator('[name=phase]').inputValue(), phase, 'Reload restores URL filters');
+  await form().locator('[name=query]').fill('zz-no-coincide');
+  assert.equal(new URL(page.url()).searchParams.get('query'), 'zz-no-coincide');
+  assert.ok(await page.locator('[data-project-empty]').isVisible());
+  assert.equal(await count(), 0);
+  await reset();
+  assert.equal(await count(), followUp.workPackages.length);
+  await form().locator('[name=assignee]').selectOption('unassigned');
+  assert.equal(await count(), followUp.workPackages.filter(work => work.issue.assignees.length === 0).length);
+  await reset();
+  const firstWork = followUp.workPackages[0];
+  const workId = `work-${firstWork.id.toLowerCase()}`;
+  await form().locator('[name=query]').fill('zz-no-coincide');
+  await page.evaluate(id => { location.hash = id; }, workId);
+  await page.waitForFunction(id => !document.getElementById(id).hidden, workId);
+  assert.ok(await page.locator(`#${workId}`).isVisible(), 'A permalink reveals work excluded by filters');
+  assert.equal(await page.locator(`#${workId} details`).getAttribute('open'), '', 'A permalink opens its evidence');
+  const disclosure = page.locator(`#${workId} summary`);
+  await disclosure.focus();
+  await page.keyboard.press('Enter');
+  assert.equal(await page.locator(`#${workId} details`).getAttribute('open'), null, 'Evidence supports keyboard toggling');
+  await page.keyboard.press('Enter');
+  assert.notEqual(await page.locator(`#${workId} details`).getAttribute('open'), null);
+  await form().locator('[name=phase]').selectOption(phase);
+  assert.equal(new URL(page.url()).hash, '', 'Changing filters removes a previous permalink target');
+  await page.reload({waitUntil: 'networkidle'});
+  assert.equal(await form().locator('[name=phase]').inputValue(), phase, 'A previous anchor cannot override new filters on reload');
+  assert.equal(await count(), followUp.workPackages.filter(work => work.phase === phase).length);
+
+  await navigate('/project/attention/');
+  assert.equal(await count(), followUp.items.length);
+  await form().locator('[name=state]').selectOption('open');
+  await form().locator('[name=scope]').selectOption('operational');
+  assert.equal(await count(), followUp.items.filter(action => action.state === 'open' && action.impactScope === 'operational').length);
+  await form().locator('[name=owner]').selectOption('unassigned');
+  assert.equal(await count(), followUp.items.filter(action => action.state === 'open' && action.impactScope === 'operational' && !action.owner).length);
+  await reset();
+  await form().locator('[name=state]').selectOption('resolved');
+  assert.equal(await count(), followUp.items.filter(action => action.state === 'resolved').length);
+  const firstAction = followUp.items.find(action => action.state === 'open') || followUp.items[0];
+  await page.evaluate(id => { location.hash = id; }, firstAction.id.toLowerCase());
+  await page.waitForFunction(id => !document.getElementById(id).hidden, firstAction.id.toLowerCase());
+  assert.ok(await page.locator(`#${firstAction.id.toLowerCase()}`).isVisible(), 'A permalink reveals an action excluded by filters');
+  await form().locator('[name=query]').fill('zz-no-coincide');
+  assert.ok(await page.locator('[data-project-empty]').isVisible());
+  await page.locator('[data-project-empty] [data-project-reset]').click();
+  assert.equal(await form().locator('[name=query]').inputValue(), '');
+  const related = page.locator('[data-project-item]:visible a[href^="/project/work/#"]').first();
+  const relatedId = (await related.getAttribute('href')).split('#')[1];
+  await related.click();
+  assert.ok(await page.locator(`#${relatedId}`).isVisible(), 'Actions link to affected deliverables');
+
+  await navigate('/project/team/');
+  const unassignedLink = page.locator('a[href*="/project/work/?"][href*="assignee=unassigned"]').first();
+  await unassignedLink.click();
+  const expectedUnassigned = followUp.workPackages.filter(work => !work.issue.assignees.length && (!new URL(page.url()).searchParams.has('status') || (work.issue.state === 'OPEN' && work.issue.executionLabels.length === 1 && work.issue.executionLabels.some(label => ['status:in-progress', 'status:blocked', 'status:review', 'status:validation'].includes(label))))).length;
+  assert.equal(await count(), expectedUnassigned, 'Team links retain development assignment scope');
+
+  for (const width of [390, 320]) {
+    await page.setViewportSize({width, height: 844});
+    for (const route of routes) {
+      await navigate(route);
+      assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `No horizontal page overflow: ${route} at ${width}px`);
+      for (const control of await form().locator('input, select, button').all()) {
+        assert.ok(await control.evaluate(element => element.getBoundingClientRect().height >= 44), `Touch target height at ${width}px`);
+      }
+      await page.screenshot({path: path.join(output, `${route.split('/')[2] || 'summary'}-${width}.png`)});
+      if (route === '/project/') {
+        await page.locator('[data-breakdown-select]').selectOption('apps');
+        assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `Application view has no horizontal overflow at ${width}px`);
+        await page.locator('.project-breakdown').screenshot({path: path.join(output, `summary-apps-${width}.png`)});
+      } else if (route === '/project/team/') {
+        await page.locator('.project-team-list > li').first().screenshot({path: path.join(output, `team-person-${width}.png`)});
+      } else {
+        await page.locator('[data-project-item]').first().screenshot({path: path.join(output, `${route.split('/')[2]}-item-${width}.png`)});
+      }
+    }
+  }
+
+  const noJs = await browser.newContext({javaScriptEnabled: false, viewport: {width: 390, height: 844}});
+  const fallback = await noJs.newPage();
+  for (const [route, expected] of [['/project/work/', followUp.workPackages.length], ['/project/attention/', followUp.items.length]]) {
+    await fallback.goto(origin + route);
+    assert.equal(await fallback.locator('[data-project-item]:visible').count(), expected, `${route} exposes every record without JavaScript`);
+    assert.ok(await fallback.locator('[data-project-filters]').isHidden());
+    assert.ok(await fallback.locator('[data-project-item] a[href^="https://github.com/"]').count() > 0);
+  }
+  await fallback.goto(origin + '/project/');
+  assert.ok(await fallback.locator('#apps').isVisible());
+  assert.ok(await fallback.locator('#phases').isVisible());
+  await fallback.locator('.project-kpis a').first().click();
+  assert.equal(new URL(fallback.url()).pathname, '/project/work/', 'Metric links work without JavaScript');
+  assert.equal(await fallback.locator('[data-project-item]:visible').count(), followUp.workPackages.length);
+  await noJs.close();
+  assert.deepEqual(failures, [], 'No browser or CSP errors');
+  assert.deepEqual(external, [], 'No external service is consulted at runtime');
+  console.log(`Project browser checks passed: ${followUp.workPackages.length} deliverables, ${followUp.items.length} actions; metrics, URL filters/history, permalinks, keyboard, 320/390px and no-JS navigation.`);
+} finally {
+  await browser.close();
+  await new Promise(resolve => server.close(resolve));
+}
