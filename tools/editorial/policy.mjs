@@ -61,7 +61,10 @@ export function validatePullRequest({ body, knownFiles }) {
   }
   const sources = values(fields.Sources, 'Sources');
   for (const source of sources) {
-    if (!/^[\w.-]+(?:\/[\w.-]+)*$/.test(source) || source.split('/').some(segment => segment === '.' || segment === '..')) {
+    // Source identity is exact membership, not a glob or a shell expression.
+    // Meeting originals legitimately contain spaces, Unicode and parentheses.
+    if (source.startsWith('/') || /[\\\u0000-\u001f\u007f:*?\[\]<>|"]/.test(source) ||
+        source.split('/').some(segment => !segment.trim() || segment === '.' || segment === '..')) {
       throw new Error('Sources must contain repository-relative file paths without traversal, URLs or globs.');
     }
     if (!knownFiles.has(source)) throw new Error(`Source is not a tracked or proposed file: ${JSON.stringify(source)}.`);

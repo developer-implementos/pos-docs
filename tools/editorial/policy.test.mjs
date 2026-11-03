@@ -57,9 +57,19 @@ test('impact vocabularies cannot silently expand or combine none with an impact'
 });
 
 test('sources must be named existing files, not traversal or arbitrary URLs', () => {
-  for (const replacement of ['../secret', '/docs/decisions/device-agent.md', 'docs/missing.md', 'https://example.test/source.md', 'docs/**']) {
+  for (const replacement of ['../secret', '/docs/decisions/device-agent.md', 'docs/missing.md', 'https://example.test/source.md', 'docs/**', 'docs/../secret.md', 'docs/\u0001secret.md', 'docs\\secret.md', 'docs//secret.md']) {
     assert.throws(() => validate(validBody.replace('docs/decisions/device-agent.md', replacement)), /Source/);
   }
+});
+
+test('tracked meeting originals may use Unicode, spaces and parentheses', () => {
+  const original = 'materials/Descripción Caja España (2da reunión).docx';
+  const result = validatePullRequest({
+    body: validBody.replace('docs/decisions/device-agent.md', original),
+    knownFiles: new Set([...knownFiles, original]),
+  });
+  assert.equal(result.sources[0], original);
+  assert.throws(() => validate(validBody.replace('docs/decisions/device-agent.md', original)), /not a tracked/);
 });
 
 test('PR changed-file metadata admits new sources and excludes removed or renamed paths', () => {

@@ -41,7 +41,7 @@ export function projectScenario(scenario) {
   };
   const nodes = scenario.steps.map((step, index) => ({
     id: `step-${index + 1}`, lane: 'journey', col: index, type: 'backend',
-    ...titleLines(step.title), tag: `Paso ${index + 1}`, width: 185, height: 98,
+    ...titleLines(step.title), tag: `Paso ${index + 1}`, height: 98,
   }));
   return {
     schema_version: 2, diagram_type: 'workflow',

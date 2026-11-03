@@ -12,6 +12,8 @@ node tools/editorial/pr-check.mjs --body-file /ruta/pr.md
 
 El cuerpo debe incluir los campos y secciones de `.github/pull_request_template.md`. `Sources` enumera archivos canónicos rastreados; `Reader-Journeys`, rutas públicas permanentes. `Review-Evidence` identifica las comprobaciones y la revisión, o describe concretamente qué falta. No escribir sólo «pendiente». `Documentation-Impact: none` exige el campo adicional `Impact-Reason` con el motivo por el que el cambio no altera arquitectura, comportamiento, contratos o datos.
 
+Las listas de `Sources` y `Reader-Journeys` usan comas como delimitador. Los nombres de fuentes admiten Unicode, espacios y paréntesis; se comprueba su coincidencia exacta con el archivo rastreado. Para un original cuyo nombre contenga comas, declarar su catálogo canónico en `Sources` y enlazar el original en la sección de fuentes de la PR.
+
 Después de construir el sitio, `node tools/editorial/journeys-check.mjs --body-file /ruta/pr.md` comprueba que las rutas y anclas declaradas existan en el HTML de `dist`. El workflow normal de calidad lo ejecuta con el cuerpo de la PR, también al editarlo. Admite páginas nuevas sin ejecutar código de la PR en el contexto privilegiado de la política.
 
 Para verificar una PR real y su issue con una sesión de lectura autorizada, usar `node tools/editorial/pr-check.mjs --pr NUMERO --github --require-issue`. El cliente lee `GH_TOKEN` o `GITHUB_TOKEN` del entorno; nunca pasar credenciales como argumento, copiarlas a archivos o mostrarlas en logs. La comprobación local de cuerpo es offline y declara explícitamente que no consultó la issue.

@@ -4,6 +4,7 @@ import { architecture } from '../architecture/model.mjs';
 import { architectureViews } from '../architecture/views.mjs';
 import { projectApplications, projectScenario, detailData } from './project.mjs';
 import { exploreCatalog } from './catalog.mjs';
+import { compileWorkflow } from './vendor/archify/renderers/workflow/workflow-compiler.mjs';
 
 test('application projection retains seven applications and all selected store contracts', () => {
   const projection = projectApplications();
@@ -34,4 +35,12 @@ test('proposal details preserve conditional and unresolved contracts instead of 
   assert.equal(details.nodes.payments.status, 'unresolved');
   assert.ok(details.edges['bridge-evidence'].href.endsWith('#detail-bridge-evidence'));
   assert.ok(exploreCatalog.filter(entry => entry.type !== 'lifecycle').every(entry => entry.status === 'proposed'));
+});
+
+test('every proposed workflow remains readable with the pinned showcase compiler', () => {
+  for (const scenario of architecture.scenarios) {
+    const workflow = projectScenario(scenario);
+    const result = compileWorkflow({ workflow, qualityProfile: workflow.meta.quality_profile });
+    assert.equal(result.ok, true, `${scenario.id}: ${JSON.stringify(result.diagnostics)}`);
+  }
 });
