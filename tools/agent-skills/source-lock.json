@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "repository": "https://github.com/developer-implementos/pos-platform",
+  "revision": "fe882243499b2df938a7bb85e81035b8147ea1af",
+  "files": {
+    ".agents/skills/pos-delivery/SKILL.md": "b70c4f18d0431b18ea7b8cee5459ad7a3ff54b8f6f99e9466e2b0f2232cfc69c",
+    ".agents/skills/pos-delivery/agents/openai.yaml": "c211ec71fa7db2beebf231d915cfb8c030af8d026e5b51a5696f166e7d42c5bd",
+    "tools/agent-skills/README.md": "17c23792577354b6e7a88dec6ce723c8202d3e2e716f8f947305f9b6395aac30",
+    "tools/agent-skills/sync.mjs": "ec5f07c9beb563ad2b650eac6d48d64656a470e8a8b1c8211d396ba903080e85",
+    "tools/agent-skills/sync.test.mjs": "9165c1a667d296ba0b03144236ae335aea3cba89f67a5bb085d4fc0537f052d6"
+  }
+}
