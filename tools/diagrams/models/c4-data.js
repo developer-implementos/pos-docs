@@ -895,13 +895,13 @@
   },
   "reporting": {
     "id": "reporting",
-    "name": "Reportes operativos",
+    "name": "Reportes y seguimiento",
     "type": "Componente",
     "technology": "libs/backend/reporting",
-    "summary": "Consulta operaciones y estados locales.",
-    "ownership": "Sólo lectura/proyecciones autorizadas; no corrige dinero desde un reporte.",
-    "offline": "Los reportes locales reflejan la información disponible y su estado de sincronización.",
-    "detail": "Consultas de ventas, turnos, pagos y pendientes respetan ámbito y permisos. Una proyección consultable no constituye otra autoridad para editar la operación.",
+    "summary": "Consulta evidencia y conserva expedientes.",
+    "ownership": "Es propietario de los expedientes de seguimiento y su historial durable. Consulta estados mediante contratos de sus contextos propietarios; no escribe dinero, ventas, documentos fiscales ni trabajos de dispositivos.",
+    "offline": "Consulta evidencia persistida en sucursal y conserva el seguimiento autorizado con PostgreSQL disponible. Una respuesta perdida se recupera con el comando original; no se repite un efecto financiero.",
+    "detail": "Compone lecturas autorizadas de sales, payments, fiscal y devices sin sustituir su autoridad. Un expediente conserva evidencia de apertura, motivo, responsable, versión e historial. Abrir, asignar y registrar una conclusión requieren permisos explícitos; la versión evita sobrescribir cambios de otro operador. Cerrar el seguimiento no confirma un pago, no libera reservas ni ejecuta emisiones o impresiones. Esta ficha describe la responsabilidad propuesta; el corte F02 enlaza implementación y evidencia verificadas.",
     "sources": [
       {
         "label": "Propuesta y decisiones de arquitectura",
@@ -1633,7 +1633,7 @@
     "level": "C3 · branch-api",
     "title": "Negocio de sucursal en un proceso",
     "scope": "apps/branch-api compone módulos de negocio y base técnica. Las bibliotecas agrupadas comparten proceso, sin convertirse en servicios independientes.",
-    "note": "sales/returns, cash/collections, pricing/catalog, payments/devices, fiscal, reporting, administration y outbox de sync. devices conserva trabajos autorizados; device-agent los obtiene y reporta evidencia. No depende del cliente de escritorio.",
+    "note": "reporting consulta evidencia de sus propietarios y conserva sólo expedientes propios, sin autoridad financiera. devices conserva trabajos autorizados; device-agent los obtiene y reporta evidencia.",
     "nodeIds": [
       "client",
       "mobileClient",
@@ -1705,7 +1705,7 @@
       {
         "from": "entry",
         "to": "reporting",
-        "label": "Consulta autorizada · TypeScript"
+        "label": "Consulta y seguimiento autorizado · TypeScript"
       },
       {
         "from": "entry",
@@ -1754,8 +1754,23 @@
       },
       {
         "from": "reporting",
+        "to": "sales",
+        "label": "Lee evidencia de venta · contrato propietario"
+      },
+      {
+        "from": "reporting",
+        "to": "payPort",
+        "label": "Lee evidencia de pagos y trabajos · contrato propietario"
+      },
+      {
+        "from": "reporting",
+        "to": "fiscalPort",
+        "label": "Lee evidencia fiscal · contrato propietario"
+      },
+      {
+        "from": "reporting",
         "to": "unitOfWork",
-        "label": "Lee estado local · repositorio"
+        "label": "Guarda sólo expedientes propios · repositorio"
       },
       {
         "from": "payPort",

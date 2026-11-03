@@ -209,7 +209,7 @@ libs/
     devices/                    # Contratos y coordinación de periféricos
     sync/                       # Protocolo y progreso de sincronización
     erp/                        # Contratos, ACL y adaptadores ERP
-    reporting/                  # Consultas y proyecciones de reportes
+    reporting/                  # Consultas, proyecciones y seguimiento operativo
     administration/             # Configuración y ámbito organizacional
   client-shell/                 # Composición Angular compartida; no es una aplicación desplegable
   features/                     # Funcionalidades de la interfaz

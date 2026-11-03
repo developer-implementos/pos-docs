@@ -27,6 +27,7 @@ jobs:
       - run: npm run portal:test
       - run: npm run presentations:test
       - run: npm run architecture:test
+      - run: npm run diagrams:test
       - run: npm run reference:test
       - run: npm run explore:test
       - run: npm run validate
