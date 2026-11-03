@@ -28,7 +28,7 @@
     "presentations:test": "node --test presentations/tools/diagrams.test.mjs presentations/tools/navigation.test.mjs presentations/tools/source-text.test.mjs tools/roadmap.test.mjs",
     "presentations:check": "node presentations/tools/check.mjs",
     "roadmap:check": "node tools/check-roadmap.mjs",
-    "portal:test": "node --test portal/catalog.test.mjs portal/previews.test.mjs portal/progress.test.mjs tools/sync-project-progress.test.mjs portal/follow-up.test.mjs tools/sync-project-follow-up.test.mjs portal/project.test.mjs portal/project-view.test.mjs portal/render.test.mjs && npm --prefix apps/starlight run test:search",
+    "portal:test": "node --test portal/catalog.test.mjs portal/previews.test.mjs portal/progress.test.mjs tools/sync-project-progress.test.mjs portal/follow-up.test.mjs tools/sync-project-follow-up.test.mjs portal/project.test.mjs portal/project-view.test.mjs portal/render.test.mjs portal/planning.test.mjs tools/sync-project-planning.test.mjs && npm --prefix apps/starlight run test:search",
     "portal:build": "node portal/build.mjs",
     "portal:check": "node portal/check.mjs",
     "viewer:check": "node portal/viewer.check.mjs",
@@ -43,6 +43,8 @@
     "follow-up:test": "node --test portal/follow-up.test.mjs tools/sync-project-follow-up.test.mjs",
     "follow-up:check": "node portal/follow-up.check.mjs",
     "project:test": "node --test portal/project.test.mjs portal/project-view.test.mjs portal/render.test.mjs",
-    "project:check": "node portal/project.check.mjs"
+    "project:check": "node portal/project.check.mjs",
+    "planning:sync": "node tools/sync-project-planning.mjs",
+    "planning:test": "node --test portal/planning.test.mjs tools/sync-project-planning.test.mjs"
   }
 }

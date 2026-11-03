@@ -1,0 +1,360 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "repository": "https://github.com/developer-implementos/pos-platform",
+    "revision": "d001f1e0eab45a990a5cfadb51d9692ddc229f94",
+    "path": "delivery/planning.json",
+    "sha256": "138e28368466769e22f72e172f36e20e467353a0c1a46c53bb7af108bd4463ab"
+  },
+  "content": {
+    "schemaVersion": 1,
+    "reviewedOn": "2026-11-03",
+    "increment": {
+      "id": "INC-01",
+      "title": "Seguimiento operativo y contratos del primer puesto",
+      "outcome": "Consultar y seguir excepciones sin confundir estados financieros, y reducir las incógnitas del primer terminal, proveedor fiscal y puesto. No habilita por sí solo cobros, emisiones ni dispositivos reales.",
+      "coordinator": "pymimtos"
+    },
+    "items": [
+      {
+        "key": "operation-evidence-timeline",
+        "kind": "story",
+        "parentDelivery": "F02-04",
+        "title": "Consultar evidencia cronológica de una operación",
+        "outcome": "Como operador autorizado, puedo ver la secuencia y el estado de cada efecto de una operación para decidir qué consultar o escalar sin repetir un cobro ni una emisión.",
+        "order": 1,
+        "priority": "P1",
+        "rationale": "Entrega visibilidad sobre los contratos persistidos existentes y reduce el riesgo de interpretar un pago incierto como venta completada. Puede desarrollarse sin operar un proveedor real.",
+        "dependsOn": [],
+        "followUps": [],
+        "scope": [
+          "Vista de una operación con venta, pago, fiscalidad, dispositivo, referencias y última evidencia; ampliar los contratos propietarios existentes de manera compatible cuando falte información.",
+          "Orden cronológico estable y paginación cuando corresponda; estados, motivos y allowedActions proceden del servidor, conservando la hora y el origen de cada evidencia.",
+          "Permisos y ámbito comprobados en API; interfaces públicas entre contextos, sin consultar tablas privadas desde otro módulo."
+        ],
+        "exclusions": [
+          "No ejecutar nuevas recuperaciones, cargos, emisiones ni reimpresiones; las acciones ya existentes conservan sus contratos y permisos.",
+          "No fabricar un estado global de éxito, traducir ausencia de evidencia a rechazo ni atribuir homologación a los adaptadores de prueba."
+        ],
+        "entryCriteria": [
+          "Persona asignada y contratos de lectura de payments, fiscal, devices y sales revisados en la issue.",
+          "Acordar referencias de correlación, comportamiento de evidencia ausente y permisos; usar los contratos estables permitidos por F02-04 sin exigir homologación ajena a esta lectura.",
+          "Identificar las consultas y proyecciones que existen antes de proponer entidades o endpoints adicionales."
+        ],
+        "criteria": [
+          "Una operación puede mostrar simultáneamente pago incierto, fiscalidad pendiente e impresión pendiente sin aparecer como éxito global.",
+          "Un operador de otro ámbito o sin permiso no obtiene evidencia por modificar el identificador o cursor.",
+          "Dos registros con la misma fecha conservan orden determinista; recargar o paginar no duplica ni oculta evidencia.",
+          "La UI distingue datos ausentes, errores de consulta y efecto incierto, y conserva el vínculo a la operación original."
+        ],
+        "expectedTests": [
+          "Pruebas de contrato y PostgreSQL: aislamiento, permisos, orden estable, cursor inválido y referencias cruzadas inexistentes.",
+          "E2E del cliente conectado: combinación de estados, recarga, error recuperable y navegación con teclado; usar fixtures sintéticos segregados.",
+          "Ejecutar lint, typecheck, pruebas de los proyectos afectados y backend:check; ampliar test:e2e:recovery para el recorrido real de lectura."
+        ],
+        "evidence": [
+          "PR y commit con contrato de lectura, rutas de contexto y estrategia de consulta documentados.",
+          "Resultados reproducibles de API/PostgreSQL y E2E conectado, con alcance de datos sintéticos y límites explícitos."
+        ],
+        "question": null,
+        "timebox": null
+      },
+      {
+        "key": "transbank-terminal-contract",
+        "kind": "research",
+        "parentDelivery": "F02-01",
+        "title": "Verificar el contrato del terminal Transbank del primer puesto",
+        "outcome": "Disponer de una matriz verificable del terminal y SDK elegidos, sus operaciones y recuperación, que permita implementar el adaptador sin confundir POS integrado con Webpay.",
+        "order": 2,
+        "priority": "P1",
+        "rationale": "La incertidumbre del terminal afecta a pagos, capacidades y cierre. Resolverla temprano evita implementar consultas o anulaciones que el dispositivo no soporta; corre en paralelo a la historia de lectura.",
+        "dependsOn": [],
+        "followUps": [
+          "FOLLOWUP-002"
+        ],
+        "scope": [
+          "Contrastar modelo, firmware, modalidad de conexión, versión/licencia del SDK y entorno autorizado con la contraparte del primer puesto.",
+          "Documentar cobro, consulta, LastSale, anulación y cierre: correlación por ticket/importe/comercio, restricciones y qué respuestas prueban un efecto.",
+          "Proponer matriz de fallos y decisiones para exclusión del terminal cuando el resultado es incierto, usando fuentes oficiales y el inventario legacy existente."
+        ],
+        "exclusions": [
+          "No cobrar, anular ni cerrar un terminal real; la investigación no concede autorización operativa.",
+          "No publicar credenciales, identificadores comerciales ni datos de tarjetas; no declarar consulta por clave propia si el contrato no la ofrece."
+        ],
+        "entryCriteria": [
+          "Persona asignada; leer delivery/reviews/F02-provider-contracts.md y el contrato propietario de payments antes de contactar o probar.",
+          "Identificar la contraparte y el material técnico disponible; las consultas de escritorio pueden empezar sin hardware, identificando lo aún no confirmado."
+        ],
+        "criteria": [
+          "Informe con fuentes y versiones separa capacidades confirmadas, limitaciones y preguntas sin respuesta.",
+          "La matriz describe cómo correlacionar una respuesta perdida y cuándo mantener exclusión o escalar; LastSale no se trata como consulta idempotente universal.",
+          "Registrar resultado y siguiente acción en FOLLOWUP-002; dejarlo abierto si falta contrato o acceso y no atribuir homologación al informe."
+        ],
+        "expectedTests": [
+          "Revisión de consistencia entre la matriz, los contratos de payments y F02-01/F02-07/F02-14; ejemplos sanitizados de respuestas si están disponibles.",
+          "Definir casos futuros de éxito, timeout, respuesta perdida, nueva venta ajena, anulación no permitida y cierre; indicar qué necesita sandbox o terminal."
+        ],
+        "evidence": [
+          "Informe versionado bajo delivery/reviews/ con fuentes, modelo/SDK confirmado o pendiente y decisiones trazables.",
+          "Enlace al seguimiento y a los casos de conformidad del adaptador; ningún secreto ni resultado de pago real."
+        ],
+        "question": "¿Qué operaciones y mecanismo de correlación ofrece el terminal/SDK vigente del primer puesto, y cómo se recupera un cobro de resultado desconocido sin autorizar otro cargo?",
+        "timebox": "Máximo 2 jornadas de análisis efectivo; al agotarlas, publicar hallazgos, preguntas, contraparte y siguiente acción. La espera de un tercero no autoriza concluir ni consumir más tiempo sin revisar el alcance."
+      },
+      {
+        "key": "fiscal-provider-contract",
+        "kind": "research",
+        "parentDelivery": "F02-02",
+        "title": "Precisar el proveedor fiscal y su contrato vigente",
+        "outcome": "Identificar el proveedor fiscal del primer alcance y la evidencia necesaria para envío, consulta y representación, manteniendo separadas respuesta del proveedor y aceptación de la autoridad fiscal.",
+        "order": 3,
+        "priority": "P1",
+        "rationale": "El contrato fiscal condiciona emisión, identidad, representación y recuperación. El legacy contiene Acepta e Ingydev y no demuestra cuál opera en el primer puesto; elegir sin evidencia crearía retrabajo y riesgo fiscal.",
+        "dependsOn": [],
+        "followUps": [
+          "FOLLOWUP-003",
+          "FOLLOWUP-006"
+        ],
+        "scope": [
+          "Confirmar proveedor, versión, ambiente y contraparte; inventariar envío, consulta, representación y códigos de estado con sus fuentes.",
+          "Documentar autoridad de numeración, identidad de deduplicación, vigencia/custodia del material y límites de contingencia como contratos o decisiones pendientes.",
+          "Definir escenarios de respuesta perdida, consulta rechazada y representación ausente sin cambiar automáticamente el destino original."
+        ],
+        "exclusions": [
+          "No emitir documentos reales ni descargar material fiscal confidencial al repositorio.",
+          "No aprobar política fiscal, inventar pool de folios ni convertir un PDF disponible en prueba de aceptación fiscal."
+        ],
+        "entryCriteria": [
+          "Persona asignada; revisar delivery/reviews/F02-provider-contracts.md y las invariantes del contexto fiscal.",
+          "Solicitar a la contraparte la identidad del proveedor vigente y documentación autorizada; registrar explícitamente las respuestas pendientes."
+        ],
+        "criteria": [
+          "El informe distingue recepción, procesamiento, rechazo, aceptación fiscal y disponibilidad de representación según la autoridad que acredita cada estado.",
+          "La identidad y semántica de consulta permiten especificar recuperación sin reemisión ciega; las capacidades no confirmadas permanecen identificadas.",
+          "FOLLOWUP-003 y FOLLOWUP-006 conservan resolución independiente: un contrato técnico revisado no constituye aprobación operativa del material fiscal."
+        ],
+        "expectedTests": [
+          "Revisión de estados y escenarios contra contratos existentes de fiscal y F02-02/F02-08/F02-12.",
+          "Definir fixtures de conformidad sanitizados y pruebas posteriores de timeout, respuesta desconocida, representación inválida e identidad ya consumida; separar contrato, sandbox y autoridad real."
+        ],
+        "evidence": [
+          "Matriz versionada bajo delivery/reviews/ con referencias oficiales/autorizadas, versión, mapeo de estados y preguntas pendientes.",
+          "Decisiones y requisitos de acceso registrados en sus seguimientos; la configuración sensible permanece fuera de Git."
+        ],
+        "question": "¿Qué proveedor fiscal está vigente en el primer alcance y qué contrato permite acreditar envío, estado, representación e identidad documental sin duplicar una emisión incierta?",
+        "timebox": "Máximo 2 jornadas de análisis efectivo; cerrar el análisis con informe de hallazgos y pendientes si la contraparte no responde, manteniendo abiertos los seguimientos no resueltos."
+      },
+      {
+        "key": "workstation-driver-compatibility",
+        "kind": "research",
+        "parentDelivery": "F02-03",
+        "title": "Determinar compatibilidad de drivers y ejecución del puesto",
+        "outcome": "Contar con una matriz del primer puesto que identifique modelos, SDK, arquitectura y cuenta/sesión Windows soportadas antes de implementar los adaptadores físicos.",
+        "order": 4,
+        "priority": "P1",
+        "rationale": "La publicación .NET actual no acredita operación física. Confirmar dependencias de 32 bits, spooler y restricciones de servicio evita elegir una arquitectura incompatible con los periféricos legacy.",
+        "dependsOn": [],
+        "followUps": [
+          "FOLLOWUP-004"
+        ],
+        "scope": [
+          "Inventariar impresora, terminal y lector del puesto: modelo, firmware, puerto, driver/SDK, licencia y disponibilidad de entorno de pruebas.",
+          "Contrastar servicio Windows frente a proceso en sesión cuando el SDK lo exija; documentar arquitectura x86/x64 y sus límites sin modificar el modelo de seguridad aprobado.",
+          "Proponer pruebas de instalación, desconexión, respuesta perdida y reinicio que distingan recepción durable, spool y efecto físico."
+        ],
+        "exclusions": [
+          "No instalar drivers ni ejecutar efectos físicos en equipos operativos sin autorización específica.",
+          "No ampliar el alcance inicial a dispositivos de red, estación compartida o acceso móvil; corresponden a fases posteriores."
+        ],
+        "entryCriteria": [
+          "Persona asignada; leer el inventario de api-impresion-caja en delivery/reviews/F02-provider-contracts.md y la documentación del host actual.",
+          "Identificar al responsable del inventario y material técnico disponible; mantener sin confirmar los equipos o licencias no comprobados."
+        ],
+        "criteria": [
+          "Cada dispositivo tiene ficha con datos confirmados o pendientes, evidencia de compatibilidad y restricciones del SDK/driver.",
+          "La propuesta explica por qué el modo de ejecución elegido está soportado por el fabricante y cómo mantiene identidad y permisos mínimos.",
+          "La matriz de pruebas separa test de protocolo, instalación y efecto físico; no se acredita impresión ni lectura real por compilar el host."
+        ],
+        "expectedTests": [
+          "Revisar compatibilidad de la propuesta con device:check, device:interop y el protocolo de ejecución de un uso existente.",
+          "Especificar pruebas futuras de spooler, reinicio, pérdida de USB, cuenta sin permisos y trabajo incierto; indicar equipo y autorización requeridos por escenario."
+        ],
+        "evidence": [
+          "Matriz de hardware y decisión de ejecución versionadas bajo delivery/reviews/, con fuentes de soporte y licencias sin datos sensibles.",
+          "Actualización trazable de FOLLOWUP-004, conservando pendientes los equipos o compatibilidades aún no comprobados."
+        ],
+        "question": "¿Qué combinación de hardware, SDK, arquitectura y cuenta/sesión Windows permite operar de forma soportada los periféricos del primer puesto con el host actual?",
+        "timebox": "Máximo 2 jornadas de análisis efectivo; entregar matriz parcial y lista de datos faltantes al finalizar. Cualquier prueba física requiere un alcance operativo autorizado por separado."
+      },
+      {
+        "key": "operation-exception-case",
+        "kind": "story",
+        "parentDelivery": "F02-04",
+        "title": "Asignar y seguir una excepción de operación",
+        "outcome": "Como supervisor autorizado, puedo asignar y seguir una excepción con motivo y evidencia para que dos operadores no tramiten soluciones contradictorias ni pierdan su historial.",
+        "order": 5,
+        "priority": "P1",
+        "rationale": "Las solicitudes de revisión de pagos existentes son inmutables y no incluyen asignación ni resolución de expedientes. El seguimiento usa primero la evidencia común y aporta coordinación sin mover dinero.",
+        "dependsOn": [
+          "operation-evidence-timeline"
+        ],
+        "followUps": [
+          "FOLLOWUP-005"
+        ],
+        "scope": [
+          "Expediente operativo vinculado a una excepción y a su evidencia original: asignación, motivo, versión y eventos auditables; definir su contexto propietario antes de diseñar tablas o rutas.",
+          "Comandos autorizados con control de concurrencia e identidad estable; la resolución del expediente expresa una conclusión documentada y no sustituye los estados financieros propietarios.",
+          "Vista conectada con responsable actual, historia y motivo de acciones denegadas; preservar las solicitudes inmutables de revisión de pagos ya existentes."
+        ],
+        "exclusions": [
+          "No añadir por esta historia reintentos financieros, compensaciones automáticas, cambios manuales de cobrado ni reasignación de reservas.",
+          "No construir una mesa de ayuda genérica, SLA automáticos ni consola de país; la conciliación completa sigue en F03/F04."
+        ],
+        "entryCriteria": [
+          "Persona asignada y entrega operation-evidence-timeline terminada con contrato de lectura estable.",
+          "Acordar con Operaciones la autoridad para asignar y resolver; FOLLOWUP-005 puede permanecer abierto para otros medios, pero el permiso de este alcance debe quedar documentado.",
+          "Revisar propietario, invariantes y estrategia de migración del expediente sin modificar la evidencia financiera inmutable."
+        ],
+        "criteria": [
+          "Asignación o resolución sin permiso se rechaza en API aunque se invoque fuera de la UI.",
+          "Dos operadores con la misma versión no sobrescriben silenciosamente la decisión del otro; el conflicto conserva las dos solicitudes y sólo un cambio efectivo autorizado.",
+          "Repetir el mismo comando recupera el resultado original; actor, motivo, versión y evidencia de cada transición quedan auditados.",
+          "Cerrar el expediente no marca un pago aprobado, no libera dinero reservado ni transforma un dispositivo incierto en exitoso."
+        ],
+        "expectedTests": [
+          "Pruebas PostgreSQL de concurrencia, rollback, comando repetido y permisos revocados; verificar que no cambia dinero ni evidencia original.",
+          "E2E conectado con dos sesiones, conflicto visible, asignación y conclusión motivadas; datos y usuarios sintéticos segregados.",
+          "Lint, typecheck, migraciones compatibles, backend:check y recorrido ampliado de test:e2e:recovery según los proyectos afectados."
+        ],
+        "evidence": [
+          "PR con decisión de propiedad, contratos, invariantes, migraciones y recuperación; no presentar el modelo propuesto como esquema existente.",
+          "Resultados de concurrencia y E2E que demuestran historial preservado y ausencia de efectos financieros implícitos."
+        ],
+        "question": null,
+        "timebox": null
+      },
+      {
+        "key": "document-correction-links",
+        "kind": "story",
+        "parentDelivery": "F02-12",
+        "title": "Consultar relaciones entre documento original y correcciones",
+        "outcome": "Como operador autorizado, puedo identificar el original y sus correcciones cuando existen, o ver que aún no hay relaciones disponibles, sin alterar el archivo fiscal original.",
+        "order": 6,
+        "priority": "P2",
+        "rationale": "Completa trazabilidad documental de lectura después del foco operativo principal. Requiere acordar el contrato del productor de correcciones de F04; no justifica implementar anticipadamente toda devolución ni emisión correctiva.",
+        "dependsOn": [],
+        "followUps": [
+          "FOLLOWUP-006"
+        ],
+        "scope": [
+          "Acordar contrato propietario de las relaciones y una consulta compatible con documentos existentes, con ámbito, tipo de relación y estado del documento relacionado.",
+          "Mostrar referencias autorizadas desde el detalle documental y distinguir ausencia de correcciones, información no disponible y permiso denegado.",
+          "Conservar documento y representación originales; probar el lector con contratos controlados y declarar pendiente su productor operativo cuando corresponda."
+        ],
+        "exclusions": [
+          "No emitir notas de crédito, efectuar devoluciones ni declarar implementado F04 por introducir el contrato de lectura.",
+          "No cambiar identidad fiscal, regenerar PDF ni exponer un documento de otro ámbito a través de un enlace."
+        ],
+        "entryCriteria": [
+          "Persona asignada y contrato de relación revisado por los contextos fiscal y devoluciones; identificar qué parte puede existir antes del productor F04.",
+          "Precisar semántica de tipos de corrección para el perfil del alcance; si depende de FOLLOWUP-006 sin respuesta, mantener la historia sin preparar."
+        ],
+        "criteria": [
+          "El detalle permite distinguir el original de cada relación conocida y nunca reemplaza su contenido ni identidad.",
+          "El servidor aplica permisos sobre ambos extremos; manipular la referencia no expone documento o representación ajenos.",
+          "Documentos históricos sin relaciones conservan su consulta y descarga; las relaciones inválidas o no disponibles tienen comportamiento explícito.",
+          "La evidencia de prueba diferencia contrato controlado de relaciones producidas por una corrección operativa real."
+        ],
+        "expectedTests": [
+          "Pruebas de contrato, datos históricos, aislamiento por ámbito y relaciones ausentes/inválidas; verificar integridad de la representación original.",
+          "E2E conectado de navegación entre referencias autorizadas y estados vacíos, con datos sintéticos.",
+          "Lint, typecheck y pruebas de los contextos afectados; si se incorpora persistencia, migración compatible e integración PostgreSQL."
+        ],
+        "evidence": [
+          "Contrato versionado, decisión de propiedad y PR del lector con límites del productor explícitos.",
+          "Resultados reproducibles de permisos, compatibilidad y navegación; no acredita emisión de correcciones ni habilitación fiscal."
+        ],
+        "question": null,
+        "timebox": null
+      }
+    ]
+  },
+  "issues": {
+    "observedAt": "2026-11-03T04:54:56.928Z",
+    "repository": "https://github.com/developer-implementos/pos-platform",
+    "entries": [
+      {
+        "code": "document-correction-links",
+        "number": 115,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/115",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T04:46:09Z",
+        "stateReason": null
+      },
+      {
+        "code": "fiscal-provider-contract",
+        "number": 112,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/112",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T04:45:41Z",
+        "stateReason": null
+      },
+      {
+        "code": "operation-evidence-timeline",
+        "number": 110,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/110",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T04:45:25Z",
+        "stateReason": null
+      },
+      {
+        "code": "operation-exception-case",
+        "number": 114,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/114",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T04:45:57Z",
+        "stateReason": null
+      },
+      {
+        "code": "transbank-terminal-contract",
+        "number": 111,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/111",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T04:45:33Z",
+        "stateReason": null
+      },
+      {
+        "code": "workstation-driver-compatibility",
+        "number": 113,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/113",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T04:45:49Z",
+        "stateReason": null
+      }
+    ]
+  }
+}

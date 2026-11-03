@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "2e1a218415107e1cf5dd928ebfa9af421b057195",
+    "revision": "d001f1e0eab45a990a5cfadb51d9692ddc229f94",
     "path": "delivery/progress.json",
-    "sha256": "1f53cff4d12a99f075d50c05255dbedf4406a0e656324f86bd51de840ef5a9ac"
+    "sha256": "acf4b8fdc0610401664de8b4064f7dbdd9cc2fa3ca1205a584c8299076b40ae6"
   },
   "content": {
     "schemaVersion": 2,
@@ -12,9 +12,9 @@
     "productRevision": "source",
     "scope": {
       "repository": "https://github.com/developer-implementos/pos-docs",
-      "revision": "ba94052cb0cd10658c5e2ad98b43f6be48ccfddc",
+      "revision": "81555000224766a2fb82fb7f8b0bc2c65ce8d1ee",
       "path": "docs/roadmap.json",
-      "sha256": "701dc03f2fbfdc8637f6b1ace5a3825705930e749fdab50d808061ba3f1ce9f9"
+      "sha256": "e91cff0a30c2162a36a05b0542eed7e5a25e0490ea898481a37969f2fb21e514"
     },
     "summary": "Quince entregables están técnicamente verificados: doce de F01 y los pagos combinados, el protocolo de dispositivos y la recuperación de cobros de F02. El cliente recupera ventas y registra revisiones durables sin duplicar efectos. Efectivo y transferencia manual están conectados; tarjeta y fiscalidad conservan sus pendientes de proveedor operativo. La aceptación humana y la habilitación productiva se registran por separado.",
     "applications": [
@@ -860,7 +860,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: El perfil de cheque elegido captura datos con sesión acotada y verifica el instrumento mediante el contrato vigente de Orsan, conservando incertidumbre y privacidad.",
+        "summary": "Pendiente de implementación y verificación técnica: El perfil de cheque elegido captura datos con sesión acotada y verifica el instrumento mediante el contrato vigente de Orsan, conservando incertidumbre y privacidad.",
         "acceptance": null,
         "verification": null
       },
@@ -920,7 +920,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Un operador autorizado consulta y mantiene el terminal homologado con operaciones auditadas, diferenciando cierre de terminal y cierre de caja.",
+        "summary": "Pendiente de implementación y verificación técnica: Un operador autorizado consulta y mantiene el terminal homologado con operaciones auditadas, diferenciando cierre de terminal y cierre de caja.",
         "acceptance": null,
         "verification": null
       },
@@ -932,7 +932,7 @@
           "country-api"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: La outbox de sucursal se entrega por HTTPS con ACK posterior al commit de inbox, efecto local y siguiente trabajo durable de país.",
+        "summary": "Pendiente de implementación y verificación técnica: La outbox de sucursal se entrega por HTTPS con ACK posterior al commit de inbox, efecto local y siguiente trabajo durable de país.",
         "acceptance": null,
         "verification": null
       },
@@ -945,7 +945,7 @@
           "branch-api"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: country-api coordina publicaciones comerciales inmutables y verificadas por ámbito, activadas por eventos, calendario o solicitud manual controlada.",
+        "summary": "Pendiente de implementación y verificación técnica: country-api coordina publicaciones comerciales inmutables y verificadas por ámbito, activadas por eventos, calendario o solicitud manual controlada.",
         "acceptance": null,
         "verification": null
       },
@@ -956,7 +956,7 @@
           "erp-worker"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: erp-worker integra una operación con el primer ERP desde su red autorizada y conserva identidad, destino, lease y resultado verificable en país.",
+        "summary": "Pendiente de implementación y verificación técnica: erp-worker integra una operación con el primer ERP desde su red autorizada y conserva identidad, destino, lease y resultado verificable en país.",
         "acceptance": null,
         "verification": null
       },
@@ -969,7 +969,7 @@
           "pos-desktop"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: El equipo observa pendientes y drena colas sin saturar destinos; decide y prueba por separado si una caché de lectura aporta valor medido.",
+        "summary": "Pendiente de implementación y verificación técnica: El equipo observa pendientes y drena colas sin saturar destinos; decide y prueba por separado si una caché de lectura aporta valor medido.",
         "acceptance": null,
         "verification": null
       },
@@ -980,7 +980,7 @@
           "erp-worker"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Los trabajos BullMQ se reconstruyen desde PostgreSQL y contratos de país tras interrupciones o pérdida de Redis sin duplicar solicitudes ni efectos inciertos.",
+        "summary": "Pendiente de implementación y verificación técnica: Los trabajos BullMQ se reconstruyen desde PostgreSQL y contratos de país tras interrupciones o pérdida de Redis sin duplicar solicitudes ni efectos inciertos.",
         "acceptance": null,
         "verification": null
       },
@@ -994,7 +994,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Cada instalación y workload se autentica con su propia identidad, ámbito y capacidades; alta, rotación, revocación y restore no clonan autoridad.",
+        "summary": "Pendiente de implementación y verificación técnica: Cada instalación y workload se autentica con su propia identidad, ámbito y capacidades; alta, rotación, revocación y restore no clonan autoridad.",
         "acceptance": null,
         "verification": null
       },
@@ -1006,7 +1006,7 @@
           "country-api"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: El operador usa identidad corporativa homologada y la sucursal aplica autorizaciones de continuidad firmadas y acotadas durante cortes de WAN.",
+        "summary": "Pendiente de implementación y verificación técnica: El operador usa identidad corporativa homologada y la sucursal aplica autorizaciones de continuidad firmadas y acotadas durante cortes de WAN.",
         "acceptance": null,
         "verification": null
       },
@@ -1018,7 +1018,7 @@
           "branch-sync-worker"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Antes de admitir cada operación, branch-api verifica que datos, permisos, reloj, material fiscal y medio permiten ejecutarla bajo el perfil de continuidad vigente.",
+        "summary": "Pendiente de implementación y verificación técnica: Antes de admitir cada operación, branch-api verifica que datos, permisos, reloj, material fiscal y medio permiten ejecutarla bajo el perfil de continuidad vigente.",
         "acceptance": null,
         "verification": null
       },
@@ -1029,7 +1029,7 @@
           "country-api"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: erp-worker prepara catálogo, clientes y precios desde sus fuentes autorizadas con un punto de corte consistente y manifiesto verificable.",
+        "summary": "Pendiente de implementación y verificación técnica: erp-worker prepara catálogo, clientes y precios desde sus fuentes autorizadas con un punto de corte consistente y manifiesto verificable.",
         "acceptance": null,
         "verification": null
       },
@@ -1040,7 +1040,7 @@
           "branch-api"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: La sucursal descarga y valida candidatas sin alterar el conjunto activo; sólo cambia versión, inbox y cursor aplicado en un commit completo.",
+        "summary": "Pendiente de implementación y verificación técnica: La sucursal descarga y valida candidatas sin alterar el conjunto activo; sólo cambia versión, inbox y cursor aplicado en un commit completo.",
         "acceptance": null,
         "verification": null
       },
@@ -1055,7 +1055,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Las versiones de cliente, sucursal, país, ERP y dispositivo pueden coexistir dentro de una matriz declarada sin interpretar incorrectamente mensajes persistidos.",
+        "summary": "Pendiente de implementación y verificación técnica: Las versiones de cliente, sucursal, país, ERP y dispositivo pueden coexistir dentro de una matriz declarada sin interpretar incorrectamente mensajes persistidos.",
         "acceptance": null,
         "verification": null
       },
@@ -1068,7 +1068,7 @@
           "erp-worker"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Una operación puede seguirse desde la sucursal hasta país y ERP; las diferencias se detectan y recuperan con acciones acotadas y evidencia durable.",
+        "summary": "Pendiente de implementación y verificación técnica: Una operación puede seguirse desde la sucursal hasta país y ERP; las diferencias se detectan y recuperan con acciones acotadas y evidencia durable.",
         "acceptance": null,
         "verification": null
       },
@@ -1081,7 +1081,7 @@
           "erp-worker"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Devolución autorizada ligada a las líneas originales, con nota de crédito y devolución de dinero identificadas como efectos independientes.",
+        "summary": "Pendiente de implementación y verificación técnica: Devolución autorizada ligada a las líneas originales, con nota de crédito y devolución de dinero identificadas como efectos independientes.",
         "acceptance": null,
         "verification": null
       },
@@ -1093,7 +1093,7 @@
           "country-api"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Aplicaciones de cobro y anticipo con reserva o exclusión autorizada, referencias durables y protección frente al doble consumo.",
+        "summary": "Pendiente de implementación y verificación técnica: Aplicaciones de cobro y anticipo con reserva o exclusión autorizada, referencias durables y protección frente al doble consumo.",
         "acceptance": null,
         "verification": null
       },
@@ -1104,7 +1104,7 @@
           "branch-api"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Jornada con ingresos, retiros, arqueos, custodia y depósito trazables; cierre parcial, traspaso y cierre final sujetos a reglas y corte transaccional aprobados.",
+        "summary": "Pendiente de implementación y verificación técnica: Jornada con ingresos, retiros, arqueos, custodia y depósito trazables; cierre parcial, traspaso y cierre final sujetos a reglas y corte transaccional aprobados.",
         "acceptance": null,
         "verification": null
       },
@@ -1117,7 +1117,7 @@
           "erp-worker"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Revisión de jornada que explica diferencias entre caja, pagos, documentos y ERP, con excepciones y aprobaciones auditadas.",
+        "summary": "Pendiente de implementación y verificación técnica: Revisión de jornada que explica diferencias entre caja, pagos, documentos y ERP, con excepciones y aprobaciones auditadas.",
         "acceptance": null,
         "verification": null
       },
@@ -1129,7 +1129,7 @@
           "country-api"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Reportes de ventas, medios de pago, cierres, cobranzas y devoluciones consultables y exportables con permisos, corte y frescura visibles.",
+        "summary": "Pendiente de implementación y verificación técnica: Reportes de ventas, medios de pago, cierres, cobranzas y devoluciones consultables y exportables con permisos, corte y frescura visibles.",
         "acceptance": null,
         "verification": null
       },
@@ -1141,7 +1141,7 @@
           "country-api"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Administración real de asignaciones y configuración autorizada, con versiones, aprobación y propagación comprobable por sucursal.",
+        "summary": "Pendiente de implementación y verificación técnica: Administración real de asignaciones y configuración autorizada, con versiones, aprobación y propagación comprobable por sucursal.",
         "acceptance": null,
         "verification": null
       },
@@ -1154,7 +1154,7 @@
           "erp-worker"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Cada maestro u oferta visible tiene autoridad declarada y flujo de consulta o modificación aprobado, sin editar directamente el espejo de venta.",
+        "summary": "Pendiente de implementación y verificación técnica: Cada maestro u oferta visible tiene autoridad declarada y flujo de consulta o modificación aprobado, sin editar directamente el espejo de venta.",
         "acceptance": null,
         "verification": null
       },
@@ -1167,7 +1167,7 @@
           "erp-worker"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Una orden, nota de venta o documento externo autorizado puede recuperarse y consumirse en caja con propietario, versión y exclusión verificables.",
+        "summary": "Pendiente de implementación y verificación técnica: Una orden, nota de venta o documento externo autorizado puede recuperarse y consumirse en caja con propietario, versión y exclusión verificables.",
         "acceptance": null,
         "verification": null
       },
@@ -1180,7 +1180,7 @@
           "erp-worker"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Un depósito verificado se imputa una sola vez a documentos y conserva parciales, excedentes y excepciones según la autoridad financiera.",
+        "summary": "Pendiente de implementación y verificación técnica: Un depósito verificado se imputa una sola vez a documentos y conserva parciales, excedentes y excepciones según la autoridad financiera.",
         "acceptance": null,
         "verification": null
       },
@@ -1193,7 +1193,7 @@
           "erp-worker"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Soporte y operaciones consultan el estado completo de una operación y gestionan excepciones con permisos y evidencia, cubriendo la administración central necesaria.",
+        "summary": "Pendiente de implementación y verificación técnica: Soporte y operaciones consultan el estado completo de una operación y gestionan excepciones con permisos y evidencia, cubriendo la administración central necesaria.",
         "acceptance": null,
         "verification": null
       },
@@ -1206,7 +1206,7 @@
           "erp-worker"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Venta financiada contra cupo autorizado, con bloqueos, condiciones, cuotas, consumo y deuda vinculados; una consulta de saldo no concede crédito offline.",
+        "summary": "Pendiente de implementación y verificación técnica: Venta financiada contra cupo autorizado, con bloqueos, condiciones, cuotas, consumo y deuda vinculados; una consulta de saldo no concede crédito offline.",
         "acceptance": null,
         "verification": null
       },
@@ -1221,7 +1221,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Una revisión identificada e instalable del alcance piloto, con integridad comprobable y procedimiento de actualización compatible.",
+        "summary": "Pendiente de implementación y verificación técnica: Una revisión identificada e instalable del alcance piloto, con integridad comprobable y procedimiento de actualización compatible.",
         "acceptance": null,
         "verification": null
       },
@@ -1235,7 +1235,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Procedimientos ensayados para recuperar sucursal y país con evidencia de pérdida de datos, tiempo de recuperación y conciliación.",
+        "summary": "Pendiente de implementación y verificación técnica: Procedimientos ensayados para recuperar sucursal y país con evidencia de pérdida de datos, tiempo de recuperación y conciliación.",
         "acceptance": null,
         "verification": null
       },
@@ -1250,7 +1250,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Operadores y soporte pueden detectar, clasificar y atender los incidentes previstos para la configuración piloto.",
+        "summary": "Pendiente de implementación y verificación técnica: Operadores y soporte pueden detectar, clasificar y atender los incidentes previstos para la configuración piloto.",
         "acceptance": null,
         "verification": null
       },
@@ -1265,7 +1265,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Expediente del piloto con configuración, conciliación, incidencias y decisión explícita de continuar, corregir o detener.",
+        "summary": "Pendiente de implementación y verificación técnica: Expediente del piloto con configuración, conciliación, incidencias y decisión explícita de continuar, corregir o detener.",
         "acceptance": null,
         "verification": null
       },
@@ -1280,7 +1280,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Entorno piloto reproducible con PostgreSQL, Redis de trabajos separados, TLS, mínimo privilegio y configuración identificable por ámbito.",
+        "summary": "Pendiente de implementación y verificación técnica: Entorno piloto reproducible con PostgreSQL, Redis de trabajos separados, TLS, mínimo privilegio y configuración identificable por ámbito.",
         "acceptance": null,
         "verification": null
       },
@@ -1295,7 +1295,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Se detectan fallos y degradación del recorrido mediante métricas y alertas accionables con responsables y objetivos medidos.",
+        "summary": "Pendiente de implementación y verificación técnica: Se detectan fallos y degradación del recorrido mediante métricas y alertas accionables con responsables y objetivos medidos.",
         "acceptance": null,
         "verification": null
       },
@@ -1310,7 +1310,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: El alcance piloto cumple objetivos de latencia, volumen y recuperación medidos con carga representativa, límites y backpressure verificables.",
+        "summary": "Pendiente de implementación y verificación técnica: El alcance piloto cumple objetivos de latencia, volumen y recuperación medidos con carga representativa, límites y backpressure verificables.",
         "acceptance": null,
         "verification": null
       },
@@ -1326,7 +1326,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Modelo de amenazas y revisión técnica/operativa del alcance piloto con hallazgos tratados y decisiones de riesgo explícitas.",
+        "summary": "Pendiente de implementación y verificación técnica: Modelo de amenazas y revisión técnica/operativa del alcance piloto con hallazgos tratados y decisiones de riesgo explícitas.",
         "acceptance": null,
         "verification": null
       },
@@ -1342,7 +1342,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Datos personales, auditoría, documentos y evidencias técnicas tienen propiedad, retención y acceso aprobados y mecanismos comprobables.",
+        "summary": "Pendiente de implementación y verificación técnica: Datos personales, auditoría, documentos y evidencias técnicas tienen propiedad, retención y acceso aprobados y mecanismos comprobables.",
         "acceptance": null,
         "verification": null
       },
@@ -1356,7 +1356,7 @@
           "pos-desktop"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Datos y referencias necesarios para el piloto se migran mediante un corte reproducible, conciliado y compatible con los consumidores autorizados.",
+        "summary": "Pendiente de implementación y verificación técnica: Datos y referencias necesarios para el piloto se migran mediante un corte reproducible, conciliado y compatible con los consumidores autorizados.",
         "acceptance": null,
         "verification": null
       },
@@ -1372,7 +1372,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Cada release piloto tiene procedencia, inventario de dependencias/licencias y vulnerabilidades revisadas, sin excepciones silenciosas.",
+        "summary": "Pendiente de implementación y verificación técnica: Cada release piloto tiene procedencia, inventario de dependencias/licencias y vulnerabilidades revisadas, sin excepciones silenciosas.",
         "acceptance": null,
         "verification": null
       },
@@ -1384,7 +1384,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Los recorridos del piloto se pueden ejecutar en los puestos elegidos con teclado, ayudas accesibles, errores comprensibles y periféricos homologados.",
+        "summary": "Pendiente de implementación y verificación técnica: Los recorridos del piloto se pueden ejecutar en los puestos elegidos con teclado, ayudas accesibles, errores comprensibles y periféricos homologados.",
         "acceptance": null,
         "verification": null
       },
@@ -1398,7 +1398,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: El recorrido priorizado se demuestra en otro país reutilizando el núcleo y delimitando sus reglas, datos y adaptadores propios.",
+        "summary": "Pendiente de implementación y verificación técnica: El recorrido priorizado se demuestra en otro país reutilizando el núcleo y delimitando sus reglas, datos y adaptadores propios.",
         "acceptance": null,
         "verification": null
       },
@@ -1410,7 +1410,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Un uso móvil delimitado funciona en Capacitor con permisos, conectividad y capacidades nativas verificadas en los dispositivos elegidos.",
+        "summary": "Pendiente de implementación y verificación técnica: Un uso móvil delimitado funciona en Capacitor con permisos, conectividad y capacidades nativas verificadas en los dispositivos elegidos.",
         "acceptance": null,
         "verification": null
       },
@@ -1426,7 +1426,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Configuraciones aceptadas se habilitan gradualmente con versiones compatibles y criterios explícitos de avance o detención.",
+        "summary": "Pendiente de implementación y verificación técnica: Configuraciones aceptadas se habilitan gradualmente con versiones compatibles y criterios explícitos de avance o detención.",
         "acceptance": null,
         "verification": null
       },
@@ -1438,7 +1438,7 @@
           "branch-sync-worker"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Cada país conserva su aceptación y puede coordinar cambios de ERP sin redirigir pendientes ni repetir efectos.",
+        "summary": "Pendiente de implementación y verificación técnica: Cada país conserva su aceptación y puede coordinar cambios de ERP sin redirigir pendientes ni repetir efectos.",
         "acceptance": null,
         "verification": null
       },
@@ -1451,7 +1451,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Perfil de red homologado para impresoras de recibos o etiquetas seleccionadas, atendidas por una instancia compartida de device-agent, con acceso autorizado desde puestos y móvil tras el piloto F05.",
+        "summary": "Pendiente de implementación y verificación técnica: Perfil de red homologado para impresoras de recibos o etiquetas seleccionadas, atendidas por una instancia compartida de device-agent, con acceso autorizado desde puestos y móvil tras el piloto F05.",
         "acceptance": null,
         "verification": null
       },
@@ -1466,7 +1466,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: El país restante entre Chile, Perú y España tiene perfil, contratos y casos locales aceptados; ningún país queda implícito por haber probado solo dos.",
+        "summary": "Pendiente de implementación y verificación técnica: El país restante entre Chile, Perú y España tiene perfil, contratos y casos locales aceptados; ningún país queda implícito por haber probado solo dos.",
         "acceptance": null,
         "verification": null
       },
@@ -1479,7 +1479,7 @@
           "erp-worker"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Los componentes legacy sustituidos se retiran solo después de demostrar ausencia de dependencias activas, conciliación y conservación del histórico necesario.",
+        "summary": "Pendiente de implementación y verificación técnica: Los componentes legacy sustituidos se retiran solo después de demostrar ausencia de dependencias activas, conciliación y conservación del histórico necesario.",
         "acceptance": null,
         "verification": null
       },
@@ -1495,7 +1495,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: Puestos, móviles, servicios y periféricos se enrolan, inventarían, actualizan, revocan y retiran con identidad y configuración trazables.",
+        "summary": "Pendiente de implementación y verificación técnica: Puestos, móviles, servicios y periféricos se enrolan, inventarían, actualizan, revocan y retiran con identidad y configuración trazables.",
         "acceptance": null,
         "verification": null
       },
@@ -1508,7 +1508,7 @@
           "erp-worker"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementar y aceptar: La operación simultánea de países y sociedades mantiene aislamiento de datos, identidad, destinos, recursos y fallos con capacidad y recuperación medidas.",
+        "summary": "Pendiente de implementación y verificación técnica: La operación simultánea de países y sociedades mantiene aislamiento de datos, identidad, destinos, recursos y fallos con capacidad y recuperación medidas.",
         "acceptance": null,
         "verification": null
       }

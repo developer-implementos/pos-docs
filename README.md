@@ -8,6 +8,7 @@ El código de las aplicaciones pertenece a [POS Platform](https://github.com/dev
 | --- | --- |
 | [`/`](https://pos-docs-starlight.vercel.app/) | Entrada breve a gestión, documentación, presentaciones y fuentes |
 | [`/project/`](https://pos-docs-starlight.vercel.app/project/) | Resumen de avance técnico y aceptación manual, con distribución por fase o aplicación |
+| [`/project/plan/`](https://pos-docs-starlight.vercel.app/project/plan/) | Próximo incremento: tipos de trabajo, orden, responsables, preparación y pruebas esperadas |
 | [`/project/work/`](https://pos-docs-starlight.vercel.app/project/work/) | Entregables, estado técnico, ejecución, asignaciones y evidencia |
 | [`/project/attention/`](https://pos-docs-starlight.vercel.app/project/attention/) | Bloqueos y decisiones con siguiente acción, contraparte, responsable y condición de cierre |
 | [`/project/team/`](https://pos-docs-starlight.vercel.app/project/team/) | Equipo, asignaciones de desarrollo y responsabilidades de seguimiento |
