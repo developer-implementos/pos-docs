@@ -292,7 +292,7 @@ En esta revisión también se contrastó el checkout `desarrollo` del sincroniza
 | Incremento operativo integrado | Usuarios y roles propios POS Chile, asignaciones, provisión persistente, HTTPS y clientes con origen aprobado; CLI de referencias legacy separada del espejo y la UI |
 | Base técnica | HTTP, Pino/Sentry opcional, migraciones, roles separados, unidad de trabajo, artefactos y comprobaciones de ámbito/esquema |
 | Historial integrado | TASK-110: evidencia por operación y estados independientes, integrado mediante la [PR #117](https://github.com/developer-implementos/pos-platform/pull/117) en `3669873`; no completa por sí solo F02-04 |
-| Implementación en revisión | TASK-114: expedientes durables en `reporting`, permisos explícitos y coordinación sin efectos financieros; [PR #118](https://github.com/developer-implementos/pos-platform/pull/118), revisión `9695bd9`, todavía sin integrar. La PR conserva su estado y controles; la [guía F02](phase-2-payments-documents.md) identifica la evidencia local |
+| Expedientes integrados | TASK-114: expedientes durables en `reporting`, permisos explícitos y coordinación sin efectos financieros; [PR #118](https://github.com/developer-implementos/pos-platform/pull/118), revisión `6e679f6`. La [guía F02](phase-2-payments-documents.md) identifica la evidencia técnica y los límites de este incremento |
 | Pendiente | Contratos comerciales de fuentes reales, enrolamiento de identidades de servicio, capacidades de país, entrega de outbox, jobs, ERP, proveedores, hardware y homologación operativa |
 
 Los [criterios técnicos de la base](implementation-plan.md#organización-y-criterios-de-aceptación) definen las comprobaciones para la estructura y sus dependencias.

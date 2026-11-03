@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "9695bd9d45d9db2e48c410123c5e630085c4144f",
+    "revision": "6e679f692aab1fa5681688f1ffae651a215c2d81",
     "path": "delivery/planning.json",
     "sha256": "138e28368466769e22f72e172f36e20e467353a0c1a46c53bb7af108bd4463ab"
   },
@@ -280,7 +280,7 @@
     ]
   },
   "issues": {
-    "observedAt": "2026-11-03T17:02:30.913Z",
+    "observedAt": "2026-11-03T17:49:34.589Z",
     "repository": "https://github.com/developer-implementos/pos-platform",
     "entries": [
       {
@@ -323,15 +323,15 @@
         "code": "operation-exception-case",
         "number": 114,
         "url": "https://github.com/developer-implementos/pos-platform/issues/114",
-        "state": "OPEN",
+        "state": "CLOSED",
         "executionLabels": [
           "status:review"
         ],
         "assignees": [
           "floxcristian"
         ],
-        "updatedAt": "2026-11-03T17:02:11Z",
-        "stateReason": null
+        "updatedAt": "2026-11-03T17:46:32Z",
+        "stateReason": "completed"
       },
       {
         "code": "transbank-terminal-contract",
