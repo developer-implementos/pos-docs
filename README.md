@@ -81,6 +81,8 @@ Cada archivo ofrece **Visualizar** y **Descargar**. Las vistas de lectura `/mate
 
 Los recorridos enlazan una sola explicación de cada responsabilidad. Consultar [fuentes y mantenimiento](docs/documentation-system.md) antes de agregar una vista. Los diagramas de diseño y los datos implementados conservan su estado y procedencia; una vista generada no acredita operación real.
 
+Para trabajar sobre una issue con Codex o Claude Code, consultar [el flujo con la skill pos-delivery](docs/agent-workflow.md). El procedimiento compartido viene versionado con el repositorio y enlaza las reglas, tareas y evidencias vigentes.
+
 Para actualizar la referencia del producto, ejecutar `npm run documentation:export` en un checkout limpio de POS Platform con su PostgreSQL efímero de pruebas. Después, desde POS Docs:
 
 ```sh
