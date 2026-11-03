@@ -20,7 +20,7 @@ export function executionLabel(issue) {
 }
 
 /** Presentation-only projection. The imported models remain the owners of all facts. */
-export function deriveProject(progress, followUp, members = teamMembers) {
+export function deriveProject(progress, followUp, members = teamMembers, planning = null) {
   const works = followUp.workPackages;
   const actions = followUp.items;
   const openActions = actions.filter(item => item.state === 'open');
@@ -31,15 +31,21 @@ export function deriveProject(progress, followUp, members = teamMembers) {
   const logins = new Map(members.map(member => [member.github.toLowerCase(), member.github]));
   for (const work of works) for (const login of work.issue.assignees) if (!logins.has(login.toLowerCase())) logins.set(login.toLowerCase(), login);
   for (const action of actions) if (action.owner && !logins.has(action.owner.toLowerCase())) logins.set(action.owner.toLowerCase(), action.owner);
+  for (const work of planning?.items || []) for (const login of work.issue.assignees) if (!logins.has(login.toLowerCase())) logins.set(login.toLowerCase(), login);
+  const coordinator = planning?.increment.coordinator;
+  if (coordinator && !logins.has(coordinator.toLowerCase())) logins.set(coordinator.toLowerCase(), coordinator);
   const people = [...logins].map(([key, github]) => ({
     ...(membersByLogin.get(key) || { name: `@${github}`, role: 'Perfil sin registrar en el equipo', github, avatar: null }),
     active: active.filter(work => work.issue.assignees.some(login => login.toLowerCase() === key)),
     actions: openActions.filter(action => action.owner?.toLowerCase() === key),
+    planned: (planning?.items || []).filter(work => work.issue.state === 'OPEN' && work.issue.assignees.some(login => login.toLowerCase() === key)),
+    coordinatesIncrement: coordinator?.toLowerCase() === key,
   }));
   return {
     progress, followUp, works, actions, openActions, active, activePreview, people,
     unassignedWork: works.filter(work => !work.issue.assignees.length),
     unassignedActive: active.filter(work => !work.issue.assignees.length),
     unassignedActions: openActions.filter(action => !action.owner),
+    unassignedPlanned: (planning?.items || []).filter(work => work.issue.state === 'OPEN' && !work.issue.assignees.length),
   };
 }

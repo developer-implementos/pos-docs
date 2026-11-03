@@ -12,6 +12,7 @@ import {renderProjectPages} from './project-view.mjs';
 import {teamMembers} from './team.mjs';
 import {loadProgress} from './progress.mjs';
 import {loadFollowUp} from './follow-up.mjs';
+import {loadPlanning} from './planning.mjs';
 import {docsOrigin, repositoryOrigin} from '../apps/starlight/site-config.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
@@ -59,8 +60,9 @@ for (const item of catalog.presentations) {
   }
 }
 const followUp = loadFollowUp(root, progress);
+const planning = loadPlanning(root, progress, followUp);
 fs.writeFileSync(path.join(output, 'index.html'), renderPortal(catalog, docsOrigin, repositoryOrigin, progress, followUp));
-for (const [pathname, page] of [...renderCatalogPages(catalog, repositoryOrigin), ...renderProjectPages(progress, followUp)]) {
+for (const [pathname, page] of [...renderCatalogPages(catalog, repositoryOrigin), ...renderProjectPages(progress, followUp, planning)]) {
   const directory = path.join(output, pathname);
   fs.mkdirSync(directory, {recursive:true});
   fs.writeFileSync(path.join(directory, 'index.html'), renderSitePage({active:'project', ...page, pathname, origin:docsOrigin, repository:repositoryOrigin}));

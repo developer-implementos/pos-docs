@@ -95,6 +95,19 @@ export function initializeProject(root) {
     revealAnchor();
   }
 
+  if (root.dataset.projectPage === 'plan') {
+    const revealPlan = () => {
+      let id;
+      try { id = decodeURIComponent(location.hash.slice(1)); } catch { return; }
+      const target = document.getElementById(id);
+      if (!target || !root.contains(target) || !target.matches('[data-plan-item]')) return;
+      const detail = target.querySelector('details');
+      if (detail) detail.open = true;
+    };
+    window.addEventListener('hashchange', revealPlan);
+    revealPlan();
+  }
+
   const selector = root.querySelector('[data-breakdown-select]');
   if (selector) {
     const views = [...root.querySelectorAll('[data-breakdown]')];

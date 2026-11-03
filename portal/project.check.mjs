@@ -5,6 +5,7 @@ import {fileURLToPath} from 'node:url';
 import {createRequire} from 'node:module';
 import {loadProgress} from './progress.mjs';
 import {loadFollowUp} from './follow-up.mjs';
+import {loadPlanning} from './planning.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const require = createRequire(path.join(root, 'apps/starlight/package.json'));
@@ -12,12 +13,13 @@ const {chromium} = require('playwright');
 const {servePublic} = require(path.join(root, 'apps/starlight/scripts/serve.cjs'));
 const progress = loadProgress(root);
 const followUp = loadFollowUp(root, progress);
+const planning = loadPlanning(root, progress, followUp);
 const output = path.join(root, 'test-results-project');
 fs.mkdirSync(output, {recursive: true});
 const server = await servePublic(0);
 const origin = `http://127.0.0.1:${server.address().port}`;
 const browser = await chromium.launch({headless: true});
-const routes = ['/project/', '/project/work/', '/project/attention/', '/project/team/'];
+const routes = ['/project/', '/project/plan/', '/project/work/', '/project/attention/', '/project/team/'];
 try {
   const page = await browser.newPage({viewport: {width: 1440, height: 1000}, reducedMotion: 'reduce'});
   const failures = [], external = [];
@@ -44,6 +46,13 @@ try {
     await page.screenshot({path: path.join(output, `${route.split('/')[2] || 'summary'}-desktop.png`)});
   }
 
+  await navigate('/project/plan/');
+  assert.equal(await page.locator('[data-plan-item]').count(), planning.items.length);
+  const firstPlan = planning.items[0];
+  await navigate(`/project/plan/#plan-${firstPlan.key}`);
+  assert.notEqual(await page.locator(`#plan-${firstPlan.key} details`).getAttribute('open'), null, 'Planning permalinks expose scope and tests');
+  await page.locator(`#plan-${firstPlan.key} a[href^="/project/work/#"]`).click();
+  assert.equal(new URL(page.url()).hash, `#work-${firstPlan.parentDelivery.toLowerCase()}`);
   await navigate('/project/');
   for (const [id, entries] of [['phases', progress.phases], ['apps', progress.applications]]) {
     const bars = page.locator(`#${id} progress`);
@@ -185,6 +194,8 @@ try {
         await page.locator('[data-breakdown-select]').selectOption('apps');
         assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `Application view has no horizontal overflow at ${width}px`);
         await page.locator('.project-breakdown').screenshot({path: path.join(output, `summary-apps-${width}.png`)});
+      } else if (route === '/project/plan/') {
+        await page.locator('[data-plan-item]').first().screenshot({path: path.join(output, `plan-item-${width}.png`)});
       } else if (route === '/project/team/') {
         await page.locator('.project-team-list > li').first().screenshot({path: path.join(output, `team-person-${width}.png`)});
       } else {
@@ -201,6 +212,10 @@ try {
     assert.ok(await fallback.locator('[data-project-filters]').isHidden());
     assert.ok(await fallback.locator('[data-project-item] a[href^="https://github.com/"]').count() > 0);
   }
+  await fallback.goto(origin + '/project/plan/');
+  assert.equal(await fallback.locator('[data-plan-item]:visible').count(), planning.items.length, 'Planning works without JavaScript');
+  await fallback.locator('[data-plan-item] details summary').first().click();
+  assert.notEqual(await fallback.locator('[data-plan-item] details').first().getAttribute('open'), null);
   await fallback.goto(origin + '/project/');
   assert.ok(await fallback.locator('#apps').isVisible());
   assert.ok(await fallback.locator('#phases').isVisible());

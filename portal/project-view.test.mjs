@@ -10,9 +10,9 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const progress = loadProgress(root);
 const followUp = loadFollowUp(root, progress);
 
-test('four project pages expose shell metadata, current navigation and reviewed provenance', () => {
+test('project pages expose shell metadata, current navigation and reviewed provenance', () => {
   const pages = renderProjectPages(progress, followUp);
-  assert.deepEqual([...pages.keys()], ['/project/', '/project/work/', '/project/attention/', '/project/team/']);
+  assert.deepEqual([...pages.keys()], ['/project/', '/project/plan/', '/project/work/', '/project/attention/', '/project/team/']);
   for (const [route, page] of pages) {
     assert.match(page.body, new RegExp(`href="${route}" aria-current="page"`));
     assert.deepEqual(page.styles, ['/portal/project.css']);

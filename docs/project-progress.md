@@ -1,6 +1,6 @@
 # Seguimiento del avance
 
-El [resumen del proyecto](/project/) presenta el avance técnico y la aceptación manual, con distribución por fase y aplicación. [Entregables](/project/work/) permite consultar qué falta, su ejecución, asignación y evidencia. [Bloqueos y decisiones](/project/attention/) explica qué acceso o información se necesita, quién impulsa la acción y qué permite resolverla. [Equipo](/project/team/) reúne las asignaciones de desarrollo y los responsables de seguimiento. Las vistas se generan desde los mismos registros revisados; no se editan porcentajes ni listas de tareas en páginas independientes.
+El [resumen del proyecto](/project/) presenta el avance técnico y la aceptación manual, con distribución por fase y aplicación. [Próximo incremento](/project/plan/) presenta trabajo acotado y su preparación. [Entregables](/project/work/) permite consultar qué falta, su ejecución, asignación y evidencia. [Bloqueos y decisiones](/project/attention/) explica qué acceso o información se necesita, quién impulsa la acción y qué permite resolverla. [Equipo](/project/team/) reúne las asignaciones de desarrollo y los responsables de seguimiento. Las vistas se generan desde los mismos registros revisados; no se editan porcentajes ni listas de tareas en páginas independientes.
 
 Los indicadores enlazan al detalle filtrado. Los filtros se guardan en la URL y los enlaces permanentes identifican cada entregable o acción; pueden compartirse y recorrerse con Atrás y Adelante. Sin JavaScript, permanecen disponibles los registros, sus enlaces y la navegación entre vistas. La portada conserva un acceso breve y los catálogos completos se consultan en [presentaciones](/presentations/) y [fuentes](/materials/).
 
@@ -9,6 +9,7 @@ Los indicadores enlazan al detalle filtrado. Los filtros se guardan en la URL y 
 | Información | Fuente responsable |
 | --- | --- |
 | Alcance y criterios del entregable | Roadmap y fichas del producto. |
+| Orden del próximo incremento, tipo de trabajo, alcance y condiciones | `delivery/planning.json` en POS Platform; las identidades se vinculan con `delivery/planning-issues.json`. |
 | Estado de ejecución, desarrollador asignado y conversación | GitHub Issues de POS Platform. |
 | Verificación técnica, evidencia y aceptación manual | `delivery/progress.json` en POS Platform. |
 | Accesos, preguntas, decisiones y condiciones pendientes | `delivery/follow-ups.json` en POS Platform. |
@@ -20,6 +21,18 @@ Cada acción distingue si afecta la verificación técnica, la habilitación ope
 
 Para resolver una acción se registra explicación, fecha y evidencia. Las preguntas se concretan con el contacto apropiado; nunca se solicita publicar contraseñas, direcciones internas ni datos comerciales. La evidencia técnica y las conversaciones privadas se enlazan, no se copian automáticamente al portal público.
 
+
+## Cómo se prepara el próximo incremento
+
+Los entregables del roadmap son compromisos de alcance de cada fase. Su obligatoriedad no determina qué debe tomar un desarrollador primero. El plan del próximo incremento establece un orden por dependencias, riesgo y valor, con una razón explícita por unidad. P0 se reserva para urgencias críticas; P1 identifica el siguiente incremento y P2 el trabajo posterior. No se asignan fechas ni estimaciones a partir del orden.
+
+El trabajo puede ser historia, error, tarea técnica, investigación o mantenimiento. Cada unidad enlaza un entregable padre y conserva resultado, límites, condiciones de entrada, criterios, pruebas y evidencia esperada. Una investigación añade la pregunta y un límite de exploración: su resultado puede ser una decisión documentada o un impedimento concreto; no exige simular funcionalidad terminada. Las fases lejanas conservan sus entregables generales hasta contar con contratos y decisiones suficientes.
+
+El responsable humano y el estado de ejecución proceden de GitHub. Una ficha detallada no está automáticamente lista: el panel exige una persona asignada, una sola etiqueta `status:ready` y dependencias cerradas con motivo `completed`. Cierres `not_planned`, sin motivo, o dependencias abiertas no satisfacen esa condición. El responsable debe comprobar las condiciones de entrada antes de iniciar; el panel no puede verificar por una etiqueta que se recibió un contrato o un permiso real.
+
+Los seguimientos relacionados conservan su fuente y sus condiciones de resolución. Una investigación puede tener como objetivo resolver una pregunta abierta, por lo que el enlace no se convierte automáticamente en un bloqueo de ejecución. La coordinación del incremento y la asignación de una tarea son responsabilidades diferentes; ambas permanecen sin confirmar hasta que exista acuerdo.
+
+Las unidades pequeñas no agregan peso ni nuevos elementos al porcentaje del roadmap. Cerrarlas en GitHub no verifica automáticamente al entregable padre ni registra aceptación humana o habilitación operativa. Al finalizar un trabajo, se deja evidencia en su issue y se revisa por separado si el paquete padre cumple todos sus criterios.
 
 ## Qué significa el porcentaje
 
@@ -67,18 +80,21 @@ El snapshot conserva el contenido original, incluido `productRevision: "source"`
    ```sh
    node tools/sync-project-progress.mjs --workspace ../pos-platform
    node tools/sync-project-follow-up.mjs --workspace ../pos-platform
+   node tools/sync-project-planning.mjs --workspace ../pos-platform
    ```
 
-   El segundo comando consulta GitHub de forma explícita con la sesión autorizada del mantenedor. Importa sólo código, número/enlace de issue, estado abierto/cerrado, etiquetas de ejecución, asignados y fecha de actualización. No importa cuerpos, comentarios, tokens ni credenciales.
+   Los importadores de seguimiento y planificación consultan GitHub de forma explícita con la sesión autorizada del mantenedor. Importan sólo código, número/enlace de issue, estado abierto/cerrado, etiquetas de ejecución, asignados y fecha de actualización. La planificación añade el motivo de cierre para distinguir trabajo completado de descartado. No importan cuerpos, comentarios, tokens ni credenciales.
 
-4. Revisar los dos snapshots de `portal/data/`. Sus hashes y revisiones identifican las fuentes; el progreso técnico debe coincidir con el producto importado. Revisar cualquier diferencia de seguimiento: issue cerrada con etiqueta activa, etiquetas contradictorias o bloqueo técnico sin acción registrada.
+4. Revisar los tres snapshots de `portal/data/`. Sus hashes y revisiones identifican las fuentes; el progreso técnico debe coincidir con el producto importado. Revisar cualquier diferencia de seguimiento: issue cerrada con etiqueta activa, etiquetas contradictorias o bloqueo técnico sin acción registrada.
 5. Ejecutar las comprobaciones y publicar la PR documental:
 
    ```sh
    node tools/sync-project-progress.mjs --workspace ../pos-platform --check
    node tools/sync-project-follow-up.mjs --workspace ../pos-platform --check
+   node tools/sync-project-planning.mjs --workspace ../pos-platform --check
    npm run progress:test
    npm run follow-up:test
+   npm run planning:test
    npm run validate
    npm run typecheck
    npm run build

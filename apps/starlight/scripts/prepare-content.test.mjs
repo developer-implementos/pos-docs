@@ -39,7 +39,7 @@ test('portal links keep their site destinations instead of becoming GitHub sourc
   assert.equal(rewriteTarget('/#materials', source), '/#materials');
   assert.equal(rewriteTarget('/#presentations', 'docs/product-repository.md'), '/#presentations');
   assert.equal(rewriteTarget('/?view=sources#materials', source), '/?view=sources#materials');
-  for (const route of ['/project/', '/project/work/', '/project/attention/', '/project/team/', '/presentations/', '/materials/']) {
+  for (const route of ['/project/', '/project/plan/', '/project/work/', '/project/attention/', '/project/team/', '/presentations/', '/materials/']) {
     assert.equal(rewriteTarget(route, source), route, `${route} is a published page`);
   }
   assert.equal(rewriteTarget('/project/work/?status=verified#work-f01-01', source), '/project/work/?status=verified#work-f01-01');

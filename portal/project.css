@@ -148,3 +148,24 @@
 @media(max-width:620px){.project-freshness{display:flex;align-items:center;justify-content:space-between;gap:4px 12px;padding-block:8px 14px}.project-freshness .project-update{margin-left:0}}
 @media(prefers-reduced-motion:reduce){.project-page *{scroll-behavior:auto!important;transition:none!important}}
 @media print{.project-navigation,.project-filters,.project-breakdown-control,.project-kpi-link{display:none!important}.project-page{padding-top:0}.project-panel,.project-action,.project-team-list article{break-inside:avoid}.project-overview-grid,.project-team-list{display:block}.project-kpis{grid-template-columns:repeat(4,1fr)}.project-page details>div{display:block}.project-page [data-breakdown][hidden]{display:block!important}}
+
+.project-increment-link{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:16px 0;border-bottom:1px solid var(--line);font-size:14px}
+.project-increment-link>span{color:var(--muted)}
+.project-planning-summary{margin-bottom:24px;max-width:1100px}
+.project-planning-summary>p{margin-block:12px}
+.project-plan-list{display:grid;gap:20px}
+.project-plan-item{min-width:0;scroll-margin-top:20px;overflow-wrap:anywhere}
+.project-plan-item:target{outline:2px solid var(--primary);outline-offset:3px}
+.project-plan-item h2{font-size:22px;margin:16px 0 12px}
+.project-plan-item p,.project-planning-summary p{font-size:14px;line-height:1.7}
+.project-plan-order{font-size:24px;font-weight:700;color:var(--primary);margin-right:8px}
+.project-plan-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 28px;margin:20px 0;padding-block:20px;border-block:1px solid var(--line)}
+.project-plan-facts dt{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:5px}
+.project-plan-facts dd{font-size:14px;margin:0;overflow-wrap:anywhere}
+.project-plan-facts ul{padding-left:18px;margin:8px 0 0;color:var(--muted)}
+.project-plan-detail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.project-plan-detail section{min-width:0}
+.project-plan-detail h3{font-size:15px;margin:12px 0 8px}
+.project-plan-detail ul{font-size:14px;padding-left:20px}
+.project-plan-detail li+li{margin-top:8px}
+@media(max-width:620px){.project-plan-facts,.project-plan-detail{grid-template-columns:1fr}.project-plan-item h2{font-size:20px}.project-plan-detail{gap:12px}}
