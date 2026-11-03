@@ -1,0 +1,1169 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "repository": "https://github.com/developer-implementos/pos-platform",
+    "revision": "2e1a218415107e1cf5dd928ebfa9af421b057195",
+    "path": "delivery/follow-ups.json",
+    "sha256": "92f0540ef2ba929bdd63e4bbe27c56ee4c9a1094e1bf1afec84c521da44e47dc"
+  },
+  "content": {
+    "schemaVersion": 1,
+    "reviewedOn": "2026-11-03",
+    "items": [
+      {
+        "id": "FOLLOWUP-001",
+        "kind": "access",
+        "state": "open",
+        "workPackages": [
+          "F01-11"
+        ],
+        "summary": "Completar acceso de lectura a Mountain",
+        "impact": "La verificación completa de F01-11 necesita consultas reales autorizadas. La última prueba del 31 de octubre llegó a DNS pero la conexión se rechazó antes de TLS; no comprueba la disponibilidad actual de la VPN.",
+        "impactScope": "technical",
+        "nextAction": "Solicitar a Infraestructura la instancia y el puerto autorizados vigentes y revisar la ruta de acceso. Configurar las credenciales de sólo lectura fuera del repositorio; repetir TLS y consultas de catálogo, precios y clientes con resultados sanitizados.",
+        "requestedFrom": "Infraestructura y responsable de la instancia Mountain autorizada",
+        "owner": null,
+        "closureCriteria": "HTTPS/TLS válidos y consultas reales de catálogo, precios y clientes con permisos y resultados registrados; sin publicar host, credenciales ni datos comerciales.",
+        "reviewedOn": "2026-11-03",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/20#issuecomment-6550796764",
+            "label": "Seguimiento en GitHub"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-002",
+        "kind": "provider",
+        "state": "open",
+        "workPackages": [
+          "F02-01",
+          "F02-07",
+          "F02-14"
+        ],
+        "summary": "Integrar y comprobar Transbank POS integrado",
+        "impact": "El contrato controlado prueba recuperación e idempotencia, pero no acredita cobro ni mantenimiento del terminal real. No detiene el desarrollo independiente de los SDK.",
+        "impactScope": "technical",
+        "nextAction": "Solicitar al responsable del terminal del piloto modelo, firmware, modalidad de conexión, versión/licencia del SDK y contacto técnico del adquirente. Confirmar contrato y entorno de pruebas autorizados para cobro, consulta, anulación y cierre.",
+        "requestedFrom": "Equipo de integración de pagos y contraparte técnica del adquirente",
+        "owner": null,
+        "closureCriteria": "Terminal y SDK identificados, contrato de operaciones y consulta de incertidumbre revisado, acceso de pruebas autorizado y reproducible registrado. La implementación y homologación se completan en los entregables enlazados.",
+        "reviewedOn": "2026-11-03",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/reviews/F02-provider-contracts.md",
+            "label": "Investigación de contratos legacy"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/specs/F02-01.md",
+            "label": "Criterios F02-01"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/specs/F02-14.md",
+            "label": "Criterios F02-14"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/progress.json",
+            "label": "Estado técnico registrado"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-003",
+        "kind": "provider",
+        "state": "open",
+        "workPackages": [
+          "F02-02",
+          "F02-07",
+          "F02-08",
+          "F02-12"
+        ],
+        "summary": "Concretar el primer adaptador fiscal",
+        "impact": "No se puede completar la integración fiscal sin identificar el contrato vigente del piloto. Persistir la solicitud o disponer de un PDF no acredita recepción fiscal.",
+        "impactScope": "technical",
+        "nextAction": "Preguntar qué proveedor fiscal está habilitado en la sucursal piloto: Acepta o Ingydev. Obtener ambiente y versión del contrato de envío, consulta y representación, con sus estados y errores; conservar credenciales fuera del repositorio.",
+        "requestedFrom": "Equipo de integración fiscal y contraparte técnica del proveedor vigente",
+        "owner": null,
+        "closureCriteria": "Proveedor activo, contraparte y contrato identificados; acceso autorizado y escenarios de envío/consulta/representación disponibles para implementar y validar el adaptador.",
+        "reviewedOn": "2026-11-03",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/reviews/F02-provider-contracts.md",
+            "label": "Investigación de contratos legacy"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/specs/F02-02.md",
+            "label": "Criterios F02-02"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/progress.json",
+            "label": "Estado técnico registrado"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-004",
+        "kind": "hardware",
+        "state": "open",
+        "workPackages": [
+          "F02-03",
+          "F02-07",
+          "F02-10",
+          "F02-11",
+          "F02-14"
+        ],
+        "summary": "Integrar drivers y comprobar periféricos del puesto",
+        "impact": "El host .NET y el protocolo durable están implementados. Falta contrastar capacidades y drivers con el hardware del piloto antes de completar impresión y operación física.",
+        "impactScope": "technical",
+        "nextAction": "Solicitar inventario del puesto piloto: modelos, firmware, puertos, controladores/SDK y licencias de impresora, terminal y lector. Confirmar disponibilidad de equipos para pruebas y cuenta/sesión Windows soportada.",
+        "requestedFrom": "Equipo de dispositivos y soporte de puestos",
+        "owner": null,
+        "closureCriteria": "Matriz de hardware/SDK y entorno de ejecución registrada con evidencia, y equipos disponibles para pruebas autorizadas. Cada driver conserva su implementación y prueba física en su entregable.",
+        "reviewedOn": "2026-11-03",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/reviews/F02-provider-contracts.md",
+            "label": "Investigación de contratos legacy"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/specs/F02-03.md",
+            "label": "Criterios F02-03"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/specs/F02-10.md",
+            "label": "Criterios F02-10"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/progress.json",
+            "label": "Estado técnico registrado"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-005",
+        "kind": "question",
+        "state": "open",
+        "workPackages": [
+          "F01-02",
+          "F01-10",
+          "F02-05",
+          "F02-06",
+          "F02-04"
+        ],
+        "summary": "Validar el perfil operativo de pagos y transferencias",
+        "impact": "El software ya soporta el plan combinado y transferencia manual dentro del alcance verificado. Falta validar qué reglas y facultades se habilitarán para operar el piloto.",
+        "impactScope": "operational",
+        "nextAction": "Preguntar a Tesorería qué medios y combinaciones usa el piloto, cuándo entrega vuelto, qué cuentas reciben transferencias y quién verifica su abono de forma independiente. Contrastar ejemplos, límites, descuentos y excepciones con la operación vigente.",
+        "requestedFrom": "Responsable de Finanzas/Tesorería del piloto",
+        "owner": null,
+        "closureCriteria": "Perfil de operación identificado y aprobado con ejemplos monetarios, excepciones y matriz de permisos. No inventar una persona responsable ni fecha de aprobación.",
+        "reviewedOn": "2026-11-03",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/specs/F02-05.md",
+            "label": "Criterios F02-05"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/specs/F02-06.md",
+            "label": "Criterios F02-06"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/specs/F02-04.md",
+            "label": "Criterios F02-04"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/progress.json",
+            "label": "Estado técnico registrado"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-006",
+        "kind": "decision",
+        "state": "open",
+        "workPackages": [
+          "F02-02",
+          "F02-08",
+          "F02-12",
+          "F03-08"
+        ],
+        "summary": "Autorizar identidad y material fiscal del piloto",
+        "impact": "La habilitación fiscal requiere una autoridad identificada y material vigente; no existe una asignación fiscal por defecto ni permiso genérico para emitir sin conexión.",
+        "impactScope": "operational",
+        "nextAction": "Confirmar entidad emisora, tipos documentales, autoridad de numeración, custodia/vigencia del material, correcciones, contingencia permitida y recuperación tras restore; definir representación y retención aplicables.",
+        "requestedFrom": "Responsable fiscal del país y del emisor piloto",
+        "owner": null,
+        "closureCriteria": "Perfil y procedimiento fiscal aprobados y vinculados al ambiente/contrato; evidencia de que restore o incertidumbre no permiten reutilizar identidad consumida.",
+        "reviewedOn": "2026-11-03",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/specs/F02-08.md",
+            "label": "Criterios F02-08"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/specs/F02-02.md",
+            "label": "Criterios F02-02"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/reviews/F02-provider-contracts.md",
+            "label": "Investigación de contratos legacy"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-007",
+        "kind": "question",
+        "state": "open",
+        "workPackages": [
+          "F02-10",
+          "F02-12"
+        ],
+        "summary": "Confirmar los formatos y copias de documentos",
+        "impact": "La plantilla y las copias deben corresponder al documento requerido en el piloto. El contrato de recibo no fiscal no reemplaza esa definición.",
+        "impactScope": "operational",
+        "nextAction": "Entregar ejemplos aprobados de tickets y documentos, contenido obligatorio, tamaños, cantidad de copias y destinatarios permitidos; obtener validación fiscal cuando el formato lo requiera.",
+        "requestedFrom": "Responsable operativo de formatos/documentos del piloto",
+        "owner": null,
+        "closureCriteria": "Plantillas y reglas de copia versionadas con ejemplos aprobados y alcance de impresión/entrega explícito.",
+        "reviewedOn": "2026-11-03",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/specs/F02-10.md",
+            "label": "Criterios F02-10"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/specs/F02-12.md",
+            "label": "Criterios F02-12"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-008",
+        "kind": "provider",
+        "state": "open",
+        "workPackages": [
+          "F02-11"
+        ],
+        "summary": "Confirmar contrato y perfil vigente de cheques",
+        "impact": "La verificación de cheques sigue por desarrollar. El contrato legado identifica una referencia de integración, pero faltan confirmar su vigencia y el acceso autorizado.",
+        "impactScope": "technical",
+        "nextAction": "Solicitar al contacto de Orsan el contrato activo, significado de rechazo/garantía, correlación y deduplicación, y entorno de consulta autorizado. Confirmar con Operaciones el perfil de cheque y los datos que captura el lector.",
+        "requestedFrom": "Equipo de integración y contraparte técnica de Orsan",
+        "owner": null,
+        "closureCriteria": "Contrato y perfil documentados, semántica de respuestas/garantía revisada y consulta de pruebas autorizada disponible. El desarrollo y la comprobación integral permanecen en F02-11.",
+        "reviewedOn": "2026-11-03",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/reviews/F02-provider-contracts.md",
+            "label": "Investigación de contratos legacy"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/specs/F02-11.md",
+            "label": "Criterios F02-11"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/progress.json",
+            "label": "Estado técnico registrado"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-009",
+        "kind": "investigation",
+        "state": "open",
+        "workPackages": [
+          "F03-03",
+          "F03-09",
+          "F03-02",
+          "F03-10"
+        ],
+        "summary": "Definir contrato ERP y extracción de maestros",
+        "impact": "Preparación de F03: los contratos de integración y origen comercial condicionan el ERP y los espejos completos. No es un bloqueo global de F02 ni prueba de que el worker ya procese operaciones.",
+        "impactScope": "technical",
+        "nextAction": "Confirmar fuentes e interfaz autorizadas, unicidad y consulta del resultado ERP, semántica de bajas, vigencia y corte consistente de maestros; acordar publicación comercial y comportamiento de cambios retroactivos.",
+        "requestedFrom": "Dueños de integración ERP, catálogo y precios",
+        "owner": null,
+        "closureCriteria": "Contrato y escenarios de ERP/maestros versionados, con interfaz y cuentas de pruebas autorizadas y semántica de cambios/bajas/corte documentada. Extracción y activación atómica se verifican posteriormente en sus entregables.",
+        "reviewedOn": "2026-11-03",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/specs/F03-03.md",
+            "label": "Criterios F03-03"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/specs/F03-09.md",
+            "label": "Criterios F03-09"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/specs/F03-02.md",
+            "label": "Criterios F03-02"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/specs/F03-10.md",
+            "label": "Criterios F03-10"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-010",
+        "kind": "validation",
+        "state": "open",
+        "workPackages": [
+          "F01-01",
+          "F01-02",
+          "F01-03",
+          "F01-04",
+          "F01-05",
+          "F01-06",
+          "F01-07",
+          "F01-08",
+          "F01-09",
+          "F01-10",
+          "F01-12",
+          "F01-13",
+          "F02-05",
+          "F02-09",
+          "F02-13"
+        ],
+        "summary": "Registrar la aceptación funcional separada de las pruebas técnicas",
+        "impact": "Hay entregables técnicamente verificados sin aceptación manual registrada. La revisión funcional es independiente y no reduce su porcentaje técnico.",
+        "impactScope": "review",
+        "nextAction": "Acordar responsable y recorrido reproducible para los entregables ya verificados; registrar resultado, entorno, alcance y observaciones sin volver a tratar las pruebas automáticas superadas como trabajo no hecho.",
+        "requestedFrom": "Revisor funcional que designe el equipo",
+        "owner": null,
+        "closureCriteria": "Aceptación identificada por entregable o revisión con observaciones concretas. Puede quedar pendiente sin bajar el porcentaje técnico.",
+        "reviewedOn": "2026-11-03",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/progress.json",
+            "label": "Estado técnico registrado"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/README.md",
+            "label": "Proceso y criterios de revisión"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/apps/pos-desktop/README.md",
+            "label": "Proceso y criterios de revisión"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-011",
+        "kind": "validation",
+        "state": "open",
+        "workPackages": [
+          "F02-12"
+        ],
+        "summary": "Comprobar el guardado de documentos en Windows",
+        "impact": "El guardado nativo está implementado y tiene pruebas de archivos; eso no acredita todavía el recorrido completo del diálogo dentro de Windows/WebView.",
+        "impactScope": "review",
+        "nextAction": "Ejecutar el recorrido en POS Desktop Windows con una representación autorizada: elegir destino, cancelar, guardar y verificar el archivo y los mensajes de resultado. Registrar versión y resultado sin documentos comerciales reales.",
+        "requestedFrom": "Revisor del cliente de escritorio que designe el equipo",
+        "owner": null,
+        "closureCriteria": "Recorrido Windows/WebView observado con evidencia de elección, cancelación y archivo guardado íntegro; registrar los fallos como pendientes de F02-12 si aparecen.",
+        "reviewedOn": "2026-11-03",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/apps/pos-desktop/README.md",
+            "label": "Alcance y pruebas del cliente de escritorio"
+          }
+        ],
+        "resolution": null
+      }
+    ]
+  },
+  "issues": {
+    "observedAt": "2026-11-03T03:23:46.644Z",
+    "repository": "https://github.com/developer-implementos/pos-platform",
+    "entries": [
+      {
+        "code": "F01-01",
+        "number": 10,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/10",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:validation"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:20:28Z"
+      },
+      {
+        "code": "F01-02",
+        "number": 11,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/11",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:validation"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:20:32Z"
+      },
+      {
+        "code": "F01-03",
+        "number": 12,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/12",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:validation"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:20:36Z"
+      },
+      {
+        "code": "F01-04",
+        "number": 13,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/13",
+        "state": "CLOSED",
+        "executionLabels": [],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:20:41Z"
+      },
+      {
+        "code": "F01-05",
+        "number": 14,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/14",
+        "state": "CLOSED",
+        "executionLabels": [],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:20:48Z"
+      },
+      {
+        "code": "F01-06",
+        "number": 15,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/15",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:validation"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:20:53Z"
+      },
+      {
+        "code": "F01-07",
+        "number": 16,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/16",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:validation"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:20:57Z"
+      },
+      {
+        "code": "F01-08",
+        "number": 17,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/17",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:validation"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:21:01Z"
+      },
+      {
+        "code": "F01-09",
+        "number": 18,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/18",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:validation"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:21:04Z"
+      },
+      {
+        "code": "F01-10",
+        "number": 19,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/19",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:validation"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:21:08Z"
+      },
+      {
+        "code": "F01-11",
+        "number": 20,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/20",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:blocked"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:21:12Z"
+      },
+      {
+        "code": "F01-12",
+        "number": 21,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/21",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:validation"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:21:16Z"
+      },
+      {
+        "code": "F01-13",
+        "number": 22,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/22",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:validation"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:21:19Z"
+      },
+      {
+        "code": "F02-01",
+        "number": 23,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/23",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:in-progress"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:21:23Z"
+      },
+      {
+        "code": "F02-02",
+        "number": 24,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/24",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:in-progress"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:21:27Z"
+      },
+      {
+        "code": "F02-03",
+        "number": 25,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/25",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:in-progress"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:21:31Z"
+      },
+      {
+        "code": "F02-04",
+        "number": 26,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/26",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:in-progress"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:21:35Z"
+      },
+      {
+        "code": "F02-05",
+        "number": 27,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/27",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:review"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:21:38Z"
+      },
+      {
+        "code": "F02-06",
+        "number": 28,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/28",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:in-progress"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:21:42Z"
+      },
+      {
+        "code": "F02-07",
+        "number": 29,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/29",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:in-progress"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:21:46Z"
+      },
+      {
+        "code": "F02-08",
+        "number": 30,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/30",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:in-progress"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:21:50Z"
+      },
+      {
+        "code": "F02-09",
+        "number": 31,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/31",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:review"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:21:54Z"
+      },
+      {
+        "code": "F02-10",
+        "number": 32,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/32",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:in-progress"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:21:57Z"
+      },
+      {
+        "code": "F02-11",
+        "number": 33,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/33",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:22:01Z"
+      },
+      {
+        "code": "F02-12",
+        "number": 34,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/34",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:in-progress"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:22:05Z"
+      },
+      {
+        "code": "F02-13",
+        "number": 35,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/35",
+        "state": "CLOSED",
+        "executionLabels": [],
+        "assignees": [
+          "floxcristian"
+        ],
+        "updatedAt": "2026-11-03T03:22:09Z"
+      },
+      {
+        "code": "F02-14",
+        "number": 36,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/36",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:22:12Z"
+      },
+      {
+        "code": "F03-01",
+        "number": 37,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/37",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T05:23:55Z"
+      },
+      {
+        "code": "F03-02",
+        "number": 38,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/38",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:22:17Z"
+      },
+      {
+        "code": "F03-03",
+        "number": 39,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/39",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:22:20Z"
+      },
+      {
+        "code": "F03-04",
+        "number": 40,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/40",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T05:24:08Z"
+      },
+      {
+        "code": "F03-05",
+        "number": 41,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/41",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T05:24:13Z"
+      },
+      {
+        "code": "F03-06",
+        "number": 42,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/42",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T05:24:18Z"
+      },
+      {
+        "code": "F03-07",
+        "number": 43,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/43",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T00:00:35Z"
+      },
+      {
+        "code": "F03-08",
+        "number": 44,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/44",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:22:24Z"
+      },
+      {
+        "code": "F03-09",
+        "number": 45,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/45",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:22:28Z"
+      },
+      {
+        "code": "F03-10",
+        "number": 46,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/46",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-11-03T03:22:31Z"
+      },
+      {
+        "code": "F03-11",
+        "number": 47,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/47",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T00:00:48Z"
+      },
+      {
+        "code": "F03-12",
+        "number": 48,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/48",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T00:00:53Z"
+      },
+      {
+        "code": "F04-01",
+        "number": 49,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/49",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T00:00:57Z"
+      },
+      {
+        "code": "F04-02",
+        "number": 50,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/50",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T00:01:01Z"
+      },
+      {
+        "code": "F04-03",
+        "number": 51,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/51",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T00:01:04Z"
+      },
+      {
+        "code": "F04-04",
+        "number": 52,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/52",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T00:01:07Z"
+      },
+      {
+        "code": "F04-05",
+        "number": 53,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/53",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T00:01:10Z"
+      },
+      {
+        "code": "F04-06",
+        "number": 54,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/54",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T00:01:13Z"
+      },
+      {
+        "code": "F04-07",
+        "number": 55,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/55",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T00:01:16Z"
+      },
+      {
+        "code": "F04-08",
+        "number": 56,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/56",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T00:01:20Z"
+      },
+      {
+        "code": "F04-09",
+        "number": 57,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/57",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T00:01:23Z"
+      },
+      {
+        "code": "F04-10",
+        "number": 58,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/58",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T00:01:26Z"
+      },
+      {
+        "code": "F04-11",
+        "number": 59,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/59",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T00:01:29Z"
+      },
+      {
+        "code": "F05-01",
+        "number": 60,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/60",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T05:25:00Z"
+      },
+      {
+        "code": "F05-02",
+        "number": 61,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/61",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T05:25:06Z"
+      },
+      {
+        "code": "F05-03",
+        "number": 62,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/62",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T05:25:11Z"
+      },
+      {
+        "code": "F05-04",
+        "number": 63,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/63",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T00:08:05Z"
+      },
+      {
+        "code": "F05-05",
+        "number": 64,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/64",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T05:25:19Z"
+      },
+      {
+        "code": "F05-06",
+        "number": 65,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/65",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T05:25:25Z"
+      },
+      {
+        "code": "F05-07",
+        "number": 66,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/66",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T05:25:30Z"
+      },
+      {
+        "code": "F05-08",
+        "number": 67,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/67",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T05:25:36Z"
+      },
+      {
+        "code": "F05-09",
+        "number": 68,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/68",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T05:25:41Z"
+      },
+      {
+        "code": "F05-10",
+        "number": 69,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/69",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T00:01:58Z"
+      },
+      {
+        "code": "F05-11",
+        "number": 70,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/70",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T05:25:49Z"
+      },
+      {
+        "code": "F05-12",
+        "number": 71,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/71",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T00:02:04Z"
+      },
+      {
+        "code": "F06-01",
+        "number": 72,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/72",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T00:08:45Z"
+      },
+      {
+        "code": "F06-02",
+        "number": 73,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/73",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T00:08:52Z"
+      },
+      {
+        "code": "F06-03",
+        "number": 74,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/74",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T05:26:01Z"
+      },
+      {
+        "code": "F06-04",
+        "number": 75,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/75",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T00:02:16Z"
+      },
+      {
+        "code": "F06-05",
+        "number": 76,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/76",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T05:26:09Z"
+      },
+      {
+        "code": "F06-06",
+        "number": 77,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/77",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T00:09:15Z"
+      },
+      {
+        "code": "F06-07",
+        "number": 78,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/78",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T00:02:25Z"
+      },
+      {
+        "code": "F06-08",
+        "number": 79,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/79",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T05:26:18Z"
+      },
+      {
+        "code": "F06-09",
+        "number": 80,
+        "url": "https://github.com/developer-implementos/pos-platform/issues/80",
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
+        "assignees": [],
+        "updatedAt": "2026-10-31T05:26:23Z"
+      }
+    ]
+  }
+}

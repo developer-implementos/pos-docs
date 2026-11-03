@@ -1,6 +1,23 @@
 # Seguimiento del avance
 
-La [portada de POS Docs](/#progress) muestra el avance técnico verificado del proyecto, de cada fase y de cada aplicación. La aceptación manual del equipo se informa por separado y no condiciona ese porcentaje. La fuente de seguimiento es [`delivery/progress.json` en la revisión publicada de POS Platform](https://github.com/developer-implementos/pos-platform/blob/98f8987bfa8764ab77f6a55a7686f2ed7884d541/delivery/progress.json). El roadmap define el alcance; el registro del producto conserva su estado y evidencia. No se editan porcentajes en la portada.
+La [portada](/#progress) resume el avance técnico por fase y aplicación. La vista [Estado, pendientes y bloqueos](/guide/project-status/) permite consultar qué falta, qué acceso o información se necesita, quién debe impulsar la acción y qué evidencia permite resolverla. Ambas vistas se generan desde los mismos registros revisados; no se editan porcentajes ni listas de tareas en páginas independientes.
+
+## Dónde se mantiene cada dato
+
+| Información | Fuente responsable |
+| --- | --- |
+| Alcance y criterios del entregable | Roadmap y fichas del producto. |
+| Estado de ejecución, desarrollador asignado y conversación | GitHub Issues de POS Platform. |
+| Verificación técnica, evidencia y aceptación manual | `delivery/progress.json` en POS Platform. |
+| Accesos, preguntas, decisiones y condiciones pendientes | `delivery/follow-ups.json` en POS Platform. |
+| Publicación | Snapshots revisados en POS Docs; sin consultar GitHub desde el navegador. |
+
+Un seguimiento describe una acción concreta que requiere información, acceso, decisión o validación. Enlaza los entregables afectados; no reemplaza sus tareas de desarrollo. El **responsable de seguimiento** impulsa la acción; **información de** identifica la contraparte necesaria. No son equivalentes al desarrollador asignado en GitHub. Si no se acordó responsable, se muestra **Por asignar**.
+
+Cada acción distingue si afecta la verificación técnica, la habilitación operativa o una revisión del equipo. Una fase futura pendiente no constituye un bloqueo actual. Un contrato de proveedor sin validar puede impedir completar su adaptador sin detener el resto del software. La fecha del seguimiento, la revisión técnica y la consulta a GitHub se muestran separadas.
+
+Para resolver una acción se registra explicación, fecha y evidencia. Las preguntas se concretan con el contacto apropiado; nunca se solicita publicar contraseñas, direcciones internas ni datos comerciales. La evidencia técnica y las conversaciones privadas se enlazan, no se copian automáticamente al portal público.
+
 
 ## Qué significa el porcentaje
 
@@ -13,8 +30,6 @@ El denominador corresponde a todos los paquetes del [roadmap versionado](/guide/
 Un paquete compartido cuenta una sola vez en el total del proyecto. Aparece también en cada aplicación que participa, por lo que **el avance general no es la media de los porcentajes de las apps**. Los porcentajes se muestran con hasta un decimal; el 100 % requiere que todos los paquetes correspondientes estén verificados. Por ejemplo, tres entregables verificados de 71 representan 4,2 % del proyecto; si pertenecen a una fase con 13 entregables, representan 23,1 % de esa fase. Es un ejemplo del cálculo, no una declaración del estado publicado.
 
 Esta medida expresa implementación y verificación de los entregables acordados, que incluyen capacidades funcionales, infraestructura, gobierno del desarrollo y validaciones. No expresa esfuerzo consumido, tiempo restante, cantidad de código ni preparación para producción. Un paquete aporta cuando la evidencia cubre todos sus criterios dentro del alcance definido, incluido el recorrido integrado si participan varias aplicaciones. El trabajo parcial conserva su resumen y estado, pero no recibe un porcentaje estimado.
-
-El código de F01 está integrado en `main` y combina dos alcances pendientes de aceptación: un incremento operativo para Chile con usuarios y permisos propios POS, provisión persistente, HTTPS y administración desde Angular contra API y PostgreSQL reales; y un laboratorio separado que prueba venta en efectivo y recuperación con datos comerciales sintéticos. Los paquetes Windows Tauri y Android y el gobierno de PR tienen evidencia técnica propia. El conector Mountain permite consultas HTTPS acotadas; la VPN resuelve el nombre del servicio, pero la conexión se rechaza antes de TLS. Sigue sin validación contra la instancia corporativa ni conexión al espejo o a la UI. El perfil operativo mantiene deshabilitados los cobros y precios sin fuente comercial verificada.
 
 El resumen de cada app señala el alcance comprobado y sus límites: una prueba de navegador no acredita instalación nativa, una consulta local de contrato no acredita el proveedor y una CI verde no acredita por sí sola todos los criterios del entregable. La integración en `main` no verifica automáticamente una tarea ni registra aceptación manual. La portada muestra cuántos entregables están verificados, cuántos aceptó el equipo y cuántos verificados esperan esa revisión manual.
 
@@ -41,32 +56,39 @@ El snapshot conserva el contenido original, incluido `productRevision: "source"`
 
 `verification.revision`, `acceptance.revision` y `scope.revision` siempre requieren un SHA completo; no admiten `source`. La verificación debe pertenecer al historial del producto efectivo. Si hay aceptación, su revisión debe incluir la verificación y pertenecer también a ese historial. Las evidencias se comprueban en el commit de cada revisión y deben ser archivos o directorios versionados, sin enlaces simbólicos. Si un squash deja una verificación o aceptación fuera de ese historial, la importación la rechaza; no la reubica automáticamente. Actualizar la portada o resolver `source` tampoco cambia por sí solo el revisor, la fecha o los estados.
 
-## Actualizar el panel
+## Actualizar el seguimiento
 
-1. En POS Platform, actualizar `delivery/progress.json` con los estados, resúmenes y evidencias de la revisión. Ejecutar `npm run progress:test` y `npm run progress:check`, revisar el diff y confirmar el cambio en Git.
-2. Desde POS Docs, importar el registro del checkout limpio del producto:
+1. En POS Platform, registrar el resultado de la sesión en la issue. Actualizar `delivery/progress.json` si cambia el alcance comprobado y `delivery/follow-ups.json` si aparece o se resuelve una acción. Conservar preguntas ya respondidas como decisiones/evidencia y no reabrirlas por cambiar de sesión. Ejecutar los controles de progreso y entrega; confirmar los archivos en Git.
+2. Publicar el resumen de ejecución desde ese checkout limpio. `npm run delivery:status` muestra el plan; `npm run delivery:status -- --apply` actualiza únicamente comentarios administrados de seguimiento. Conserva conversación, estado, asignados y etiquetas. `--check` detecta comentarios desactualizados.
+3. Importar desde POS Docs, usando el checkout limpio y la revisión del producto que se quiere publicar:
 
    ```sh
-   npm run progress:sync -- --workspace ../pos-platform
+   node tools/sync-project-progress.mjs --workspace ../pos-platform
+   node tools/sync-project-follow-up.mjs --workspace ../pos-platform
    ```
 
-3. Revisar el cambio en `portal/data/project-progress.json`. Es una copia de metadatos para publicación: no incluye el código del producto, credenciales ni resultados operativos sensibles.
-4. Validar la correspondencia con la fuente, los cálculos y el portal:
+   El segundo comando consulta GitHub de forma explícita con la sesión autorizada del mantenedor. Importa sólo código, número/enlace de issue, estado abierto/cerrado, etiquetas de ejecución, asignados y fecha de actualización. No importa cuerpos, comentarios, tokens ni credenciales.
+
+4. Revisar los dos snapshots de `portal/data/`. Sus hashes y revisiones identifican las fuentes; el progreso técnico debe coincidir con el producto importado. Revisar cualquier diferencia de seguimiento: issue cerrada con etiqueta activa, etiquetas contradictorias o bloqueo técnico sin acción registrada.
+5. Ejecutar las comprobaciones y publicar la PR documental:
 
    ```sh
-   npm run progress:sync -- --workspace ../pos-platform --check
+   node tools/sync-project-progress.mjs --workspace ../pos-platform --check
+   node tools/sync-project-follow-up.mjs --workspace ../pos-platform --check
    npm run progress:test
+   npm run follow-up:test
    npm run validate
    npm run typecheck
    npm run build
    npm run portal:check
+   npm run follow-up:check
    ```
 
-5. Confirmar y publicar el cambio revisado de POS Docs. Vercel construye el portal con ese snapshot y la portada identifica la revisión publicada.
+`--check` no escribe. En seguimiento compara el contenido y estado observado; no falla sólo por transcurrir el reloj. La importación normal registra una nueva fecha de consulta. La fuente debe ser un commit del repositorio corporativo y un checkout limpio; las referencias de evidencia del progreso deben pertenecer a su historial. Un clon superficial necesita recuperar esos commits.
 
-`--check` detecta un snapshot desactualizado sin modificarlo. La importación rechaza cambios sin commit en el producto, un repositorio distinto, evidencia inexistente y un alcance que ya no coincide con el roadmap. Ambos checkouts deben incluir los commits referenciados; un clon superficial requiere recuperar esa historia antes de importar. Valida todo antes de reemplazar el snapshot. El hash de la fuente identifica su contenido JSON normalizado; el hash del alcance corresponde al archivo del roadmap con saltos de línea LF.
+El build de Vercel es autónomo y usa los snapshots confirmados. **Un push a POS Platform o un cambio de issue no actualizan automáticamente POS Docs.** Publicar un corte requiere importar, revisar y fusionar la PR de documentación. El equipo debe hacerlo al actualizar entregables, resolver impedimentos o preparar una revisión de avance. La fecha visible permite reconocer qué corte se está consultando.
 
-POS Platform es un repositorio privado. Los enlaces a su registro y evidencia requieren acceso de la empresa; los porcentajes, resúmenes y estados revisados son visibles en el portal público. El build y el navegador no consultan ese repositorio ni necesitan sus credenciales. **Un push a POS Platform no actualiza automáticamente POS Docs:** el nuevo resumen se publica mediante el flujo anterior, no en tiempo real.
+Los enlaces de POS Platform requieren acceso al repositorio privado. Los datos de seguimiento incluidos en el snapshot son públicos: no incluir información que sólo deba circular dentro de la empresa.
 
 ## Cambios de alcance
 

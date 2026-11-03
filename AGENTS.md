@@ -6,7 +6,7 @@ Repositorio editorial público de POS Platform. Contiene el portal de recursos, 
 
 El backlog de producto y sus responsables están en GitHub Issues de `developer-implementos/pos-platform`; leer su `CONTRIBUTING.md` y la ficha `delivery/specs/Fxx-xx.md` antes de cambiar un contrato o el alcance. Enlazar cada PR documental al issue del producto mediante URL completa. No cerrar el entregable desde un PR editorial ni atribuir aceptación de producto a la publicación de documentación. Una sesión de agente trabaja en una rama propia y deja decisiones, validaciones y bloqueos en el issue o PR, no sólo en el chat.
 
-`docs/roadmap.json` define el alcance versionado. Cambiar IDs, aplicaciones o aceptación exige coordinar `delivery/backlog.json`, fichas, issues y registro de avance del producto; no mantener un segundo backlog manual aquí. Importar el avance sólo desde una revisión limpia y verificable, siguiendo `docs/project-progress.md`.
+`docs/roadmap.json` define el alcance versionado. Cambiar IDs, aplicaciones o aceptación exige coordinar `delivery/backlog.json`, fichas, issues y registro de avance del producto; no mantener un segundo backlog manual aquí. Importar el avance y los seguimientos sólo desde una revisión limpia y verificable, siguiendo `docs/project-progress.md`. El estado de ejecución y asignados proceden de GitHub; las acciones públicas proceden de `delivery/follow-ups.json`. No mantener otra lista manual de bloqueos en páginas o presentaciones, ni atribuir disponibilidad actual a una prueba de acceso histórica. Mostrar fechas de revisión/consulta y conservar las preguntas resueltas.
 
 ## Convenciones editoriales
 

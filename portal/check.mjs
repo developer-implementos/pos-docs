@@ -131,10 +131,11 @@ try {
   const method = progressSection.locator('summary');
   await method.focus();
   await page.keyboard.press('Enter');
-  assert.ok(await progressSection.locator('.progress-work-list').isVisible());
-  assert.equal(await progressSection.locator('.progress-work-list>li').count(), progress.total);
+    assert.ok(await progressSection.getByRole('link', {name:'Consultar el estado y los pendientes de cada entregable'}).isVisible());
+    assert.equal(await progressSection.locator('.progress-work-list').count(), 0);
   await page.keyboard.press('Enter');
-  assert.ok(await progressSection.locator('.progress-work-list').isHidden());
+    assert.ok(await progressSection.getByRole('link', {name:'Consultar el estado y los pendientes de cada entregable'}).isHidden());
+    assert.ok(await progressSection.getByRole('link', {name:'Ver pendientes y bloqueos'}).isVisible());
   report.checks.push('Pinned project/app/phase progress, independent manual acceptance and keyboard-operated methodology');
 
   const references = await page.locator('a[href], link[href], script[src], img[src]').evaluateAll(nodes => nodes.map(node => ({
