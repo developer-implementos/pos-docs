@@ -134,6 +134,7 @@ test('schema 1 acceptance stays historical across summary, breakdowns, dates and
     assert.match(page.body, /<strong>Aceptación del alcance<\/strong>/);
     assert.match(page.body, /registro histórico de esquema 1 mide aceptación del alcance/);
     assert.match(page.body, /No contiene verificaciones técnicas separadas/);
+    assert.match(page.body, /La aceptación histórica no acredita verificación técnica separada ni habilitación operativa/);
     assert.doesNotMatch(page.body, /<strong>Avance técnico<\/strong>|ALCANCE VERIFICADO/);
   }
   const summary = pages.get('/project/').body;
