@@ -10,3 +10,5 @@
 *.woff binary
 *.woff2 binary
 *.ttf binary
+# Preserve upstream bytes verified by tools/archify/vendor-manifest.json.
+tools/archify/vendor/archify/** -text linguist-vendored

@@ -5,6 +5,8 @@ import { generatedPages, generatedDirectories, labLinks, siteBase, sourceRouteAl
 import { productEvidence, productReferences } from './product-evidence.mjs';
 import { loadCatalog } from '../../../portal/catalog.mjs';
 import { loadRoadmap, renderRoadmapDocs, renderRoadmapPhase } from '../../../tools/roadmap.mjs';
+import { exploreCatalog } from '../../../tools/archify/catalog.mjs';
+import { generatedPageFile } from './content-files.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const output = path.join(root, 'apps/starlight/src/content/docs');
@@ -14,7 +16,7 @@ const routeBySource = new Map();
 const anchorBySource = new Map();
 const publicCatalog = loadCatalog(root);
 const publishedDownloads = new Map(publicCatalog.materials.map(item => [item.source, item.href]));
-const publishedPages = new Set(['/architecture/', '/presentations/', ...publicCatalog.presentations.flatMap(item => [item.href, item.readingHref])]);
+const publishedPages = new Set(['/architecture/', '/explore/', '/presentations/', ...exploreCatalog.map(item => item.href), ...publicCatalog.presentations.flatMap(item => [item.href, item.readingHref])]);
 
 function slug(text) {
   return text.toLowerCase().replace(/<[^>]*>/g, '').replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
@@ -248,7 +250,6 @@ export function prepareContent() {
     if (firstHeading) body = body.replace(/^#{1,6}\s+[^\n]+\n?/, `<span id="${firstHeading.id}"></span>\n`);
     body = normalizeHeadings(rewriteLinks(body, page.linkSource || page.source));
     if (page.roadmap || page.roadmapPhase) body = roadmapContent(body, page.roadmapPhase);
-    const extension = page.flow ? '.mdx' : '.md';
     const sourceLabel = page.kind === 'evidence' ? 'Evidencia y alcance de la revisión' : page.kind === 'research' ? 'Análisis que sustenta la propuesta' : 'Fuente del contenido';
     let imports = '';
     let enhanced = '';
@@ -265,7 +266,7 @@ export function prepareContent() {
     const frontmatter = `---\ntitle: ${JSON.stringify(page.title)}\ndescription: ${JSON.stringify(page.description)}\neditUrl: false\n${pagination(page)}---\n\n`;
     const sourceReference = page.sourceDownload === false ? `\`${page.source}\`` : `[${page.source}](${page.source.startsWith('docs/') ? '/' + page.source : `${repositoryOrigin}/blob/main/${page.source}`})`;
     const footer = `\n\n---\n\n${sourceLabel}: ${sourceReference}${page.range?.from ? ` · sección «${page.range.from}»` : ''}.\n`;
-    const destination = path.join(output, page.route + extension);
+    const destination = path.join(output, generatedPageFile(page));
     fs.mkdirSync(path.dirname(destination), { recursive: true });
     fs.writeFileSync(destination, frontmatter + imports + pageContext(page) + enhanced + body + labs + footer, 'utf8');
     generatedFiles.add(destination);

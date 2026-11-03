@@ -1,0 +1,57 @@
+import assert from 'node:assert/strict';
+import {createRequire} from 'node:module';
+import fs from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {loadBundle, operations, digest} from './bundle.mjs';
+
+const require = createRequire(new URL('../../apps/starlight/package.json', import.meta.url));
+const {chromium} = require('playwright');
+const {servePublic} = require('./scripts/serve.cjs');
+const bundle = loadBundle();
+const server = await servePublic(0);
+const origin = `http://127.0.0.1:${server.address().port}`;
+const output = fileURLToPath(new URL('../../test-results-reference/', import.meta.url));
+fs.mkdirSync(output, {recursive:true});
+const browser = await chromium.launch();
+try {
+  const page = await browser.newPage({viewport:{width:1440,height:900},reducedMotion:'reduce'});
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
+  page.on('requestfailed', request => errors.push(request.url()));
+  page.on('request', request => { if (new URL(request.url()).origin !== origin) errors.push(`External request: ${request.url()}`); });
+  const total = bundle.apis.reduce((count, api) => count + operations(api.document).length, 0);
+  await page.goto(`${origin}/guide/api/pos-platform/`, {waitUntil:'networkidle'});
+  assert.equal(await page.locator('[data-api-operation]').count(), total);
+  const search = page.getByRole('searchbox', {name:'Buscar en los contratos'});
+  await search.fill('no-such-operation-719462');
+  await page.getByText('No hay operaciones con esa búsqueda.').waitFor();
+  assert.equal(await page.locator('[data-api-operation]:visible').count(), 0);
+  const target = operations(bundle.apis[0].document)[0];
+  await search.fill(target.operationId);
+  assert.ok(await page.locator('[data-api-operation]:visible').count() > 0);
+  const id = `${bundle.apis[0].id}-${target.operationId}`;
+  await page.goto(`${origin}/guide/api/pos-platform/#${id}`, {waitUntil:'networkidle'});
+  assert.equal(await page.evaluate(id => document.getElementById(id)?.open, id), true);
+  for (const [relative, bytes] of bundle.files) {
+    const response = await page.request.get(`${origin}/contracts/${relative}`);
+    assert.equal(response.status(), 200);
+    assert.equal(digest(await response.body()), digest(bytes), 'Published contract differs from its reviewed snapshot');
+  }
+  for (const route of ['/guide/api/pos-platform/', '/guide/api/data-model/', '/guide/flows/', '/explore/']) {
+    await page.goto(origin + route, {waitUntil:'networkidle'});
+    if (route === '/guide/api/pos-platform/') await page.locator('[data-api-operation]').first().evaluate(element => { element.open = true; });
+    if (route === '/guide/api/data-model/') await page.locator('.data-table').first().evaluate(element => { element.open = true; });
+    for (const width of [1440,375,320]) {
+      await page.setViewportSize({width,height:900});
+      assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${route} overflows at ${width}`);
+      await page.screenshot({path:path.join(output, `${route.replaceAll('/', '-')}-${width}.png`)});
+    }
+  }
+  assert.deepEqual(errors, []);
+  console.log(`Product reference verified: ${total} operations, source-identical downloads, filtering, deep links, CSP and 4 routes at 3 widths.`);
+} finally {
+  await browser.close();
+  await new Promise(resolve => server.close(resolve));
+}

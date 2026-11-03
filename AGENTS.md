@@ -10,6 +10,11 @@ El backlog de producto y sus responsables están en GitHub Issues de `developer-
 
 ## Convenciones editoriales
 
+- Antes de editar, identificar la pregunta que resolverá el cambio y su recorrido en `docs/flows/`. Seguir `docs/documentation-system.md`: responsabilidades y decisiones pertenecen a POS Docs; contratos, migraciones y evidencia de ejecución proceden de POS Platform. Archify, Starlight y Reveal consumen fuentes compartidas. No crear otro catálogo manual de aplicaciones, relaciones, endpoints o tablas.
+- Declarar `Documentation-Impact` en la PR (`architecture`, `behavior`, `contracts`, `data` o `none`) y enlazar las fuentes afectadas o justificar la ausencia de impacto. Usar `behavior` para cambios de flujo u operación, con el mismo vocabulario del producto. Las vistas de implementación requieren revisión inmutable del producto. Importar referencias mediante `node tools/product-reference/sync.mjs --workspace <checkout-limpio>`; nunca copiar credenciales, filas o endpoints de despliegue.
+- Los JSON/HTML de Archify se generan con el runtime fijado en `tools/archify/`; no editar artefactos ni instalar otra versión por sesión. Actualizar el adaptador y el modelo de origen, ejecutar sus comprobaciones y revisar visualmente las vistas afectadas. Los cambios de versión requieren actualización explícita de licencias y manifiesto del proveedor.
+- No declarar comprensión humana a partir de un test o una revisión de agente. La revisión independiente contrasta el recorrido, sus límites y evidencia; registrar las sesiones de comprensión según `docs/editorial/comprehension-validation.md` únicamente cuando ocurran.
+
 - Mantener rutas públicas en inglés y contenido en español. Conservar `/guide/` y sus enlaces permanentes.
 - `/` es el portal: `portal/catalog.json` registra las presentaciones y descargas. Publicar originales de `materials/` sólo cuando estén catalogados; no copiar indiscriminadamente el directorio. Ver `materials/README.md`.
 - `docs/` contiene las fuentes canónicas. `apps/starlight/src/content/docs/` combina páginas manuales con carpetas generadas que no se editan ni versionan.

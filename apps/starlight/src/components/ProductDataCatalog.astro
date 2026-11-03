@@ -1,0 +1,39 @@
+---
+import {productReference} from '../data/product-reference';
+const {manifest, database} = productReference;
+const contexts = [...new Set<string>(database.databases.flatMap(db => db.tables.map(table => table.context)))].sort();
+---
+<p>Esquema extraído después de aplicar las migraciones a una base de pruebas aislada, en la revisión <a href={`${manifest.source.repository}/commit/${manifest.source.commit}`}>{manifest.source.commit.slice(0, 12)}</a>. Incluye estructura y restricciones; no contiene registros de negocio ni describe una instancia productiva.</p>
+<p><a href="/contracts/database/schema.json" download>Descargar estructura JSON</a> · <a href="/contracts/manifest.json">Revisión y hashes de los artefactos</a> · <a href="/guide/api/pos-platform/">Contratos HTTP</a></p>
+{contexts.map(context => <section>
+  <h2 id={`context-${context}`}>{context}</h2>
+  <p>{database.databases.filter(db => db.tables.some(table => table.context === context)).map((db, index) => <>{index > 0 && ' · '}<a href={`/explore/data-${db.id}-${context}/`}>Explorar relaciones · {db.id === 'branch' ? 'sucursal' : 'país'}</a></>)}</p>
+  {database.databases.flatMap(db => db.tables.filter(table => table.context === context).map(table => (
+    <details class="data-table" id={`table-${db.id}-${table.schema}-${table.name}`}>
+      <summary><code>{table.schema}.{table.name}</code></summary>
+      <div class="data-detail">
+        <p>Base: <strong>{db.id}</strong>. Aplicación: <code>{db.app}</code>. Contexto propietario: <code>{table.context}</code>.</p>
+        <div class="table-scroll" tabindex="0" role="region" aria-label={`Columnas de ${table.schema}.${table.name}`}>
+          <table><thead><tr><th>Columna</th><th>Tipo SQL</th><th>Permite nulo</th><th>Valor predeterminado</th><th>Descripción de origen</th></tr></thead>
+            <tbody>{table.columns.map(column => <tr><td><code>{column.name}</code></td><td>{column.type}</td><td>{column.nullable ? 'Sí' : 'No'}</td><td><code>{column.default ?? '—'}</code></td><td>{column.comment || 'Sin comentario en la migración'}</td></tr>)}</tbody>
+          </table>
+        </div>
+        <h3>Restricciones</h3>
+        <ul>{table.constraints.map(constraint => <li><code>{constraint.name}</code>: <code>{constraint.definition}</code></li>)}</ul>
+        <details><summary>Índices</summary><ul>{table.indexes.map(index => <li><code>{index.definition}</code></li>)}</ul></details>
+      </div>
+    </details>
+  )))}
+</section>)}
+<details><summary>Migraciones aplicadas</summary><pre><code>{JSON.stringify(database.databases.map(db => ({database: db.id, migrations: db.migrations})), null, 2)}</code></pre></details>
+
+<style>
+  .data-table { margin-block:.75rem; border:1px solid var(--sl-color-gray-5); border-radius:.5rem; }
+  summary { padding:.85rem; cursor:pointer; font-weight:600; overflow-wrap:anywhere; }
+  summary:focus-visible, .table-scroll:focus-visible { outline:3px solid var(--sl-color-accent); }
+  .data-detail { padding:0 1rem 1rem; min-width:0; }
+  .table-scroll { overflow:auto; max-width:100%; }
+  table { min-width:36rem; }
+  pre { overflow:auto; max-height:28rem; padding:1rem; border:1px solid var(--sl-color-gray-5); }
+  li { overflow-wrap:anywhere; }
+</style>

@@ -160,9 +160,10 @@ async function run() {
     report.checks.push('Heading hierarchy, unique anchors, proposal reading path and page status are consistent');
     await page.goto(origin + '/guide/diagrams/');
     const explorer = page.locator('[data-diagram-explore]');
-    assert.equal(await explorer.getAttribute('href'), '/architecture/');
+    assert.equal(await explorer.getAttribute('href'), '/explore/applications/');
     assert.equal(await explorer.locator('img').getAttribute('src'), '/docs/architecture/pos-platform-base.svg');
     const preview = page.locator('[data-diagram-open]').first();
+    await preview.evaluate(element => { for (let parent = element.parentElement; parent; parent = parent.parentElement) if (parent instanceof HTMLDetailsElement) parent.open = true; });
     await preview.click();
     assert.equal(await page.locator('dialog[open]').count(), 1);
     await page.waitForFunction(() => {

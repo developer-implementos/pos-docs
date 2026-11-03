@@ -1,0 +1,103 @@
+---
+import {operations} from '../../../../tools/product-reference/bundle.mjs';
+import {productReference} from '../data/product-reference';
+const {manifest, apis} = productReference;
+const revisionUrl = `${manifest.source.repository}/commit/${manifest.source.commit}`;
+const securityLabel = (security: Array<Record<string, string[]>>) => security.length
+  ? security.map(requirement => Object.keys(requirement).join(' + ') || 'Sin credencial declarada').join(' o ')
+  : 'Sin credencial declarada en OpenAPI';
+---
+
+<p>Contrato HTTP generado desde <a href={revisionUrl}>POS Platform · {manifest.source.commit.slice(0, 12)}</a>. Describe rutas y esquemas del código de esa revisión. La disponibilidad de cada capacidad y su homologación se consultan en los recorridos y el registro de entregables.</p>
+<p><a href="/guide/flows/">Recorridos de negocio</a> · <a href="/guide/api/data-model/">Datos implementados</a> · <a href="/contracts/manifest.json">Manifiesto de procedencia</a></p>
+<p>Los enlaces al código requieren acceso al repositorio del equipo. Los contratos publicados aquí pueden consultarse sin iniciar sesión.</p>
+
+<pos-product-api>
+  <label class="api-search" hidden>Buscar en los contratos
+    <input type="search" placeholder="Ruta, operación, campo o descripción" autocomplete="off" />
+  </label>
+  <p class="api-counter" role="status" aria-live="polite" data-pagefind-ignore></p>
+  {apis.map(api => (
+    <section data-api-section aria-labelledby={`api-${api.id}`}>
+      <h2 id={`api-${api.id}`}>{api.id}</h2>
+      <p>{api.document.info.description || 'Referencia del contrato HTTP de la aplicación.'}</p>
+      <p><a href={`/contracts/openapi/${api.id}.json`} download>Descargar OpenAPI de {api.id}</a></p>
+      <p>{operations(api.document).length} operaciones. Las rutas conservan su método, identidad y esquemas originales.</p>
+      {operations(api.document).map(operation => (
+        <details class="api-operation" id={`${api.id}-${operation.operationId}`} data-api-operation>
+          <summary><span class="api-method">{operation.method}</span> <code>{operation.route}</code></summary>
+          <div class="api-detail">
+            <p><strong>{operation.summary || operation.operationId}</strong></p>
+            {operation.description && <p>{operation.description}</p>}
+            <dl><dt>Identidad del contrato</dt><dd><code>{operation.operationId}</code></dd><dt>Autenticación declarada</dt><dd>{securityLabel(operation.security)}</dd></dl>
+            <p>La autorización por permisos, los estados admitidos y las garantías transaccionales dependen del caso de uso. OpenAPI no acredita esos comportamientos por sí solo.</p>
+            {operation.parameters.length > 0 && <><h3>Parámetros</h3><pre data-pagefind-ignore><code>{JSON.stringify(operation.parameters, null, 2)}</code></pre></>}
+            {operation.requestBody && <><h3>Cuerpo de la solicitud</h3><pre data-pagefind-ignore><code>{JSON.stringify(operation.requestBody, null, 2)}</code></pre></>}
+            <h3>Respuestas</h3><pre data-pagefind-ignore><code>{JSON.stringify(operation.responses, null, 2)}</code></pre>
+            <p><a href={`#schemas-${api.id}`}>Consultar los esquemas referenciados</a> · <a href={`#${api.id}-${operation.operationId}`}>Enlace a esta operación</a></p>
+          </div>
+        </details>
+      ))}
+      <details id={`schemas-${api.id}`} class="api-schemas">
+        <summary>Esquemas y mecanismos de autenticación de {api.id}</summary>
+        <pre data-pagefind-ignore><code>{JSON.stringify(api.document.components || {}, null, 2)}</code></pre>
+      </details>
+    </section>
+  ))}
+</pos-product-api>
+
+<script>
+  class ProductApiCatalog extends HTMLElement {
+    connectedCallback() {
+      if (this.dataset.ready) return;
+      const label = this.querySelector<HTMLElement>('.api-search');
+      const input = this.querySelector<HTMLInputElement>('input');
+      const counter = this.querySelector<HTMLElement>('.api-counter');
+      if (!label || !input || !counter) return;
+      this.dataset.ready = 'true';
+      label.hidden = false;
+      const normalize = (value: string) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+      const entries = [...this.querySelectorAll<HTMLDetailsElement>('[data-api-operation]')].map(element => ({element, text: normalize(element.textContent || '')}));
+      const filter = () => {
+        const words = normalize(input.value).trim().split(/\s+/).filter(Boolean);
+        let count = 0;
+        for (const entry of entries) {
+          entry.element.hidden = !words.every(word => entry.text.includes(word));
+          if (!entry.element.hidden) count++;
+        }
+        counter.textContent = count ? `${count} de ${entries.length} operaciones` : 'No hay operaciones con esa búsqueda.';
+      };
+      input.addEventListener('input', filter);
+      const reveal = () => {
+        let id;
+        try { id = decodeURIComponent(location.hash.slice(1)); } catch { return; }
+        const target = document.getElementById(id);
+        if (target instanceof HTMLDetailsElement && this.contains(target)) {
+          input.value = ''; filter(); target.open = true;
+        }
+      };
+      window.addEventListener('hashchange', reveal);
+      filter(); reveal();
+    }
+  }
+  if (!customElements.get('pos-product-api')) customElements.define('pos-product-api', ProductApiCatalog);
+</script>
+
+<style>
+  pos-product-api { display:block; min-width:0; }
+  [hidden] { display:none !important; }
+  .api-search { display:grid; gap:.4rem; font-weight:600; margin-block:1.5rem .5rem; }
+  input { width:100%; min-height:44px; border:1px solid var(--sl-color-gray-3); border-radius:.5rem; padding:.65rem .8rem; font:inherit; font-weight:400; color:var(--sl-color-text); background:var(--sl-color-bg); }
+  input:focus-visible { outline:3px solid var(--sl-color-accent); outline-offset:0; }
+  .api-counter { color:var(--sl-color-gray-2); font-size:.9rem; }
+  .api-operation { margin-block:.65rem; border:1px solid var(--sl-color-gray-5); border-radius:.5rem; }
+  summary { padding:.85rem; cursor:pointer; font-weight:600; overflow-wrap:anywhere; }
+  summary code { white-space:normal; font-size:.9em; }
+  summary:focus-visible { outline:3px solid var(--sl-color-accent); outline-offset:0; }
+  .api-method { color:var(--sl-color-accent-high); font-weight:700; margin-right:.35rem; }
+  .api-detail { padding:0 1rem 1rem; }
+  .api-detail dt { font-weight:600; }
+  .api-detail dd { margin-inline-start:0; margin-block-end:.75rem; overflow-wrap:anywhere; }
+  pre { max-height:28rem; overflow:auto; padding:1rem; border:1px solid var(--sl-color-gray-5); border-radius:.4rem; background:var(--sl-color-gray-6); font-size:.8rem; }
+  .api-schemas { margin-block:1rem; }
+</style>
