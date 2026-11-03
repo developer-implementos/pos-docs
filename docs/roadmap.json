@@ -4,8 +4,8 @@
   "reviewedOn": "2026-10-30",
   "status": "proposed",
   "statusLabel": "Secuencia propuesta",
-  "notice": "Propuesta para acordar con producto, operaciones y desarrollo. No hay fechas, recursos ni habilitaciones productivas aprobadas. Los criterios de aceptación determinan el avance.",
-  "baseline": "El producto en revisión incorpora operación transaccional de laboratorio con PostgreSQL real y un incremento para Chile con usuarios/permisos propios POS, provisión persistente, HTTPS y consultas legacy acotadas. El perfil operativo mantiene cerrados cobros y precios no verificados; la CLI legacy aún no alimenta el espejo ni la UI. No se acredita integración en main, aceptación de fase ni habilitación productiva. Hay seis apps y device-agent en C#/.NET Windows sigue pendiente; su SQLite será técnico.",
+  "notice": "Propuesta para acordar con producto, operaciones y desarrollo. No hay fechas, recursos ni habilitaciones productivas aprobadas. El avance técnico se acredita con verificación y evidencia de los criterios; la aceptación humana y la habilitación operativa se registran por separado.",
+  "baseline": "El alcance de estas fases define los resultados y condiciones de entrega. El estado de implementación, la evidencia técnica, las aceptaciones humanas y las condiciones operativas vigentes se consultan en el dashboard del proyecto, con su revisión y fuentes identificadas. Una capacidad propuesta no se considera habilitada por estar incluida en el roadmap.",
   "phases": [
     {
       "id": "phase-01",
@@ -381,7 +381,7 @@
           {
             "id": "F01-V12",
             "scenario": "Dos sesiones retoman trabajo y se republica el inventario de issues.",
-            "expected": "Se conserva un responsable, una ficha y un código por entregable, sin duplicar issues ni sobrescribir notas; un cierre de GitHub no aumenta el porcentaje sin aceptación."
+            "expected": "Se conserva un responsable, una ficha y un código por entregable, sin duplicar issues ni sobrescribir notas; un cierre de GitHub no aumenta el porcentaje sin verificación técnica registrada; la aceptación humana se registra por separado."
           }
         ],
         "parallel": [
