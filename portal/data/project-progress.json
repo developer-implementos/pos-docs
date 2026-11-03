@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "74a864a332b509e7d4f9832505dc8757d7e74b0b",
+    "revision": "9695bd9d45d9db2e48c410123c5e630085c4144f",
     "path": "delivery/progress.json",
-    "sha256": "acf4b8fdc0610401664de8b4064f7dbdd9cc2fa3ca1205a584c8299076b40ae6"
+    "sha256": "7be0359244526eeaf668435cb82d03a6128311d70892432b05f473779b535476"
   },
   "content": {
     "schemaVersion": 2,
@@ -694,7 +694,7 @@
           "device-agent"
         ],
         "status": "in_progress",
-        "summary": "Seguimiento de pagos, documentos fiscales y trabajos con listados paginados, filtro de estado y detalle conectado, verificado mediante API HTTPS y PostgreSQL. Faltan historial y resolución de excepciones por operación, responsables y recorridos completos.",
+        "summary": "Seguimiento conectado con estados independientes e historial de evidencia por operación. Los expedientes conservan responsables, motivos y transiciones auditadas, con permisos explícitos, concurrencia y recuperación sin modificar dinero. Pendientes las acciones seguras por efecto y los runbooks completos con escalamiento y resultados verificables; este incremento no completa F02-04.",
         "acceptance": null,
         "verification": null
       },

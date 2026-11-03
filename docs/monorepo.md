@@ -221,7 +221,7 @@ flowchart LR
     ERP -->|"CLI HTTPS acotada · acceso por verificar"| Mountain["Referencias Mountain"]
 ```
 
-Las líneas continuas muestran capacidades implementadas en revisión, limitadas por perfil; las discontinuas, integraciones pendientes. La CLI Mountain tiene pruebas HTTPS locales, no validación del servicio corporativo ni conexión al espejo. La continuidad ante caída de WAN depende de la LAN y del servidor de sucursal. La autonomía ante caída de ambos sería otro perfil con decisiones y pruebas propias.
+Las líneas continuas muestran capacidades implementadas, limitadas por perfil; las discontinuas, integraciones pendientes. La CLI Mountain tiene pruebas HTTPS locales, no validación del servicio corporativo ni conexión al espejo. La continuidad ante caída de WAN depende de la LAN y del servidor de sucursal. La autonomía ante caída de ambos sería otro perfil con decisiones y pruebas propias.
 
 ## Capas y reutilización interna
 
@@ -291,7 +291,8 @@ En esta revisión también se contrastó el checkout `desarrollo` del sincroniza
 | Laboratorio integrado | Angular conectado, identidad y permisos de servidor sintéticos, configuración, caja, catálogo, clientes, cestas, precios y efectivo en PostgreSQL; evidencia técnica por entregable |
 | Incremento operativo integrado | Usuarios y roles propios POS Chile, asignaciones, provisión persistente, HTTPS y clientes con origen aprobado; CLI de referencias legacy separada del espejo y la UI |
 | Base técnica | HTTP, Pino/Sentry opcional, migraciones, roles separados, unidad de trabajo, artefactos y comprobaciones de ámbito/esquema |
-| Implementación en revisión | TASK-110 y TASK-114: historial común y expedientes durables en `reporting`, permisos explícitos y coordinación sin efectos financieros; revisión e integración identificadas en la guía F02 |
+| Historial integrado | TASK-110: evidencia por operación y estados independientes, integrado mediante la [PR #117](https://github.com/developer-implementos/pos-platform/pull/117) en `3669873`; no completa por sí solo F02-04 |
+| Implementación en revisión | TASK-114: expedientes durables en `reporting`, permisos explícitos y coordinación sin efectos financieros; [PR #118](https://github.com/developer-implementos/pos-platform/pull/118), revisión `9695bd9`, todavía sin integrar. La PR conserva su estado y controles; la [guía F02](phase-2-payments-documents.md) identifica la evidencia local |
 | Pendiente | Contratos comerciales de fuentes reales, enrolamiento de identidades de servicio, capacidades de país, entrega de outbox, jobs, ERP, proveedores, hardware y homologación operativa |
 
 Los [criterios técnicos de la base](implementation-plan.md#organización-y-criterios-de-aceptación) definen las comprobaciones para la estructura y sus dependencias.
