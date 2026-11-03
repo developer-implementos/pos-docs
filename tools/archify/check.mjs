@@ -40,6 +40,11 @@ try {
       }), `${entry.id}: context control must not be covered by native toolbar`);
     }
     const first = page.locator('svg [data-node-id]').first();
+    await page.locator('[data-pos-details-open]').focus();
+    await page.keyboard.press('Enter');
+    assert.ok(await page.locator('[data-pos-details-close]').evaluate(element => element === document.activeElement), `${entry.id}: details button transfers keyboard focus`);
+    await page.keyboard.press('Escape');
+    assert.ok(await page.locator('[data-pos-details-open]').evaluate(element => element === document.activeElement), `${entry.id}: details button focus restored`);
     await first.focus();
     await first.press('Enter');
     assert.ok(await page.locator('#pos-diagram-details').isVisible(), `${entry.id}: keyboard inspector`);

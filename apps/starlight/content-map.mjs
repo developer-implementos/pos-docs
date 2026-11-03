@@ -173,7 +173,7 @@ export const sidebar = [
   { label: 'Visión general de la solución', link: '/overview/' },
   { label: 'Arquitectura y recorridos visuales', link: '/diagrams/' },
   { label: 'Recorridos de operación', collapsed: true, items: generatedPages.filter(page => page.route === 'flows' || page.route.startsWith('flows/')).map(page => item(page.route)) },
-  { label: 'Contratos y datos del POS', collapsed: true, items: [{ label: 'APIs de POS Platform', link: '/api/pos-platform/' }, { label: 'Modelo de datos implementado', link: '/api/data-model/' }] },
+  { label: 'Contratos y datos del POS', collapsed: true, items: [{ label: 'APIs de POS Platform', link: '/api/pos-platform/' }, { label: 'Diccionario de datos', link: '/api/data-model/' }] },
   { label: 'Roadmap de entrega', collapsed: false, items: [item('proposal/roadmap', 'Visión general'), item('roadmap/coverage'), ...roadmap.phases.map(phase => item(`roadmap/${phase.id}`))] },
   { label: 'Mapa de contenidos', link: '/contents/' },
   { label: 'Glosario del POS', link: '/glossary/' },

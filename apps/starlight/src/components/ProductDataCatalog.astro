@@ -1,39 +1,141 @@
 ---
 import {productReference} from '../data/product-reference';
 const {manifest, database} = productReference;
-const contexts = [...new Set<string>(database.databases.flatMap(db => db.tables.map(table => table.context)))].sort();
+const tables = database.databases.flatMap(db => db.tables.map(table => ({db, table})));
+const contexts = [...new Set(tables.map(({table}) => table.context))].sort();
+const totalFields = tables.reduce((sum, {table}) => sum + table.columns.length, 0);
+const tableId = (db: string, schema: string, name: string) => `table-${db}-${schema}-${name}`;
+const fieldId = (db: string, schema: string, name: string, column: string) => `field-${db}-${schema}-${name}-${column}`;
+const example = (value: unknown) => typeof value === 'string' ? value : JSON.stringify(value, null, 2);
 ---
-<p>Esquema extraído después de aplicar las migraciones a una base de pruebas aislada, en la revisión <a href={`${manifest.source.repository}/commit/${manifest.source.commit}`}>{manifest.source.commit.slice(0, 12)}</a>. Incluye estructura y restricciones; no contiene registros de negocio ni describe una instancia productiva.</p>
-<p><a href="/contracts/database/schema.json" download>Descargar estructura JSON</a> · <a href="/contracts/manifest.json">Revisión y hashes de los artefactos</a> · <a href="/guide/api/pos-platform/">Contratos HTTP</a></p>
-{contexts.map(context => <section>
-  <h2 id={`context-${context}`}>{context}</h2>
-  <p>{database.databases.filter(db => db.tables.some(table => table.context === context)).map((db, index) => <>{index > 0 && ' · '}<a href={`/explore/data-${db.id}-${context}/`}>Explorar relaciones · {db.id === 'branch' ? 'sucursal' : 'país'}</a></>)}</p>
-  {database.databases.flatMap(db => db.tables.filter(table => table.context === context).map(table => (
-    <details class="data-table" id={`table-${db.id}-${table.schema}-${table.name}`}>
-      <summary><code>{table.schema}.{table.name}</code></summary>
-      <div class="data-detail">
-        <p>Base: <strong>{db.id}</strong>. Aplicación: <code>{db.app}</code>. Contexto propietario: <code>{table.context}</code>.</p>
-        <div class="table-scroll" tabindex="0" role="region" aria-label={`Columnas de ${table.schema}.${table.name}`}>
-          <table><thead><tr><th>Columna</th><th>Tipo SQL</th><th>Permite nulo</th><th>Valor predeterminado</th><th>Descripción de origen</th></tr></thead>
-            <tbody>{table.columns.map(column => <tr><td><code>{column.name}</code></td><td>{column.type}</td><td>{column.nullable ? 'Sí' : 'No'}</td><td><code>{column.default ?? '—'}</code></td><td>{column.comment || 'Sin comentario en la migración'}</td></tr>)}</tbody>
-          </table>
+<p><strong>{tables.length} tablas · {totalFields} campos</strong> · PostgreSQL · Revisión <a href={`${manifest.source.repository}/commit/${manifest.source.commit}`}>{manifest.source.commit.slice(0, 12)}</a></p>
+<div class="dictionary" data-dictionary>
+  <form class="dictionary-search" role="search" aria-label="Diccionario de datos">
+    <label for="dictionary-query">Buscar tabla, campo o descripción</label>
+    <div class="search-row"><input id="dictionary-query" type="search" placeholder="Ej. sales.sale, outbox o moneda" autocomplete="off" /><button type="reset">Limpiar</button></div>
+    <p class="search-count" role="status" aria-live="polite" data-dictionary-count>{tables.length} tablas · {totalFields} campos</p>
+  </form>
+  <nav aria-label="Contextos de datos" class="context-links">{contexts.map(context => <a href={`#context-${context}`}>{context}</a>)}</nav>
+  <details class="dictionary-method"><summary>Origen, ejemplos y descargas</summary>
+    <p>La estructura procede de migraciones aplicadas a PostgreSQL de pruebas; las descripciones se mantienen junto al código del contexto propietario en POS Platform. Esta referencia describe implementación, no una base productiva. El <a href="/guide/diagrams/">mapa de arquitectura</a> muestra la autoridad de cada almacén; las fichas del roadmap identifican los datos todavía propuestos.</p>
+    <p>Los ejemplos son valores sintéticos por campo, no filas listas para insertar. Se verifica su compatibilidad con el tipo SQL; no prueban relaciones entre filas, reglas de negocio o aceptación fiscal. Las credenciales se omiten.</p>
+    <p><a href="/contracts/database/schema.json" download>Descargar diccionario JSON</a> · <a href="/contracts/manifest.json">Revisión y hashes</a> · <a href="/guide/api/pos-platform/">Contratos HTTP</a></p>
+  </details>
+  <p data-dictionary-empty hidden>No hay tablas ni campos con esa búsqueda.</p>
+  {contexts.map(context => <section data-data-context>
+    <h2 id={`context-${context}`}>{context}</h2>
+    <p>{database.databases.filter(db => db.tables.some(table => table.context === context)).map((db, index) => <>{index > 0 && ' · '}<a href={`/explore/data-${db.id}-${context}/`}>Explorar relaciones · {db.id === 'branch' ? 'sucursal' : 'país'}</a></>)}</p>
+    {tables.filter(({table}) => table.context === context).map(({db, table}) => (
+      <details class="data-table" id={tableId(db.id, table.schema, table.name)} data-data-table data-table-search={`${db.id} ${db.app} ${table.context} ${table.schema}.${table.name} ${table.documentation.description} ${table.documentation.usage}`}>
+        <summary><code>{table.schema}.{table.name}</code><span class="table-count">{table.columns.length} campos · {db.id === 'branch' ? 'sucursal' : 'país'}</span><span class="table-purpose">{table.documentation.description}</span></summary>
+        <div class="data-detail">
+          <p>{table.documentation.usage}</p>
+          <p class="data-meta">Aplicación: <code>{db.app}</code> · Contexto propietario: <code>{table.context}</code> · <a href={`#${tableId(db.id, table.schema, table.name)}`}>Enlace a esta tabla</a></p>
+          <h3>Campos</h3>
+          <div class="data-fields">{table.columns.map(column => <details class="data-field" id={fieldId(db.id, table.schema, table.name, column.name)} data-data-field data-field-search={`${table.schema}.${table.name}.${column.name} ${column.type} ${column.documentation.description} ${column.documentation.usage}`}>
+            <summary><code>{column.name}</code><span class="field-type">{column.type}{column.nullable ? ' · admite NULL' : ' · requerido'}</span><span class="field-description">{column.documentation.description}</span></summary>
+            <div class="field-detail">
+              <p><strong>Uso.</strong> {column.documentation.usage}</p>
+              <p><strong>Valor predeterminado SQL.</strong> <code>{column.default ?? 'Sin valor predeterminado'}</code></p>
+              {column.comment && <p><strong>Comentario SQL.</strong> {column.comment}</p>}
+              {Object.hasOwn(column.documentation, 'example') ? <><p><strong>Ejemplo sintético del campo</strong></p><pre tabindex="0" aria-label={`Ejemplo de ${table.schema}.${table.name}.${column.name}`}><code>{example(column.documentation.example)}</code></pre></> : <p><strong>Ejemplo omitido.</strong> {column.documentation.exampleOmittedReason}</p>}
+              <a href={`#${fieldId(db.id, table.schema, table.name, column.name)}`}>Enlace a este campo</a>
+            </div>
+          </details>)}</div>
+          <details class="sql-details"><summary>Claves, restricciones e índices</summary>
+            <p>Las claves y restricciones declaradas se extraen de PostgreSQL. Los triggers y las validaciones de aplicación se consultan en las fuentes de la tabla.</p>
+            <h4>Restricciones</h4><ul>{table.constraints.map(constraint => <li><code>{constraint.name}</code>: <code>{constraint.definition}</code></li>)}</ul>
+            <h4>Índices</h4><ul>{table.indexes.map(index => <li><code>{index.definition}</code></li>)}</ul>
+          </details>
+          <details class="sources"><summary>Fuentes de esta definición</summary><ul>{table.documentation.sources.map(source => <li><a href={`${manifest.source.repository}/blob/${manifest.source.commit}/${source.path}`}>{source.path}</a>{source.symbol && <> · <code>{source.symbol}</code></>}</li>)}</ul></details>
         </div>
-        <h3>Restricciones</h3>
-        <ul>{table.constraints.map(constraint => <li><code>{constraint.name}</code>: <code>{constraint.definition}</code></li>)}</ul>
-        <details><summary>Índices</summary><ul>{table.indexes.map(index => <li><code>{index.definition}</code></li>)}</ul></details>
-      </div>
-    </details>
-  )))}
-</section>)}
-<details><summary>Migraciones aplicadas</summary><pre><code>{JSON.stringify(database.databases.map(db => ({database: db.id, migrations: db.migrations})), null, 2)}</code></pre></details>
+      </details>
+    ))}
+  </section>)}
+</div>
+<details><summary>Migraciones aplicadas</summary><pre tabindex="0"><code>{JSON.stringify(database.databases.map(db => ({database: db.id, migrations: db.migrations})), null, 2)}</code></pre></details>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-dictionary]');
+  if (root) {
+    const form = root.querySelector<HTMLFormElement>('form')!;
+    const input = root.querySelector<HTMLInputElement>('input')!;
+    const count = root.querySelector<HTMLElement>('[data-dictionary-count]')!;
+    const empty = root.querySelector<HTMLElement>('[data-dictionary-empty]')!;
+    const tables = [...root.querySelectorAll<HTMLDetailsElement>('[data-data-table]')];
+    const normalize = (value: string) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('es');
+    const index = tables.map(table => ({table, text: normalize(table.dataset.tableSearch!), fields: [...table.querySelectorAll<HTMLDetailsElement>('[data-data-field]')].map(field => ({field, text: normalize(field.dataset.fieldSearch!)}))}));
+    const filter = () => {
+      const words = normalize(input.value.trim()).split(/\s+/).filter(Boolean);
+      const matches = (text: string) => words.every(word => text.includes(word));
+      let visibleTables = 0, visibleFields = 0;
+      for (const {table, text, fields} of index) {
+        const whole = matches(text);
+        let fieldsVisible = 0;
+        for (const {field, text: fieldText} of fields) {
+          field.hidden = !(whole || matches(`${text} ${fieldText}`));
+          if (!field.hidden) fieldsVisible++;
+        }
+        table.hidden = fieldsVisible === 0 && !whole;
+        if (!table.hidden) { visibleTables++; visibleFields += fieldsVisible; }
+        if (words.length) table.open = !table.hidden;
+      }
+      for (const section of root.querySelectorAll<HTMLElement>('[data-data-context]')) section.hidden = ![...section.querySelectorAll<HTMLDetailsElement>('[data-data-table]')].some(table => !table.hidden);
+      count.textContent = `${visibleTables} tablas · ${visibleFields} campos`;
+      empty.hidden = visibleTables !== 0;
+    };
+    const revealTarget = () => {
+      let id: string;
+      try { id = decodeURIComponent(location.hash.slice(1)); } catch { return; }
+      const target = document.getElementById(id);
+      if (!target || !root.contains(target)) return;
+      input.value = ''; filter();
+      if (target instanceof HTMLDetailsElement) target.open = true;
+      const parent = target.closest<HTMLDetailsElement>('[data-data-table]');
+      if (parent) parent.open = true;
+      requestAnimationFrame(() => target.scrollIntoView({block:'start', behavior:'instant'}));
+    };
+    form.addEventListener('submit', event => event.preventDefault());
+    form.addEventListener('reset', () => { input.value = ''; filter(); input.focus(); });
+    input.addEventListener('input', filter);
+    window.addEventListener('hashchange', revealTarget);
+    revealTarget();
+  }
+</script>
 
 <style>
-  .data-table { margin-block:.75rem; border:1px solid var(--sl-color-gray-5); border-radius:.5rem; }
+  .dictionary { min-width:0; }
+  .dictionary [hidden] { display:none !important; }
+  .dictionary-search { margin-block:1.5rem; }
+  label { display:block; font-weight:600; margin-bottom:.4rem; }
+  .search-row { display:flex; gap:.5rem; }
+  input { flex:1; min-width:0; width:100%; font:inherit; padding:.65rem .75rem; color:var(--sl-color-text); background:var(--sl-color-bg); border:1px solid var(--sl-color-gray-3); border-radius:.35rem; }
+  button { font:inherit; font-weight:600; color:var(--sl-color-text-accent); background:var(--sl-color-bg); border:1px solid var(--sl-color-gray-4); border-radius:.35rem; padding:.5rem .75rem; cursor:pointer; }
+  .search-count { font-size:.875rem; color:var(--sl-color-gray-2); margin-top:.4rem; }
+  .context-links { display:flex; flex-wrap:wrap; gap:.4rem 1rem; padding-block:.5rem 1rem; }
+  .dictionary-method { margin-block:.5rem 1.5rem; }
+  .dictionary-method summary { padding:.35rem 0; font-size:.9rem; }
+  .data-table { margin-block:.75rem; border:1px solid var(--sl-color-gray-5); border-radius:.5rem; scroll-margin-top:6rem; }
   summary { padding:.85rem; cursor:pointer; font-weight:600; overflow-wrap:anywhere; }
-  summary:focus-visible, .table-scroll:focus-visible { outline:3px solid var(--sl-color-accent); }
+  :is(summary,input,button,pre):focus-visible { outline:2px solid var(--sl-color-accent); outline-offset:2px; }
+  .table-count { display:inline-block; margin-left:.75rem; font-weight:400; font-size:.8rem; color:var(--sl-color-gray-2); }
+  .table-purpose { display:block; font-weight:400; font-size:.9rem; margin-top:.3rem; }
   .data-detail { padding:0 1rem 1rem; min-width:0; }
-  .table-scroll { overflow:auto; max-width:100%; }
-  table { min-width:36rem; }
-  pre { overflow:auto; max-height:28rem; padding:1rem; border:1px solid var(--sl-color-gray-5); }
-  li { overflow-wrap:anywhere; }
+  .data-meta { font-size:.85rem; }
+  .data-fields { border-block:1px solid var(--sl-color-gray-5); }
+  .data-field { margin:0; scroll-margin-top:6rem; }
+  .data-field + .data-field { border-top:1px solid var(--sl-color-gray-5); }
+  .data-field summary { padding:.75rem .25rem; }
+  .field-type { font-size:.8rem; font-weight:400; margin-left:.5rem; color:var(--sl-color-gray-2); }
+  .field-description { display:block; font-size:.9rem; font-weight:400; margin-top:.3rem; }
+  .field-detail { padding:0 .25rem 1rem; min-width:0; }
+  .field-detail p { margin-block:.6rem; }
+  .field-detail a { font-size:.85rem; }
+  .data-field:target { background:var(--sl-color-bg-inline-code); }
+  .sql-details, .sources { margin-top:1rem; }
+  .sql-details summary, .sources summary { padding:.5rem 0; }
+  pre { overflow:auto; max-height:24rem; max-width:100%; padding:.85rem; border:1px solid var(--sl-color-gray-5); font-size:.8rem; }
+  li, p, code { overflow-wrap:anywhere; }
+  pre code { overflow-wrap:normal; }
+  @media(max-width:40rem) { .data-detail { padding-inline:.65rem; } .table-count { display:block; margin:.35rem 0 0; } .field-type { display:block; margin:.3rem 0 0; } }
 </style>

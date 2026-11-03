@@ -21,9 +21,13 @@ export interface ApiOperation {
   responses: Record<string, unknown>;
   security: Array<Record<string, string[]>>;
 }
-export interface DatabaseColumn {name: string; type: string; nullable: boolean; default: string | null; comment: string | null}
+export type JsonValue = null | boolean | number | string | JsonValue[] | {[key: string]: JsonValue};
+export interface DocumentationSource {path: string; symbol?: string}
+export interface TableDocumentation {description: string; usage: string; sources: DocumentationSource[]}
+export type ColumnDocumentation = {description: string; usage: string} & ({example: JsonValue; exampleOmittedReason?: never} | {example?: never; exampleOmittedReason: string});
+export interface DatabaseColumn {name: string; type: string; nullable: boolean; default: string | null; comment: string | null; documentation: ColumnDocumentation}
 export interface DatabaseConstraint {name: string; type: string; definition: string; columns: string[]; references?: {schema: string; table: string; columns: string[]}}
-export interface DatabaseTable {schema: string; name: string; context: string; columns: DatabaseColumn[]; constraints: DatabaseConstraint[]; indexes: Array<{name: string; definition: string}>}
+export interface DatabaseTable {schema: string; name: string; context: string; documentation: TableDocumentation; columns: DatabaseColumn[]; constraints: DatabaseConstraint[]; indexes: Array<{name: string; definition: string}>}
 export interface DatabaseReference {id: string; app: string; migrations: Array<{id: string; checksum: string}>; schemas: string[]; tables: DatabaseTable[]}
 export interface ProductBundle {
   manifest: ProductManifest;

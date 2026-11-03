@@ -23,7 +23,32 @@
       }
       const schema = panel.querySelector('[data-pos-detail-schema]');
       schema.replaceChildren();
+      if (details.fieldDocumentation?.length) {
+        const note = document.createElement('p');
+        note.textContent = 'Ejemplos sintéticos por campo; no son filas para insertar. Los tipos SQL se verifican al exportar; las reglas de negocio y relaciones se validan por separado.';
+        schema.append(note);
+        for (const field of details.fieldDocumentation) {
+          const section = document.createElement('details');
+          const heading = document.createElement('summary');
+          heading.textContent = `${field.name} · ${field.type}`;
+          section.append(heading);
+          for (const text of [field.description, field.usage, field.nullable ? 'Admite NULL.' : 'No admite NULL.', `Predeterminado SQL: ${field.default ?? 'sin valor predeterminado'}`, ...(field.comment ? [`Comentario SQL: ${field.comment}`] : [])]) {
+            const paragraph = document.createElement('p');
+            paragraph.textContent = text;
+            section.append(paragraph);
+          }
+          const sample = document.createElement(Object.hasOwn(field, 'example') ? 'pre' : 'p');
+          sample.textContent = Object.hasOwn(field, 'example') ? (typeof field.example === 'string' ? field.example : JSON.stringify(field.example, null, 2)) : `Ejemplo omitido: ${field.exampleOmittedReason}`;
+          if (sample.tagName === 'PRE') { sample.tabIndex = 0; sample.setAttribute('aria-label', `Ejemplo sintético de ${field.name}`); }
+          const anchor = document.createElement('a');
+          anchor.href = field.href;
+          anchor.textContent = 'Definición completa del campo';
+          section.append(sample, anchor);
+          schema.append(section);
+        }
+      }
       for (const [key, label] of [['fields', 'Columnas'], ['constraints', 'Restricciones'], ['indexes', 'Índices']]) {
+        if (key === 'fields' && details.fieldDocumentation?.length) continue;
         if (!details[key]?.length) continue;
         const section = document.createElement('details');
         const heading = document.createElement('summary');
@@ -46,7 +71,10 @@
     opener.setAttribute('aria-expanded', 'false');
     origin.focus({ preventScroll: true });
   }
-  opener.addEventListener('click', () => panel.hidden ? open(null, opener) : close());
+  opener.addEventListener('click', () => {
+    if (panel.hidden) { open(null, opener); closer.focus(); }
+    else close();
+  });
   closer.addEventListener('click', close);
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && !panel.hidden) { event.stopPropagation(); close(); }

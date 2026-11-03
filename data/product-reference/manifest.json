@@ -13,11 +13,11 @@
   ],
   "database": {
     "file": "database/schema.json",
-    "sha256": "2974e1dbb1d5aca94c1c9b94bd50191017303b36a5382cb3a068a67305610a8f"
+    "sha256": "0cb46d3579a95e8264a856725dd22e31e02d00e0febe987bb3368311ca518de4"
   },
   "schemaVersion": 1,
   "source": {
-    "commit": "af2c10bd4737dde138d55eeee1a12740aec1bb5c",
+    "commit": "bbb879ea3682e0bd36c649833d817270acf8545c",
     "repository": "https://github.com/developer-implementos/pos-platform"
   }
 }

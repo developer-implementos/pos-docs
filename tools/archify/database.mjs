@@ -69,12 +69,13 @@ export function projectDatabase(schema, source) {
     };
     const details = {
       nodes: Object.fromEntries(tables.map(table => [entityId(table), {
-        title: fullname(table), description: `${table.comment || 'Tabla del esquema físico.'} ${table.context !== context ? 'Referencia de otro contexto.' : ''}`.trim(),
-        technology: `${database.engine}${database.engineVersion ? ` ${database.engineVersion}` : ''} · ${database.app} · ${source.commit.slice(0, 7)}`, status: 'implemented', evidenceKind: 'migration-export', href,
+        title: fullname(table), description: `${table.documentation.description} ${table.documentation.usage} ${table.context !== context ? 'Referencia de otro contexto.' : ''}`.trim(),
+        technology: `${database.engine}${database.engineVersion ? ` ${database.engineVersion}` : ''} · ${database.app} · ${source.commit.slice(0, 7)}`, status: 'implemented', evidenceKind: 'migration-export', href: `/guide/api/data-model/#table-${database.id}-${table.schema}-${table.name}`,
         fields: table.columns.map(column => `${column.name}: ${column.type}${column.nullable ? ' · NULL' : ' · NOT NULL'}${column.default == null ? '' : ` · DEFAULT ${column.default}`}${column.comment ? ` · ${column.comment}` : ''}`),
+        fieldDocumentation: table.columns.map(column => ({name: column.name, type: column.type, nullable: column.nullable, default: column.default, comment: column.comment, ...column.documentation, href: `/guide/api/data-model/#field-${database.id}-${table.schema}-${table.name}-${column.name}`})),
         constraints: table.constraints.map(constraint => `${constraint.name}: ${constraint.definition}`),
         indexes: table.indexes.map(index => index.definition),
-        links: [{ label: 'Contexto completo y SQL', href: `/guide/api/data-model/#context-${table.context}` }, { label: `Código · ${source.commit.slice(0, 7)}`, href: `${source.repository}/tree/${source.commit}` }],
+        links: [{ label: 'Diccionario y SQL de esta tabla', href: `/guide/api/data-model/#table-${database.id}-${table.schema}-${table.name}` }, ...table.documentation.sources.map(item => ({label: item.symbol || item.path.split('/').at(-1), href: `${source.repository}/blob/${source.commit}/${item.path}`}))],
       }])),
       edges: Object.fromEntries(relationships.map(({ relationship, constraint, table }) => [relationship.id, {
         title: constraint.name, description: constraint.definition,
