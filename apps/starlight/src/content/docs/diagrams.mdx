@@ -1,26 +1,55 @@
 ---
-title: Diagramas de arquitectura
-description: Mapa general de la propuesta con aplicaciones, tecnologías y conexiones, acompañado de las vistas C4 y los recorridos de venta y precios.
+title: Arquitectura y recorridos visuales
+description: Un mapa principal del POS con recorridos de operación, fuentes de contratos y vistas C4 de detalle bajo demanda.
 editUrl: false
 ---
 
 import Diagram from '../../components/Diagram.astro';
 
-El mapa general, las siete vistas estructurales y los dos recorridos representan **el diseño propuesto**. El [modelo C4](/guide/architecture/c4-model/) conserva los contratos y el alcance; las [decisiones](/guide/proposal/decisions/) gobiernan la recomendación. El [monorepo](/guide/implementation/monorepo/#estado-de-implementación) distingue la base técnica de las capacidades pendientes.
+Empieza por el mapa de aplicaciones o elige una operación. El mapa y las vistas C4 representan **el diseño propuesto**. Los ciclos de estados identifican los predicados de una revisión del código; los [contratos del POS](/guide/api/pos-platform/) y el [modelo de datos implementado](/guide/api/data-model/) conservan la revisión de la que se exportaron. El [estado del monorepo](/guide/implementation/monorepo/#estado-de-implementación) mantiene los límites de cada aplicación.
 
 ## Mapa general de arquitectura
 
-La vista inicial reúne las siete aplicaciones, PostgreSQL de sucursal y país, SQLite del agente y los dos almacenes Redis de jobs. **BullMQ con Redis dedicado es una dependencia seleccionada**, pendiente de implementación: programación breve en `country-api` y ejecución en `erp-worker`, cada una dentro de su red. El explorador permite seleccionar elementos o conexiones y consultar responsabilidades, contratos y recuperación. La caché Redis sigue siendo opcional y usa una instancia distinta.
+El [mapa interactivo de aplicaciones](/explore/applications/) muestra procesos, datos y fronteras de despliegue desde las mismas fuentes que las vistas de detalle. Las fichas amplían cada responsabilidad. El [modelo C4](/guide/architecture/c4-model/) y las [decisiones](/guide/proposal/decisions/) mantienen el contrato completo.
 
-<Diagram src="/docs/architecture/pos-platform-base.svg" alt="Arquitectura base: siete aplicaciones, PostgreSQL de sucursal y país, SQLite técnico y Redis jobs separados para país y ERP; sistemas externos mediante contratos autorizados." title="Mapa general de arquitectura" caption="Arquitectura base · Explora las zonas, las conexiones y los recorridos desde el mismo modelo." interactiveHref="/architecture/" downloadHref="/docs/architecture/pos-platform.svg" width={1830} height={2044} />
+<Diagram src="/docs/architecture/pos-platform-base.svg" alt="Arquitectura base: siete aplicaciones, PostgreSQL de sucursal y país, SQLite técnico y Redis jobs separados para país y ERP; sistemas externos mediante contratos autorizados." title="Mapa general de arquitectura" caption="Diseño propuesto · Abrir el mapa permite explorar las aplicaciones con el espacio completo de la pantalla." interactiveHref="/explore/applications/" downloadHref="/docs/architecture/pos-platform.svg" width={1830} height={2044} />
 
-[Recorrido de una venta](/architecture/?scenario=local-sale&step=1) · [Restauración y conciliación](/architecture/?scenario=recovery&step=1) · [Mapa completo](/architecture/?view=full)
+[Explorador de contratos y conexiones](/architecture/) · [Mapa completo](/architecture/?view=full)
+
+## Elegir una operación
+
+| Necesito entender | Recorrido y fuentes | Vista interactiva |
+| --- | --- | --- |
+| Confirmación y recuperación de una venta | [Registrar una venta](/guide/flows/sale/) | [Venta local](/explore/local-sale/) |
+| Un cobro con resultado incierto | [Cobrar y resolver un pago](/guide/flows/payments/) | [Pago incierto propuesto](/explore/uncertain-payment/) |
+| Un documento y su impresión | [Documento fiscal](/guide/flows/fiscal/) · [Impresión](/guide/flows/printing/) | [Trabajo por puesto](/explore/local-printing/) |
+| Actualización de precios en sucursal | [Publicar y aplicar precios](/guide/flows/pricing/) | [Versión comercial](/explore/commercial-version/) |
+| Entrega de operaciones a país y ERP | [Sincronización](/guide/flows/synchronization/) | [Recepción y resultado ERP](/explore/country-erp/) |
+| Caídas, restauración y conciliación | [Recuperación](/guide/flows/recovery/) | [Retorno controlado](/explore/recovery/) |
+
+[Todos los recorridos de operación](/guide/flows/) incluyen caja y migración. Las siguientes vistas C4 son consultas de detalle: se despliegan cuando necesitas una frontera o componente concreto.
+
+## Estados de cada operación
+
+Estas vistas están respaldadas por predicados del código en `98f8987`. Cada transición enlaza archivo y líneas; el alcance es inspección de implementación, sin acreditar homologación de proveedores ni prueba física. Mantienen separados los estados que el operador necesita distinguir.
+
+| Vista | Qué permite distinguir |
+| --- | --- |
+| [Cesta y confirmación](/explore/state-sale/) | Edición, pausa, recuperación y confirmación; una cesta cancelada no es una venta devuelta |
+| [Intento de cobro](/explore/state-payment/) | Resultado bancario, incertidumbre y conciliación; un reintento de consulta no crea otro cargo |
+| [Documento fiscal](/explore/state-fiscal/) | Recepción del proveedor y aceptación fiscal; consultar no vuelve a emitir |
+| [Trabajo de impresión](/explore/state-printing/) | Recepción, permiso único, spooler y resultado; evidencia pendiente no autoriza otra impresión |
 
 ## Vista general de aplicaciones y despliegue
 
 Vista intermedia sin módulos internos: cada aplicación declara tecnología y responsabilidad, y las flechas describen la operación y el protocolo. Las instancias Redis de jobs permanecen en país y en la red ERP, separadas de la caché opcional. PostgreSQL conserva el estado de negocio y la outbox que permite recuperar los jobs; los trabajos de periféricos conservan su registro SQLite propio.
 
+<details>
+<summary>Ver diagrama y descargar su fuente</summary>
+
 <Diagram src="/docs/architecture/pos-platform-overview.svg" alt="Vista general de las siete aplicaciones del POS, datos de sucursal y país, BullMQ con Redis dedicado por entorno, periféricos y proveedores; conectores descriptivos sin módulos internos." title="Aplicaciones, datos y conexiones" caption="Vista de despliegue · Dependencias seleccionadas, contratos y evolución F06 de periféricos de red." downloadHref="/docs/architecture/pos-platform-overview.svg" width={3600} height={2650} />
+
+</details>
 
 [Procesamiento de jobs](/guide/architecture/job-processing/) · [Explorar BullMQ en país](/architecture/?view=full#detail-country-bullmq) · [Explorar BullMQ en ERP](/architecture/?view=full#detail-bullmq)
 
@@ -28,7 +57,12 @@ Vista intermedia sin módulos internos: cada aplicación declara tecnología y r
 
 Actores, POS corporativo y sistemas externos. La operación supervisada representa una responsabilidad propuesta; la asignación de roles productivos necesita validación.
 
+<details>
+<summary>Ver diagrama y descargar su fuente</summary>
+
 <Diagram src="/docs/diagramas-excalidraw/previews/01-contexto.svg" alt="C1: actores del POS Platform y sistemas externos de fiscalidad, pagos e integración ERP." caption="C1 · Límite del producto y relaciones externas." sourceHref="/docs/diagramas-excalidraw/01-contexto.excalidraw" />
+
+</details>
 
 [Producto y alcance](/guide/proposal/product/) · [Login, perfiles y evolución de permisos](/guide/proposal/access-operations/)
 
@@ -36,7 +70,12 @@ Actores, POS corporativo y sistemas externos. La operación supervisada represen
 
 Las siete aplicaciones son `pos-desktop`, `pos-mobile`, `device-agent`, `branch-api`, `branch-sync-worker`, `country-api` y `erp-worker`. BullMQ es una librería dentro de las aplicaciones de país y ERP. La vista separa aplicaciones, almacenes de jobs y caché opcional; la venta habilitada conserva su persistencia local. El [contrato de publicación](/guide/architecture/master-data-publication/) asigna programación de solicitudes y publicación a `country-api`, y preparación por lotes a `erp-worker`.
 
+<details>
+<summary>Ver diagrama y descargar su fuente</summary>
+
 <Diagram src="/docs/diagramas-excalidraw/previews/02-contenedores.svg" alt="C2: siete aplicaciones, PostgreSQL de sucursal y país, SQLite técnico, Redis jobs dedicado a cada entorno y caché Redis opcional; ERP mediante conexión HTTPS saliente de su worker." caption="C2 · Aplicaciones, almacenes y contratos; cada bloque declara su alcance." sourceHref="/docs/diagramas-excalidraw/02-contenedores.excalidraw" />
+
+</details>
 
 [Contratos de contenedores](/guide/proposal/architecture/#contratos-de-contenedores-y-propiedad-de-datos)
 
@@ -44,7 +83,12 @@ Las siete aplicaciones son `pos-desktop`, `pos-mobile`, `device-agent`, `branch-
 
 `branch-api` compone los contextos de negocio y la base técnica compartida en un proceso. Los grupos de bibliotecas no implican un microservicio por módulo.
 
+<details>
+<summary>Ver diagrama y descargar su fuente</summary>
+
 <Diagram src="/docs/diagramas-excalidraw/previews/03-backend-sucursal.svg" alt="C3 de branch-api: contextos de operación, precios, catálogo, pagos, fiscalidad y dispositivos; persistencia transaccional y soporte compartido." caption="C3 · branch-api: casos de uso, bibliotecas y autoridad de sucursal." sourceHref="/docs/diagramas-excalidraw/03-backend-sucursal.excalidraw" />
+
+</details>
 
 [Backend modular](/guide/architecture/c4-model/#c3-del-backend-módulos-de-un-único-proceso) · [Estructura del monorepo](/guide/architecture/monorepo/)
 
@@ -52,7 +96,12 @@ Las siete aplicaciones son `pos-desktop`, `pos-mobile`, `device-agent`, `branch-
 
 `branch-sync-worker` entrega eventos, conserva progreso y prepara versiones locales. Usa las bibliotecas de sincronización y los contratos de catálogo/precios; el acuse de país no confirma el resultado del ERP.
 
+<details>
+<summary>Ver diagrama y descargar su fuente</summary>
+
 <Diagram src="/docs/diagramas-excalidraw/previews/04-sincronizador.svg" alt="C3 de branch-sync-worker: emisor, receptor, validación, activación y soporte técnico con outbox, inbox y comunicación con país." caption="C3 · branch-sync-worker: entrega recuperable y activación de datos." sourceHref="/docs/diagramas-excalidraw/04-sincronizador.excalidraw" />
+
+</details>
 
 [Sincronización y propiedad de datos](/guide/proposal/synchronization/) · [Entrega y acuse durable](/architecture/?scenario=country-erp&step=2)
 
@@ -60,7 +109,12 @@ Las siete aplicaciones son `pos-desktop`, `pos-mobile`, `device-agent`, `branch-
 
 `country-api` recibe operaciones, confirma el efecto local antes del ACK y sirve trabajo, resultados y publicaciones. BullMQ programa publicaciones y crea solicitudes breves fuera del ciclo HTTP con su Redis de jobs dedicado. PostgreSQL conserva el calendario, las solicitudes y el estado de negocio. La caché Redis opcional acelera lecturas reconstruibles en otra instancia.
 
+<details>
+<summary>Ver diagrama y descargar su fuente</summary>
+
 <Diagram src="/docs/diagramas-excalidraw/previews/08-country-api.svg" alt="C3 de country-api: autorización por ámbito, recepción transaccional, trabajo ERP, publicaciones, programación BullMQ con Redis jobs, PostgreSQL y caché Redis opcional separada." caption="C3 · country-api: recepción durable y servicios de país en un proceso." sourceHref="/docs/diagramas-excalidraw/08-country-api.excalidraw" />
+
+</details>
 
 [Contratos de país](/guide/architecture/c4-model/#c3-de-país-recepción-consulta-y-entrega-de-trabajo) · [Caché de país opcional](/guide/architecture/c4-model/#caché-de-país-opcional)
 
@@ -68,7 +122,12 @@ Las siete aplicaciones son `pos-desktop`, `pos-mobile`, `device-agent`, `branch-
 
 `erp-worker` corre en la red autorizada del ERP. Inicia HTTPS a `country-api` para solicitar trabajo y entregar resultados; compone fachadas, ACL y adaptadores. BullMQ con Redis dedicado en esa misma red organiza ejecución, preparación por lotes y consultas de conciliación. No existe Redis ni SQL WAN; un reintento no autoriza repetir un efecto externo incierto.
 
+<details>
+<summary>Ver diagrama y descargar su fuente</summary>
+
 <Diagram src="/docs/diagramas-excalidraw/previews/09-erp-worker.svg" alt="C3 de erp-worker: BullMQ y Redis jobs en red ERP, admisión, trabajo y resultados, fachadas, ACL, adaptadores y conciliación; conexión HTTPS saliente a país y protocolo ERP por validar." caption="C3 · erp-worker: traducción y conciliación con destino e identidad estables." sourceHref="/docs/diagramas-excalidraw/09-erp-worker.excalidraw" />
+
+</details>
 
 [Responsabilidades del worker ERP](/guide/architecture/c4-model/#c3-de-integración-erp-ejecución-dentro-de-la-red-autorizada) · [Contratos ERP](/guide/proposal/contracts/)
 
@@ -76,7 +135,12 @@ Las siete aplicaciones son `pos-desktop`, `pos-mobile`, `device-agent`, `branch-
 
 Puestos, móviles, servidor de sucursal, plataforma de país y red autorizada del ERP. El perfil inicial cubre pérdida de WAN con LAN y escritor local disponibles. Los Redis de jobs pertenecen a país y red ERP: no se instala Redis por sucursal ni se requiere acceso WAN para confirmar una operación local habilitada.
 
+<details>
+<summary>Ver diagrama y descargar su fuente</summary>
+
 <Diagram src="/docs/diagramas-excalidraw/previews/05-despliegue.svg" alt="Despliegue de referencia entre puestos, móviles, servidor local, plataforma de país y red autorizada ERP, con caché opcional y recuperación." caption="Vista de despliegue complementaria · No corresponde al cuarto nivel de C4." sourceHref="/docs/diagramas-excalidraw/05-despliegue.excalidraw" />
+
+</details>
 
 [Tecnología y despliegue](/guide/proposal/technology/) · [Condiciones de continuidad](/guide/proposal/continuity/)
 
@@ -84,7 +148,12 @@ Puestos, móviles, servidor de sucursal, plataforma de país y red autorizada de
 
 Distribución por eventos y carga masiva, preparación de datos y activación completa de una versión.
 
+<details>
+<summary>Ver diagrama y descargar su fuente</summary>
+
 <Diagram src="/docs/diagramas-excalidraw/06-flujo-precios.svg" alt="Vista dinámica de publicación, transporte, validación y activación de una versión de precios y ofertas." caption="Flujo de precios · El ticket conserva la versión aplicada." sourceHref="/docs/diagramas-excalidraw/06-flujo-precios.excalidraw" />
+
+</details>
 
 [Precios y ofertas locales](/guide/proposal/pricing-promotions/) · [Contrato de publicación](/guide/architecture/master-data-publication/) · [Preparación y activación](/architecture/?scenario=commercial-version&step=1)
 
@@ -92,7 +161,12 @@ Distribución por eventos y carga masiva, preparación de datos y activación co
 
 Intención, pago, commit, outbox y entrega posterior. Los estados de venta, pago, fiscalidad e integración se conservan independientes.
 
+<details>
+<summary>Ver diagrama y descargar su fuente</summary>
+
 <Diagram src="/docs/diagramas-excalidraw/07-flujo-venta.svg" alt="Vista dinámica de una venta desde su intención y pago hasta el commit local y la integración posterior con ERP." caption="Flujo de venta · La recuperación evita repetir efectos monetarios." sourceHref="/docs/diagramas-excalidraw/07-flujo-venta.excalidraw" />
+
+</details>
 
 [Diseño y animación de venta](/guide/proposal/continuity/) · [Contratos ERP](/guide/proposal/contracts/)
 

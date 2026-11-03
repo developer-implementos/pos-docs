@@ -125,7 +125,7 @@ const html = head(deck.title,'<link rel="stylesheet" href="../vendor/reveal/dist
 <button id="mobile-notes" class="mobile-action">Notas de la lámina</button>
 <button id="fullscreen" aria-keyshortcuts="F">Pantalla completa</button>
 <a href="/guide/reference/presentation/" class="resource-separator">Documentación de la propuesta</a>
-<a href="/architecture/">Mapa interactivo de arquitectura</a>
+<a href="/guide/diagrams/">Arquitectura y recorridos interactivos</a><a href="/guide/api/pos-platform/">Contratos HTTP del POS</a>
 <a href="/">Portal de POS Platform</a>
 </nav></div>
 <dialog id="index-dialog" aria-labelledby="index-title"><div class="dialog-heading"><h2 id="index-title">Arquitectura y roadmap</h2><button data-close aria-label="Cerrar índice">Cerrar</button></div><p class="index-help">← → Capítulos · ↑ ↓ Láminas · Espacio Recorrido</p><div class="index-chapters">${indexMarkup}</div></dialog>

@@ -5,7 +5,7 @@ import { validateRoadmap } from '../../tools/roadmap.mjs';
 const roadmap = validateRoadmap(roadmapSource);
 export { docsOrigin, repositoryOrigin, presentationOrigin, presentationRepository } from './site-config.mjs';
 export const siteBase = '/guide/';
-export const generatedDirectories = ['proposal', 'roadmap', 'architecture', 'operations', 'evidence', 'reference', 'implementation'];
+export const generatedDirectories = ['proposal', 'roadmap', 'architecture', 'operations', 'evidence', 'reference', 'implementation', 'flows'];
 export const sourceRouteAliases = {
   'README.md': 'implementation/repository',
   'apps/pos-docs/README.md': 'reference/maintenance',
@@ -55,6 +55,16 @@ const reference = (route, source, title, description, kind = 'reference') => ({ 
 const phaseHeading = phase => `F${String(phase.number).padStart(2, '0')} · ${phase.title}`;
 
 export const generatedPages = [
+  reference('flows', 'docs/flows/index.md', 'Recorridos de operación', 'Acceso por operación a su diseño, contratos, código, fallos y evidencia de implementación.'),
+  reference('flows/sale', 'docs/flows/sale.md', 'Registrar una venta', 'Cotización, confirmación local, resultado del comando y entrega posterior.'),
+  reference('flows/cash', 'docs/flows/cash.md', 'Abrir y operar una caja', 'Identidad, turno, movimientos y alcance pendiente del cierre de jornada.'),
+  reference('flows/payments', 'docs/flows/payments.md', 'Cobrar y resolver un pago', 'Efectivo, transferencia, intento externo, resultado incierto y recuperación.'),
+  reference('flows/fiscal', 'docs/flows/fiscal.md', 'Emitir y consultar un documento', 'Fuente comercial, identidad fiscal, envío, consulta y evidencia del emisor.'),
+  reference('flows/printing', 'docs/flows/printing.md', 'Imprimir y recuperar un trabajo', 'Autorización, recepción SQLite, permiso de ejecución y resultado del host.'),
+  reference('flows/pricing', 'docs/flows/pricing.md', 'Publicar y aplicar precios', 'Origen, versión comercial, preparación, validación y activación del espejo local.'),
+  reference('flows/synchronization', 'docs/flows/synchronization.md', 'Entregar operaciones a país y ERP', 'Outbox, recepción durable, trabajo y resultado externo con identidades estables.'),
+  reference('flows/recovery', 'docs/flows/recovery.md', 'Recuperar una operación o instalación', 'Consulta de comandos, efectos inciertos, restauración y condiciones para reabrir.'),
+  reference('flows/migration', 'docs/flows/migration.md', 'Migrar desde el POS actual', 'Correspondencia de capacidades, coexistencia, compatibilidad y aceptación del corte.'),
   reference('roadmap/coverage', 'docs/roadmap-coverage.md', 'Cobertura y criterios de finalización', 'Capacidades, límites del 100 %, dependencias externas y aceptación del alcance de entrega.', 'proposal'),
   { ...reference('proposal/roadmap', 'docs/roadmap.md', roadmap.title, 'Punto de partida, secuencia de seis fases y acceso a sus entregables, aplicaciones y pruebas de aceptación.', 'proposal'), range: { from: null, to: phaseHeading(roadmap.phases[0]) }, roadmap: true },
   ...roadmap.phases.map((phase, index) => ({
@@ -126,6 +136,7 @@ export const generatedPages = [
   reference('reference/maintenance', 'apps/starlight/README.md', 'Mantenimiento de la documentación', 'Fuentes, generación, diagramas, búsqueda y publicación de esta guía Starlight.', 'reference'),
   reference('reference/documentation-audit', 'docs/auditoria-documentacion.md', 'Auditoría de consistencia documental', 'Hallazgos, correcciones, fuentes canónicas, controles de calidad y validación pendiente con el equipo.', 'reference'),
   reference('reference/comprehension-validation', 'docs/editorial/comprehension-validation.md', 'Validación de comprensión', 'Tareas aplicadas a la propuesta, criterios observables y registro de resultados de la revisión con el equipo.', 'reference'),
+  reference('reference/documentation-system', 'docs/documentation-system.md', 'Fuentes y mantenimiento del conocimiento', 'Autoridad por tipo de información, derivados, procedencia y cambios coordinados entre repositorios.', 'reference'),
   reference('reference/narration-pipeline', 'docs/editorial/narration-pipeline.md', 'Narrador de la presentación histórica', 'Antecedentes del guion, generación y publicación del audio del explorador anterior.', 'historical'),
   reference('reference/video-publication', 'docs/editorial/video-publication.md', 'Video: producción y publicación', 'Antecedentes del video y su procedimiento de producción.', 'historical'),
   reference('implementation/repository', 'docs/product-repository.md', 'Repositorio POS Platform', 'Entrada al monorepo: aplicaciones, comandos, documentación y límites de implementación.', 'implementation'),
@@ -160,13 +171,15 @@ const item = (route, label) => ({ label: label || generatedPages.find(page => pa
 export const sidebar = [
   { label: 'Inicio', link: '/' },
   { label: 'Visión general de la solución', link: '/overview/' },
-  { label: 'Mapa general y diagramas C4', link: '/diagrams/' },
+  { label: 'Arquitectura y recorridos visuales', link: '/diagrams/' },
+  { label: 'Recorridos de operación', collapsed: true, items: generatedPages.filter(page => page.route === 'flows' || page.route.startsWith('flows/')).map(page => item(page.route)) },
+  { label: 'Contratos y datos del POS', collapsed: true, items: [{ label: 'APIs de POS Platform', link: '/api/pos-platform/' }, { label: 'Modelo de datos implementado', link: '/api/data-model/' }] },
   { label: 'Roadmap de entrega', collapsed: false, items: [item('proposal/roadmap', 'Visión general'), item('roadmap/coverage'), ...roadmap.phases.map(phase => item(`roadmap/${phase.id}`))] },
   { label: 'Mapa de contenidos', link: '/contents/' },
   { label: 'Glosario del POS', link: '/glossary/' },
   { label: 'Producto y alcance', collapsed: true, items: ['product', 'evolution', 'corporate-reuse'].map(route => item(`proposal/${route}`)) },
   { label: 'Arquitectura y estructura', collapsed: true, items: [item('proposal/architecture'), item('architecture/c4-model'), item('architecture/master-data-publication'), item('architecture/job-processing'), item('architecture/postgresql-transactions'), item('architecture/identity'), item('architecture/monorepo'), item('architecture/native-clients'), item('architecture/device-agent'), item('architecture/drawio'), item('proposal/contracts'), item('proposal/technology'), item('architecture/technologies'), item('architecture/providers'), item('architecture/messaging')] },
-  { label: 'Flujos del producto', collapsed: true, items: ['continuity', 'pricing-promotions', 'synchronization', 'integration', 'erp-migration', 'fiscal-compliance', 'access-operations'].map(route => item(`proposal/${route}`)).concat([item('operations/cash-management')]) },
+  { label: 'Contratos de operación', collapsed: true, items: ['continuity', 'pricing-promotions', 'synchronization', 'integration', 'erp-migration', 'fiscal-compliance', 'access-operations'].map(route => item(`proposal/${route}`)).concat([item('operations/cash-management')]) },
   { label: 'Decisiones y validación', collapsed: true, items: [item('proposal/decisions'), ...['validation', 'resilience', 'open-items'].map(route => item(`operations/${route}`))] },
   { label: 'Implementación y desarrollo', collapsed: true, items: generatedPages.filter(page => page.route.startsWith('implementation/')).map(page => item(page.route)) },
   { label: 'Extensiones opcionales', collapsed: true, items: [item('proposal/ai'), item('architecture/ai'), item('architecture/rfid')] },

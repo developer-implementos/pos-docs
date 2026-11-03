@@ -3,11 +3,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
-import {documentKinds, generatedDirectories, generatedPages, readingPath, sidebar} from '../content-map.mjs';
+import {documentKinds, generatedPages, readingPath, sidebar} from '../content-map.mjs';
 import {productEvidence} from './product-evidence.mjs';
 import {loadProgress} from '../../../portal/progress.mjs';
+import {loadBundle} from '../../../tools/product-reference/bundle.mjs';
+import {authoredPageFiles} from './content-files.mjs';
 
 const root = fileURLToPath(new URL('../../../', import.meta.url));
+loadBundle();
 const progress = loadProgress(root);
 console.log(`Project progress: ${progress.completed}/${progress.total} (${progress.measurement}), ${progress.accepted} accepted, ${progress.applications.length} applications; source ${progress.source.revision.slice(0, 12)}.`);
 assert.ok(fs.existsSync(path.join(root, productEvidence.productGuide.source)), 'Missing editorial product guide');
@@ -24,19 +27,11 @@ for (const page of generatedPages) {
   for (const key of ['title', 'description', 'source']) assert.ok(page[key]?.trim(), `Missing ${key}: ${page.route}`);
   assert.ok(fs.existsSync(path.join(root, page.source)), `Missing canonical source: ${page.source}`);
 }
-function authored(directory, prefix = '') {
-  for (const entry of fs.readdirSync(directory, {withFileTypes: true})) {
-    if (!prefix && generatedDirectories.includes(entry.name)) continue;
-    const relative = prefix + entry.name;
-    if (entry.isDirectory()) authored(path.join(directory, entry.name), relative + '/');
-    else if (/\.mdx?$/.test(relative)) {
-      register(relative.replace(/\.mdx?$/, '').replace(/(^|\/)index$/, ''));
-      const source = fs.readFileSync(path.join(directory, entry.name), 'utf8');
-      assert.match(source, /^---\r?\n[\s\S]*?\r?\ndescription: .+\r?\n/, `Missing description: ${relative}`);
-    }
-  }
+for (const relative of authoredPageFiles(content, generatedPages)) {
+  register(relative.replace(/\.mdx?$/, '').replace(/(^|\/)index$/, ''));
+  const source = fs.readFileSync(path.join(content, relative), 'utf8');
+  assert.match(source, /^---\r?\n[\s\S]*?\r?\ndescription: .+\r?\n/, `Missing description: ${relative}`);
 }
-authored(content);
 const navigation = new Set();
 function visit(items) {
   for (const item of items) {

@@ -1,0 +1,15 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {docsOrigin} from '../../apps/starlight/site-config.mjs';
+
+const root = fileURLToPath(new URL('../../dist/explore/', import.meta.url));
+const catalog = JSON.parse(fs.readFileSync(path.join(root, 'catalog.json'), 'utf8'));
+const entries = Array.isArray(catalog) ? catalog : catalog.diagrams;
+if (!Array.isArray(entries) || !entries.length) throw new Error('Build the Archify catalog before its index');
+const escape = value => String(value ?? '').replace(/[&<>"']/gu, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+const stateLabel = entry => entry.type === 'lifecycle' ? 'Comportamiento inspeccionado · revisión identificada' : entry.type === 'erd' ? 'Estructura extraída de migraciones · revisión identificada' : 'Diseño objetivo · consultar alcance implementado';
+const items = entries.map(entry => `<li><a href="${escape(entry.href)}">${escape(entry.title)}</a><p>${escape(entry.description)}</p><span>${stateLabel(entry)}</span></li>`).join('');
+fs.writeFileSync(path.join(root, 'index.html'), `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Explorar el POS · POS Platform</title><meta name="description" content="Recorridos interactivos, aplicaciones y datos del POS con fuentes identificadas."><link rel="canonical" href="${docsOrigin}/explore/"><link rel="icon" href="/portal/assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/portal/portal.css"><link rel="stylesheet" href="/explore/index.css"></head><body><a class="skip-link" href="#main">Saltar al contenido</a><header class="site-header"><div class="header-inner"><a class="brand" href="/"><img src="/portal/assets/logo.svg" width="148" height="50" alt="Implementos"><span>POS Platform</span></a><nav aria-label="Navegación principal"><a href="/guide/flows/">Recorridos</a><a href="/guide/api/pos-platform/">Contratos HTTP</a><a href="/guide/diagrams/">Documentación</a></nav></div></header><main id="main"><h1>Explorar el POS</h1><p class="lead">Elige la operación o la parte del sistema que necesitas entender.</p><p>Las vistas de diseño describen el comportamiento acordado. Los datos implementados proceden de migraciones del producto; cada referencia identifica su revisión. La ejecución y homologación se acreditan en los <a href="/guide/proposal/roadmap/">entregables</a>.</p><ul class="explore-list">${items}</ul></main></body></html>`);
+fs.writeFileSync(path.join(root, 'index.css'), `.explore-list{list-style:none;padding:0;margin:2rem 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem 2rem}.explore-list li{padding:1.2rem 0;border-top:1px solid var(--line)}.explore-list a{font-size:1.2rem;font-weight:700}.explore-list p{margin:.7rem 0}.explore-list span{font-size:.85rem;color:var(--muted)}main{padding-block:2rem 4rem}main>p{max-width:75ch}@media(max-width:650px){.explore-list{grid-template-columns:minmax(0,1fr)}}`);
+console.log(`Explore index: ${entries.length} source-backed views.`);

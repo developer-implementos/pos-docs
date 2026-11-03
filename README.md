@@ -10,6 +10,10 @@ El código de las aplicaciones pertenece a [POS Platform](https://github.com/dev
 | [`/#progress`](https://pos-docs-starlight.vercel.app/#progress) | Avance general y por aplicación, basado en entregables verificados del producto |
 | [`/guide/`](https://pos-docs-starlight.vercel.app/guide/) | Documentación técnica Starlight |
 | [`/architecture/`](https://pos-docs-starlight.vercel.app/architecture/) | Mapa SVG interactivo de aplicaciones, tecnologías y contratos de integración |
+| [`/guide/flows/`](https://pos-docs-starlight.vercel.app/guide/flows/) | Recorridos de negocio, límites y evidencia enlazada |
+| [`/explore/`](https://pos-docs-starlight.vercel.app/explore/) | Vistas Archify derivadas de la arquitectura y de datos implementados |
+| [`/guide/api/pos-platform/`](https://pos-docs-starlight.vercel.app/guide/api/pos-platform/) | Contratos HTTP generados del POS y descargas OpenAPI |
+| [`/guide/api/data-model/`](https://pos-docs-starlight.vercel.app/guide/api/data-model/) | Tablas y restricciones extraídas de las migraciones del producto |
 | [`/presentations/architecture/`](https://pos-docs-starlight.vercel.app/presentations/architecture/) | Arquitectura y roadmap en Reveal.js |
 | [`/#materials`](https://pos-docs-starlight.vercel.app/#materials) | Fuentes de reuniones y cuestionarios, filtrables por país y formato |
 | [`/guide/evidence/country-comparison/`](https://pos-docs-starlight.vercel.app/guide/evidence/country-comparison/) | Síntesis comparativa aportada de Chile, Perú y España |
@@ -26,6 +30,9 @@ El código de las aplicaciones pertenece a [POS Platform](https://github.com/dev
 | `presentations/` | Organización de presentaciones Reveal.js y referencias vigentes |
 | `tools/diagrams/` | Modelos, generadores y comprobaciones C4, Excalidraw y draw.io |
 | `tools/architecture/` | Modelo, SVG descargable y explorador interactivo de la propuesta |
+| `tools/archify/` | Adaptadores y runtime fijado para vistas interactivas; consume el modelo compartido |
+| `tools/product-reference/` | Importación, validación y publicación de contratos y esquema, sin acceso operativo |
+| `data/product-reference/` | Snapshot revisado de OpenAPI y esquema con commit y hashes; no se edita a mano |
 | `tools/export-documentation.mjs` | Snapshot documental derivado para consumidores como las presentaciones |
 | `.github/workflows/` | Validación automática independiente del producto |
 
@@ -64,6 +71,20 @@ Seguir [materials/README.md](materials/README.md): añadir el original y registr
 Cada archivo ofrece **Visualizar** y **Descargar**. Las vistas de lectura `/materials/view/<id>/` usan PDF.js local y PDF revisados vinculados al original por SHA-256. La conversión se hace antes de publicar; Vercel sólo construye el sitio y copia los derivados registrados. Para regenerarlos, consultar [los requisitos de conversión](materials/previews/README.md).
 
 ## Evidencia y actualización
+
+Los recorridos enlazan una sola explicación de cada responsabilidad. Consultar [fuentes y mantenimiento](docs/documentation-system.md) antes de agregar una vista. Los diagramas de diseño y los datos implementados conservan su estado y procedencia; una vista generada no acredita operación real.
+
+Para actualizar la referencia del producto, ejecutar `npm run documentation:export` en un checkout limpio de POS Platform con su PostgreSQL efímero de pruebas. Después, desde POS Docs:
+
+```sh
+npm run reference:sync -- --workspace ../pos-platform
+npm run reference:test
+npm run build
+npm run reference:check
+npm run explore:check
+```
+
+Revisar el diff del snapshot antes de publicarlo. El importador sólo acepta los archivos declarados, hashes válidos y el commit exacto del checkout corporativo limpio. El build público consume esa copia local y no necesita credenciales, PostgreSQL ni el checkout del producto. Apidog consume estos OpenAPI en una sola dirección; la preparación local del producto no conecta ni sincroniza una cuenta.
 
 Las páginas distinguen propuesta, implementación, investigación e historia. La revisión de código que sustenta el catálogo se registra aparte de la revisión de este repositorio editorial. El build usa archivos versionados y no consulta `main` del producto ni repositorios vecinos.
 

@@ -1,0 +1,221 @@
+{
+  "components": {
+    "schemas": {
+      "ApiErrorDto": {
+        "properties": {
+          "category": {
+            "description": "Categoría del error.",
+            "enum": [
+              "VALIDATION",
+              "NOT_FOUND",
+              "AUTHORIZATION",
+              "CONFLICT",
+              "SECURITY",
+              "EXTERNAL",
+              "TIMEOUT",
+              "TECHNICAL"
+            ],
+            "type": "string"
+          },
+          "code": {
+            "description": "Código estable para identificar el error.",
+            "example": "VALIDATION_ERROR",
+            "type": "string"
+          },
+          "message": {
+            "description": "Descripción del error.",
+            "example": "Invalid request",
+            "type": "string"
+          },
+          "timestamp": {
+            "description": "Fecha y hora del error en UTC.",
+            "example": "2026-10-14T12:00:00.000Z",
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "category",
+          "timestamp"
+        ],
+        "type": "object"
+      },
+      "LivenessResponseDto": {
+        "properties": {
+          "status": {
+            "description": "El servicio puede responder solicitudes.",
+            "enum": [
+              "ok"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "type": "object"
+      },
+      "ReadinessResponseDto": {
+        "properties": {
+          "status": {
+            "description": "El servicio terminó de iniciar y está disponible para recibir solicitudes.",
+            "enum": [
+              "ready"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "type": "object"
+      },
+      "RuntimeInfoDto": {
+        "properties": {
+          "apiVersion": {
+            "description": "Versión de la API.",
+            "enum": [
+              "1"
+            ],
+            "type": "string"
+          },
+          "mode": {
+            "description": "Base de API, sin operaciones de negocio ni integraciones conectadas.",
+            "enum": [
+              "foundation"
+            ],
+            "type": "string"
+          },
+          "service": {
+            "description": "Identificador del servicio.",
+            "enum": [
+              "country-api"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "service",
+          "apiVersion",
+          "mode"
+        ],
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "bearer": {
+        "bearerFormat": "JWT",
+        "description": "Sesión opaca caducable; no es un JWT.",
+        "scheme": "bearer",
+        "type": "http"
+      },
+      "device": {
+        "bearerFormat": "JWT",
+        "description": "Credencial privada de instalación del host de periféricos; no acepta sesiones de operador.",
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "contact": {},
+    "description": "Identidad técnica y verificación de PostgreSQL de país. F01 no habilita recepción de ventas, maestros ni integración ERP.",
+    "title": "POS Platform · API de País",
+    "version": "1.0.0"
+  },
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/v1": {
+      "get": {
+        "description": "Identifica el servicio y la versión de API disponible para el cliente.",
+        "operationId": "countryGetInfo",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuntimeInfoDto"
+                }
+              }
+            },
+            "description": "Información de la API disponible."
+          }
+        },
+        "summary": "Obtener información del servicio de país",
+        "tags": [
+          "Plataforma"
+        ]
+      }
+    },
+    "/health/live": {
+      "get": {
+        "description": "Permite comprobar que el servicio puede responder solicitudes.",
+        "operationId": "healthGetLiveness",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LivenessResponseDto"
+                }
+              }
+            },
+            "description": "El servicio responde."
+          }
+        },
+        "summary": "Verificar actividad del servicio",
+        "tags": [
+          "Disponibilidad"
+        ]
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "description": "Comprueba el estado del proceso y las dependencias registradas por esta aplicación. Una dependencia no disponible o un esquema incompatible devuelve 503, sin revelar configuración.",
+        "operationId": "healthGetReadiness",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadinessResponseDto"
+                }
+              }
+            },
+            "description": "El servicio está disponible."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorDto"
+                }
+              }
+            },
+            "description": "El servicio aún no está disponible o se está cerrando."
+          }
+        },
+        "summary": "Verificar disponibilidad del servicio",
+        "tags": [
+          "Disponibilidad"
+        ]
+      }
+    }
+  },
+  "servers": [],
+  "tags": [
+    {
+      "description": "Estado de disponibilidad de la API.",
+      "name": "Disponibilidad"
+    },
+    {
+      "description": "Identificación y versión de la API de POS Platform.",
+      "name": "Plataforma"
+    }
+  ]
+}

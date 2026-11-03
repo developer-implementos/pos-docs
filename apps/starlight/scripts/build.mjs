@@ -101,4 +101,7 @@ run(path.join(root, 'tools/export-documentation.mjs'));
 run(path.join(root, 'presentations/tools/build.mjs'));
 run(path.join(root, 'tools/architecture/build.mjs'));
 run(path.join(root, 'portal/build.mjs'));
+run(path.join(root, 'tools/product-reference/build.mjs'));
+run(path.join(root, 'tools/archify/build.mjs'));
+run(path.join(root, 'tools/product-reference/explore-index.mjs'));
 console.log(`Documentation artifact: ${pages} guide HTML files, ${assets} downloads, ${scripts.size} shared scripts; dist/{index.html,guide,docs,presentations,portal}.`);

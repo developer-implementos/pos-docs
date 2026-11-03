@@ -1,0 +1,76 @@
+/* Portal theme adapter. Upstream stays unmodified and node geometry keeps its measured font. */
+html[data-theme="light"] {
+  --bg:#f5f7fa;
+  --text:#16283e;
+  --text-muted:#4a607d;
+  --frontend-stroke:#0545ba;
+  --frontend-fill:#eaf0fd;
+  --backend-stroke:#0545ba;
+  --backend-fill:#eaf0fd;
+  --arrow-emphasis:#0545ba;
+}
+html[data-theme="dark"] {
+  --frontend-stroke:#91b7ff;
+  --backend-stroke:#91b7ff;
+  --arrow-emphasis:#91b7ff;
+}
+.pos-docs-context {
+  display:flex;
+  align-items:center;
+  gap:18px;
+  padding:8px 16px;
+  border-bottom:1px solid var(--panel-border);
+  color:var(--text-muted);
+  font:14px/1.4 system-ui,sans-serif;
+}
+.pos-docs-context a,.pos-diagram-details a,.pos-docs-fallback a {
+  color:var(--frontend-stroke);
+  font-weight:650;
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+.pos-docs-context span { margin-right:auto }
+.pos-docs-context button,.pos-diagram-details button {
+  color:var(--frontend-stroke);
+  background:var(--frontend-fill);
+  border:1px solid var(--panel-border);
+  border-radius:6px;
+  min-height:36px;
+  padding:6px 12px;
+  font:600 14px/1.4 system-ui,sans-serif;
+  cursor:pointer;
+}
+.pos-docs-context :focus-visible,.pos-diagram-details :focus-visible { outline:3px solid var(--frontend-stroke);outline-offset:2px }
+.pos-diagram-details {
+  position:fixed;
+  right:16px;
+  top:66px;
+  z-index:400;
+  width:min(380px,calc(100vw - 32px));
+  max-height:calc(100dvh - 90px);
+  overflow:auto;
+  padding:20px;
+  background:var(--toolbar-menu-bg);
+  color:var(--text);
+  border:1px solid var(--panel-border);
+  border-radius:10px;
+  box-shadow:0 6px 24px #0002;
+  font:16px/1.55 system-ui,sans-serif;
+}
+.pos-diagram-details[hidden] { display:none }
+.pos-detail-heading { display:flex;align-items:flex-start;gap:12px }
+.pos-detail-heading h2 { margin:0;font-size:19px;line-height:1.3;flex:1 }
+.pos-detail-heading button { min-width:36px }
+.pos-diagram-details p { margin:16px 0 }
+.pos-diagram-details a,.pos-diagram-details p { overflow-wrap:anywhere }
+[data-pos-detail-schema] details { border-top:1px solid var(--panel-border);padding:12px 0 }
+[data-pos-detail-schema] summary { cursor:pointer;font-weight:650 }
+[data-pos-detail-schema] p { font:12px/1.6 ui-monospace,monospace }
+[data-pos-detail-status] { color:var(--text-muted);font-size:14px }
+.pos-docs-fallback { padding:0 16px }
+@media(max-width:650px) {
+  .pos-docs-context { gap:10px;padding:6px 10px;font-size:12px;flex-wrap:wrap }
+  .pos-docs-context span { display:none }
+  .pos-docs-context a:first-child { margin-right:auto }
+  .pos-diagram-details { right:8px;top:58px;width:calc(100vw - 16px);max-height:calc(100dvh - 76px) }
+}
