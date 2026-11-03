@@ -1,0 +1,24 @@
+# Fuente única de responsables editoriales. El equipo POS Platform tiene acceso
+# maintain; cada PR identifica su recorrido y la evidencia de revisión concreta.
+* @developer-implementos/pos-platform
+
+# Arquitectura, decisiones, recorridos y evidencia editorial
+/docs/ @developer-implementos/pos-platform
+/tools/architecture/ @developer-implementos/pos-platform
+/tools/diagrams/ @developer-implementos/pos-platform
+
+# Contratos y datos importados: revisar con el propietario en POS Platform
+/data/product-reference/ @developer-implementos/pos-platform
+/tools/product-reference/ @developer-implementos/pos-platform
+/tools/archify/ @developer-implementos/pos-platform
+
+# Lectura, presentaciones y material aportado
+/apps/starlight/ @developer-implementos/pos-platform
+/presentations/ @developer-implementos/pos-platform
+/portal/ @developer-implementos/pos-platform
+/materials/ @developer-implementos/pos-platform
+
+# Política y publicación
+/.github/ @developer-implementos/pos-platform
+/tools/editorial/ @developer-implementos/pos-platform
+/AGENTS.md @developer-implementos/pos-platform

@@ -7042,101 +7042,101 @@
     </mxGraphModel>
   </diagram>
   <diagram id="c4-7" name="Flujo de venta">
-    <mxGraphModel grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4564" pageHeight="8142" math="0" shadow="0" background="#ffffff">
+    <mxGraphModel grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4564" pageHeight="8851" math="0" shadow="0" background="#ffffff">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="group-notes-7198-0" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="64" y="7197.5" width="1404" height="191.75" as="geometry" />
+        <mxCell id="group-notes-7907-0" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
+          <mxGeometry x="64" y="7906.5" width="1404" height="191.75" as="geometry" />
         </mxCell>
-        <mxCell id="group-notes-7198-1" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="1492" y="7197.5" width="1404" height="191.75" as="geometry" />
+        <mxCell id="group-notes-7907-1" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
+          <mxGeometry x="1492" y="7906.5" width="1404" height="191.75" as="geometry" />
         </mxCell>
-        <mxCell id="group-notes-7198-2" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="2920" y="7197.5" width="1404" height="191.75" as="geometry" />
+        <mxCell id="group-notes-7907-2" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
+          <mxGeometry x="2920" y="7906.5" width="1404" height="191.75" as="geometry" />
         </mxCell>
-        <mxCell id="group-notes-7198-3" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="64" y="7413.25" width="1404" height="191.75" as="geometry" />
+        <mxCell id="group-notes-7907-3" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
+          <mxGeometry x="64" y="8122.25" width="1404" height="191.75" as="geometry" />
         </mxCell>
-        <mxCell id="group-notes-7198-4" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="1492" y="7413.25" width="1404" height="191.75" as="geometry" />
+        <mxCell id="group-notes-7907-4" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
+          <mxGeometry x="1492" y="8122.25" width="1404" height="191.75" as="geometry" />
         </mxCell>
-        <mxCell id="group-notes-7198-5" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="2920" y="7413.25" width="1404" height="191.75" as="geometry" />
+        <mxCell id="group-notes-7907-5" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
+          <mxGeometry x="2920" y="8122.25" width="1404" height="191.75" as="geometry" />
         </mxCell>
-        <mxCell id="group-notes-7198-6" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
-          <mxGeometry x="64" y="7629" width="1404" height="191.75" as="geometry" />
+        <mxCell id="group-notes-7907-6" value="" parent="1" vertex="1" style="group;html=0;container=1;collapsible=0;recursiveResize=0;">
+          <mxGeometry x="64" y="8338" width="1404" height="191.75" as="geometry" />
         </mxCell>
         <mxCell id="life-client" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#A8B8D0;strokeWidth=1;dashed=1;dashPattern=6 4;edgeStyle=none;rounded=0;startArrow=none;endArrow=none;endSize=10;">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="241.5" y="642" as="sourcePoint" />
-            <mxPoint x="241.5" y="7009.5" as="targetPoint" />
+            <mxPoint x="241.5" y="7718.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="life-branchApi" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#A8B8D0;strokeWidth=1;dashed=1;dashPattern=6 4;edgeStyle=none;rounded=0;startArrow=none;endArrow=none;endSize=10;">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="596.5" y="642" as="sourcePoint" />
-            <mxPoint x="596.5" y="7009.5" as="targetPoint" />
+            <mxPoint x="596.5" y="7718.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="life-branchDb" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#A8B8D0;strokeWidth=1;dashed=1;dashPattern=6 4;edgeStyle=none;rounded=0;startArrow=none;endArrow=none;endSize=10;">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="951.5" y="642" as="sourcePoint" />
-            <mxPoint x="951.5" y="7009.5" as="targetPoint" />
+            <mxPoint x="951.5" y="7718.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="life-payments" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#A8B8D0;strokeWidth=1;dashed=1;dashPattern=6 4;edgeStyle=none;rounded=0;startArrow=none;endArrow=none;endSize=10;">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="1306.5" y="642" as="sourcePoint" />
-            <mxPoint x="1306.5" y="7009.5" as="targetPoint" />
+            <mxPoint x="1306.5" y="7718.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="life-device" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#A8B8D0;strokeWidth=1;dashed=1;dashPattern=6 4;edgeStyle=none;rounded=0;startArrow=none;endArrow=none;endSize=10;">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="1661.5" y="642" as="sourcePoint" />
-            <mxPoint x="1661.5" y="7009.5" as="targetPoint" />
+            <mxPoint x="1661.5" y="7718.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="life-deviceJournal" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#A8B8D0;strokeWidth=1;dashed=1;dashPattern=6 4;edgeStyle=none;rounded=0;startArrow=none;endArrow=none;endSize=10;">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="2016.5" y="642" as="sourcePoint" />
-            <mxPoint x="2016.5" y="7009.5" as="targetPoint" />
+            <mxPoint x="2016.5" y="7718.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="life-peripherals" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#A8B8D0;strokeWidth=1;dashed=1;dashPattern=6 4;edgeStyle=none;rounded=0;startArrow=none;endArrow=none;endSize=10;">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="2371.5" y="642" as="sourcePoint" />
-            <mxPoint x="2371.5" y="7009.5" as="targetPoint" />
+            <mxPoint x="2371.5" y="7718.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="life-syncWorker" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#A8B8D0;strokeWidth=1;dashed=1;dashPattern=6 4;edgeStyle=none;rounded=0;startArrow=none;endArrow=none;endSize=10;">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="2726.5" y="642" as="sourcePoint" />
-            <mxPoint x="2726.5" y="7009.5" as="targetPoint" />
+            <mxPoint x="2726.5" y="7718.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="life-countryApi" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#A8B8D0;strokeWidth=1;dashed=1;dashPattern=6 4;edgeStyle=none;rounded=0;startArrow=none;endArrow=none;endSize=10;">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="3081.5" y="642" as="sourcePoint" />
-            <mxPoint x="3081.5" y="7009.5" as="targetPoint" />
+            <mxPoint x="3081.5" y="7718.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="life-countryDb" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#A8B8D0;strokeWidth=1;dashed=1;dashPattern=6 4;edgeStyle=none;rounded=0;startArrow=none;endArrow=none;endSize=10;">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="3436.5" y="642" as="sourcePoint" />
-            <mxPoint x="3436.5" y="7009.5" as="targetPoint" />
+            <mxPoint x="3436.5" y="7718.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="life-erpAdapter" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#A8B8D0;strokeWidth=1;dashed=1;dashPattern=6 4;edgeStyle=none;rounded=0;startArrow=none;endArrow=none;endSize=10;">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="3791.5" y="642" as="sourcePoint" />
-            <mxPoint x="3791.5" y="7009.5" as="targetPoint" />
+            <mxPoint x="3791.5" y="7718.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="life-erp" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#A8B8D0;strokeWidth=1;dashed=1;dashPattern=6 4;edgeStyle=none;rounded=0;startArrow=none;endArrow=none;endSize=10;">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="4146.5" y="642" as="sourcePoint" />
-            <mxPoint x="4146.5" y="7009.5" as="targetPoint" />
+            <mxPoint x="4146.5" y="7718.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="sheet" value="" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#fff;strokeWidth=1.5;fillColor=#fff;rounded=1;arcSize=8;">
@@ -7388,441 +7388,497 @@
             <mxPoint x="2016" y="2811" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="step-11-note" value="Antes de ejecutar registra jobId, hash e intento. Mismo jobId y mismo hash recuperan estado; mismo jobId con distinto hash es conflicto. El journal no es una base de ventas." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="2869" width="1537.519531" height="25" as="geometry" />
+        <mxCell id="step-11-note" value="Conserva jobId, hash y destino antes del acuse. Una reentrega recupera el mismo trabajo; recibirlo no autoriza el efecto físico. SQLite no es una base de ventas." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="2869" width="1427.480469" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="step-12-label" value="13  Ejecuta impresión autorizada · driver/SDK homologado" parent="step-12" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="0" y="0" width="573.525391" height="27.5" as="geometry" relative="1">
-            <mxPoint x="-337" y="-42.5" as="offset" />
+        <mxCell id="step-12-label" value="13  Acusa recepción durable · HTTPS/LAN saliente" parent="step-12" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="501.359375" height="27.5" as="geometry" relative="1">
+            <mxPoint x="-514.5" y="-42.5" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="step-12" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1662" y="2974.5" as="sourcePoint" />
-            <mxPoint x="2371" y="2974.5" as="targetPoint" />
+            <mxPoint x="1661" y="2974.5" as="sourcePoint" />
+            <mxPoint x="597" y="2974.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="step-12-note" value="Un único agente autorizado opera el equipo físico. Las capacidades y drivers requieren homologación; este flujo de impresión no habilita un terminal de pago." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="3032.5" width="1398.652344" height="25" as="geometry" />
+        <mxCell id="step-12-note" value="La API valida identidad, hash, destino y vigencia. Este acuse acredita recepción, todavía no ejecución." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="3032.5" width="908.349609" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="step-13-label" value="14  Devuelve evidencia técnica de ejecución · driver/SDK" parent="step-13" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="0" y="0" width="558.851562" height="27.5" as="geometry" relative="1">
-            <mxPoint x="-337" y="-42.5" as="offset" />
+        <mxCell id="step-13-label" value="14  Solicita permiso para el intento · HTTPS/LAN saliente" parent="step-13" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="560.033203" height="27.5" as="geometry" relative="1">
+            <mxPoint x="-514.5" y="-42.5" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="step-13" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="2371" y="3138" as="sourcePoint" />
-            <mxPoint x="1662" y="3138" as="targetPoint" />
+            <mxPoint x="1661" y="3138" as="sourcePoint" />
+            <mxPoint x="597" y="3138" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="step-13-note" value="La aceptación del spooler indica recepción técnica y no confirma salida física. Ante resultado incierto conserva la identidad y requiere consulta o intervención; no reimprime automáticamente." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="3196" width="1684.257812" height="25" as="geometry" />
+        <mxCell id="step-13-note" value="El host registra el intento y pide autorización de un uso. Un permiso previo, respuesta perdida o resultado incierto no permite repetir el efecto." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="3196" width="1254.023438" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="step-14-label" value="15  Conserva intento y evidencia&#10;antes de reportar · SQLite" parent="step-14" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="0" y="0" width="319.193359" height="55" as="geometry" relative="1">
-            <mxPoint x="-159.5" y="-70" as="offset" />
+        <mxCell id="step-14-label" value="15  Consume permiso de un uso&#10;antes de responder ·&#10;PostgreSQL" parent="step-14" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="317.958008" height="82.5" as="geometry" relative="1">
+            <mxPoint x="-159.5" y="-97.5" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="step-14" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1662" y="3329" as="sourcePoint" />
-            <mxPoint x="2016" y="3329" as="targetPoint" />
+            <mxPoint x="597" y="3356.5" as="sourcePoint" />
+            <mxPoint x="951" y="3356.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="step-14-note" value="Si se corta la LAN conserva estado técnico y reanuda el reporte al reconectar. La pérdida o restauración del journal exige reconciliar antes de volver a ejecutar." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="3387" width="1410.810547" height="25" as="geometry" />
+        <mxCell id="step-14-note" value="La actualización atómica valida trabajo recibido, intento, destino y vigencia. El permiso queda consumido antes de responder; restaurar SQLite no concede otro." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="3414.5" width="1419.716797" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="step-15-label" value="16  Reporta evidencia con jobId original · HTTPS/LAN saliente" parent="step-15" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="0" y="0" width="608.985352" height="27.5" as="geometry" relative="1">
+        <mxCell id="step-15-label" value="16  Devuelve autorización nueva y vigente · HTTPS" parent="step-15" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="505.033203" height="27.5" as="geometry" relative="1">
             <mxPoint x="-514.5" y="-42.5" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="step-15" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1661" y="3492.5" as="sourcePoint" />
-            <mxPoint x="597" y="3492.5" as="targetPoint" />
+            <mxPoint x="597" y="3520" as="sourcePoint" />
+            <mxPoint x="1661" y="3520" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="step-15-note" value="Reintenta la entrega de la evidencia, no el efecto físico. El backend comprueba identidad, hash, dispositivo y transición de estado; no interpreta el spool como prueba física." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="3550.5" width="1525.371094" height="25" as="geometry" />
+        <mxCell id="step-15-note" value="Sólo una respuesta nueva authorized permite iniciar el efecto dentro de su vigencia. El host descuenta tránsito y espera usando el presupuesto monotónico; pérdida, vencimiento o replay impiden una ejecución nueva." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="3578" width="1921.191406" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="step-16-label" value="17  Conserva estado del trabajo&#10;y trazabilidad · PostgreSQL" parent="step-16" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="0" y="0" width="311.867188" height="55" as="geometry" relative="1">
-            <mxPoint x="-159.5" y="-70" as="offset" />
+        <mxCell id="step-16-label" value="17  Ejecuta una vez el intento autorizado · driver/SDK homologado" parent="step-16" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="650.611328" height="27.5" as="geometry" relative="1">
+            <mxPoint x="-337" y="-42.5" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="step-16" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="597" y="3683.5" as="sourcePoint" />
-            <mxPoint x="951" y="3683.5" as="targetPoint" />
+            <mxPoint x="1662" y="3683.5" as="sourcePoint" />
+            <mxPoint x="2371" y="3683.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="step-16-note" value="La venta y su documento mantienen sus identidades. Reimpresión es una operación explícita y autorizada con auditoría y referencia al trabajo anterior." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="3741.5" width="1339.6875" height="25" as="geometry" />
+        <mxCell id="step-16-note" value="Un único controlador serializa capacidades del mismo periférico. Hardware y bases no comparten transacción; aceptar el spooler no demuestra impresión física. La incertidumbre se recupera sin reimprimir automáticamente." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="3741.5" width="1977.587891" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="step-17-label" value="18  Lee outbox confirmada y reclama lote acotado · PostgreSQL" parent="step-17" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="0" y="0" width="627.354492" height="27.5" as="geometry" relative="1">
-            <mxPoint x="-869.5" y="-42.5" as="offset" />
+        <mxCell id="step-17-label" value="18  Devuelve evidencia técnica de ejecución · driver/SDK" parent="step-17" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="558.851562" height="27.5" as="geometry" relative="1">
+            <mxPoint x="-337" y="-42.5" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="step-17" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="2726" y="3847" as="sourcePoint" />
-            <mxPoint x="952" y="3847" as="targetPoint" />
+            <mxPoint x="2371" y="3847" as="sourcePoint" />
+            <mxPoint x="1662" y="3847" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="step-17-note" value="El claim o lease técnico es recuperable. No mantiene una transacción abierta durante el envío ni altera libremente las ventas." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="3905" width="1110.625" height="25" as="geometry" />
+        <mxCell id="step-17-note" value="La aceptación del spooler indica recepción técnica y no confirma salida física. Ante resultado incierto conserva la identidad y requiere consulta o intervención; no reimprime automáticamente." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="3905" width="1684.257812" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="step-18-label" value="19  Envía lote con eventId y&#10;secuencia · HTTPS autenticado" parent="step-18" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="0" y="0" width="310.599609" height="55" as="geometry" relative="1">
+        <mxCell id="step-18-label" value="19  Conserva intento y evidencia&#10;antes de reportar · SQLite" parent="step-18" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="319.193359" height="55" as="geometry" relative="1">
             <mxPoint x="-159.5" y="-70" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="step-18" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="2727" y="4038" as="sourcePoint" />
-            <mxPoint x="3081" y="4038" as="targetPoint" />
+            <mxPoint x="1662" y="4038" as="sourcePoint" />
+            <mxPoint x="2016" y="4038" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="step-18-note" value="Incluye país, sucursal, versión de contrato e identidad estable del evento. La entrega es al menos una vez; un reintento no fabrica otra venta." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="4096" width="1250.78125" height="25" as="geometry" />
+        <mxCell id="step-18-note" value="Si se corta la LAN conserva estado técnico y reanuda el reporte al reconectar. La pérdida o restauración del journal exige reconciliar antes de volver a ejecutar." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="4096" width="1410.810547" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="step-19-label" value="20  Valida emisor, contrato, orden e identidad" parent="step-19" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="0" y="0" width="441.095703" height="27.5" as="geometry" relative="1">
-            <mxPoint x="-178" y="-66" as="offset" />
+        <mxCell id="step-19-label" value="20  Reporta evidencia con jobId original · HTTPS/LAN saliente" parent="step-19" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="608.985352" height="27.5" as="geometry" relative="1">
+            <mxPoint x="-514.5" y="-42.5" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="step-19" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="3081" y="4201.5" as="sourcePoint" />
-            <mxPoint x="3082" y="4249.5" as="targetPoint" />
-            <Array as="points">
-              <mxPoint x="3291.5" y="4201.5" />
-              <mxPoint x="3291.5" y="4249.5" />
-            </Array>
+            <mxPoint x="1661" y="4201.5" as="sourcePoint" />
+            <mxPoint x="597" y="4201.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="step-19-note" value="Autentica el ámbito y comprueba el contrato. La decisión definitiva de deduplicación y sus restricciones se aplica dentro del commit siguiente." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="4296.5" width="1252.900391" height="25" as="geometry" />
+        <mxCell id="step-19-note" value="Reintenta la entrega de la evidencia, no el efecto físico. El backend comprueba identidad, hash, dispositivo y transición de estado; no interpreta el spool como prueba física." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="4259.5" width="1525.371094" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="step-20-label" value="21  Aplica inbox + efecto local +&#10;outbox · PostgreSQL" parent="step-20" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="0" y="0" width="310.642578" height="55" as="geometry" relative="1">
+        <mxCell id="step-20-label" value="21  Conserva estado del trabajo&#10;y trazabilidad · PostgreSQL" parent="step-20" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="311.867188" height="55" as="geometry" relative="1">
             <mxPoint x="-159.5" y="-70" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="step-20" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="3082" y="4429.5" as="sourcePoint" />
-            <mxPoint x="3436" y="4429.5" as="targetPoint" />
+            <mxPoint x="597" y="4392.5" as="sourcePoint" />
+            <mxPoint x="951" y="4392.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="step-20-note" value="Confirma inbox, efecto o proyección requerida y outbox en una misma transacción, junto con el trabajo posterior y la deduplicación. Un duplicado ya aplicado conserva su resultado; igual ID con contenido distinto es conflicto, no éxito." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="4487.5" width="2063.408203" height="25" as="geometry" />
+        <mxCell id="step-20-note" value="La venta y su documento mantienen sus identidades. Reimpresión es una operación explícita y autorizada con auditoría y referencia al trabajo anterior." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="4450.5" width="1339.6875" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="step-21-label" value="22  Confirma commit y resultado&#10;durable · PostgreSQL" parent="step-21" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="0" y="0" width="316.668945" height="55" as="geometry" relative="1">
-            <mxPoint x="-159.5" y="-70" as="offset" />
+        <mxCell id="step-21-label" value="22  Lee outbox confirmada y reclama lote acotado · PostgreSQL" parent="step-21" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="627.354492" height="27.5" as="geometry" relative="1">
+            <mxPoint x="-869.5" y="-42.5" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="step-21" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="3436" y="4620.5" as="sourcePoint" />
-            <mxPoint x="3082" y="4620.5" as="targetPoint" />
+            <mxPoint x="2726" y="4556" as="sourcePoint" />
+            <mxPoint x="952" y="4556" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="step-21-note" value="Solo este resultado permite afirmar aplicación local en país. Guardar únicamente recepción no basta para emitir el ACK de aplicación." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="4678.5" width="1187.294922" height="25" as="geometry" />
+        <mxCell id="step-21-note" value="El claim o lease técnico es recuperable. No mantiene una transacción abierta durante el envío ni altera libremente las ventas." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="4614" width="1110.625" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="step-22-label" value="23  Devuelve ACK de aplicación&#10;por evento · HTTPS" parent="step-22" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="0" y="0" width="314.294922" height="55" as="geometry" relative="1">
+        <mxCell id="step-22-label" value="23  Envía lote con eventId y&#10;secuencia · HTTPS autenticado" parent="step-22" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="310.599609" height="55" as="geometry" relative="1">
             <mxPoint x="-159.5" y="-70" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="step-22" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="3081" y="4811.5" as="sourcePoint" />
-            <mxPoint x="2727" y="4811.5" as="targetPoint" />
+            <mxPoint x="2727" y="4747" as="sourcePoint" />
+            <mxPoint x="3081" y="4747" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="step-22-note" value="Identifica eventos aplicados, duplicados equivalentes y rechazos. No declara pago liquidado, validez fiscal ni documento contabilizado en ERP." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="4869.5" width="1265.976562" height="25" as="geometry" />
+        <mxCell id="step-22-note" value="Incluye país, sucursal, versión de contrato e identidad estable del evento. La entrega es al menos una vez; un reintento no fabrica otra venta." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="4805" width="1250.78125" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="step-23-label" value="24  Persiste acuse y avance de entrega · PostgreSQL" parent="step-23" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="0" y="0" width="525.851562" height="27.5" as="geometry" relative="1">
-            <mxPoint x="-869.5" y="-42.5" as="offset" />
+        <mxCell id="step-23-label" value="24  Valida emisor, contrato, orden e identidad" parent="step-23" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="441.095703" height="27.5" as="geometry" relative="1">
+            <mxPoint x="-178" y="-66" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="step-23" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="2726" y="4975" as="sourcePoint" />
-            <mxPoint x="952" y="4975" as="targetPoint" />
+            <mxPoint x="3081" y="4910.5" as="sourcePoint" />
+            <mxPoint x="3082" y="4958.5" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="3291.5" y="4910.5" />
+              <mxPoint x="3291.5" y="4958.5" />
+            </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="step-23-note" value="Actualiza estados técnicos y checkpoint de eventos realmente acusados. Mantiene pendientes no confirmados y evidencia durante el horizonte de retención y recuperación." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="5033" width="1526.474609" height="25" as="geometry" />
+        <mxCell id="step-23-note" value="Autentica el ámbito y comprueba el contrato. La decisión definitiva de deduplicación y sus restricciones se aplica dentro del commit siguiente." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="5005.5" width="1252.900391" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="step-24-label" value="25  Consulta estado local e&#10;integración pendiente · HTTPS&#10;LAN" parent="step-24" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="0" y="0" width="302.048828" height="82.5" as="geometry" relative="1">
-            <mxPoint x="-159.5" y="-97.5" as="offset" />
+        <mxCell id="step-24-label" value="25  Aplica inbox + efecto local +&#10;outbox · PostgreSQL" parent="step-24" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="310.642578" height="55" as="geometry" relative="1">
+            <mxPoint x="-159.5" y="-70" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="step-24" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="242" y="5193.5" as="sourcePoint" />
-            <mxPoint x="596" y="5193.5" as="targetPoint" />
+            <mxPoint x="3082" y="5138.5" as="sourcePoint" />
+            <mxPoint x="3436" y="5138.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="step-24-note" value="Consulta la venta local y distingue confirmación, entrega a país y resultado ERP. Las interacciones siguientes no forman parte de su transacción local." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="5251.5" width="1331.494141" height="25" as="geometry" />
+        <mxCell id="step-24-note" value="Confirma inbox, efecto o proyección requerida y outbox en una misma transacción, junto con el trabajo posterior y la deduplicación. Un duplicado ya aplicado conserva su resultado; igual ID con contenido distinto es conflicto, no éxito." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="5196.5" width="2063.408203" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="step-25-label" value="26  BullMQ activa consumidor técnico · Redis red&#10;ERP" parent="step-25" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="0" y="0" width="481.754883" height="55" as="geometry" relative="1">
-            <mxPoint x="-178" y="-93.5" as="offset" />
+        <mxCell id="step-25-label" value="26  Confirma commit y resultado&#10;durable · PostgreSQL" parent="step-25" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="316.668945" height="55" as="geometry" relative="1">
+            <mxPoint x="-159.5" y="-70" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="step-25" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="3791" y="5384.5" as="sourcePoint" />
-            <mxPoint x="3792" y="5432.5" as="targetPoint" />
-            <Array as="points">
-              <mxPoint x="4001.5" y="5384.5" />
-              <mxPoint x="4001.5" y="5432.5" />
-            </Array>
+            <mxPoint x="3436" y="5329.5" as="sourcePoint" />
+            <mxPoint x="3082" y="5329.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="step-25-note" value="El job ejecuta dentro de erp-worker con concurrencia acotada; consulta/reclama la operación durable al comenzar, no después de esperar con lease en una cola larga. Los pendientes se reconstruyen mediante country-api HTTPS." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="5479.5" width="2037.851562" height="25" as="geometry" />
+        <mxCell id="step-25-note" value="Solo este resultado permite afirmar aplicación local en país. Guardar únicamente recepción no basta para emitir el ACK de aplicación." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="5387.5" width="1187.294922" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="step-26-label" value="27  Solicita trabajo identificado · HTTPS saliente" parent="step-26" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="0" y="0" width="472.011719" height="27.5" as="geometry" relative="1">
-            <mxPoint x="-337" y="-42.5" as="offset" />
+        <mxCell id="step-26-label" value="27  Devuelve ACK de aplicación&#10;por evento · HTTPS" parent="step-26" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="314.294922" height="55" as="geometry" relative="1">
+            <mxPoint x="-159.5" y="-70" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="step-26" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="3791" y="5585" as="sourcePoint" />
-            <mxPoint x="3082" y="5585" as="targetPoint" />
+            <mxPoint x="3081" y="5520.5" as="sourcePoint" />
+            <mxPoint x="2727" y="5520.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="step-26-note" value="erp-worker inicia la conexión desde la red autorizada del ERP. Presenta identidad y ámbito; country-api conserva la autoridad del registro durable. No hay SQL remoto ni llamada entrante obligatoria al worker." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="5643" width="1839.541016" height="25" as="geometry" />
+        <mxCell id="step-26-note" value="Identifica eventos aplicados, duplicados equivalentes y rechazos. No declara pago liquidado, validez fiscal ni documento contabilizado en ERP." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="5578.5" width="1265.976562" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="step-27-label" value="28  Reclama trabajo e intento&#10;con lease · PostgreSQL" parent="step-27" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="0" y="0" width="287.396484" height="55" as="geometry" relative="1">
-            <mxPoint x="-159.5" y="-70" as="offset" />
+        <mxCell id="step-27-label" value="28  Persiste acuse y avance de entrega · PostgreSQL" parent="step-27" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="525.851562" height="27.5" as="geometry" relative="1">
+            <mxPoint x="-869.5" y="-42.5" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="step-27" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="3082" y="5776" as="sourcePoint" />
-            <mxPoint x="3436" y="5776" as="targetPoint" />
+            <mxPoint x="2726" y="5684" as="sourcePoint" />
+            <mxPoint x="952" y="5684" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="step-27-note" value="Selecciona una operación confirmada y conserva país, destino, versión de contrato, intento y dueño/vencimiento del lease. Expirar el lease no detiene una llamada ERP ya iniciada ni autoriza repetir un efecto incierto." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="5834" width="1915.576172" height="25" as="geometry" />
+        <mxCell id="step-27-note" value="Actualiza estados técnicos y checkpoint de eventos realmente acusados. Mantiene pendientes no confirmados y evidencia durante el horizonte de retención y recuperación." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="5742" width="1526.474609" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="step-28-label" value="29  Devuelve trabajo, destino y referencia · HTTPS" parent="step-28" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="0" y="0" width="497.674805" height="27.5" as="geometry" relative="1">
-            <mxPoint x="-337" y="-42.5" as="offset" />
+        <mxCell id="step-28-label" value="29  Consulta estado local e&#10;integración pendiente · HTTPS&#10;LAN" parent="step-28" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="302.048828" height="82.5" as="geometry" relative="1">
+            <mxPoint x="-159.5" y="-97.5" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="step-28" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="3082" y="5939.5" as="sourcePoint" />
-            <mxPoint x="3791" y="5939.5" as="targetPoint" />
+            <mxPoint x="242" y="5902.5" as="sourcePoint" />
+            <mxPoint x="596" y="5902.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="step-28-note" value="El worker usa ese contexto en cada reintento y durante un cambio de ERP. Un pendiente conserva destino y versión; no se redirige silenciosamente." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="5997.5" width="1318.173828" height="25" as="geometry" />
+        <mxCell id="step-28-note" value="Consulta la venta local y distingue confirmación, entrega a país y resultado ERP. Las interacciones siguientes no forman parte de su transacción local." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="5960.5" width="1331.494141" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="step-29-label" value="30  Fachada y ACL traducen el contrato POS" parent="step-29" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="0" y="0" width="441.47168" height="27.5" as="geometry" relative="1">
-            <mxPoint x="-178" y="-66" as="offset" />
+        <mxCell id="step-29-label" value="30  BullMQ activa consumidor técnico · Redis red&#10;ERP" parent="step-29" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="481.754883" height="55" as="geometry" relative="1">
+            <mxPoint x="-178" y="-93.5" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="step-29" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="3791" y="6103" as="sourcePoint" />
-            <mxPoint x="3792" y="6151" as="targetPoint" />
+            <mxPoint x="3791" y="6093.5" as="sourcePoint" />
+            <mxPoint x="3792" y="6141.5" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="4001.5" y="6103" />
-              <mxPoint x="4001.5" y="6151" />
+              <mxPoint x="4001.5" y="6093.5" />
+              <mxPoint x="4001.5" y="6141.5" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="step-29-note" value="Son componentes TypeScript internos de libs/backend/erp. Traducción y adaptador respetan las capacidades verificadas de AX, custom o Gira; no son tres servicios HTTP obligatorios." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="6198" width="1631.210938" height="25" as="geometry" />
+        <mxCell id="step-29-note" value="El job ejecuta dentro de erp-worker con concurrencia acotada; consulta/reclama la operación durable al comenzar, no después de esperar con lease en una cola larga. Los pendientes se reconstruyen mediante country-api HTTPS." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="6188.5" width="2037.851562" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="step-30-label" value="31  Envía operación o consulta&#10;resultado · contrato homologado" parent="step-30" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="0" y="0" width="316.754883" height="55" as="geometry" relative="1">
-            <mxPoint x="-159.5" y="-70" as="offset" />
+        <mxCell id="step-30-label" value="31  Solicita trabajo identificado · HTTPS saliente" parent="step-30" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="472.011719" height="27.5" as="geometry" relative="1">
+            <mxPoint x="-337" y="-42.5" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="step-30" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="3792" y="6331" as="sourcePoint" />
-            <mxPoint x="4146" y="6331" as="targetPoint" />
+            <mxPoint x="3791" y="6294" as="sourcePoint" />
+            <mxPoint x="3082" y="6294" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="step-30-note" value="Ejecuta la capacidad permitida con identidad estable. No mantiene una transacción SQL de país abierta mientras espera al ERP." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="6389" width="1141.425781" height="25" as="geometry" />
+        <mxCell id="step-30-note" value="erp-worker inicia la conexión desde la red autorizada del ERP. Presenta identidad y ámbito; country-api conserva la autoridad del registro durable. No hay SQL remoto ni llamada entrante obligatoria al worker." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="6352" width="1839.541016" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="step-31-label" value="32  Devuelve resultado o&#10;referencia · protocolo ERP" parent="step-31" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="0" y="0" width="259.230469" height="55" as="geometry" relative="1">
+        <mxCell id="step-31-label" value="32  Reclama trabajo e intento&#10;con lease · PostgreSQL" parent="step-31" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="287.396484" height="55" as="geometry" relative="1">
             <mxPoint x="-159.5" y="-70" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="step-31" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="4146" y="6522" as="sourcePoint" />
-            <mxPoint x="3792" y="6522" as="targetPoint" />
+            <mxPoint x="3082" y="6485" as="sourcePoint" />
+            <mxPoint x="3436" y="6485" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="step-31-note" value="La respuesta puede confirmar, rechazar o dejar resultado incierto. Un timeout conserva el intento; se consulta o concilia cuando la capacidad exista, sin fabricar otro cargo/documento." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="6580" width="1622.021484" height="25" as="geometry" />
+        <mxCell id="step-31-note" value="Selecciona una operación confirmada y conserva país, destino, versión de contrato, intento y dueño/vencimiento del lease. Expirar el lease no detiene una llamada ERP ya iniciada ni autoriza repetir un efecto incierto." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="6543" width="1915.576172" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="step-32-label" value="33  Reporta resultado con identidad original · HTTPS saliente" parent="step-32" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="0" y="0" width="599.220703" height="27.5" as="geometry" relative="1">
+        <mxCell id="step-32-label" value="33  Devuelve trabajo, destino y referencia · HTTPS" parent="step-32" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="497.674805" height="27.5" as="geometry" relative="1">
             <mxPoint x="-337" y="-42.5" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="step-32" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="3791" y="6685.5" as="sourcePoint" />
-            <mxPoint x="3082" y="6685.5" as="targetPoint" />
+            <mxPoint x="3082" y="6648.5" as="sourcePoint" />
+            <mxPoint x="3791" y="6648.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="step-32-note" value="Reentregar o consultar el resultado es independiente de reenviar la operación al ERP. Se preservan referencia, destino, versión y evidencia técnica." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="6743.5" width="1311.523438" height="25" as="geometry" />
+        <mxCell id="step-32-note" value="El worker usa ese contexto en cada reintento y durante un cambio de ERP. Un pendiente conserva destino y versión; no se redirige silenciosamente." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="6706.5" width="1318.173828" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="step-33-label" value="34  Persiste resultado y estado&#10;de integración · PostgreSQL" parent="step-33" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
-          <mxGeometry x="0" y="0" width="302.05957" height="55" as="geometry" relative="1">
-            <mxPoint x="-159.5" y="-70" as="offset" />
+        <mxCell id="step-33-label" value="34  Fachada y ACL traducen el contrato POS" parent="step-33" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="441.47168" height="27.5" as="geometry" relative="1">
+            <mxPoint x="-178" y="-66" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="step-33" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="3082" y="6876.5" as="sourcePoint" />
-            <mxPoint x="3436" y="6876.5" as="targetPoint" />
+            <mxPoint x="3791" y="6812" as="sourcePoint" />
+            <mxPoint x="3792" y="6860" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="4001.5" y="6812" />
+              <mxPoint x="4001.5" y="6860" />
+            </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="step-33-note" value="El resultado se registra con transiciones condicionales y deduplicación. ACK de aplicación de la venta, resultado ERP y contabilización definitiva siguen siendo hitos distintos." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="6934.5" width="1540.878906" height="25" as="geometry" />
+        <mxCell id="step-33-note" value="Son componentes TypeScript internos de libs/backend/erp. Traducción y adaptador respetan las capacidades verificadas de AX, custom o Gira; no son tres servicios HTTP obligatorios." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="6907" width="1631.210938" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="step-34-label" value="35  Envía operación o consulta&#10;resultado · contrato homologado" parent="step-34" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="316.754883" height="55" as="geometry" relative="1">
+            <mxPoint x="-159.5" y="-70" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="step-34" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="3792" y="7040" as="sourcePoint" />
+            <mxPoint x="4146" y="7040" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="step-34-note" value="Ejecuta la capacidad permitida con identidad estable. No mantiene una transacción SQL de país abierta mientras espera al ERP." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="7098" width="1141.425781" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="step-35-label" value="36  Devuelve resultado o&#10;referencia · protocolo ERP" parent="step-35" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="259.230469" height="55" as="geometry" relative="1">
+            <mxPoint x="-159.5" y="-70" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="step-35" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="4146" y="7231" as="sourcePoint" />
+            <mxPoint x="3792" y="7231" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="step-35-note" value="La respuesta puede confirmar, rechazar o dejar resultado incierto. Un timeout conserva el intento; se consulta o concilia cuando la capacidad exista, sin fabricar otro cargo/documento." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="7289" width="1622.021484" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="step-36-label" value="37  Reporta resultado con identidad original · HTTPS saliente" parent="step-36" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="599.220703" height="27.5" as="geometry" relative="1">
+            <mxPoint x="-337" y="-42.5" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="step-36" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="3791" y="7394.5" as="sourcePoint" />
+            <mxPoint x="3082" y="7394.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="step-36-note" value="Reentregar o consultar el resultado es independiente de reenviar la operación al ERP. Se preservan referencia, destino, versión y evidencia técnica." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="7452.5" width="1311.523438" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="step-37-label" value="38  Persiste resultado y estado&#10;de integración · PostgreSQL" parent="step-37" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+          <mxGeometry x="0" y="0" width="302.05957" height="55" as="geometry" relative="1">
+            <mxPoint x="-159.5" y="-70" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="step-37" value="" parent="1" edge="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;edgeStyle=none;rounded=0;startArrow=none;endArrow=open;endSize=10;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="3082" y="7585.5" as="sourcePoint" />
+            <mxPoint x="3436" y="7585.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="step-37-note" value="El resultado se registra con transiciones condicionales y deduplicación. ACK de aplicación de la venta, resultado ERP y contabilización definitiva siguen siendo hitos distintos." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
+          <mxGeometry x="64" y="7643.5" width="1540.878906" height="25" as="geometry" />
         </mxCell>
         <mxCell id="dynamic-note" value="Secuencia objetivo recomendada. Cada flecha es una interacción, no una transacción distribuida. Impresión y sincronización son ramas independientes de la venta confirmada; imprimir no bloquea la entrega a país ni crea otra venta." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=24;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="7027.5" width="2472.105469" height="30" as="geometry" />
+          <mxGeometry x="64" y="7736.5" width="2472.105469" height="30" as="geometry" />
         </mxCell>
         <mxCell id="notes-title" value="Condiciones, fallos y recuperación" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=32;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="7127.5" width="487.375" height="40" as="geometry" />
+          <mxGeometry x="64" y="7836.5" width="487.375" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="notes-7198-0-bg" value="" parent="group-notes-7198-0" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
+        <mxCell id="notes-7907-0-bg" value="" parent="group-notes-7907-0" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
           <mxGeometry x="0" y="0" width="1404" height="191.75" as="geometry" />
         </mxCell>
-        <mxCell id="notes-7198-0-title" value="Pago desconocido o aprobado sin commit local" parent="group-notes-7198-0" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
+        <mxCell id="notes-7907-0-title" value="Pago desconocido o aprobado sin commit local" parent="group-notes-7907-0" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="22" width="523.925781" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-7198-0-body" value="Un timeout conserva el intento y su incertidumbre: consulta o conciliación según capacidad, sin recargar ni cambiar automáticamente de&#10;proveedor. Si el pago se aprobó y falla el commit local, se recuperan intención y evidencia; una reversa o intervención controlada conserva&#10;el intento original." parent="group-notes-7198-0" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+        <mxCell id="notes-7907-0-body" value="Un timeout conserva el intento y su incertidumbre: consulta o conciliación según capacidad, sin recargar ni cambiar automáticamente de&#10;proveedor. Si el pago se aprobó y falla el commit local, se recuperan intención y evidencia; una reversa o intervención controlada conserva&#10;el intento original." parent="group-notes-7907-0" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="74.25" width="1353.773438" height="82.5" as="geometry" />
         </mxCell>
-        <mxCell id="notes-7198-1-bg" value="" parent="group-notes-7198-1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
+        <mxCell id="notes-7907-1-bg" value="" parent="group-notes-7907-1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
           <mxGeometry x="0" y="0" width="1404" height="191.75" as="geometry" />
         </mxCell>
-        <mxCell id="notes-7198-1-title" value="Pago por SDK: capacidad futura independiente" parent="group-notes-7198-1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
+        <mxCell id="notes-7907-1-title" value="Pago por SDK: capacidad futura independiente" parent="group-notes-7907-1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="22" width="522.595215" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-7198-1-body" value="La venta ilustrada usa una API desde backend. Si se homologa un SDK local, device-agent obtiene el trabajo autorizado directamente de&#10;branch-api y reporta evidencia con la misma identidad e importe. El cliente no transporta el comando al agente. Migrar impresión no&#10;habilita pagos; no se ejecutan API y SDK para el mismo intento." parent="group-notes-7198-1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+        <mxCell id="notes-7907-1-body" value="La venta ilustrada usa una API desde backend. Si se homologa un SDK local, device-agent obtiene el trabajo autorizado directamente de&#10;branch-api y reporta evidencia con la misma identidad e importe. El cliente no transporta el comando al agente. Migrar impresión no&#10;habilita pagos; no se ejecutan API y SDK para el mismo intento." parent="group-notes-7907-1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="74.25" width="1337.97168" height="82.5" as="geometry" />
         </mxCell>
-        <mxCell id="notes-7198-2-bg" value="" parent="group-notes-7198-2" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
+        <mxCell id="notes-7907-2-bg" value="" parent="group-notes-7907-2" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
           <mxGeometry x="0" y="0" width="1404" height="191.75" as="geometry" />
         </mxCell>
-        <mxCell id="notes-7198-2-title" value="Fiscalidad e impresión tienen su propio resultado" parent="group-notes-7198-2" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
+        <mxCell id="notes-7907-2-title" value="Fiscalidad e impresión tienen su propio resultado" parent="group-notes-7907-2" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="22" width="543.359375" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-7198-2-body" value="Sólo se emiten documentos permitidos por la modalidad nacional habilitada. device-agent imprime una referencia existente; aceptación del&#10;spooler no acredita impresión física. Un resultado incierto conserva evidencia; reimprimir requiere una operación explícita autorizada, sin&#10;nueva venta, cargo ni emisión fiscal." parent="group-notes-7198-2" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+        <mxCell id="notes-7907-2-body" value="Sólo se emiten documentos permitidos por la modalidad nacional habilitada. device-agent imprime una referencia existente; aceptación del&#10;spooler no acredita impresión física. Un resultado incierto conserva evidencia; reimprimir requiere una operación explícita autorizada, sin&#10;nueva venta, cargo ni emisión fiscal." parent="group-notes-7907-2" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="74.25" width="1353.78418" height="82.5" as="geometry" />
         </mxCell>
-        <mxCell id="notes-7198-3-bg" value="" parent="group-notes-7198-3" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
+        <mxCell id="notes-7907-3-bg" value="" parent="group-notes-7907-3" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
           <mxGeometry x="0" y="0" width="1404" height="191.75" as="geometry" />
         </mxCell>
-        <mxCell id="notes-7198-3-title" value="Caída WAN frente a caída LAN" parent="group-notes-7198-3" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
+        <mxCell id="notes-7907-3-title" value="Caída WAN frente a caída LAN" parent="group-notes-7907-3" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="22" width="346.459961" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-7198-3-body" value="Sin WAN la outbox permanece durable y se permiten solo operaciones soportadas por datos, autenticación, pago y fiscalidad vigentes. Sin&#10;LAN, backend o escritor autorizado se detiene el comando dependiente. Ninguna terminal crea por ello una base o autoridad alternativa." parent="group-notes-7198-3" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+        <mxCell id="notes-7907-3-body" value="Sin WAN la outbox permanece durable y se permiten solo operaciones soportadas por datos, autenticación, pago y fiscalidad vigentes. Sin&#10;LAN, backend o escritor autorizado se detiene el comando dependiente. Ninguna terminal crea por ello una base o autoridad alternativa." parent="group-notes-7907-3" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="74.25" width="1352.967773" height="55" as="geometry" />
         </mxCell>
-        <mxCell id="notes-7198-4-bg" value="" parent="group-notes-7198-4" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
+        <mxCell id="notes-7907-4-bg" value="" parent="group-notes-7907-4" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
           <mxGeometry x="0" y="0" width="1404" height="191.75" as="geometry" />
         </mxCell>
-        <mxCell id="notes-7198-4-title" value="ACK perdido, replay y restore" parent="group-notes-7198-4" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
+        <mxCell id="notes-7907-4-title" value="ACK perdido, replay y restore" parent="group-notes-7907-4" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="22" width="327.929688" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-7198-4-body" value="Un ACK perdido provoca reentrega del mismo eventId; país deduplica en la transacción del efecto. Un hueco o conflicto queda pendiente&#10;para resolver. La retención y conciliación cubren restauraciones que retrocedan inbox, datos o cursores; no se promete exactly-once&#10;universal." parent="group-notes-7198-4" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+        <mxCell id="notes-7907-4-body" value="Un ACK perdido provoca reentrega del mismo eventId; país deduplica en la transacción del efecto. Un hueco o conflicto queda pendiente&#10;para resolver. La retención y conciliación cubren restauraciones que retrocedan inbox, datos o cursores; no se promete exactly-once&#10;universal." parent="group-notes-7907-4" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="74.25" width="1337.950195" height="82.5" as="geometry" />
         </mxCell>
-        <mxCell id="notes-7198-5-bg" value="" parent="group-notes-7198-5" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
+        <mxCell id="notes-7907-5-bg" value="" parent="group-notes-7907-5" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
           <mxGeometry x="0" y="0" width="1404" height="191.75" as="geometry" />
         </mxCell>
-        <mxCell id="notes-7198-5-title" value="ERP posterior no es el ACK de país" parent="group-notes-7198-5" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
+        <mxCell id="notes-7907-5-title" value="ERP posterior no es el ACK de país" parent="group-notes-7907-5" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="22" width="397.424316" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-7198-5-body" value="erp-worker reclama trabajo mediante HTTPS saliente a country-api y ejecuta fachada, ACL y adaptadores dentro del mismo proceso.&#10;Country-api conserva intentos y resultados en PostgreSQL; no existe acceso SQL WAN desde el worker. Una respuesta incierta requiere&#10;consulta o conciliación antes de repetir efectos." parent="group-notes-7198-5" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+        <mxCell id="notes-7907-5-body" value="erp-worker reclama trabajo mediante HTTPS saliente a country-api y ejecuta fachada, ACL y adaptadores dentro del mismo proceso.&#10;Country-api conserva intentos y resultados en PostgreSQL; no existe acceso SQL WAN desde el worker. Una respuesta incierta requiere&#10;consulta o conciliación antes de repetir efectos." parent="group-notes-7907-5" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="74.25" width="1335.748047" height="82.5" as="geometry" />
         </mxCell>
-        <mxCell id="notes-7198-6-bg" value="" parent="group-notes-7198-6" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
+        <mxCell id="notes-7907-6-bg" value="" parent="group-notes-7907-6" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#CCD7E8;strokeWidth=1.5;fillColor=#F7F9FD;rounded=1;arcSize=8;">
           <mxGeometry x="0" y="0" width="1404" height="191.75" as="geometry" />
         </mxCell>
-        <mxCell id="notes-7198-6-title" value="Reintento técnico y efecto financiero" parent="group-notes-7198-6" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
+        <mxCell id="notes-7907-6-title" value="Reintento técnico y efecto financiero" parent="group-notes-7907-6" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#0545BA;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#0545BA;fontSize=25;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="22" width="403.015137" height="31.25" as="geometry" />
         </mxCell>
-        <mxCell id="notes-7198-6-body" value="BullMQ + Redis de trabajos es la tecnología elegida dentro de erp-worker. Un job stalled puede entregarse otra vez: debe consultar estado&#10;e identidad durables. PostgreSQL, restricciones y reconciliación protegen el negocio; un efecto ERP incierto no se reenvía&#10;automáticamente. Las colas no participan del commit de venta en sucursal." parent="group-notes-7198-6" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
+        <mxCell id="notes-7907-6-body" value="BullMQ + Redis de trabajos es la tecnología elegida dentro de erp-worker. Un job stalled puede entregarse otra vez: debe consultar estado&#10;e identidad durables. PostgreSQL, restricciones y reconciliación protegen el negocio; un efecto ERP incierto no se reenvía&#10;automáticamente. Las colas no participan del commit de venta en sucursal." parent="group-notes-7907-6" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=22;align=left;verticalAlign=top;">
           <mxGeometry x="22" y="74.25" width="1351.979492" height="82.5" as="geometry" />
         </mxCell>
         <mxCell id="footer" value="C4: contenedor = aplicación o almacén; componente = módulo dentro de un proceso. Despliegue y dinámicas son vistas complementarias, no el nivel de código." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="7874.75" width="1424.169922" height="25" as="geometry" />
+          <mxGeometry x="64" y="8583.75" width="1424.169922" height="25" as="geometry" />
         </mxCell>
         <mxCell id="glossary" value="LAN: red de tienda · WAN: enlace a país · ACK: acuse de aplicación durable · ACL: capa anticorrupción · outbox/inbox: registros de envío/recepción · watermark: corte consistente del origen" parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=20;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="7940.75" width="1681.240234" height="25" as="geometry" />
+          <mxGeometry x="64" y="8649.75" width="1681.240234" height="25" as="geometry" />
         </mxCell>
         <mxCell id="sources" value="FUENTES DEL REPOSITORIO&#10;docs/c4-arquitectura-propuesta.md  ·  docs/operacion-caja-y-evolucion.md  ·  docs/revision-resiliencia-datos-pos.md  ·  docs/extensibilidad-proveedores-dispositivos.md&#10;Aplicaciones completas: frontend Angular alojado por las shells nativas Tauri (escritorio) y Capacitor (móvil). libs/client-shell compone Angular: raíz, configuración, rutas, guards y layout. F01: operación local persistida. F02: host .NET/SQLite y protocolo integrados en un corte parcial; drivers físicos pendientes. F05: piloto por puesto. F06: red y estación compartida por homologar, sin autoridad de ventas. Sincronización e integración siguen propuestas. Nx organiza código y CI." parent="1" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#4C607D;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#4C607D;fontSize=18;align=left;verticalAlign=top;">
-          <mxGeometry x="64" y="8009.75" width="3811.96582" height="67.5" as="geometry" />
+          <mxGeometry x="64" y="8718.75" width="3811.96582" height="67.5" as="geometry" />
         </mxCell>
-        <mxCell id="ZurOfRgRzebSytuebAYBO" value="pos-desktop&#10;«Contenedor»&#10;Angular (frontend) ·&#10;Tauri (shell nativa)&#10;Envía comandos identificados y&#10;presenta el resultado durable al&#10;operador." parent="client" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=18.9;align=center;verticalAlign=middle;">
+        <mxCell id="1rJGcTNpu8MVbrrXigyZy" value="pos-desktop&#10;«Contenedor»&#10;Angular (frontend) ·&#10;Tauri (shell nativa)&#10;Envía comandos identificados y&#10;presenta el resultado durable al&#10;operador." parent="client" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=18.9;align=center;verticalAlign=middle;">
           <mxGeometry x="17.833496" y="20.475" width="295.333008" height="169.05" as="geometry" />
         </mxCell>
-        <mxCell id="jeR6L_ty2LfISwBtQ-v1N" value="branch-api&#10;«Contenedor»&#10;NestJS + Fastify / Node.js&#10;Autoriza la operación y coordina&#10;negocio, pago y evidencia local." parent="branchApi" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=18.9;align=center;verticalAlign=middle;">
+        <mxCell id="x8FLF6B2OpDD6DzU6qqPS" value="branch-api&#10;«Contenedor»&#10;NestJS + Fastify / Node.js&#10;Autoriza la operación y coordina&#10;negocio, pago y evidencia local." parent="branchApi" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=18.9;align=center;verticalAlign=middle;">
           <mxGeometry x="15.495605" y="44.625" width="300.008789" height="120.75" as="geometry" />
         </mxCell>
-        <mxCell id="9Vz8xRbwIMKmCEJt9K6TH" value="Datos de sucursal&#10;«Contenedor de datos»&#10;PostgreSQL&#10;Custodia intención, venta, caja,&#10;auditoría y outbox en un&#10;primario compartido." parent="branchDb" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=18.9;align=center;verticalAlign=middle;">
+        <mxCell id="ByO2HM_JuMvaKsHqshlDK" value="Datos de sucursal&#10;«Contenedor de datos»&#10;PostgreSQL&#10;Custodia intención, venta, caja,&#10;auditoría y outbox en un&#10;primario compartido." parent="branchDb" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=18.9;align=center;verticalAlign=middle;">
           <mxGeometry x="19.57666" y="32.55" width="291.84668" height="144.9" as="geometry" />
         </mxCell>
-        <mxCell id="2aBm41BuY4KkMlfsLIdLj" value="Proveedor de pagos&#10;«Sistema externo»&#10;API / SDK según proveedor&#10;Informa resultado y referencia;&#10;la consulta posterior está sujeta&#10;a homologación." parent="payments" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=18.9;align=center;verticalAlign=middle;">
+        <mxCell id="rPzl7UFP2heYQKwNbJLRE" value="Proveedor de pagos&#10;«Sistema externo»&#10;API / SDK según proveedor&#10;Informa resultado y referencia;&#10;la consulta posterior está sujeta&#10;a homologación." parent="payments" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=18.9;align=center;verticalAlign=middle;">
           <mxGeometry x="17.833496" y="32.55" width="295.333008" height="144.9" as="geometry" />
         </mxCell>
-        <mxCell id="uObU1AmViqPKIgHxRqsoy" value="device-agent&#10;«Contenedor»&#10;C# / .NET · Windows&#10;F02: ejecuta periféricos del&#10;puesto Windows." parent="device" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=18.9;align=center;verticalAlign=middle;">
+        <mxCell id="wg0PFT_J4Nt24kobucpSt" value="device-agent&#10;«Contenedor»&#10;C# / .NET · Windows&#10;F02: ejecuta periféricos del&#10;puesto Windows." parent="device" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=18.9;align=center;verticalAlign=middle;">
           <mxGeometry x="39.43335" y="44.625" width="252.133301" height="120.75" as="geometry" />
         </mxCell>
-        <mxCell id="qpJiad6PQAd74QDzkX7ia" value="Journal técnico de dispositivos&#10;«Contenedor de datos»&#10;SQLite&#10;Guarda trabajos, deduplicación&#10;y evidencia." parent="deviceJournal" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=18.9;align=center;verticalAlign=middle;">
+        <mxCell id="fGKUyd22Sgiz2SfEe9Kox" value="Journal técnico de dispositivos&#10;«Contenedor de datos»&#10;SQLite&#10;Guarda trabajos, deduplicación&#10;y evidencia." parent="deviceJournal" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=18.9;align=center;verticalAlign=middle;">
           <mxGeometry x="20.156006" y="44.625" width="290.687988" height="120.75" as="geometry" />
         </mxCell>
-        <mxCell id="YflBI223vg_SHeljW9Y38" value="Periféricos del puesto&#10;«Hardware externo»&#10;USB / serie · driver / SDK&#10;F02: impresoras y lectores&#10;locales del puesto." parent="peripherals" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=18.9;align=center;verticalAlign=middle;">
+        <mxCell id="oLodViWFYz2Iz013K7_z6" value="Periféricos del puesto&#10;«Hardware externo»&#10;USB / serie · driver / SDK&#10;F02: impresoras y lectores&#10;locales del puesto." parent="peripherals" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=18.9;align=center;verticalAlign=middle;">
           <mxGeometry x="41.791748" y="44.625" width="247.416504" height="120.75" as="geometry" />
         </mxCell>
-        <mxCell id="Zs0ZqNdkilfY75jY8tyhe" value="branch-sync-worker&#10;«Contenedor»&#10;NestJS / Node.js · sin servidor&#10;HTTP&#10;Entrega outbox confirmada y&#10;conserva identidad durante&#10;reintentos." parent="syncWorker" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=18.9;align=center;verticalAlign=middle;">
+        <mxCell id="CQfZmKCZg3pe-GN7vkIfG" value="branch-sync-worker&#10;«Contenedor»&#10;NestJS / Node.js · sin servidor&#10;HTTP&#10;Entrega outbox confirmada y&#10;conserva identidad durante&#10;reintentos." parent="syncWorker" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=18.9;align=center;verticalAlign=middle;">
           <mxGeometry x="24.28833" y="20.475" width="282.42334" height="169.05" as="geometry" />
         </mxCell>
-        <mxCell id="_I99kbvQsbgEo_vWj9V-G" value="country-api&#10;«Contenedor»&#10;NestJS + Fastify / Node.js ·&#10;BullMQ&#10;Valida el contrato y confirma&#10;inbox, efecto local y outbox&#10;antes de acusar aplicación." parent="countryApi" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=18.9;align=center;verticalAlign=middle;">
+        <mxCell id="U7eHZDk4eN8yHQjb8kHpN" value="country-api&#10;«Contenedor»&#10;NestJS + Fastify / Node.js ·&#10;BullMQ&#10;Valida el contrato y confirma&#10;inbox, efecto local y outbox&#10;antes de acusar aplicación." parent="countryApi" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=18.9;align=center;verticalAlign=middle;">
           <mxGeometry x="33.798828" y="20.475" width="263.402344" height="169.05" as="geometry" />
         </mxCell>
-        <mxCell id="e5KBiNRErN39GdmdRNT_D" value="Datos operativos de país&#10;«Contenedor de datos»&#10;PostgreSQL&#10;Guarda proyección de la venta,&#10;deduplicación y trabajo posterior&#10;de integración." parent="countryDb" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=18.9;align=center;verticalAlign=middle;">
+        <mxCell id="i6hkbUFtYtaxxA2GEuD-X" value="Datos operativos de país&#10;«Contenedor de datos»&#10;PostgreSQL&#10;Guarda proyección de la venta,&#10;deduplicación y trabajo posterior&#10;de integración." parent="countryDb" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=18.9;align=center;verticalAlign=middle;">
           <mxGeometry x="14.32666" y="32.55" width="302.34668" height="144.9" as="geometry" />
         </mxCell>
-        <mxCell id="NfNopoQdka-SCcJfvUfF9" value="erp-worker&#10;«Contenedor»&#10;NestJS / Node.js · BullMQ&#10;Consume trabajo; traduce y&#10;concilia con ERP." parent="erpAdapter" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=18.9;align=center;verticalAlign=middle;">
+        <mxCell id="k5h33RZGX7aBnQhoLsZ0E" value="erp-worker&#10;«Contenedor»&#10;NestJS / Node.js · BullMQ&#10;Consume trabajo; traduce y&#10;concilia con ERP." parent="erpAdapter" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=18.9;align=center;verticalAlign=middle;">
           <mxGeometry x="36.516113" y="44.625" width="257.967773" height="120.75" as="geometry" />
         </mxCell>
-        <mxCell id="aJtmRqIJEDgRVowHhXV9N" value="ERP del país&#10;«Sistema externo»&#10;CL: AX · ES: Gira · PE: custom&#10;Recibe y concilia documentos&#10;financieros." parent="erp" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=18.9;align=center;verticalAlign=middle;">
+        <mxCell id="8NghkHDx7zN73TCAVN-MV" value="ERP del país&#10;«Sistema externo»&#10;CL: AX · ES: Gira · PE: custom&#10;Recibe y concilia documentos&#10;financieros." parent="erp" vertex="1" style="html=0;fontFamily=Arial;shadow=0;spacing=0;opacity=100;strokeColor=#182842;strokeWidth=2;shape=text;strokeColor=none;fillColor=none;whiteSpace=nowrap;overflow=visible;fontColor=#182842;fontSize=18.9;align=center;verticalAlign=middle;">
           <mxGeometry x="20.212402" y="44.625" width="290.575195" height="120.75" as="geometry" />
         </mxCell>
       </root>

@@ -10,22 +10,19 @@ Producto y repositorio: [POS Platform](https://github.com/developer-implementos/
 
 Los clientes Angular con PrimeNG para escritorio (Tauri) y móvil (Capacitor) y la base del backend se mantienen en **pos-platform**. La guía Starlight, sus fuentes y diagramas pertenecen al repositorio editorial [POS Docs](https://github.com/developer-implementos/pos-docs).
 
-| Ubicación | Responsabilidad y estado |
-| --- | --- |
-| `apps/pos-desktop` | Cliente Angular propio para escritorio, alojado en Tauri |
-| `apps/pos-mobile` | Cliente Angular propio para Android/iOS, alojado en Capacitor |
-| `libs/client-shell` | Composición Angular compartida: rutas, configuración y shell |
-| `apps/branch-api` | Identidad y administración POS Chile mediante HTTPS/PostgreSQL; motor comercial en validación |
-| `apps/device-agent` | Host .NET 10 por puesto, recepción e intentos en SQLite; protocolo integrado en el corte parcial F02 y driver físico pendiente |
-| `apps/country-api` | Base HTTP y sonda de PostgreSQL por ámbito; sin recepción comercial |
-| `apps/branch-sync-worker`, `apps/erp-worker` | Composición de workers; CLI ERP de lectura independiente, procesamiento de jobs pendiente |
-| `libs/` | Features del frontend, contextos del backend y contratos compartidos, con límites de importación |
+El [estado de implementación por aplicación](monorepo.md#estado-de-implementación) y la [propiedad de datos por contexto](monorepo.md#propiedad-de-datos-por-contexto) se mantienen en la guía del monorepo. Usa esas referencias para localizar la responsabilidad del cambio.
 
 Las aplicaciones comparten repositorio y contratos, con builds independientes. El cliente normal comienza en `unconfigured` y bloquea el acceso hasta recibir la configuración del puesto para el origen HTTPS autorizado en su paquete. `branch` usa el perfil operativo con identidad y permisos del servidor; `branch-lab` mantiene las pruebas sintéticas y `demo` se selecciona explícitamente. Ningún fallo de conexión o configuración activa la demostración. La [guía F01](phase-1-laboratory.md) distingue el incremento operativo integrado del recorrido de laboratorio y enlaza sus instrucciones de aprovisionamiento.
 
 El [corte parcial F02 integrado](phase-2-payments-documents.md) incorpora persistencia de pagos/fiscalidad y el host de dispositivos con protocolo HTTPS y SQLite reales. La compilación y las pruebas no habilitan proveedores, numeración fiscal o hardware: esas capacidades conservan su homologación y entrega pendientes.
 
-![Centro de operación con indicadores, gráficos y pendientes](screenshots/dashboard.png)
+## Preparar una tarea
+
+La [guía para empezar una tarea](/guide/implementation/start-a-task/) conecta la issue, las instrucciones del repositorio y el entorno que corresponde al cambio. Para trabajar con la API y PostgreSQL reales, empieza por el [incremento operativo F01](phase-1-laboratory.md#incremento-operativo-integrado), que enlaza el aprovisionamiento, o por el [corte F02](phase-2-payments-documents.md) para cobros, documentos y dispositivos. Sus guías identifican las pruebas y los límites de cada perfil.
+
+La demostración siguiente sirve para explorar la interfaz con datos sintéticos.
+
+![Centro de operación de la demostración, con indicadores, gráficos y pendientes sintéticos](screenshots/dashboard.png)
 
 ## Iniciar la demostración
 

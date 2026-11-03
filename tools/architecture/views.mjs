@@ -1,4 +1,5 @@
 import { architecture } from './model.mjs';
+import deviceExecution from '../diagrams/models/device-execution.cjs';
 
 /** A projection preserves source IDs and contracts; hidden components resolve to their owner. */
 export function projectArchitecture(model, nodeIds, { id = 'projection', title = model.title, compact = true, edgeIds } = {}) {
@@ -64,7 +65,7 @@ export function validateArchitecture(model = architecture) {
     if (['desktop', 'mobile'].includes(edge.from) && ['bridge', 'device-journal', 'devices'].includes(edge.to) || edge.from === 'bridge' && ['desktop', 'mobile'].includes(edge.to)) fail(`Device work cannot depend on a client relay: ${edge.id}`);
     if (edge.to === 'device-journal' && edge.from !== 'bridge') fail(`Agent journal has a single application owner: ${edge.id}`);
   }
-  for (const [id, from, to] of [['sync-country', 'branch-sync', 'country-api'], ['claim-report', 'erp-worker', 'country-api'], ['submit-publication', 'master-source', 'country-api'], ['device-command', 'bridge', 'branch-api'], ['bridge-evidence', 'bridge', 'branch-api']]) {
+  for (const [id, from, to] of [['sync-country', 'branch-sync', 'country-api'], ['claim-report', 'erp-worker', 'country-api'], ['submit-publication', 'master-source', 'country-api'], ['device-command', 'bridge', 'branch-api'], ['device-execution-permit', 'bridge', 'branch-api'], ['bridge-evidence', 'bridge', 'branch-api']]) {
     const edge = model.edges.find(edge => edge.id === id);
     if (!edge || edge.from !== from || edge.to !== to || !edge.protocol.includes('HTTPS')) fail(`Outgoing HTTPS boundary changed: ${id}`);
   }
@@ -79,6 +80,15 @@ export function validateArchitecture(model = architecture) {
   if (!initialPrinting || initialPrinting.steps.some(step => step.nodes.includes('mobile') || step.nodes.includes('network-devices'))) fail('Initial dedicated printing cannot imply shared mobile or network support');
   const sharedPrinting = model.scenarios.find(scenario => scenario.id === 'shared-printing');
   if (!sharedPrinting?.steps.some(step => step.edges.includes('network-hardware-command'))) fail('Later shared printing must show its separate network contract');
+  for (const scenario of [initialPrinting, sharedPrinting]) {
+    deviceExecution.assertExecutionOrder(scenario.steps.flatMap(step => step.deviceSteps ?? []), scenario.id);
+    const permit = scenario.steps.find(step => step.deviceSteps?.includes('device-permit-consume'));
+    if (!permit.edges.includes('device-execution-permit') || !permit.edges.includes('device-jobs-local')) fail('Execution permission must show its API and durable PostgreSQL contract');
+    for (const step of scenario.steps) {
+      const hardware = step.edges.some(id => ['hardware-command', 'network-hardware-command'].includes(id));
+      if (hardware !== Boolean(step.deviceSteps?.includes('device-effect'))) fail('Physical device relationship must follow the permission step');
+    }
+  }
   for (const scenario of model.scenarios) for (const step of scenario.steps) {
     for (const id of [...step.nodes, ...step.edges]) if (!ids.has(id)) fail(`Unknown scenario item: ${id}`);
     for (const id of step.edges) { const edge = model.edges.find(edge => edge.id === id); if (!step.nodes.includes(edge.from) || !step.nodes.includes(edge.to)) fail(`Scenario omits relationship endpoint: ${scenario.id}/${id}`); }

@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "reviews": [
+    {
+      "source": "docs/start-a-task.md",
+      "sourceSha256": "1b4c39dacdd193cfeae39a1cef5f18609311e668a93c574c710f674e64202c93",
+      "productRevision": "6e679f692aab1fa5681688f1ffae651a215c2d81",
+      "reviewedOn": "2026-11-03",
+      "reviewer": {
+        "kind": "agent",
+        "name": "Codex · TASK-121"
+      },
+      "scope": "Recorrido de inicio, enlaces canónicos y separación de demo, laboratorio y operación; contrastado con instrucciones y guías de la revisión indicada. No acredita ejecución funcional ni comprensión humana.",
+      "evidence": [
+        "https://github.com/developer-implementos/pos-platform/issues/121"
+      ]
+    },
+    {
+      "source": "docs/product-repository.md",
+      "sourceSha256": "c7f658880fe0559e2351972864a634a34bd324af94b0d6a75c68757d0727e0db",
+      "productRevision": "6e679f692aab1fa5681688f1ffae651a215c2d81",
+      "reviewedOn": "2026-11-03",
+      "reviewer": {
+        "kind": "agent",
+        "name": "Codex · TASK-121"
+      },
+      "scope": "Entrada al producto, clasificación de perfiles y referencias de estado contrastadas con las guías F01/F02 y el catálogo de aplicaciones; revisión editorial por agentes, sin aceptación ni homologación.",
+      "evidence": [
+        "https://github.com/developer-implementos/pos-platform/issues/121"
+      ]
+    }
+  ]
+}

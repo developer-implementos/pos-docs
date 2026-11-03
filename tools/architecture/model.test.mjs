@@ -3,6 +3,9 @@ import test from 'node:test';
 import { architecture } from './model.mjs';
 import { architectureViews, projectArchitecture, scenarioView, validateArchitecture } from './views.mjs';
 import { renderArchitecture } from './render.mjs';
+import { overview, renderOverview } from './overview.mjs';
+import deviceExecution from '../diagrams/models/device-execution.cjs';
+import dynamicViews from '../diagrams/models/dynamic-data.cjs';
 
 const copy = () => structuredClone(architecture);
 
@@ -128,4 +131,50 @@ test('every published view and guided step has a readable layout with all its co
       assert.ok(svg.includes(`data-item-id="${item.id}"`), `${view.id} preserves ${item.id}`);
     }
   }
+});
+
+test('overview inherits application identities, technology and protocols from canonical relationships', () => {
+  const nodes = new Map(architecture.nodes.map(node => [node.id, node]));
+  const endpoint = id => nodes.get(id)?.owner ?? id;
+  for (const node of overview.nodes) {
+    assert.equal(node.app, nodes.get(node.id).appId);
+    assert.equal(node.technology, nodes.get(node.id).technology);
+    assert.equal(node.technologyLines.join(' '), node.technology);
+  }
+  for (const edge of overview.edges) {
+    const boundary = architecture.edges.filter(source => edge.refs.includes(source.id) && endpoint(source.from) !== endpoint(source.to));
+    assert.ok(boundary.length);
+    for (const source of boundary) {
+      assert.equal(endpoint(source.from), edge.from);
+      assert.equal(endpoint(source.to), edge.to);
+      assert.ok(edge.protocol.includes(source.protocolLabel));
+    }
+  }
+  const svg = renderOverview();
+  assert.doesNotMatch(svg, /device-service/);
+  for (const node of architecture.nodes.filter(node => node.kind === 'app')) assert.ok(svg.includes(node.appId));
+});
+
+test('detailed device views require durable receipt and a one-use permission before hardware', () => {
+  const sale = dynamicViews.find(view => view.id === 'sale');
+  assert.doesNotThrow(() => deviceExecution.assertExecutionOrder(sale.steps.map(step => step.deviceStep), 'sale'));
+  for (const scenarioId of ['local-printing', 'shared-printing']) {
+    const missing = copy();
+    const scenario = missing.scenarios.find(value => value.id === scenarioId);
+    scenario.steps = scenario.steps.filter(step => !step.deviceSteps?.includes('device-permit-consume'));
+    assert.throws(() => validateArchitecture(missing), /one-use permit before the physical effect/);
+    const reversed = copy();
+    const steps = reversed.scenarios.find(value => value.id === scenarioId).steps;
+    const permitIndex = steps.findIndex(step => step.deviceSteps?.includes('device-permit-consume'));
+    [steps[permitIndex], steps[permitIndex + 1]] = [steps[permitIndex + 1], steps[permitIndex]];
+    assert.throws(() => validateArchitecture(reversed), /one-use permit before the physical effect/);
+    const premature = copy();
+    const receipt = premature.scenarios.find(value => value.id === scenarioId).steps.find(step => step.deviceSteps?.includes('device-receipt'));
+    receipt.edges.push(scenarioId === 'local-printing' ? 'hardware-command' : 'network-hardware-command');
+    assert.throws(() => validateArchitecture(premature), /Physical device relationship must follow the permission step/);
+  }
+  const omittedConsumption = sale.steps.filter(step => step.deviceStep !== 'device-permit-consume');
+  assert.throws(() => deviceExecution.assertExecutionOrder(omittedConsumption.map(step => step.deviceStep), 'sale'), /one-use permit/);
+  const duplicatedEffect = sale.steps.flatMap(step => step.deviceStep === 'device-effect' ? [step, step] : [step]);
+  assert.throws(() => deviceExecution.assertExecutionOrder(duplicatedEffect.map(step => step.deviceStep), 'sale'), /one-use permit/);
 });

@@ -1,6 +1,6 @@
 ---
 title: POS Platform
-description: Propuesta de arquitectura, estructura del producto y evidencia para una plataforma POS corporativa multipaís.
+description: Arquitectura, desarrollo, contratos, operaciones y fuentes de POS Platform, con acceso al avance del proyecto.
 editUrl: false
 tableOfContents: false
 ---
@@ -8,60 +8,31 @@ tableOfContents: false
 import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 import { productRepositoryOrigin } from '../../../site-config.mjs';
 
-Una plataforma POS corporativa para **Chile, Perú y España**, con módulos de negocio compartidos y adaptadores para las diferencias de cada país. Esta guía reúne la arquitectura propuesta, la implementación del monorepo y la evidencia del sistema actual. Las fuentes técnicas se mantienen en [POS Docs](https://github.com/developer-implementos/pos-docs); el código del producto pertenece a <a href={productRepositoryOrigin}>POS Platform</a>. La documentación distingue la revisión editorial de la revisión del código que describe.
+Una plataforma POS corporativa para **Chile, Perú y España**, con negocio compartido y adaptadores por país. Elige lo que necesitas resolver. Cada guía distingue el diseño objetivo, la implementación y su evidencia. El código pertenece a <a href={productRepositoryOrigin}>POS Platform</a>; estas fuentes se mantienen en [POS Docs](https://github.com/developer-implementos/pos-docs).
 
 <CardGrid>
-  <LinkCard title="Gestión del proyecto" description="Avance verificado, entregables, bloqueos y decisiones, responsables y fechas del corte publicado." href="/project/" />
-  <LinkCard title="Recorridos de operación" description="Sigue una venta, un pago, una impresión o una recuperación hasta sus contratos, código y evidencia." href="/guide/flows/" />
-  <LinkCard title="Visión general de la solución" description="Producto compartido, responsabilidades por zona y recorrido completo de una venta." href="/guide/overview/" />
-  <LinkCard title="Roadmap de entrega" description="Seis planes de fase con entregables por aplicación, tareas, dependencias y pruebas para aceptar cada recorrido." href="/guide/proposal/roadmap/" />
-  <LinkCard title="Estructura del código" description="Aplicaciones, bibliotecas compartidas, límites DDD y proyectos de pruebas del producto." href="/guide/architecture/monorepo/" />
-  <LinkCard title="Arquitectura y recorridos visuales" description="Mapa principal de aplicaciones y vistas de detalle desde las mismas fuentes, con su estado explícito." href="/guide/diagrams/#mapa-general-de-arquitectura" />
-  <LinkCard title="Decisiones y validación" description="Estado de las decisiones, alternativas y evidencia que requiere el piloto." href="/guide/proposal/decisions/" />
+  <LinkCard title="Entender el sistema" description="Responsabilidades, arquitectura, decisiones y relación entre la propuesta y el código disponible." href="/guide/overview/" />
+  <LinkCard title="Empezar una tarea" description="Ubica el trabajo, prepara el entorno adecuado y sigue las verificaciones y el flujo de PR del producto." href="/guide/implementation/start-a-task/" />
+  <LinkCard title="Consultar APIs y datos" description="Contratos HTTP exportados, esquemas, campos, ejemplos y diagramas entidad-relación." href="/guide/api/pos-platform/" />
+  <LinkCard title="Seguir una operación" description="Venta, cobro, impresión o recuperación: diseño, contratos, código y evidencia relacionados." href="/guide/flows/" />
+  <LinkCard title="Consultar avance y bloqueos" description="Próximo incremento, entregables, responsables y preguntas externas del corte publicado." href="/project/" />
+  <LinkCard title="Consultar fuentes y migración" description="Reuniones por país, antecedentes y evidencia del sistema que estamos migrando." href="/guide/evidence/country-comparison/" />
 </CardGrid>
 
 ## Trabajar en el monorepo
 
-El diseño objetivo y el estado del código se consultan por separado. Las guías de implementación indican los procesos disponibles, los límites del scaffolding y sus comandos de desarrollo.
-
-- [Estructura y límites DDD](/guide/implementation/monorepo/) · [Arquitectura implementada](/guide/implementation/architecture/) · [Pruebas y E2E](/guide/implementation/testing/).
-- [API NestJS](/guide/implementation/api/) · [API simulada](/guide/implementation/mock-api/) · [Cliente de escritorio](/guide/implementation/desktop/).
-- [Seguridad y controles](/guide/implementation/security/) · [Publicación en Vercel](/guide/implementation/deployment/).
-- [Contratos HTTP exportados](/guide/api/pos-platform/) · [Modelo de datos implementado](/guide/api/data-model/).
+La [guía para empezar una tarea](/guide/implementation/start-a-task/) enlaza el procedimiento vigente del producto. Consulta la [estructura del código](/guide/implementation/monorepo/), sus [pruebas y E2E](/guide/implementation/testing/) y el [diccionario de datos con ERD](/guide/api/data-model/) según el cambio.
 
 ## Recorridos de la propuesta
 
-La presentación [Arquitectura y roadmap](/presentations/architecture/) sintetiza la propuesta del portal. Los recorridos siguientes enlazan el detalle y los criterios de aceptación mantenidos en esta guía.
-
-| Tema | Diseño y detalle |
-| --- | --- |
-| Plan de entrega | [Visión general de las seis fases](/guide/proposal/roadmap/) · [F01: venta persistida](/guide/roadmap/phase-01/) |
-| Venta y continuidad | [Confirmación local y condiciones de operación](/guide/proposal/continuity/) |
-| Precios y ofertas | [Evaluación local y versiones de reglas](/guide/proposal/pricing-promotions/) |
-| Sincronización | [Entrega, acuses y propiedad de datos](/guide/proposal/synchronization/) |
-| Integración ERP | [Contratos, fachada y ACL](/guide/proposal/contracts/) |
-| Procesamiento de trabajos | [BullMQ y Redis por entorno](/guide/architecture/job-processing/) |
-| Organización del código | [Monorepo y límites de módulos](/guide/architecture/monorepo/) |
+El [mapa principal de aplicaciones](/guide/diagrams/#mapa-general-de-arquitectura) sitúa las responsabilidades. El [roadmap](/guide/proposal/roadmap/) describe el alcance por fase; el [registro de decisiones](/guide/proposal/decisions/) conserva las elecciones y condiciones. La presentación [Arquitectura y roadmap](/presentations/architecture/) resume esas fuentes.
 
 ## Estado del material
 
-Las guías de [F01: operación conectada](/guide/implementation/phase-1/) y [F02: cobros, documentos y dispositivos](/guide/implementation/phase-2/) explican el código disponible, su evidencia técnica y las capacidades operativas pendientes.
-
-| Categoría | Qué representa |
-| --- | --- |
-| **Propuesta** | Diseño objetivo y recomendaciones con su estado de decisión. No acredita una implementación productiva. |
-| **Sistema actual y evidencia** | Comportamientos observados en fuentes y snapshots de repositorios. Su correspondencia con producción debe confirmarse. |
-| **Operación y validación** | Escenarios de recuperación, condiciones de aceptación y datos pendientes para cerrar el diseño. |
-| **Implementación y desarrollo** | Estructura, comandos y controles documentados en el repositorio; cada guía declara las capacidades disponibles y sus límites. |
-
-Cada página identifica su alcance. El [estado de implementación y las decisiones pendientes](/guide/overview/#estado-de-la-propuesta) distingue la demostración frontend, la base backend y el producto objetivo. IA y RFID se consultan como **extensiones opcionales**.
+La [guía del repositorio](/guide/implementation/repository/) y los recorridos de [F01](/guide/implementation/phase-1/) y [F02](/guide/implementation/phase-2/) explican la implementación y sus límites. El [panel de gestión](/project/) distingue verificación técnica, aceptación humana y pendientes operativos. Cada fuente conserva su revisión; una propuesta o una demostración no acredita una capacidad productiva.
 
 ## Fuentes y presentación
 
-La [propuesta y sus decisiones](/guide/proposal/decisions/) gobiernan el diseño. Las páginas se generan por tema desde esas fuentes; la evidencia y las revisiones conservan sus límites y enlaces al código. El [mapa de contenidos](/guide/contents/) reúne todos los temas y el [glosario del POS](/guide/glossary/) conecta los términos con su aplicación en la propuesta.
-
-La [auditoría de consistencia documental](/guide/reference/documentation-audit/) registra las correcciones, los controles de calidad y la validación pendiente con el equipo.
-
-El [procedimiento de fuentes y mantenimiento](/guide/reference/documentation-system/) identifica dónde se edita cada dato y cómo se revisa un cambio sin mantener otra copia en las presentaciones o herramientas de API.
+El [mapa de contenidos](/guide/contents/) reúne los temas de consulta. El [procedimiento de mantenimiento](/guide/reference/documentation-system/) identifica la fuente que se edita para cada cambio; la [auditoría documental](/guide/reference/documentation-audit/) conserva controles y límites de revisión.
 
 [Consultar presentaciones](/presentations/) · [Consultar fuentes de reuniones](/materials/) · [Leer síntesis por país](/guide/evidence/country-comparison/) · [Volver al portal](/)

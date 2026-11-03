@@ -8,7 +8,9 @@ next:
   link: /guide/proposal/product/
 ---
 
-**POS Platform es la propuesta de un producto corporativo de punto de venta para Chile, Perú y España.** Comparte las reglas y los casos de uso de venta, caja, precios y pagos. Cada país selecciona su configuración y sus integraciones fiscales, bancarias y ERP. La continuidad durante una caída de Internet es uno de sus requisitos, junto con integridad de las operaciones, permisos, extensibilidad y mantenimiento común.
+**POS Platform es un producto corporativo de punto de venta en desarrollo para Chile, Perú y España.** Su arquitectura comparte reglas y casos de uso de venta, caja, precios y pagos. Cada país selecciona su configuración e integraciones fiscales, bancarias y ERP. La continuidad durante una caída de Internet es uno de sus requisitos, junto con integridad de las operaciones, permisos, extensibilidad y mantenimiento común.
+
+Esta página explica el diseño del conjunto. La [guía de implementación](/guide/implementation/repository/) identifica las capacidades integradas y sus límites; el [panel del proyecto](/project/) muestra la verificación técnica y los pendientes del corte publicado.
 
 ## Qué se comparte y qué cambia
 
@@ -22,7 +24,7 @@ El **perfil de país** selecciona moneda, reglas, documentos y proveedores compa
 
 | Zona | Responsabilidad propuesta | Datos que conserva |
 | --- | --- | --- |
-| Puesto de caja | Presentar la operación con Angular; Tauri permite empaquetarla y acceder a capacidades nativas autorizadas. | Interfaz y preferencias; el puente de periféricos puede conservar evidencia técnica durable de sus comandos. La autoridad de ventas permanece en sucursal. |
+| Puesto de caja | Presentar la operación con Angular; Tauri permite empaquetarla y acceder a capacidades nativas autorizadas. | Interfaz y preferencias; el servicio de periféricos conserva evidencia técnica durable de sus trabajos. La autoridad de ventas permanece en sucursal. |
 | Servidor de sucursal | Validar permisos, calcular precios con datos locales y confirmar ventas, pagos registrados y movimientos de caja. | PostgreSQL guarda las operaciones y sus eventos pendientes en una misma transacción. |
 | Sincronizador de sucursal | Entregar operaciones a central, recibir maestros y preparar versiones comerciales. | Identidades de mensajes, pendientes y avances persistidos en PostgreSQL de sucursal. |
 | Plataforma de país | Aceptar operaciones, consolidar información, distribuir datos e integrar el ERP y los proveedores de su ámbito. | PostgreSQL operativo de país y estados de integración. El ERP conserva su responsabilidad financiera pactada. |
@@ -47,20 +49,19 @@ La **outbox** es el registro de eventos pendientes junto al negocio; la **inbox*
 
 Las aplicaciones de `apps/` arrancan procesos o interfaces. Las bibliotecas de `libs/` agrupan reglas, casos de uso, contratos e integraciones; una biblioteca no exige un despliegue propio. Nx organiza proyectos y tareas de construcción. Sus límites deben impedir que una función de ventas escriba directamente en los datos de otro módulo.
 
-El [catálogo del monorepo](/guide/architecture/monorepo/) es la referencia de nombres y estructura. Distingue la maqueta web, las bases técnicas locales y las capacidades que todavía deben implementarse. Incluye la [correspondencia desde Mountain y otros repositorios](/guide/architecture/monorepo/#correspondencia-del-legacy-con-pos-platform).
+La [estructura del monorepo](/guide/implementation/monorepo/) relaciona aplicaciones, bibliotecas y rutas físicas con su estado de implementación. El [diseño de módulos](/guide/architecture/monorepo/) explica sus fronteras y la [correspondencia desde Mountain y otros repositorios](/guide/architecture/monorepo/#correspondencia-del-legacy-con-pos-platform). Para preparar un cambio, sigue la [guía para empezar una tarea](/guide/implementation/start-a-task/).
 
 ## Estado de la propuesta
 
-| Estado | Qué se puede afirmar |
+| Necesidad | Fuente de referencia |
 | --- | --- |
-| Dirección indicada | Angular + Tauri para escritorio, Angular + Capacitor para Android/iOS y Nx para organizar el código. La homologación y operación del producto siguen pendientes. |
-| Diseño recomendado | Backend modular NestJS/Fastify, PostgreSQL de sucursal y país, sincronización recuperable y adaptadores por capacidad. Requieren aprobación y piloto. |
-| Base de código revisada | El monorepo incluye los clientes Angular/PrimeNG con Tauri y Capacitor, la base técnica NestJS/Fastify y esqueletos de workers. El frontend sigue usando adaptadores mock; no hay persistencia ni operaciones comerciales backend. |
-| Legacy observado | Mountain ya tiene login, perfiles y accesos a módulos. Los informes fijan los snapshots y las limitaciones; no prueban la configuración productiva. |
-| Por acordar | Matriz de operaciones offline, vigencias y recotización, proveedores, límites por país, recuperación, capacidad y criterios cuantitativos de aceptación. |
+| Entender las decisiones | [Registro de decisiones](/guide/proposal/decisions/): diseño acordado, condiciones y recomendaciones. |
+| Saber qué está integrado | [Repositorio del producto](/guide/implementation/repository/), [F01](/guide/implementation/phase-1/) y [F02](/guide/implementation/phase-2/): código, persistencia, perfiles y evidencia, separados de las capacidades por habilitar. |
+| Consultar avance o impedimentos | [Gestión del proyecto](/project/) y [bloqueos y decisiones](/project/attention/): estados, responsables y siguientes acciones del corte publicado. |
+| Contrastar el legacy | [Fuentes y snapshots revisados](/guide/evidence/audit/): comportamiento observado y límites de correspondencia con producción. |
 
-El [registro de decisiones](/guide/proposal/decisions/) fija los motivos y las condiciones de aprobación. La [validación del piloto](/guide/operations/validation/) define las evidencias necesarias. Las simulaciones explican el comportamiento propuesto; las garantías se demuestran mediante esas pruebas y la homologación.
+La [validación del piloto](/guide/operations/validation/) define las evidencias operativas necesarias. Las simulaciones explican el comportamiento propuesto. La verificación técnica, la aceptación humana y la habilitación con proveedores y equipos reales se registran por separado.
 
-El [roadmap de entrega](/guide/proposal/roadmap/) organiza el trabajo pendiente en seis fases. Cada una detalla las condiciones de entrada, los entregables por aplicación y módulo, las tareas, los escenarios de aceptación y la evidencia para decidir su cierre. El [plan de F01: venta persistida](/guide/roadmap/phase-01/) concreta la primera integración de la interfaz con la API y la persistencia de sucursal. La presentación resume el mismo plan mantenido en esta guía.
+El [roadmap de entrega](/guide/proposal/roadmap/) organiza el alcance en seis fases. Cada una detalla las condiciones de entrada, los entregables por aplicación y módulo, las tareas, los escenarios de aceptación y la evidencia para decidir su cierre. El [plan de F01: venta persistida](/guide/roadmap/phase-01/) concreta la primera integración de la interfaz con la API y la persistencia de sucursal. La presentación resume el mismo plan mantenido en esta guía.
 
 [Mapa de contenidos](/guide/contents/) · [Glosario con el significado aplicado al POS](/guide/glossary/)
