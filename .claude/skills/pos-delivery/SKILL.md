@@ -32,11 +32,23 @@ Una consulta de estado es de lectura: invocar la skill no toma tareas, crea issu
 
 No cargues todas las fichas ni mantengas otra lista de pendientes. Las copias publicadas son instantáneas: compara sus revisiones y fechas con el producto antes de explicar una diferencia. La ausencia de un dato no significa cero, terminado o desbloqueado.
 
+## Aplicar Organic Driven Development
+
+Sigue ODD de Gentle AI **v4.3.1**, fijado por `tools/odd/toolchain.lock.json`, y el contrato de `odd/README.md`. Clasifica el trabajo después de explorar: una corrección pequeña y bien comprendida se resuelve inline; una unidad sustancial o que deba retomarse conserva antes de implementar `odd/tasks/<feature-name>.md`. No crear una ficha por comando ni convertir toda consulta en un proyecto.
+
+La ficha lleva un encabezado breve (objetivo, rama, estrategia de entrega, test runner), `## Specs` con S1… y criterios comprobables, `## Tasks` con una línea por T# vinculada a S#, ruta inline/delegated, estado y commit o evidencia RED/GREEN, y `## Log` append-only. L1 conserva la solicitud original literalmente; nuevas decisiones y correcciones se añaden con evidencia. No publicar secretos ni transcripciones ajenas al alcance. Enlaza issue y fichas canónicas; no copies el backlog, porcentajes o especificaciones completas ya propietarias de otra fuente.
+
+Antes de retomar, reconcilia Git, issue y el documento con su espejo completo en Engram, proyecto del repositorio, topic `odd/<feature-name>/tasks`; incluye la ruta relativa del archivo. Después de actualizar, lee ambos para comprobar que coinciden: no son una transacción atómica. Si Engram no está disponible, conserva el archivo y declara la sincronización pendiente; no inventes memoria ni atribuyas hechos históricos a ODD. No subas bases de memoria, credenciales ni historiales del asistente al repositorio público.
+
+Explora, resuelve incertidumbres que cambien el contrato, implementa y verifica cortes pequeños contra S#. Delega con ownership explícito y verifica el resultado recibido. Una casilla marcada no acredita calidad. Mantén los cambios de intención en Log, actualiza Tasks y vincula la evidencia real; no reescribas decisiones pasadas para aparentar un proceso perfecto.
+
+RDD es una revisión posterior distinta de tests, aprobación humana y aceptación operativa. Usa el protocolo nativo de la versión fijada: capacidades, STATUS y únicamente sus transiciones/argumentos exactos; respeta el consentimiento que solicite para el candidato concreto. Nunca reconstruyas tokens, inventes un recibo `approved`, reutilices aprobación de otro diff ni presentes ausencia de lentes como revisión LLM. RDD no autoriza push, PR o merge. La revisión automática de GitHub es un control remoto separado; consulta su ejecución para el SHA actual.
+
 ## Preparar y ejecutar una unidad revisable
 
 Para una solicitud de implementación, revisa preparación, dependencias, responsable humano confirmado y trabajo concurrente antes de elegir el alcance. Si aún no hay issue, busca primero una existente; crea una unidad del tipo real sólo dentro del trabajo autorizado. Sigue el plan y el catálogo actuales para el código, padre, fase y aplicaciones; no inventes un entregable del roadmap para una tarea técnica independiente. No confundas una obligación de fase con prioridad de ejecución.
 
-Registra el resultado, alcance y pruebas previstas una vez en la issue o PR de trabajo. Actualiza ese registro al cambiar el alcance o aparecer un impedimento, sin publicar cada comando ni transcripciones del chat. Un bloqueo debe decir qué falta, a qué criterio afecta, la siguiente acción y quién la coordina si está confirmado. Continúa las partes independientes; una VPN ausente o un contrato pendiente no bloquean automáticamente toda la fase.
+Para una unidad sustancial, registra intención y ejecución en su ficha ODD; la issue o PR enlaza esa ficha y resume resultado y límites. Para trabajo inline, registra resultado, alcance y pruebas previstas en la issue o PR de trabajo. Actualiza ese registro al cambiar el alcance o aparecer un impedimento, sin publicar cada comando ni transcripciones del chat. Un bloqueo debe decir qué falta, a qué criterio afecta, la siguiente acción y quién la coordina si está confirmado. Continúa las partes independientes; una VPN ausente o un contrato pendiente no bloquean automáticamente toda la fase.
 
 Contrasta cada criterio de la unidad con implementación y evidencia, usando una tabla breve cuando facilite la revisión:
 
@@ -56,7 +68,7 @@ En POS Docs, importa desde el corte limpio e identificado que requiere `docs/pro
 
 ## Preparar PR y traspaso
 
-Usa la plantilla vigente y `CONTRIBUTING.md` para el título, metadatos, relaciones y cierre. Revisa el diff completo y los vínculos efectivos de GitHub, no sólo el cuerpo. Una PR parcial no cierra entregables; una hija completa sólo cierra su propio alcance. Una PR editorial enlaza la issue del producto sin cerrarla. No modifiques bloques administrados de issues al margen de su publicador.
+Usa la plantilla vigente y `CONTRIBUTING.md` para el título, metadatos, relaciones y cierre. Declara `ODD-Task` con la ficha real; sólo el trabajo pequeño usa `inline` con `ODD-Reason` concreto. Una PR editorial puede enlazar la ficha del producto fijada a un commit, siguiendo `odd/README.md`. Revisa el diff completo y los vínculos efectivos de GitHub, no sólo el cuerpo. Una PR parcial no cierra entregables; una hija completa sólo cierra su propio alcance. Una PR editorial enlaza la issue del producto sin cerrarla. No modifiques bloques administrados de issues al margen de su publicador.
 
 Antes de integrar, consulta la revisión actual, los checks requeridos y el estado de revisión. Aplica la política existente, incluida su excepción administrativa cuando corresponda: una autorización para otra PR no sirve y disponer de credenciales no la sustituye. No cambies reglas, publiques checks aprobados ficticios ni presentes una comprobación omitida como superada. La skill no crea una nueva exigencia de aprobación para las acciones que el usuario ya autorizó.
 

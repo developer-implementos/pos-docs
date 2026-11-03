@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "canonicalRepository": "developer-implementos/pos-platform",
+  "files": {
+    ".github/workflows/automated-review.yml": "f6603febdf86467306c9f1a2559762d691c1dc227208bab98d9f06c762b4db89",
+    "tools/automated-review/core.mjs": "20134ab4012a795c27bc4edfdfcb5a2f6ba94c736513e4805f7c66ca3fbee6ae",
+    "tools/automated-review/runtime.mjs": "f6f0e12032b3f5d30453801ca08a21619dacc6e2ea11d49fe18a4a1a5c5d29a7",
+    "tools/automated-review/run.mjs": "8fc5c81f68a5950a7143c55be6fb0e9868eebb8649ffdde5ddde76a6c3a61966",
+    "tools/automated-review/review.test.mjs": "5711a2cff1b7ca3206b98bf9eccf28a80a611488418315c9415e07df8d7f07bd",
+    "tools/automated-review/distribute.mjs": "661d91159fa766927f676e9befc6281b0798ea4ea984b5a79eda75646d0ed5fe",
+    "tools/automated-review/README.md": "d9490a309ba098ede96bcda762435442bcd6aae35c1d53195dcebc06cb2c0887",
+    "tools/automated-review/cli/package.json": "485b3b618dfdfa5e689b8f7f6fc0ba3d50df94fe4eb1f60f8028ccee9927c785",
+    "tools/automated-review/cli/package-lock.json": "0239d419d7548ded4a5cdd22c2f0bb3a33df6fa8e65054c12eb990316b30a01c"
+  }
+}

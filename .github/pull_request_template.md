@@ -1,3 +1,7 @@
+ODD-Task:
+
+<!-- Ficha local odd/tasks/<feature-name>.md; un cambio pequeño puede usar inline con ODD-Reason. -->
+
 Issue: https://github.com/developer-implementos/pos-platform/issues/
 
 Documentation-Impact:

@@ -1,0 +1,9 @@
+{
+  "name": "pos-trusted-review-cli",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pinned official Anthropic native CLI for the isolated Linux reviewer; no lifecycle scripts.",
+  "dependencies": {
+    "@anthropic-ai/claude-code-linux-x64": "2.1.296"
+  }
+}

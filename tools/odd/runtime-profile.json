@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "codexModels": {
+    "odd-explorer": "gpt-6-astra",
+    "odd-worker": "gpt-6-astra",
+    "odd-verify": "gpt-6-astra"
+  },
+  "codexEfforts": {
+    "odd-explorer": "high",
+    "odd-worker": "high",
+    "odd-verify": "high"
+  }
+}

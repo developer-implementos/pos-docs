@@ -28,6 +28,68 @@
       "evidence": [
         "https://github.com/developer-implementos/pos-platform/issues/121"
       ]
+    },
+    {
+      "source": "docs/development-methodology.md",
+      "sourceSha256": "b69c28a37478afe0a29855f189b1e7f7a6ce469e2cf4d9a292f41369cee8868a",
+      "productRevision": "278420ec5d1e6e1df3c3df34157c14631cb2f98c",
+      "reviewedOn": "2026-11-03",
+      "reviewer": {
+        "kind": "agent",
+        "name": "Codex · docs_navigation · TASK-122"
+      },
+      "scope": "Contraste editorial del protocolo ODD v4.3.1: unidad sustancial frente a trabajo inline, Specs/Tasks/Log y espejo Engram, autoridad de issues/progreso, presupuesto y excepción de PR, consentimiento RDD por candidato y revisión remota preparada. Comparado con routing, skills, CONTRIBUTING y herramientas fijadas del producto. No acredita comprensión humana, ejecución de todas las sesiones ni conexión remota.",
+      "evidence": [
+        "https://github.com/developer-implementos/pos-platform/issues/122",
+        "https://github.com/developer-implementos/pos-platform/pull/126",
+        "https://github.com/developer-implementos/pos-platform/pull/128"
+      ]
+    },
+    {
+      "source": "docs/agent-workflow.md",
+      "sourceSha256": "8f31e332bc248073c8c02243032476b9cd1e7f9191228c3ca3093314405f7b9a",
+      "productRevision": "278420ec5d1e6e1df3c3df34157c14631cb2f98c",
+      "reviewedOn": "2026-11-03",
+      "reviewer": {
+        "kind": "agent",
+        "name": "Codex · docs_navigation · TASK-122"
+      },
+      "scope": "Recorrido de uso de pos-delivery en Codex y Claude Code; distribución por revisión y hashes, fuentes de estado, traspaso y límites de confianza/MCP. Contrastado con skill, importadores y configuración del producto. Se distingue preparación del revisor remoto de activación y aprobación humana; no certifica que otras máquinas estén configuradas.",
+      "evidence": [
+        "https://github.com/developer-implementos/pos-platform/issues/122",
+        "https://github.com/developer-implementos/pos-platform/pull/126",
+        "https://github.com/developer-implementos/pos-platform/pull/128"
+      ]
+    },
+    {
+      "source": "docs/start-a-task.md",
+      "sourceSha256": "cc235b047d17577ebf694a1369c73108b5485460c26dbb37199d071f7504424a",
+      "productRevision": "278420ec5d1e6e1df3c3df34157c14631cb2f98c",
+      "reviewedOn": "2026-11-03",
+      "reviewer": {
+        "kind": "agent",
+        "name": "Codex · docs_navigation · TASK-122"
+      },
+      "scope": "Recorrido issue → instrucciones canónicas → ficha ODD cuando corresponde → entorno y comprobaciones → PR. Revisados destinos y distinción entre demo, laboratorio y operación; el cambio de metodología enlaza las políticas del producto sin duplicarlas. No revalida funcionalmente F01/F02 ni acredita acceso a proveedores o aceptación del equipo.",
+      "evidence": [
+        "https://github.com/developer-implementos/pos-platform/issues/122",
+        "https://github.com/developer-implementos/pos-platform/pull/126"
+      ]
+    },
+    {
+      "source": "docs/documentation-system.md",
+      "sourceSha256": "1261593636661e94aa6fe535e16962306a39a28e3628385870fbddd96a4e8989",
+      "productRevision": "278420ec5d1e6e1df3c3df34157c14631cb2f98c",
+      "reviewedOn": "2026-11-03",
+      "reviewer": {
+        "kind": "agent",
+        "name": "Codex · docs_navigation · TASK-122"
+      },
+      "scope": "Distribución de autoridad entre documentación, código, contratos, datos, fichas ODD, memoria local y registros de avance; separación entre captura y revisión editorial y entre checks, revisión humana y aceptación. Contrastado con las políticas de entrega y los validadores/importadores existentes. No constituye auditoría completa de cada contrato o tabla publicada.",
+      "evidence": [
+        "https://github.com/developer-implementos/pos-platform/issues/122",
+        "https://github.com/developer-implementos/pos-platform/pull/126"
+      ]
     }
   ]
 }
