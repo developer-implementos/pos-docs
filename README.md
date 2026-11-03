@@ -77,7 +77,7 @@ Los recorridos enlazan una sola explicación de cada responsabilidad. Consultar 
 Para actualizar la referencia del producto, ejecutar `npm run documentation:export` en un checkout limpio de POS Platform con su PostgreSQL efímero de pruebas. Después, desde POS Docs:
 
 ```sh
-npm run reference:sync -- --workspace ../pos-platform
+node tools/product-reference/sync.mjs --workspace ../pos-platform
 npm run reference:test
 npm run build
 npm run reference:check
