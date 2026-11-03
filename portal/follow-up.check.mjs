@@ -28,6 +28,13 @@ try {
   assert.equal(await page.locator('[data-work]').count(),model.workPackages.length);
   assert.equal(await page.locator('[data-action]:visible').count(),model.counts.open);
   const workForm=page.locator('[data-work-filters]');
+  const contrast=await workForm.getByRole('button',{name:'Limpiar'}).evaluate(button=>{
+    const css=getComputedStyle(button);
+    const luminance=color=>color.match(/[\d.]+/g).slice(0,3).map(Number).map(value=>value/255).map(value=>value<=.04045?value/12.92:((value+.055)/1.055)**2.4).reduce((sum,value,index)=>sum+value*[.2126,.7152,.0722][index],0);
+    const foreground=luminance(css.color),background=luminance(css.backgroundColor);
+    return (Math.max(foreground,background)+.05)/(Math.min(foreground,background)+.05);
+  });
+  assert.ok(contrast>=4.5,`Filter reset text has sufficient contrast (${contrast})`);
   await workForm.locator('[name=phase]').selectOption('phase-02');
   await workForm.locator('[name=status]').selectOption('remaining');
   const expected=model.workPackages.filter(work=>work.phase==='phase-02'&&work.status!=='verified');
@@ -35,6 +42,7 @@ try {
   await workForm.locator('[name=query]').fill('zz-no-coincide');
   assert.ok(await page.locator('[data-work-empty]').isVisible());
   await workForm.getByRole('button',{name:'Limpiar'}).click();
+  await page.waitForFunction(total=>document.querySelectorAll('[data-work]:not([hidden])').length===total,model.workPackages.length);
   assert.equal(await page.locator('[data-work]:visible').count(),model.workPackages.length);
   const actions=page.locator('[data-action-filters]');
   await actions.locator('[name=scope]').selectOption('operational');

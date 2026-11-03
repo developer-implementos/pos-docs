@@ -29,7 +29,8 @@ export function initializeFollowUp(root) {
     form.hidden = false;
     form.addEventListener('input', filter);
     form.addEventListener('submit', event => event.preventDefault());
-    form.addEventListener('reset', () => queueMicrotask(filter));
+    // The native reset updates controls after its event; filter on the next task.
+    form.addEventListener('reset', () => setTimeout(filter, 0));
     filter();
   }
   function revealLinkedItem() {
