@@ -28,3 +28,7 @@ tmp/
 /apps/starlight/src/content/docs/implementation/
 /apps/starlight/src/content/docs/flows/
 /apps/starlight/src/content/docs/flows.md
+
+# Local agent memory and review authority are private.
+.engram/
+.gentle-ai/

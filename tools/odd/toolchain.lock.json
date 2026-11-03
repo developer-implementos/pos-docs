@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "platform": "windows-amd64",
+  "go": {
+    "version": "1.25.10",
+    "url": "https://go.dev/dl/go1.25.10.windows-amd64.zip",
+    "sha256": "ca37af2dadd8544464f1a9ca7c3886499d1cdfcb263855d0a1d71f194b2bd222"
+  },
+  "engram": {
+    "version": "3.6.1",
+    "commit": "d33a14a2ed822784752e5678b1673289ee1c0de4",
+    "url": "https://github.com/Gentleman-Programming/engram/releases/download/v3.6.1/engram_3.6.1_windows_amd64.zip",
+    "sha256": "129026b49e51db2453d28a5fbb915893ff7a8f4764b3ebc83e1ed80f72c3dedf"
+  },
+  "gentleAi": {
+    "version": "4.3.1",
+    "commit": "2dba7784114fff57864519c4c0d067e952a8c98b",
+    "package": "github.com/gentleman-programming/gentle-ai/v4/cmd/gentle-ai",
+    "module": "github.com/gentleman-programming/gentle-ai/v4",
+    "moduleSum": "h1:00p8dnjJrhYFq1Qikk2oY6K/UXIty9A/IBUUOUiX9XA="
+  }
+}

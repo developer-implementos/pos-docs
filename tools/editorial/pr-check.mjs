@@ -3,7 +3,8 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { filesAfterChanges, validatePullRequest } from './policy.mjs';
-import { checkLinkedIssue, githubClient, loadPullRequest } from './github.mjs';
+import { assertPullRequestUnchanged, checkLinkedIssue, githubClient, githubOddReader, loadPullRequest } from './github.mjs';
+import { readLocalDocument, validateDeclaration } from '../odd/check.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const args = process.argv.slice(2);
@@ -25,12 +26,14 @@ if (modes.length !== 1 || (options['--require-issue'] && !options['--github']) |
 let files = new Set(execFileSync('git', ['ls-files', '-z'], { cwd: root, encoding: 'utf8' }).split('\0').filter(Boolean));
 const get = githubClient({ token: process.env.GH_TOKEN || process.env.GITHUB_TOKEN });
 let body;
+let snapshot;
 let revision = 'local body; remote PR revision not inspected';
 if (options['--body-file']) {
   body = fs.readFileSync(path.resolve(options['--body-file']), 'utf8');
 } else {
   let number = Number(options['--pr']);
   let expectedHead = null;
+  let expectedBase = null;
   if (options['--event-file']) {
     const event = JSON.parse(fs.readFileSync(options['--event-file'], 'utf8'));
     if (event.repository?.full_name !== 'developer-implementos/pos-docs' || event.pull_request?.base?.ref !== 'main') {
@@ -38,21 +41,33 @@ if (options['--body-file']) {
     }
     number = event.number;
     expectedHead = event.pull_request.head?.sha;
-    if (!/^[a-f\d]{40}$/.test(expectedHead || '')) throw new Error('Missing immutable PR head in event.');
+    expectedBase = event.pull_request.base?.sha;
+    if (!/^[a-f\d]{40}$/.test(expectedHead || '') || !/^[a-f\d]{40}$/.test(expectedBase || '')) throw new Error('Missing immutable PR head or base in event.');
   }
-  const pr = await loadPullRequest(get, number, expectedHead);
+  const pr = await loadPullRequest(get, number, expectedHead, expectedBase);
   body = pr.body;
   files = filesAfterChanges(files, pr.files);
   revision = pr.head;
+  snapshot = pr.snapshot;
 }
 const declaration = validatePullRequest({ body, knownFiles: files });
+if (options['--body-file']) {
+  const source = githubOddReader(get);
+  await validateDeclaration(body, { readDocument: reference => {
+    if (reference.kind === 'local') return readLocalDocument(root, reference);
+    if (!options['--github']) throw new Error('Pinned cross-repository ODD documents require --github for verified source access.');
+    return source.document(reference.repository, reference.revision, reference.path);
+  } });
+}
 const issue = options['--github']
   ? await checkLinkedIssue(get, declaration.issueNumber, { required: options['--require-issue'] === true })
   : { status: 'unverified', reason: 'Offline check: issue identity and open state were not queried.' };
+if (snapshot) await assertPullRequestUnchanged(get, snapshot);
 const summary = [
   'Editorial declaration: valid.',
   `PR revision: ${revision}.`,
   `Product issue: ${declaration.issueUrl}; ${issue.status}.`,
+  snapshot ? 'ODD: declared source and changed task histories validated against immutable head/base revisions.' : 'ODD: declaration and current document validated; prior Log history requires a remote PR check.',
   ...(issue.reason ? [issue.reason] : []),
   'This validates declared metadata and available issue evidence. It does not approve the content, attest human review or accept a product deliverable.',
 ];

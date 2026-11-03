@@ -1,0 +1,53 @@
+name: Automated review
+
+on:
+  pull_request_target:
+    branches: [main]
+    types: [opened, edited, synchronize, reopened, ready_for_review, converted_to_draft]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: automated-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    name: AI review
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Read trusted base only
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            tools/automated-review
+            .github/workflows/automated-review.yml
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Verify trusted reviewer distribution and tests
+        run: |
+          node tools/automated-review/distribute.mjs --check
+          node --test tools/automated-review/review.test.mjs
+      - name: Review immutable candidate as data
+        run: node tools/automated-review/run.mjs
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          POS_AI_REVIEW_ENABLED: ${{ vars.POS_AI_REVIEW_ENABLED }}
+          POS_AI_REVIEW_AUTH: ${{ vars.POS_AI_REVIEW_AUTH }}
+          POS_AI_REVIEW_MODEL: ${{ vars.POS_AI_REVIEW_MODEL }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+      - name: Preserve deterministic review evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: automated-review-evidence
+          path: ${{ runner.temp }}/pos-ai-review-evidence.json
+          if-no-files-found: ignore
+          retention-days: 30

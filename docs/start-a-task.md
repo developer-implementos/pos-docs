@@ -10,6 +10,8 @@ Lee las [instrucciones de agentes](https://github.com/developer-implementos/pos-
 
 La guía de [trabajo con Codex y Claude Code](/guide/implementation/agent-workflow/) explica cómo activar la skill compartida y mantener sus instrucciones sincronizadas.
 
+Para una unidad sustancial, sigue [ODD](development-methodology.md) antes de implementar. La ficha enlaza la issue, conserva Specs/Tasks/Log y permite retomar el trabajo. La política de PR define las comprobaciones de trazabilidad; su resultado no sustituye revisar los criterios del cambio.
+
 ## Localizar el cambio
 
 Empieza por el [recorrido de operación](/guide/flows/) afectado: cada ficha conecta diseño, contratos, código, datos y fallos. La [estructura del monorepo](/guide/implementation/monorepo/) sitúa las aplicaciones y bibliotecas; los [contratos HTTP](/guide/api/pos-platform/) y el [diccionario de datos con ERD](/guide/api/data-model/) permiten revisar sus fronteras. Las referencias de implementación muestran la revisión de código que describen.

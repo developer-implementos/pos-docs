@@ -4,6 +4,8 @@ La skill **pos-delivery** guía una tarea desde su issue hasta la verificación,
 
 Las reglas comunes siguen en [AGENTS.md del producto](https://github.com/developer-implementos/pos-platform/blob/main/AGENTS.md) y [CONTRIBUTING.md](https://github.com/developer-implementos/pos-platform/blob/main/CONTRIBUTING.md); los cambios editoriales siguen además [AGENTS.md de POS Docs](https://github.com/developer-implementos/pos-docs/blob/main/AGENTS.md). La skill organiza su aplicación. No reemplaza esas reglas, la CI, la revisión ni la autorización necesaria para integrar cambios.
 
+La sesión aplica [Organic Driven Development](development-methodology.md): conserva la intención de un cambio sustancial en Specs/Tasks/Log y su espejo local Engram. Esa guía explica cuándo crear la ficha y cómo distinguir verificación, revisión y aceptación; esta página concentra la activación de los asistentes.
+
 ## Usarla en una tarea
 
 Abre el checkout o worktree de `pos-platform` o `pos-docs` en el asistente. La skill viene versionada con el repositorio: no requiere instalación global, enlaces simbólicos ni una ubicación particular del otro checkout.
@@ -31,6 +33,14 @@ La selección automática también es posible cuando la petición coincide con l
 | Traspasar la sesión | «Deja un traspaso para otro desarrollador: revisión, trabajo terminado, pruebas, riesgos y siguiente paso.» | Registro recuperable desde Git y la issue/PR, que distingue cambios locales de cambios publicados. |
 
 Conserva el alcance y las autorizaciones de la sesión: seleccionar la skill, por sí solo, no autoriza acciones adicionales. Una consulta de estado es de lectura; una solicitud de implementación continúa el trabajo autorizado. Una instrucción cargada tampoco garantiza obediencia: revisa los resultados y conserva los controles del repositorio.
+
+## Herramientas del protocolo
+
+Las instrucciones y recursos del protocolo quedan fijados en el checkout. La [guía de herramientas del producto](https://github.com/developer-implementos/pos-platform/blob/main/tools/odd/README.md) mantiene la preparación de las herramientas nativas; el bootstrap comprobado está limitado a Windows x64 y PowerShell 7. Instala versiones oficiales verificadas en un directorio privado y no reemplaza la configuración global de los asistentes.
+
+El MCP local de Engram se declara por proyecto en `.mcp.json` para Claude y `.codex/config.toml` para Codex. Abre un checkout de confianza, permite su servidor local según las opciones del cliente y comprueba que ese cliente puede descubrirlo y leer su memoria. Una prueba directa del servidor no acredita esa conexión ni concede confianza a otro checkout. La memoria queda fuera del repositorio; no se versionan credenciales ni se conceden aprobaciones generales de herramientas. Mientras falte conexión, el agente conserva la ficha en Git y declara el espejo pendiente.
+
+RDD utiliza la herramienta nativa y sus transiciones para un candidato estable. El consentimiento que solicite corresponde a ese candidato. La revisión automática de GitHub está preparada para una conexión posterior, según [TASK-122](https://github.com/developer-implementos/pos-platform/issues/122); instalar el CLI en el PC no la activa. Su [procedimiento](https://github.com/developer-implementos/pos-platform/blob/main/tools/automated-review/README.md) mantiene la configuración y las pruebas necesarias antes de exigirla para integrar una PR.
 
 ## Consultar una sola fuente
 
