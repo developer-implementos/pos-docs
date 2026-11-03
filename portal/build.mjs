@@ -6,7 +6,9 @@ import {createRequire} from 'node:module';
 import {loadCatalog} from './catalog.mjs';
 import {loadPreviews} from './previews.mjs';
 import {renderMaterialViewer} from './viewer.mjs';
-import {renderPortal} from './render.mjs';
+import {renderPortal, renderCatalogPages} from './render.mjs';
+import {renderSitePage} from './site-shell.mjs';
+import {renderProjectPages} from './project-view.mjs';
 import {teamMembers} from './team.mjs';
 import {loadProgress} from './progress.mjs';
 import {loadFollowUp} from './follow-up.mjs';
@@ -28,7 +30,7 @@ fs.mkdirSync(path.join(assets, 'team'), {recursive:true});
 for (const {avatar} of teamMembers) {
   fs.copyFileSync(path.join(root, 'portal/assets/team', avatar), path.join(assets, 'team', avatar));
 }
-for (const file of ['portal.css', 'portal.js', 'viewer.css', 'viewer.js']) fs.copyFileSync(path.join(root, 'portal', file), path.join(output, 'portal', file));
+for (const file of ['portal.css', 'portal.js', 'viewer.css', 'viewer.js', 'project.css', 'project.js']) fs.copyFileSync(path.join(root, 'portal', file), path.join(output, 'portal', file));
 const require = createRequire(path.join(root, 'apps/starlight/package.json'));
 const pdfjs = path.dirname(require.resolve('pdfjs-dist/package.json'));
 const pdfjsOutput = path.join(output, 'portal/pdfjs');
@@ -56,5 +58,11 @@ for (const item of catalog.presentations) {
     assert.ok(fs.existsSync(destination), `Presentation was catalogued but not built: ${href}`);
   }
 }
-fs.writeFileSync(path.join(output, 'index.html'), renderPortal(catalog, docsOrigin, repositoryOrigin, progress, loadFollowUp(root, progress)));
+const followUp = loadFollowUp(root, progress);
+fs.writeFileSync(path.join(output, 'index.html'), renderPortal(catalog, docsOrigin, repositoryOrigin, progress, followUp));
+for (const [pathname, page] of [...renderCatalogPages(catalog, repositoryOrigin), ...renderProjectPages(progress, followUp)]) {
+  const directory = path.join(output, pathname);
+  fs.mkdirSync(directory, {recursive:true});
+  fs.writeFileSync(path.join(directory, 'index.html'), renderSitePage({active:'project', ...page, pathname, origin:docsOrigin, repository:repositoryOrigin}));
+}
 console.log(`Resource portal: / with ${catalog.presentations.length} presentation(s), ${catalog.materials.length} originals and ${previews.size} PDF previews.`);

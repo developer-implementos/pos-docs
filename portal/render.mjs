@@ -1,7 +1,9 @@
-import { renderProgress } from './progress-view.mjs';
+import {renderSitePage, escapeHtml as escape} from './site-shell.mjs';
 import { teamMembers } from './team.mjs';
 
-const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const percent = value => new Intl.NumberFormat('es-CL', {maximumFractionDigits:1}).format(value);
+const date = value => new Intl.DateTimeFormat('es-CL', {dateStyle:'long', timeZone:'UTC'}).format(new Date(value));
+
 const size = bytes => {
   const unit = bytes < 1024 ? 'B' : bytes < 1024 * 1024 ? 'KB' : 'MB';
   const divisor = unit === 'B' ? 1 : unit === 'KB' ? 1024 : 1024 * 1024;
@@ -19,41 +21,46 @@ function downloadItem(item, proposal = false) {
 }
 
 export function renderPortal(catalog, origin, repository, progress, followUp = null) {
+  const open = followUp?.items.filter(item => item.state === 'open').length ?? 0;
+  const technical = progress.measurement === 'verification';
+  const body = `<div class="home-intro"><p class="eyebrow">IMPLEMENTOS · PRODUCTO CORPORATIVO</p><h1>POS Platform</h1><p class="lead">Un lugar para entender la plataforma, seguir su avance y consultar las fuentes del proyecto.</p></div>
+  <section id="progress" class="home-status" aria-labelledby="home-status-title">
+    <div class="home-status-heading"><h2 id="home-status-title">El proyecto, de un vistazo</h2><p>Avance revisado: <time datetime="${escape(progress.reviewedOn)}">${date(progress.reviewedOn)}</time></p></div>
+    <div class="home-metrics"><a href="/project/work/?status=${technical ? 'verified' : 'accepted'}"><strong>${percent(progress.percent)} %</strong><span>${progress.completed}/${progress.total} entregables ${technical ? 'verificados' : 'aceptados'}</span></a><a href="/project/work/?status=in_progress"><strong>${progress.counts.in_progress}</strong><span>En desarrollo</span></a><a href="/project/attention/?state=open"><strong>${open}</strong><span>Acciones pendientes</span></a></div>
+    <div class="home-status-footer"><p>El avance mide entregables; las revisiones humanas se consultan por separado.</p><a class="button primary" href="/project/">Ver proyecto</a></div>
+  </section>
+  <section class="home-destinations" aria-label="Explorar POS Platform">
+    <article class="destination"><span class="destination-number" aria-hidden="true">01</span><h2><a href="/guide/">Documentación</a></h2><p>Arquitectura, recorridos, contratos y datos para entender y desarrollar el sistema.</p><div class="destination-links"><a href="/guide/diagrams/">Diagramas</a><a href="/guide/proposal/roadmap/">Roadmap</a><a href="/guide/api/pos-platform/">APIs y datos</a></div></article>
+    <article id="presentations" class="destination"><span class="destination-number" aria-hidden="true">02</span><h2><a href="/presentations/">Presentaciones</a></h2><p>Propuestas del equipo en Reveal.js, con referencias y lectura complementaria.</p><span class="destination-meta">${catalog.presentations.length} ${catalog.presentations.length === 1 ? 'presentación disponible' : 'presentaciones disponibles'}</span></article>
+    <article id="materials" class="destination"><span class="destination-number" aria-hidden="true">03</span><h2><a href="/materials/">Fuentes de reuniones</a></h2><p>Cuestionarios, registros y antecedentes de Chile, Perú y España. Visualiza o descarga los originales.</p><span class="destination-meta">${catalog.materials.filter(item => item.kind !== 'proposal').length} fuentes catalogadas</span></article>
+    <article id="team" class="destination"><span class="destination-number" aria-hidden="true">04</span><h2><a href="/project/team/">Equipo de trabajo</a></h2><p>Personas, responsabilidades y trabajo asignado en GitHub.</p><div class="home-team">${teamMembers.map(member => `<a href="https://github.com/${escape(member.github)}" aria-label="GitHub de ${escape(member.name)}: @${escape(member.github)}"><img src="/portal/assets/team/${escape(member.avatar)}" width="40" height="40" alt="${escape(member.name)}" loading="lazy" decoding="async"></a>`).join('')}</div></article>
+  </section>`;
+  return renderSitePage({title:'Inicio', description:'Documentación, seguimiento, propuestas y fuentes de POS Platform.', pathname:'/', body, origin, repository, scripts:['/portal/portal.js']});
+}
+
+export function renderCatalogPages(catalog, repository) {
   const decks = catalog.presentations.map(deck => `<article class="presentation">
     <div class="presentation-cover" aria-hidden="true"><span>POS PLATFORM</span><strong>${escape(deck.title)}</strong><span>PROPUESTA · REVEAL.JS</span></div>
-    <div class="presentation-content"><p class="eyebrow">Presentación web · Reveal.js</p><h3>${escape(deck.title)}</h3><p>${escape(deck.description)}</p>
-    <div class="actions"><a class="button primary" href="${escape(deck.href)}">Abrir presentación</a><a class="text-link" href="${escape(deck.readingHref)}">Leer contenido</a></div></div>
+    <div class="presentation-content"><p class="eyebrow">Presentación web · Reveal.js</p><h2>${escape(deck.title)}</h2><p>${escape(deck.description)}</p>
+    <div class="actions"><a class="button secondary" href="${escape(deck.readingHref)}">Leer contenido</a><a class="button primary" href="${escape(deck.href)}">Abrir presentación</a></div></div>
   </article>`).join('');
   const sources = catalog.materials.filter(item => item.kind !== 'proposal');
   const proposalFiles = catalog.materials.filter(item => item.kind === 'proposal');
   const materials = sources.map(item => downloadItem(item)).join('');
   const formats = [...new Set(sources.map(item => item.format))].sort();
   const countries = [...new Set(sources.map(item => item.country).filter(Boolean))].sort((a,b) => countryNames[a].localeCompare(countryNames[b], 'es'));
-  return `<!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>POS Platform · Documentación y presentaciones</title><meta name="description" content="Documentación técnica, presentaciones Reveal.js y materiales de referencia de POS Platform, en el repositorio de Implementos.">
-<link rel="canonical" href="${escape(origin)}/"><meta property="og:title" content="POS Platform · Documentación y presentaciones"><meta property="og:description" content="Arquitectura, decisiones y materiales de trabajo de POS Platform."><meta property="og:url" content="${escape(origin)}/"><meta property="og:type" content="website">
-<link rel="icon" href="/portal/assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/portal/portal.css"><script type="module" src="/portal/portal.js"></script></head>
-<body><a class="skip-link" href="#main">Saltar al contenido</a>
-<header class="site-header"><div class="header-inner"><a class="brand" href="/" aria-label="POS Platform, inicio"><img src="/portal/assets/logo.svg" width="148" height="50" alt="Implementos"><span>POS Platform</span></a>
-<nav aria-label="Navegación principal"><a href="/guide/">Documentación</a><a href="/guide/project-status/">Estado y pendientes</a><a href="#presentations">Propuestas</a><a href="#materials">Fuentes</a><a href="#team">Equipo</a></nav></div></header>
-<main id="main" tabindex="-1">
-<div class="intro"><p class="eyebrow">IMPLEMENTOS · POS PLATFORM</p><h1>Documentación y recursos</h1><p class="lead">La arquitectura del producto, las propuestas del equipo y las fuentes de reuniones que explican las necesidades de cada país.</p></div>
-${renderProgress(progress, followUp)}
-<section class="resource-section" aria-labelledby="documentation-title"><div class="section-heading"><span class="section-number" aria-hidden="true">01</span><div><h2 id="documentation-title">Documentación técnica</h2><p>La referencia para entender y desarrollar la plataforma.</p></div></div>
-<div class="documentation"><div class="documentation-intro"><p class="eyebrow">GUÍA STARLIGHT</p><h3>De la propuesta<br>a la implementación.</h3><p>Arquitectura, límites del monorepo, decisiones y evidencia del sistema actual, organizados por tema.</p><a class="button light" href="/guide/">Explorar documentación</a></div>
-<ul class="guide-paths"><li><a href="/guide/overview/">Visión general</a><p>Alcance corporativo y responsabilidades de cada pieza.</p></li><li><a href="/guide/diagrams/">Arquitectura y recorridos interactivos</a><p>Aplicaciones, conexiones y operaciones con detalle bajo demanda.</p></li><li><a href="/guide/implementation/monorepo/">Estructura e implementación</a><p>Aplicaciones, bibliotecas y estado del código.</p></li><li><a href="/guide/api/pos-platform/">Contratos y datos del POS</a><p>APIs y esquemas derivados de una revisión del producto. <a href="/guide/flows/">Seguir una operación</a>.</p></li><li><a href="/guide/proposal/roadmap/">Roadmap detallado de entrega</a><p>Entregables por aplicación, dependencias y pruebas para aceptar cada fase.</p></li></ul></div></section>
-<section id="presentations" class="resource-section" aria-labelledby="presentations-title"><div class="section-heading"><span class="section-number" aria-hidden="true">02</span><div><h2 id="presentations-title">Propuestas</h2><p>Diseño objetivo y plan de evolución elaborados por el equipo.</p></div></div>${decks || '<p>Todavía no hay presentaciones publicadas.</p>'}
+  return new Map([
+    ['/presentations/', {title:'Presentaciones', description:'Propuestas del equipo en Reveal.js y documentos de propuesta.', active:'presentations', body:`<section id="presentations" class="resource-section" aria-labelledby="presentations-title"><div class="section-heading"><div><h1 id="presentations-title">Presentaciones</h1><p>Diseño objetivo y plan de evolución elaborados por el equipo.</p></div></div>${decks || '<p>Todavía no hay presentaciones publicadas.</p>'}
 ${proposalFiles.length ? `<ul class="proposal-downloads" aria-label="Documentos de propuesta">${proposalFiles.map(item => downloadItem(item, true)).join('')}</ul>` : ''}
 <p class="section-note">Las propuestas tienen su propio estado de revisión. Los acuerdos se registran en <a href="/guide/proposal/decisions/">Decisiones y validación</a>.</p></section>
-<section id="materials" class="resource-section" aria-labelledby="materials-title"><div class="section-heading"><span class="section-number" aria-hidden="true">03</span><div><h2 id="materials-title">Fuentes de reuniones</h2><p>Registros, cuestionarios y antecedentes recibidos del equipo.</p></div></div>
+`}],
+    ['/materials/', {title:'Fuentes de reuniones', description:'Registros, cuestionarios y antecedentes de Chile, Perú y España.', active:'materials', scripts:['/portal/portal.js'], body:`<section id="materials" class="resource-section" aria-labelledby="materials-title"><div class="section-heading"><div><h1 id="materials-title">Fuentes de reuniones</h1><p>Registros, cuestionarios y antecedentes recibidos del equipo.</p></div></div>
 <p class="materials-notice">Los originales conservan lo registrado o consultado en cada revisión. Un cuestionario no implica que todas sus preguntas estén respondidas ni que sus requisitos estén aprobados.</p>
-<aside class="source-summary" aria-labelledby="summary-title"><div><p class="eyebrow">SÍNTESIS APORTADA</p><h3 id="summary-title">Síntesis comparativa por país</h3><p>El resumen de Chile, Perú y España, con la imagen original y una versión legible. Su contenido se distingue de las fuentes originales y de la propuesta de solución.</p></div><a class="text-link" href="/guide/evidence/country-comparison/">Leer resumen comparativo</a></aside>
+<aside class="source-summary" aria-labelledby="summary-title"><div><p class="eyebrow">SÍNTESIS APORTADA</p><h2 id="summary-title">Síntesis comparativa por país</h2><p>El resumen de Chile, Perú y España, con la imagen original y una versión legible. Su contenido se distingue de las fuentes originales y de la propuesta de solución.</p></div><a class="text-link" href="/guide/evidence/country-comparison/">Leer resumen comparativo</a></aside>
 <form class="filters" role="search" aria-label="Buscar fuentes de reuniones" data-filters hidden><div class="search-field"><label for="material-query">Buscar fuente</label><input id="material-query" type="search" placeholder="Título, tema o descripción" autocomplete="off"></div><div><label for="material-format">Formato</label><select id="material-format"><option value="">Todos los formatos</option>${formats.map(format => `<option value="${escape(format)}">${escape(format.toUpperCase())}</option>`).join('')}</select></div><div><label for="material-country">País</label><select id="material-country"><option value="">Todos los países</option>${countries.map(country => `<option value="${country}">${countryNames[country]}</option>`).join('')}</select></div><button type="reset" class="button secondary">Limpiar</button></form>
 <p class="result-count" aria-live="polite" aria-atomic="true" data-count>${sources.length} fuentes</p><ul class="materials-list">${materials}</ul>
 <div class="empty-state" data-empty hidden><h3>No hay fuentes con esos filtros</h3><p>Prueba otra búsqueda o limpia los filtros.</p></div>
 <div class="contribute"><div><h3>¿Un nuevo documento del equipo?</h3><p>Identifica su país, contexto y fecha conocida, y clasifícalo como fuente original, síntesis o propuesta, independientemente de su formato.</p></div><a class="text-link" href="${escape(repository)}/blob/main/materials/README.md">Cómo añadir materiales</a></div></section>
-<section id="team" class="resource-section" aria-labelledby="team-title"><div class="section-heading"><span class="section-number" aria-hidden="true">04</span><h2 id="team-title">Equipo de trabajo</h2></div>
-<ul class="team-list" role="list">${teamMembers.map(member => `<li><img class="team-avatar" src="/portal/assets/team/${escape(member.avatar)}" width="56" height="56" alt="" loading="lazy" decoding="async"><div class="team-member-info"><p class="team-name">${escape(member.name)}</p><p class="team-role">${escape(member.role)}</p><p class="team-profile"><a class="text-link" href="https://github.com/${escape(member.github)}" aria-label="GitHub de ${escape(member.name)}: @${escape(member.github)}">@${escape(member.github)}</a></p></div></li>`).join('')}</ul></section>
-</main><footer><div class="footer-inner"><p><strong>POS Platform</strong><span>Documentación de Implementos</span></p><a class="text-link" href="${escape(repository)}">Repositorio pos-docs</a></div></footer></body></html>`;
+<noscript><p>Se muestran todas las fuentes. Los filtros requieren JavaScript; las descargas y el acceso a los documentos siguen disponibles.</p></noscript>`}],
+  ]);
 }

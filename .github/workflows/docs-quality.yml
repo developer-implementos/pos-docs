@@ -39,6 +39,7 @@ jobs:
       - run: npm run roadmap:check
       - run: npm run portal:check
       - run: npm run follow-up:check
+      - run: npm run project:check
       - run: npm run viewer:check
       - run: npm run reference:check
       - run: npm run explore:check
@@ -52,6 +53,7 @@ jobs:
             test-results-presentations/
             test-results-portal/
             test-results-follow-up/
+            test-results-project/
             test-results-roadmap/
             test-results-viewer/
             test-results-reference/

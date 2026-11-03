@@ -6,71 +6,55 @@ import {createRequire} from 'node:module';
 import {loadProgress} from './progress.mjs';
 import {loadFollowUp} from './follow-up.mjs';
 
-const root=fileURLToPath(new URL('../',import.meta.url));
-const require=createRequire(path.join(root,'apps/starlight/package.json'));
-const {chromium}=require('playwright');
-const {servePublic}=require(path.join(root,'apps/starlight/scripts/serve.cjs'));
-const model=loadFollowUp(root,loadProgress(root));
-const output=path.join(root,'test-results-follow-up');
-fs.mkdirSync(output,{recursive:true});
-const server=await servePublic(0);
-const origin=`http://127.0.0.1:${server.address().port}`;
-const browser=await chromium.launch({headless:true});
+const root = fileURLToPath(new URL('../', import.meta.url));
+const require = createRequire(path.join(root, 'apps/starlight/package.json'));
+const {chromium} = require('playwright');
+const {servePublic} = require(path.join(root, 'apps/starlight/scripts/serve.cjs'));
+const model = loadFollowUp(root, loadProgress(root));
+const output = path.join(root, 'test-results-follow-up');
+fs.mkdirSync(output, {recursive: true});
+const server = await servePublic(0);
+const origin = `http://127.0.0.1:${server.address().port}`;
+const browser = await chromium.launch({headless: true});
 try {
-  const page=await browser.newPage({viewport:{width:1440,height:1000},reducedMotion:'reduce'});
-  const failures=[];
-  page.on('pageerror',error=>failures.push(error.message));
-  page.on('console',message=>{if(message.type()==='error') failures.push(message.text());});
-  const external=[];
-  page.on('request',request=>{if(!request.url().startsWith(origin)&&!request.url().startsWith('data:'))external.push(request.url());});
-  const response=await page.goto(origin+'/guide/project-status/',{waitUntil:'networkidle'});
-  assert.equal(response.status(),200);
-  assert.equal(await page.locator('[data-work]').count(),model.workPackages.length);
-  assert.equal(await page.locator('[data-action]:visible').count(),model.counts.open);
-  const workForm=page.locator('[data-work-filters]');
-  const contrast=await workForm.getByRole('button',{name:'Limpiar'}).evaluate(button=>{
-    const css=getComputedStyle(button);
-    const luminance=color=>color.match(/[\d.]+/g).slice(0,3).map(Number).map(value=>value/255).map(value=>value<=.04045?value/12.92:((value+.055)/1.055)**2.4).reduce((sum,value,index)=>sum+value*[.2126,.7152,.0722][index],0);
-    const foreground=luminance(css.color),background=luminance(css.backgroundColor);
-    return (Math.max(foreground,background)+.05)/(Math.min(foreground,background)+.05);
-  });
-  assert.ok(contrast>=4.5,`Filter reset text has sufficient contrast (${contrast})`);
-  await workForm.locator('[name=phase]').selectOption('phase-02');
-  await workForm.locator('[name=status]').selectOption('remaining');
-  const expected=model.workPackages.filter(work=>work.phase==='phase-02'&&work.status!=='verified');
-  assert.equal(await page.locator('[data-work]:visible').count(),expected.length);
-  await workForm.locator('[name=query]').fill('zz-no-coincide');
-  assert.ok(await page.locator('[data-work-empty]').isVisible());
-  await workForm.getByRole('button',{name:'Limpiar'}).click();
-  await page.waitForFunction(total=>document.querySelectorAll('[data-work]:not([hidden])').length===total,model.workPackages.length);
-  assert.equal(await page.locator('[data-work]:visible').count(),model.workPackages.length);
-  const actions=page.locator('[data-action-filters]');
-  await actions.locator('[name=scope]').selectOption('operational');
-  assert.equal(await page.locator('[data-action]:visible').count(),model.counts.operational);
-  await actions.locator('[name=kind]').selectOption('access');
-  assert.ok(await page.locator('[data-action-empty]').isVisible());
-  const first=model.items[0];
-  await page.evaluate(id=>{location.hash=id;},first.id.toLowerCase());
-  await page.waitForFunction(id=>!document.getElementById(id).hidden,first.id.toLowerCase());
-  assert.ok(await page.locator('#'+first.id.toLowerCase()).isVisible(),'Permalinks reveal filtered entries');
-  const summary=page.locator('#'+first.id.toLowerCase()+' summary');
-  await summary.focus();await page.keyboard.press('Enter');
-  assert.ok(await summary.locator('..').getAttribute('open')!==null);
-  await page.screenshot({path:path.join(output,'desktop.png')});
-  for(const width of [390,320]) {
-    await page.setViewportSize({width,height:844});
-    assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`No page overflow at ${width}px`);
-    assert.ok(await actions.locator('[name=kind]').evaluate(el=>el.getBoundingClientRect().height>=44));
+  const page = await browser.newPage({viewport: {width: 1440, height: 1000}, reducedMotion: 'reduce'});
+  const failures = [];
+  page.on('pageerror', error => failures.push(error.message));
+  page.on('console', message => { if (message.type() === 'error') failures.push(message.text()); });
+  const firstWork = model.workPackages[0];
+  const firstAction = model.items[0];
+  for (const [old, target] of [
+    ['', '/project/'],
+    ['#work-title', '/project/work/'],
+    ['#actions-title', '/project/attention/'],
+    [`#work-${firstWork.id.toLowerCase()}`, `/project/work/#work-${firstWork.id.toLowerCase()}`],
+    [`#${firstAction.id.toLowerCase()}`, `/project/attention/#${firstAction.id.toLowerCase()}`],
+    ['?phase=phase-02&status=remaining', '/project/work/?phase=phase-02&status=remaining'],
+    ['?query=F01', '/project/work/?query=F01'],
+    ['?scope=operational&state=open', '/project/attention/?scope=operational&state=open'],
+  ]) {
+    await page.goto(`${origin}/guide/project-status/${old}`, {waitUntil: 'networkidle'});
+    await page.waitForURL(origin + target);
+    assert.equal(page.url(), origin + target, `Historical URL retains its destination: ${old}`);
+    if (target.includes('#')) assert.ok(await page.locator(target.slice(target.indexOf('#'))).isVisible());
   }
-  await page.screenshot({path:path.join(output,'mobile.png')});
-  assert.deepEqual(failures,[],'No browser or CSP errors');
-  assert.deepEqual(external,[],'No private or external service consulted at runtime');
-  const noJs=await browser.newContext({javaScriptEnabled:false});
-  const fallback=await noJs.newPage();
-  await fallback.goto(origin+'/guide/project-status/');
-  assert.equal(await fallback.locator('[data-work]:visible').count(),model.workPackages.length);
-  assert.equal(await fallback.locator('[data-action]:visible').count(),model.items.length);
-  assert.ok(await fallback.locator('[data-work-filters]').isHidden());
+  await page.screenshot({path: path.join(output, 'permalink.png')});
+  const noJs = await browser.newContext({javaScriptEnabled: false});
+  const fallback = await noJs.newPage();
+  await fallback.goto(`${origin}/guide/project-status/`);
+  const expectedLinks = [
+    ...model.workPackages.map(work => [`work-${work.id.toLowerCase()}`, `/project/work/#work-${work.id.toLowerCase()}`]),
+    ...model.items.map(action => [action.id.toLowerCase(), `/project/attention/#${action.id.toLowerCase()}`]),
+  ];
+  for (const [id, href] of expectedLinks) assert.equal(await fallback.locator(`#${id} a`).getAttribute('href'), href);
+  await fallback.locator('[data-project-migration] summary').click();
+  await fallback.locator(`#work-${firstWork.id.toLowerCase()} a`).click();
+  assert.equal(new URL(fallback.url()).pathname, '/project/work/');
+  assert.ok(await fallback.locator(`#work-${firstWork.id.toLowerCase()}`).isVisible());
+  assert.deepEqual(failures, [], 'Historical route has no browser or CSP errors');
   await noJs.close();
-  console.log(`Follow-up browser checks passed: ${model.workPackages.length} deliverables, filters, permalinks, keyboard, 320/390px, CSP, no external requests and no-JS content.`);
-} finally {await browser.close();await new Promise(resolve=>server.close(resolve));}
+  console.log(`Follow-up compatibility passed: redirects, filters and ${expectedLinks.length} historical permalinks with no-JS fallback.`);
+} finally {
+  await browser.close();
+  await new Promise(resolve => server.close(resolve));
+}

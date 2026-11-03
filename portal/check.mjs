@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { docsOrigin } from '../apps/starlight/site-config.mjs';
 import { loadCatalog } from './catalog.mjs';
 import { loadProgress } from './progress.mjs';
-import { formatProgressPercent } from './progress-view.mjs';
+import { loadFollowUp } from './follow-up.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const require = createRequire(path.join(root, 'apps/starlight/package.json'));
@@ -15,6 +15,7 @@ const { chromium } = require('playwright');
 const { servePublic } = require(path.join(root, 'apps/starlight/scripts/serve.cjs'));
 const catalog = loadCatalog(root);
 const progress = loadProgress(root);
+const followUp = loadFollowUp(root, progress);
 const sourceMaterials = catalog.materials.filter(item => item.kind !== 'proposal');
 const proposalMaterials = catalog.materials.filter(item => item.kind === 'proposal');
 const comparisonHref = '/guide/evidence/country-comparison/';
@@ -26,9 +27,10 @@ const comparisonSourceIds = [
 const results = path.join(root, 'test-results-portal');
 fs.mkdirSync(results, { recursive: true });
 
-const report = { checks: [], links: [], materials: [], screenshots: [], browserErrors: [], failedRequests: [] };
+const report = { checks: [], links: [], materials: [], screenshots: [], browserErrors: [], failedRequests: [], expectedRedirectCancellations: [] };
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 const sorted = values => [...values].sort();
+const formatProgressPercent = value => new Intl.NumberFormat('es-CL', {maximumFractionDigits:1}).format(value);
 const mime = {
   pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
   docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -37,16 +39,56 @@ const mime = {
 const server = await servePublic(0);
 const origin = `http://127.0.0.1:${server.address().port}`;
 let browser;
+const observations = new WeakMap();
+const redirectAssets = new Set(['/portal/assets/Inter-Regular.ttf', '/portal/assets/Inter-Bold.ttf']);
 
 function observe(page) {
+  const state = { redirectFrom: null, redirectRequests: new WeakMap() };
+  observations.set(page, state);
   page.on('pageerror', error => report.browserErrors.push(error.message));
   page.on('console', message => {
     if (message.type() === 'error') report.browserErrors.push(message.text());
   });
-  page.on('requestfailed', request => report.failedRequests.push(`${request.failure()?.errorText}: ${request.url()}`));
+  page.on('request', request => {
+    if (!state.redirectFrom || !['image', 'font'].includes(request.resourceType())) return;
+    const url = new URL(request.url());
+    if (request.frame().url() === state.redirectFrom && url.origin === origin && redirectAssets.has(url.pathname)) {
+      state.redirectRequests.set(request, state.redirectFrom);
+    }
+  });
+  page.on('requestfailed', request => {
+    const failure = request.failure()?.errorText;
+    const redirectedDocument = state.redirectRequests.get(request);
+    if (failure === 'net::ERR_ABORTED' && redirectedDocument) {
+      report.expectedRedirectCancellations.push({ document: redirectedDocument, resource: request.url() });
+      return;
+    }
+    report.failedRequests.push(`${failure}: ${request.url()}`);
+  });
   page.on('response', response => {
     if (response.status() >= 400) report.failedRequests.push(`${response.status()}: ${response.url()}`);
   });
+}
+
+async function settlePage(page) {
+  await page.waitForLoadState('networkidle');
+  await page.evaluate(async () => { await document.fonts.ready; });
+  await page.waitForLoadState('networkidle');
+}
+
+async function followLegacyRedirect(page, source, destination, navigate) {
+  const state = observations.get(page);
+  const from = new URL(source, origin);
+  assert.ok(from.origin === origin && from.pathname === '/' && ['#materials', '#presentations'].includes(from.hash));
+  await settlePage(page);
+  state.redirectFrom = from.href;
+  try {
+    await navigate();
+    await page.waitForURL(origin + destination, { waitUntil: 'networkidle' });
+    await settlePage(page);
+  } finally {
+    state.redirectFrom = null;
+  }
 }
 
 async function visibleMaterials(page) {
@@ -98,67 +140,71 @@ try {
   assert.equal(await page.getByRole('main').count(), 1);
   assert.equal(await page.getByRole('navigation', { name: 'Navegación principal' }).count(), 1);
   assert.equal(await page.locator('script:not([src])').count(), 0, 'Portal scripts are externalized');
+  for (const href of await page.locator('img[src]').evaluateAll(nodes => nodes.map(node => node.getAttribute('src')))) {
+    const url = new URL(href, origin);
+    if (url.origin === origin && url.pathname.startsWith('/portal/assets/')) redirectAssets.add(url.pathname);
+  }
   report.checks.push('Root response, security headers, canonical URL and landmarks');
 
   const progressSection = page.locator('#progress');
-  assert.equal(await progressSection.getByRole('heading', { name: 'Avance del proyecto', exact: true }).count(), 1);
+  assert.equal(await progressSection.getByRole('heading', { name: 'El proyecto, de un vistazo', exact: true }).count(), 1);
   const measured = progress.measurement === 'verification' ? 'verificados' : 'aceptados';
-  assert.equal(await progressSection.getAttribute('data-measurement'), progress.measurement);
-  const overall = progressSection.getByRole('progressbar', { name: `Entregables ${measured} del proyecto`, exact: true });
-  assert.equal(await overall.getAttribute('max'), String(progress.total));
-  assert.equal(await overall.getAttribute('value'), String(progress.completed));
-  assert.equal(await progressSection.locator('[data-progress-app]').count(), progress.applications.length);
-  for (const app of progress.applications) {
-    const row = progressSection.locator(`[data-progress-app="${app.id}"]`);
-    assert.equal(await row.getByRole('progressbar').getAttribute('value'), String(app.completed));
-    assert.equal(await row.getByRole('progressbar').getAttribute('max'), String(app.total));
-    assert.equal((await row.locator('.progress-app-value strong').textContent()).trim(), `${formatProgressPercent(app.percent)} %`);
+  const completed = progressSection.locator(`a[href="/project/work/?status=${progress.measurement === 'verification' ? 'verified' : 'accepted'}"]`);
+  assert.equal((await completed.locator('strong').textContent()).trim(), `${formatProgressPercent(progress.percent)} %`);
+  assert.equal((await completed.locator('span').textContent()).trim(), `${progress.completed}/${progress.total} entregables ${measured}`);
+  assert.equal(await progressSection.locator('a[href="/project/work/?status=in_progress"] strong').textContent(), String(progress.counts.in_progress));
+  assert.equal(await progressSection.locator('a[href="/project/attention/?state=open"] strong').textContent(), String(followUp.items.filter(item => item.state === 'open').length));
+  assert.equal(await progressSection.locator('time').getAttribute('datetime'), progress.reviewedOn);
+  assert.ok(await progressSection.getByRole('link', { name: 'Ver proyecto', exact: true }).isVisible());
+  assert.match(await progressSection.innerText(), /revisiones humanas se consultan por separado/);
+  assert.equal(await page.locator('[data-progress-app], [data-progress-phase], .progress-work-list, [data-material], .presentation, a[download]').count(), 0, 'The home page keeps detailed progress and catalogs on their own pages');
+  for (const [id, href] of [['presentations', '/presentations/'], ['materials', '/materials/'], ['team', '/project/team/']]) {
+    assert.ok(await page.locator(`#${id} a[href="${href}"]`).isVisible(), `The home destination remains useful without a full list: ${href}`);
   }
-  assert.equal(await progressSection.locator('[data-progress-phase]').count(), progress.phases.length);
-  for (const phase of progress.phases) {
-    const row = progressSection.locator(`[data-progress-phase="${phase.id}"]`);
-    assert.equal(await row.locator('a').getAttribute('href'), phase.href);
-    assert.equal((await row.locator('strong').textContent()).trim(), `${formatProgressPercent(phase.percent)} %`);
-    assert.equal((await row.locator('div>span').textContent()).trim(), `${phase.completed} de ${phase.total} ${measured}`);
-  }
-  if (progress.measurement === 'verification') {
-    assert.deepEqual(await progressSection.locator('.progress-manual strong').allTextContents(), [String(progress.accepted), String(progress.pendingAcceptance)]);
-    assert.equal(await progressSection.locator('.progress-manual progress').count(), 0, 'Manual review is not a second completion bar');
-  } else {
-    assert.equal(await progressSection.locator('.progress-manual').count(), 0);
-    assert.match(await progressSection.locator('.progress-legacy-note').textContent(), /esquema 1/);
-  }
-  const method = progressSection.locator('summary');
-  await method.focus();
-  await page.keyboard.press('Enter');
-    assert.ok(await progressSection.getByRole('link', {name:'Consultar el estado y los pendientes de cada entregable'}).isVisible());
-    assert.equal(await progressSection.locator('.progress-work-list').count(), 0);
-  await page.keyboard.press('Enter');
-    assert.ok(await progressSection.getByRole('link', {name:'Consultar el estado y los pendientes de cada entregable'}).isHidden());
-    assert.ok(await progressSection.getByRole('link', {name:'Ver pendientes y bloqueos'}).isVisible());
-  report.checks.push('Pinned project/app/phase progress, independent manual acceptance and keyboard-operated methodology');
+  report.checks.push('Compact home with derived progress, review date, filtered detail links and separate human review');
 
-  const references = await page.locator('a[href], link[href], script[src], img[src]').evaluateAll(nodes => nodes.map(node => ({
-    tag: node.tagName,
-    href: node.getAttribute('href') || node.getAttribute('src'),
-  })));
+  const presentationsPage = await context.newPage();
+  observe(presentationsPage);
+  const materialsPage = await context.newPage();
+  observe(materialsPage);
   const local = new Set(['/guide/', comparisonHref, ...catalog.presentations.flatMap(deck => [deck.href, deck.readingHref])]);
-  for (const reference of references) {
-    const url = new URL(reference.href, origin);
-    if (url.origin !== origin) continue;
-    if (url.pathname === '/' && url.hash) {
-      assert.equal(await page.locator('[id]').evaluateAll((nodes, id) => nodes.filter(node => node.id === id).length, decodeURIComponent(url.hash.slice(1))), 1, `Anchor resolves: ${reference.href}`);
-    } else {
-      local.add(url.pathname + url.search);
+  for (const [surface, pathname, active] of [[page, '/', null], [presentationsPage, '/presentations/', 'Presentaciones'], [materialsPage, '/materials/', 'Fuentes']]) {
+    const result = await surface.goto(origin + pathname, { waitUntil: 'networkidle' });
+    assert.equal(result.status(), 200, `Catalog/portal is served directly: ${pathname}`);
+    assert.equal(result.request().redirectedFrom(), null);
+    const policy = result.headers()['content-security-policy'] || '';
+    const scriptPolicy = policy.split(';').find(value => value.trim().startsWith('script-src ')) || '';
+    assert.match(scriptPolicy, /'self'/u);
+    assert.doesNotMatch(scriptPolicy, /unsafe-inline|unsafe-eval|wasm-unsafe-eval/u);
+    assert.equal(result.headers()['x-content-type-options'], 'nosniff');
+    assert.equal(await surface.locator('link[rel="canonical"]').getAttribute('href'), docsOrigin + pathname);
+    assert.equal(await surface.locator('meta[property="og:url"]').getAttribute('content'), docsOrigin + pathname);
+    assert.equal(await surface.getByRole('heading', { level: 1 }).count(), 1);
+    assert.equal(await surface.getByRole('main').count(), 1);
+    assert.equal(await surface.getByRole('navigation', { name: 'Navegación principal' }).count(), 1);
+    assert.equal(await surface.locator('script:not([src])').count(), 0);
+    if (active) assert.equal(await surface.getByRole('navigation', { name: 'Navegación principal' }).getByRole('link', { name: active, exact: true }).getAttribute('aria-current'), 'page');
+    const references = await surface.locator('a[href], link[href], script[src], img[src]').evaluateAll(nodes => nodes.map(node => node.getAttribute('href') || node.getAttribute('src')));
+    for (const reference of references) {
+      const url = new URL(reference, origin + pathname);
+      if (url.origin !== origin) continue;
+      if (url.pathname === pathname && url.hash) {
+        assert.equal(await surface.locator('[id]').evaluateAll((nodes, id) => nodes.filter(node => node.id === id).length, decodeURIComponent(url.hash.slice(1))), 1, `Anchor resolves: ${pathname}${reference}`);
+      } else {
+        local.add(url.pathname + url.search);
+      }
     }
   }
+  await settlePage(materialsPage);
+  await materialsPage.close();
+  await page.goto(origin + '/materials/', { waitUntil: 'networkidle' });
   for (const href of local) {
     const result = await context.request.get(origin + href, { maxRedirects: 0 });
     assert.equal(result.status(), 200, `Local resource resolves directly: ${href}`);
     report.links.push(href);
     await result.dispose();
   }
-  report.checks.push('Every portal link, local asset, Starlight entry and local Reveal/reading page');
+  report.checks.push('Home and catalog security/landmarks, active navigation, every local link, asset and Reveal/reading page');
 
   for (const href of [
     '/presentations/architecture/downloads/Implementos-POS-Platform-Arquitectura-y-Roadmap.pptx',
@@ -173,17 +219,21 @@ try {
 
   assert.deepEqual(sorted(catalog.materials.map(item => item.id)), sorted(comparisonSourceIds), 'All seven historical and meeting originals remain published');
   assert.ok(sourceMaterials.length && catalog.presentations.length, 'The portal distinguishes original sources from Reveal proposals without requiring a downloadable proposal');
-  const proposals = page.locator('#presentations');
+  const proposals = presentationsPage.locator('#presentations');
   const sources = page.locator('#materials');
-  assert.equal(await proposals.getByRole('heading', { name: 'Propuestas', exact: true, level: 2 }).count(), 1);
-  assert.equal(await sources.getByRole('heading', { name: 'Fuentes de reuniones', exact: true, level: 2 }).count(), 1);
-  assert.deepEqual(await downloadHrefs(page.locator('a[download]')), sorted(catalog.materials.map(item => item.href)), 'Every catalog original has exactly one download link');
+  assert.equal(await proposals.getByRole('heading', { name: 'Presentaciones', exact: true, level: 1 }).count(), 1);
+  assert.equal(await sources.getByRole('heading', { name: 'Fuentes de reuniones', exact: true, level: 1 }).count(), 1);
+  assert.deepEqual(sorted([...(await downloadHrefs(page.locator('a[download]'))), ...(await downloadHrefs(presentationsPage.locator('a[download]')))]), sorted(catalog.materials.map(item => item.href)), 'Every catalog original has exactly one download link across its dedicated catalogs');
   assert.deepEqual(await downloadHrefs(proposals.locator('a[download]')), sorted(proposalMaterials.map(item => item.href)), 'Proposal originals appear only with proposals');
   assert.deepEqual(await downloadHrefs(proposals.locator('a[download][data-proposal-download]')), sorted(proposalMaterials.map(item => item.href)), 'Proposal downloads have their own semantic marker');
   assert.deepEqual(await downloadHrefs(sources.locator('a[download]')), sorted(sourceMaterials.map(item => item.href)), 'Source downloads contain every retained historical and meeting original');
   for (const proposal of proposalMaterials) assert.equal(await sources.locator(`a[href="${proposal.href}"]`).count(), 0, `Proposal has no link in meeting sources: ${proposal.id}`);
   assert.equal(await sources.locator('[data-material]').count(), sourceMaterials.length, 'Only original sources are filterable material rows');
   assert.equal(await proposals.locator('[data-material]').count(), 0, 'Proposals are outside source filtering');
+  for (const deck of catalog.presentations) {
+    assert.ok(await proposals.locator(`a[href="${deck.href}"]`).isVisible(), `Published presentation remains visible: ${deck.id}`);
+    assert.ok(await proposals.locator(`a[href="${deck.readingHref}"]`).isVisible(), `Published reading page remains visible: ${deck.id}`);
+  }
   await assertSources(page, sourceMaterials, 'All source documents are initially visible');
   const docxSources = sourceMaterials.filter(item => item.format === 'docx' && ['meeting', 'questionnaire'].includes(item.kind));
   for (const id of comparisonSourceIds.slice(1)) {
@@ -208,16 +258,21 @@ try {
   assert.equal((await summaryPage.goto(origin + comparisonHref, { waitUntil: 'networkidle' })).status(), 200, 'The comparative synthesis is published in Starlight');
   const summaryContent = summaryPage.locator('.sl-markdown-content');
   const summaryLinks = await summaryContent.locator('a[href]').evaluateAll(nodes => nodes.map(node => node.getAttribute('href')));
-  assert.ok(summaryLinks.includes('/#materials'), 'The synthesis points back to portal sources, not their GitHub directory');
+  const summaryReturn = summaryLinks.includes('/materials/') ? '/materials/' : '/#materials';
+  assert.ok(summaryLinks.includes(summaryReturn), 'The synthesis points back to the source catalog or its compatible legacy anchor, not GitHub');
   for (const id of comparisonSourceIds) {
     const item = sourceMaterials.find(item => item.id === id);
     assert.ok(item, `The comparative synthesis retains its source: ${id}`);
     assert.ok(summaryLinks.includes(item.href), `The synthesis links the local published original: ${item.id}`);
   }
   assert.ok(!summaryLinks.some(href => /github\.com\/[^/]+\/[^/]+\/(?:blob|tree)\/[^/]+\/(?:materials\/|#materials$)/u.test(href)), 'Published source links and portal anchors are not rewritten to GitHub');
-  await summaryContent.locator('a[href="/#materials"]').first().click();
-  await summaryPage.waitForURL(origin + '/#materials');
-  assert.ok(await summaryPage.locator('#materials').isVisible(), 'Following the synthesis source link reaches the portal source section');
+  if (summaryReturn === '/#materials') {
+    await followLegacyRedirect(summaryPage, summaryReturn, '/materials/', () => summaryContent.locator(`a[href="${summaryReturn}"]`).first().click());
+  } else {
+    await summaryContent.locator(`a[href="${summaryReturn}"]`).first().click();
+    await summaryPage.waitForURL(origin + '/materials/', { waitUntil: 'networkidle' });
+  }
+  assert.ok(await summaryPage.locator('#materials').isVisible(), 'Following the synthesis source link reaches the dedicated source catalog');
   assert.equal((await summaryPage.goto(origin + comparisonHref, { waitUntil: 'networkidle' })).status(), 200);
   const summaryImages = new Set(await summaryPage.locator('img[src]').evaluateAll(nodes => nodes.map(node => node.getAttribute('src'))));
   for (const image of summaryImages) {
@@ -229,6 +284,7 @@ try {
     report.links.push(url.pathname + url.search);
     await resource.dispose();
   }
+  await settlePage(summaryPage);
   await summaryPage.close();
   report.checks.push('Country synthesis page, local original-source destinations, working portal return and local image resources');
 
@@ -245,9 +301,10 @@ try {
     assert.equal(sha256(body), sha256(source), `Served original is unchanged: ${item.source}`);
     await resource.dispose();
 
-    const link = page.getByRole('link', { name: `Descargar ${item.title} (${item.format.toUpperCase()})`, exact: true });
+    const downloadPage = item.kind === 'proposal' ? presentationsPage : page;
+    const link = downloadPage.getByRole('link', { name: `Descargar ${item.title} (${item.format.toUpperCase()})`, exact: true });
     assert.equal(await link.getAttribute('href'), item.href, 'Download links have explicit accessible names');
-    const [download] = await Promise.all([page.waitForEvent('download'), link.click()]);
+    const [download] = await Promise.all([downloadPage.waitForEvent('download'), link.click()]);
     assert.equal(await download.failure(), null, `Browser download succeeds: ${item.source}`);
     assert.equal(download.suggestedFilename(), path.basename(item.source));
     assert.equal(sha256(fs.readFileSync(await download.path())), sha256(source), `Browser download preserves bytes: ${item.source}`);
@@ -256,7 +313,7 @@ try {
   }
   report.checks.push('All materials: catalog, built file, HTTP bytes, MIME and browser downloads');
 
-  await page.goto(origin + '/', { waitUntil: 'networkidle' });
+  await page.goto(origin + '/materials/', { waitUntil: 'networkidle' });
   const form = page.getByRole('search', { name: 'Buscar fuentes de reuniones' });
   await form.waitFor({ state: 'visible' });
   const query = form.getByRole('searchbox', { name: 'Buscar fuente', exact: true });
@@ -326,58 +383,100 @@ try {
   await format.selectOption(intersectionSource.format);
   await country.selectOption(intersectionSource.country);
   await assertSources(page, [intersectionSource], 'Search, format and country intersect to one source');
+  const filtered = new URL(page.url());
+  assert.equal(filtered.pathname, '/materials/');
+  assert.equal(filtered.searchParams.get('q'), intersectionSource.title);
+  assert.equal(filtered.searchParams.get('format'), intersectionSource.format);
+  assert.equal(filtered.searchParams.get('country'), intersectionSource.country);
+  await page.reload({ waitUntil: 'networkidle' });
+  assert.equal(await query.inputValue(), intersectionSource.title);
+  assert.equal(await format.inputValue(), intersectionSource.format);
+  assert.equal(await country.inputValue(), intersectionSource.country);
+  await assertSources(page, [intersectionSource], 'A shared or reloaded catalog URL restores all filters');
   const otherCountry = countries.find(value => value !== intersectionSource.country);
   assert.ok(otherCountry, 'There is another country to test a nonmatching intersection');
   await country.selectOption(otherCountry);
   await assertSources(page, [], 'A mismatched country excludes the matching query and format');
   assert.ok(await page.locator('[data-empty]').isVisible());
   assert.ok(await page.locator(`#materials a[href="${comparisonHref}"]`).isVisible(), 'Source filtering does not remove the synthesis');
-  assert.deepEqual(await downloadHrefs(page.locator('#presentations a[download]:visible')), sorted(proposalMaterials.map(item => item.href)), 'Source filters do not affect proposal downloads');
+  assert.deepEqual(await downloadHrefs(proposals.locator('a[download]:visible')), sorted(proposalMaterials.map(item => item.href)), 'Source filters do not affect proposal downloads in their catalog');
   await reset.click();
   await page.waitForFunction(() => ['material-query', 'material-format', 'material-country'].every(id => document.getElementById(id).value === ''));
   await assertSources(page, sourceMaterials, 'Reset clears search, format and country together');
   assert.ok(await page.locator('[data-empty]').isHidden());
   assert.ok(await page.locator('.materials-list').isVisible());
-  report.checks.push('Accent/case-insensitive search, no-results announcement, format/country filters, combined intersection, singular count and complete reset');
+  assert.equal(new URL(page.url()).search, '', 'Reset also removes the shared filters from the URL');
+  report.checks.push('Accent/case-insensitive search, no-results announcement, combined filters, URL restoration, singular count and complete reset');
 
-  for (const width of [1440, 768, 375, 320]) {
-    await page.setViewportSize({ width, height: 1000 });
-    await page.evaluate(async () => { await document.fonts.ready; window.scrollTo(0, 0); });
-    const layout = await page.evaluate(() => ({
-      viewport: document.documentElement.clientWidth,
-      width: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth),
-      clipped: [...document.querySelectorAll('h1,h2,h3,p,a,input,select,button')].filter(node => {
-        if (!node.getClientRects().length || node.classList.contains('skip-link')) return false;
-        const box = node.getBoundingClientRect();
-        return box.left < -1 || box.right > document.documentElement.clientWidth + 1;
-      }).map(node => ({ tag: node.tagName, text: (node.textContent || node.getAttribute('aria-label') || '').trim().slice(0, 90) })),
-    }));
-    const filename = `portal-${width}.png`;
-    await page.screenshot({ path: path.join(results, filename), fullPage: true });
-    report.screenshots.push(filename);
-    assert.ok(layout.width <= layout.viewport + 1, `No horizontal overflow at ${width}px: ${JSON.stringify(layout)}`);
-    assert.deepEqual(layout.clipped, [], `No offscreen content/controls at ${width}px`);
+  for (const pathname of ['/', '/presentations/', '/materials/']) {
+    await page.goto(origin + pathname, { waitUntil: 'networkidle' });
+    for (const width of [1440, 768, 375, 320]) {
+      await page.setViewportSize({ width, height: 1000 });
+      await page.evaluate(async () => { await document.fonts.ready; window.scrollTo(0, 0); });
+      const layout = await page.evaluate(() => ({
+        viewport: document.documentElement.clientWidth,
+        width: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth),
+        clipped: [...document.querySelectorAll('h1,h2,h3,p,a,input,select,button')].filter(node => {
+          if (!node.getClientRects().length || node.classList.contains('skip-link')) return false;
+          const box = node.getBoundingClientRect();
+          return box.left < -1 || box.right > document.documentElement.clientWidth + 1;
+        }).map(node => ({ tag: node.tagName, text: (node.textContent || node.getAttribute('aria-label') || '').trim().slice(0, 90) })),
+      }));
+      const filename = `portal-${pathname.split('/').filter(Boolean).join('-') || 'home'}-${width}.png`;
+      await page.screenshot({ path: path.join(results, filename), fullPage: true });
+      report.screenshots.push(filename);
+      assert.ok(layout.width <= layout.viewport + 1, `${pathname}: no horizontal overflow at ${width}px: ${JSON.stringify(layout)}`);
+      assert.deepEqual(layout.clipped, [], `${pathname}: no offscreen content/controls at ${width}px`);
+    }
   }
-  report.checks.push('Responsive layout at 1440, 768, 375 and 320px with screenshots');
+  report.checks.push('Home and both catalogs at 1440, 768, 375 and 320px with responsive screenshots');
+
+  for (const [hash, destination] of [['presentations', '/presentations/'], ['materials', '/materials/']]) {
+    await followLegacyRedirect(page, `/#${hash}`, destination, () => page.goto(`${origin}/#${hash}`, { waitUntil: 'networkidle' }));
+    assert.ok(await page.locator(`#${hash}`).isVisible(), `Legacy /#${hash} reaches its dedicated catalog`);
+  }
+  const legacyFiltered = `/?country=${intersectionSource.country}#materials`;
+  await followLegacyRedirect(page, legacyFiltered, `/materials/?country=${intersectionSource.country}`, () => page.goto(origin + legacyFiltered, { waitUntil: 'networkidle' }));
+  await assertSources(page, sourceMaterials.filter(item => item.country === intersectionSource.country), 'The legacy material anchor preserves query filters');
+  report.checks.push('Legacy catalog anchors redirect with query filters preserved');
+  await page.goto(origin + '/#constructor', {waitUntil:'networkidle'});
+  assert.equal(page.url(), origin + '/#constructor', 'Unknown fragments cannot resolve inherited object properties as redirects');
+  assert.ok(await page.getByRole('heading', {level:1, name:'POS Platform', exact:true}).isVisible());
 
   const noJs = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 375, height: 1000 } });
   const fallback = await noJs.newPage();
   observe(fallback);
-  assert.equal((await fallback.goto(origin + '/')).status(), 200);
-  assert.equal(await fallback.locator('#progress [data-progress-app]').count(), progress.applications.length, 'All app progress is available without JavaScript');
+  assert.equal((await fallback.goto(origin + '/', { waitUntil: 'networkidle' })).status(), 200);
+  await settlePage(fallback);
+  assert.equal(await fallback.locator('[data-progress-app], [data-progress-phase], [data-material]').count(), 0, 'The home also remains compact without JavaScript');
   assert.ok(await fallback.locator('#progress time').isVisible(), 'The review date is visible without JavaScript');
+  assert.equal(await fallback.locator('#progress .home-metrics a').count(), 3, 'The derived summary keeps working links without JavaScript');
+  for (const [hash, destination] of [['presentations', '/presentations/'], ['materials', '/materials/']]) {
+    await fallback.goto(`${origin}/#${hash}`, { waitUntil: 'networkidle' });
+    await settlePage(fallback);
+    assert.equal(fallback.url(), `${origin}/#${hash}`, 'A legacy anchor remains reachable without JavaScript');
+    const destinationLink = fallback.locator(`#${hash} a[href="${destination}"]`);
+    assert.ok(await destinationLink.isVisible(), `The legacy anchor offers a direct catalog link: ${hash}`);
+    await destinationLink.click();
+    await fallback.waitForURL(origin + destination, { waitUntil: 'networkidle' });
+    await settlePage(fallback);
+  }
   await assertSources(fallback, sourceMaterials, 'All source documents are available without JavaScript');
-  assert.deepEqual(await downloadHrefs(fallback.locator('a[download]:visible')), sorted(catalog.materials.map(item => item.href)), 'Every original, including proposals, is downloadable without JavaScript');
+  assert.deepEqual(await downloadHrefs(fallback.locator('a[download]:visible')), sorted(sourceMaterials.map(item => item.href)), 'Every source original is downloadable without JavaScript');
   assert.ok(await fallback.locator(`#materials a[href="${comparisonHref}"]`).isVisible(), 'The synthesis remains available without JavaScript');
   assert.ok(await fallback.locator('[data-filters]').isHidden(), 'Inert search controls are hidden without JavaScript');
   assert.ok(await fallback.locator('[data-empty]').isHidden());
+  assert.equal((await fallback.goto(origin + '/presentations/', { waitUntil: 'networkidle' })).status(), 200);
+  await settlePage(fallback);
+  assert.deepEqual(await downloadHrefs(fallback.locator('a[download]:visible')), sorted(proposalMaterials.map(item => item.href)), 'Every proposal original is downloadable without JavaScript');
   for (const deck of catalog.presentations) {
     assert.ok(await fallback.locator(`a[href="${deck.href}"]`).isVisible(), 'Presentation links remain available without JavaScript');
     assert.ok(await fallback.locator(`a[href="${deck.readingHref}"]`).isVisible(), 'Reading links remain available without JavaScript');
   }
   await fallback.getByRole('link', { name: 'Documentación', exact: true }).click();
-  await fallback.waitForURL(origin + '/guide/');
-  report.checks.push('JavaScript-disabled materials, presentation/reading links and Starlight navigation');
+  await fallback.waitForURL(origin + '/guide/', { waitUntil: 'networkidle' });
+  await settlePage(fallback);
+  report.checks.push('JavaScript-disabled compact home, legacy fallback links, complete source/proposal catalogs and Starlight navigation');
   await noJs.close();
   assert.deepEqual(report.browserErrors, [], 'No browser errors or CSP violations');
   assert.deepEqual(report.failedRequests, [], 'No failed browser requests');

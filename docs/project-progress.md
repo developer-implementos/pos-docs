@@ -1,6 +1,8 @@
 # Seguimiento del avance
 
-La [portada](/#progress) resume el avance técnico por fase y aplicación. La vista [Estado, pendientes y bloqueos](/guide/project-status/) permite consultar qué falta, qué acceso o información se necesita, quién debe impulsar la acción y qué evidencia permite resolverla. Ambas vistas se generan desde los mismos registros revisados; no se editan porcentajes ni listas de tareas en páginas independientes.
+El [resumen del proyecto](/project/) presenta el avance técnico y la aceptación manual, con distribución por fase y aplicación. [Entregables](/project/work/) permite consultar qué falta, su ejecución, asignación y evidencia. [Bloqueos y decisiones](/project/attention/) explica qué acceso o información se necesita, quién impulsa la acción y qué permite resolverla. [Equipo](/project/team/) reúne las asignaciones de desarrollo y los responsables de seguimiento. Las vistas se generan desde los mismos registros revisados; no se editan porcentajes ni listas de tareas en páginas independientes.
+
+Los indicadores enlazan al detalle filtrado. Los filtros se guardan en la URL y los enlaces permanentes identifican cada entregable o acción; pueden compartirse y recorrerse con Atrás y Adelante. Sin JavaScript, permanecen disponibles los registros, sus enlaces y la navegación entre vistas. La portada conserva un acceso breve y los catálogos completos se consultan en [presentaciones](/presentations/) y [fuentes](/materials/).
 
 ## Dónde se mantiene cada dato
 
@@ -21,7 +23,7 @@ Para resolver una acción se registra explicación, fecha y evidencia. Las pregu
 
 ## Qué significa el porcentaje
 
-El denominador corresponde a todos los paquetes del [roadmap versionado](/guide/proposal/roadmap/). La portada muestra su cantidad actual. Todos tienen el mismo peso en esta métrica:
+El denominador corresponde a todos los paquetes del [roadmap versionado](/guide/proposal/roadmap/). El resumen del proyecto muestra su cantidad actual. Todos tienen el mismo peso en esta métrica:
 
 - **Proyecto:** paquetes únicos verificados / paquetes del alcance × 100.
 - **Fase:** paquetes verificados de la fase / paquetes de esa fase × 100.
@@ -31,7 +33,7 @@ Un paquete compartido cuenta una sola vez en el total del proyecto. Aparece tamb
 
 Esta medida expresa implementación y verificación de los entregables acordados, que incluyen capacidades funcionales, infraestructura, gobierno del desarrollo y validaciones. No expresa esfuerzo consumido, tiempo restante, cantidad de código ni preparación para producción. Un paquete aporta cuando la evidencia cubre todos sus criterios dentro del alcance definido, incluido el recorrido integrado si participan varias aplicaciones. El trabajo parcial conserva su resumen y estado, pero no recibe un porcentaje estimado.
 
-El resumen de cada app señala el alcance comprobado y sus límites: una prueba de navegador no acredita instalación nativa, una consulta local de contrato no acredita el proveedor y una CI verde no acredita por sí sola todos los criterios del entregable. La integración en `main` no verifica automáticamente una tarea ni registra aceptación manual. La portada muestra cuántos entregables están verificados, cuántos aceptó el equipo y cuántos verificados esperan esa revisión manual.
+El resumen de cada app señala el alcance comprobado y sus límites: una prueba de navegador no acredita instalación nativa, una consulta local de contrato no acredita el proveedor y una CI verde no acredita por sí sola todos los criterios del entregable. La integración en `main` no verifica automáticamente una tarea ni registra aceptación manual. El resumen del proyecto muestra cuántos entregables están verificados, cuántos aceptó el equipo y cuántos verificados esperan esa revisión manual.
 
 ## Estados y evidencia
 
@@ -44,7 +46,7 @@ El resumen de cada app señala el alcance comprobado y sus límites: una prueba 
 
 El esquema 2 exige `verification` para `verified`: commit del producto, fecha de revisión, revisor técnico y rutas de evidencia versionada. El revisor identifica quién realizó la comprobación, incluida una sesión de agente cuando corresponda; no se presenta como aprobación humana. El informe debe describir el alcance probado y los resultados de los criterios correspondientes, incluidos fallos y recuperación. La presencia de carpetas, un build exitoso o una captura de una pantalla mock no sustituyen esa verificación.
 
-`acceptance` es una revisión manual independiente con los mismos campos. Puede permanecer en `null` después de verificar el entregable. Cuando el equipo la registra, debe revisar una versión que incluya la verificación técnica y una fecha igual o posterior. Sólo los entregables `verified` pueden tener aceptación manual. Los demás estados mantienen ambos campos en `null`. El contador **Aceptación manual** muestra las aceptaciones y los verificados pendientes de revisión; no añade una segunda barra ni modifica el avance técnico.
+`acceptance` es una revisión manual independiente con los mismos campos. Puede permanecer en `null` después de verificar el entregable. Cuando el equipo la registra, debe revisar una versión que incluya la verificación técnica y una fecha igual o posterior. Sólo los entregables `verified` pueden tener aceptación manual. Los demás estados mantienen ambos campos en `null`. El indicador de aceptación humana muestra las aceptaciones y los verificados pendientes de revisión; no añade una segunda barra ni modifica el avance técnico.
 
 Los snapshots de esquema 1 conservan su medición histórica de aceptación, identificada como **Aceptación del roadmap**. No se convierten en verificación técnica automáticamente: el porcentaje principal cambia a la nueva medición al importar un registro de esquema 2.
 
@@ -54,7 +56,7 @@ El registro separa tres revisiones: el código al que se refiere la evidencia de
 
 El snapshot conserva el contenido original, incluido `productRevision: "source"`, para comprobar su hash contra el JSON del producto. Las salidas derivadas resuelven ese valor al SHA de `source.revision`; los snapshots anteriores con SHA explícito siguen siendo válidos. Así, un squash puede cambiar el SHA del registro sin dejar la evidencia de aplicaciones apuntando a un commit de rama que ya no pertenece al historial integrado.
 
-`verification.revision`, `acceptance.revision` y `scope.revision` siempre requieren un SHA completo; no admiten `source`. La verificación debe pertenecer al historial del producto efectivo. Si hay aceptación, su revisión debe incluir la verificación y pertenecer también a ese historial. Las evidencias se comprueban en el commit de cada revisión y deben ser archivos o directorios versionados, sin enlaces simbólicos. Si un squash deja una verificación o aceptación fuera de ese historial, la importación la rechaza; no la reubica automáticamente. Actualizar la portada o resolver `source` tampoco cambia por sí solo el revisor, la fecha o los estados.
+`verification.revision`, `acceptance.revision` y `scope.revision` siempre requieren un SHA completo; no admiten `source`. La verificación debe pertenecer al historial del producto efectivo. Si hay aceptación, su revisión debe incluir la verificación y pertenecer también a ese historial. Las evidencias se comprueban en el commit de cada revisión y deben ser archivos o directorios versionados, sin enlaces simbólicos. Si un squash deja una verificación o aceptación fuera de ese historial, la importación la rechaza; no la reubica automáticamente. Actualizar el panel o resolver `source` tampoco cambia por sí solo el revisor, la fecha o los estados.
 
 ## Actualizar el seguimiento
 
@@ -82,6 +84,7 @@ El snapshot conserva el contenido original, incluido `productRevision: "source"`
    npm run build
    npm run portal:check
    npm run follow-up:check
+   npm run project:check
    ```
 
 `--check` no escribe. En seguimiento compara el contenido y estado observado; no falla sólo por transcurrir el reloj. La importación normal registra una nueva fecha de consulta. La fuente debe ser un commit del repositorio corporativo y un checkout limpio; las referencias de evidencia del progreso deben pertenecer a su historial. Un clon superficial necesita recuperar esos commits.

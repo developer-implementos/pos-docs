@@ -218,6 +218,7 @@ try {
     assert.ok(!response.headers()['content-security-policy'].includes("'unsafe-eval'"), `${item.id}: the viewer does not enable JavaScript eval`);
     await waitForRender(page, 1);
     assert.equal(await page.locator('h1').textContent(), item.title);
+    assert.equal(await page.locator('.viewer-back').getAttribute('href'), item.kind === 'proposal' ? '/presentations/' : '/materials/', 'The viewer returns directly to its dedicated catalog');
     assert.equal(await page.locator('#material-viewer').getAttribute('data-pages'), String(preview.pages));
     assert.equal(await page.locator('#pdf-page').getAttribute('max'), String(preview.pages));
     assert.equal(Number((await page.locator('#pdf-total').textContent()).match(/\d+/u)?.[0]), preview.pages);
@@ -422,6 +423,9 @@ try {
   await staticPage.locator('#document-info-close').click();
   assert.equal(await staticPage.locator('#preview-download').isVisible(), false, 'The native close action works without JavaScript');
   await assertNoPageOverflow(staticPage, 'Viewer without JavaScript');
+  await staticPage.locator('.viewer-back').click();
+  await staticPage.waitForURL(origin + (representative.kind === 'proposal' ? '/presentations/' : '/materials/'));
+  assert.ok(await staticPage.getByRole('heading', { level: 1 }).isVisible(), 'Returning to the catalog works without JavaScript');
   report.checks.push('Download links remain available without JavaScript; loading a viewer never starts an automatic download.');
   assert.deepEqual(report.unexpectedDownloads, []);
   assert.deepEqual(report.externalRequests, []);

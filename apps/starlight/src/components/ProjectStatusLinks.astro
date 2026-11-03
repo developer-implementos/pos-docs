@@ -1,0 +1,35 @@
+---
+import progressSnapshot from '../../../../portal/data/project-progress.json';
+import followUpSnapshot from '../../../../portal/data/project-follow-up.json';
+const work = progressSnapshot.content.workPackages;
+const actions = followUpSnapshot.content.items;
+---
+<div data-project-migration data-pagefind-ignore>
+  <p id="work-title"><a href="/project/work/" data-project-target>Consultar todos los entregables</a></p>
+  <p id="actions-title"><a href="/project/attention/" data-project-target>Consultar todos los bloqueos y decisiones</a></p>
+  <details>
+    <summary>Enlaces permanentes a entregables y seguimientos</summary>
+    <ul>
+      {work.map(item => <li id={`work-${item.id.toLowerCase()}`}><a href={`/project/work/#work-${item.id.toLowerCase()}`} data-project-target>{item.id}</a></li>)}
+      {actions.map(item => <li id={item.id.toLowerCase()}><a href={`/project/attention/#${item.id.toLowerCase()}`} data-project-target>{item.id}: {item.summary}</a></li>)}
+    </ul>
+  </details>
+</div>
+<script>
+  // Keep old bookmarked fragments useful without duplicating the dashboard.
+  const source = new URL(window.location.href);
+  const anchor = document.getElementById(source.hash.slice(1));
+  const linked = anchor?.querySelector<HTMLAnchorElement>('[data-project-target]');
+  const actionKeys = ['kind', 'scope', 'state', 'owner'];
+  const workKeys = ['phase', 'app', 'status', 'assignee'];
+  const path = linked?.getAttribute('href') || (actionKeys.some(key => source.searchParams.has(key))
+    ? '/project/attention/' : ['query', ...workKeys].some(key => source.searchParams.has(key)) ? '/project/work/' : '/project/');
+  const destination = new URL(path, source.origin);
+  const allowed = destination.pathname.includes('/attention/') ? ['query', ...actionKeys]
+    : destination.pathname.includes('/work/') ? ['query', ...workKeys] : ['view'];
+  for (const key of allowed) {
+    const value = source.searchParams.get(key);
+    if (value) destination.searchParams.set(key, value);
+  }
+  window.location.replace(destination.pathname + destination.search + destination.hash);
+</script>
