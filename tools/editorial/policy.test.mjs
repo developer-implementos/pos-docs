@@ -167,7 +167,9 @@ test('privileged metadata workflow checks out only trusted base with read permis
   assert.match(workflow, /persist-credentials: false/);
   assert.match(workflow, /contents: read/);
   assert.match(workflow, /pull-requests: read/);
-  assert.doesNotMatch(workflow, /secrets\.|: write|head\.(?:sha|ref)|npm |cache:|download-artifact/);
+  assert.doesNotMatch(workflow, /secrets\.|: write|head\.(?:sha|ref)|npm |download-artifact/);
+  assert.doesNotMatch(workflow, /^[ \t]*cache:/m);
+  assert.match(workflow, /^[ \t]+package-manager-cache: false[ \t]*\r?$/m);
   const runLines = workflow.split(/\r?\n/).filter(line => /\brun:/.test(line));
   assert.equal(runLines.length, 1);
   assert.doesNotMatch(runLines[0], /\$\{\{/);
