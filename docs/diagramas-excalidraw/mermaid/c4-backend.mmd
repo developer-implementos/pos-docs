@@ -1,6 +1,6 @@
 flowchart TB
     accTitle: C3 · branch-api — Negocio de sucursal en un proceso
-    accDescr: apps/branch-api compone módulos de negocio y base técnica. Las bibliotecas agrupadas comparten proceso, sin convertirse en servicios independientes. sales/returns, cash/collections, pricing/catalog, payments/devices, fiscal, reporting, administration y outbox de sync. devices conserva trabajos autorizados; device-agent los obtiene y reporta evidencia. No depende del cliente de escritorio.
+    accDescr: apps/branch-api compone módulos de negocio y base técnica. Las bibliotecas agrupadas comparten proceso, sin convertirse en servicios independientes. reporting consulta evidencia de sus propietarios y conserva sólo expedientes propios, sin autoridad financiera. devices conserva trabajos autorizados; device-agent los obtiene y reporta evidencia.
     subgraph backendScope["apps/branch-api · UN proceso NestJS + Fastify"]
         direction TB
         entry["API de comandos<br/>«Componente»<br/>Controllers NestJS / Fastify<br/>Valida entrada e identidad del comando."]:::pos
@@ -10,7 +10,7 @@ flowchart TB
         cash["Caja, cobranzas y anticipos<br/>«Componente»<br/>libs/backend/cash + collections<br/>Coordina turnos, movimientos y cobranzas."]:::pos
         payPort["Pagos y dispositivos<br/>«Componente»<br/>libs/backend/payments + devices<br/>Gestiona intentos, trabajos y evidencia."]:::pos
         fiscalPort["Fiscalidad y adaptadores<br/>«Componente»<br/>libs/backend/fiscal<br/>Aplica modalidad fiscal por país."]:::pos
-        reporting["Reportes operativos<br/>«Componente»<br/>libs/backend/reporting<br/>Consulta operaciones y estados locales."]:::pos
+        reporting["Reportes y seguimiento<br/>«Componente»<br/>libs/backend/reporting<br/>Consulta evidencia y conserva expedientes."]:::pos
         unitOfWork["Persistencia transaccional<br/>«Componente»<br/>Repositorios + contrato outbox (sync)<br/>Confirma negocio, auditoría y outbox."]:::pos
         technicalBase["Base técnica compartida<br/>«Componente»<br/>shared/backend · composición objetivo<br/>Configuración, salud, Pino y Sentry opt-in."]:::pos
     end
@@ -27,7 +27,7 @@ flowchart TB
     entry -->|"Autoriza ámbito y operación · TypeScript"| access
     entry -->|"Venta o devolución · TypeScript"| sales
     entry -->|"Turnos, cobranza o anticipo · TypeScript"| cash
-    entry -->|"Consulta autorizada · TypeScript"| reporting
+    entry -->|"Consulta y seguimiento autorizado · TypeScript"| reporting
     entry -->|"Autoriza trabajo o registra evidencia · TypeScript"| payPort
     entry -->|"Configura y correlaciona · TypeScript"| technicalBase
     sales -->|"Cotiza y fija versión · TypeScript"| pricing
@@ -37,7 +37,10 @@ flowchart TB
     sales -->|"Confirma operación + outbox · TypeScript"| unitOfWork
     cash -->|"Movimiento + auditoría · TypeScript"| unitOfWork
     pricing -->|"Lee versión autorizada · repositorio"| unitOfWork
-    reporting -->|"Lee estado local · repositorio"| unitOfWork
+    reporting -->|"Lee evidencia de venta · contrato propietario"| sales
+    reporting -->|"Lee evidencia de pagos y trabajos · contrato propietario"| payPort
+    reporting -->|"Lee evidencia fiscal · contrato propietario"| fiscalPort
+    reporting -->|"Guarda sólo expedientes propios · repositorio"| unitOfWork
     payPort -->|"Intención y resultado separados · TypeScript"| unitOfWork
     fiscalPort -->|"Referencia y resultado · TypeScript"| unitOfWork
     unitOfWork -->|"Negocio + auditoría + outbox · PostgreSQL"| branchDb

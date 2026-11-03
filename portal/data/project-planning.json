@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "d001f1e0eab45a990a5cfadb51d9692ddc229f94",
+    "revision": "74a864a332b509e7d4f9832505dc8757d7e74b0b",
     "path": "delivery/planning.json",
     "sha256": "138e28368466769e22f72e172f36e20e467353a0c1a46c53bb7af108bd4463ab"
   },
@@ -280,7 +280,7 @@
     ]
   },
   "issues": {
-    "observedAt": "2026-11-03T04:54:56.928Z",
+    "observedAt": "2026-11-03T14:51:56.527Z",
     "repository": "https://github.com/developer-implementos/pos-platform",
     "entries": [
       {
@@ -313,10 +313,12 @@
         "url": "https://github.com/developer-implementos/pos-platform/issues/110",
         "state": "OPEN",
         "executionLabels": [
-          "status:triage"
+          "status:in-progress"
         ],
-        "assignees": [],
-        "updatedAt": "2026-11-03T04:45:25Z",
+        "assignees": [
+          "floxcristian"
+        ],
+        "updatedAt": "2026-11-03T13:12:16Z",
         "stateReason": null
       },
       {
@@ -325,10 +327,12 @@
         "url": "https://github.com/developer-implementos/pos-platform/issues/114",
         "state": "OPEN",
         "executionLabels": [
-          "status:triage"
+          "status:in-progress"
         ],
-        "assignees": [],
-        "updatedAt": "2026-11-03T04:45:57Z",
+        "assignees": [
+          "floxcristian"
+        ],
+        "updatedAt": "2026-11-03T13:18:37Z",
         "stateReason": null
       },
       {

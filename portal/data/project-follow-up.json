@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "d001f1e0eab45a990a5cfadb51d9692ddc229f94",
+    "revision": "74a864a332b509e7d4f9832505dc8757d7e74b0b",
     "path": "delivery/follow-ups.json",
-    "sha256": "92f0540ef2ba929bdd63e4bbe27c56ee4c9a1094e1bf1afec84c521da44e47dc"
+    "sha256": "637233c685765d87b1a5c6e07e8e4cfc1a77e7008b1af26ea3371eeea9aec95d"
   },
   "content": {
     "schemaVersion": 1,
@@ -155,7 +155,7 @@
           "F02-04"
         ],
         "summary": "Validar el perfil operativo de pagos y transferencias",
-        "impact": "El software ya soporta el plan combinado y transferencia manual dentro del alcance verificado. Falta validar qué reglas y facultades se habilitarán para operar el piloto.",
+        "impact": "El software ya soporta el plan combinado y transferencia manual dentro del alcance verificado. Se confirmó que la asignación y el cierre de expedientes requieren supervisores con permisos explícitos y no cambian dinero. Falta validar las reglas monetarias y facultades de verificación para operar el piloto.",
         "impactScope": "operational",
         "nextAction": "Preguntar a Tesorería qué medios y combinaciones usa el piloto, cuándo entrega vuelto, qué cuentas reciben transferencias y quién verifica su abono de forma independiente. Contrastar ejemplos, límites, descuentos y excepciones con la operación vigente.",
         "requestedFrom": "Responsable de Finanzas/Tesorería del piloto",
@@ -163,6 +163,10 @@
         "closureCriteria": "Perfil de operación identificado y aprobado con ejemplos monetarios, excepciones y matriz de permisos. No inventar una persona responsable ni fecha de aprobación.",
         "reviewedOn": "2026-11-03",
         "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/114#issuecomment-6604879992",
+            "label": "Criterio confirmado para el seguimiento de expedientes, separado de la autorización financiera"
+          },
           {
             "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/specs/F02-05.md",
             "label": "Criterios F02-05"
@@ -384,7 +388,7 @@
     ]
   },
   "issues": {
-    "observedAt": "2026-11-03T04:54:53.386Z",
+    "observedAt": "2026-11-03T14:51:52.548Z",
     "repository": "https://github.com/developer-implementos/pos-platform",
     "entries": [
       {

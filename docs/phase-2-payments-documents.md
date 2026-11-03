@@ -2,7 +2,7 @@
 
 **Implementación parcial integrada en `main`.** F02 incorpora persistencia y contratos de pagos, fiscalidad y dispositivos en `branch-api`, y el host nativo `apps/device-agent`. Las pruebas usan PostgreSQL, SQLite y HTTPS reales con datos aislados. Los adaptadores de pago y facturación son exclusivos de pruebas, sin conexión a proveedores; el host publicado no incluye un driver físico habilitado. Este corte no habilita cobros con tarjeta, emisión fiscal ni impresión operativa.
 
-El código de este corte está integrado en `main`, en la [revisión `98f8987` de POS Platform](https://github.com/developer-implementos/pos-platform/tree/98f8987bfa8764ab77f6a55a7686f2ed7884d541). La [matriz técnica de F02](https://github.com/developer-implementos/pos-platform/blob/98f8987bfa8764ab77f6a55a7686f2ed7884d541/delivery/reviews/F02-verification.md) conserva las comprobaciones de la base y sus pendientes; el [informe de F02-13](https://github.com/developer-implementos/pos-platform/blob/98f8987bfa8764ab77f6a55a7686f2ed7884d541/delivery/reviews/F02-13-verification.md) acredita la recuperación comercial incorporada después. El avance del portal procede del registro de esta revisión integrada: **3 de 14 entregables F02 verificados (21,4 %)**. La aceptación humana y la habilitación operativa se informan por separado.
+El código de este corte está integrado en `main`, en la [revisión `98f8987` de POS Platform](https://github.com/developer-implementos/pos-platform/tree/98f8987bfa8764ab77f6a55a7686f2ed7884d541). La [matriz técnica de F02](https://github.com/developer-implementos/pos-platform/blob/98f8987bfa8764ab77f6a55a7686f2ed7884d541/delivery/reviews/F02-verification.md) conserva las comprobaciones de la base y sus pendientes; el [informe de F02-13](https://github.com/developer-implementos/pos-platform/blob/98f8987bfa8764ab77f6a55a7686f2ed7884d541/delivery/reviews/F02-13-verification.md) acredita la recuperación comercial incorporada después. El avance se consulta en el [panel del proyecto](/project/), con su revisión de producto identificada. La aceptación humana y la habilitación operativa se informan por separado.
 
 La revisión fijada incorpora el seguimiento conectado, la búsqueda y descarga protegida del original fiscal, el cobro combinado y la recuperación comercial. Las PR enlazadas conservan las comprobaciones y resultados de cada incremento. Publicar esta guía no acredita por sí solo una ejecución aprobada de CI, el guardado físico de archivos desde una WebView nativa ni la habilitación operativa del producto.
 
@@ -10,9 +10,13 @@ La revisión fijada incorpora el seguimiento conectado, la búsqueda y descarga 
 
 El [roadmap F02](/guide/roadmap/phase-02/) conserva los catorce entregables y sus criterios. La implementación de un contrato, una prueba o un binario no completa por sí sola toda la fase. La revisión técnica y el avance se registran en POS Platform; la publicación de esta guía no implica aceptación humana.
 
+**Ampliación implementada y en revisión:** [TASK-110](https://github.com/developer-implementos/pos-platform/issues/110) reúne la evidencia por operación y se revisa en la [PR #117](https://github.com/developer-implementos/pos-platform/pull/117). [TASK-114](https://github.com/developer-implementos/pos-platform/issues/114) añade expedientes con responsables y cierre documentado; su issue conserva el estado de revisión. La integración de ambos incrementos en `main` está pendiente: no pertenecen al corte integrado citado arriba ni completan por sí solos [F02-04](https://github.com/developer-implementos/pos-platform/issues/26). La aceptación humana conserva su registro independiente.
+
+La ampliación corresponde a la [revisión `74a864a`](https://github.com/developer-implementos/pos-platform/tree/74a864a332b509e7d4f9832505dc8757d7e74b0b). Su [recorrido conectado de expedientes](https://github.com/developer-implementos/pos-platform/blob/74a864a332b509e7d4f9832505dc8757d7e74b0b/tests/pos-clients-e2e/operational/operation-cases.spec.ts) verifica dos supervisores, respuesta perdida después de persistir, recuperación del mismo comando y conflicto de versión; el [recorrido de evidencia](https://github.com/developer-implementos/pos-platform/blob/74a864a332b509e7d4f9832505dc8757d7e74b0b/tests/pos-clients-e2e/operational/operation-evidence.spec.ts) cubre estados independientes, paginación y fallo de consulta. Ambos usan API HTTPS y PostgreSQL aislados con datos sintéticos, sin operar proveedores ni hardware reales.
+
 ## Incrementos integrados
 
-Los siguientes incrementos están integrados en `main`, hasta la [revisión `23a1cb8`](https://github.com/developer-implementos/pos-platform/tree/23a1cb80c3db4ac010ce7aba93132da3025c3877). El porcentaje del portal sigue procediendo del snapshot identificado arriba; integrar una PR parcial no verifica automáticamente su entregable.
+Los siguientes incrementos están integrados en `main`, hasta la [revisión `23a1cb8`](https://github.com/developer-implementos/pos-platform/tree/23a1cb80c3db4ac010ce7aba93132da3025c3877). El avance del portal procede de su snapshot de producto; integrar una PR parcial no verifica automáticamente su entregable.
 
 | Incremento | Revisión de producto | Resultado acotado |
 | --- | --- | --- |
@@ -36,6 +40,42 @@ Las PR conservan sus comprobaciones y límites. Las pruebas del código nativo, 
 `country-api`, los workers, BullMQ y Redis no intervienen en el recorrido local del host. La coordinación del puesto usa HTTPS y persistencia en sucursal; no necesita una cola Redis en el PC. La [decisión de dispositivos](decisions/device-agent.md) fija la ubicación por puesto y la evolución de dispositivos de red en F06.
 
 ## Qué conserva cada contexto
+
+### Historial de evidencia por operación
+
+**TASK-110 · implementación en revisión, aún no integrada en `main`.**
+
+Desde **Seguimiento de operaciones**, el detalle reúne la evidencia de la venta, los pagos, los documentos fiscales y la impresión. Cada efecto conserva su estado: un pago aprobado puede coexistir con fiscalidad pendiente o una impresión incierta. El panel no resume esa combinación como un éxito global.
+
+`reporting` compone consultas públicas de los contextos propietarios dentro de una lectura consistente de PostgreSQL. No crea una segunda autoridad financiera, no consulta proveedores y no vuelve a ejecutar comandos. El permiso del registro seleccionado permite entrar a su detalle; cada efecto adicional exige su propio permiso y ámbito. La vista distingue registros disponibles, ausencia de registros vinculados, falta de permiso y relación que no puede establecerse. Un error de consulta tampoco se presenta como ausencia de evidencia.
+
+El historial usa hechos que ya se conservaron: creación, intentos, observaciones, confirmación local y recepción o resultado de dispositivos. No reconstruye transiciones inexistentes. Ordena por la hora registrada en sucursal y una identidad estable; cuando existe una hora observada por el proveedor o el dispositivo, la muestra por separado. El estado actual aparece en su propio resumen, no como si hubiera sido el resultado original de todos los eventos anteriores.
+
+La paginación conserva una revisión del conjunto autorizado. Si cambia la evidencia mientras se recorren sus páginas, el cliente solicita actualizarla en lugar de mezclar versiones. Un fallo de red conserva los registros ya consultados con un aviso; un cambio de sesión o de permisos limpia la vista. La consulta tiene límites explícitos por operación y falla de forma visible si se exceden, sin presentar un historial truncado como completo.
+
+Esta lectura sólo ofrece actualizar la evidencia. Los controles de recuperación existentes conservan sus permisos y confirmaciones propios. La [historia TASK-110](https://github.com/developer-implementos/pos-platform/issues/110) concentra su seguimiento; su entrega no completa por sí sola la resolución integral de excepciones de F02-04. El [catálogo HTTP](/guide/api/pos-platform/) publica contratos de una revisión identificada; sólo describe esta ampliación cuando esa revisión la incluya.
+
+### Autoridad del seguimiento de excepciones
+
+**TASK-114 · implementación en revisión, aún no integrada en `main`.**
+
+El perfil inicial reserva la asignación y el cierre de expedientes a supervisores con permisos explícitos. Un expediente conserva una conclusión operativa y su evidencia; cerrarlo no aprueba un pago, no libera una reserva, no emite un documento ni confirma una impresión. La solicitud original de revisión de pago conserva su identidad e inmutabilidad.
+
+La [historia TASK-114](https://github.com/developer-implementos/pos-platform/issues/114) implementa ese seguimiento sobre el historial común. Los permisos se habilitan de forma expresa y se asignan mediante roles; el nombre «supervisor» por sí solo no concede facultades. Las reglas de Tesorería y fiscalidad del piloto mantienen sus validaciones específicas.
+
+| Acción | Permiso explícito | Información conservada |
+| --- | --- | --- |
+| Consultar expedientes y su historial | `operation.case.read` y permisos sobre la evidencia original | Operación, evidencia de apertura, responsable, estado y decisiones de seguimiento |
+| Abrir un expediente o cambiar su responsable | `operation.case.assign`, además de consulta | Motivo, identidad del supervisor, responsable habilitado y versión del expediente |
+| Registrar una conclusión y cerrar el expediente | `operation.case.resolve`, además de consulta | Conclusión, referencia de evidencia y autor; los estados del pago, documento e impresión permanecen a cargo de sus contextos |
+
+El expediente pertenece al ámbito de sucursal, puesto e instalación. Cada incidente se identifica por la operación y el evento que motivó su apertura: repetir ese mismo incidente no crea otro expediente, incluso después de cerrarlo. Una nueva evidencia permite abrir otro seguimiento. El historial conserva los hechos originales de apertura, asignación y cierre; no permite reescribirlos ni borrar un expediente cerrado.
+
+El directorio ofrece personas activas del ámbito con permisos de expediente. Antes de asignar, el servidor comprueba además que el destinatario pueda consultar el ancla y la evidencia original; no basta tener un rol de supervisor. Una fuente de venta reservada a su autor no se vuelve visible por asignar un expediente. Si el destinatario no tiene acceso, la asignación se rechaza sin cambiar al responsable anterior. Las consultas, comandos y recuperación de respuestas vuelven a comprobar los permisos vigentes y la visibilidad de la evidencia, incluida la utilizada para cerrar.
+
+Dos supervisores pueden consultar el mismo expediente, pero sus cambios llevan la versión que leyeron. Si uno lo modifica antes, el otro debe actualizar la consulta; no se sobrescribe su decisión. Si se pierde una respuesta, el cliente conserva la identidad del comando pendiente y recupera ese mismo resultado, sujeto nuevamente a autorización. No genera otra asignación ni otro cierre como sustituto silencioso.
+
+`reporting` es propietario de estas decisiones operativas durables. Sus proyecciones de lectura pueden reconstruirse; el historial de expedientes debe conservarse y respaldarse. El [diccionario de datos](/guide/api/data-model/) y el catálogo HTTP muestran exclusivamente lo exportado desde su revisión de producto identificada; esta ampliación requiere actualizar ese artefacto. Este seguimiento no sustituye la revisión de Tesorería ni habilita proveedores.
 
 **Pagos:** el backend inmoviliza la cesta y la cotización vinculadas al intento, conserva el destino y excluye operaciones incompatibles sobre el mismo terminal. Guarda el intento antes de llamar al proveedor. Una respuesta perdida exige consultar o conciliar el intento original; no permite cobrar con otra clave para salir de la incertidumbre. Si llega evidencia contradictoria después de liberar un rechazo, la cuarentena se conserva tanto para el terminal como para la cesta: liberar el intento anterior no vuelve seguro otro cobro o la confirmación en efectivo. Si la venta ya se confirmó antes de conocer el conflicto, conserva su evidencia; no la borra ni deshace un movimiento externo por cambiar el estado local. La compensación tiene su propia intención, importe reservado, destino e intento. El plan combinado coordina las asignaciones sin habilitar una reversa operativa con un adquirente ausente.
 
@@ -118,7 +158,7 @@ El seguimiento permite conocer el estado persistido, con estos límites:
 - **Documento fiscal:** el estado aceptado o rechazado puede coexistir con evidencia contradictoria posterior. El listado no expone todavía ese historial completo ni acredita que no existan incidentes. Los metadatos y la disponibilidad del PDF original son datos separados; la descarga exige contenido conservado y autorización adicional.
 - **Dispositivo:** `spooled` acredita recepción por el spooler, no salida física del papel. Consultar un resultado incierto no vuelve a ejecutar el trabajo.
 
-Este incremento integrado aporta parte de **F02-04** y **F02-12**. Quedan por completar la vista integral de excepciones por operación, el historial de evidencias, los responsables y las acciones de resolución de cada efecto. La búsqueda y descarga fiscal amplían el software disponible; no acreditan por sí solas un proveedor fiscal operativo ni el guardado del archivo desde las WebView nativas.
+Este incremento integrado aporta parte de **F02-04** y **F02-12**. El [historial por operación](#historial-de-evidencia-por-operación) y los [expedientes con responsables](#autoridad-del-seguimiento-de-excepciones) ya tienen implementación nueva en revisión. **F02-04 sigue incompleto:** además de integrar y verificar esos incrementos, necesita completar las acciones de recuperación por efecto que exigen sus criterios y comprobar los runbooks de resultado desconocido, rechazo, fallo conocido y pérdida de LAN en el entorno acordado. Cerrar un expediente no ejecuta esas acciones. La aceptación humana se registra por separado; la búsqueda y descarga fiscal tampoco acreditan un proveedor fiscal operativo ni el guardado desde las WebView nativas.
 
 ### Historial de compensaciones y consulta del resultado
 
@@ -181,7 +221,7 @@ Las pruebas de composición de este incremento unen propietarios reales de ident
 
 Si el proveedor no permite compensar o consultar, se mantienen el pago y la evidencia originales sin afirmar que se devolvió dinero. El operador puede registrar una **solicitud de revisión operativa** con motivo. El servidor conserva identidad, pago, plan, solicitante y fecha, junto con el estado, importes, destino original y decisiones disponibles en ese momento. La solicitud es inmutable y única por pago; se puede consultar después de recargar y recuperar con el mismo comando si se pierde la respuesta. El cliente no puede aportar ni sobrescribir esa evidencia.
 
-Registrar la revisión no modifica estados financieros, ni marca dinero devuelto ni cancela una reserva. Tampoco impide completar después una venta que vuelva a cumplir sus condiciones; la solicitud conserva su evidencia histórica y no pasa por ello a presentarse como resuelta. El alcance es la revisión de este pago, sin asignación automática, SLA o bandeja integral de incidentes; esas capacidades pertenecen a F02-04.
+Registrar la revisión no modifica estados financieros, ni marca dinero devuelto ni cancela una reserva. Tampoco impide completar después una venta que vuelva a cumplir sus condiciones; la solicitud conserva su evidencia histórica y no pasa por ello a presentarse como resuelta. La solicitud de pago no asigna responsables ni tiene un ciclo de cierre propio: [TASK-114](#autoridad-del-seguimiento-de-excepciones) incorpora ese seguimiento en un expediente separado, actualmente en revisión. No implementa asignación automática, SLA ni todas las acciones de recuperación de F02-04.
 
 La migración aditiva `241_payment_recovery_review_requests` conserva esas solicitudes en `payments.payment_recovery_review_request`, con unicidad por pago, protección contra actualización y borrado y permisos runtime de lectura/inserción. Ejecutar el migrador propietario y comprobar la API con manifiesto compatible antes de desplegar el cliente; conservar la ventana controlada indicada arriba. El manifiesto exacto también exige una compilación compatible con la 241 para revertir comportamiento. No se eliminan comandos, solicitudes, reservas ni evidencia para permitir otra operación. La verificación técnica y el porcentaje siguen el registro del producto, sin aceptación humana implícita.
 

@@ -133,6 +133,10 @@
         {
           "checksum": "a927fd7f780e7be647388e14fe025c838cd9532e477f356ffda9ea8c6bfe4501",
           "id": "241_payment_recovery_review_requests"
+        },
+        {
+          "checksum": "08afe1d2ceab6b0543107bdfa826c2c91eae40ab2641b195e8ecbbaa9403b2d6",
+          "id": "242_operation_cases"
         }
       ],
       "schemas": [
@@ -144,6 +148,7 @@
         "payments",
         "platform",
         "pricing",
+        "reporting",
         "sales",
         "sync"
       ],
@@ -14981,6 +14986,760 @@
           ],
           "name": "quote",
           "schema": "pricing"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identificador estable del expediente de seguimiento operativo.",
+                "example": "10000000-0000-4000-8000-000000000001",
+                "usage": "Se genera al abrir el expediente y permite consultarlo o enviar comandos con versión."
+              },
+              "name": "id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Sucursal propietaria del expediente y su historial.",
+                "example": "10000000-0000-4000-8000-000000000001",
+                "usage": "Se deriva de la sesión autorizada y acota todas las lecturas y comandos."
+              },
+              "name": "branch_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Puesto al que pertenece la evidencia y el expediente.",
+                "example": "10000000-0000-4000-8000-000000000001",
+                "usage": "Impide consultar o modificar expedientes desde otro puesto de la sucursal."
+              },
+              "name": "register_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instalación autorizada que conserva el ámbito del expediente.",
+                "example": "10000000-0000-4000-8000-000000000001",
+                "usage": "Se compara con la sesión junto con sucursal y puesto; no se acepta desde el cuerpo."
+              },
+              "name": "installation_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Contexto de origen desde el cual se consultó la evidencia.",
+                "example": "payments",
+                "usage": "Selecciona el contrato propietario de pagos, fiscalidad o dispositivos; no atribuye autoridad financiera a reporting."
+              },
+              "name": "anchor_kind",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identificador del agregado propietario usado como referencia de consulta.",
+                "example": "10000000-0000-4000-8000-000000000001",
+                "usage": "El contrato de evidencia valida existencia y ámbito antes de abrir; no se crea una clave foránea entre contextos."
+              },
+              "name": "anchor_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identidad de la evidencia original que motivó la apertura.",
+                "example": "payments:observation:10000000-0000-4000-8000-000000000001",
+                "usage": "Con ámbito y referencia de origen evita abrir dos expedientes para el mismo incidente, incluso después de cerrarlo."
+              },
+              "name": "source_event_id",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instantánea pública y sanitizada de la evidencia original y su revisión.",
+                "example": {
+                  "event": {
+                    "disposition": null,
+                    "eventId": "payments:observation:10000000-0000-4000-8000-000000000001",
+                    "eventType": "payment-observation",
+                    "kind": "payments",
+                    "occurredAt": null,
+                    "reasonCode": null,
+                    "recordedAt": "2026-11-03T10:00:00.000Z",
+                    "sourceId": "10000000-0000-4000-8000-000000000001",
+                    "state": "uncertain"
+                  },
+                  "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                },
+                "usage": "Se conserva inmutable para explicar la apertura. No es un estado financiero actual ni permite ejecutar un cobro."
+              },
+              "name": "source_evidence",
+              "nullable": false,
+              "type": "jsonb"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Operador autenticado que abrió el seguimiento del incidente.",
+                "example": "10000000-0000-4000-8000-000000000001",
+                "usage": "Se deriva de la sesión y permanece en la evidencia aunque cambie la persona asignada."
+              },
+              "name": "opened_by",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Fecha de recepción durable de la apertura en PostgreSQL.",
+                "example": "2026-11-03T10:00:00.000Z",
+                "usage": "Ordena las consultas por fecha y UUID con precisión de microsegundos para la paginación."
+              },
+              "name": "opened_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Motivo documentado al abrir el expediente.",
+                "example": "Investigar el resultado sin repetir el cobro.",
+                "usage": "El texto acotado explica la investigación. No debe incluir credenciales ni datos de tarjeta y no se reemplaza al reasignar."
+              },
+              "name": "reason",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Operador encargado del seguimiento, o ausencia de asignación.",
+                "example": "10000000-0000-4000-8000-000000000001",
+                "usage": "Al asignar se comprueba que sigue activo en el mismo ámbito y posee permisos explícitos de lectura y resolución."
+              },
+              "name": "assigned_operator_id",
+              "nullable": true,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": "'open'::text",
+              "documentation": {
+                "description": "Estado administrativo del seguimiento: abierto o resuelto.",
+                "example": "open",
+                "usage": "Cerrar el seguimiento no aprueba un pago, no libera reservas ni confirma fiscalidad o impresión."
+              },
+              "name": "state",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": "1",
+              "documentation": {
+                "description": "Versión consecutiva del expediente y de su última transición.",
+                "example": 1,
+                "usage": "Los comandos de asignación y cierre requieren la versión esperada; cada cambio efectivo incrementa exactamente una unidad."
+              },
+              "name": "version",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Fecha en la que se documentó el cierre del seguimiento.",
+                "example": null,
+                "usage": "Permanece ausente mientras esté abierto; no es la fecha de pago ni de resolución fiscal."
+              },
+              "name": "resolved_at",
+              "nullable": true,
+              "type": "timestamp with time zone"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "id",
+                "version"
+              ],
+              "definition": "FOREIGN KEY (id, version) REFERENCES reporting.operation_case_event(case_id, version) DEFERRABLE INITIALLY DEFERRED",
+              "name": "case_transition_required",
+              "references": {
+                "columns": [
+                  "case_id",
+                  "version"
+                ],
+                "schema": "reporting",
+                "table": "operation_case_event"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "anchor_id"
+              ],
+              "definition": "NOT NULL anchor_id",
+              "name": "operation_case_anchor_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "anchor_kind"
+              ],
+              "definition": "CHECK (anchor_kind = ANY (ARRAY['payments'::text, 'fiscal'::text, 'devices'::text]))",
+              "name": "operation_case_anchor_kind_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "anchor_kind"
+              ],
+              "definition": "NOT NULL anchor_kind",
+              "name": "operation_case_anchor_kind_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "branch_id"
+              ],
+              "definition": "NOT NULL branch_id",
+              "name": "operation_case_branch_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "branch_id",
+                "register_id",
+                "installation_id",
+                "anchor_kind",
+                "anchor_id",
+                "source_event_id"
+              ],
+              "definition": "UNIQUE (branch_id, register_id, installation_id, anchor_kind, anchor_id, source_event_id)",
+              "name": "operation_case_branch_id_register_id_installation_id_anchor_key",
+              "type": "u"
+            },
+            {
+              "columns": [
+                "state",
+                "resolved_at"
+              ],
+              "definition": "CHECK ((state = 'resolved'::text) = (resolved_at IS NOT NULL))",
+              "name": "operation_case_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "NOT NULL id",
+              "name": "operation_case_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "installation_id"
+              ],
+              "definition": "NOT NULL installation_id",
+              "name": "operation_case_installation_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "opened_at"
+              ],
+              "definition": "NOT NULL opened_at",
+              "name": "operation_case_opened_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "opened_by"
+              ],
+              "definition": "NOT NULL opened_by",
+              "name": "operation_case_opened_by_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "PRIMARY KEY (id)",
+              "name": "operation_case_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "reason"
+              ],
+              "definition": "CHECK (reason = btrim(reason) AND char_length(reason) >= 3 AND char_length(reason) <= 500)",
+              "name": "operation_case_reason_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "reason"
+              ],
+              "definition": "NOT NULL reason",
+              "name": "operation_case_reason_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "register_id"
+              ],
+              "definition": "NOT NULL register_id",
+              "name": "operation_case_register_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "source_event_id"
+              ],
+              "definition": "CHECK (char_length(source_event_id) >= 1 AND char_length(source_event_id) <= 240)",
+              "name": "operation_case_source_event_id_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "source_event_id"
+              ],
+              "definition": "NOT NULL source_event_id",
+              "name": "operation_case_source_event_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "source_evidence"
+              ],
+              "definition": "CHECK (jsonb_typeof(source_evidence) = 'object'::text)",
+              "name": "operation_case_source_evidence_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "source_evidence"
+              ],
+              "definition": "NOT NULL source_evidence",
+              "name": "operation_case_source_evidence_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "state"
+              ],
+              "definition": "CHECK (state = ANY (ARRAY['open'::text, 'resolved'::text]))",
+              "name": "operation_case_state_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "state"
+              ],
+              "definition": "NOT NULL state",
+              "name": "operation_case_state_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "version"
+              ],
+              "definition": "CHECK (version > 0)",
+              "name": "operation_case_version_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "version"
+              ],
+              "definition": "NOT NULL version",
+              "name": "operation_case_version_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "reporting",
+          "documentation": {
+            "description": "Expediente durable de coordinación de una excepción operativa.",
+            "sources": [
+              {
+                "path": "libs/backend/reporting/src/infrastructure/operation-case-migration.ts",
+                "symbol": "operationCaseMigration"
+              },
+              {
+                "path": "libs/backend/reporting/src/infrastructure/sql-operation-case.store.ts",
+                "symbol": "SqlOperationCaseStore"
+              },
+              {
+                "path": "libs/backend/reporting/src/application/operation-case.service.ts",
+                "symbol": "OperationCaseService"
+              }
+            ],
+            "usage": "Reporting conserva decisiones de seguimiento separadas de las proyecciones reconstruibles. La apertura referencia evidencia real autorizada; asignación y cierre requieren permisos explícitos y versión, sin modificar estados financieros."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE INDEX operation_case_anchor_lookup ON reporting.operation_case USING btree (branch_id, register_id, installation_id, anchor_kind, anchor_id, opened_at DESC, id DESC)",
+              "name": "operation_case_anchor_lookup"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX operation_case_branch_id_register_id_installation_id_anchor_key ON reporting.operation_case USING btree (branch_id, register_id, installation_id, anchor_kind, anchor_id, source_event_id)",
+              "name": "operation_case_branch_id_register_id_installation_id_anchor_key"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX operation_case_pkey ON reporting.operation_case USING btree (id)",
+              "name": "operation_case_pkey"
+            }
+          ],
+          "name": "operation_case",
+          "schema": "reporting"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identificador inmutable de una transición efectiva del expediente.",
+                "example": "10000000-0000-4000-8000-000000000001",
+                "usage": "Permite identificar el registro de apertura, asignación o cierre sin reutilizar evidencia financiera."
+              },
+              "name": "id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Expediente al que pertenece la transición auditada.",
+                "example": "10000000-0000-4000-8000-000000000001",
+                "usage": "La relación interna de reporting preserva historia y la consulta autorizada comprueba el ámbito del expediente."
+              },
+              "name": "case_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identidad del comando que produjo esta transición.",
+                "example": "10000000-0000-4000-8000-000000000001",
+                "usage": "El diario de comandos recupera el resultado original ante reintentos; un rechazo concurrente no genera otra transición."
+              },
+              "name": "command_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Operador autenticado que solicitó el cambio efectivo.",
+                "example": "10000000-0000-4000-8000-000000000001",
+                "usage": "Permite distinguir quién tomó la decisión de quién quedó asignado para dar seguimiento."
+              },
+              "name": "actor_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Clase de transición: apertura, asignación o cierre.",
+                "example": "opened",
+                "usage": "Describe exclusivamente coordinación operativa. No expresa que haya ocurrido un cobro, devolución o emisión."
+              },
+              "name": "event_type",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Versión del expediente después del cambio efectivo.",
+                "example": 1,
+                "usage": "Es única por expediente y ordena su historial sin depender de empates de fecha; mantiene la paginación estable."
+              },
+              "name": "version",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Momento en que PostgreSQL registró la transición.",
+                "example": "2026-11-03T10:00:00.000Z",
+                "usage": "Se muestra como tiempo de auditoría separado del momento externo de la evidencia original."
+              },
+              "name": "recorded_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Explicación de la apertura, reasignación o conclusión documentada.",
+                "example": "Revisión documentada; el efecto sigue incierto.",
+                "usage": "Se conserva sin modificación para reconstruir decisiones, con longitud acotada y sin datos sensibles de pago."
+              },
+              "name": "reason",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Responsable que quedó asignado después de la transición.",
+                "example": "10000000-0000-4000-8000-000000000001",
+                "usage": "Conserva la evolución del responsable; una asignación nula indica que quedó sin asignar."
+              },
+              "name": "assigned_operator_id",
+              "nullable": true,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Evidencia sanitizada que respalda una apertura o un cierre.",
+                "example": {
+                  "event": {
+                    "disposition": null,
+                    "eventId": "payments:observation:10000000-0000-4000-8000-000000000001",
+                    "eventType": "payment-observation",
+                    "kind": "payments",
+                    "occurredAt": null,
+                    "reasonCode": null,
+                    "recordedAt": "2026-11-03T10:00:00.000Z",
+                    "sourceId": "10000000-0000-4000-8000-000000000001",
+                    "state": "uncertain"
+                  },
+                  "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                },
+                "usage": "La asignación no crea evidencia financiera y deja este campo ausente. El cierre conserva su referencia sin modificar el origen."
+              },
+              "name": "evidence",
+              "nullable": true,
+              "type": "jsonb"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "actor_id"
+              ],
+              "definition": "NOT NULL actor_id",
+              "name": "operation_case_event_actor_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "case_id"
+              ],
+              "definition": "FOREIGN KEY (case_id) REFERENCES reporting.operation_case(id)",
+              "name": "operation_case_event_case_id_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "reporting",
+                "table": "operation_case"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "case_id"
+              ],
+              "definition": "NOT NULL case_id",
+              "name": "operation_case_event_case_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "case_id",
+                "version"
+              ],
+              "definition": "UNIQUE (case_id, version)",
+              "name": "operation_case_event_case_id_version_key",
+              "type": "u"
+            },
+            {
+              "columns": [
+                "event_type",
+                "evidence"
+              ],
+              "definition": "CHECK ((event_type = 'assigned'::text) = (evidence IS NULL))",
+              "name": "operation_case_event_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "command_id"
+              ],
+              "definition": "UNIQUE (command_id)",
+              "name": "operation_case_event_command_id_key",
+              "type": "u"
+            },
+            {
+              "columns": [
+                "command_id"
+              ],
+              "definition": "NOT NULL command_id",
+              "name": "operation_case_event_command_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "event_type"
+              ],
+              "definition": "CHECK (event_type = ANY (ARRAY['opened'::text, 'assigned'::text, 'resolved'::text]))",
+              "name": "operation_case_event_event_type_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "event_type"
+              ],
+              "definition": "NOT NULL event_type",
+              "name": "operation_case_event_event_type_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "evidence"
+              ],
+              "definition": "CHECK (evidence IS NULL OR jsonb_typeof(evidence) = 'object'::text)",
+              "name": "operation_case_event_evidence_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "NOT NULL id",
+              "name": "operation_case_event_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "PRIMARY KEY (id)",
+              "name": "operation_case_event_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "reason"
+              ],
+              "definition": "CHECK (reason = btrim(reason) AND char_length(reason) >= 3 AND char_length(reason) <= 500)",
+              "name": "operation_case_event_reason_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "reason"
+              ],
+              "definition": "NOT NULL reason",
+              "name": "operation_case_event_reason_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "recorded_at"
+              ],
+              "definition": "NOT NULL recorded_at",
+              "name": "operation_case_event_recorded_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "version"
+              ],
+              "definition": "CHECK (version > 0)",
+              "name": "operation_case_event_version_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "version"
+              ],
+              "definition": "NOT NULL version",
+              "name": "operation_case_event_version_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "reporting",
+          "documentation": {
+            "description": "Historia inmutable de las transiciones efectivas de un expediente.",
+            "sources": [
+              {
+                "path": "libs/backend/reporting/src/infrastructure/operation-case-migration.ts",
+                "symbol": "operationCaseMigration"
+              },
+              {
+                "path": "libs/backend/reporting/src/infrastructure/sql-operation-case.store.ts",
+                "symbol": "SqlOperationCaseStore"
+              },
+              {
+                "path": "libs/backend/reporting/src/application/operation-case.service.ts",
+                "symbol": "OperationCaseService"
+              }
+            ],
+            "usage": "Cada versión tiene una transición auditada. Los comandos rechazados permanecen en el diario de comandos; cerrar un expediente no resuelve por declaración el pago, la fiscalidad ni el dispositivo."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE UNIQUE INDEX operation_case_event_case_id_version_key ON reporting.operation_case_event USING btree (case_id, version)",
+              "name": "operation_case_event_case_id_version_key"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX operation_case_event_command_id_key ON reporting.operation_case_event USING btree (command_id)",
+              "name": "operation_case_event_command_id_key"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX operation_case_event_pkey ON reporting.operation_case_event USING btree (id)",
+              "name": "operation_case_event_pkey"
+            }
+          ],
+          "name": "operation_case_event",
+          "schema": "reporting"
         },
         {
           "columns": [
