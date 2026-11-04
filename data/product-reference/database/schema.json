@@ -137,6 +137,10 @@
         {
           "checksum": "08afe1d2ceab6b0543107bdfa826c2c91eae40ab2641b195e8ecbbaa9403b2d6",
           "id": "242_operation_cases"
+        },
+        {
+          "checksum": "c48ceb2453d9180906b633cfd0f7d97ce0515ccbd9b5121abe4ea4b2a9ccaebd",
+          "id": "243_compensation_cancellation"
         }
       ],
       "schemas": [
@@ -9048,7 +9052,7 @@
               "documentation": {
                 "description": "Estado durable de la anulación o devolución.",
                 "example": "uncertain",
-                "usage": "confirmed requiere evidencia compatible; uncertain conserva la reserva, y reconciliation-required exige revisión por conflicto."
+                "usage": "confirmed requiere evidencia compatible; uncertain conserva la reserva, y reconciliation-required exige revisión por conflicto. cancelled es terminal, exige evidencia inmutable sin intentos previos y libera únicamente la reserva de compensación sin devolver dinero."
               },
               "name": "state",
               "nullable": false,
@@ -9209,7 +9213,7 @@
               "columns": [
                 "state"
               ],
-              "definition": "CHECK (state = ANY (ARRAY['created'::text, 'dispatching'::text, 'confirmed'::text, 'rejected'::text, 'uncertain'::text, 'reconciliation-required'::text]))",
+              "definition": "CHECK (state = ANY (ARRAY['created'::text, 'dispatching'::text, 'confirmed'::text, 'rejected'::text, 'cancelled'::text, 'uncertain'::text, 'reconciliation-required'::text]))",
               "name": "compensation_state_check",
               "type": "c"
             },
@@ -9277,6 +9281,153 @@
             }
           ],
           "name": "compensation",
+          "schema": "payments"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Reserva cancelada, con una única evidencia de cancelación.",
+                "example": "10000000-0000-4000-8000-000000000064",
+                "usage": "Relaciona el registro con la compensación sin modificar su identidad o importe."
+              },
+              "name": "compensation_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Operador autorizado que retiró la reserva.",
+                "example": "10000000-0000-4000-8000-000000000006",
+                "usage": "Conserva al actor incluso cuando es un supervisor distinto del propietario del plan."
+              },
+              "name": "cancelled_by",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Hora del servidor al registrar la cancelación.",
+                "example": "2026-11-04T14:30:00.000Z",
+                "usage": "Ordena la evidencia cronológica de la operación."
+              },
+              "name": "cancelled_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Motivo obligatorio declarado por el operador.",
+                "example": "Continuar con la venta original sin devolver dinero.",
+                "usage": "Explica por qué se retiró la reserva; no constituye evidencia bancaria."
+              },
+              "name": "reason",
+              "nullable": false,
+              "type": "text"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [],
+              "definition": "TRIGGER DEFERRABLE INITIALLY DEFERRED",
+              "name": "check_cancelled_compensation",
+              "type": "t"
+            },
+            {
+              "columns": [
+                "cancelled_at"
+              ],
+              "definition": "NOT NULL cancelled_at",
+              "name": "compensation_cancellation_cancelled_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "cancelled_by"
+              ],
+              "definition": "NOT NULL cancelled_by",
+              "name": "compensation_cancellation_cancelled_by_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "compensation_id"
+              ],
+              "definition": "FOREIGN KEY (compensation_id) REFERENCES payments.compensation(id)",
+              "name": "compensation_cancellation_compensation_id_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "payments",
+                "table": "compensation"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "compensation_id"
+              ],
+              "definition": "NOT NULL compensation_id",
+              "name": "compensation_cancellation_compensation_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "compensation_id"
+              ],
+              "definition": "PRIMARY KEY (compensation_id)",
+              "name": "compensation_cancellation_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "reason"
+              ],
+              "definition": "CHECK (reason = btrim(reason) AND char_length(reason) >= 3 AND char_length(reason) <= 200)",
+              "name": "compensation_cancellation_reason_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "reason"
+              ],
+              "definition": "NOT NULL reason",
+              "name": "compensation_cancellation_reason_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "payments",
+          "documentation": {
+            "description": "Evidencia inmutable de cancelación de una reserva antes de cualquier intento.",
+            "sources": [
+              {
+                "path": "libs/backend/payments/src/infrastructure/compensation-cancellation.migration.ts",
+                "symbol": "compensationCancellationMigration"
+              },
+              {
+                "path": "libs/backend/payments/src/application/payments.service.ts",
+                "symbol": "cancelCompensation"
+              }
+            ],
+            "usage": "Se confirma junto al estado cancelled; libera únicamente la reserva de compensación. No acredita devolución ni cambia el cobro original."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE UNIQUE INDEX compensation_cancellation_pkey ON payments.compensation_cancellation USING btree (compensation_id)",
+              "name": "compensation_cancellation_pkey"
+            }
+          ],
+          "name": "compensation_cancellation",
           "schema": "payments"
         },
         {

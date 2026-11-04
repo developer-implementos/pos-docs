@@ -11,6 +11,8 @@ La recuperación depende de qué se perdió. Una respuesta HTTP ausente, un resu
 | Se perdió la respuesta al confirmar | [Recuperar el comando original](/guide/implementation/phase-1/#resolver-un-resultado-incierto) |
 | Hay cobro confirmado y venta pendiente | [Recuperación comercial y compensación explícita](/guide/implementation/phase-2/#recuperación-de-venta-y-compensación-explícita) |
 | Se desconoce si hubo cobro externo | [Pago incierto](payments.md): conservar identidad, destino y reserva |
+| Necesito consultar al proveedor el resultado del pago o documento original | [Consulta explícita del efecto original](/guide/implementation/phase-2/#consulta-explícita-del-efecto-original): disponibilidad, autorización y recuperación de la misma solicitud |
+| Necesito retirar una reserva de compensación que nunca se envió | [Cancelación de una reserva antes del envío](/guide/implementation/phase-2/#cancelación-de-una-reserva-antes-del-envío): decisión local con motivo; no devuelve dinero |
 | El host no recibió el acuse de un resultado | [Trabajo de impresión](printing.md): recuperar evidencia sin repetir efecto |
 | Se perdió el servidor o se restauró una copia | [Restauración y retorno controlado](/explore/recovery/) |
 

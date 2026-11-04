@@ -12909,6 +12909,420 @@
         ]
       }
     },
+    "/api/v1/fiscal/documents/{documentId}/inquiry-options": {
+      "get": {
+        "operationId": "getFiscalInquiryOptionsV1",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "documentId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "allowedActions": {
+                      "items": {
+                        "enum": [
+                          "inquire"
+                        ],
+                        "type": "string"
+                      },
+                      "maxItems": 1,
+                      "type": "array"
+                    },
+                    "documentId": {
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                      "type": "string"
+                    },
+                    "reasonCodes": {
+                      "items": {
+                        "enum": [
+                          "permission-required",
+                          "inquiry-not-required",
+                          "inquiry-not-supported",
+                          "provider-unavailable"
+                        ],
+                        "type": "string"
+                      },
+                      "maxItems": 4,
+                      "type": "array"
+                    },
+                    "state": {
+                      "enum": [
+                        "prepared",
+                        "dispatching",
+                        "unknown",
+                        "submitted",
+                        "accepted",
+                        "rejected"
+                      ],
+                      "type": "string"
+                    },
+                    "version": {
+                      "maximum": 9007199254740991,
+                      "minimum": 0,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "documentId",
+                    "version",
+                    "state",
+                    "allowedActions",
+                    "reasonCodes"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Error público con código estable; no contiene detalles internos."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Error público con código estable; no contiene detalles internos."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Error público con código estable; no contiene detalles internos."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Error público con código estable; no contiene detalles internos."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Error público con código estable; no contiene detalles internos."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Error público con código estable; no contiene detalles internos."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Error público con código estable; no contiene detalles internos."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Consultar disponibilidad de consulta explícita del efecto original",
+        "tags": [
+          "Fiscal"
+        ]
+      }
+    },
     "/api/v1/fiscal/documents/{documentId}/reconcile": {
       "post": {
         "operationId": "reconcileFiscalDocumentV1",
@@ -15567,6 +15981,7 @@
                                           "payment-attempt-finished",
                                           "payment-observation",
                                           "compensation-created",
+                                          "compensation-cancelled",
                                           "payment-review-requested",
                                           "payment-plan-created",
                                           "compensation-attempt-started",
@@ -16267,6 +16682,7 @@
                                 "payment-attempt-finished",
                                 "payment-observation",
                                 "compensation-created",
+                                "compensation-cancelled",
                                 "payment-review-requested",
                                 "payment-plan-created",
                                 "compensation-attempt-started",
@@ -16901,6 +17317,7 @@
                                     "payment-attempt-finished",
                                     "payment-observation",
                                     "compensation-created",
+                                    "compensation-cancelled",
                                     "payment-review-requested",
                                     "payment-plan-created",
                                     "compensation-attempt-started",
@@ -17549,6 +17966,7 @@
                                 "payment-attempt-finished",
                                 "payment-observation",
                                 "compensation-created",
+                                "compensation-cancelled",
                                 "payment-review-requested",
                                 "payment-plan-created",
                                 "compensation-attempt-started",
@@ -18139,6 +18557,7 @@
                                       "payment-attempt-finished",
                                       "payment-observation",
                                       "compensation-created",
+                                      "compensation-cancelled",
                                       "payment-review-requested",
                                       "payment-plan-created",
                                       "compensation-attempt-started",
@@ -18807,6 +19226,7 @@
                                 "payment-attempt-finished",
                                 "payment-observation",
                                 "compensation-created",
+                                "compensation-cancelled",
                                 "payment-review-requested",
                                 "payment-plan-created",
                                 "compensation-attempt-started",
@@ -19537,6 +19957,7 @@
                               "payment-attempt-finished",
                               "payment-observation",
                               "compensation-created",
+                              "compensation-cancelled",
                               "payment-review-requested",
                               "payment-plan-created",
                               "compensation-attempt-started",
@@ -20113,6 +20534,7 @@
                         "dispatching",
                         "confirmed",
                         "rejected",
+                        "cancelled",
                         "uncertain",
                         "reconciliation-required"
                       ],
@@ -20474,6 +20896,487 @@
         ]
       }
     },
+    "/api/v1/payment-compensations/{compensationId}/cancel": {
+      "post": {
+        "operationId": "cancelPaymentCompensationV1",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "compensationId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "commandId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "contractVersion": {
+                    "enum": [
+                      1
+                    ],
+                    "type": "number"
+                  },
+                  "expectedVersion": {
+                    "maximum": 9007199254740991,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "reason": {
+                    "maxLength": 200,
+                    "minLength": 3,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "commandId",
+                  "contractVersion",
+                  "expectedVersion",
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "action": {
+                      "enum": [
+                        "void",
+                        "refund"
+                      ],
+                      "type": "string"
+                    },
+                    "amount": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "amount": {
+                          "pattern": "^(0|[1-9]\\d{0,11})(\\.\\d{1,4})?$",
+                          "type": "string"
+                        },
+                        "currency": {
+                          "pattern": "^[A-Z]{3}$",
+                          "type": "string"
+                        },
+                        "scale": {
+                          "maximum": 4,
+                          "minimum": 0,
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "amount",
+                        "currency",
+                        "scale"
+                      ],
+                      "type": "object"
+                    },
+                    "compensationId": {
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    },
+                    "paymentIntentId": {
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                      "type": "string"
+                    },
+                    "providerReference": {
+                      "nullable": true,
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:/-]{0,119}$",
+                      "type": "string"
+                    },
+                    "state": {
+                      "enum": [
+                        "created",
+                        "dispatching",
+                        "confirmed",
+                        "rejected",
+                        "cancelled",
+                        "uncertain",
+                        "reconciliation-required"
+                      ],
+                      "type": "string"
+                    },
+                    "version": {
+                      "maximum": 9007199254740991,
+                      "minimum": 0,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "compensationId",
+                    "paymentIntentId",
+                    "action",
+                    "amount",
+                    "state",
+                    "version",
+                    "createdAt",
+                    "providerReference"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Error público con código estable; no contiene detalles internos."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Error público con código estable; no contiene detalles internos."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Error público con código estable; no contiene detalles internos."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Error público con código estable; no contiene detalles internos."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Error público con código estable; no contiene detalles internos."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Error público con código estable; no contiene detalles internos."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Error público con código estable; no contiene detalles internos."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Cancelar una reserva sin intentos previos, conservando el pago original",
+        "tags": [
+          "Payments"
+        ]
+      }
+    },
     "/api/v1/payment-compensations/{compensationId}/execute": {
       "post": {
         "operationId": "executePaymentCompensationV1",
@@ -20587,6 +21490,7 @@
                         "dispatching",
                         "confirmed",
                         "rejected",
+                        "cancelled",
                         "uncertain",
                         "reconciliation-required"
                       ],
@@ -20973,6 +21877,59 @@
                     "allowed": {
                       "type": "boolean"
                     },
+                    "cancellation": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "allowed": {
+                          "type": "boolean"
+                        },
+                        "evidence": {
+                          "additionalProperties": false,
+                          "nullable": true,
+                          "properties": {
+                            "cancelledAt": {
+                              "format": "date-time",
+                              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                              "type": "string"
+                            },
+                            "cancelledBy": {
+                              "format": "uuid",
+                              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                              "type": "string"
+                            },
+                            "reason": {
+                              "maxLength": 200,
+                              "minLength": 3,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "cancelledBy",
+                            "cancelledAt",
+                            "reason"
+                          ],
+                          "type": "object"
+                        },
+                        "reasonCodes": {
+                          "items": {
+                            "enum": [
+                              "permission-required",
+                              "compensation-not-created",
+                              "attempt-exists"
+                            ],
+                            "type": "string"
+                          },
+                          "maxItems": 3,
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "allowed",
+                        "reasonCodes",
+                        "evidence"
+                      ],
+                      "type": "object"
+                    },
                     "compensation": {
                       "additionalProperties": false,
                       "properties": {
@@ -21033,6 +21990,7 @@
                             "dispatching",
                             "confirmed",
                             "rejected",
+                            "cancelled",
                             "uncertain",
                             "reconciliation-required"
                           ],
@@ -21539,6 +22497,7 @@
                         "dispatching",
                         "confirmed",
                         "rejected",
+                        "cancelled",
                         "uncertain",
                         "reconciliation-required"
                       ],
@@ -24350,6 +25309,7 @@
                                   "dispatching",
                                   "confirmed",
                                   "rejected",
+                                  "cancelled",
                                   "uncertain",
                                   "reconciliation-required"
                                 ],
@@ -24899,6 +25859,7 @@
                         "dispatching",
                         "confirmed",
                         "rejected",
+                        "cancelled",
                         "uncertain",
                         "reconciliation-required"
                       ],
@@ -25833,6 +26794,421 @@
           }
         ],
         "summary": "Despachar una sola vez el cobro autorizado",
+        "tags": [
+          "Payments"
+        ]
+      }
+    },
+    "/api/v1/payment-intents/{paymentIntentId}/inquiry-options": {
+      "get": {
+        "operationId": "getPaymentInquiryOptionsV1",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "paymentIntentId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "allowedActions": {
+                      "items": {
+                        "enum": [
+                          "inquire"
+                        ],
+                        "type": "string"
+                      },
+                      "maxItems": 1,
+                      "type": "array"
+                    },
+                    "paymentIntentId": {
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                      "type": "string"
+                    },
+                    "reasonCodes": {
+                      "items": {
+                        "enum": [
+                          "permission-required",
+                          "inquiry-not-required",
+                          "inquiry-not-supported",
+                          "provider-unavailable"
+                        ],
+                        "type": "string"
+                      },
+                      "maxItems": 4,
+                      "type": "array"
+                    },
+                    "state": {
+                      "enum": [
+                        "created",
+                        "dispatching",
+                        "approved",
+                        "declined",
+                        "cancelled",
+                        "uncertain",
+                        "reconciliation-required"
+                      ],
+                      "type": "string"
+                    },
+                    "version": {
+                      "maximum": 9007199254740991,
+                      "minimum": 0,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "paymentIntentId",
+                    "version",
+                    "state",
+                    "allowedActions",
+                    "reasonCodes"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Error público con código estable; no contiene detalles internos."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Error público con código estable; no contiene detalles internos."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Error público con código estable; no contiene detalles internos."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Error público con código estable; no contiene detalles internos."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Error público con código estable; no contiene detalles internos."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Error público con código estable; no contiene detalles internos."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Error público con código estable; no contiene detalles internos."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Consultar disponibilidad de consulta explícita del efecto original",
         "tags": [
           "Payments"
         ]
