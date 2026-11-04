@@ -4,6 +4,8 @@ Repositorio editorial público de POS Platform. Contiene el portal de recursos, 
 
 ## Trabajo coordinado
 
+La CI se ejecuta desde los equipos del desarrollo, sin GitHub Actions. No reactivar workflows ni usar ejecución alojada como respaldo. Seguir [el procedimiento local](tools/local-ci/README.md), manteniendo separada la evidencia del candidato de la política de su PR y la aprobación humana. No hay Mac disponible y no se acredita iOS. Las protecciones actuales conservan su vigencia hasta activar explícitamente una transición revisada.
+
 Para iniciar o retomar tareas, preparar PR, revisar avance o dejar un traspaso, usar la skill [pos-delivery](.agents/skills/pos-delivery/SKILL.md), disponible en Codex y Claude Code. Este repositorio recibe una distribución fijada por revisión desde POS Platform; no editar su contenido ni mantener otra variante editorial. Ver `tools/agent-skills/README.md` y ejecutar `npm run skills:check`. Las instrucciones y fuentes siguientes conservan su autoridad; la skill no reemplaza checks ni revisión.
 
 El backlog de producto y sus responsables están en GitHub Issues de `developer-implementos/pos-platform`; leer su `CONTRIBUTING.md` y la ficha `delivery/specs/Fxx-xx.md` antes de cambiar un contrato o el alcance. Enlazar cada PR documental al issue del producto mediante URL completa. No cerrar el entregable desde un PR editorial ni atribuir aceptación de producto a la publicación de documentación. Una sesión de agente trabaja en una rama propia y deja decisiones, validaciones y bloqueos en el issue o PR, no sólo en el chat.

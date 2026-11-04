@@ -18,9 +18,9 @@ Después de construir el sitio, `node tools/editorial/journeys-check.mjs --body-
 
 Para verificar una PR real y su issue con una sesión de lectura autorizada, usar `node tools/editorial/pr-check.mjs --pr NUMERO --github --require-issue`. El cliente lee `GH_TOKEN` o `GITHUB_TOKEN` del entorno; nunca pasar credenciales como argumento, copiarlas a archivos o mostrarlas en logs. La comprobación local de cuerpo es offline y declara explícitamente que no consultó la issue.
 
-## Ejecución en GitHub
+## Ejecución local y workflows conservados
 
-`npm run verify` es la entrada canónica de verificación local y del workflow `docs-quality.yml`. GitHub instala las dependencias y Chromium antes de invocarla; no mantiene otra lista de suites que pueda divergir. Después del build y las comprobaciones, valida los recorridos declarados cuando se trata de una PR y conserva la subida de evidencias con `always()`, incluso si falla una etapa. La ejecución local no acredita que la revisión remota actual ya haya pasado.
+GitHub Actions permanece deshabilitado por TASK-161. El [recorrido local](../local-ci/README.md) invoca `npm run verify` como entrada canónica y comprueba además los recorridos declarados. Los workflows versionados conservan su configuración para revisión; su presencia no acredita ejecución remota ni autoriza reactivarlos. El wrapper no consulta la política online: ejecutar el comando de PR real desde una base confiable en un entorno separado.
 
 `editorial-policy.yml` ejecuta sólo la política de la base confiable con `pull_request_target`: lee metadatos de la PR, archivos cambiados y, si el token tiene acceso, la issue de POS Platform. No ejecuta código de la PR, instala paquetes, recupera cachés ni descarga sus artefactos. Las credenciales tienen sólo lectura y los destinos HTTP están limitados a los dos repositorios; no se siguen redirecciones. Los títulos y cuerpos nunca se interpolan en shell.
 
