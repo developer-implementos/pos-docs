@@ -1,14 +1,26 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import { createHash } from 'node:crypto';
 import { filesAfterChanges, validateOwners, validatePullRequest, verifyIssue, visibleBody } from './policy.mjs';
-import { checkLinkedIssue, githubClient, loadPullRequest } from './github.mjs';
+import { assertPullRequestUnchanged, checkLinkedIssue, githubClient, loadPullRequest as loadLivePullRequest } from './github.mjs';
+
+// Existing editorial metadata cases explicitly provide empty Git trees.
+const loadPullRequest = (get, ...args) => loadLivePullRequest(async path => {
+  const commit = path.match(/\/git\/commits\/([a-f0-9]{40})$/);
+  if (commit) return { status: 200, value: { sha: commit[1], tree: { sha: commit[1] } } };
+  const tree = path.match(/\/git\/trees\/([a-f0-9]{40})\?recursive=1$/);
+  if (tree) return { status: 200, value: { sha: tree[1], truncated: false, tree: [] } };
+  return get(path);
+}, ...args);
 
 const validBody = `Issue: https://github.com/developer-implementos/pos-platform/issues/121
 Documentation-Impact: architecture, behavior
 Sources: docs/decisions/device-agent.md, tools/architecture/model.mjs
 Reader-Journeys: /guide/flows/printing/, /guide/diagrams/#mapa-general-de-arquitectura
 Review-Evidence: Revisión técnica del flujo y tests en la PR; revisión humana pendiente de asignación.
+ODD-Task: inline
+ODD-Reason: Corrección editorial acotada sobre una decisión existente y comprendida.
 
 ## Resultado
 La recepción durable y la autorización del efecto quedan distinguidas en todas las vistas.
@@ -133,7 +145,7 @@ test('GitHub client constrains token destinations and rejects redirects', async 
 });
 
 const head = 'a'.repeat(40);
-const pr = { number: 23, state: 'open', body: validBody, changed_files: 1, head: { sha: head }, base: { ref: 'main', repo: { full_name: 'developer-implementos/pos-docs' } } };
+const pr = { number: 23, state: 'open', body: validBody, changed_files: 1, head: { sha: head }, base: { ref: 'main', sha: 'b'.repeat(40), repo: { full_name: 'developer-implementos/pos-docs' } } };
 
 test('remote PR inspection reads metadata only and verifies it did not change', async () => {
   const requested = [];
@@ -160,6 +172,14 @@ test('CODEOWNERS requires coverage and prevents ownerless or shadowed entries', 
   assert.throws(() => validateOwners('* @floxcristian\n* @someone'), /duplicate/);
 });
 
+test('the repository CODEOWNERS uses the explicit paths required by editorial policy', () => {
+  const owners = fs.readFileSync(new URL('../../.github/CODEOWNERS', import.meta.url), 'utf8');
+  assert.ok(validateOwners(owners).areas > 1);
+  for (const pattern of ['/package*.json', '/eslint.config.*', '/tools/verify-local-ci*']) {
+    assert.throws(() => validateOwners(`* @developer-implementos/pos-platform\n${pattern} @floxcristian`), /explicit repository paths/);
+  }
+});
+
 test('privileged metadata workflow checks out only trusted base with read permissions', () => {
   const workflow = fs.readFileSync(new URL('../../.github/workflows/editorial-policy.yml', import.meta.url), 'utf8');
   assert.match(workflow, /pull_request_target:/);
@@ -167,8 +187,133 @@ test('privileged metadata workflow checks out only trusted base with read permis
   assert.match(workflow, /persist-credentials: false/);
   assert.match(workflow, /contents: read/);
   assert.match(workflow, /pull-requests: read/);
-  assert.doesNotMatch(workflow, /secrets\.|: write|head\.(?:sha|ref)|npm |cache:|download-artifact/);
+  assert.doesNotMatch(workflow, /secrets\.|: write|head\.(?:sha|ref)|npm |download-artifact/);
+  assert.doesNotMatch(workflow, /^[ \t]*cache:/m);
+  assert.match(workflow, /^[ \t]+package-manager-cache: false[ \t]*\r?$/m);
   const runLines = workflow.split(/\r?\n/).filter(line => /\brun:/.test(line));
   assert.equal(runLines.length, 1);
   assert.doesNotMatch(runLines[0], /\$\{\{/);
+});
+
+const oddPath = 'odd/tasks/editorial-recovery.md';
+const oddDocument = `# Clarify recovery in the proposal
+## Specs
+- S1. Preserve the existing distinction between implementation and acceptance.
+## Tasks
+- [ ] T1 · S1 · route:inline · Check the recovery explanation · status:in_progress · evidence: editorial verification pending.
+## Log
+- L1 · Original request, verbatim:
+
+> Explain recovery without claiming an operational acceptance.
+`;
+
+function oddRepository({ before = {}, after = {}, reference = oddPath } = {}) {
+  const pull = structuredClone(pr);
+  pull.body = validBody.replace('ODD-Task: inline', `ODD-Task: ${reference}`);
+  const repository = pull.base.repo.full_name;
+  const responses = new Map();
+  for (const [revision, files] of [[pull.base.sha, before], [pull.head.sha, after]]) {
+    const entries = [];
+    for (const [path, text] of Object.entries(files)) {
+      const bytes = Buffer.from(text);
+      const sha = createHash('sha1').update(`blob ${bytes.length}\0`).update(bytes).digest('hex');
+      entries.push({ path, mode: '100644', type: 'blob', size: bytes.length, sha });
+      responses.set(`repos/${repository}/git/blobs/${sha}`, { sha, size: bytes.length, encoding: 'base64', content: bytes.toString('base64') });
+    }
+    if (entries.length) entries.push(
+      { path: 'odd', mode: '040000', type: 'tree', sha: 'd'.repeat(40) },
+      { path: 'odd/tasks', mode: '040000', type: 'tree', sha: 'e'.repeat(40) },
+    );
+    const sha = createHash('sha1').update(JSON.stringify(entries)).digest('hex');
+    responses.set(`repos/${repository}/git/commits/${revision}`, { sha: revision, tree: { sha } });
+    responses.set(`repos/${repository}/git/trees/${sha}?recursive=1`, { sha, truncated: false, tree: entries });
+  }
+  const calls = [];
+  const get = async path => {
+    calls.push(path);
+    if (path === `repos/${repository}/pulls/23`) return { status: 200, value: structuredClone(pull) };
+    if (path === `repos/${repository}/pulls/23/files?per_page=100&page=1`) return { status: 200, value: [{ filename: oddPath, status: 'modified' }] };
+    if (responses.has(path)) return { status: 200, value: structuredClone(responses.get(path)) };
+    return { status: 404 };
+  };
+  return { get, pull, responses, calls };
+}
+
+test('editorial ODD declaration must be visible, unique and explicit even for a small correction', () => {
+  for (const replacement of ['', '<!-- ODD-Task: inline -->', '> ODD-Task: inline', '    ODD-Task: inline', '```\nODD-Task: inline\n```']) {
+    assert.throws(() => validate(validBody.replace('ODD-Task: inline', replacement)), /visible ODD-Task/);
+  }
+  assert.throws(() => validate(validBody + '\nODD-Task: inline'), /visible ODD-Task/);
+  assert.throws(() => validate(validBody.replace(/ODD-Reason: [^\n]+/, 'ODD-Reason: TODO')), /concretely/);
+  assert.throws(() => validate(validBody.replace('ODD-Task: inline', 'ODD-Task: odd/tasks/../secret.md')), /kebab/);
+});
+
+test('editorial PR validates source text and all changed task histories at head/base SHAs', async () => {
+  const subject = oddRepository({ after: { [oddPath]: oddDocument } });
+  const result = await loadLivePullRequest(subject.get, 23, subject.pull.head.sha, subject.pull.base.sha);
+  assert.equal(result.head, subject.pull.head.sha);
+  assert.equal(result.base, subject.pull.base.sha);
+  assert.equal(subject.calls.filter(path => path.includes('/git/blobs/')).length, 1);
+  assert.ok(subject.calls.includes(`repos/developer-implementos/pos-docs/git/commits/${subject.pull.base.sha}`));
+  assert.ok(subject.calls.includes(`repos/developer-implementos/pos-docs/git/commits/${subject.pull.head.sha}`));
+  assert.equal(subject.calls.at(-1), 'repos/developer-implementos/pos-docs/pulls/23');
+  for (const [after, pattern] of [
+    [{ [oddPath]: oddDocument.replace('without claiming', 'claiming') }, /append-only/],
+    [{}, /must not be removed/],
+    [{ 'odd/tasks/renamed.md': oddDocument }, /must not be removed/],
+  ]) {
+    const invalid = oddRepository({ reference: 'inline', before: { [oddPath]: oddDocument }, after });
+    await assert.rejects(loadLivePullRequest(invalid.get, 23), pattern);
+  }
+});
+
+test('declared ODD source access is mandatory even when product issue access may remain unverified', async () => {
+  const absent = oddRepository();
+  await assert.rejects(loadLivePullRequest(absent.get, 23), /Required ODD document does not exist/);
+  for (const status of [403, 404]) {
+    const subject = oddRepository({ reference: `https://github.com/developer-implementos/pos-platform/blob/${'c'.repeat(40)}/${oddPath}` });
+    const get = async path => path.startsWith('repos/developer-implementos/pos-platform/') ? { status } : subject.get(path);
+    await assert.rejects(loadLivePullRequest(get, 23), new RegExp(`Cannot read ODD.*HTTP ${status}`));
+    assert.equal((await checkLinkedIssue(get, 122)).status, 'unverified');
+  }
+});
+
+test('editorial Git API allowlist permits only immutable reads and never arbitrary destinations', async () => {
+  const calls = [];
+  const get = githubClient({ token: 'synthetic-token', fetcher: async (url, options) => {
+    calls.push(url);
+    assert.equal(options.redirect, 'error');
+    assert.equal(options.method, undefined, 'Read-only GET is the only operation');
+    return { ok: true, status: 200, json: async () => ({}) };
+  } });
+  for (const path of [`git/commits/${head}`, `git/blobs/${head}`, `git/trees/${head}?recursive=1`]) {
+    await get(`repos/developer-implementos/pos-docs/${path}`);
+  }
+  for (const path of [
+    'repos/developer-implementos/pos-docs/git/commits/main',
+    `repos/other/private/git/commits/${head}`,
+    `repos/developer-implementos/pos-docs/git/blobs/${head}?ref=main`,
+    `repos/developer-implementos/pos-docs/git/trees/${head}?recursive=1&token=bad`,
+    `https://example.test/${head}`,
+  ]) await assert.rejects(get(path), /allowlist/);
+  assert.equal(calls.length, 3);
+});
+
+test('editorial head, base and mutable metadata are rechecked after source reads and issue lookup', async () => {
+  for (const field of ['head', 'base', 'body', 'state']) {
+    const subject = oddRepository({ after: { [oddPath]: oddDocument } });
+    await assert.rejects(loadLivePullRequest(async path => {
+      const response = await subject.get(path);
+      if (path.includes('/git/blobs/')) {
+        if (['head', 'base'].includes(field)) subject.pull[field].sha = 'f'.repeat(40);
+        else subject.pull[field] = 'changed';
+      }
+      return response;
+    }, 23), /changed during/);
+  }
+  const subject = oddRepository({ after: { [oddPath]: oddDocument } });
+  await assert.rejects(loadLivePullRequest(subject.get, 23, head, 'f'.repeat(40)), /base changed since/);
+  const result = await loadLivePullRequest(subject.get, 23);
+  subject.pull.body += '\nEdited while reading the product issue.';
+  await assert.rejects(assertPullRequestUnchanged(subject.get, result.snapshot), /changed during/);
 });

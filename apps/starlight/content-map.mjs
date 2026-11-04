@@ -140,6 +140,7 @@ export const generatedPages = [
   reference('reference/narration-pipeline', 'docs/editorial/narration-pipeline.md', 'Narrador de la presentación histórica', 'Antecedentes del guion, generación y publicación del audio del explorador anterior.', 'historical'),
   reference('reference/video-publication', 'docs/editorial/video-publication.md', 'Video: producción y publicación', 'Antecedentes del video y su procedimiento de producción.', 'historical'),
   reference('implementation/start-a-task', 'docs/start-a-task.md', 'Empezar una tarea', 'Desde la tarea asignada hasta el entorno, la verificación y la PR, enlazando las instrucciones canónicas del producto.'),
+  reference('implementation/development-methodology', 'docs/development-methodology.md', 'Método de desarrollo con IA', 'ODD: intención, tareas y evidencia entre sesiones; relación con Engram, revisión independiente y fuentes de seguimiento.'),
   reference('implementation/repository', 'docs/product-repository.md', 'Repositorio POS Platform', 'Entrada al monorepo: aplicaciones, comandos, documentación y límites de implementación.', 'implementation'),
   reference('implementation/agent-workflow', 'docs/agent-workflow.md', 'Trabajo con Codex y Claude Code', 'Uso y mantenimiento de la skill compartida para issues, PR, evidencia, bloqueos y traspasos.', 'reference'),
   reference('implementation/progress', 'docs/project-progress.md', 'Metodología del avance', 'Fuentes, verificación técnica, aceptación manual y publicación del corte de gestión de POS Platform.', 'reference'),
@@ -184,11 +185,12 @@ export const sidebar = [
   ] },
   { label: 'Empezar una tarea', collapsed: true, items: [
     item('implementation/start-a-task', 'Guía para empezar'),
+    item('implementation/development-methodology'),
     item('implementation/repository'),
     item('implementation/monorepo'),
     item('implementation/architecture'),
     item('implementation/testing'),
-    { label: 'Guías de implementación', collapsed: true, items: generatedPages.filter(page => page.route.startsWith('implementation/') && !['start-a-task', 'repository', 'monorepo', 'architecture', 'testing', 'progress', 'deployment'].includes(page.route.split('/')[1])).map(page => item(page.route)) },
+    { label: 'Guías de implementación', collapsed: true, items: generatedPages.filter(page => page.route.startsWith('implementation/') && !['start-a-task', 'development-methodology', 'repository', 'monorepo', 'architecture', 'testing', 'progress', 'deployment'].includes(page.route.split('/')[1])).map(page => item(page.route)) },
   ] },
   { label: 'Consultar APIs y datos', collapsed: true, items: [
     { label: 'APIs de POS Platform', link: '/api/pos-platform/' },

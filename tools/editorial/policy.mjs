@@ -1,3 +1,5 @@
+import { parseDeclaration } from '../odd/check.mjs';
+
 const issuePattern = /^https:\/\/github\.com\/developer-implementos\/pos-platform\/issues\/([1-9]\d*)$/;
 const allowedImpacts = new Set(['architecture', 'behavior', 'contracts', 'data', 'none']);
 const requiredSections = ['Resultado', 'Fuentes y revisión', 'Validación', 'Riesgos y reversión'];
@@ -86,6 +88,7 @@ export function validatePullRequest({ body, knownFiles }) {
   if (/\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)(?:\s*:\s*|\s+)(?:https:\/\/github\.com\/)?developer-implementos\/pos-platform(?:\/issues\/|#)\d+/i.test(body)) {
     throw new Error('Editorial PRs reference product issues without closing product deliverables.');
   }
+  parseDeclaration(body);
   return { issueNumber: Number(issue[1]), issueUrl: fields.Issue, impacts, sources, journeys, reviewEvidence };
 }
 

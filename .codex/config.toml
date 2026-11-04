@@ -1,0 +1,6 @@
+# Project-only MCP; no credentials, model overrides, global hooks or auto-approval.
+[mcp_servers.pos_engram]
+command = "node"
+args = ["tools/odd/engram.mjs"]
+startup_timeout_sec = 20
+tool_timeout_sec = 60

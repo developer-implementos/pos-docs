@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "pos_engram": {
+      "command": "node",
+      "args": ["tools/odd/engram.mjs"]
+    }
+  }
+}

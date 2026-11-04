@@ -23,6 +23,7 @@ jobs:
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: '22.23.3'
+          package-manager-cache: false
       - name: Validate declarations and available issue evidence
         env:
           GITHUB_TOKEN: ${{ github.token }}

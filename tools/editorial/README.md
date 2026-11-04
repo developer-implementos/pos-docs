@@ -20,11 +20,13 @@ Para verificar una PR real y su issue con una sesión de lectura autorizada, usa
 
 ## Ejecución en GitHub
 
+`npm run verify` es la entrada canónica de verificación local y del workflow `docs-quality.yml`. GitHub instala las dependencias y Chromium antes de invocarla; no mantiene otra lista de suites que pueda divergir. Después del build y las comprobaciones, valida los recorridos declarados cuando se trata de una PR y conserva la subida de evidencias con `always()`, incluso si falla una etapa. La ejecución local no acredita que la revisión remota actual ya haya pasado.
+
 `editorial-policy.yml` ejecuta sólo la política de la base confiable con `pull_request_target`: lee metadatos de la PR, archivos cambiados y, si el token tiene acceso, la issue de POS Platform. No ejecuta código de la PR, instala paquetes, recupera cachés ni descarga sus artefactos. Las credenciales tienen sólo lectura y los destinos HTTP están limitados a los dos repositorios; no se siguen redirecciones. Los títulos y cuerpos nunca se interpolan en shell.
 
 El `GITHUB_TOKEN` de POS Docs puede no leer el repositorio privado del producto. Un 403/404 se presenta como **issue no verificada**, sin afirmar que existe, está abierta o que el permiso es su única causa. La revisión con acceso al producto debe comprobarla; `--require-issue` permite exigir esa evidencia y falla si no está disponible. Errores de servicio o una issue cerrada/PR equivocada fallan. No se configura un secreto adicional ni se cambia ninguna regla de merge con esta política.
 
-El workflow y CODEOWNERS son efectivos desde su integración en la rama base. El check de declaración no sustituye una aprobación ni activa por sí solo un check requerido: esa exigencia pertenece a las reglas del repositorio. `.github/CODEOWNERS` es la fuente única de responsables por área. El equipo `@developer-implementos/pos-platform` tiene acceso `maintain`, comprobado durante TASK-121; los cambios de permisos requieren revisión independiente.
+El workflow y CODEOWNERS son efectivos desde su integración en la rama base. El check de declaración no sustituye una aprobación ni activa por sí solo un check requerido: esa exigencia pertenece a las reglas del repositorio. `.github/CODEOWNERS` es la fuente única de responsables por área; usa rutas explícitas del repositorio y una regla general de respaldo. La [política de protección](../../.github/rulesets/README.md) mantiene la configuración prevista, los permisos y el procedimiento para contrastarlos con GitHub. Validar este archivo no acredita permisos remotos ni revisiones realizadas.
 
 ## Referencias
 

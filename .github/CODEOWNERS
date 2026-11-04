@@ -1,5 +1,5 @@
 # Fuente única de responsables editoriales. El equipo POS Platform tiene acceso
-# maintain; cada PR identifica su recorrido y la evidencia de revisión concreta.
+# write; cada PR identifica su recorrido y la evidencia de revisión concreta.
 * @developer-implementos/pos-platform
 
 # Arquitectura, decisiones, recorridos y evidencia editorial
@@ -19,6 +19,19 @@
 /materials/ @developer-implementos/pos-platform
 
 # Política y publicación
-/.github/ @developer-implementos/pos-platform
-/tools/editorial/ @developer-implementos/pos-platform
-/AGENTS.md @developer-implementos/pos-platform
+/.github/ @floxcristian
+/tools/editorial/ @floxcristian
+/AGENTS.md @floxcristian
+
+/CLAUDE.md @floxcristian
+/.agents/ @floxcristian
+/.claude/ @floxcristian
+/tools/odd/ @floxcristian
+/tools/agent-skills/ @floxcristian
+/tools/automated-review/ @floxcristian
+/.codex/ @floxcristian
+/.mcp.json @floxcristian
+/tools/repository-governance.test.mjs @floxcristian
+/package.json @floxcristian
+/package-lock.json @floxcristian
+/.atl/ @floxcristian
