@@ -90,6 +90,38 @@
         "https://github.com/developer-implementos/pos-platform/issues/122",
         "https://github.com/developer-implementos/pos-platform/pull/126"
       ]
+    },
+    {
+      "source": "docs/flows/recovery.md",
+      "sourceSha256": "ad1ba10d808e8aa2e59781dcc4610f6d6d69401ab458bd28e808ebb58469cb9c",
+      "productRevision": "39295496b2e9488b60ce57f9165205c066f687c4",
+      "reviewedOn": "2026-11-04",
+      "reviewer": {
+        "kind": "agent",
+        "name": "Codex · TASK-165/TASK-166"
+      },
+      "scope": "Contraste de consulta explícita del efecto original y cancelación de reservas con contratos, propietarios y runbooks del corte integrado. Revisión semántica del export: tres rutas nuevas, autorización conservada, estado y evidencia de cancelación y migración aditiva; sin aceptación humana, homologación ni despliegue operativo.",
+      "evidence": [
+        "https://github.com/developer-implementos/pos-platform/pull/171",
+        "https://github.com/developer-implementos/pos-platform/pull/172#issuecomment-6643511672",
+        "https://github.com/developer-implementos/pos-docs/pull/30"
+      ]
+    },
+    {
+      "source": "docs/phase-2-payments-documents.md",
+      "sourceSha256": "603154a7101e2b595dd72085a53ff4fdc114d7fab699967967b657e537ef1895",
+      "productRevision": "39295496b2e9488b60ce57f9165205c066f687c4",
+      "reviewedOn": "2026-11-04",
+      "reviewer": {
+        "kind": "agent",
+        "name": "Codex · TASK-165/TASK-166"
+      },
+      "scope": "Contraste de consulta explícita del efecto original y cancelación de reservas con contratos, propietarios y runbooks del corte integrado. Revisión semántica del export: tres rutas nuevas, autorización conservada, estado y evidencia de cancelación y migración aditiva; sin aceptación humana, homologación ni despliegue operativo.",
+      "evidence": [
+        "https://github.com/developer-implementos/pos-platform/pull/171",
+        "https://github.com/developer-implementos/pos-platform/pull/172#issuecomment-6643511672",
+        "https://github.com/developer-implementos/pos-docs/pull/30"
+      ]
     }
   ]
 }
