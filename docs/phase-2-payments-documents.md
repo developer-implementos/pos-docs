@@ -341,7 +341,7 @@ El SDK está fijado a **.NET 10.0.403**, con dependencias y lockfiles versionado
 
 SQLite usa WAL, sincronización `FULL` y transacciones breves. La identidad de la base está vinculada al origen, sucursal, puesto, instalación, época y dispositivos configurados: cambiar ese ámbito no reasigna silenciosamente una base existente. Una exclusión del proceso protege la instancia; la base impide dos intentos en ejecución para el mismo dispositivo. El código no mantiene una transacción SQL abierta mientras espera red o hardware.
 
-Los comandos reproducibles están en POS Platform: `npm run device:restore`, `npm run device:check`, `npm run device:publish` y `npm run device:interop`. La [guía del host](https://github.com/developer-implementos/pos-platform/blob/a98f08e3223abe95f12a4ea4f0de9bcde5c15865/apps/device-agent/README.md) define configuración y límites. Publicar el binario y validar su configuración no acredita instalación SCM, privilegios de servicio, actualización, firma o recuperación de un driver real.
+Los comandos reproducibles están en POS Platform: `pnpm run device:restore`, `pnpm run device:check`, `pnpm run device:publish` y `pnpm run device:interop`. La [guía del host](https://github.com/developer-implementos/pos-platform/blob/a98f08e3223abe95f12a4ea4f0de9bcde5c15865/apps/device-agent/README.md) define configuración y límites. Publicar el binario y validar su configuración no acredita instalación SCM, privilegios de servicio, actualización, firma o recuperación de un driver real.
 
 ## Evidencia observada y pendientes
 

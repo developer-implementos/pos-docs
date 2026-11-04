@@ -55,8 +55,8 @@ Los recursos necesarios acompañan a la skill. Cada clon conserva su versión y 
 Los cambios de comportamiento se realizan en la fuente de `pos-platform`, vinculados a una issue y revisados como cualquier otro cambio del repositorio. Después se regeneran sus copias y se comprueba que coincidan:
 
 ```sh
-npm run skills:sync
-npm run skills:check
+pnpm run skills:sync
+pnpm run skills:check
 ```
 
 Para actualizar POS Docs, ejecuta desde su raíz una importación explícita. Sustituye los marcadores por el checkout limpio del producto y el SHA completo de su `HEAD` que se ha revisado:

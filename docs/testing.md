@@ -19,13 +19,13 @@ La organización del producto separa aplicaciones operativas y proyectos de prue
 | Documentación, en POS Docs | `apps/starlight/scripts` | Fuentes, catálogo, build, enlaces, búsqueda y navegador | Se ejecuta en otro repositorio; no acredita funcionamiento del POS |
 | Escritorio Windows | Job `windows-desktop` de CI | Compilación y empaquetado Tauri | No es una suite E2E nativa |
 
-El [corte F02](phase-2-payments-documents.md) incorpora `npm run device:check` para build, formato y pruebas .NET, y `npm run device:interop` para el recorrido entre procesos. Los fixtures comunes validan sobre, resultado, recepción y permiso de ejecución tanto en TypeScript como en C#. La comprobación negativa de TLS ocurre antes de transmitir credenciales; la confianza en la CA efímera sólo existe en el helper de pruebas.
+El [corte F02](phase-2-payments-documents.md) incorpora `pnpm run device:check` para build, formato y pruebas .NET, y `pnpm run device:interop` para el recorrido entre procesos. Los fixtures comunes validan sobre, resultado, recepción y permiso de ejecución tanto en TypeScript como en C#. La comprobación negativa de TLS ocurre antes de transmitir credenciales; la confianza en la CA efímera sólo existe en el helper de pruebas.
 
 ## Proyecto E2E de clientes objetivo
 
 `tests/pos-clients-e2e` es un proyecto de pruebas Nx vinculado a `pos-desktop`, `pos-mobile` y `branch-api` mediante dependencias explícitas, porque visitar una URL no permite inferir el vínculo por imports. No se añade a las siete aplicaciones objetivo ni se publica como servicio.
 
-Los recorridos de escritorio y móvil tienen configuración, fixtures, control de tiempo, reportes y capturas de fallos propios. Los comandos son `npm run test:e2e` y `npm run test:e2e:mobile`. Localmente las suites pueden iniciar el servidor de desarrollo; CI debe probar el build de producción. Si se activa caché o ejecución affected, sus entradas deben incluir la configuración, fixtures y aplicación probada; entornos externos mutables no se consideran reproducibles por defecto.
+Los recorridos de escritorio y móvil tienen configuración, fixtures, control de tiempo, reportes y capturas de fallos propios. Los comandos son `pnpm run test:e2e` y `pnpm run test:e2e:mobile`. Localmente las suites pueden iniciar el servidor de desarrollo; CI debe probar el build de producción. Si se activa caché o ejecución affected, sus entradas deben incluir la configuración, fixtures y aplicación probada; entornos externos mutables no se consideran reproducibles por defecto.
 
 ## Soporte compartido de pruebas
 
@@ -51,13 +51,13 @@ Estas suites no existen por describirlas aquí. La ausencia de un recorrido impl
 Desde la raíz del repositorio del producto:
 
 ```sh
-npm test
-npm run test:e2e
-npm run test:e2e:mobile
-npm run test:e2e:branch
-npm run backend:check
-npm run backend:smoke
-npm run structure:check
+pnpm test
+pnpm run test:e2e
+pnpm run test:e2e:mobile
+pnpm run test:e2e:branch
+pnpm run backend:check
+pnpm run backend:smoke
+pnpm run structure:check
 ```
 
 El runner `test:e2e:branch` requiere `POS_TEST_ADMIN_URL` de laboratorio loopback; aprovisiona, migra, siembra datos sintéticos, arranca artefactos y ejecuta la suite real. La [guía F01](phase-1-laboratory.md) detalla condiciones y recuperación. Los resultados se registran como evidencia de ejecución, sin aprobar automáticamente entregables.

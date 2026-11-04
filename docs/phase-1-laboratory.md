@@ -14,7 +14,7 @@ Los puestos se aprovisionan con identidad de caja e instalación. El cliente sel
 
 El código de este incremento está integrado en `main`; el corte de escritorio corresponde a la [revisión a603a77](https://github.com/developer-implementos/pos-platform/commit/a603a770c8c950dd1499158606b0ff72801d1f45). La [matriz de verificación técnica](../delivery/reviews/F01-technical-verification.md) identifica los entregables comprobados y la evidencia de cada revisión; la aceptación manual sigue pendiente. El [registro de avance](project-progress.md) conserva ambas mediciones por separado; integrar código no habilita una caja productiva.
 
-La [guía de puesta en marcha](../tools/database/README.operational.md) detalla infraestructura, certificados, provisión y registro de puestos. La [matriz del incremento](../delivery/reviews/F01-operational-increment.md) enlaza las pruebas y los pendientes de aceptación. El recorrido automatizado `npm run test:e2e:operational` usa cliente, API HTTPS y PostgreSQL reales con identidades efímeras de prueba: administra un usuario, concede acceso, lo revoca y lo reactiva. No utiliza mocks HTTP ni consulta servicios corporativos.
+La [guía de puesta en marcha](../tools/database/README.operational.md) detalla infraestructura, certificados, provisión y registro de puestos. La [matriz del incremento](../delivery/reviews/F01-operational-increment.md) enlaza las pruebas y los pendientes de aceptación. El recorrido automatizado `pnpm run test:e2e:operational` usa cliente, API HTTPS y PostgreSQL reales con identidades efímeras de prueba: administra un usuario, concede acceso, lo revoca y lo reactiva. No utiliza mocks HTTP ni consulta servicios corporativos.
 
 ## Recorrido del laboratorio transaccional
 
@@ -88,11 +88,11 @@ El laboratorio HTTP permanece en loopback. El perfil operativo requiere TLS expl
 
 ## Ejecutar las comprobaciones del laboratorio
 
-Utiliza un checkout de la revisión de POS Platform identificada en la [guía del repositorio](product-repository.md), no una versión distinta de `main` por defecto. Publicar esta guía o un resultado de CI no implica que el código ya se haya integrado en esa rama. Se requiere Node compatible con su `engines`, npm 11.6.0 y PostgreSQL 18.6 aislado en loopback. Las URLs administrativas y credenciales se suministran al proceso por un medio local protegido; no se publican ni se copian a ejemplos versionados.
+Utiliza un checkout de la revisión de POS Platform identificada en la [guía del repositorio](product-repository.md), no una versión distinta de `main` por defecto. Publicar esta guía o un resultado de CI no implica que el código ya se haya integrado en esa rama. Se requiere Node compatible con su `engines`, pnpm 10.28.1 y PostgreSQL 18.6 aislado en loopback. Las URLs administrativas y credenciales se suministran al proceso por un medio local protegido; no se publican ni se copian a ejemplos versionados.
 
 ```sh
-npm ci
-npm run test:e2e:branch
+pnpm install --frozen-lockfile
+pnpm run test:e2e:branch
 ```
 
 El runner recibe `POS_TEST_ADMIN_URL` para un servidor de pruebas aislado. Crea bases y roles sintéticos, construye artefactos, ejecuta migración, seed y comprobación con credenciales separadas, inicia API y cliente, ejecuta Playwright y limpia sus recursos. El seed crea operador y supervisor independientes; sus contraseñas se generan para la ejecución. No apunta a una base de sucursal existente.

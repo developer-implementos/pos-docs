@@ -26,18 +26,18 @@ La demostración siguiente sirve para explorar la interfaz con datos sintéticos
 
 ## Iniciar la demostración
 
-Requiere Node.js 22.19 o posterior en la rama 22, o Node.js 24, y npm 11.6.0.
+Requiere Node.js 22.19 o posterior en la rama 22, o Node.js 24, y pnpm 10.28.1.
 
-Si tu instalación usa otra versión de npm, instala las dependencias con `npx --yes npm@11.6.0 ci`.
+El gestor y su versión exacta están declarados en `packageManager`. `corepack enable pnpm` usa esa declaración y evita fijar la versión en dos lugares; también sirve instalar `pnpm@10.28.1` por separado.
 
 ```sh
 git clone https://github.com/developer-implementos/pos-platform.git
 cd pos-platform
-npm ci
-npm run demo:start
+pnpm install --frozen-lockfile
+pnpm run demo:start
 ```
 
-Abre **http://127.0.0.1:4300** para desarrollar la interfaz demo del cliente de escritorio. Este servidor local no es una aplicación web independiente ni un despliegue público. `npm start`, `npm run desktop:dev` y `npm run mobile:start` conservan el comportamiento normal sin configurar; no seleccionan la demo. La [decisión de clientes nativos](decisions/native-clients.md) explica la separación y los límites.
+Abre **http://127.0.0.1:4300** para desarrollar la interfaz demo del cliente de escritorio. Este servidor local no es una aplicación web independiente ni un despliegue público. `pnpm start`, `pnpm run desktop:dev` y `pnpm run mobile:start` conservan el comportamiento normal sin configurar; no seleccionan la demo. La [decisión de clientes nativos](decisions/native-clients.md) explica la separación y los límites.
 
  La pantalla de acceso permite iniciar sesión con cuentas de demostración. Puedes completar el formulario desde **Accesos de demostración** o usar `admin@example.test` y la contraseña pública `Demo123!`. También están disponibles `supervisor@example.test`, `caja@example.test` y `auditor@example.test`, con la misma contraseña.
 
@@ -48,7 +48,7 @@ En este perfil todos los RUT, clientes, usuarios y operaciones son sintéticos; 
 ## API de sucursal
 
 ```sh
-npm run api:dev
+pnpm run api:dev
 ```
 
 La API requiere un perfil explícito y PostgreSQL migrado con su rol de ejecución. El perfil `operational` de Chile incorpora cuentas POS, roles y asignaciones persistidos, con HTTPS y orígenes de cliente autorizados individualmente. El perfil `laboratory` conserva el recorrido sintético en loopback. La API publica contratos en `/api/v1`, sondas en `/health/live` y `/health/ready`, y OpenAPI JSON en `/api/openapi.json` cuando está habilitado. La [guía F01](phase-1-laboratory.md) distingue ambos perfiles y enlaza el procedimiento de configuración; `api:dev` no crea una base ni usuarios automáticamente.
@@ -64,12 +64,12 @@ La [decisión BullMQ + Redis de trabajos](decisions/job-processing.md) pertenece
 Las apps backend comparten `libs/shared/backend/runtime`; la persistencia transaccional pertenece a `libs/shared/backend/persistence` y el negocio a sus contextos. `country-api` tiene base y sonda propias. `branch-sync-worker` y `erp-worker` conservan su composición sin trabajos operativos. El conector de lectura ERP es independiente: su contrato no acredita que los maestros o precios ya estén publicados en el POS ni que exista sincronización de extremo a extremo. Rspack/SWC empaqueta las apps Node y TSC comprueba tipos.
 
 ```sh
-npm run api:check
-npm run api:build
-npm run api:smoke
+pnpm run api:check
+pnpm run api:build
+pnpm run api:smoke
 ```
 
-Para comprobar el scaffold completo: `npm run backend:check`, `npm run backend:smoke` y `npm run structure:check`. `npm run country:dev` inicia la API de país en el puerto 3001; `npm run sync:check` y `npm run erp:check` verifican la composición y cierre de los workers sin ejecutar jobs. Consulta todos los [comandos del workspace](monorepo.md#comandos-del-workspace).
+Para comprobar el scaffold completo: `pnpm run backend:check`, `pnpm run backend:smoke` y `pnpm run structure:check`. `pnpm run country:dev` inicia la API de país en el puerto 3001; `pnpm run sync:check` y `pnpm run erp:check` verifican la composición y cierre de los workers sin ejecutar jobs. Consulta todos los [comandos del workspace](monorepo.md#comandos-del-workspace).
 
 El backend y las librerías puras tienen lint con información de tipos para detectar promesas sin manejar y usos inseguros, además de fronteras Nx verificadas. Las [reglas y su alcance](monorepo.md#reglas-de-código-y-fronteras) distinguen esos controles de los del frontend; no sustituyen pruebas de comportamiento ni los requisitos pendientes de producción.
 
@@ -166,28 +166,28 @@ Los límites de importación se verifican con Nx/ESLint. Se usan Angular con det
 ## Validación
 
 ```sh
-npm run lint
-npm test
-npm run build
-npx playwright install chromium
-npm run test:e2e
-npm run desktop:info
+pnpm run lint
+pnpm test
+pnpm run build
+pnpm exec playwright install chromium
+pnpm run test:e2e
+pnpm run desktop:info
 ```
 
 Las pruebas cubren políticas, montos, persistencia, permisos, reintentos, calendarios y recorridos de navegador. La verificación de la demo se solicita explícitamente; los builds normales conectados comienzan sin configurar cuando no reciben una política de despliegue. CI comprueba compilación y empaquetado nativo, sin acreditar por ello instalación, firma de distribución ni aceptación operativa. Las acciones de CI están fijadas por commit y tienen permisos de lectura.
 
 Validación tras la revisión de calidad (3 de octubre de 2026): **144 pruebas de lógica e infraestructura y 37 recorridos de navegador pasan**, junto con lint, formato y compilación web de producción. Los recorridos ejecutan el bundle productivo con la CSP de Tauri, incluyen tamaños de 375 y 1440 px y verifican controles de prime-showcase y accesibilidad del dashboard/reportes en claro y oscuro. El [informe de revisión](quality-review.md) detalla correcciones y condiciones pendientes para producción.
 
-Las comprobaciones de CI se consultan en [Actions de pos-platform](https://github.com/developer-implementos/pos-platform/actions). El instalador se puede generar con `npm run desktop:build`.
+Las comprobaciones de CI se consultan en [Actions de pos-platform](https://github.com/developer-implementos/pos-platform/actions). El instalador se puede generar con `pnpm run desktop:build`.
 
 ## Clientes nativos
 
 ```sh
-npm run desktop:dev
-npm run desktop:build
+pnpm run desktop:dev
+pnpm run desktop:build
 ```
 
-El escritorio necesita Rust, MSVC/Windows SDK y WebView2. Consulta [preparación de Tauri](desktop.md). Para Android/iOS consulta [preparación de Capacitor](mobile.md); su compilación Angular no acredita apertura, permisos, periféricos ni distribución nativa. `npm run build` compila los dos clientes Angular secuencialmente; `desktop:build` empaqueta Tauri y los comandos móviles sincronizan o ejecutan sus proyectos nativos. La [guía F01](phase-1-laboratory.md) enlaza la preparación del paquete con su origen HTTPS exacto y el registro público del puesto. El contenedor no tiene comandos para cobrar, imprimir físicamente o acceder libremente al sistema; no se acredita una distribución firmada para operación productiva.
+El escritorio necesita Rust, MSVC/Windows SDK y WebView2. Consulta [preparación de Tauri](desktop.md). Para Android/iOS consulta [preparación de Capacitor](mobile.md); su compilación Angular no acredita apertura, permisos, periféricos ni distribución nativa. `pnpm run build` compila los dos clientes Angular secuencialmente; `desktop:build` empaqueta Tauri y los comandos móviles sincronizan o ejecutan sus proyectos nativos. La [guía F01](phase-1-laboratory.md) enlaza la preparación del paquete con su origen HTTPS exacto y el registro público del puesto. El contenedor no tiene comandos para cobrar, imprimir físicamente o acceder libremente al sistema; no se acredita una distribución firmada para operación productiva.
 
 ## De maqueta a producto
 

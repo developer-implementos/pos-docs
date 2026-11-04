@@ -25,10 +25,10 @@ Las exportaciones CSV neutralizan celdas que pueden interpretarse como fórmulas
 Ejecutar desde la raíz, con las versiones fijadas en el lockfile:
 
 ```powershell
-npm ci
-npm audit --omit=dev
-npm audit
-npm run check
+pnpm install --frozen-lockfile
+pnpm audit --omit=dev
+pnpm audit
+pnpm run check
 ```
 
 El primer audit mide el árbol de dependencias de producción declarado en npm. El segundo incluye compiladores, generadores, linters y otras herramientas de desarrollo. Un resultado sin alertas en producción no significa que todo el toolchain esté libre de vulnerabilidades, ni demuestra por sí solo la seguridad de la aplicación.
@@ -43,8 +43,8 @@ Los builds se ejecutan con entradas de confianza y sin credenciales de producci�
 
 La [PR #94](https://github.com/developer-implementos/pos-platform/pull/94), integrada en [`d5d5e5f`](https://github.com/developer-implementos/pos-platform/commit/d5d5e5f30fe44f2c2c64fec3e45ba3fe7e3b6d01), incorpora el permiso exclusivo `allow-save-protected-pdf` para el comando `save_protected_pdf` en la ventana local `main`. No concede acceso genérico a archivos, shell, red externa, pagos o dispositivos. La [guía F02](phase-2-payments-documents.md#guardado-nativo-en-windows) delimita la exportación protegida y su evidencia; la prueba de interfaz nativa sigue pendiente. La CSP de producción limita scripts a los assets locales; la política de desarrollo permite además el servidor local. No hay claves de firma ni un updater conectado. La configuración del host está en [escritorio](desktop.md).
 
-Los E2E de CI sirven el resultado exacto de `npm run build` con un servidor Node de lectura en `127.0.0.1`, tipos MIME explícitos, rutas confinadas a `dist/apps/pos-desktop/browser` y la CSP de producción leída de Tauri. No recompilan ni reescriben assets. `inlineCritical` está deshabilitado mediante la configuración de Angular para evitar su handler inline de carga de CSS, que esta CSP rechaza; la minificación sigue activa. El servidor comprueba también rutas codificadas y enlaces simbólicos que salgan del directorio público.
+Los E2E de CI sirven el resultado exacto de `pnpm run build` con un servidor Node de lectura en `127.0.0.1`, tipos MIME explícitos, rutas confinadas a `dist/apps/pos-desktop/browser` y la CSP de producción leída de Tauri. No recompilan ni reescriben assets. `inlineCritical` está deshabilitado mediante la configuración de Angular para evitar su handler inline de carga de CSS, que esta CSP rechaza; la minificación sigue activa. El servidor comprueba también rutas codificadas y enlaces simbólicos que salgan del directorio público.
 
-Para repetir el recorrido demo sobre el bundle optimizado (`production` de Angular), primero compilar y después ejecutar, por ejemplo en PowerShell: `$env:POS_E2E_PRODUCTION='1'; $env:POS_E2E_PORT='4301'; npm run test:e2e`. Sin esas variables, las pruebas locales siguen usando el servidor de desarrollo. El modo producción no reutiliza servidores previos. Estas pruebas verifican Chromium con la política CSP, no sustituyen una apertura ni una prueba de uso del ejecutable en WebView2. El audit npm tampoco cubre las dependencias de `Cargo.lock`; queda pendiente incorporar una auditoría de avisos Rust antes de distribuir el producto nativo.
+Para repetir el recorrido demo sobre el bundle optimizado (`production` de Angular), primero compilar y después ejecutar, por ejemplo en PowerShell: `$env:POS_E2E_PRODUCTION='1'; $env:POS_E2E_PORT='4301'; pnpm run test:e2e`. Sin esas variables, las pruebas locales siguen usando el servidor de desarrollo. El modo producción no reutiliza servidores previos. Estas pruebas verifican Chromium con la política CSP, no sustituyen una apertura ni una prueba de uso del ejecutable en WebView2. El audit npm tampoco cubre las dependencias de `Cargo.lock`; queda pendiente incorporar una auditoría de avisos Rust antes de distribuir el producto nativo.
 
 El paso a producción requiere identidad corporativa y enrolamiento, contratos de sincronización/integración autenticados, retención, respaldo y restauración probados, firma de artefactos y homologación de equipos. La persistencia transaccional de laboratorio y sus pruebas son evidencia parcial, no aceptación operativa.

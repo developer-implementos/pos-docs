@@ -31,13 +31,13 @@ La transición de 180 ms afecta solo transformaciones y opacidad, se puede inver
 Después de instalar las dependencias del repositorio, ejecutar desde su raíz:
 
 ```sh
-npm run icons:generate
-npm run icons:check
+pnpm run icons:generate
+pnpm run icons:check
 ```
 
 Ambos generadores utilizan `@phosphor-icons/core` 2.1.1 instalado localmente y el formato del proyecto. `--check` compara la salida esperada sin escribir archivos. El generador duotono contiene un catálogo explícito de 37 nombres y escribe `libs/ui/src/lib/duotone-icons.ts`.
 
-`npm run check` y el job web de CI ejecutan la comprobación del catálogo para detectar cambios manuales o recursos desactualizados.
+`pnpm run check` y el job web de CI ejecutan la comprobación del catálogo para detectar cambios manuales o recursos desactualizados.
 
 Se validan la versión, el `viewBox`, los atributos y las capas antes de extraer la geometría. Solo se aceptan los SVG simples conocidos, sin transformaciones, trazos, referencias, máscaras ni reglas de relleno adicionales. Si cambia el formato de un recurso, la generación falla y exige revisión; no intenta reinterpretar el dibujo.
 
