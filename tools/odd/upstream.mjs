@@ -303,11 +303,16 @@ export function regenerate() {
   process.stdout.write(`Rendered ${entries.length} upstream files; fixture retained at ${fixture}\n`);
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
-  const command = process.argv[2] ?? '--check';
-  if (command === '--render') regenerate();
-  else if (command === '--check' || command === '--write')
-    process.stdout.write(
-      `Verified ${check(root, { distribute: command === '--write' })} pinned upstream files.\n`,
-    );
-  else throw new Error('Use --check, --write or --render');
+  const args = process.argv.slice(2);
+  if (args.length > 1 || (args.length === 1 && !['--check', '--write', '--render'].includes(args[0]))) {
+    process.stderr.write('Usage: node tools/odd/upstream.mjs [--check | --write | --render]\n');
+    process.exitCode = 2;
+  } else {
+    const command = args[0] ?? '--check';
+    if (command === '--render') regenerate();
+    else
+      process.stdout.write(
+        `Verified ${check(root, { distribute: command === '--write' })} pinned upstream files.\n`,
+      );
+  }
 }
