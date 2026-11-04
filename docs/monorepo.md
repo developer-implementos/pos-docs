@@ -156,28 +156,40 @@ Una suite `pos-system-e2e` requerirá un recorrido real sucursal–persistencia�
 
 Los workers tienen ciclo de vida propio. No se añade un listener HTTP de negocio solo para ejecutar tareas. Un futuro backoffice separado o un worker adicional de país requiere una necesidad concreta; no forma parte de estas siete aplicaciones objetivo. Starlight se compila desde el repositorio editorial POS Docs y no integra el grafo Nx del producto.
 
+## Gestor de dependencias
+
+pos-platform resuelve dependencias con **pnpm**, cuya versión exacta declara `packageManager`. `corepack enable pnpm` usa esa declaración, de modo que la versión no se fija en dos lugares. Este repositorio editorial conserva npm y sus propios lockfiles; son decisiones independientes.
+
+Tres invariantes sostienen esa elección y conviene conocerlas antes de cambiar algo del workspace:
+
+- **El linker permanece aislado**, que es el valor por defecto de pnpm. Un paquete sólo resuelve lo que declara, así que una dependencia no declarada falla en la máquina de quien la introduce en vez de sobrevivir hasta producción. Hoistear volvería a ocultarlas: una resolución fallida se corrige declarando el paquete.
+- **Los proyectos nativos generados por Capacitor no se versionan.** `capacitor.settings.gradle`, `app/capacitor.build.gradle` y `CapApp-SPM/Package.swift` incrustan la ruta del store con el hash de peer dependencies, es decir el grafo de una máquina concreta. El grafo Nx los regenera antes de compilar, porque los targets `compile`, `run` y `open` de cada plataforma dependen de su `sync`.
+- **Los scripts de instalación de dependencias están denegados por defecto.** `pnpm-workspace.yaml` lista en `onlyBuiltDependencies` únicamente los paquetes que producen un binding nativo o un binario de plataforma que el build necesita; añadir una entrada es una decisión de cadena de suministro. La analítica de instalación queda fuera deliberadamente.
+
+Dos diferencias operativas respecto de npm afectan a cualquier comando que se documente aquí: pnpm **reenvía** el separador `--` al script en vez de consumirlo, por lo que los argumentos se pasan sin él; y pnpm no viene con Node, de modo que un entorno limpio debe habilitarlo antes de invocarlo.
+
 ## Comandos del workspace
 
 | Comando                   | Alcance                                                                          |
 | ------------------------- | -------------------------------------------------------------------------------- |
-| `npm start` | Interfaz Angular de escritorio en `http://127.0.0.1:4300` |
-| `npm run build` | Compila los bundles Angular de escritorio y móvil secuencialmente |
-| `npm run desktop:bundle` | Compila sólo el bundle Angular de escritorio |
-| `npm run desktop:dev` | Abre Tauri con servidor de desarrollo |
-| `npm run desktop:build` | Empaqueta Tauri, incluido su bundle Angular |
-| `npm run mobile:start` | Interfaz Angular móvil en `http://127.0.0.1:4301` |
-| `npm run mobile:build` | Compila sólo el bundle Angular móvil |
-| `npm run mobile:sync:android` / `mobile:sync:ios` | Construye y sincroniza el proyecto nativo |
-| `npm run mobile:android` / `mobile:ios` | Ejecuta el cliente en el entorno nativo disponible |
-| `npm run api:dev`         | API de sucursal en `http://127.0.0.1:3000`                                       |
-| `npm run country:dev`     | API de país en `http://127.0.0.1:3001`                                           |
-| `npm run sync:check`      | Compone y cierra el contexto del worker de sincronización; no ejecuta jobs       |
-| `npm run erp:check`       | Compone y cierra el contexto del worker ERP; no envía operaciones                |
-| `npm run backend:check`   | Lint, tipos, pruebas y build de proyectos backend y librerías puras del producto |
-| `npm run backend:build`   | Genera los artefactos de las cuatro aplicaciones backend                         |
-| `npm run backend:smoke`   | Verifica los cuatro artefactos fuera del monorepo con dependencias de producción |
-| `npm run structure:check` | Comprueba las reglas arquitectónicas del scaffold                                |
-| `npm run graph`           | Muestra el grafo de proyectos Nx                                                 |
+| `pnpm start` | Interfaz Angular de escritorio en `http://127.0.0.1:4300` |
+| `pnpm run build` | Compila los bundles Angular de escritorio y móvil secuencialmente |
+| `pnpm run desktop:bundle` | Compila sólo el bundle Angular de escritorio |
+| `pnpm run desktop:dev` | Abre Tauri con servidor de desarrollo |
+| `pnpm run desktop:build` | Empaqueta Tauri, incluido su bundle Angular |
+| `pnpm run mobile:start` | Interfaz Angular móvil en `http://127.0.0.1:4301` |
+| `pnpm run mobile:build` | Compila sólo el bundle Angular móvil |
+| `pnpm run mobile:sync:android` / `mobile:sync:ios` | Construye y sincroniza el proyecto nativo |
+| `pnpm run mobile:android` / `mobile:ios` | Ejecuta el cliente en el entorno nativo disponible |
+| `pnpm run api:dev`         | API de sucursal en `http://127.0.0.1:3000`                                       |
+| `pnpm run country:dev`     | API de país en `http://127.0.0.1:3001`                                           |
+| `pnpm run sync:check`      | Compone y cierra el contexto del worker de sincronización; no ejecuta jobs       |
+| `pnpm run erp:check`       | Compone y cierra el contexto del worker ERP; no envía operaciones                |
+| `pnpm run backend:check`   | Lint, tipos, pruebas y build de proyectos backend y librerías puras del producto |
+| `pnpm run backend:build`   | Genera los artefactos de las cuatro aplicaciones backend                         |
+| `pnpm run backend:smoke`   | Verifica los cuatro artefactos fuera del monorepo con dependencias de producción |
+| `pnpm run structure:check` | Comprueba las reglas arquitectónicas del scaffold                                |
+| `pnpm run graph`           | Muestra el grafo de proyectos Nx                                                 |
 
 Estos comandos se ejecutan desde **pos-platform**. Los comandos `api:*` trabajan únicamente con `branch-api`. Los checks de workers comprueban composición y cierre; no equivalen a tener un consumidor, calendario o cola funcionando. El [mantenimiento de Starlight](../apps/starlight/README.md) describe los comandos independientes que se ejecutan en POS Docs.
 
@@ -259,7 +271,7 @@ Las promesas deben esperarse o manejarse explícitamente: escribir `void` no des
 
 `@nx/enforce-module-boundaries` separa navegador, servidor y librerías puras; también impide que los contextos backend importen otros contextos o que la plataforma técnica dependa de negocio. La app compone módulos. Introducir una futura colaboración requiere definir su contrato y dirección de dependencia; no se habilitan imports internos ni se desactiva el límite por conveniencia. Las pruebas de arquitectura ejercitan la configuración real de ESLint y el grafo Nx.
 
-`npm run lint` comprueba aplicaciones y librerías; `npm run backend:check` incluye los targets de lint del backend. El análisis estático no prueba autorización, atomicidad, privacidad de cualquier texto arbitrario ni corrección comercial; esas garantías requieren contratos y pruebas del comportamiento implementado.
+`pnpm run lint` comprueba aplicaciones y librerías; `pnpm run backend:check` incluye los targets de lint del backend. El análisis estático no prueba autorización, atomicidad, privacidad de cualquier texto arbitrario ni corrección comercial; esas garantías requieren contratos y pruebas del comportamiento implementado.
 
 ### Artefactos
 

@@ -6,16 +6,16 @@ La estructura objetivo define `libs/shared/frontend/ui` para la presentación tr
 
 ## Comandos
 
-Desde la raíz del monorepo, con las dependencias instaladas mediante `npm ci`:
+Desde la raíz del monorepo, con las dependencias instaladas mediante `pnpm install --frozen-lockfile`:
 
 | Comando | Resultado |
 | --- | --- |
-| `npm run mobile:start` | Sirve la interfaz Angular móvil para desarrollo local en `http://127.0.0.1:4301` |
-| `npm run mobile:build` | Genera el bundle Angular en `dist/apps/pos-mobile/browser` |
-| `npm run mobile:sync:android` | Prepara el bundle y sincroniza el proyecto Android |
-| `npm run mobile:sync:ios` | Prepara el bundle y sincroniza el proyecto iOS |
-| `npm run mobile:android` | Ejecuta el cliente Android mediante Capacitor, con toolchain y dispositivo/emulador disponibles |
-| `npm run mobile:ios` | Ejecuta el cliente iOS mediante Capacitor, en macOS con Xcode y destino disponible |
+| `pnpm run mobile:start` | Sirve la interfaz Angular móvil para desarrollo local en `http://127.0.0.1:4301` |
+| `pnpm run mobile:build` | Genera el bundle Angular en `dist/apps/pos-mobile/browser` |
+| `pnpm run mobile:sync:android` | Prepara el bundle y sincroniza el proyecto Android |
+| `pnpm run mobile:sync:ios` | Prepara el bundle y sincroniza el proyecto iOS |
+| `pnpm run mobile:android` | Ejecuta el cliente Android mediante Capacitor, con toolchain y dispositivo/emulador disponibles |
+| `pnpm run mobile:ios` | Ejecuta el cliente iOS mediante Capacitor, en macOS con Xcode y destino disponible |
 
 Capacitor copia el bundle compilado al proyecto nativo durante `sync`; no compila la interfaz Angular por sí solo. Los comandos del monorepo coordinan esas etapas. Actualizar código compartido requiere construir y sincronizar nuevamente antes de probar en el host. [Flujo oficial de Capacitor](https://capacitorjs.com/docs/basics/workflow).
 
@@ -31,7 +31,7 @@ El host carga recursos empaquetados, sin `server.url` remoto ni tráfico HTTP si
 
 La revisión del 21 de octubre de 2026 mantiene una alerta moderada en `@capacitor/cli` 8.5.3 → `xcode` 3.0.1 → `uuid`. El aviso [GHSA-w5hq-g745-h8pq](https://github.com/advisories/GHSA-w5hq-g745-h8pq) afecta a los métodos `v3()`, `v5()` y `v6()` cuando reciben un buffer de salida externo. El código instalado de `xcode`, en `lib/pbxProject.js`, genera identificadores mediante `uuid.v4()` sin buffer; esa llamada no coincide con la condición vulnerable descrita. La dependencia pertenece a las herramientas de generación de proyectos, no al bundle Angular móvil.
 
-La alerta sigue pendiente: esta revisión de la llamada no significa que el paquete esté corregido. Capacitor CLI 8.5.3 es la última versión estable comprobada y todavía depende de `xcode` 3.x. Conservar las versiones fijadas, revisar la corrección upstream y repetir `npm audit` al actualizar; no aplicar un downgrade automático ni sustituir dependencias mediante overrides.
+La alerta sigue pendiente: esta revisión de la llamada no significa que el paquete esté corregido. Capacitor CLI 8.5.3 es la última versión estable comprobada y todavía depende de `xcode` 3.x. Conservar las versiones fijadas, revisar la corrección upstream y repetir `pnpm audit` al actualizar; no aplicar un downgrade automático ni sustituir dependencias mediante overrides.
 
 ## Alcance comprobable
 

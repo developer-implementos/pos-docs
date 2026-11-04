@@ -49,7 +49,7 @@ POS Platform es un producto independiente, con Core solo como referencia. La [es
 
 Las reglas de ventas, caja y pagos pertenecen a sus contextos; las variantes nacionales pertenecen al contexto que las evalúa. Compartir consumidores no convierte una regla comercial en infraestructura genérica. Las pruebas de fronteras deben rechazar dependencias de servidor desde navegador, frameworks desde dominio, producción hacia testing e imports privados entre contextos.
 
-La verificación técnica utiliza `npm run icons:check` cuando afecte UI, `npm run lint`, `npm test`, `npm run build`, `npm run test:e2e` y los checks backend/estructura correspondientes. La [guía de pruebas](testing.md) diferencia los alcances y las capacidades aún pendientes de verificación.
+La verificación técnica utiliza `pnpm run icons:check` cuando afecte UI, `pnpm run lint`, `pnpm test`, `pnpm run build`, `pnpm run test:e2e` y los checks backend/estructura correspondientes. La [guía de pruebas](testing.md) diferencia los alcances y las capacidades aún pendientes de verificación.
 
 Persistencia, identidad e integraciones se desarrollan por recorridos verificables. Una carpeta, un endpoint vacío o una prueba que devuelve éxito fijo no acreditan una capacidad comercial.
 

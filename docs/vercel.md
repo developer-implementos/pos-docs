@@ -42,7 +42,7 @@ La política CSP admite los scripts y activos del propio sitio; Pagefind necesit
 
 ## Separación de entregas
 
-En el repositorio **pos-platform**, `npm run build` construye los clientes Angular; `npm run desktop:build` empaqueta Tauri y los comandos `mobile:*` construyen, sincronizan o ejecutan Capacitor según la etapa. Sus guías están en [escritorio](desktop.md) y [móvil](mobile.md). Ninguna de esas acciones publica Starlight, instala automáticamente un cliente en sucursales o lo publica en una tienda.
+En el repositorio **pos-platform**, `pnpm run build` construye los clientes Angular; `pnpm run desktop:build` empaqueta Tauri y los comandos `mobile:*` construyen, sincronizan o ejecutan Capacitor según la etapa. Sus guías están en [escritorio](desktop.md) y [móvil](mobile.md). Ninguna de esas acciones publica Starlight, instala automáticamente un cliente en sucursales o lo publica en una tienda.
 
 El [backend](api.md#artefacto-y-ejecución) conserva sus propios artefactos y supervisión de procesos. Publicar Starlight no inicia una API, un worker, una base de datos ni un sincronizador.
 

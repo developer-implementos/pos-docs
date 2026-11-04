@@ -6,7 +6,7 @@ El cliente distingue `unconfigured`, `branch`, `branch-lab` y `demo`. El perfil 
 
 ## Prerrequisitos Windows
 
-- Node.js compatible con `package.json` y dependencias instaladas con `npm ci`.
+- Node.js compatible con `package.json` y dependencias instaladas con `pnpm install --frozen-lockfile`.
 - Rust mediante rustup con host MSVC. `rust-toolchain.toml` fija Rust 1.90.0, requerido por la versión de Tauri seleccionada.
 - Microsoft C++ Build Tools con la carga **Desktop development with C++** y Windows SDK.
 - Microsoft Edge WebView2 Runtime.
@@ -18,12 +18,12 @@ Los requisitos de Windows están descritos en la [documentación oficial de Taur
 Desde la raíz del workspace:
 
 ```powershell
-npm run desktop:info
-npm run desktop:dev
-npm run desktop:build
+pnpm run desktop:info
+pnpm run desktop:dev
+pnpm run desktop:build
 ```
 
-`desktop:dev` inicia el frontend en `http://127.0.0.1:4300` antes de abrir la ventana nativa. No inicies otro servidor en ese mismo puerto. Para desarrollar la interfaz de escritorio en navegador, usa `npm start`; ese servidor no es una aplicación web independiente.
+`desktop:dev` inicia el frontend en `http://127.0.0.1:4300` antes de abrir la ventana nativa. No inicies otro servidor en ese mismo puerto. Para desarrollar la interfaz de escritorio en navegador, usa `pnpm start`; ese servidor no es una aplicación web independiente.
 
 `desktop:build` ejecuta el build Angular e incorpora `dist/apps/pos-desktop/browser`. Los artefactos de Windows se generan en `apps/pos-desktop/src-tauri/target/release/bundle/nsis`.
 
@@ -45,7 +45,7 @@ Los perfiles conectados usan la autoridad transaccional de `branch-api` y Postgr
 
 ## Verificación y límite actual
 
-La compilación y el empaquetado de Windows terminaron correctamente en el [job `windows-desktop` de GitHub Actions](https://github.com/floxcristian/corporate-pos/actions/runs/37151843645/job/111287161510), finalizado el **3 de octubre de 2026 a las 20:37:51 UTC**. Ejecutó `npm run desktop:build` con Rust 1.90.0 para el commit [`0d09abc01ca0d0314d51056e2f7d1eaf8027d256`](https://github.com/floxcristian/corporate-pos/commit/0d09abc01ca0d0314d51056e2f7d1eaf8027d256).
+La compilación y el empaquetado de Windows terminaron correctamente en el [job `windows-desktop` de GitHub Actions](https://github.com/floxcristian/corporate-pos/actions/runs/37151843645/job/111287161510), finalizado el **3 de octubre de 2026 a las 20:37:51 UTC**. Ejecutó `pnpm run desktop:build` con Rust 1.90.0 para el commit [`0d09abc01ca0d0314d51056e2f7d1eaf8027d256`](https://github.com/floxcristian/corporate-pos/commit/0d09abc01ca0d0314d51056e2f7d1eaf8027d256).
 
 El artefacto **`corporate-pos-windows-demo`** contiene `Corporate POS_0.1.0_x64-setup.exe` (2.035.184 bytes) y el `Cargo.lock` generado por esa misma compilación. El lockfile fue recuperado sin modificaciones en `apps/pos-desktop/src-tauri/Cargo.lock`; fija también las dependencias transitivas del build exitoso. La copia de esta revisión está en `dist/installers/0d09abc/target/release/bundle/nsis/`, directorio ignorado por Git. El hash del lockfile del artefacto coincide con el versionado.
 

@@ -29,7 +29,7 @@ Las convenciones se contrastaron con [developer-implementos/core](https://github
 | [Versionado URI del bootstrap](https://github.com/developer-implementos/core/blob/b25164a50375845989a671cdc8e13360866c76af/apps/core-api/src/bootstrap/bootstrap.ts) y [convenciones OpenAPI](https://github.com/developer-implementos/core/blob/b25164a50375845989a671cdc8e13360866c76af/AGENTS.md) | Prefijo `api`, versión URI `1`, sondas neutrales y documentación en español con `operationId` estables                             |
 | [Helper Vitest/SWC](https://github.com/developer-implementos/core/blob/b25164a50375845989a671cdc8e13360866c76af/libs/shared/testing/src/config/vitest.helper.ts)                                                                                                                                     | Vitest con transformación SWC y metadata de decoradores para probar la inyección real de Nest                                      |
 
-POS conserva npm, Nx 23 y NestJS 12. La incorporación de varias aplicaciones backend y librerías compartidas justifica Rspack/SWC con el plugin oficial de Nx para empaquetar fuentes internas, manteniendo TSC para comprobar tipos. Los artefactos incluyen manifiesto y lockfile de distribución; no necesitan resolver aliases desde el workspace. Se adapta el [empaquetado de Core](https://github.com/developer-implementos/core/blob/b25164a50375845989a671cdc8e13360866c76af/apps/core-api/rspack.config.js) sin copiar sus plugins correctivos ni su lista de dependencias cloud.
+POS conserva pnpm, Nx 23 y NestJS 12. La incorporación de varias aplicaciones backend y librerías compartidas justifica Rspack/SWC con el plugin oficial de Nx para empaquetar fuentes internas, manteniendo TSC para comprobar tipos. Los artefactos incluyen manifiesto y lockfile de distribución; no necesitan resolver aliases desde el workspace. Se adapta el [empaquetado de Core](https://github.com/developer-implementos/core/blob/b25164a50375845989a671cdc8e13360866c76af/apps/core-api/rspack.config.js) sin copiar sus plugins correctivos ni su lista de dependencias cloud.
 
 Para Sentry se toma como referencia la [inicialización y cierre de Core](https://github.com/developer-implementos/core/tree/b25164a50375845989a671cdc8e13360866c76af/apps/core-api/src/common/sentry), con una integración más acotada: un `NodeClient` privado de `@sentry/node` por aplicación, captura explícita y filtrado por campos permitidos. No se copia la inicialización global de `@sentry/nestjs`, el profiling ni las integraciones automáticas de Core. Pino sigue siendo el logger de Nest y HTTP; Sentry es un destino opcional para errores seleccionados.
 
@@ -58,18 +58,18 @@ Las librerías de `libs/backend` separan contratos, aplicación, dominio, infrae
 
 ## Desarrollo
 
-Requiere Node.js `>=22.19.0 <23` o `>=24 <25` y npm 11.6.0, igual que el monorepo.
+Requiere Node.js `>=22.19.0 <23` o `>=24 <25` y pnpm 10.28.1, igual que el monorepo.
 
 Desde la raíz:
 
 ```sh
-npm ci
-npm run api:dev
+pnpm install --frozen-lockfile
+pnpm run api:dev
 ```
 
 El laboratorio utiliza HTTP en loopback. La operación requiere perfil `operational`, HTTPS explícito, base migrada/aprovisionada y credencial runtime independiente de migración. Nx recompila cambios y reinicia la API; no aprovisiona una base automáticamente.
 
-`npm run country:dev` inicia la base HTTP de país en `http://127.0.0.1:3001`. Las aplicaciones tienen identidades y composición separadas; iniciar ambas no establece una conexión entre ellas. Los [comandos del workspace](monorepo.md#comandos-del-workspace) también incluyen las verificaciones de los workers, que componen y cierran su contexto sin ejecutar trabajos de negocio.
+`pnpm run country:dev` inicia la base HTTP de país en `http://127.0.0.1:3001`. Las aplicaciones tienen identidades y composición separadas; iniciar ambas no establece una conexión entre ellas. Los [comandos del workspace](monorepo.md#comandos-del-workspace) también incluyen las verificaciones de los workers, que componen y cierran su contexto sin ejecutar trabajos de negocio.
 
 Para configurar el entorno local, copia `apps/branch-api/.env.example` a `apps/branch-api/.env`. Nx carga ese archivo para sus tareas; las variables ya definidas en el entorno tienen prioridad. No versionar `.env` ni secretos. El arranque directo con Node no usa la carga de archivos de Nx: necesita variables del proceso o `node --env-file=/ruta/api.env main.js`.
 
@@ -182,27 +182,27 @@ Cada aplicación tiene su cliente privado, sin instalar integraciones automátic
 ## Verificación
 
 ```sh
-npm run api:test
-npm run api:check
-npm run api:smoke
+pnpm run api:test
+pnpm run api:check
+pnpm run api:smoke
 ```
 
 `api:check` ejecuta los targets Nx `lint`, `typecheck`, `test` y `build` de `branch-api`.
 
 Las pruebas usan Vitest y SWC con metadata de decoradores para la inyección de Nest. Los casos HTTP de laboratorio y persistencia requieren PostgreSQL real aislado mediante `POS_TEST_ADMIN_URL`; las pruebas puras no requieren ese servicio. Se verifican permisos, ámbitos, versiones, concurrencia y recuperación. Rspack/SWC genera el bundle distribuible; TSC comprueba tipos por separado.
 
-El smoke del artefacto lo instala fuera del monorepo con `npm ci --omit=dev`, para detectar dependencias resueltas accidentalmente desde el workspace. La composición de laboratorio usa base, roles y seed sintéticos; verifica los comandos de migración/comprobación y el arranque configurado. También comprueba que el perfil no abra operación productiva. La instalación requiere acceso al registro npm. Los checks de Sentry usan transporte en memoria y canarios sintéticos, sin enviar eventos a un servicio real.
+El smoke del artefacto lo instala fuera del monorepo con `pnpm install --prod --frozen-lockfile`, para detectar dependencias resueltas accidentalmente desde el workspace. La composición de laboratorio usa base, roles y seed sintéticos; verifica los comandos de migración/comprobación y el arranque configurado. También comprueba que el perfil no abra operación productiva. La instalación requiere acceso al registro npm. Los checks de Sentry usan transporte en memoria y canarios sintéticos, sin enviar eventos a un servicio real.
 
 El job `api` de CI ejecuta `backend:check`, `structure:check` y `backend:smoke`, separado de los jobs del frontend y escritorio. Cubre las cuatro aplicaciones backend y sus librerías; los comandos `api:*` siguen disponibles para trabajar solo sobre `branch-api`.
 
-Para abarcar las cuatro aplicaciones backend y sus librerías, usar `npm run backend:check`, `npm run backend:build` y `npm run backend:smoke`. `npm run structure:check` verifica las reglas arquitectónicas. La comprobación de cada worker solo acredita su composición y cierre; todavía no hay transporte o jobs de negocio que probar.
+Para abarcar las cuatro aplicaciones backend y sus librerías, usar `pnpm run backend:check`, `pnpm run backend:build` y `pnpm run backend:smoke`. `pnpm run structure:check` verifica las reglas arquitectónicas. La comprobación de cada worker solo acredita su composición y cierre; todavía no hay transporte o jobs de negocio que probar.
 
 La comprobación del artefacto también captura los logs del proceso: exige una sola entrada de finalización por solicitud, correlación compartida entre Nest y HTTP y ausencia de valores sensibles sintéticos enviados en headers, query, cuerpo y rutas desconocidas.
 
 ## Artefacto y ejecución
 
 ```sh
-npm run api:build
+pnpm run api:build
 ```
 
 El resultado se genera en `dist/apps/branch-api`: bundle de aplicación y librerías internas, `package.json` y lockfile con las dependencias externas del runtime. La entrega del servicio utiliza esa carpeta, sin copiar el `node_modules` completo del monorepo ni publicar las librerías fuente por separado. Las demás aplicaciones backend generan su propio artefacto bajo `dist/apps/<aplicación>`.
@@ -210,7 +210,7 @@ El resultado se genera en `dist/apps/branch-api`: bundle de aplicación y librer
 En el destino, desde la carpeta del artefacto:
 
 ```sh
-npm ci --omit=dev
+pnpm install --prod --frozen-lockfile
 node --env-file=/ruta/api.env main.js
 ```
 

@@ -74,7 +74,7 @@ El snapshot conserva el contenido original, incluido `productRevision: "source"`
 ## Actualizar el seguimiento
 
 1. En POS Platform, registrar el resultado de la sesión en la issue. Actualizar `delivery/progress.json` si cambia el alcance comprobado y `delivery/follow-ups.json` si aparece o se resuelve una acción. Conservar preguntas ya respondidas como decisiones/evidencia y no reabrirlas por cambiar de sesión. Ejecutar los controles de progreso y entrega; confirmar los archivos en Git.
-2. Publicar el resumen de ejecución desde ese checkout limpio. `npm run delivery:status` muestra el plan; `npm run delivery:status -- --apply` actualiza únicamente comentarios administrados de seguimiento. Conserva conversación, estado, asignados y etiquetas. `--check` detecta comentarios desactualizados.
+2. Publicar el resumen de ejecución desde ese checkout limpio. `pnpm run delivery:status` muestra el plan; `pnpm run delivery:status --apply` actualiza únicamente comentarios administrados de seguimiento. Conserva conversación, estado, asignados y etiquetas. `--check` detecta comentarios desactualizados.
 3. Importar desde POS Docs, usando el checkout limpio y la revisión del producto que se quiere publicar:
 
    ```sh
