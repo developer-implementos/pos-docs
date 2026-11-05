@@ -7,6 +7,7 @@ import {
   mkdtempSync,
   mkdirSync,
   readFileSync,
+  readdirSync,
   realpathSync,
   renameSync,
   rmSync,
@@ -44,6 +45,127 @@ function copyFixture(context) {
   check(directory, { distribute: true });
   return directory;
 }
+
+function cliFixture(context, { minimal = false } = {}) {
+  const directory = minimal ? fixture(context) : copyFixture(context);
+  mkdirSync(path.join(directory, 'tools/odd'), { recursive: true });
+  cpSync(path.join(root, 'tools/odd/upstream.mjs'), path.join(directory, 'tools/odd/upstream.mjs'));
+  return directory;
+}
+
+function runCli(directory, args) {
+  return spawnSync(process.execPath, [path.join(directory, 'tools/odd/upstream.mjs'), ...args], {
+    cwd: directory,
+    encoding: 'utf8',
+    timeout: 10_000,
+    windowsHide: true,
+    // A buggy render dispatch must never reach the personal toolchain or configuration.
+    env: {
+      SystemRoot: process.env.SystemRoot ?? '',
+      HOME: directory,
+      USERPROFILE: directory,
+      APPDATA: directory,
+      LOCALAPPDATA: '',
+      PATH: '',
+      NODE_OPTIONS: '',
+    },
+  });
+}
+
+function fixtureHash(directory) {
+  const inventory = [];
+  function visit(relative = '') {
+    for (const entry of readdirSync(path.join(directory, relative), { withFileTypes: true })) {
+      const name = relative ? `${relative}/${entry.name}` : entry.name;
+      if (entry.isDirectory()) {
+        inventory.push(['directory', name]);
+        visit(name);
+      } else {
+        assert.ok(entry.isFile(), `Unexpected fixture entry: ${name}`);
+        inventory.push(['file', name, sha256(readFileSync(path.join(directory, name)))]);
+      }
+    }
+  }
+  visit();
+  inventory.sort((left, right) => left[1].localeCompare(right[1], 'en'));
+  return sha256(JSON.stringify(inventory));
+}
+
+for (const args of [[], ['--check']]) {
+  test(`CLI verifies without changes for ${JSON.stringify(args)}`, (context) => {
+    const directory = cliFixture(context);
+    const before = fixtureHash(directory);
+    const result = runCli(directory, args);
+    assert.ifError(result.error);
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stdout, /^Verified 8 pinned upstream files\.\r?\n$/u);
+    assert.equal(result.stderr, '');
+    assert.equal(fixtureHash(directory), before);
+  });
+}
+
+test('CLI --write repairs drifted managed output', (context) => {
+  const directory = cliFixture(context);
+  writeFileSync(path.join(directory, '.agents/skills/work-unit-commits/SKILL.md'), 'drifted output');
+  const result = runCli(directory, ['--write']);
+  assert.ifError(result.error);
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /^Verified 8 pinned upstream files\.\r?\n$/u);
+  assert.equal(result.stderr, '');
+  assert.equal(check(directory), 8);
+});
+
+test('CLI accepts --render and reaches its toolchain guard without running native tools', (context) => {
+  const directory = cliFixture(context, { minimal: true });
+  const before = fixtureHash(directory);
+  const result = runCli(directory, ['--render']);
+  assert.ifError(result.error);
+  assert.equal(result.status, 1);
+  assert.equal(result.stdout, '');
+  assert.match(result.stderr, /Rendering requires the pinned Windows toolchain/u);
+  assert.equal(fixtureHash(directory), before);
+});
+
+const invalidArguments = [
+  ['--unknown'],
+  ['positional'],
+  [''],
+  ['--check', '--unknown'],
+  ['--unknown', '--check'],
+  ['--check', 'positional'],
+  ['positional', '--check'],
+  ['--check', ''],
+  ['', '--check'],
+  ['--check', '--render'],
+  ['--render', '--check'],
+  ['--check', '--write'],
+  ['--write', '--check'],
+  ['--write', '--render'],
+  ['--render', '--write'],
+  ['--check', '--check'],
+  ['--write', '--write'],
+  ['--render', '--render'],
+  ['--check', '--write', '--render'],
+];
+
+for (const minimal of [false, true]) {
+  for (const args of invalidArguments) {
+    test(`CLI rejects ${JSON.stringify(args)} before ${minimal ? 'missing configuration access' : 'changing drifted output'}`, (context) => {
+      const directory = cliFixture(context, { minimal });
+      if (!minimal)
+        writeFileSync(path.join(directory, '.agents/skills/work-unit-commits/SKILL.md'), 'drifted output');
+      const before = fixtureHash(directory);
+      const result = runCli(directory, args);
+      assert.ifError(result.error);
+      assert.equal(fixtureHash(directory), before, 'Rejected arguments must preserve every fixture entry');
+      assert.equal(result.status, 2, result.stderr);
+      assert.equal(result.stdout, '');
+      assert.match(result.stderr, /Usage:.*--check.*--write.*--render/u);
+      assert.doesNotMatch(result.stderr, /ENOENT|Rendering requires|Distribution differs/u);
+    });
+  }
+}
+
 test('vendored upstream and distributed skills are byte-identical', () => assert.equal(check(root), 8));
 test('changed vendor, changed renderer, missing distribution and undeclared asset fail', (context) => {
   const directory = copyFixture(context);
