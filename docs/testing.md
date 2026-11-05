@@ -2,6 +2,8 @@
 
 La organización del producto separa aplicaciones operativas y proyectos de pruebas en **pos-platform**. Define `tests/pos-clients-e2e` para los recorridos Angular de escritorio y móvil y `libs/shared/backend/testing` para el soporte técnico reutilizable. La documentación se valida desde **pos-docs**. La cobertura revisada y los proyectos previstos se presentan por separado: describir una suite no acredita su implementación. El [mapa del monorepo](monorepo.md) detalla responsabilidades y estado del producto.
 
+La CI se ejecuta desde los equipos del desarrollo y GitHub Actions permanece deshabilitado por [TASK-161](https://github.com/developer-implementos/pos-platform/issues/161). El [procedimiento local del producto](https://github.com/developer-implementos/pos-platform/tree/main/tools/local-ci) conserva comandos y evidencia por plataforma; [POS Docs](https://github.com/developer-implementos/pos-docs/tree/main/tools/local-ci) verifica su candidato editorial. Para integrar se comprueban evidencia local real, política online fresca y revisión humana vigente. La falta de Mac deja iOS sin ejecutar y sus criterios de release pendientes; una suite portable no lo acredita.
+
 ## Cobertura existente y ubicación
 
 | Comprobación | Ruta en el snapshot revisado | Qué verifica | Límite |
@@ -17,7 +19,7 @@ La organización del producto separa aplicaciones operativas y proyectos de prue
 | Fronteras arquitectónicas | `tools/eslint` | Reglas de imports y calidad existentes | La organización objetivo requiere comprobar todos sus límites con casos negativos |
 | Artefactos backend | `tools/verify-api-artifact.mjs` | Arranque fuera del workspace con dependencias de producción | No acredita recuperación comercial |
 | Documentación, en POS Docs | `apps/starlight/scripts` | Fuentes, catálogo, build, enlaces, búsqueda y navegador | Se ejecuta en otro repositorio; no acredita funcionamiento del POS |
-| Escritorio Windows | Job `windows-desktop` de CI | Compilación y empaquetado Tauri | No es una suite E2E nativa |
+| Escritorio Windows | Verificación local de Tauri; el snapshot conserva el job `windows-desktop` | Compilación y empaquetado Tauri | No es una suite E2E nativa; el workflow no se ejecuta con Actions deshabilitado |
 
 El [corte F02](phase-2-payments-documents.md) incorpora `pnpm run device:check` para build, formato y pruebas .NET, y `pnpm run device:interop` para el recorrido entre procesos. Los fixtures comunes validan sobre, resultado, recepción y permiso de ejecución tanto en TypeScript como en C#. La comprobación negativa de TLS ocurre antes de transmitir credenciales; la confianza en la CA efímera sólo existe en el helper de pruebas.
 

@@ -6,22 +6,17 @@ const json = (name) => JSON.parse(readFileSync(new URL(`../${name}`, import.meta
 const core = json('.github/rulesets/main.json');
 const review = json('.github/rulesets/review.json');
 const settings = json('.github/repository.json');
-const name = json('package.json').name;
 const byType = (ruleset, type) => ruleset.rules.filter(rule => rule.type === type);
 
-test('technical rules require a PR and verified checks without any bypass actor', () => {
+test('technical rules protect PR integration without hosted status checks or bypass actors', () => {
   assert.deepEqual(core.bypass_actors, []);
   assert.deepEqual(core.conditions.ref_name, { include: ['~DEFAULT_BRANCH'], exclude: [] });
   assert.equal(core.enforcement, 'active');
-  for (const type of ['deletion', 'non_fast_forward', 'required_linear_history', 'pull_request', 'required_status_checks']) assert.equal(byType(core, type).length, 1);
+  assert.deepEqual(core.rules.map(rule => rule.type).sort(), ['deletion', 'non_fast_forward', 'pull_request', 'required_linear_history']);
+  assert.equal(byType(core, 'required_status_checks').length, 0);
   const pr = byType(core, 'pull_request')[0].parameters;
   assert.deepEqual(pr.allowed_merge_methods, ['squash']);
   assert.equal(pr.required_review_thread_resolution, true);
-  const checks = byType(core, 'required_status_checks')[0].parameters;
-  assert.equal(checks.strict_required_status_checks_policy, true);
-  assert.equal(checks.do_not_enforce_on_create, false);
-  const expected = name === 'pos-platform' ? ['delivery-progress', 'api', 'clients', 'android-mobile', 'ios-mobile', 'windows-desktop', 'PR policy'] : ['documentation', 'editorial-policy'];
-  assert.deepEqual(checks.required_status_checks, expected.map(context => ({ context, integration_id: 15368 })));
 });
 
 test('only Cristian can bypass the separate human-review ruleset via a PR', () => {
@@ -39,6 +34,9 @@ test('merge settings and ownership protect the policy itself', () => {
   assert.equal(settings.allow_merge_commit, false);
   assert.equal(settings.allow_rebase_merge, false);
   assert.equal(settings.allow_squash_merge, true);
+  assert.equal(settings.allow_auto_merge, false);
+  assert.equal(settings.allow_update_branch, true);
+  assert.equal(settings.delete_branch_on_merge, true);
   assert.equal(settings.squash_merge_commit_title, 'PR_TITLE');
   assert.equal(settings.squash_merge_commit_message, 'PR_BODY');
   const owners = readFileSync(new URL('../.github/CODEOWNERS', import.meta.url), 'utf8');

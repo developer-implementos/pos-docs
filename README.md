@@ -45,7 +45,7 @@ La separación de presentaciones y herramientas sigue la organización de [integ
 
 ## Desarrollo local
 
-Requiere Node.js 22.19 o posterior de la rama 22, o Node.js 24. CI utiliza Node.js 22.23.3 y npm 11.6.0.
+Requiere Node.js 22.19 o posterior de la rama 22, o Node.js 24. La referencia de verificación local utiliza Node.js 22.23.3 y npm 11.6.0. GitHub Actions permanece deshabilitado; seguir el [recorrido de CI desde equipos de desarrollo](tools/local-ci/README.md) para conservar evidencia del candidato y comprobar la política de PR por separado.
 
 ```sh
 npm run setup
