@@ -1,6 +1,6 @@
 # Verificación editorial local
 
-El equipo ejecuta CI desde sus PC; GitHub Actions permanece deshabilitado en ambos repositorios por [TASK-161](https://github.com/developer-implementos/pos-platform/issues/161). La CI local real aprobada, la política online fresca y la revisión humana exigida permiten integrar. El wrapper conserva evidencia del candidato sin llamar a GitHub ni cambiar protecciones. GitHub aplica las [reglas de PR y revisión](../../.github/rulesets/README.md), pero no comprueba la ejecución local: una persona verifica el recibo antes del merge. No se publican checks/estados sustitutos ni se incorpora una GitHub App.
+El equipo ejecuta la CI de POS Docs desde sus PC, con GitHub Actions deshabilitado en este repositorio. POS Platform ya no sigue este procedimiento: desde [TASK-161](https://github.com/developer-implementos/pos-platform/issues/161) su CI corre en GitHub Actions sobre runners propios, sin minutos alojados. La CI local real aprobada, la política online fresca y la revisión humana exigida permiten integrar. El wrapper conserva evidencia del candidato sin llamar a GitHub ni cambiar protecciones. GitHub aplica las [reglas de PR y revisión](../../.github/rulesets/README.md), pero no comprueba la ejecución local: una persona verifica el recibo antes del merge. No se publican checks/estados sustitutos ni se incorpora una GitHub App.
 
 ## Preparar y ejecutar
 

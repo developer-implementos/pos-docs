@@ -178,7 +178,7 @@ Las pruebas cubren políticas, montos, persistencia, permisos, reintentos, calen
 
 Validación tras la revisión de calidad (3 de octubre de 2026): **144 pruebas de lógica e infraestructura y 37 recorridos de navegador pasan**, junto con lint, formato y compilación web de producción. Los recorridos ejecutan el bundle productivo con la CSP de Tauri, incluyen tamaños de 375 y 1440 px y verifican controles de prime-showcase y accesibilidad del dashboard/reportes en claro y oscuro. El [informe de revisión](quality-review.md) detalla correcciones y condiciones pendientes para producción.
 
-Las comprobaciones de CI se consultan en [Actions de pos-platform](https://github.com/developer-implementos/pos-platform/actions). El instalador se puede generar con `pnpm run desktop:build`.
+Las comprobaciones de CI se consultan en [Actions de pos-platform](https://github.com/developer-implementos/pos-platform/actions); corren en runners propios de la organización, sin minutos alojados, según la [guía del runner](https://github.com/developer-implementos/pos-platform/blob/main/tools/runner/README.md). El instalador se puede generar con `pnpm run desktop:build` en Windows; la CI no lo compila mientras no exista un runner propio de Windows ([TASK-206](https://github.com/developer-implementos/pos-platform/issues/206)).
 
 ## Clientes nativos
 
