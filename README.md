@@ -45,7 +45,7 @@ La separación de presentaciones y herramientas sigue la organización de [integ
 
 ## Desarrollo local
 
-Requiere Node.js 22.19 o posterior de la rama 22, o Node.js 24. La referencia de verificación local utiliza Node.js 22.23.3 y npm 11.6.0. GitHub Actions permanece deshabilitado; seguir el [recorrido de CI desde equipos de desarrollo](tools/local-ci/README.md) para conservar evidencia del candidato y comprobar la política de PR por separado.
+Requiere Node.js 22.19 o posterior de la rama 22, o Node.js 24. La referencia de verificación local utiliza Node.js 22.23.3 y npm 11.6.0. GitHub Actions verifica cada PR con runners alojados ([por qué](.github/rulesets/README.md#github-actions-en-este-repositorio)); el [recorrido local](tools/local-ci/README.md) es opcional, para verificar antes de empujar y conservar evidencia del candidato.
 
 ```sh
 npm run setup

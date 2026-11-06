@@ -1,6 +1,6 @@
 # Verificación editorial local
 
-El equipo ejecuta CI desde sus PC; GitHub Actions permanece deshabilitado en ambos repositorios por [TASK-161](https://github.com/developer-implementos/pos-platform/issues/161). La CI local real aprobada, la política online fresca y la revisión humana exigida permiten integrar. El wrapper conserva evidencia del candidato sin llamar a GitHub ni cambiar protecciones. GitHub aplica las [reglas de PR y revisión](../../.github/rulesets/README.md), pero no comprueba la ejecución local: una persona verifica el recibo antes del merge. No se publican checks/estados sustitutos ni se incorpora una GitHub App.
+La CI de POS Docs corre en GitHub Actions, con runners alojados ([decisión y motivos](../../.github/rulesets/README.md#github-actions-en-este-repositorio)). Este recorrido sigue disponible como forma opcional de verificar antes de empujar: ya no es la única verificación ni condiciona la integración. POS Platform no lo sigue: su CI corre en GitHub Actions sobre runners propios desde [pos-platform#210](https://github.com/developer-implementos/pos-platform/pull/210), sin minutos alojados. El wrapper conserva evidencia del candidato sin llamar a GitHub ni cambiar protecciones. GitHub aplica las [reglas de PR y revisión](../../.github/rulesets/README.md), pero no comprueba la ejecución local: si alguien aporta un recibo, lo contrasta una persona. No se publican checks/estados sustitutos ni se incorpora una GitHub App.
 
 ## Preparar y ejecutar
 
@@ -33,7 +33,7 @@ Corregir el problema, confirmar el nuevo candidato y ejecutar otra vez con una c
 
 ## Política de la PR por separado
 
-En otro checkout limpio y confiable de **main**, con la sesión de lectura autorizada y sin ejecutar código del candidato:
+`editorial-policy.yml` ejecuta esta política en cada PR, pero su token no lee el repositorio privado del producto y deja la issue como **no verificada**. Para comprobarla, en otro checkout limpio y confiable de **main**, con la sesión de lectura autorizada y sin ejecutar código del candidato:
 
 ```sh
 node tools/editorial/pr-check.mjs --pr 123 --github --require-issue
@@ -41,16 +41,16 @@ node tools/editorial/pr-check.mjs --pr 123 --github --require-issue
 
 Sustituir `123` por la PR real. Conservar el SHA de esa base, el resultado del comando y los metadatos consultados. El [control editorial](../editorial/README.md) valida declaración, historial ODD e issue real, y rechaza cambios de la PR durante su consulta. Sus pruebas unitarias y el modo `--body-file` no sustituyen esa consulta online. Antes de aceptar evidencia, contrastar el HEAD y el hash del cuerpo con la PR actual, y repetir la verificación cuando cambien. Esta unidad no automatiza la vinculación de este manifiesto a número de PR/base ni publica un check remoto.
 
-## Comprobar antes de integrar
+## Contrastar un recibo local
 
-La persona responsable de integrar deja en la PR una referencia consultable al recibo y a la política online, con revisión y resultados. Antes del merge:
+El recibo no es condición para integrar: las [reglas de `main`](../../.github/rulesets/README.md#github-actions-en-este-repositorio) no exigen ningún check. Quien lo aporte como evidencia deja en la PR una referencia consultable al recibo y a la política online, con revisión y resultados. Para aceptarlo:
 
 1. Consultar HEAD, cuerpo y base actuales de la PR, reglas efectivas y revisión. Contrastar el SHA y el hash del cuerpo con `manifest.json` y comprobar los hashes de logs, locks y `package.json`, las versiones admitidas y todos los resultados. Revisar los logs; un archivo que dice `passed` por sí solo no acredita ejecución.
 2. Confirmar `npm run verify` y recorridos declarados aprobados para el candidato actual, sin fallos, interrupciones, `not_run` ni evidencia incompleta u obsoleta. Al cambiar HEAD o cuerpo, ejecutar de nuevo el wrapper en una carpeta nueva. Si cambia la base, actualizar el candidato sobre esa base cuando corresponda y repetir las comprobaciones aplicables; no reutilizar la política online anterior.
-3. Repetir el control online desde la base confiable actual y conservar SHA de base, HEAD, cuerpo y resultado. Una política fallida o no consultada impide integrar, aunque el build haya pasado. Confirmar nuevamente que la PR no cambió después de estas comprobaciones.
-4. Confirmar conversaciones resueltas, ausencia de conflictos y revisión independiente vigente con CODEOWNERS y aprobación del último push. Sólo @floxcristian puede omitir la revisión humana mediante PR, con autorización explícita para ese candidato; esa excepción conserva los controles locales y de política.
+3. Repetir el control online desde la base confiable actual y conservar SHA de base, HEAD, cuerpo y resultado. Una política fallida o no consultada no se presenta como aprobada, aunque el build haya pasado. Confirmar nuevamente que la PR no cambió después de estas comprobaciones.
+4. Confirmar conversaciones resueltas, ausencia de conflictos y revisión independiente vigente con CODEOWNERS y aprobación del último push. Sólo @floxcristian puede omitir la revisión humana mediante PR, con autorización explícita para ese candidato; esa excepción omite sólo esa revisión.
 
-Con esa evidencia y la revisión requerida, se puede integrar manualmente mediante squash sin esperar Actions. Un resultado fallido, obsoleto o no ejecutado no autoriza merge. La configuración versionada no prueba el estado remoto: consultar las reglas efectivas. Auto-merge permanece deshabilitado para conservar la comprobación final de HEAD, base y evidencia antes de integrar.
+La integración es manual, mediante squash, con la revisión requerida. Un resultado fallido, obsoleto o no ejecutado no se presenta como aprobado. La configuración versionada no prueba el estado remoto: consultar las reglas efectivas. Auto-merge permanece deshabilitado para conservar la comprobación final de HEAD, base y evidencia antes de integrar.
 
 El pedido de merge debe exigir el HEAD exacto revisado, por ejemplo `gh pr merge 123 --repo developer-implementos/pos-docs --squash --match-head-commit SHA_REVISADO`, sustituyendo número y SHA por los comprobados; no usar `--auto` ni `--admin`. Consultar otra vez la base justo antes de enviarlo: si cambió, detener la integración, renovar la política online y repetir las comprobaciones aplicables. `--match-head-commit` protege el HEAD del candidato, pero no ofrece una condición atómica sobre el SHA de la base; conservar ese límite explícito en la revisión de evidencia.
 
