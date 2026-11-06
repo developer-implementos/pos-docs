@@ -12,8 +12,12 @@ concurrency:
   cancel-in-progress: true
 jobs:
   documentation:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # Runners propios, sin respaldo alojado: la organizacion no consume minutos
+    # alojados (pos-platform#161). El pool se declara en POS_CI_LINUX_RUNS_ON como
+    # arreglo JSON de etiquetas; sin ella, las etiquetas que el agente se asigna
+    # solo. Calibrado contra el fleet compartido, no contra la nube.
+    runs-on: ${{ fromJSON(vars.POS_CI_LINUX_RUNS_ON || '["self-hosted","linux","x64"]') }}
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
@@ -25,7 +29,20 @@ jobs:
           cache-dependency-path: apps/starlight/package-lock.json
       - run: npm install --global npm@11.6.0
       - run: npm run setup
-      - run: npm --prefix apps/starlight exec playwright install --with-deps chromium
+      # `--with-deps` instala bibliotecas del sistema con sudo, que un runner
+      # propio no concede. Las aprovisiona el host (scripts/runner-bootstrap.sh
+      # en devops-platform); el job instala el navegador fijado y prueba que
+      # arranca, para que una biblioteca ausente falle aqui con su nombre y no
+      # en la primera prueba con un error que no se parece a su causa.
+      - name: Install the pinned browser, and prove it can launch
+        shell: bash
+        run: |
+          set -e
+          npm --prefix apps/starlight exec playwright install chromium
+          if ! (cd apps/starlight && node -e "import('playwright').then(({ chromium }) => chromium.launch()).then((browser) => browser.close())"); then
+            echo "::error::El navegador no arranca en este runner. Las bibliotecas del sistema las instala el aprovisionamiento del host (scripts/runner-bootstrap.sh en devops-platform), no este job." >&2
+            exit 1
+          fi
       - name: Run the canonical local and CI verification
         run: npm run verify
       - name: Check declared reader journeys in generated HTML

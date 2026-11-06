@@ -317,3 +317,23 @@ test('editorial head, base and mutable metadata are rechecked after source reads
   subject.pull.body += '\nEdited while reading the product issue.';
   await assert.rejects(assertPullRequestUnchanged(subject.get, result.snapshot), /changed during/);
 });
+
+test('the editorial workflows declare only self-hosted runners and no sudo step', () => {
+  // The organization does not consume hosted Actions minutes (pos-platform#161).
+  // `automated-review.yml` is a distributed copy from POS Platform and follows its
+  // routing when the distribution is refreshed from an integrated product revision.
+  const hosted = /\b(ubuntu|windows|macos)-(latest|\d[\w.]*)\b/;
+  for (const name of ['docs-quality.yml', 'editorial-policy.yml']) {
+    const workflow = fs.readFileSync(new URL(`../../.github/workflows/${name}`, import.meta.url), 'utf8');
+    const runsOn = workflow.split(/\r?\n/).filter(line => /^\s+runs-on:/.test(line));
+    assert.ok(runsOn.length > 0, `${name} must declare runs-on`);
+    for (const line of runsOn) {
+      assert.doesNotMatch(line, hosted, `${name} declares a hosted runner: ${line.trim()}`);
+      assert.match(line, /fromJSON\(vars\.POS_CI_(?:TRUSTED|LINUX)_RUNS_ON \|\|/, `${name} must route through the declared pool`);
+      assert.match(line, /'\["self-hosted","linux","x64"\]'\) \}\}$/, `${name} must default to the self-hosted pool`);
+    }
+    // A comment that names sudo does not run sudo; it is the text that explains the bounded step.
+    const executable = workflow.split(/\r?\n/).filter(line => !/^\s*#/.test(line)).join('\n');
+    assert.doesNotMatch(executable, /--with-deps|\bsudo\b/, `${name} must not need sudo on a self-hosted runner`);
+  }
+});

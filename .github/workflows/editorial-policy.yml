@@ -11,7 +11,11 @@ concurrency:
   cancel-in-progress: true
 jobs:
   editorial-policy:
-    runs-on: ubuntu-latest
+    # Pool confiable cuando exista (POS_CI_TRUSTED_RUNS_ON); mientras tanto el pool
+    # propio, por la misma decision que pos-platform#161 tomo para su PR policy:
+    # solo herramientas del SHA base, token de lectura y sin secretos, que
+    # tools/editorial/policy.test.mjs afirma.
+    runs-on: ${{ fromJSON(vars.POS_CI_TRUSTED_RUNS_ON || vars.POS_CI_LINUX_RUNS_ON || '["self-hosted","linux","x64"]') }}
     timeout-minutes: 5
     steps:
       # Execute only the policy from the trusted base. Never checkout PR code,
