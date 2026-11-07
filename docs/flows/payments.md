@@ -1,6 +1,6 @@
 # Cobrar y resolver un pago
 
-El recorrido comienza en una cesta y cotización identificadas. La [guía de cobro combinado](/guide/implementation/phase-2/#cobro-combinado-y-transferencia-manual) concentra las reglas implementadas de efectivo y transferencia: importes aplicados, vuelto, reserva de saldo y verificación autorizada.
+El recorrido comienza en una cesta y cotización identificadas. La [guía de cobro combinado](/guide/implementation/phase-2/#cobro-combinado-y-transferencia-manual) concentra las reglas implementadas de efectivo y transferencia: importes aplicados, vuelto, reserva de saldo y verificación autorizada. El redondeo legal de efectivo está [propuesto en el ADR-20](/guide/architecture/cash-rounding/) y aún no está implementado.
 
 ## Resultado y recuperación
 
