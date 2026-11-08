@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "c131147216e1998321016afd87b019bacd045935",
+    "revision": "5037be3607190a63a69381e3ebc2253b56637a47",
     "path": "delivery/follow-ups.json",
     "sha256": "59af02d172bd6c6c3f1e30ea75b7e3343d034f70870218447b1601735c6fd8e0"
   },
@@ -547,7 +547,7 @@
     ]
   },
   "issues": {
-    "observedAt": "2026-11-08T17:07:40.761Z",
+    "observedAt": "2026-11-08T17:29:03.833Z",
     "repository": "https://github.com/developer-implementos/pos-platform",
     "entries": [
       {
@@ -559,7 +559,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:01:29Z"
+        "updatedAt": "2026-11-08T17:26:06Z"
       },
       {
         "code": "F01-02",
@@ -570,7 +570,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:01:44Z"
+        "updatedAt": "2026-11-08T17:26:11Z"
       },
       {
         "code": "F01-03",
@@ -581,7 +581,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:01:57Z"
+        "updatedAt": "2026-11-08T17:26:15Z"
       },
       {
         "code": "F01-04",
@@ -590,7 +590,7 @@
         "state": "CLOSED",
         "executionLabels": [],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:02:12Z"
+        "updatedAt": "2026-11-08T17:26:19Z"
       },
       {
         "code": "F01-05",
@@ -599,7 +599,7 @@
         "state": "CLOSED",
         "executionLabels": [],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:02:25Z"
+        "updatedAt": "2026-11-08T17:26:24Z"
       },
       {
         "code": "F01-06",
@@ -610,7 +610,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:02:42Z"
+        "updatedAt": "2026-11-08T17:26:28Z"
       },
       {
         "code": "F01-07",
@@ -621,7 +621,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:02:54Z"
+        "updatedAt": "2026-11-08T17:26:32Z"
       },
       {
         "code": "F01-08",
@@ -632,7 +632,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:03:04Z"
+        "updatedAt": "2026-11-08T17:26:37Z"
       },
       {
         "code": "F01-09",
@@ -643,7 +643,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:03:18Z"
+        "updatedAt": "2026-11-08T17:26:41Z"
       },
       {
         "code": "F01-10",
@@ -654,7 +654,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:03:28Z"
+        "updatedAt": "2026-11-08T17:26:46Z"
       },
       {
         "code": "F01-11",
@@ -665,7 +665,7 @@
           "status:blocked"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:03:39Z"
+        "updatedAt": "2026-11-08T17:26:50Z"
       },
       {
         "code": "F01-12",
@@ -676,7 +676,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:03:49Z"
+        "updatedAt": "2026-11-08T17:26:55Z"
       },
       {
         "code": "F01-13",
@@ -687,7 +687,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:03:58Z"
+        "updatedAt": "2026-11-08T17:26:59Z"
       },
       {
         "code": "F02-01",
@@ -698,7 +698,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:04:08Z"
+        "updatedAt": "2026-11-08T17:27:04Z"
       },
       {
         "code": "F02-02",
@@ -709,7 +709,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:04:16Z"
+        "updatedAt": "2026-11-08T17:27:08Z"
       },
       {
         "code": "F02-03",
@@ -720,7 +720,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:04:24Z"
+        "updatedAt": "2026-11-08T17:27:13Z"
       },
       {
         "code": "F02-04",
@@ -731,7 +731,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:04:31Z"
+        "updatedAt": "2026-11-08T17:27:17Z"
       },
       {
         "code": "F02-05",
@@ -742,7 +742,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:04:37Z"
+        "updatedAt": "2026-11-08T17:27:22Z"
       },
       {
         "code": "F02-06",
@@ -753,7 +753,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:04:43Z"
+        "updatedAt": "2026-11-08T17:27:26Z"
       },
       {
         "code": "F02-07",
@@ -764,7 +764,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:04:51Z"
+        "updatedAt": "2026-11-08T17:27:31Z"
       },
       {
         "code": "F02-08",
@@ -775,7 +775,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:04:58Z"
+        "updatedAt": "2026-11-08T17:27:35Z"
       },
       {
         "code": "F02-09",
@@ -786,7 +786,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:05:04Z"
+        "updatedAt": "2026-11-08T17:27:40Z"
       },
       {
         "code": "F02-10",
@@ -797,7 +797,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:05:11Z"
+        "updatedAt": "2026-11-08T17:27:45Z"
       },
       {
         "code": "F02-11",
@@ -808,7 +808,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:05:17Z"
+        "updatedAt": "2026-11-08T17:27:49Z"
       },
       {
         "code": "F02-12",
@@ -819,7 +819,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:05:26Z"
+        "updatedAt": "2026-11-08T17:27:53Z"
       },
       {
         "code": "F02-13",
@@ -830,7 +830,7 @@
         "assignees": [
           "floxcristian"
         ],
-        "updatedAt": "2026-11-08T17:05:32Z"
+        "updatedAt": "2026-11-08T17:27:58Z"
       },
       {
         "code": "F02-14",
@@ -841,7 +841,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:05:41Z"
+        "updatedAt": "2026-11-08T17:28:02Z"
       },
       {
         "code": "F03-01",
@@ -863,7 +863,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:05:49Z"
+        "updatedAt": "2026-11-08T17:28:07Z"
       },
       {
         "code": "F03-03",
@@ -874,7 +874,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:06:00Z"
+        "updatedAt": "2026-11-08T17:28:11Z"
       },
       {
         "code": "F03-04",
@@ -929,7 +929,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:06:09Z"
+        "updatedAt": "2026-11-08T17:28:16Z"
       },
       {
         "code": "F03-09",
@@ -940,7 +940,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:06:15Z"
+        "updatedAt": "2026-11-08T17:28:21Z"
       },
       {
         "code": "F03-10",
@@ -951,7 +951,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:06:20Z"
+        "updatedAt": "2026-11-08T17:28:25Z"
       },
       {
         "code": "F03-11",
@@ -1105,7 +1105,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:06:25Z"
+        "updatedAt": "2026-11-08T17:28:30Z"
       },
       {
         "code": "F05-02",
@@ -1215,7 +1215,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:06:29Z"
+        "updatedAt": "2026-11-08T17:28:34Z"
       },
       {
         "code": "F05-12",
@@ -1248,7 +1248,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:06:33Z"
+        "updatedAt": "2026-11-08T17:28:40Z"
       },
       {
         "code": "F06-03",

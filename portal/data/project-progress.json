@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "c131147216e1998321016afd87b019bacd045935",
+    "revision": "5037be3607190a63a69381e3ebc2253b56637a47",
     "path": "delivery/progress.json",
-    "sha256": "e8a3545eae1828acf27f4ac2169be49c02925e82062092da3df563f03abf8fb5"
+    "sha256": "ef342e181f854cd8d76d6a786804cd9b5c98b5a1a5b45638bfec5b9e66b2765e"
   },
   "content": {
     "schemaVersion": 2,
@@ -364,7 +364,7 @@
           "device-agent"
         ],
         "status": "verified",
-        "summary": "Verificados el inventario, las instrucciones compartidas y la política alojada de PR con cuatro rechazos y restauración válida. Las reglas efectivas conservan revisión y siete checks, con bypass administrativo sólo mediante PR. No registra una práctica humana del equipo ni aceptación manual.",
+        "summary": "Verificados el inventario, las instrucciones compartidas y la política alojada de PR con cuatro rechazos y restauración válida. La verificación del 31 de octubre de 2026 observó revisión y siete checks, con bypass administrativo sólo mediante PR; esa evidencia histórica no describe los checks exigidos actualmente. La política vigente y su comprobación remota se consultan en .github/rulesets/README.md. No registra una práctica humana del equipo ni aceptación manual.",
         "acceptance": null,
         "verification": {
           "revision": "4cfd5c8bd2b4c6c40ec1578c3ea52116112f5aea",
