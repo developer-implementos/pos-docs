@@ -4,6 +4,8 @@ Issue: https://github.com/developer-implementos/pos-platform/issues/161
 
 Objetivo: conservar evidencia local de la verificación editorial del candidato sin consumir GitHub Actions. Rama: `codex/task-161-local-only-ci`. Entrega: una unidad editorial revisable, coordinada con T3 (S2/S4/S5) de la ficha `odd/tasks/local-only-ci.md` del producto. Test runner: Node test runner y `npm run verify` existente.
 
+La política local exclusiva de esta unidad es histórica: L15 la reemplazó. La reconciliación de TASK-219 continúa en S5/T4, rama `codex/task-219-current-ci`, conservando la PR #34 y sus commits. Estrategia: una unidad editorial en la misma PR; reversión del nuevo commit sin retirar el wrapper ni cambios anteriores.
+
 ## Specs
 
 - S1. Invocar el verificador canónico, sin duplicar su lista de suites; conservar logs, hashes de locks, HEAD limpio y estable y estados reales de ejecución. Fallos, interrupciones y comprobaciones ausentes no equivalen a éxito.
@@ -11,11 +13,15 @@ Objetivo: conservar evidencia local de la verificación editorial del candidato 
 - S3. Documentar instalación, ejecución, recuperación y límites de evidencia. La verificación editorial no prueba plataformas nativas; iOS permanece no ejecutado porque no hay Mac disponible.
 - S4. Permitir integrar manualmente mediante squash cuando la CI local real del candidato, la política online actualizada y la revisión exigida estén comprobadas. Deshabilitar auto-merge antes de retirar checks requeridos y conservar actualización/limpieza de ramas. Una persona contrasta evidencia, SHA, cuerpo y base vigentes; GitHub no verifica la ejecución local. No publicar checks/estados sustitutos ni aceptar fallos, evidencia obsoleta o pasos no ejecutados. iOS pendiente bloquea los criterios de release que lo exigen, sin crear una obligación universal de CI alojada para integrar.
 
+- S5. Alinear las instrucciones y guías con las decisiones integradas en POS Platform `c131147216e1998321016afd87b019bacd045935` y la CI editorial alojada. Separar compilación histórica, ejecución actual y habilitación; conservar el Log y corregir enlaces al procedimiento propietario sin modificar workflows, settings, snapshots ni producto.
+
 ## Tasks
 
 - [x] T1 · S1,S2 · route:delegated · Implementar wrapper y pruebas negativas sin modificar otras worktrees · status:done · evidence: suite 15/15 aprobada con Node 22.23.3/npm 11.6.0; después de añadir rechazo de escrituras parciales de log, pruebas de procesos 4/4 aprobadas. Se cubren fuente, logs, fallo, timeout, interrupción y terminación no confirmada.
 - [x] T2 · S2,S3 · route:delegated · Documentar recorrido local y ejecutar comprobaciones pertinentes · status:done · evidence: manifiesto local completo aprobado para da5fc580c83a67c2b03cf3462fd61dead3e6bb87; las modificaciones posteriores tienen verificación proporcional separada en L13, sin heredar aprobación del commit anterior.
 - [x] T3 · S2,S4 · route:delegated · Ajustar política versionada e instrucciones de merge con evidencia local real y revisión humana · status:done · evidence: gobernanza RED/GREEN, 64/64 pruebas, validate y build aprobados; revisión independiente sin hallazgos accionables. La activación remota y la verificación del candidato final corresponden al coordinador.
+
+- [x] T4 · S5 · route:delegated · Reconciliar política editorial y referencias de CI del producto en PR #34 · status:done · evidence: L18; texto actualizado, controles focales e historial append-only aprobados; verify, recorridos construidos y revisión del candidato final a cargo de la coordinación antes de publicar.
 
 ## Log
 
@@ -48,3 +54,13 @@ Se conserva esa autorización para el cambio coordinado de reglas. La lectura de
 - L14 · 2026-11-04 · El coordinador activó el flujo autorizado en ambos repositorios: primero deshabilitó auto-merge y después retiró exclusivamente required_status_checks. La lectura remota confirma reglas de revisión intactas, PR y conversaciones obligatorias, historia protegida, Actions y todos los workflows deshabilitados; no existe protección clásica adicional (404). Respaldo antes/después en tmp/task-161/activation-* local e ignorado. Ninguna PR se integró ni se publicó un status. La integración del código de las PR #164/#29 sigue separada de esta activación.
 
 - L15 · 2026-11-06 · Decisión posterior del responsable, que reemplaza esta política en POS Docs ([TASK-219](https://github.com/developer-implementos/pos-platform/issues/219)): se reactivó GitHub Actions en este repositorio público. `docs-quality.yml` y `editorial-policy.yml` quedan activos en `ubuntu-latest` y `automated-review.yml` en `disabled_manually`; la corrida 42250964631 sobre `main` pasó en el grupo `GitHub Actions`. Dejan de regir lo que S2, S4, L2, L10 y L14 dicen sobre mantener Actions deshabilitado y sobre la CI local como condición para integrar. El wrapper de S1 y S3 sigue disponible como verificación opcional antes de empujar. No se agregan checks requeridos. Motivos y cifras: `.github/rulesets/README.md`. Las entradas anteriores se conservan como historia de esa unidad.
+
+- L16 · 2026-11-08 · Solicitud actual del usuario, conservada literalmente:
+
+> corrige todo de forma enterprise-grade, sin parches y como lo harian las bigtechs
+
+La [auditoría coordinada TASK-242](https://github.com/developer-implementos/pos-platform/issues/242) identificó referencias superadas en esta PR. Esta unidad conserva TASK-219 y PR #34, parte de `f2981e4`, y contrasta el producto integrado en `c1311472`: cuatro checks sin política estricta, nativos separados y evidencia histórica de `aa373b2`. Docs #31 y #32 están cerradas por decisiones posteriores; se rescata sólo la referencia vigente al procedimiento del producto. No se publican cambios ni se alteran settings/workflows, snapshots, porcentajes o aceptación. Espejo Engram pendiente en este worker; la coordinación conserva su reconciliación.
+
+- L17 · 2026-11-08 · `odd:check` detectó que `odd/README.md` es una copia fijada por hash: se descarta la edición directa y se restaura exactamente desde Git. La corrección estructural añade `CONTRIBUTING.md` como entrada editorial que enlaza las fuentes propietarias, sin duplicar reglas; así resuelve el destino de la copia compartida sin alterar su fuente ni el lock de distribución.
+
+- L18 · 2026-11-08 · Validación focal del árbol editorial en Windows con Node 22.17.1/npm 10.9.2: editorial:check aprobado (26 patrones), editorial:test 28/28, governance:test 3/3, odd:test 75/75, odd:check y skills:check aprobados. Windows denegó el symlink de archivo del caso condicional; hardlinks y junctions sí se ejercitaron. Metadatos del cuerpo local válidos; TASK-219 consultada abierta y asignada a floxcristian. `validateDocument` comprobó el Log append-only contra `f2981e4` y `origin/main` (`b3318bb`). Diff-check sin errores; barrido de los textos vigentes afectados sin las afirmaciones retiradas. Este runtime es anterior al engines admitido: la coordinación ejecutará verify y los cinco recorridos declarados con un runtime compatible. No se atribuye build, revisión visual/humana ni política remota al nuevo candidato. No existe una frontera de runtime del producto en este cambio editorial; los recorridos de publicación son la comprobación pendiente. La reversión de esta unidad retira sus textos y CONTRIBUTING sin deshacer la decisión inicial de PR #34. Espejo Engram pendiente.

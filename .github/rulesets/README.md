@@ -36,7 +36,7 @@ La corrida [42250964631](https://github.com/developer-implementos/pos-docs/actio
 
 **Este repositorio no puede usar los runners propios.** `gh api 'orgs/developer-implementos/actions/runner-groups?visible_to_repository=pos-docs'` responde vacío, porque los grupos tienen `allows_public_repositories: false`. Abrirlos expondría un equipo de la red interna a cualquier fork, y GitHub dice que los runners propios «[should almost never be used for public repositories](https://docs.github.com/en/actions/reference/security/secure-use)». Pasar a runners propios exigiría hacer privado este repositorio.
 
-**POS Platform decide aparte.** Su repositorio es privado y allí los minutos alojados se facturan: por eso su CI corre en runners propios desde [pos-platform#210](https://github.com/developer-implementos/pos-platform/pull/210).
+**POS Platform decide aparte.** Su repositorio es privado y los minutos alojados se facturan. Los checks obligatorios corren en runners propios; Windows e iOS sólo se compilan por despacho manual alojado con costo. Su [guía del runner](https://github.com/developer-implementos/pos-platform/blob/main/tools/runner/README.md) mantiene los niveles, comandos y límites; esta decisión editorial no los modifica.
 
 **Ningún check es obligatorio.** Las reglas de `main` no incluyen `required_status_checks` y esta decisión no agrega ninguno: `Documentation quality` y `Editorial PR policy` informan en la PR, y GitHub no impide integrar si fallan o no corren. Quien integra lee esos resultados; un fallo o un workflow que no corrió no se presenta como aprobado. La [CI local](../../tools/local-ci/README.md) sigue disponible para verificar antes de empujar: es opcional y ya no es la única verificación.
 
