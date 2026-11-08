@@ -2,17 +2,17 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "6e679f692aab1fa5681688f1ffae651a215c2d81",
+    "revision": "c131147216e1998321016afd87b019bacd045935",
     "path": "delivery/progress.json",
-    "sha256": "7be0359244526eeaf668435cb82d03a6128311d70892432b05f473779b535476"
+    "sha256": "e8a3545eae1828acf27f4ac2169be49c02925e82062092da3df563f03abf8fb5"
   },
   "content": {
     "schemaVersion": 2,
-    "reviewedOn": "2026-11-02",
+    "reviewedOn": "2026-11-06",
     "productRevision": "source",
     "scope": {
       "repository": "https://github.com/developer-implementos/pos-docs",
-      "revision": "81555000224766a2fb82fb7f8b0bc2c65ce8d1ee",
+      "revision": "4b1eac077827438f520fc748fbd39fac588bd35d",
       "path": "docs/roadmap.json",
       "sha256": "e91cff0a30c2162a36a05b0542eed7e5a25e0490ea898481a37969f2fb21e514"
     },
@@ -51,13 +51,17 @@
           {
             "path": "delivery/evidence/f02-commercial-recovery-integration.json",
             "label": "Equivalencia entre código probado y commit integrado mediante squash"
+          },
+          {
+            "path": "delivery/evidence/native-ci-aa373b2.json",
+            "label": "Instalador NSIS no configurado compilado en Windows en aa373b2; digest verificado, sin instalación ni firma"
           }
         ]
       },
       {
         "id": "pos-mobile",
         "stage": "foundation",
-        "summary": "Host Capacitor con Angular compartido y política de origen HTTPS. La evidencia de empaquetado Android se registra por separado; el CI portable no acredita ejecución instalada, dispositivos ni iOS.",
+        "summary": "Host Capacitor con Angular compartido y política de origen HTTPS. La evidencia de empaquetado se registra por separado: APK Android sin firma y, en la corrida alojada de aa373b2, también la app iOS para simulador sin firma con el mismo bundle web. No acredita instalación, ejecución en dispositivo o simulador, firma ni que revisiones posteriores compilen en iOS.",
         "nextStep": "Conservar evidencia del APK y política del paquete; validar los dispositivos y recorridos nativos del canal seleccionado en su fase correspondiente.",
         "evidence": [
           {
@@ -75,6 +79,10 @@
           {
             "path": "delivery/evidence/f01-android-package.json",
             "label": "Dos APK Android compilados y política embebida comprobada; sin instalación ni homologación"
+          },
+          {
+            "path": "delivery/evidence/native-ci-aa373b2.json",
+            "label": "APK Android y app iOS para simulador compilados sin firma en aa373b2; digests verificados, sin instalación ni ejecución"
           }
         ]
       },
@@ -187,6 +195,10 @@
           {
             "path": "delivery/evidence/f02-main-integration.json",
             "label": "Integración squash comprobada: fuentes equivalentes y referencias de CI identificadas"
+          },
+          {
+            "path": "delivery/evidence/native-ci-aa373b2.json",
+            "label": "Host win-x64 publicado en Windows con 35 pruebas aprobadas en aa373b2; sin servicio ni hardware"
           }
         ]
       }
@@ -659,7 +671,7 @@
           "device-agent"
         ],
         "status": "in_progress",
-        "summary": "Intenciones, intentos y destinos durables, reserva de venta y recuperación implementados y probados en PostgreSQL. Pendientes adaptador Transbank POS integrado, evidencia del proveedor y UX conectada.",
+        "summary": "Intenciones, intentos y destinos durables, reserva de venta y recuperación implementados y probados en PostgreSQL. La consulta explícita del efecto original desde Seguimiento (TASK-165, bf05f73) y la recuperación comercial con anulación o reembolso (F02-13) ya operan en el cliente conectado. Pendientes: adaptador Transbank POS integrado y evidencia del proveedor; la UX para iniciar un cobro con tarjeta, hoy deshabilitada en el cliente conectado, donde payment.card no figura entre las capacidades soportadas del perfil operativo; y la ejecución del SDK mediante device-agent, cuyo protocolo sólo declara la capacidad receipt.print.",
         "acceptance": null,
         "verification": null
       },
@@ -694,7 +706,7 @@
           "device-agent"
         ],
         "status": "in_progress",
-        "summary": "Seguimiento conectado con estados independientes e historial de evidencia por operación. Los expedientes conservan responsables, motivos y transiciones auditadas, con permisos explícitos, concurrencia y recuperación sin modificar dinero. Pendientes las acciones seguras por efecto y los runbooks completos con escalamiento y resultados verificables; este incremento no completa F02-04.",
+        "summary": "Seguimiento conectado muestra por operación los estados independientes de venta, pago, documento fiscal e impresión con su evidencia cronológica (TASK-110, 3669873). Los expedientes asignan responsables y conservan motivos y transiciones auditadas, con permisos explícitos y concurrencia, sin modificar dinero (TASK-114, 6e679f6). Desde el detalle, un operador autorizado consulta el efecto original de un pago o documento incierto en su destino congelado y recupera la misma solicitud tras perder la respuesta (TASK-165, bf05f73; runbook en libs/backend/fiscal/README.inquiries.md), y cancela antes del despacho una reserva de anulación o reembolso sin intentos, sin devolver dinero (TASK-166, 3929549; migración 243). La anulación y el reembolso del pago se reservan y ejecutan desde el mismo detalle mediante F02-13. Pendientes: bandeja transversal ListOperationExceptions; reintento seguro y reversa por efecto donde el contrato del propietario los admita; reimpresión autorizada, cuyo contrato PrintExistingDocument pertenece a F02-10; acciones sobre trabajos de dispositivo inciertos, hoy sólo consultables; aprobación o doble control según el acuerdo de Operaciones, Finanzas y Soporte; y runbooks de dispositivo, fallo conocido y escalamiento con resultado verificable en sandbox, ya que los actuales usan proveedores controlados en fixtures. Este incremento no completa F02-04.",
         "acceptance": null,
         "verification": null
       },
@@ -767,7 +779,7 @@
           "device-agent"
         ],
         "status": "in_progress",
-        "summary": "Perfiles de pago versionados, destino fiscal congelado y asignación de instalación/época implementados. Contrato estable del protocolo de dispositivos; matriz y conformidad de proveedores/SDK pendientes.",
+        "summary": "Perfiles de pago versionados, destino fiscal congelado y asignación de instalación/época implementados. Antes de reservar saldo o crear la intención, la admisión rechaza un destino sin adaptador registrado de proveedor, versión y contrato exactos, sin capacidad de cobro o que declara consulta o compensación que ese adaptador no implementa, y conserva el recibo del rechazo (1350ad6, PR #93). Contrato estable del protocolo de dispositivos. Pendientes: comando propietario para provisionar perfiles de pago, hoy sólo una función que usan las pruebas; validación por país y entidad con CountryProfile.paymentProviderIds; kit de conformidad y simulador de fallos por capacidad para adaptadores; declaración de canales de notificación con su autenticidad; y matriz de proveedores/SDK.",
         "acceptance": null,
         "verification": null
       },

@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "6e679f692aab1fa5681688f1ffae651a215c2d81",
+    "revision": "c131147216e1998321016afd87b019bacd045935",
     "path": "delivery/follow-ups.json",
-    "sha256": "637233c685765d87b1a5c6e07e8e4cfc1a77e7008b1af26ea3371eeea9aec95d"
+    "sha256": "59af02d172bd6c6c3f1e30ea75b7e3343d034f70870218447b1601735c6fd8e0"
   },
   "content": {
     "schemaVersion": 1,
-    "reviewedOn": "2026-11-03",
+    "reviewedOn": "2026-11-06",
     "items": [
       {
         "id": "FOLLOWUP-001",
@@ -20,15 +20,19 @@
         "summary": "Completar acceso de lectura a Mountain",
         "impact": "La verificación completa de F01-11 necesita consultas reales autorizadas. La última prueba del 31 de octubre llegó a DNS pero la conexión se rechazó antes de TLS; no comprueba la disponibilidad actual de la VPN.",
         "impactScope": "technical",
-        "nextAction": "Solicitar a Infraestructura la instancia y el puerto autorizados vigentes y revisar la ruta de acceso. Configurar las credenciales de sólo lectura fuera del repositorio; repetir TLS y consultas de catálogo, precios y clientes con resultados sanitizados.",
+        "nextAction": "Solicitar a Infraestructura la instancia y el puerto autorizados vigentes y revisar la ruta de acceso. Configurar las credenciales de sólo lectura fuera del repositorio; repetir TLS y las consultas explícitas de productos y clientes del primer conector, con permisos efectivos y resultados sanitizados, sin feeds que consuman cursores ni endpoints GET que escriban datos. Los precios quedan fuera de este conector hasta su contrato, que sigue FOLLOWUP-012.",
         "requestedFrom": "Infraestructura y responsable de la instancia Mountain autorizada",
         "owner": null,
-        "closureCriteria": "HTTPS/TLS válidos y consultas reales de catálogo, precios y clientes con permisos y resultados registrados; sin publicar host, credenciales ni datos comerciales.",
-        "reviewedOn": "2026-11-03",
+        "closureCriteria": "URL, VPN y HTTPS/TLS válidos contra la instancia acordada, y consultas reales de productos y clientes con permisos efectivos y resultados registrados; sin publicar host, credenciales ni datos comerciales. Habilitar precios no es condición de este seguimiento.",
+        "reviewedOn": "2026-11-06",
         "evidence": [
           {
             "url": "https://github.com/developer-implementos/pos-platform/issues/20#issuecomment-6550796764",
             "label": "Seguimiento en GitHub"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/aa373b2f1507549e516dc4e3e5c5b6b8fcf35591/delivery/specs/F01-11.md",
+            "label": "Criterios F01-11: el primer conector consulta productos y clientes; precios tras su contrato"
           }
         ],
         "resolution": null
@@ -43,13 +47,13 @@
           "F02-14"
         ],
         "summary": "Integrar y comprobar Transbank POS integrado",
-        "impact": "El contrato controlado prueba recuperación e idempotencia, pero no acredita cobro ni mantenimiento del terminal real. No detiene el desarrollo independiente de los SDK.",
+        "impact": "El contrato controlado prueba recuperación e idempotencia, pero no acredita cobro ni mantenimiento del terminal real. No detiene el desarrollo independiente de los SDK. La confirmación de reversa frente a refund que F02-13 deja al adquirente y a Finanzas se sigue en FOLLOWUP-015, porque su impacto es operativo: F02-13 está verificado técnicamente y esa respuesta no condiciona su verificación.",
         "impactScope": "technical",
         "nextAction": "Solicitar al responsable del terminal del piloto modelo, firmware, modalidad de conexión, versión/licencia del SDK y contacto técnico del adquirente. Confirmar contrato y entorno de pruebas autorizados para cobro, consulta, anulación y cierre.",
         "requestedFrom": "Equipo de integración de pagos y contraparte técnica del adquirente",
         "owner": null,
         "closureCriteria": "Terminal y SDK identificados, contrato de operaciones y consulta de incertidumbre revisado, acceso de pruebas autorizado y reproducible registrado. La implementación y homologación se completan en los entregables enlazados.",
-        "reviewedOn": "2026-11-03",
+        "reviewedOn": "2026-11-06",
         "evidence": [
           {
             "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/reviews/F02-provider-contracts.md",
@@ -154,14 +158,14 @@
           "F02-06",
           "F02-04"
         ],
-        "summary": "Validar el perfil operativo de pagos y transferencias",
-        "impact": "El software ya soporta el plan combinado y transferencia manual dentro del alcance verificado. Se confirmó que la asignación y el cierre de expedientes requieren supervisores con permisos explícitos y no cambian dinero. Falta validar las reglas monetarias y facultades de verificación para operar el piloto.",
+        "summary": "Validar el perfil operativo de pagos, promociones y resolución de excepciones",
+        "impact": "El software ya soporta el plan combinado y transferencia manual dentro del alcance verificado. Se confirmó que la asignación y el cierre de expedientes requieren supervisores con permisos explícitos y no cambian dinero. Falta validar las reglas monetarias y facultades de verificación para operar el piloto, las reglas comerciales de F01-10 y los responsables y acciones permitidas que F02-04 condiciona a un acuerdo.",
         "impactScope": "operational",
-        "nextAction": "Preguntar a Tesorería qué medios y combinaciones usa el piloto, cuándo entrega vuelto, qué cuentas reciben transferencias y quién verifica su abono de forma independiente. Contrastar ejemplos, límites, descuentos y excepciones con la operación vigente.",
-        "requestedFrom": "Responsable de Finanzas/Tesorería del piloto",
+        "nextAction": "Preguntar a Tesorería qué medios y combinaciones usa el piloto, cuándo entrega vuelto, qué cuentas reciben transferencias y quién verifica su abono de forma independiente. Contrastar ejemplos, límites, descuentos y excepciones con la operación vigente. Solicitar a Comercial la aprobación de las reglas de acumulación, mínimos, exclusión y autoridad de cupones de F01-10, y acordar con Operaciones, Finanzas y Soporte los responsables y las acciones permitidas por tipo de evidencia de F02-04, incluida la aprobación que exija cada acción.",
+        "requestedFrom": "Finanzas/Tesorería del piloto para el perfil monetario; Comercial para las reglas de F01-10; Operaciones, Finanzas y Soporte para las acciones de resolución de F02-04",
         "owner": null,
-        "closureCriteria": "Perfil de operación identificado y aprobado con ejemplos monetarios, excepciones y matriz de permisos. No inventar una persona responsable ni fecha de aprobación.",
-        "reviewedOn": "2026-11-03",
+        "closureCriteria": "Perfil de operación identificado y aprobado con ejemplos monetarios, excepciones y matriz de permisos; reglas de F01-10 aprobadas por Comercial; responsables y acciones permitidas por tipo de evidencia de F02-04 acordados por Operaciones, Finanzas y Soporte. No inventar una persona responsable ni fecha de aprobación.",
+        "reviewedOn": "2026-11-06",
         "evidence": [
           {
             "url": "https://github.com/developer-implementos/pos-platform/issues/114#issuecomment-6604879992",
@@ -182,6 +186,10 @@
           {
             "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/progress.json",
             "label": "Estado técnico registrado"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/aa373b2f1507549e516dc4e3e5c5b6b8fcf35591/delivery/specs/F01-10.md",
+            "label": "Criterios F01-10: aprobación comercial de acumulación, mínimos, exclusión y cupones"
           }
         ],
         "resolution": null
@@ -255,14 +263,14 @@
         "workPackages": [
           "F02-11"
         ],
-        "summary": "Confirmar contrato y perfil vigente de cheques",
-        "impact": "La verificación de cheques sigue por desarrollar. El contrato legado identifica una referencia de integración, pero faltan confirmar su vigencia y el acceso autorizado.",
+        "summary": "Obtener el contrato activo y la integración técnica de Orsan para cheques",
+        "impact": "La verificación de cheques sigue por desarrollar. Orsan continúa vigente como proveedor de verificación de cheques según la confirmación del 2026-10-02 registrada en POS Docs, e Instacheck dejó de usarse. Lo pendiente es el contrato activo, la configuración por sucursal y la integración técnica autorizada; el código legado sólo identifica una referencia de integración.",
         "impactScope": "technical",
         "nextAction": "Solicitar al contacto de Orsan el contrato activo, significado de rechazo/garantía, correlación y deduplicación, y entorno de consulta autorizado. Confirmar con Operaciones el perfil de cheque y los datos que captura el lector.",
         "requestedFrom": "Equipo de integración y contraparte técnica de Orsan",
         "owner": null,
         "closureCriteria": "Contrato y perfil documentados, semántica de respuestas/garantía revisada y consulta de pruebas autorizada disponible. El desarrollo y la comprobación integral permanecen en F02-11.",
-        "reviewedOn": "2026-11-03",
+        "reviewedOn": "2026-11-06",
         "evidence": [
           {
             "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/reviews/F02-provider-contracts.md",
@@ -275,6 +283,14 @@
           {
             "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/progress.json",
             "label": "Estado técnico registrado"
+          },
+          {
+            "url": "https://pos-docs-starlight.vercel.app/guide/evidence/chile-operations/#6-orsan-vigente-e-instacheck-retirado",
+            "label": "Confirmación del 2026-10-02: Orsan vigente e Instacheck retirado"
+          },
+          {
+            "url": "https://pos-docs-starlight.vercel.app/guide/evidence/integration-catalog/",
+            "label": "Catálogo de integraciones: Orsan como proveedor vigente y pendientes"
           }
         ],
         "resolution": null
@@ -384,11 +400,154 @@
           }
         ],
         "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-012",
+        "kind": "decision",
+        "state": "open",
+        "workPackages": [
+          "F01-11"
+        ],
+        "summary": "Confirmar reglas de catálogo y contrato de precios del conector Mountain",
+        "impact": "El conector consulta referencias de productos y clientes sin asignar unidades, disponibilidad ni precios a partir de datos ausentes. Resolver códigos, conversiones y disponibilidad informativa con evidencia requiere las reglas del dueño del catálogo; sin ellas no se infieren de los datos legacy. Los precios no se habilitan hasta acordar su contrato.",
+        "impactScope": "technical",
+        "nextAction": "Solicitar al dueño del catálogo e inventario qué códigos identifican un producto, sus conversiones de unidad y empaque, el significado de la disponibilidad informativa y su frecuencia de actualización. Acordar el contrato de precios antes de habilitarlos: moneda y escala, neto o bruto, impuestos, unidades, vigencia y rechazo explícito del marcador legacy «SKU sin precio».",
+        "requestedFrom": "Dueño de catálogo e inventario del piloto; Comercial para las reglas de catálogo y el contrato de precios",
+        "owner": null,
+        "closureCriteria": "Reglas de códigos, conversiones, disponibilidad y frecuencia confirmadas con ejemplos sintéticos, y contrato de precios documentado antes de habilitarlos. No se resuelve por falta de respuesta ni se habilitan precios por inferencia.",
+        "reviewedOn": "2026-11-06",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/aa373b2f1507549e516dc4e3e5c5b6b8fcf35591/delivery/specs/F01-11.md",
+            "label": "Criterios F01-11: dependencias externas y decisiones pendientes"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/aa373b2f1507549e516dc4e3e5c5b6b8fcf35591/libs/backend/erp/README.md",
+            "label": "Alcance acotado del conector de productos y clientes"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/20",
+            "label": "Issue F01-11"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-013",
+        "kind": "hardware",
+        "state": "open",
+        "workPackages": [
+          "F02-03",
+          "F05-01",
+          "F06-02"
+        ],
+        "summary": "Proveer capacidad propia de CI para Windows y macOS",
+        "impact": "Por decisión del responsable del 2026-11-06 (#161 y #221), el fleet propio sólo tiene Linux, y windows-desktop e ios-mobile dejaron de ser checks obligatorios: corren sólo por despacho manual de native.yml, en runners alojados y con costo. Mientras nadie los despache no se compila Tauri/NSIS ni se ejecutan en Windows cargo test, clippy y el host .NET, ni se compila iOS. F02-03 exige el host .NET en Windows con su matriz de cuenta y sesión, F05-01 artefactos Tauri y servicio Windows instalables, y F06-02 la instalación en iOS cuando forme parte de los dispositivos acordados. F05-12 no se incluye: sus criterios son pruebas humanas y físicas en los puestos sobre los artefactos de F05-01.",
+        "impactScope": "technical",
+        "nextAction": "Registrar un runner propio de Windows con Rust/MSVC/Windows SDK y .NET según global.json, efímero y con usuario dedicado, y un Mac propio con el Xcode fijado; llevar a ellos los jobs de native.yml y obtener una corrida real verde de cada uno leída por runner_name. Si una plataforma no tendrá capacidad propia, registrar esa decisión y su riesgo, y despachar native.yml antes de acreditar un entregable que dependa de ella.",
+        "requestedFrom": "Administrador de la organización en GitHub y responsable de la infraestructura de CI",
+        "owner": null,
+        "closureCriteria": "Corridas reales verdes de windows-desktop e ios-mobile en runners propios, leídas por runner_name; o decisión registrada de no proveerla, con su riesgo. Compilar en CI no acredita instalación, firma ni prueba física de los entregables.",
+        "reviewedOn": "2026-11-06",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/206",
+            "label": "TASK-206: capacidad propia de Windows y macOS"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/161",
+            "label": "Decisión de ejecutar la CI sólo en runners propios"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/aa373b2f1507549e516dc4e3e5c5b6b8fcf35591/delivery/specs/F02-03.md",
+            "label": "Criterios F02-03"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/aa373b2f1507549e516dc4e3e5c5b6b8fcf35591/delivery/specs/F05-01.md",
+            "label": "Criterios F05-01"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/aa373b2f1507549e516dc4e3e5c5b6b8fcf35591/delivery/specs/F06-02.md",
+            "label": "Criterios F06-02"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-014",
+        "kind": "access",
+        "state": "open",
+        "workPackages": [
+          "F01-05",
+          "F05-11"
+        ],
+        "summary": "Aislar el fleet de CI con runners efímeros y un pool confiable, y dar a un segundo host la capacidad de los jobs con servicios",
+        "impact": "Con la CI en el fleet propio por decisión de #161, sus agentes no son efímeros: un job de cualquier rama puede dejar estado en disco para el siguiente, y PR policy pasa a compartir ese pool hasta que exista uno confiable, con token de lectura y sin secretos, aunque un runner comprometido podría falsear su resultado. De los tres agentes del fleet, sólo los dos que comparten un host tienen Docker, que exigen api y clients, los checks obligatorios que levantan PostgreSQL como servicio; clients necesita además las bibliotecas de Chromium. El tercero está en otra máquina sin Docker y no toma esos jobs, así que si el host compartido cae, esperan en cola. F01-05 se verificó con la política ejecutada desde la base confiable en runners alojados, y su revalidación contra la configuración vigente es una tarea separada. F05-11 exige procedencia, integridad y permisos acotados del pipeline, que dependen de este aislamiento.",
+        "impactScope": "technical",
+        "nextAction": "Ejecutar cada job en un entorno nuevo —contenedor o VM que se crea y se descarta, con el runner registrado como efímero o JIT dentro—, porque volver a registrar un runner efímero sobre el mismo disco conserva su caché y su perfil; crear un pool confiable en una máquina, VM o distribución WSL2 distinta del pool de PR, registrado con --no-default-labels y sólo la etiqueta pos-trusted para que ningún job de una rama pueda caer en él, y declararlo en POS_CI_TRUSTED_RUNS_ON como [\"pos-trusted\"]; dar continuidad a api y clients con un segundo host que tenga Docker dentro de su aislamiento, las bibliotecas de Chromium y la etiqueta docker, equipando la máquina del tercer agente o registrando otra, porque un agente sin esa capacidad no los ejecuta; y restringir los grupos de runners a los repositorios y workflows que los usan.",
+        "requestedFrom": "Administrador de la organización en GitHub y responsable de la infraestructura de CI",
+        "owner": null,
+        "closureCriteria": "Corrida real de PR policy en el pool confiable leída por runner_name, cada job en un entorno nuevo que se descarta al terminar, con el runner efímero o JIT dentro, corridas reales verdes de api y clients en un segundo host con Docker, las bibliotecas de Chromium y la etiqueta docker, leídas por runner_name, y grupos de runners restringidos, con evidencia de la configuración. Un agente en otro host sin esa capacidad no da esa continuidad. No verifica por sí solo F01-05 ni F05-11.",
+        "reviewedOn": "2026-11-06",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/207",
+            "label": "TASK-207: runners efímeros y pool confiable separado"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/161",
+            "label": "Decisión de ejecutar la CI sólo en runners propios"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/pull/210",
+            "label": "TASK-161: api y clients piden la capacidad docker y esperan en cola sin un runner que la tenga"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/aa373b2f1507549e516dc4e3e5c5b6b8fcf35591/delivery/specs/F01-05.md",
+            "label": "Criterios F01-05"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/aa373b2f1507549e516dc4e3e5c5b6b8fcf35591/delivery/specs/F05-11.md",
+            "label": "Criterios F05-11"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-015",
+        "kind": "question",
+        "state": "open",
+        "workPackages": [
+          "F02-13"
+        ],
+        "summary": "Confirmar reversa frente a refund con el adquirente y Finanzas",
+        "impact": "F02-13 está verificado técnicamente con un proveedor contractual controlado, y esta respuesta no condiciona esa verificación ni su porcentaje. Condiciona su uso con el adquirente real, cuya resolución operativa conserva referencias, plazos y autorizaciones propios: la ficha deja al adquirente y a Finanzas la diferencia entre reversa y refund, sus plazos, las referencias y la resolución manual. La evidencia de F02-13 no acredita homologación bancaria.",
+        "impactScope": "operational",
+        "nextAction": "Confirmar con el adquirente y Finanzas la diferencia entre reversa y refund, sus plazos, las referencias que identifican cada operación y la resolución manual cuando no exista reversa ni consulta.",
+        "requestedFrom": "Contraparte técnica del adquirente y Finanzas",
+        "owner": null,
+        "closureCriteria": "Reversa frente a refund, sus plazos, referencias y resolución manual confirmados por el adquirente y Finanzas y documentados con evidencia. No cambia la verificación técnica registrada de F02-13 ni acredita homologación bancaria.",
+        "reviewedOn": "2026-11-06",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/aa373b2f1507549e516dc4e3e5c5b6b8fcf35591/delivery/specs/F02-13.md",
+            "label": "Criterios F02-13: reversa frente a refund, plazos, referencias y resolución manual"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/23a1cb80c3db4ac010ce7aba93132da3025c3877/delivery/reviews/F02-13-verification.md",
+            "label": "Verificación técnica de F02-13 con proveedor contractual controlado y sus límites"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/35",
+            "label": "Issue F02-13"
+          }
+        ],
+        "resolution": null
       }
     ]
   },
   "issues": {
-    "observedAt": "2026-11-03T17:54:36.798Z",
+    "observedAt": "2026-11-08T17:07:40.761Z",
     "repository": "https://github.com/developer-implementos/pos-platform",
     "entries": [
       {
@@ -400,7 +559,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:47:25Z"
+        "updatedAt": "2026-11-08T17:01:29Z"
       },
       {
         "code": "F01-02",
@@ -411,7 +570,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:47:30Z"
+        "updatedAt": "2026-11-08T17:01:44Z"
       },
       {
         "code": "F01-03",
@@ -422,7 +581,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:47:35Z"
+        "updatedAt": "2026-11-08T17:01:57Z"
       },
       {
         "code": "F01-04",
@@ -431,7 +590,7 @@
         "state": "CLOSED",
         "executionLabels": [],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:47:41Z"
+        "updatedAt": "2026-11-08T17:02:12Z"
       },
       {
         "code": "F01-05",
@@ -440,7 +599,7 @@
         "state": "CLOSED",
         "executionLabels": [],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:47:46Z"
+        "updatedAt": "2026-11-08T17:02:25Z"
       },
       {
         "code": "F01-06",
@@ -451,7 +610,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:47:51Z"
+        "updatedAt": "2026-11-08T17:02:42Z"
       },
       {
         "code": "F01-07",
@@ -462,7 +621,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:47:56Z"
+        "updatedAt": "2026-11-08T17:02:54Z"
       },
       {
         "code": "F01-08",
@@ -473,7 +632,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:48:01Z"
+        "updatedAt": "2026-11-08T17:03:04Z"
       },
       {
         "code": "F01-09",
@@ -484,7 +643,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:48:07Z"
+        "updatedAt": "2026-11-08T17:03:18Z"
       },
       {
         "code": "F01-10",
@@ -495,7 +654,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:48:12Z"
+        "updatedAt": "2026-11-08T17:03:28Z"
       },
       {
         "code": "F01-11",
@@ -506,7 +665,7 @@
           "status:blocked"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:48:17Z"
+        "updatedAt": "2026-11-08T17:03:39Z"
       },
       {
         "code": "F01-12",
@@ -517,7 +676,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:48:23Z"
+        "updatedAt": "2026-11-08T17:03:49Z"
       },
       {
         "code": "F01-13",
@@ -528,7 +687,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:48:28Z"
+        "updatedAt": "2026-11-08T17:03:58Z"
       },
       {
         "code": "F02-01",
@@ -539,7 +698,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:48:34Z"
+        "updatedAt": "2026-11-08T17:04:08Z"
       },
       {
         "code": "F02-02",
@@ -550,7 +709,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:48:39Z"
+        "updatedAt": "2026-11-08T17:04:16Z"
       },
       {
         "code": "F02-03",
@@ -561,7 +720,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:48:45Z"
+        "updatedAt": "2026-11-08T17:04:24Z"
       },
       {
         "code": "F02-04",
@@ -572,7 +731,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:48:50Z"
+        "updatedAt": "2026-11-08T17:04:31Z"
       },
       {
         "code": "F02-05",
@@ -580,10 +739,10 @@
         "url": "https://github.com/developer-implementos/pos-platform/issues/27",
         "state": "OPEN",
         "executionLabels": [
-          "status:review"
+          "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:48:55Z"
+        "updatedAt": "2026-11-08T17:04:37Z"
       },
       {
         "code": "F02-06",
@@ -594,7 +753,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:49:00Z"
+        "updatedAt": "2026-11-08T17:04:43Z"
       },
       {
         "code": "F02-07",
@@ -605,7 +764,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:49:06Z"
+        "updatedAt": "2026-11-08T17:04:51Z"
       },
       {
         "code": "F02-08",
@@ -616,7 +775,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:49:11Z"
+        "updatedAt": "2026-11-08T17:04:58Z"
       },
       {
         "code": "F02-09",
@@ -624,10 +783,10 @@
         "url": "https://github.com/developer-implementos/pos-platform/issues/31",
         "state": "OPEN",
         "executionLabels": [
-          "status:review"
+          "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:49:17Z"
+        "updatedAt": "2026-11-08T17:05:04Z"
       },
       {
         "code": "F02-10",
@@ -638,7 +797,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:49:23Z"
+        "updatedAt": "2026-11-08T17:05:11Z"
       },
       {
         "code": "F02-11",
@@ -649,7 +808,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:49:28Z"
+        "updatedAt": "2026-11-08T17:05:17Z"
       },
       {
         "code": "F02-12",
@@ -660,7 +819,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:49:33Z"
+        "updatedAt": "2026-11-08T17:05:26Z"
       },
       {
         "code": "F02-13",
@@ -671,7 +830,7 @@
         "assignees": [
           "floxcristian"
         ],
-        "updatedAt": "2026-11-03T04:49:39Z"
+        "updatedAt": "2026-11-08T17:05:32Z"
       },
       {
         "code": "F02-14",
@@ -682,7 +841,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:49:44Z"
+        "updatedAt": "2026-11-08T17:05:41Z"
       },
       {
         "code": "F03-01",
@@ -704,7 +863,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:49:54Z"
+        "updatedAt": "2026-11-08T17:05:49Z"
       },
       {
         "code": "F03-03",
@@ -715,7 +874,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:49:59Z"
+        "updatedAt": "2026-11-08T17:06:00Z"
       },
       {
         "code": "F03-04",
@@ -770,7 +929,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:50:26Z"
+        "updatedAt": "2026-11-08T17:06:09Z"
       },
       {
         "code": "F03-09",
@@ -781,7 +940,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:50:32Z"
+        "updatedAt": "2026-11-08T17:06:15Z"
       },
       {
         "code": "F03-10",
@@ -792,7 +951,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:50:37Z"
+        "updatedAt": "2026-11-08T17:06:20Z"
       },
       {
         "code": "F03-11",
@@ -946,7 +1105,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:51:50Z"
+        "updatedAt": "2026-11-08T17:06:25Z"
       },
       {
         "code": "F05-02",
@@ -1056,7 +1215,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:52:42Z"
+        "updatedAt": "2026-11-08T17:06:29Z"
       },
       {
         "code": "F05-12",
@@ -1089,7 +1248,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:52:58Z"
+        "updatedAt": "2026-11-08T17:06:33Z"
       },
       {
         "code": "F06-03",
