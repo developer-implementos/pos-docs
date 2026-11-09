@@ -37,6 +37,27 @@ test('home publishes derived summary links and legacy destinations without dupli
   assert.doesNotMatch(html, /data-material|data-progress-app|data-progress-phase|a[^>]+ download/);
 });
 
+test('home shows what changed in the newest release and links to the full history', () => {
+  const changelog = {version:'0.3.0', date:'2026-11-12', total:7, entries:[
+    {section:'Contenido actualizado', scope:'follow-up', text:'FOLLOWUP-009 nuevo: falta `<acceso>` al emisor', pr:41, prUrl:'https://github.com/example/pos-docs/issues/41', commit:'abc1234'},
+    {section:'Correcciones', scope:null, text:'corregir el estado de ADR-14', pr:null, prUrl:null, commit:null},
+  ]};
+  const html = renderPortal(catalog, origin, repository, progress, null, changelog);
+  const section = html.slice(html.indexOf('id="changes"'), html.indexOf('</section>', html.indexOf('id="changes"')));
+  assert.match(section, /<h2 id="home-changes-title">Qué cambió<\/h2>/);
+  assert.match(section, /Versión 0\.3\.0 · <time datetime="2026-11-12">12 de noviembre de 2026<\/time>/);
+  assert.match(section, /<span class="change-kind">Contenido actualizado<\/span>/);
+  assert.match(section, /FOLLOWUP-009 nuevo: falta <code>&lt;acceso&gt;<\/code> al emisor/);
+  assert.match(section, /<a href="https:\/\/github\.com\/example\/pos-docs\/issues\/41" aria-label="PR #41">#41<\/a>/);
+  assert.match(section, /corregir el estado de ADR-14<\/span><\/li>/);
+  assert.match(section, /Y 5 cambios más en esta versión/);
+  assert.match(section, /href="\/guide\/changelog\/">Ver historial completo<\/a>/);
+  assert.match(section, new RegExp(`href="${repository}/releases"`));
+  assert.ok(html.indexOf('id="progress"') < html.indexOf('id="changes"') && html.indexOf('id="changes"') < html.indexOf('home-destinations'));
+  // Without a history the home keeps its previous layout.
+  assert.doesNotMatch(renderPortal(catalog, origin, repository, progress), /id="changes"/);
+});
+
 test('legacy acceptance snapshots are labeled and linked as acceptance without claiming technical verification', () => {
   const html = renderPortal(catalog, origin, repository, {...progress, measurement:'acceptance', completed:2, total:10, percent:20});
   assert.match(html, /2\/10 entregables aceptados/);
