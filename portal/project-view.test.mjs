@@ -27,6 +27,14 @@ test('project pages expose shell metadata, current navigation and reviewed prove
   }
 });
 
+test('overview links to what changed in the newest release, only on the summary', () => {
+  const changelog = {version:'0.3.0', date:'2026-11-12', total:1, entries:[{section:'Novedades', text:'x', pr:null, prUrl:null, commit:null}]};
+  const pages = renderProjectPages(progress, followUp, null, changelog);
+  assert.match(pages.get('/project/').body, /<p class="project-increment-link"><a href="\/guide\/changelog\/">Qué cambió · versión 0\.3\.0<\/a><span>1 cambio publicado el <time datetime="2026-11-12">12-11-2026<\/time><\/span><\/p>/);
+  for (const route of ['/project/work/', '/project/attention/', '/project/team/']) assert.doesNotMatch(pages.get(route).body, /Qué cambió/);
+  assert.doesNotMatch(renderProjectPages(progress, followUp).get('/project/').body, /Qué cambió/);
+});
+
 test('overview has actionable KPIs, limited execution preview and both no-JS breakdowns', () => {
   const html = renderProjectPages(progress, followUp).get('/project/').body;
   assert.equal((html.match(/class="project-kpi"/g) || []).length, 4);

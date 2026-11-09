@@ -1,5 +1,6 @@
 import {renderSitePage, escapeHtml as escape} from './site-shell.mjs';
 import { teamMembers } from './team.mjs';
+import {renderInline} from './changelog.mjs';
 
 const percent = value => new Intl.NumberFormat('es-CL', {maximumFractionDigits:1}).format(value);
 const date = value => new Intl.DateTimeFormat('es-CL', {dateStyle:'long', timeZone:'UTC'}).format(new Date(value));
@@ -20,7 +21,19 @@ function downloadItem(item, proposal = false) {
   </li>`;
 }
 
-export function renderPortal(catalog, origin, repository, progress, followUp = null) {
+/** The newest release from CHANGELOG.md, so the team sees what changed without opening the history. */
+function changes(changelog, repository) {
+  if (!changelog) return '';
+  const more = changelog.total - changelog.entries.length;
+  const items = changelog.entries.map(item => `<li><span class="change-kind">${escape(item.section)}</span><span>${renderInline(item.text)}${item.pr ? ` <a href="${escape(item.prUrl)}" aria-label="PR #${item.pr}">#${item.pr}</a>` : ''}</span></li>`).join('');
+  return `<section id="changes" class="home-status home-changes" aria-labelledby="home-changes-title">
+    <div class="home-status-heading"><h2 id="home-changes-title">Qué cambió</h2><p>Versión ${escape(changelog.version)} · <time datetime="${escape(changelog.date)}">${date(changelog.date)}</time></p></div>
+    ${items ? `<ul class="home-change-list">${items}</ul>` : '<p>Esta versión no tiene entradas.</p>'}
+    <div class="home-status-footer"><p>${more > 0 ? `Y ${more} ${more === 1 ? 'cambio más' : 'cambios más'} en esta versión. ` : ''}Para recibir cada versión, suscribirse a los <a href="${escape(repository)}/releases">releases en GitHub</a>.</p><a class="button secondary" href="/guide/changelog/">Ver historial completo</a></div>
+  </section>`;
+}
+
+export function renderPortal(catalog, origin, repository, progress, followUp = null, changelog = null) {
   const open = followUp?.items.filter(item => item.state === 'open').length ?? 0;
   const technical = progress.measurement === 'verification';
   const body = `<div class="home-intro"><p class="eyebrow">IMPLEMENTOS · PRODUCTO CORPORATIVO</p><h1>POS Platform</h1><p class="lead">Un lugar para entender la plataforma, seguir su avance y consultar las fuentes del proyecto.</p></div>
@@ -29,6 +42,7 @@ export function renderPortal(catalog, origin, repository, progress, followUp = n
     <div class="home-metrics"><a href="/project/work/?status=${technical ? 'verified' : 'accepted'}"><strong>${percent(progress.percent)} %</strong><span>${progress.completed}/${progress.total} entregables ${technical ? 'verificados' : 'aceptados'}</span></a><a href="/project/work/?status=in_progress"><strong>${progress.counts.in_progress}</strong><span>En desarrollo</span></a><a href="/project/attention/?state=open"><strong>${open}</strong><span>Acciones pendientes</span></a></div>
     <div class="home-status-footer"><p>El avance mide entregables; las revisiones humanas se consultan por separado.</p><a class="button primary" href="/project/">Ver proyecto</a></div>
   </section>
+  ${changes(changelog, repository)}
   <section class="home-destinations" aria-label="Explorar POS Platform">
     <article class="destination"><span class="destination-number" aria-hidden="true">01</span><h2><a href="/guide/">Documentación</a></h2><p>Arquitectura, recorridos, contratos y datos para entender y desarrollar el sistema.</p><div class="destination-links"><a href="/guide/diagrams/">Diagramas</a><a href="/guide/proposal/roadmap/">Roadmap</a><a href="/guide/api/pos-platform/">APIs y datos</a></div></article>
     <article id="presentations" class="destination"><span class="destination-number" aria-hidden="true">02</span><h2><a href="/presentations/">Presentaciones</a></h2><p>Propuestas del equipo en Reveal.js, con referencias y lectura complementaria.</p><span class="destination-meta">${catalog.presentations.length} ${catalog.presentations.length === 1 ? 'presentación disponible' : 'presentaciones disponibles'}</span></article>
