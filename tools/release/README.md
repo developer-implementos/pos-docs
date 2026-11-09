@@ -42,9 +42,11 @@ END_COMMIT_OVERRIDE
 Reglas, que `Editorial PR policy` comprueba:
 
 - Una línea por entrada, `tipo(alcance): texto`, separadas por una línea en blanco.
-- Sin `!`: release-please no lo reconoce dentro del bloque. Un cambio incompatible se marca en el título.
+- Sin `!`: release-please no lo reconoce dentro del bloque, y cuando hay bloque ignora el título. Un cambio incompatible va en un PR propio, sin bloque y con `!` en el título.
 - Sin HTML: el historial se publica como página del sitio.
-- Un solo bloque. release-please lee los marcadores **en cualquier parte del cuerpo, comentarios HTML incluidos**: nunca los pongas en una plantilla ni en un ejemplo dentro del PR.
+- Un solo bloque. release-please busca el marcador de apertura **en cualquier parte del cuerpo, comentarios HTML y comillas invertidas incluidos**, y si falta el de cierre toma como entradas todo lo que sigue. Basta nombrarlo en el texto para que la entrada del PR se pierda o salga equivocada: nunca escribas los marcadores en una plantilla, un ejemplo o una mención.
+
+Sin bloque, release-please lee el título y el cuerpo como un solo mensaje, porque `main` integra con el cuerpo del PR como mensaje del commit. Un párrafo del cuerpo que empiece con `tipo(alcance): ` se convierte en otra entrada, y uno que empiece con `BREAKING CHANGE:` vuelve incompatible la versión. La política no lo comprueba: revisar el cuerpo antes de integrar.
 
 release-please lee el cuerpo del PR al armar la versión, así que el bloque se puede corregir después de integrar mientras la versión no se haya publicado. Con la integración automática eso dura minutos: escribirlo bien antes de integrar.
 

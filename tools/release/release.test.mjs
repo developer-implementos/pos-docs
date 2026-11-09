@@ -128,6 +128,8 @@ test('a malformed changelog block in a PR body is rejected before release-please
   // release-please reads the markers inside HTML comments too, so the template must never carry them.
   assert.equal(validateChangelogOverride('<!-- BEGIN_COMMIT_OVERRIDE\ndocs: x\nEND_COMMIT_OVERRIDE -->').entries.length, 1);
   assert.throws(() => validateChangelogOverride('BEGIN_COMMIT_OVERRIDE\ndocs: x'), /exactly one/);
+  // Naming the marker in prose is enough: release-please takes everything after it as the entries.
+  assert.throws(() => validateChangelogOverride('release-please lee `BEGIN_COMMIT_OVERRIDE` en cualquier parte del cuerpo.'), /exactly one/);
   assert.throws(() => validateChangelogOverride('END_COMMIT_OVERRIDE BEGIN_COMMIT_OVERRIDE'), /exactly one/);
   assert.throws(() => validateChangelogOverride('BEGIN_COMMIT_OVERRIDE\n\nEND_COMMIT_OVERRIDE'), /empty/);
   assert.throws(() => validateChangelogOverride('BEGIN_COMMIT_OVERRIDE\nactualizar FOLLOWUP-005\nEND_COMMIT_OVERRIDE'), /type\(scope\): text/);
