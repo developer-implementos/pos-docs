@@ -5,11 +5,11 @@ Dos rulesets acumulativos separan integración técnica y revisión humana:
 | Fuente | Ruleset remoto | Propósito | Bypass |
 | --- | --- | --- | --- |
 | `main.json` | `26482639` · POS Docs protected main | PR, conversaciones, historia lineal, impedir borrado y force push | Ninguno |
-| `review.json` | `26482640` · POS Docs reviewed main | Una aprobación ajena vigente, CODEOWNERS, aprobación del último push | Sólo @floxcristian, `User` 28737734, mediante PR |
+| `review.json` | `26482640` · POS Docs reviewed main | Una aprobación ajena vigente, CODEOWNERS, aprobación del último push | @floxcristian (`User` 28737734) y la App de versiones (`Integration` 5686471, `implementos-pos-docs-release`), ambos mediante PR |
 
-`../repository.json` permite squash manual, actualización de ramas y limpieza de ramas integradas. Auto-merge permanece deshabilitado para que la integración ocurra después de comprobar la evidencia vigente. El equipo `pos-platform` conserva permiso `push` (escritura), no `maintain`. Los owners de la organización mantienen administración heredada y pueden gestionar las reglas; no son actores de bypass por ese hecho. No modificar sus roles de empresa para administrar POS.
+`../repository.json` permite squash manual, actualización de ramas y limpieza de ramas integradas. El auto-merge nativo permanece deshabilitado para que la integración ocurra después de comprobar la evidencia vigente; el PR de release lo integra un workflow con esa misma condición ([versiones automáticas](#versiones-automáticas)). El equipo `pos-platform` conserva permiso `push` (escritura), no `maintain`. Los owners de la organización mantienen administración heredada y pueden gestionar las reglas; no son actores de bypass por ese hecho. No modificar sus roles de empresa para administrar POS.
 
-Los archivos son estado deseado revisable, no prueba de activación. La configuración real se consulta en GitHub, incluidas reglas heredadas. El ruleset técnico no exige ningún check ([decisión](#github-actions-en-este-repositorio)). El merge se hace por squash manual, con la revisión humana vigente y después de leer los resultados de los workflows para el candidato actual. GitHub aplica PR y revisión; no verifica un recibo ni una ejecución local, y no se publican checks/estados sustitutos ni se incorpora una GitHub App.
+Los archivos son estado deseado revisable, no prueba de activación. La configuración real se consulta en GitHub, incluidas reglas heredadas. El ruleset técnico no exige ningún check ([decisión](#github-actions-en-este-repositorio)). El merge se hace por squash manual, con la revisión humana vigente y después de leer los resultados de los workflows para el candidato actual. GitHub aplica PR y revisión; no verifica un recibo ni una ejecución local, y no se publican checks/estados sustitutos. La única GitHub App propia es la de versiones: no acredita checks ni revisión, sólo integra el PR de release.
 
 Un agente no omite revisión humana sin autorización explícita de @floxcristian para la PR concreta. La excepción omite sólo esa revisión: no acredita los workflows ni representa aceptación operativa. Integrar manualmente mediante squash después de contrastar HEAD y base actuales.
 
@@ -40,6 +40,24 @@ La corrida [42250964631](https://github.com/developer-implementos/pos-docs/actio
 
 **Ningún check es obligatorio.** Las reglas de `main` no incluyen `required_status_checks` y esta decisión no agrega ninguno: `Documentation quality` y `Editorial PR policy` informan en la PR, y GitHub no impide integrar si fallan o no corren. Quien integra lee esos resultados; un fallo o un workflow que no corrió no se presenta como aprobado. La [CI local](../../tools/local-ci/README.md) sigue disponible para verificar antes de empujar: es opcional y ya no es la única verificación.
 
+## Versiones automáticas
+
+Decisión del responsable del 2026-11-09 ([TASK-253](https://github.com/developer-implementos/pos-platform/issues/253)): POS Docs publica una versión por cada cambio integrado, sin un paso manual, para que el equipo sepa qué cambió sin releer la documentación. La [guía de versiones](../../tools/release/README.md) describe el flujo completo.
+
+- La App `implementos-pos-docs-release` figura en `review.json` como excepción en modo `pull_request`, el mismo patrón que Renovate en core. `main.json` no cambia: sin excepciones, también para la App.
+- Su clave vive en el environment `release`, que sólo admite `main` y no tiene excepción para administradores. Un miembro con escritura no puede leerla desde una rama propia.
+- `release-merge.yml` sólo integra el PR de release después de validar autor, rama y archivos, y de que la última corrida de `Documentation quality` sobre ese SHA aprobó. Fija ese SHA al integrar.
+- La App puede integrar cualquier PR sin revisión si alguien obtiene su clave. Ése es el riesgo aceptado, y la razón de las tres restricciones anteriores.
+
+La excepción se aplicó el 2026-11-09 con la primera línea, después de respaldar el ruleset; GitHub devuelve los actores en el orden de `review.json`. Para retirarla, quitar la App de `review.json` y repetir el mismo `PUT`.
+
+```sh
+gh api repos/developer-implementos/pos-docs/rulesets/26482640 --method PUT --input .github/rulesets/review.json -H 'X-GitHub-Api-Version: 2026-03-10'
+gh api repos/developer-implementos/pos-docs/rulesets/26482640 --jq .bypass_actors
+gh api repos/developer-implementos/pos-docs/environments/release --jq '{can_admins_bypass, deployment_branch_policy}'
+gh api repos/developer-implementos/pos-docs/environments/release/deployment-branch-policies --jq '.branch_policies[] | {name, type}'
+```
+
 ## Aplicar y comprobar
 
 Antes de modificar, guardar respuestas de repositorio, rulesets y permiso del equipo en un directorio local ignorado. Conservar ese respaldo para restaurar una configuración accidentalmente incorrecta; no usarlo para eludir un control fallido.
@@ -55,7 +73,7 @@ gh api repos/developer-implementos/pos-docs/rulesets/26482640
 gh api repos/developer-implementos/pos-docs/actions/workflows --jq '.workflows[] | "\(.state) \(.path)"'
 ```
 
-Comprobar `enforcement`, rama, ausencia de `required_status_checks`, PR, conversaciones resueltas, historia lineal, prohibición de borrado/force push, revisión ajena, CODEOWNERS, aprobación del último push y actores/modo de bypass; consultar también reglas heredadas. Verificar el permiso del equipo, squash manual, `allow_auto_merge: false`, actualización/limpieza de ramas conservadas y el estado de los workflows: `docs-quality.yml` y `editorial-policy.yml` en `active`, `automated-review.yml` en `disabled_manually`. Si una regla efectiva exige checks de Actions, registrar la discrepancia y corregir sólo la configuración autorizada; no fabricar un éxito. No probar push, force push ni borrado contra `main`.
+Comprobar `enforcement`, rama, ausencia de `required_status_checks`, PR, conversaciones resueltas, historia lineal, prohibición de borrado/force push, revisión ajena, CODEOWNERS, aprobación del último push y actores/modo de bypass; consultar también reglas heredadas. Verificar el permiso del equipo, squash manual, `allow_auto_merge: false`, actualización/limpieza de ramas conservadas y el estado de los workflows: `docs-quality.yml`, `editorial-policy.yml`, `release.yml` y `release-merge.yml` en `active`, `automated-review.yml` en `disabled_manually`. Si una regla efectiva exige checks de Actions, registrar la discrepancia y corregir sólo la configuración autorizada; no fabricar un éxito. No probar push, force push ni borrado contra `main`.
 
 ## Incorporar un control nuevo
 

@@ -22,6 +22,7 @@ Review-Evidence:
 ## Resultado
 
 <!-- Pregunta que resuelve, recorrido afectado y resultado observable. -->
+<!-- El título de esta PR es su entrada en el historial de cambios: escribir qué cambió y el identificador afectado. Para varias entradas, seguir tools/release/README.md; no copiar aquí sus marcadores. -->
 
 ## Fuentes y revisión
 

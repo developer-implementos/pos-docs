@@ -1,0 +1,45 @@
+name: Release merge
+# Merges the release PR after Documentation quality passed on its exact head. Runs the trusted
+# default-branch code; the PR is read through the API and never checked out or executed.
+on:
+  workflow_run:
+    workflows: [Documentation quality]
+    types: [completed]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  merge:
+    name: Merge release PR
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.head_branch == 'release-please--branches--main' &&
+      github.event.workflow_run.head_repository.full_name == github.repository)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment: release
+    concurrency:
+      group: release-merge
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '22.23.3'
+          package-manager-cache: false
+      - name: Issue a release App token
+        id: app
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          app-id: ${{ vars.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+      - name: Validate and merge the release PR
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: node tools/release/merge.mjs ${HEAD_SHA:+--head-sha "$HEAD_SHA"}

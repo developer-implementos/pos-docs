@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
 import { filesAfterChanges, validatePullRequest } from './policy.mjs';
 import { assertPullRequestUnchanged, checkLinkedIssue, githubClient, githubOddReader, loadPullRequest } from './github.mjs';
 import { readLocalDocument, validateDeclaration } from '../odd/check.mjs';
+import { loadReleaseConfig, validateChangelogOverride } from '../release/policy.mjs';
+import { checkReleasePullRequest } from '../release/pr.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const args = process.argv.slice(2);
@@ -27,6 +29,7 @@ let files = new Set(execFileSync('git', ['ls-files', '-z'], { cwd: root, encodin
 const get = githubClient({ token: process.env.GH_TOKEN || process.env.GITHUB_TOKEN });
 let body;
 let snapshot;
+let release = null;
 let revision = 'local body; remote PR revision not inspected';
 if (options['--body-file']) {
   body = fs.readFileSync(path.resolve(options['--body-file']), 'utf8');
@@ -44,13 +47,29 @@ if (options['--body-file']) {
     expectedBase = event.pull_request.base?.sha;
     if (!/^[a-f\d]{40}$/.test(expectedHead || '') || !/^[a-f\d]{40}$/.test(expectedBase || '')) throw new Error('Missing immutable PR head or base in event.');
   }
-  const pr = await loadPullRequest(get, number, expectedHead, expectedBase);
-  body = pr.body;
-  files = filesAfterChanges(files, pr.files);
-  revision = pr.head;
-  snapshot = pr.snapshot;
+  // A release PR carries no editorial declaration: its identity and file scope are checked instead.
+  release = await checkReleasePullRequest(get, number, { expectedHead, expectedBase, config: loadReleaseConfig().config });
+  if (!release) {
+    const pr = await loadPullRequest(get, number, expectedHead, expectedBase);
+    body = pr.body;
+    files = filesAfterChanges(files, pr.files);
+    revision = pr.head;
+    snapshot = pr.snapshot;
+  }
+}
+if (release) {
+  const summary = [
+    `Release PR #${release.number}: identity and scope valid.`,
+    `PR revision: ${release.head}.`,
+    `Version ${release.previous} -> ${release.version}; ${release.files} files, limited to CHANGELOG.md, the manifest and the package.json version.`,
+    'This validates what release-please wrote. The merge waits for Documentation quality on this exact revision.',
+  ];
+  console.log(summary.join('\n'));
+  if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary.map(line => `- ${line}`).join('\n') + '\n');
+  process.exit(0);
 }
 const declaration = validatePullRequest({ body, knownFiles: files });
+const changelog = validateChangelogOverride(body);
 if (options['--body-file']) {
   const source = githubOddReader(get);
   await validateDeclaration(body, { readDocument: reference => {
@@ -68,6 +87,7 @@ const summary = [
   `PR revision: ${revision}.`,
   `Product issue: ${declaration.issueUrl}; ${issue.status}.`,
   snapshot ? 'ODD: declared source and changed task histories validated against immutable head/base revisions.' : 'ODD: declaration and current document validated; prior Log history requires a remote PR check.',
+  changelog.entries.length ? `Changelog: ${changelog.entries.length} entries replace the PR title in the next release.` : 'Changelog: the PR title becomes the release entry.',
   ...(issue.reason ? [issue.reason] : []),
   'This validates declared metadata and available issue evidence. It does not approve the content, attest human review or accept a product deliverable.',
 ];

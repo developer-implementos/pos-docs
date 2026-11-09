@@ -42,6 +42,8 @@ test('development and status journeys lead to implementation and the maintained 
   assert.ok(routes.includes('/implementation/phase-1/'));
   const tracking = sidebar.find(item => item.label === 'Consultar avance y bloqueos');
   assert.equal(tracking.items[0].link, '/project-status/');
+  assert.equal(tracking.items[1].link, '/changelog/', 'The version history sits next to the status it explains');
+  assert.equal(generatedPages.find(page => page.route === 'changelog').source, 'CHANGELOG.md', 'release-please owns the history source');
   assert.ok(!flatten(tracking.items).some(item => item.link === '/operations/open-items/'), 'The historical questionnaire is a source, not the blocker registry');
   const questionnaire = generatedPages.find(page => page.route === 'operations/open-items');
   assert.equal(questionnaire.source, 'docs/solicitud-informacion-equipo.md', 'Retain the permanent questionnaire URL');

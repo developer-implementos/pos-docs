@@ -1,0 +1,31 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "bootstrap-sha": "2375b0e0cda6295b035807b066c196b9c897ca15",
+  "packages": {
+    ".": {
+      "release-type": "node",
+      "package-name": "pos-docs",
+      "changelog-path": "CHANGELOG.md",
+      "include-component-in-tag": false,
+      "include-v-in-tag": true,
+      "bump-minor-pre-major": true,
+      "bump-patch-for-minor-pre-major": false,
+      "pull-request-title-pattern": "chore(release): publicar versión ${version}",
+      "pull-request-header": "Reader-Journeys: /guide/changelog/\n\nVersión generada por release-please a partir de los PR integrados en `main`. La integra el workflow `release-merge.yml` cuando `Documentation quality` aprueba esta revisión; no se edita a mano.",
+      "pull-request-footer": "Cómo se escriben estas entradas: [guía de versiones](https://github.com/developer-implementos/pos-docs/blob/main/tools/release/README.md).",
+      "changelog-sections": [
+        { "type": "feat", "section": "Novedades", "hidden": false },
+        { "type": "fix", "section": "Correcciones", "hidden": false },
+        { "type": "docs", "section": "Contenido actualizado", "hidden": false },
+        { "type": "revert", "section": "Reversiones", "hidden": false },
+        { "type": "perf", "section": "Rendimiento", "hidden": true },
+        { "type": "refactor", "section": "Reorganización interna", "hidden": true },
+        { "type": "build", "section": "Construcción", "hidden": true },
+        { "type": "ci", "section": "Integración continua", "hidden": true },
+        { "type": "test", "section": "Pruebas", "hidden": true },
+        { "type": "chore", "section": "Mantenimiento", "hidden": true },
+        { "type": "style", "section": "Estilo", "hidden": true }
+      ]
+    }
+  }
+}
