@@ -60,6 +60,7 @@
     "governance:test": "node --test tools/repository-governance.test.mjs",
     "release:test": "node --test tools/release/*.test.mjs",
     "release:check": "node tools/release/check.mjs",
+    "release:entries": "node tools/release/snapshot-changes.mjs",
     "review:test": "node --test tools/automated-review/review.test.mjs",
     "review:check": "node tools/automated-review/distribute.mjs --check"
   }

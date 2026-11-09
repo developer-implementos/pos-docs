@@ -50,6 +50,28 @@ Sin bloque, release-please lee el título y el cuerpo como un solo mensaje, porq
 
 release-please lee el cuerpo del PR al armar la versión, así que el bloque se puede corregir después de integrar mientras la versión no se haya publicado. Con la integración automática eso dura minutos: escribirlo bien antes de integrar.
 
+### Un PR que importa avance, seguimientos o planificación
+
+Las entradas de una importación no se escriben a mano: salen de comparar los snapshots de `portal/data/` con los de `main`. Después de importar, generar el bloque y pegarlo en el cuerpo del PR:
+
+```sh
+npm run release:entries
+```
+
+Cada cambio es una entrada en «Contenido actualizado»:
+
+| Cambio | Ejemplo |
+| --- | --- |
+| Seguimiento nuevo, resuelto, reabierto o retirado | `docs(follow-up): FOLLOWUP-012 nuevo · Decisión: Confirmar reglas de catálogo y contrato de precios del conector Mountain` |
+| Texto de un seguimiento: resumen, impacto, próxima acción o criterio de cierre | `docs(follow-up): FOLLOWUP-002 actualizado (impacto): Integrar y comprobar Transbank POS integrado` |
+| Estado de un entregable, su aceptación o su ejecución en GitHub | `docs(progress): F02-05 en GitHub pasa de En revisión a En validación` |
+| Entregable nuevo o retirado, y resumen actualizado (su primera oración) | `docs(progress): F02-07 actualizado (resumen): Perfiles de pago versionados, destino fiscal congelado y asignación de instalación/época implementados` |
+| Incremento nuevo y trabajos que entran, salen o cambian de título, resultado o ejecución | `docs(planning): Consultar evidencia cronológica de una operación (F02-04) entra al próximo incremento` |
+
+No generan entrada los cambios que trae casi toda importación sin cambiar lo que el equipo lee: fechas de revisión o de consulta, evidencia, responsables y asignados. Los estados usan los mismos nombres que [la página del proyecto](https://pos-docs-starlight.vercel.app/project/).
+
+`Editorial PR policy` recalcula las entradas desde los commits de base y head del PR y rechaza el PR si falta alguna. El bloque reemplaza al título en el historial, así que cualquier otro cambio del mismo PR, como una página editada, agrega su propia entrada al bloque. Las entradas reflejan lo importado a POS Docs, no el momento en que el cambio ocurrió en POS Platform.
+
 ## Cómo se publica una versión
 
 1. Un push a `main` ejecuta [`release.yml`](../../.github/workflows/release.yml). release-please, con la identidad de la App, abre o actualiza el PR `chore(release): publicar versión X.Y.Z` desde la rama `release-please--branches--main--components--pos-docs`.
