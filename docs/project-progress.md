@@ -103,6 +103,8 @@ El snapshot conserva el contenido original, incluido `productRevision: "source"`
    npm run project:check
    ```
 
+6. Generar las entradas del historial de cambios con `npm run release:entries` y pegar el bloque que imprime en el cuerpo de la PR. Cada seguimiento nuevo o resuelto, cambio de estado o texto actualizado queda como una entrada propia en la próxima versión. La política editorial rechaza la PR si falta alguna. Si la PR cambia algo más, agregar su entrada al mismo bloque ([guía de versiones](https://github.com/developer-implementos/pos-docs/blob/main/tools/release/README.md#un-pr-que-importa-avance-seguimientos-o-planificación)).
+
 `--check` no escribe. En seguimiento compara el contenido y estado observado; no falla sólo por transcurrir el reloj. La importación normal registra una nueva fecha de consulta. La fuente debe ser un commit del repositorio corporativo y un checkout limpio; las referencias de evidencia del progreso deben pertenecer a su historial. Un clon superficial necesita recuperar esos commits.
 
 El build de Vercel es autónomo y usa los snapshots confirmados. **Un push a POS Platform o un cambio de issue no actualizan automáticamente POS Docs.** Publicar un corte requiere importar, revisar y fusionar la PR de documentación. El equipo debe hacerlo al actualizar entregables, resolver impedimentos o preparar una revisión de avance. La fecha visible permite reconocer qué corte se está consultando.
