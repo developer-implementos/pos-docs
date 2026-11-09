@@ -35,7 +35,9 @@ La alerta sigue pendiente: esta revisión de la llamada no significa que el paqu
 
 ## Alcance comprobable
 
-El cliente selecciona `demo` o `branch-lab`. El segundo utiliza identidad de laboratorio y operaciones de servidor con sesión en memoria; la [guía F01](phase-1-laboratory.md) define su alcance. No incorpora un almacén seguro de credenciales nativas, persistencia transaccional móvil ni sincronización en segundo plano. Tampoco habilita pagos, cámara, lectores, impresoras u otras capacidades nativas sin sus contratos, permisos e integración específica.
+El cliente móvil utiliza los mismos perfiles explícitos que escritorio, definidos en la [decisión de clientes nativos](decisions/native-clients.md#datos-y-acceso): parte sin registrar (`unconfigured`), se conecta con identidad propia POS mediante `branch`, reserva `branch-lab` para el laboratorio y `demo` para adaptadores sintéticos. La configuración se valida antes del arranque; un fallo de configuración o de API no activa la demo. El perfil operativo requiere el origen HTTPS autorizado y el registro del puesto.
+
+La [guía F01](phase-1-laboratory.md#perfiles-del-cliente) delimita configuración, identidad y sesiones en memoria. Compartir estos perfiles no acredita homologación de los recorridos en Android o iOS. El cliente no incorpora un almacén seguro de credenciales nativas, persistencia transaccional móvil ni sincronización en segundo plano. Tampoco habilita pagos, cámara, lectores, impresoras u otras capacidades nativas sin sus contratos, permisos e integración específica.
 
 La verificación del bundle y los recorridos de navegador se distingue de la apertura en Android/iOS. Antes de afirmar soporte nativo deben probarse instalación, acceso, teclado, orientación, áreas seguras, suspensión/reanudación, pérdida de conectividad y recuperación en dispositivos representativos. Los permisos, firma y distribución se validan por plataforma. La prueba de un viewport móvil en Chromium no cubre esas condiciones.
 

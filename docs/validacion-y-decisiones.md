@@ -207,6 +207,8 @@ El coste total debe incluir terminales y repuestos, nodo de tienda y energía pr
 
 La [solicitud de información al equipo](solicitud-informacion-equipo.md) convierte estas decisiones en preguntas priorizadas, responsables sugeridos y evidencias concretas, con una plantilla para responder por país.
 
+Esta tabla es el catálogo de decisiones que el proyecto debe cerrar y el momento en que cada una se vuelve necesaria; no registra su estado. Lo que hoy está abierto, con su siguiente acción, a quién se pidió y cuándo se revisó, se consulta en [Bloqueos y decisiones](/project/attention/), que importa los seguimientos del producto. Una decisión entra allí cuando condiciona un entregable del incremento en curso; mientras tanto sigue pendiente aunque no tenga seguimiento propio, y su ausencia en esa vista no significa que esté resuelta.
+
 | Prioridad | Decisión o dato faltante | Responsable sugerido | Impacto |
 | --- | --- | --- | --- |
 | Antes de fijar infraestructura | Alcance de «No Cloud» en Chile | Arquitectura y seguridad | Ubicación de plataforma, conectividad y servicios administrados |
