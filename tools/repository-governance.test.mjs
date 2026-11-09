@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import { releaseApp } from './release/policy.mjs';
 
@@ -68,4 +68,27 @@ test('release workflows hold the App token only on main and only to open, valida
   assert.match(merge, /head_repository\.full_name == github\.repository/);
   assert.match(merge, /run: node tools\/release\/merge\.mjs /);
   assert.doesNotMatch(merge, /permission-issues/, 'Merging needs no issue access');
+});
+
+// GitHub discards a workflow whose YAML does not parse, and no other check parses it: a plain `run:`
+// value containing ": " left release.yml unloadable (TASK-253). Values that YAML would read as a
+// nested mapping must be quoted or written as block scalars. Comments and block contents are skipped.
+test('workflow values that YAML would read as a mapping are quoted or block scalars', () => {
+  const directory = new URL('../.github/workflows/', import.meta.url);
+  const problems = [];
+  for (const name of readdirSync(directory).filter(file => file.endsWith('.yml'))) {
+    let blockIndent = null;
+    readFileSync(new URL(name, directory), 'utf8').split(/\r?\n/).forEach((line, index) => {
+      const indent = line.match(/^ */)[0].length;
+      if (blockIndent !== null) {
+        if (!line.trim() || indent > blockIndent) return;
+        blockIndent = null;
+      }
+      const value = line.match(/^ *(?:- )?[\w.-]+:\s+(\S.*)$/)?.[1];
+      if (!value) return;
+      if (/^[|>]/.test(value)) blockIndent = indent;
+      else if (!/^['"[{&*!]/.test(value) && value.replace(/\s#.*$/, '').includes(': ')) problems.push(`${name}:${index + 1}: ${value}`);
+    });
+  }
+  assert.deepEqual(problems, []);
 });

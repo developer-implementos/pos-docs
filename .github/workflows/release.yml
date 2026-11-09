@@ -54,4 +54,5 @@ jobs:
         env:
           TAG: ${{ steps.release.outputs.tag_name }}
           URL: ${{ steps.release.outputs.html_url }}
-        run: echo "- Publicada la versión $TAG: $URL" >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          echo "- Publicada la versión ${TAG}: ${URL}" >> "$GITHUB_STEP_SUMMARY"
