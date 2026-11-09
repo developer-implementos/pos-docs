@@ -5,7 +5,7 @@ Dos rulesets acumulativos separan integración técnica y revisión humana:
 | Fuente | Ruleset remoto | Propósito | Bypass |
 | --- | --- | --- | --- |
 | `main.json` | `26482639` · POS Docs protected main | PR, conversaciones, historia lineal, impedir borrado y force push | Ninguno |
-| `review.json` | `26482640` · POS Docs reviewed main | Una aprobación ajena vigente, CODEOWNERS, aprobación del último push | @floxcristian (`User` 28737734) y la App de versiones (`Integration` RELEASE_APP_ID), ambos mediante PR |
+| `review.json` | `26482640` · POS Docs reviewed main | Una aprobación ajena vigente, CODEOWNERS, aprobación del último push | @floxcristian (`User` 28737734) y la App de versiones (`Integration` 5686471, `implementos-pos-docs-release`), ambos mediante PR |
 
 `../repository.json` permite squash manual, actualización de ramas y limpieza de ramas integradas. El auto-merge nativo permanece deshabilitado para que la integración ocurra después de comprobar la evidencia vigente; el PR de release lo integra un workflow con esa misma condición ([versiones automáticas](#versiones-automáticas)). El equipo `pos-platform` conserva permiso `push` (escritura), no `maintain`. Los owners de la organización mantienen administración heredada y pueden gestionar las reglas; no son actores de bypass por ese hecho. No modificar sus roles de empresa para administrar POS.
 
@@ -49,7 +49,10 @@ Decisión del responsable del 2026-11-09 ([TASK-253](https://github.com/develope
 - `release-merge.yml` sólo integra el PR de release después de validar autor, rama y archivos, y de que la última corrida de `Documentation quality` sobre ese SHA aprobó. Fija ese SHA al integrar.
 - La App puede integrar cualquier PR sin revisión si alguien obtiene su clave. Ése es el riesgo aceptado, y la razón de las tres restricciones anteriores.
 
+La excepción se aplicó el 2026-11-09 con la primera línea, después de respaldar el ruleset; GitHub devuelve los actores en el orden de `review.json`. Para retirarla, quitar la App de `review.json` y repetir el mismo `PUT`.
+
 ```sh
+gh api repos/developer-implementos/pos-docs/rulesets/26482640 --method PUT --input .github/rulesets/review.json -H 'X-GitHub-Api-Version: 2026-03-10'
 gh api repos/developer-implementos/pos-docs/rulesets/26482640 --jq .bypass_actors
 gh api repos/developer-implementos/pos-docs/environments/release --jq '{can_admins_bypass, deployment_branch_policy}'
 gh api repos/developer-implementos/pos-docs/environments/release/deployment-branch-policies --jq '.branch_policies[] | {name, type}'

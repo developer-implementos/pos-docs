@@ -26,8 +26,8 @@ test('only Cristian and the release App can bypass the separate human-review rul
   assert.deepEqual(review.conditions, core.conditions);
   assert.ok(Number.isSafeInteger(releaseApp.id) && releaseApp.id > 0, 'Declare the release App ID in tools/release/policy.mjs');
   assert.deepEqual(review.bypass_actors, [
-    { actor_id: 28737734, actor_type: 'User', bypass_mode: 'pull_request' },
     { actor_id: releaseApp.id, actor_type: 'Integration', bypass_mode: 'pull_request' },
+    { actor_id: 28737734, actor_type: 'User', bypass_mode: 'pull_request' },
   ]);
   assert.equal(review.rules.length, 1);
   assert.equal(review.rules[0].type, 'pull_request');

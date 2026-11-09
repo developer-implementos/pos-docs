@@ -9,7 +9,7 @@ export const repository = 'developer-implementos/pos-docs';
 export const releaseBranch = 'release-please--branches--main';
 export const pendingLabel = 'autorelease: pending';
 /** GitHub App that opens and merges the release PR. It is the only bot in the review bypass. */
-export const releaseApp = { id: 0, slug: 'implementos-pos-docs-release' };
+export const releaseApp = { id: 5686471, slug: 'implementos-pos-docs-release' };
 export const releaseBot = `${releaseApp.slug}[bot]`;
 /** A release PR may only touch these files, and only modify them. */
 export const releaseFiles = ['.release-please-manifest.json', 'CHANGELOG.md', 'package.json'];
