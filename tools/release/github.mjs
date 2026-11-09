@@ -73,6 +73,11 @@ export async function latestQualityRun(request, sha) {
   return runs.sort((left, right) => Date.parse(right.created_at) - Date.parse(left.created_at))[0] ?? null;
 }
 
+export async function pullRequestLabels(request, number) {
+  const pr = await getJson(request, `${prefix}pulls/${number}`);
+  return (pr?.labels ?? []).map(label => label.name);
+}
+
 export async function untaggedMergedReleases(request) {
   const issues = await getJson(request, `${prefix}issues?state=closed&labels=autorelease%3A%20pending&per_page=100`);
   return issues.filter(issue => issue.pull_request?.merged_at);

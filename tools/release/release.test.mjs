@@ -200,11 +200,35 @@ test('the merge refuses anything that is not a clean release PR', async () => {
 });
 
 test('a merged release that is still untagged fails the release run', async () => {
-  const pending = [{ number: 26, html_url: 'u', pull_request: { merged_at: '2026-11-10T10:00:00Z' } }];
-  const request = async () => ({ status: 200, value: pending });
-  await assert.rejects(verifyTagged({ request, startedAt: '2026-11-10T10:05:00Z' }), /#26/);
+  const listed = [{ number: 26, html_url: 'u', pull_request: { merged_at: '2026-11-10T10:00:00Z' } }];
+  // `labels` answers each direct read of the PR in turn; the label search keeps listing it.
+  const github = labels => {
+    const reads = [];
+    const request = async (method, path) => {
+      if (path.endsWith('/pulls/26')) {
+        reads.push(path);
+        return { status: 200, value: { number: 26, labels: [{ name: labels[Math.min(reads.length, labels.length) - 1] }] } };
+      }
+      return { status: 200, value: listed };
+    };
+    return { request, reads };
+  };
+  const pauses = [];
+  const pause = async ms => { pauses.push(ms); };
+  const stuck = github(['autorelease: pending']);
+  await assert.rejects(verifyTagged({ request: stuck.request, startedAt: '2026-11-10T10:05:00Z', pause }), /#26/);
+  assert.equal(stuck.reads.length, 3, 'A PR is re-read before the run fails');
   // A merge that happened after this run started is tagged by the run its push triggered.
-  await verifyTagged({ request, startedAt: '2026-11-10T09:55:00Z' });
+  const fresh = github(['autorelease: pending']);
+  await verifyTagged({ request: fresh.request, startedAt: '2026-11-10T09:55:00Z', pause });
+  assert.equal(fresh.reads.length, 0);
+  // The label search lags the label swap release-please makes seconds before this step (run
+  // 42697341007): the PR itself already says tagged, or does so on a later read.
+  await verifyTagged({ request: github(['autorelease: tagged']).request, startedAt: '2026-11-10T10:05:00Z', pause });
+  pauses.length = 0;
+  const lagging = github(['autorelease: pending', 'autorelease: tagged']);
+  await verifyTagged({ request: lagging.request, startedAt: '2026-11-10T10:05:00Z', pause });
+  assert.deepEqual([lagging.reads.length, pauses.length], [2, 1]);
 });
 
 test('the editorial check validates a release PR through immutable Git objects', async () => {
