@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readdirSync, readFileSync } from 'node:fs';
 import { test } from 'node:test';
-import { releaseApp } from './release/policy.mjs';
+import { releaseApp, releaseBranch } from './release/policy.mjs';
 
 const json = (name) => JSON.parse(readFileSync(new URL(`../${name}`, import.meta.url), 'utf8'));
 const core = json('.github/rulesets/main.json');
@@ -64,7 +64,7 @@ test('release workflows hold the App token only on main and only to open, valida
   assert.match(release, /^on:\n  push:\n    branches: \[main\]\n  workflow_dispatch:\npermissions:/m);
   assert.match(release, /node tools\/release\/verify\.mjs/, 'An untagged merged release must fail the run');
   assert.match(merge, /^on:\n  workflow_run:\n    workflows: \[Documentation quality\]\n    types: \[completed\]\n  workflow_dispatch:\npermissions:/m);
-  assert.match(merge, /head_branch == 'release-please--branches--main'/);
+  assert.ok(merge.includes(`head_branch == '${releaseBranch}' &&`), 'The merge job runs only for the release branch the policy accepts');
   assert.match(merge, /head_repository\.full_name == github\.repository/);
   assert.match(merge, /run: node tools\/release\/merge\.mjs /);
   assert.doesNotMatch(merge, /permission-issues/, 'Merging needs no issue access');
