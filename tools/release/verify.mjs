@@ -4,11 +4,23 @@
  */
 import fs from 'node:fs';
 import { pathToFileURL } from 'node:url';
-import { releaseClient, untaggedMergedReleases } from './github.mjs';
+import { pullRequestLabels, releaseClient, untaggedMergedReleases } from './github.mjs';
 import { pendingLabel } from './policy.mjs';
 
-export async function verifyTagged({ request, startedAt }) {
-  const pending = (await untaggedMergedReleases(request)).filter(issue => Date.parse(issue.pull_request.merged_at) < Date.parse(startedAt));
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+/**
+ * The label search lags the label swap that release-please makes seconds before this step (run
+ * 42697341007 listed a release it had just tagged). Each listed PR is confirmed through its own
+ * record, re-read up to `attempts` times, and only one still pending after that fails the run.
+ */
+export async function verifyTagged({ request, startedAt, attempts = 3, pause = wait }) {
+  let pending = (await untaggedMergedReleases(request)).filter(issue => Date.parse(issue.pull_request.merged_at) < Date.parse(startedAt));
+  for (let attempt = 1; pending.length && attempt <= attempts; attempt++) {
+    if (attempt > 1) await pause(10_000);
+    const labels = await Promise.all(pending.map(issue => pullRequestLabels(request, issue.number)));
+    pending = pending.filter((issue, index) => labels[index].includes(pendingLabel));
+  }
   if (pending.length) {
     throw new Error(`Merged release PRs still labelled "${pendingLabel}": ${pending.map(issue => `#${issue.number} (${issue.html_url})`).join(', ')}. ` +
       'release-please will not open another release until each one is tagged. See tools/release/README.md#recuperar-un-release-sin-tag.');
