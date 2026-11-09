@@ -2,7 +2,7 @@ import { releaseBranch, repository } from './policy.mjs';
 
 const prefix = `repos/${repository}/`;
 const allowed = [
-  /^pulls\?state=open&base=main&head=developer-implementos:release-please--branches--main&per_page=100$/,
+  /^pulls\?state=open&base=main&head=developer-implementos:release-please--branches--main--components--pos-docs&per_page=100$/,
   /^pulls\/[1-9]\d*$/,
   /^pulls\/[1-9]\d*\/files\?per_page=100&page=[1-9]\d*$/,
   /^pulls\/[1-9]\d*\/merge$/,

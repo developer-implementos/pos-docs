@@ -63,6 +63,17 @@ test('the repository history, manifest and configuration agree', () => {
   assert.ok(result.releases >= 1);
 });
 
+test('the release branch is the one release-please names for this single package', () => {
+  // With one package, release-please opens a PR per component and puts the component in the branch
+  // even when tags omit it: `component`, else the package name (17.6.0, strategies/base.js
+  // getBranchComponent). A merged group would use the bare branch instead.
+  const root = config.packages['.'];
+  const component = root.component ?? root['package-name'] ?? JSON.parse(text('package.json')).name;
+  assert.equal(Object.keys(config.packages).length, 1);
+  assert.notEqual(config['separate-pull-requests'], false);
+  assert.equal(releaseBranch, `release-please--branches--main--components--${component}`);
+});
+
 test('the configuration keeps reader-facing types visible and tooling hidden', () => {
   const sections = Object.fromEntries(config.packages['.']['changelog-sections'].map(section => [section.type, section]));
   for (const type of ['feat', 'fix', 'docs', 'revert']) assert.equal(sections[type].hidden, false, type);

@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import { isDeepStrictEqual } from 'node:util';
 
 export const repository = 'developer-implementos/pos-docs';
-export const releaseBranch = 'release-please--branches--main';
+export const releaseBranch = 'release-please--branches--main--components--pos-docs';
 export const pendingLabel = 'autorelease: pending';
 /** GitHub App that opens and merges the release PR. It is the only bot in the review bypass. */
 export const releaseApp = { id: 5686471, slug: 'implementos-pos-docs-release' };
