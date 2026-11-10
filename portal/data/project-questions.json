@@ -1,0 +1,960 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "repository": "https://github.com/developer-implementos/pos-platform",
+    "revision": "d68152951c2f9eef8925c4490207cee243e27467",
+    "path": "delivery/business-questions.json",
+    "sha256": "0dee0a75442150365480b9b5777f7605ffb8e2cf09372bdf08f7c7adee425a1c"
+  },
+  "integration": {
+    "reference": "main",
+    "included": true
+  },
+  "content": {
+    "schemaVersion": 1,
+    "reviewedOn": "2026-11-10",
+    "audit": "delivery/reviews/pos-parity-2026-11-10",
+    "items": [
+      {
+        "id": "Q-01",
+        "topic": "Cupones",
+        "question": "¿La exclusión del cupón con OV aplica a una campaña de baterías, a cualquier cupón manual, al cupón preasociado o a toda cesta con OV, incluida la mixta?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: el campo de cupón se deshabilita con cualquier línea de OV y el cupón de la OV (comboVenta 3) se precarga; no hay regla «batería» en código",
+        "answerSources": [
+          "code"
+        ],
+        "auditRefs": [
+          "C-30"
+        ],
+        "parityRefs": [
+          "P-14"
+        ],
+        "sources": [],
+        "decider": "Comercial",
+        "owner": null,
+        "followUp": "FOLLOWUP-005",
+        "workPackages": [
+          "F01-10",
+          "F04-08"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-02",
+        "topic": "Permisos",
+        "question": "¿El perfil Bodeguero debe poder emitir NC?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Concedido hoy en QA y en la sucursal productiva",
+        "answerSources": [
+          "data"
+        ],
+        "auditRefs": [
+          "R-03",
+          "C-21"
+        ],
+        "parityRefs": [
+          "P-03"
+        ],
+        "sources": [],
+        "decider": "Operaciones y Finanzas",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-01",
+          "F04-06"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-03",
+        "topic": "Permisos",
+        "question": "¿El cajero debe crear y editar clientes o sólo consultarlos?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: con el submódulo Clientes puede crear y editar (el guard compara el segmento)",
+        "answerSources": [
+          "code"
+        ],
+        "auditRefs": [
+          "C-26"
+        ],
+        "parityRefs": [
+          "P-03"
+        ],
+        "sources": [],
+        "decider": "Comercial y Operaciones",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F01-08",
+          "F04-06"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-04",
+        "topic": "Permisos",
+        "question": "¿Se conserva que el cajero consulte NC y devuelva dinero contra NC, y que el administrador no tenga Devolución NC?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Concedido así en QA y en producción",
+        "answerSources": [
+          "data"
+        ],
+        "auditRefs": [
+          "R-03",
+          "C-21"
+        ],
+        "parityRefs": [
+          "P-03"
+        ],
+        "sources": [],
+        "decider": "Operaciones y Finanzas",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-01",
+          "F04-06"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-05",
+        "topic": "Permisos",
+        "question": "¿La autorización se exige en servidor por acción?",
+        "kind": "decision",
+        "state": "decided",
+        "currentAnswer": "POS Platform la exige (F01-01); el legacy sólo la controla en el menú",
+        "answerSources": [
+          "spec"
+        ],
+        "auditRefs": [
+          "P-04"
+        ],
+        "parityRefs": [
+          "P-04"
+        ],
+        "sources": [
+          "delivery/specs/F01-01.md"
+        ],
+        "decider": "Producto (ya decidido)",
+        "owner": null,
+        "followUp": null,
+        "workPackages": [
+          "F01-01"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-06",
+        "topic": "Identidad ERP",
+        "question": "¿Pueden vender las cuentas sin RecId y a qué trabajador se atribuye la venta en AX?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: id_externo=0 en 3 cuentas técnicas; la venta sube con workerIdDefecto y la NC con Worker=0",
+        "answerSources": [
+          "code",
+          "data"
+        ],
+        "auditRefs": [
+          "C-23",
+          "R-05",
+          "R-15"
+        ],
+        "parityRefs": [
+          "P-05"
+        ],
+        "sources": [],
+        "decider": "Finanzas/Contabilidad y RR. HH.",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F03-03",
+          "F03-07",
+          "F05-10"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-07",
+        "topic": "Atribución",
+        "question": "¿Se registra el vendedor además del operador de caja?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: la OV conserva el vendedor; usuario_id del documento suele quedar vacío",
+        "answerSources": [
+          "data"
+        ],
+        "auditRefs": [
+          "R-07",
+          "P-06"
+        ],
+        "parityRefs": [
+          "P-06"
+        ],
+        "sources": [],
+        "decider": "Comercial",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F01-09",
+          "F04-08"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-08",
+        "topic": "Venta en espera",
+        "question": "¿Cuánto vive una venta pausada y qué ocurre con las no retomadas?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: sin vencimiento; 4.096 documentos venta-espera en 400 días en la sucursal productiva",
+        "answerSources": [
+          "data"
+        ],
+        "auditRefs": [
+          "R-07",
+          "R-08"
+        ],
+        "parityRefs": [
+          "P-18"
+        ],
+        "sources": [],
+        "decider": "Operaciones",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F01-09"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-09",
+        "topic": "Pagos inciertos",
+        "question": "¿Cómo se concilian los documentos pago-en-curso sin pago local con el adquirente y quién lo hace?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: 2.138 en 400 días; recuperación sólo manual con «Ingresar voucher»",
+        "answerSources": [
+          "data",
+          "code"
+        ],
+        "auditRefs": [
+          "R-08",
+          "P-24"
+        ],
+        "parityRefs": [
+          "P-24"
+        ],
+        "sources": [],
+        "decider": "Tesorería/Finanzas",
+        "owner": null,
+        "followUp": "FOLLOWUP-016",
+        "workPackages": [
+          "F02-04",
+          "F02-14",
+          "F05-10"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-10",
+        "topic": "Estados",
+        "question": "¿Qué significa el estado migrado y qué tratamiento corresponde?",
+        "kind": "fact",
+        "state": "open",
+        "currentAnswer": "512 documentos en 400 días en la sucursal productiva; no se identificó su escritor",
+        "answerSources": [
+          "data"
+        ],
+        "auditRefs": [
+          "R-07",
+          "R-15"
+        ],
+        "parityRefs": [
+          "P-39"
+        ],
+        "sources": [],
+        "decider": "TI legacy",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F05-10"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-11",
+        "topic": "Cancelación",
+        "question": "¿Cancelar una venta debe anular definitivamente el documento persistido?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: sólo limpia la sesión; el documento guardado permanece",
+        "answerSources": [
+          "code"
+        ],
+        "auditRefs": [
+          "C-34"
+        ],
+        "parityRefs": [
+          "P-19"
+        ],
+        "sources": [],
+        "decider": "Operaciones",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F01-09"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-12",
+        "topic": "Descuentos",
+        "question": "¿Se requiere descuento o precio manual y con qué autorización?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: no expuesto en la interfaz; el backend acepta importes recibidos. POS Platform exige autorización (F01-10)",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [
+          "P-15"
+        ],
+        "parityRefs": [
+          "P-15"
+        ],
+        "sources": [],
+        "decider": "Comercial",
+        "owner": null,
+        "followUp": "FOLLOWUP-005",
+        "workPackages": [
+          "F01-10"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-13",
+        "topic": "Continuidad",
+        "question": "¿Se bloquea la venta cuando la caja se abrió en otra fecha?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: sólo en build production; desactivado en QA",
+        "answerSources": [
+          "code",
+          "configuration"
+        ],
+        "auditRefs": [
+          "C-28",
+          "S-08"
+        ],
+        "parityRefs": [
+          "P-09"
+        ],
+        "sources": [],
+        "decider": "Operaciones y Tesorería",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-03"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-14",
+        "topic": "Cierre",
+        "question": "¿Se reactivan en el nuevo POS las validaciones de diferencia de efectivo y de pagos en curso, desactivadas desde 2021?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: desactivadas en código para todos los entornos",
+        "answerSources": [
+          "code"
+        ],
+        "auditRefs": [
+          "P-08"
+        ],
+        "parityRefs": [
+          "P-08"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude-notas.md"
+        ],
+        "decider": "Tesorería",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-03"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-15",
+        "topic": "Cierre y OV",
+        "question": "¿Al cerrar caja se liberan en AX las OVs tomadas por la caja?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: validarCierre llama a _liberarOvs, que escribe en AX",
+        "answerSources": [
+          "code"
+        ],
+        "auditRefs": [
+          "P-10"
+        ],
+        "parityRefs": [
+          "P-10"
+        ],
+        "sources": [
+          "delivery/reviews/legacy-context-2026-11-09.md"
+        ],
+        "decider": "Comercial y Operaciones",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-03",
+          "F04-08"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-16",
+        "topic": "NC",
+        "question": "¿Cuál es el límite de importe de una NC y su redondeo por línea?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Mountain rechaza más de 1.000.000 y MPOS más de 999.999",
+        "answerSources": [
+          "code"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-32"
+        ],
+        "sources": [
+          "delivery/reviews/legacy-context-2026-11-09.md"
+        ],
+        "decider": "Finanzas/Fiscal",
+        "owner": null,
+        "followUp": "FOLLOWUP-005",
+        "workPackages": [
+          "F04-01"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-17",
+        "topic": "Reimpresión",
+        "question": "¿La reimpresión exige permiso propio y motivo?",
+        "kind": "decision",
+        "state": "decided",
+        "currentAnswer": "F02-10 lo exige; el legacy no. La implementación actual no exige motivo",
+        "answerSources": [
+          "spec"
+        ],
+        "auditRefs": [
+          "P-28"
+        ],
+        "parityRefs": [
+          "P-28"
+        ],
+        "sources": [
+          "delivery/specs/F02-10.md"
+        ],
+        "decider": "Producto (ya decidido)",
+        "owner": null,
+        "followUp": null,
+        "workPackages": [
+          "F02-10"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-18",
+        "topic": "Medios",
+        "question": "¿SumUp sigue en el alcance o se retira?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Integración catalogada en QA y producción sin cajas asignadas",
+        "answerSources": [
+          "data"
+        ],
+        "auditRefs": [
+          "R-09"
+        ],
+        "parityRefs": [
+          "P-21"
+        ],
+        "sources": [],
+        "decider": "Tesorería",
+        "owner": null,
+        "followUp": "FOLLOWUP-005",
+        "workPackages": [
+          "F02-05",
+          "F02-07"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-19",
+        "topic": "Anulación",
+        "question": "¿Cómo se devuelve un pago con débito si el terminal sólo anula crédito?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: el débito se deriva al módulo de devoluciones",
+        "answerSources": [
+          "code"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-25"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/inventarios/perifericos-notas.md"
+        ],
+        "decider": "Finanzas y adquirente",
+        "owner": null,
+        "followUp": "FOLLOWUP-015",
+        "workPackages": [
+          "F02-13",
+          "F04-01"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-20",
+        "topic": "Cheques",
+        "question": "¿Se verifican todos los cheques o sólo los de terceros, y con qué proveedor?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: los de terceros siempre se verifican por un error de precedencia; Orsan o Instacheck",
+        "answerSources": [
+          "code"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-29"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/inventarios/perifericos-notas.md"
+        ],
+        "decider": "Tesorería",
+        "owner": null,
+        "followUp": "FOLLOWUP-008",
+        "workPackages": [
+          "F02-11"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-21",
+        "topic": "Clientes",
+        "question": "¿Al seleccionar un cliente se refresca siempre desde AX o sólo cuando falta o venció?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: refresca siempre y persiste la respuesta",
+        "answerSources": [
+          "code"
+        ],
+        "auditRefs": [
+          "C-29"
+        ],
+        "parityRefs": [
+          "P-16"
+        ],
+        "sources": [],
+        "decider": "Comercial y TI",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F01-08",
+          "F03-09"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-22",
+        "topic": "Catálogo",
+        "question": "¿La búsqueda avanzada debe poder vender SKUs que no existen localmente?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: no; descarta los que no tienen ID local",
+        "answerSources": [
+          "code"
+        ],
+        "auditRefs": [
+          "C-31"
+        ],
+        "parityRefs": [
+          "P-12"
+        ],
+        "sources": [],
+        "decider": "Comercial",
+        "owner": null,
+        "followUp": "FOLLOWUP-012",
+        "workPackages": [
+          "F01-11"
+        ],
+        "priority": "P3",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-23",
+        "topic": "Caja",
+        "question": "¿Se requieren ingresos y retiros de efectivo durante el turno?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy (2fe7991): no hay flujo; existen tablas pos_movimientos y tipo_movimientos sin flujo identificado",
+        "answerSources": [
+          "code",
+          "schema"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-08"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude-notas.md"
+        ],
+        "decider": "Tesorería",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-03"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-24",
+        "topic": "Usuarios",
+        "question": "¿Un empleado ausente de la lista de su sucursal debe desactivarse en toda la base?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: sí, y un empleado inválido revierte la lista completa de la sucursal",
+        "answerSources": [
+          "code"
+        ],
+        "auditRefs": [
+          "C-43"
+        ],
+        "parityRefs": [
+          "P-02"
+        ],
+        "sources": [],
+        "decider": "RR. HH. y TI",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F03-07",
+          "F04-06"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-25",
+        "topic": "Documentos",
+        "question": "¿Qué referencias documentales (OC, HES, HEM, 802) exige cada tipo de cliente?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Columnas presentes en documentos; 802 con longitud distinta en QA y producción",
+        "answerSources": [
+          "schema"
+        ],
+        "auditRefs": [
+          "P-31"
+        ],
+        "parityRefs": [
+          "P-31"
+        ],
+        "sources": [],
+        "decider": "Comercial y Fiscal",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F02-02",
+          "F04-11"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-26",
+        "topic": "Fiscal QA",
+        "question": "¿Qué ambiente fiscal usa la caja QA legacy?",
+        "kind": "fact",
+        "state": "open",
+        "currentAnswer": "El simulador sirve al backend general; en la caja no se halló la clave",
+        "answerSources": [
+          "configuration"
+        ],
+        "auditRefs": [
+          "C-15"
+        ],
+        "parityRefs": [
+          "P-30"
+        ],
+        "sources": [],
+        "decider": "TI legacy",
+        "owner": null,
+        "followUp": "FOLLOWUP-003",
+        "workPackages": [
+          "F02-02"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-27",
+        "topic": "Crédito",
+        "question": "¿Los acuerdos de cobranza con interés y cuotas entran en el alcance?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Existen en el legacy (cobranza_acuerdos y cobranza_cuotas)",
+        "answerSources": [
+          "code",
+          "schema"
+        ],
+        "auditRefs": [
+          "C-33"
+        ],
+        "parityRefs": [
+          "P-35"
+        ],
+        "sources": [],
+        "decider": "Finanzas/Crédito",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-02",
+          "F04-11"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-28",
+        "topic": "Reportes",
+        "question": "¿Qué reportes son obligatorios en el piloto, incluido «Ventas por tipos»?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Listado legacy en P-37; «Ventas por tipos» concedido pero en construcción",
+        "answerSources": [
+          "code",
+          "data"
+        ],
+        "auditRefs": [
+          "C-36"
+        ],
+        "parityRefs": [
+          "P-37"
+        ],
+        "sources": [],
+        "decider": "Operaciones y Finanzas",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-05"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-29",
+        "topic": "Transbank",
+        "question": "¿Qué valida «terminal listo» antes de cobrar (puerto, llaves, jornada abierta)?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: sólo socket del agente y estado del puerto; no comprueba llaves ni jornada",
+        "answerSources": [
+          "code"
+        ],
+        "auditRefs": [
+          "C-32"
+        ],
+        "parityRefs": [
+          "P-23"
+        ],
+        "sources": [],
+        "decider": "Tesorería y adquirente",
+        "owner": null,
+        "followUp": "FOLLOWUP-002",
+        "workPackages": [
+          "F02-14"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-30",
+        "topic": "Identidad",
+        "question": "¿Se conserva la contraseña inicial fija de las altas sincronizadas?",
+        "kind": "decision",
+        "state": "decided",
+        "currentAnswer": "No: F01-01 prohíbe credenciales embebidas y exige contraseña inicial fuerte en la provisión; el legacy la fija en código",
+        "answerSources": [
+          "spec"
+        ],
+        "auditRefs": [
+          "C-43"
+        ],
+        "parityRefs": [
+          "P-02"
+        ],
+        "sources": [
+          "delivery/specs/F01-01.md#L34",
+          "delivery/specs/F01-01.md#L58"
+        ],
+        "decider": "Producto (ya decidido)",
+        "owner": null,
+        "followUp": null,
+        "workPackages": [
+          "F01-01",
+          "F03-07"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-31",
+        "topic": "Identidad ERP",
+        "question": "¿La falta de RecId impide sincronizar las ventas de un usuario?",
+        "kind": "fact",
+        "state": "answered",
+        "currentAnswer": "No. Los documentos que llegan a vigente se sincronizan; los no sincronizados de cuentas sin RecId estaban en estados no finales. Sin RecId la venta se atribuye a workerIdDefecto",
+        "answerSources": [
+          "data",
+          "code"
+        ],
+        "auditRefs": [
+          "C-23",
+          "R-15"
+        ],
+        "parityRefs": [
+          "P-05"
+        ],
+        "sources": [],
+        "decider": "Finanzas/Contabilidad (valida la respuesta)",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F03-03"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-32",
+        "topic": "Cierre",
+        "question": "¿QA omite validaciones de cierre que producción aplica?",
+        "kind": "fact",
+        "state": "answered",
+        "currentAnswer": "Sólo una diferencia demostrada: el bundle QA se compiló sin production y no bloquea la venta con caja abierta en otra fecha; los indicadores de cierre son iguales",
+        "answerSources": [
+          "configuration",
+          "code"
+        ],
+        "auditRefs": [
+          "C-28",
+          "S-08",
+          "R-10"
+        ],
+        "parityRefs": [
+          "P-09"
+        ],
+        "sources": [],
+        "decider": "Tesorería (valida la respuesta)",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-03"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-33",
+        "topic": "Cobranza",
+        "question": "¿Abonar a una deuda y pagar deudas son el mismo flujo?",
+        "kind": "fact",
+        "state": "answered",
+        "currentAnswer": "Sí: mismo flujo de cobranza con monto parcial o total. El «Abonar» del POS es un anticipo distinto y existen acuerdos con cuotas",
+        "answerSources": [
+          "code"
+        ],
+        "auditRefs": [
+          "C-33"
+        ],
+        "parityRefs": [
+          "P-35"
+        ],
+        "sources": [],
+        "decider": "Finanzas (valida la respuesta)",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-02"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-10",
+        "validation": null
+      }
+    ]
+  }
+}

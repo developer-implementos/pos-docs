@@ -1,6 +1,6 @@
 # Seguimiento del avance
 
-El [resumen del proyecto](/project/) presenta el avance técnico y la aceptación manual, con distribución por fase y aplicación. [Próximo incremento](/project/plan/) presenta trabajo acotado y su preparación. [Entregables](/project/work/) permite consultar qué falta, su ejecución, asignación y evidencia. [Bloqueos y decisiones](/project/attention/) explica qué acceso o información se necesita, quién impulsa la acción y qué permite resolverla. [Equipo](/project/team/) reúne las asignaciones de desarrollo y los responsables de seguimiento. Las vistas se generan desde los mismos registros revisados; no se editan porcentajes ni listas de tareas en páginas independientes.
+El [resumen del proyecto](/project/) presenta el avance técnico y la aceptación manual, con distribución por fase y aplicación. [Próximo incremento](/project/plan/) presenta trabajo acotado y su preparación. [Entregables](/project/work/) permite consultar qué falta, su ejecución, asignación y evidencia. [Bloqueos y decisiones](/project/attention/) explica qué acceso o información se necesita, quién impulsa la acción y qué permite resolverla. [Preguntas y reglas](https://pos-docs-starlight.vercel.app/project/questions/) agrupa por fase las preguntas y reglas de negocio, con quién decide, la respuesta actual y su validación. [Equipo](/project/team/) reúne las asignaciones de desarrollo y los responsables de seguimiento. Las vistas se generan desde los mismos registros revisados; no se editan porcentajes ni listas de tareas en páginas independientes.
 
 Los indicadores enlazan al detalle filtrado. Los filtros se guardan en la URL y los enlaces permanentes identifican cada entregable o acción; pueden compartirse y recorrerse con Atrás y Adelante. Sin JavaScript, permanecen disponibles los registros, sus enlaces y la navegación entre vistas. La portada conserva un acceso breve y los catálogos completos se consultan en [presentaciones](/presentations/) y [fuentes](/materials/).
 
@@ -13,6 +13,7 @@ Los indicadores enlazan al detalle filtrado. Los filtros se guardan en la URL y 
 | Estado de ejecución, desarrollador asignado y conversación | GitHub Issues de POS Platform. |
 | Verificación técnica, evidencia y aceptación manual | `delivery/progress.json` en POS Platform. |
 | Accesos, preguntas, decisiones y condiciones pendientes | `delivery/follow-ups.json` en POS Platform. |
+| Preguntas y reglas de negocio, quién decide, respuesta actual y validación | `delivery/business-questions.json` en POS Platform. |
 | Publicación | Snapshots revisados en POS Docs; sin consultar GitHub desde el navegador. |
 
 Un seguimiento describe una acción concreta que requiere información, acceso, decisión o validación. Enlaza los entregables afectados; no reemplaza sus tareas de desarrollo. El **responsable de seguimiento** impulsa la acción; **información de** identifica la contraparte necesaria. No son equivalentes al desarrollador asignado en GitHub. Si no se acordó responsable, se muestra **Por asignar**.
@@ -20,6 +21,18 @@ Un seguimiento describe una acción concreta que requiere información, acceso, 
 Cada acción distingue si afecta la verificación técnica, la habilitación operativa o una revisión del equipo. Una fase futura pendiente no constituye un bloqueo actual. Un contrato de proveedor sin validar puede impedir completar su adaptador sin detener el resto del software. La fecha del seguimiento, la revisión técnica y la consulta a GitHub se muestran separadas.
 
 Para resolver una acción se registra explicación, fecha y evidencia. Las preguntas se concretan con el contacto apropiado; nunca se solicita publicar contraseñas, direcciones internas ni datos comerciales. La evidencia técnica y las conversaciones privadas se enlazan, no se copian automáticamente al portal público.
+
+## Preguntas y reglas de negocio
+
+El registro de preguntas de POS Platform reúne, una por una, las preguntas y reglas que surgen de una auditoría: qué se pregunta, qué hace hoy el sistema, de dónde sale esa respuesta, quién debe decidir y si el responsable de negocio la validó. Su esquema y sus estados se describen en la sección «Preguntas y reglas de negocio» de `delivery/README.md` en POS Platform; la vista enlaza el registro en la revisión importada. Un seguimiento conserva la acción agregada; la pregunta enlaza ese seguimiento sin repetir su acción ni su criterio de cierre. El registro no cambia porcentajes, no cierra issues ni acredita aceptación de entregables.
+
+La vista ubica cada pregunta en la fase más temprana de sus entregables, según el roadmap, y las ordena por prioridad (P1 a P3) y código. El filtro de fase incluye también las preguntas que afectan a esa fase. **Quién decide** nombra un rol, no una persona. El **responsable de seguimiento** es el login GitHub de quien impulsa la pregunta; sin uno registrado se muestra **Por asignar**. El seguimiento se enlaza cuando figura en el corte publicado de seguimientos; si no, se muestra su código como texto.
+
+El comportamiento legacy citado en la respuesta actual describe lo observado, no una regla aprobada. Una regla o una respuesta pasa a `validated` sólo cuando la confirma el responsable de negocio del rol que decide. Entonces el registro de POS Platform anota en `validation` su login GitHub, la fecha y una nota breve de lo confirmado, mediante el cambio y la revisión habituales del producto. Si la confirmación cambia la regla, la decisión se lleva antes a la ficha propietaria. Un agente nunca valida en nombre de una persona; una prueba, la importación o esta publicación no equivalen a una validación. La vista muestra «Validada por @login el fecha» únicamente con ese registro y «Pendiente de validación» en los demás casos, incluidas las decisiones que ya constan en una ficha.
+
+`tools/sync-project-questions.mjs` importa el registro sin consultar GitHub. Lo valida con las reglas de POS Platform en la revisión importada: forma y estados, paquetes del backlog, seguimientos, identificadores de la auditoría y archivos citados. También rechaza en cualquier texto hosts corporativos, alias SSH, direcciones privadas y dominios internos, con la misma regla que el producto; el build repite esa comprobación sobre el snapshot. La revisión editorial descarta además credenciales, datos de clientes y datos personales.
+
+El importador registra si `main` del repositorio corporativo contiene la revisión, según `origin/main` del checkout; conviene actualizarlo con `git fetch` antes de importar. Una revisión publicada en una rama todavía sin integrar puede importarse para revisar la vista. En ese caso, la página la identifica como **Corte previo a la integración**: su contenido puede cambiar antes de integrarse y, al integrarse, se vuelve a importar desde `main`. Una revisión que no está en ninguna rama remota se rechaza.
 
 
 ## Cómo se prepara el próximo incremento
@@ -73,7 +86,7 @@ El snapshot conserva el contenido original, incluido `productRevision: "source"`
 
 ## Actualizar el seguimiento
 
-1. En POS Platform, registrar el resultado de la sesión en la issue. Actualizar `delivery/progress.json` si cambia el alcance comprobado y `delivery/follow-ups.json` si aparece o se resuelve una acción. Conservar preguntas ya respondidas como decisiones/evidencia y no reabrirlas por cambiar de sesión. Ejecutar los controles de progreso y entrega; confirmar los archivos en Git.
+1. En POS Platform, registrar el resultado de la sesión en la issue. Actualizar `delivery/progress.json` si cambia el alcance comprobado, `delivery/follow-ups.json` si aparece o se resuelve una acción y `delivery/business-questions.json` si cambia una pregunta, su respuesta o su validación. Conservar preguntas ya respondidas como decisiones/evidencia y no reabrirlas por cambiar de sesión. Ejecutar los controles de progreso y entrega; confirmar los archivos en Git.
 2. Publicar el resumen de ejecución desde ese checkout limpio. `pnpm run delivery:status` muestra el plan; `pnpm run delivery:status --apply` actualiza únicamente comentarios administrados de seguimiento. Conserva conversación, estado, asignados y etiquetas. `--check` detecta comentarios desactualizados.
 3. Importar desde POS Docs, usando el checkout limpio y la revisión del producto que se quiere publicar:
 
@@ -81,20 +94,23 @@ El snapshot conserva el contenido original, incluido `productRevision: "source"`
    node tools/sync-project-progress.mjs --workspace ../pos-platform
    node tools/sync-project-follow-up.mjs --workspace ../pos-platform
    node tools/sync-project-planning.mjs --workspace ../pos-platform
+   node tools/sync-project-questions.mjs --workspace ../pos-platform
    ```
 
-   Los importadores de seguimiento y planificación consultan GitHub de forma explícita con la sesión autorizada del mantenedor. Importan sólo código, número/enlace de issue, estado abierto/cerrado, etiquetas de ejecución, asignados y fecha de actualización. La planificación añade el motivo de cierre para distinguir trabajo completado de descartado. No importan cuerpos, comentarios, tokens ni credenciales.
+   Los importadores de seguimiento y planificación consultan GitHub de forma explícita con la sesión autorizada del mantenedor. Importan sólo código, número/enlace de issue, estado abierto/cerrado, etiquetas de ejecución, asignados y fecha de actualización. La planificación añade el motivo de cierre para distinguir trabajo completado de descartado. No importan cuerpos, comentarios, tokens ni credenciales. El importador de preguntas no consulta GitHub: lee el registro, el backlog, los seguimientos y la auditoría de la revisión importada.
 
-4. Revisar los tres snapshots de `portal/data/`. Sus hashes y revisiones identifican las fuentes; el progreso técnico debe coincidir con el producto importado. Revisar cualquier diferencia de seguimiento: issue cerrada con etiqueta activa, etiquetas contradictorias o bloqueo técnico sin acción registrada.
+4. Revisar los cuatro snapshots de `portal/data/`. Sus hashes y revisiones identifican las fuentes; el progreso técnico debe coincidir con el producto importado. Revisar cualquier diferencia de seguimiento: issue cerrada con etiqueta activa, etiquetas contradictorias o bloqueo técnico sin acción registrada.
 5. Ejecutar las comprobaciones y publicar la PR documental:
 
    ```sh
    node tools/sync-project-progress.mjs --workspace ../pos-platform --check
    node tools/sync-project-follow-up.mjs --workspace ../pos-platform --check
    node tools/sync-project-planning.mjs --workspace ../pos-platform --check
+   node tools/sync-project-questions.mjs --workspace ../pos-platform --check
    npm run progress:test
    npm run follow-up:test
    npm run planning:test
+   npm run questions:test
    npm run validate
    npm run typecheck
    npm run build
@@ -103,7 +119,7 @@ El snapshot conserva el contenido original, incluido `productRevision: "source"`
    npm run project:check
    ```
 
-6. Generar las entradas del historial de cambios con `npm run release:entries` y pegar el bloque que imprime en el cuerpo de la PR. Cada seguimiento nuevo o resuelto, cambio de estado o texto actualizado queda como una entrada propia en la próxima versión. La política editorial rechaza la PR si falta alguna. Si la PR cambia algo más, agregar su entrada al mismo bloque ([guía de versiones](https://github.com/developer-implementos/pos-docs/blob/main/tools/release/README.md#un-pr-que-importa-avance-seguimientos-o-planificación)).
+6. Generar las entradas del historial de cambios con `npm run release:entries` y pegar el bloque que imprime en el cuerpo de la PR. Cada seguimiento nuevo o resuelto, cambio de estado o texto actualizado queda como una entrada propia en la próxima versión. La política editorial rechaza la PR si falta alguna. Ese cálculo cubre avance, seguimientos y planificación; un cambio del registro de preguntas se describe con su propia entrada. Si la PR cambia algo más, agregar su entrada al mismo bloque ([guía de versiones](https://github.com/developer-implementos/pos-docs/blob/main/tools/release/README.md#un-pr-que-importa-avance-seguimientos-o-planificación)).
 
 `--check` no escribe. En seguimiento compara el contenido y estado observado; no falla sólo por transcurrir el reloj. La importación normal registra una nueva fecha de consulta. La fuente debe ser un commit del repositorio corporativo y un checkout limpio; las referencias de evidencia del progreso deben pertenecer a su historial. Un clon superficial necesita recuperar esos commits.
 

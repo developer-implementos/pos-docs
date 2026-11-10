@@ -5,15 +5,36 @@ import { fileURLToPath } from 'node:url';
 import { renderProjectPages } from './project-view.mjs';
 import { deriveProgress, loadProgress, progressContentHash } from './progress.mjs';
 import { loadFollowUp } from './follow-up.mjs';
+import { deriveQuestions, loadQuestions, questionsContentHash } from './questions.mjs';
+import { teamMembers } from './team.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const progress = loadProgress(root);
 const followUp = loadFollowUp(root, progress);
+const questions = loadQuestions(root, progress, followUp);
+const questionsSnapshot = JSON.parse(fs.readFileSync(new URL('./data/project-questions.json', import.meta.url), 'utf8'));
+const routes = ['/project/', '/project/plan/', '/project/work/', '/project/attention/', '/project/questions/', '/project/team/'];
+const escapeText = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+const reviewDate = value => new Intl.DateTimeFormat('es-CL', { dateStyle: 'medium', timeZone: 'UTC' }).format(new Date(`${value}T00:00:00Z`));
+function questionsWith(mutate = () => {}, integration = questionsSnapshot.integration, followUpModel = followUp) {
+  const snapshot = structuredClone(questionsSnapshot);
+  mutate(snapshot.content);
+  snapshot.source.sha256 = questionsContentHash(snapshot.content);
+  snapshot.integration = integration;
+  return deriveQuestions(snapshot, progress, followUpModel);
+}
+const questionsPage = (model = questions, followUpModel = followUp) => renderProjectPages(progress, followUpModel, null, null, model).get('/project/questions/').body;
+const card = (html, id) => {
+  const start = html.indexOf(`<article id="${id.toLowerCase()}"`);
+  assert.ok(start >= 0, `Card ${id} is published`);
+  return html.slice(start, html.indexOf('</article>', start));
+};
 
 test('project pages expose shell metadata, current navigation and reviewed provenance', () => {
-  const pages = renderProjectPages(progress, followUp);
-  assert.deepEqual([...pages.keys()], ['/project/', '/project/plan/', '/project/work/', '/project/attention/', '/project/team/']);
+  const pages = renderProjectPages(progress, followUp, null, null, questions);
+  assert.deepEqual([...pages.keys()], routes);
   for (const [route, page] of pages) {
+    for (const href of routes) assert.match(page.body, new RegExp(`<nav class="project-navigation"[^]*?href="${href}"`), `${route} links ${href}`);
     assert.match(page.body, new RegExp(`href="${route}" aria-current="page"`));
     assert.deepEqual(page.styles, ['/portal/project.css']);
     assert.deepEqual(page.scripts, ['/portal/project.js']);
@@ -157,4 +178,120 @@ test('schema 1 acceptance stays historical across summary, breakdowns, dates and
   assert.match(work, /Acta de aceptación del fixture/);
   assert.doesNotMatch(work, /Estado técnico|Verificación técnica completa|value="verified"|value="review"|Sin verificación completa/);
   assert.match(work, /Sin aceptación registrada/);
+});
+
+test('questions page summarizes states and pending validation and groups every record by phase', () => {
+  const html = questionsPage();
+  assert.match(html, /data-project-page="questions"/);
+  assert.equal((html.match(/<h1>/g) || []).length, 1);
+  assert.equal((html.match(/data-project-item/g) || []).length, questions.items.length);
+  const start = html.indexOf('class="project-question-summary"');
+  const summary = html.slice(start, html.indexOf('</section>', start));
+  for (const [state, label] of [['open', 'abiertas'], ['answered', 'respondidas'], ['decided', 'decididas'], ['validated', 'validadas']]) {
+    assert.match(summary, new RegExp(`href="/project/questions/\\?state=${state}"><strong>${questions.counts[state]}</strong> ${label}`));
+  }
+  assert.match(summary, new RegExp(`<strong>${questions.counts.pendingValidation}</strong> por validar`));
+  assert.match(summary, new RegExp(`<strong>${questions.counts.unassigned}</strong> sin responsable de seguimiento`));
+  let previous = -1;
+  for (const group of questions.groups) {
+    const index = html.indexOf(`id="questions-${group.id}"`);
+    assert.ok(index > previous, `Phase ${group.id} follows the roadmap order`);
+    previous = index;
+    const section = html.slice(index, html.indexOf('</section>', index));
+    assert.ok(section.includes(`<a href="${group.href}">F${group.id.slice(-2)} · ${escapeText(group.title)}</a>`), `${group.id} names and links its phase`);
+    assert.deepEqual([...section.matchAll(/<article id="(q-\d+)"/g)].map(match => match[1].toUpperCase()), group.items.map(item => item.id));
+  }
+});
+
+test('each question shows its answer, sources, decider, owner, follow-up, packages, priority and validation', () => {
+  const html = questionsPage();
+  const repository = questions.source.repository;
+  for (const item of questions.items) {
+    const body = card(html, item.id);
+    assert.ok(body.includes(`<code>${item.id}</code>`));
+    for (const value of [item.topic, item.question, item.currentAnswer, item.decider]) assert.ok(body.includes(escapeText(value)), `${item.id} shows ${value}`);
+    assert.ok(body.includes(`data-state="${item.state}"`));
+    assert.ok(body.includes(`data-decider="${escapeText(item.decider)}"`));
+    assert.ok(body.includes(`data-phases="${item.phases.join(' ')}"`));
+    assert.ok(body.includes(`<dt>Prioridad</dt><dd>${item.priority}</dd>`));
+    for (const source of item.sources) assert.ok(body.includes(`href="${repository}/blob/${questions.source.revision}/${source}"`), `${item.id} pins ${source}`);
+    for (const work of item.packages) assert.ok(body.includes(`href="/project/work/#work-${work.id.toLowerCase()}"`));
+    if (item.owner === null) assert.ok(body.includes('<dt>Responsable de seguimiento</dt><dd><span class="project-unassigned">Por asignar</span>'));
+    if (item.validation === null) assert.ok(body.includes('Pendiente de validación'));
+    if (item.followUp && item.followUpAction) assert.ok(body.includes(`href="/project/attention/#${item.followUp.toLowerCase()}"`));
+    if (item.followUp && !item.followUpAction) {
+      assert.ok(body.includes(item.followUp) && !body.includes(`/project/attention/#${item.followUp.toLowerCase()}`), `${item.followUp} stays as text when it is not published`);
+      assert.ok(body.includes('no publicado en el corte de seguimientos'));
+    }
+    if (!item.followUp) assert.ok(body.includes('<dt>Seguimiento</dt><dd><span class="project-unassigned">Sin seguimiento</span>'));
+  }
+});
+
+test('questions link published follow-ups and keep missing ones as text', () => {
+  const withFollowUp = questions.items.find(item => item.followUp);
+  const present = structuredClone(followUp);
+  if (!present.items.some(action => action.id === withFollowUp.followUp)) present.items.push({ ...present.items[0], id: withFollowUp.followUp, summary: 'Seguimiento sintético publicado' });
+  const linked = card(questionsPage(questionsWith(undefined, undefined, present), present), withFollowUp.id);
+  assert.ok(linked.includes(`href="/project/attention/#${withFollowUp.followUp.toLowerCase()}">${withFollowUp.followUp}`));
+  const absent = { ...structuredClone(followUp), items: followUp.items.filter(action => action.id !== withFollowUp.followUp) };
+  const text = card(questionsPage(questionsWith(undefined, undefined, absent), absent), withFollowUp.id);
+  assert.ok(!text.includes(`/project/attention/#${withFollowUp.followUp.toLowerCase()}`));
+  assert.ok(text.includes(`${withFollowUp.followUp} <small>no publicado en el corte de seguimientos</small>`));
+});
+
+test('owners use the team profile when it exists and business validation names its login and date', () => {
+  const member = teamMembers[0];
+  const [firstSource, secondSource] = questionsSnapshot.content.items;
+  const model = questionsWith(content => {
+    const [first, second] = content.items;
+    first.owner = member.github;
+    Object.assign(second, { owner: 'external-user', state: 'validated', validation: { validatedOn: second.reviewedOn, validatedBy: 'pymimtos', note: 'Confirmada en la reunión de reglas.' } });
+  });
+  const html = questionsPage(model);
+  assert.ok(card(html, firstSource.id).includes(`<a href="/project/team/#member-${member.github.toLowerCase()}">${escapeText(member.name)}</a>`));
+  const external = card(html, secondSource.id);
+  assert.ok(external.includes('<a href="https://github.com/external-user">@external-user</a>'));
+  assert.ok(external.includes(`Validada por <a href="https://github.com/pymimtos">@pymimtos</a> el <time datetime="${secondSource.reviewedOn}">${reviewDate(secondSource.reviewedOn)}</time>`));
+  assert.ok(external.includes('Confirmada en la reunión de reglas.'));
+  assert.ok(external.includes('data-state="validated"'));
+  assert.equal(model.counts.validated, questions.counts.validated + 1);
+});
+
+test('questions page states that legacy behavior is not an approved rule and links the source at the imported revision', () => {
+  const html = questionsPage();
+  assert.ok(html.includes('El comportamiento legacy citado describe lo observado; no es una regla aprobada.'));
+  assert.ok(html.includes('Sólo el responsable de negocio valida una regla o una respuesta'));
+  const href = `${questions.source.repository}/blob/${questions.source.revision}/${questions.source.path}`;
+  assert.ok(html.includes(`href="${href}">Registro de preguntas · ${questions.source.revision.slice(0, 8)}</a>`));
+  assert.ok(html.includes(`Registro revisado <time datetime="${questions.reviewedOn}">`));
+  assert.match(html, /data-project-filters hidden/);
+  for (const name of ['state', 'phase', 'decider']) assert.ok(html.includes(`<select name="${name}">`), name);
+  for (const decider of questions.deciders) assert.ok(html.includes(`<option value="${escapeText(decider)}">`), decider);
+  assert.match(html, /<noscript>/);
+});
+
+test('a pre-integration revision is identified on the questions page', () => {
+  const preview = questionsPage(questionsWith(undefined, { reference: 'main', included: false }));
+  assert.ok(preview.includes('class="project-alert project-question-preview"'));
+  assert.ok(preview.includes('Corte previo a la integración'));
+  assert.ok(preview.includes('todavía no está integrada en <code>main</code>'));
+  const integrated = questionsPage(questionsWith(undefined, { reference: 'main', included: true }));
+  assert.ok(!integrated.includes('Corte previo a la integración'));
+  assert.ok(integrated.includes('Revisión integrada en <code>main</code>'));
+  assert.equal(questionsPage().includes('Corte previo a la integración'), questions.integration.included === false, 'The published snapshot shows its own integration state');
+});
+
+test('questions escape authored text and render without a published registry', () => {
+  const html = questionsPage(questionsWith(content => { content.items[0].question = '¿<img src=x onerror=alert(1)>?'; }));
+  assert.match(html, /&lt;img src=x onerror=alert\(1\)&gt;/);
+  assert.doesNotMatch(html, /<img src=x/);
+  const empty = renderProjectPages(progress, followUp).get('/project/questions/').body;
+  assert.ok(empty.includes('No hay un registro de preguntas publicado en este corte.'));
+  assert.doesNotMatch(empty, /data-project-item/);
+});
+
+test('overview links the questions view with its open and pending counts', () => {
+  const html = renderProjectPages(progress, followUp, null, null, questions).get('/project/').body;
+  assert.ok(html.includes(`<p class="project-increment-link"><a href="/project/questions/">Preguntas y reglas de negocio</a><span>${questions.counts.open} abiertas · ${questions.counts.pendingValidation} por validar con el responsable de negocio.</span></p>`));
+  assert.ok(!renderProjectPages(progress, followUp).get('/project/').body.includes('<a href="/project/questions/">Preguntas y reglas de negocio</a>'));
 });

@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "2985aa799165af300f8a522349803548d4415c7b",
+    "revision": "d68152951c2f9eef8925c4490207cee243e27467",
     "path": "delivery/follow-ups.json",
-    "sha256": "2633b3109fdc8d0cd6b7f22e3bf69481ab8edc295f14bdec94d9efcd5eec18c4"
+    "sha256": "d276ff3ceee812fc41ecc6d147154c707b6cffa7cb981d60281d75dc6f1e32a7"
   },
   "content": {
     "schemaVersion": 1,
-    "reviewedOn": "2026-11-08",
+    "reviewedOn": "2026-11-10",
     "items": [
       {
         "id": "FOLLOWUP-001",
@@ -18,14 +18,18 @@
           "F01-11"
         ],
         "summary": "Completar acceso de lectura a Mountain",
-        "impact": "La verificación completa de F01-11 necesita consultas reales autorizadas. La última prueba del 31 de octubre llegó a DNS pero la conexión se rechazó antes de TLS; no comprueba la disponibilidad actual de la VPN.",
+        "impact": "La verificación completa de F01-11 necesita consultas reales autorizadas. El 9 de noviembre se autenticaron SSH y PostgreSQL y respondió la web QA, pero no se verificó el contrato HTTPS del lector ni sus consultas de productos/clientes. Esta observación no acredita disponibilidad futura ni resuelve el rechazo histórico de otra frontera.",
         "impactScope": "technical",
-        "nextAction": "Solicitar a Infraestructura la instancia y el puerto autorizados vigentes y revisar la ruta de acceso. Configurar las credenciales de sólo lectura fuera del repositorio; repetir TLS y las consultas explícitas de productos y clientes del primer conector, con permisos efectivos y resultados sanitizados, sin feeds que consuman cursores ni endpoints GET que escriban datos. Los precios quedan fuera de este conector hasta su contrato, que sigue FOLLOWUP-012.",
+        "nextAction": "Confirmar con Infraestructura la URL HTTPS, certificado y cuenta técnica de lectura de la instancia acordada; contrastar sus rutas y revisión con el conector y ejecutar las consultas explícitas de productos/clientes con resultados sanitizados. No usar detalle de cliente ni validar cierre como sondas: pueden escribir o liberar OVs. Los precios siguen en FOLLOWUP-012.",
         "requestedFrom": "Infraestructura y responsable de la instancia Mountain autorizada",
         "owner": null,
         "closureCriteria": "URL, VPN y HTTPS/TLS válidos contra la instancia acordada, y consultas reales de productos y clientes con permisos efectivos y resultados registrados; sin publicar host, credenciales ni datos comerciales. Habilitar precios no es condición de este seguimiento.",
-        "reviewedOn": "2026-11-06",
+        "reviewedOn": "2026-11-09",
         "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/258",
+            "label": "TASK-258: contraste de lectura del 9 de noviembre; alcance y límites"
+          },
           {
             "url": "https://github.com/developer-implementos/pos-platform/issues/20#issuecomment-6550796764",
             "label": "Seguimiento en GitHub"
@@ -49,12 +53,16 @@
         "summary": "Integrar y comprobar Transbank POS integrado",
         "impact": "El contrato controlado prueba recuperación e idempotencia, pero no acredita cobro ni mantenimiento del terminal real. No detiene el desarrollo independiente de los SDK. La confirmación de reversa frente a refund que F02-13 deja al adquirente y a Finanzas se sigue en FOLLOWUP-015, porque su impacto es operativo: F02-13 está verificado técnicamente y esa respuesta no condiciona su verificación.",
         "impactScope": "technical",
-        "nextAction": "Solicitar al responsable del terminal del piloto modelo, firmware, modalidad de conexión, versión/licencia del SDK y contacto técnico del adquirente. Confirmar contrato y entorno de pruebas autorizados para cobro, consulta, anulación y cierre.",
+        "nextAction": "Completar TASK-111 con modelo, firmware, conexión y versión/licencia del SDK del terminal físico. La revisión del 9 de noviembre no identificó ese inventario en los catálogos SQL consultados; las ramas de los servicios tampoco prueban qué terminal está instalado. Confirmar contrato y entorno autorizado de cobro, consulta, anulación y cierre, distinguiendo agente conectado de terminal disponible.",
         "requestedFrom": "Equipo de integración de pagos y contraparte técnica del adquirente",
         "owner": null,
         "closureCriteria": "Terminal y SDK identificados, contrato de operaciones y consulta de incertidumbre revisado, acceso de pruebas autorizado y reproducible registrado. La implementación y homologación se completan en los entregables enlazados.",
-        "reviewedOn": "2026-11-06",
+        "reviewedOn": "2026-11-09",
         "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/258",
+            "label": "TASK-258: contraste de lectura del 9 de noviembre; alcance y límites"
+          },
           {
             "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/reviews/F02-provider-contracts.md",
             "label": "Investigación de contratos legacy"
@@ -85,14 +93,18 @@
           "F02-12"
         ],
         "summary": "Concretar el primer adaptador fiscal",
-        "impact": "No se puede completar la integración fiscal sin identificar el contrato vigente del piloto. Persistir la solicitud o disponer de un PDF no acredita recepción fiscal.",
+        "impact": "La lectura del 9 de noviembre observa Acepta seleccionado en las bases de QA y de una sucursal productiva, además de un contador fiscal simulado en QA. La selección no acredita contrato, material fiscal ni emisión real; la integración sigue pendiente.",
         "impactScope": "technical",
-        "nextAction": "Preguntar qué proveedor fiscal está habilitado en la sucursal piloto: Acepta o Ingydev. Obtener ambiente y versión del contrato de envío, consulta y representación, con sus estados y errores; conservar credenciales fuera del repositorio.",
+        "nextAction": "Completar TASK-112: confirmar con la contraparte de Acepta el contrato y ambiente efectivos de envío, consulta y representación, y su vínculo con el despliegue del piloto. Separar el simulador de folios QA de identidad/material fiscal autorizado; contrastar estados, errores, consulta de incertidumbre y versión, sin emitir documentos durante la investigación.",
         "requestedFrom": "Equipo de integración fiscal y contraparte técnica del proveedor vigente",
         "owner": null,
         "closureCriteria": "Proveedor activo, contraparte y contrato identificados; acceso autorizado y escenarios de envío/consulta/representación disponibles para implementar y validar el adaptador.",
-        "reviewedOn": "2026-11-03",
+        "reviewedOn": "2026-11-09",
         "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/258",
+            "label": "TASK-258: contraste de lectura del 9 de noviembre; alcance y límites"
+          },
           {
             "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/reviews/F02-provider-contracts.md",
             "label": "Investigación de contratos legacy"
@@ -122,12 +134,16 @@
         "summary": "Integrar drivers y comprobar periféricos del puesto",
         "impact": "El host .NET y el protocolo durable están implementados. Falta contrastar capacidades y drivers con el hardware del piloto antes de completar impresión y operación física.",
         "impactScope": "technical",
-        "nextAction": "Solicitar inventario del puesto piloto: modelos, firmware, puertos, controladores/SDK y licencias de impresora, terminal y lector. Confirmar disponibilidad de equipos para pruebas y cuenta/sesión Windows soportada.",
+        "nextAction": "Completar TASK-113 con inventario físico por puesto: modelo/variante de EPSON TM-H6000V informado, MICR instalado, terminal, firmware, puertos, drivers/SDK, arquitectura y licencias. La lectura del 9 de noviembre sólo encontró servicios de impresión configurados, sin identificar el modelo físico. Confirmar cuenta/sesión Windows, exclusión de impresión/MICR y equipos autorizados para pruebas; no asumir flota homogénea.",
         "requestedFrom": "Equipo de dispositivos y soporte de puestos",
         "owner": null,
         "closureCriteria": "Matriz de hardware/SDK y entorno de ejecución registrada con evidencia, y equipos disponibles para pruebas autorizadas. Cada driver conserva su implementación y prueba física en su entregable.",
-        "reviewedOn": "2026-11-03",
+        "reviewedOn": "2026-11-09",
         "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/258",
+            "label": "TASK-258: contraste de lectura del 9 de noviembre; alcance y límites"
+          },
           {
             "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/reviews/F02-provider-contracts.md",
             "label": "Investigación de contratos legacy"
@@ -161,12 +177,16 @@
         "summary": "Validar el perfil operativo de pagos, promociones y resolución de excepciones",
         "impact": "El software ya soporta el plan combinado y transferencia manual dentro del alcance verificado. Se confirmó que la asignación y el cierre de expedientes requieren supervisores con permisos explícitos y no cambian dinero. Falta validar las reglas monetarias y facultades de verificación para operar el piloto, las reglas comerciales de F01-10 y los responsables y acciones permitidas que F02-04 condiciona a un acuerdo.",
         "impactScope": "operational",
-        "nextAction": "Preguntar a Tesorería qué medios y combinaciones usa el piloto, cuándo entrega vuelto, qué cuentas reciben transferencias y quién verifica su abono de forma independiente. Contrastar ejemplos, límites, descuentos y excepciones con la operación vigente. Solicitar a Comercial la aprobación de las reglas de acumulación, mínimos, exclusión y autoridad de cupones de F01-10, y acordar con Operaciones, Finanzas y Soporte los responsables y las acciones permitidas por tipo de evidencia de F02-04, incluida la aprobación que exija cada acción.",
+        "nextAction": "Preguntar a Tesorería qué medios y combinaciones usa el piloto, cuándo entrega vuelto, qué cuentas reciben transferencias y quién verifica su abono de forma independiente. Contrastar ejemplos, límites, descuentos y excepciones con la operación vigente. Solicitar a Comercial la aprobación de las reglas de acumulación, mínimos, exclusión y autoridad de cupones de F01-10, y acordar con Operaciones, Finanzas y Soporte los responsables y las acciones permitidas por tipo de evidencia de F02-04, incluida la aprobación que exija cada acción. Precisar si la exclusión batería/OV corresponde a una campaña, a cupón preasociado o a toda OV, incluyendo cesta mixta; el legacy contiene un camino de cupones OV. Contrastar también el límite de NC desigual entre Mountain y MPOS; no convertirlo en regla fiscal sin aprobación.",
         "requestedFrom": "Finanzas/Tesorería del piloto para el perfil monetario; Comercial para las reglas de F01-10; Operaciones, Finanzas y Soporte para las acciones de resolución de F02-04",
         "owner": null,
         "closureCriteria": "Perfil de operación identificado y aprobado con ejemplos monetarios, excepciones y matriz de permisos; reglas de F01-10 aprobadas por Comercial; responsables y acciones permitidas por tipo de evidencia de F02-04 acordados por Operaciones, Finanzas y Soporte. No inventar una persona responsable ni fecha de aprobación.",
-        "reviewedOn": "2026-11-06",
+        "reviewedOn": "2026-11-09",
         "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/258",
+            "label": "TASK-258: contraste de lectura del 9 de noviembre; alcance y límites"
+          },
           {
             "url": "https://github.com/developer-implementos/pos-platform/issues/114#issuecomment-6604879992",
             "label": "Criterio confirmado para el seguimiento de expedientes, separado de la autorización financiera"
@@ -308,12 +328,16 @@
         "summary": "Definir contrato ERP y extracción de maestros",
         "impact": "Preparación de F03: los contratos de integración y origen comercial condicionan el ERP y los espejos completos. No es un bloqueo global de F02 ni prueba de que el worker ya procese operaciones.",
         "impactScope": "technical",
-        "nextAction": "Confirmar fuentes e interfaz autorizadas, unicidad y consulta del resultado ERP, semántica de bajas, vigencia y corte consistente de maestros; acordar publicación comercial y comportamiento de cambios retroactivos.",
+        "nextAction": "Contrastar contratos ERP y maestros con las revisiones desplegadas y las diferencias MPOS identificadas en TASK-258; los HEAD remotos no acreditan el binario y QA contiene cambios sin commit. Acordar mapeo de identidad AX/actor POS sin Worker de reserva silencioso, bajas/perfiles, correlación de OVs/cobranzas y resultado ERP. Confirmar corte consistente, activación real de CAR/datasources y acceso con TLS válido a las consolas; no equiparar colas o suscripciones durables con entrega aplicada.",
         "requestedFrom": "Dueños de integración ERP, catálogo y precios",
         "owner": null,
         "closureCriteria": "Contrato y escenarios de ERP/maestros versionados, con interfaz y cuentas de pruebas autorizadas y semántica de cambios/bajas/corte documentada. Extracción y activación atómica se verifican posteriormente en sus entregables.",
-        "reviewedOn": "2026-11-03",
+        "reviewedOn": "2026-11-09",
         "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/258",
+            "label": "TASK-258: contraste de lectura del 9 de noviembre; alcance y límites"
+          },
           {
             "url": "https://github.com/developer-implementos/pos-platform/blob/af2c10bd4737dde138d55eeee1a12740aec1bb5c/delivery/specs/F03-03.md",
             "label": "Criterios F03-03"
@@ -560,11 +584,101 @@
           }
         ],
         "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-016",
+        "kind": "investigation",
+        "state": "open",
+        "workPackages": [
+          "F02-04",
+          "F02-14",
+          "F05-10"
+        ],
+        "summary": "Conciliar con el adquirente los pagos en curso del legacy",
+        "impact": "En la sucursal productiva autorizada, 2.138 documentos de los últimos 400 días quedaron en pago en curso sin ningún pago local registrado. La caja legacy descarta un pago aprobado por el terminal ante timeout, código de autorización vacío o cierre del navegador, y sólo lo recupera manualmente. Sin conciliar con el adquirente no se sabe cuántos tuvieron cargo. La migración no debe trasladar esos estados a ciegas, y las pruebas de recuperación del producto necesitan ese caso real. No afecta las verificaciones técnicas registradas.",
+        "impactScope": "operational",
+        "nextAction": "Obtener del adquirente el detalle de transacciones de un período acotado de la sucursal piloto y cruzarlo, con autorización de Tesorería, con los documentos en pago en curso por fecha, terminal, importe y código de autorización. Registrar la proporción con cargo y el procedimiento de devolución o regularización.",
+        "requestedFrom": "Tesorería/Finanzas, con la contraparte del adquirente y Operaciones de la sucursal piloto",
+        "owner": null,
+        "closureCriteria": "Conciliación documentada de un período representativo con la proporción de pagos aprobados sin registro y el tratamiento acordado para la migración y la operación. Si no hay cargos huérfanos, la evidencia lo demuestra para ese período.",
+        "reviewedOn": "2026-11-10",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/258",
+            "label": "TASK-258: auditoría de paridad legacy, corte del 10 de noviembre de 2026"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/2985aa799165af300f8a522349803548d4415c7b/delivery/specs/F02-04.md",
+            "label": "Criterios F02-04: resolución visible de pagos inciertos"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-017",
+        "kind": "validation",
+        "state": "open",
+        "workPackages": [
+          "F01-09",
+          "F01-10",
+          "F03-07",
+          "F04-01",
+          "F04-03",
+          "F04-06"
+        ],
+        "summary": "Validar el registro de preguntas y reglas de negocio de paridad",
+        "impact": "La auditoría de paridad registra 33 preguntas y reglas con su respuesta actual y la fuente de esa respuesta (código, datos o ficha): 27 abiertas, 3 respondidas con evidencia y 3 ya decididas en fichas. Ninguna está validada por un responsable de negocio. Sin esa validación no puede aprobarse una diferencia intencional ni fijarse el resultado esperado de los casos de paridad que dependen de ellas: permisos por perfil, cuentas sin identidad ERP, ventas en espera, cancelación, reglas de cierre y liberación de OV. El comportamiento legacy citado no constituye una regla aprobada.",
+        "impactScope": "review",
+        "nextAction": "Designar al responsable de reglas de negocio y revisar el registro en reuniones por tema con Comercial, Operaciones, Tesorería/Finanzas y RR. HH. Por cada entrada, registrar la decisión o la confirmación de la respuesta, con login y fecha, y trasladar a la ficha propietaria las reglas aprobadas.",
+        "requestedFrom": "Responsable de reglas de negocio por designar, con Comercial, Operaciones, Tesorería/Finanzas y RR. HH. según cada entrada",
+        "owner": null,
+        "closureCriteria": "Cada entrada del registro queda validada o con una decisión registrada por su responsable, con fecha, y las reglas aprobadas quedan en sus fichas. Una entrada sin respuesta permanece abierta.",
+        "reviewedOn": "2026-11-10",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/258",
+            "label": "TASK-258: auditoría de paridad legacy, corte del 10 de noviembre de 2026"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/2985aa799165af300f8a522349803548d4415c7b/delivery/specs/F04-06.md",
+            "label": "Criterios F04-06: administración de usuarios, cajas y configuración"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-018",
+        "kind": "investigation",
+        "state": "open",
+        "workPackages": [
+          "F01-01",
+          "F02-14",
+          "F04-06"
+        ],
+        "summary": "Recorrer la interfaz legacy de QA con las cuentas aportadas",
+        "impact": "Las afirmaciones sobre menús por rol, búsqueda avanzada, estado Transbank y búsqueda de OV están contrastadas con código y datos, pero no en la interfaz servida. El agente no inicia sesión con credenciales personales. Sin ese recorrido, esas afirmaciones conservan su estado parcial.",
+        "impactScope": "technical",
+        "nextAction": "Una persona con acceso autorizado recorre la caja QA legacy con las dos cuentas aportadas siguiendo la guía del corte, sin abrir ni cerrar caja, cobrar, emitir ni guardar cambios, y registra fecha, rol, versión visible y capturas sin datos de clientes.",
+        "requestedFrom": "Persona del equipo con acceso autorizado a la caja QA legacy",
+        "owner": null,
+        "closureCriteria": "Recorrido registrado para los seis puntos de la guía, con el estado actualizado de las afirmaciones afectadas.",
+        "reviewedOn": "2026-11-10",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/258",
+            "label": "TASK-258: auditoría de paridad legacy, corte del 10 de noviembre de 2026"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/2985aa799165af300f8a522349803548d4415c7b/delivery/specs/F01-01.md",
+            "label": "Criterios F01-01: identidad, permisos y apertura de turno"
+          }
+        ],
+        "resolution": null
       }
     ]
   },
   "issues": {
-    "observedAt": "2026-11-10T01:36:57.535Z",
+    "observedAt": "2026-11-10T18:46:56.265Z",
     "repository": "https://github.com/developer-implementos/pos-platform",
     "entries": [
       {
