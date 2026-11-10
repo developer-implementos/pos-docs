@@ -27,7 +27,7 @@ function entry(scope, text) {
   const line = `docs(${scope}): ${clean(text)}`;
   return line.length <= maxLength ? line : `${line.slice(0, maxLength - 1).trimEnd()}…`;
 }
-/** Work summaries run to several sentences; the first one says what changed. */
+/** Summaries and resolutions run to several sentences; the first one says what changed. */
 const firstSentence = text => String(text ?? '').split(/(?<=\.)\s+(?=\p{Lu})/u)[0];
 const byKey = (list, key) => new Map((list ?? []).map(item => [item[key], item]));
 const changedFields = (before, after, labels) => Object.keys(labels).filter(field => JSON.stringify(before[field]) !== JSON.stringify(after[field]));
@@ -39,15 +39,15 @@ function followUpChanges(before, after) {
   const current = byKey(after?.content.items, 'id');
   for (const [id, item] of current) {
     const old = previous.get(id);
-    if (!old) entries.push(entry('follow-up', `${id} nuevo · ${actionKinds[item.kind] ?? item.kind}: ${item.summary}`));
+    if (!old) entries.push(entry('follow-up', `${id} nuevo · ${actionKinds[item.kind] ?? item.kind}: ${firstSentence(item.summary)}`));
     else if (old.state !== item.state) {
-      entries.push(entry('follow-up', item.state === 'resolved' ? `${id} resuelto: ${item.resolution?.summary ?? item.summary}` : `${id} reabierto: ${item.summary}`));
+      entries.push(entry('follow-up', item.state === 'resolved' ? `${id} resuelto: ${firstSentence(item.resolution?.summary ?? item.summary)}` : `${id} reabierto: ${firstSentence(item.summary)}`));
     } else {
       const fields = changedFields(old, item, followUpTexts);
-      if (fields.length) entries.push(entry('follow-up', `${id} actualizado (${fields.map(field => followUpTexts[field]).join(', ')}): ${item.summary}`));
+      if (fields.length) entries.push(entry('follow-up', `${id} actualizado (${fields.map(field => followUpTexts[field]).join(', ')}): ${firstSentence(item.summary)}`));
     }
   }
-  for (const [id, item] of previous) if (!current.has(id)) entries.push(entry('follow-up', `${id} retirado del registro: ${item.summary}`));
+  for (const [id, item] of previous) if (!current.has(id)) entries.push(entry('follow-up', `${id} retirado del registro: ${firstSentence(item.summary)}`));
   return entries;
 }
 
