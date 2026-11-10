@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "5037be3607190a63a69381e3ebc2253b56637a47",
+    "revision": "2985aa799165af300f8a522349803548d4415c7b",
     "path": "delivery/follow-ups.json",
-    "sha256": "59af02d172bd6c6c3f1e30ea75b7e3343d034f70870218447b1601735c6fd8e0"
+    "sha256": "2633b3109fdc8d0cd6b7f22e3bf69481ab8edc295f14bdec94d9efcd5eec18c4"
   },
   "content": {
     "schemaVersion": 1,
-    "reviewedOn": "2026-11-06",
+    "reviewedOn": "2026-11-08",
     "items": [
       {
         "id": "FOLLOWUP-001",
@@ -435,7 +435,7 @@
       {
         "id": "FOLLOWUP-013",
         "kind": "hardware",
-        "state": "open",
+        "state": "resolved",
         "workPackages": [
           "F02-03",
           "F05-01",
@@ -448,7 +448,7 @@
         "requestedFrom": "Administrador de la organización en GitHub y responsable de la infraestructura de CI",
         "owner": null,
         "closureCriteria": "Corridas reales verdes de windows-desktop e ios-mobile en runners propios, leídas por runner_name; o decisión registrada de no proveerla, con su riesgo. Compilar en CI no acredita instalación, firma ni prueba física de los entregables.",
-        "reviewedOn": "2026-11-06",
+        "reviewedOn": "2026-11-08",
         "evidence": [
           {
             "url": "https://github.com/developer-implementos/pos-platform/issues/206",
@@ -471,7 +471,20 @@
             "label": "Criterios F06-02"
           }
         ],
-        "resolution": null
+        "resolution": {
+          "resolvedOn": "2026-11-08",
+          "summary": "Decisión registrada de no proveer capacidad propia de Windows ni de macOS: el responsable no tiene presupuesto para más máquinas (ADR-0006 D3). Riesgo aceptado: windows-desktop e ios-mobile compilan sólo por despacho de native.yml, en runners alojados y con costo, y no acreditan instalación, firma ni prueba física. Lo mitiga nativos-vencidos, que cada lunes abre una issue si pasaron más de 31 días sin una compilación en verde. Antes de acreditar un entregable que dependa de esas plataformas hay que despachar native.yml.",
+          "evidence": [
+            {
+              "url": "https://github.com/developer-implementos/devops-platform/blob/c09adf29a8f8230a02b5eac0b57abb486039c5e4/docs/architecture/adrs/ADR-0006-fleet-scope-and-capacity.md",
+              "label": "ADR-0006 D3: sin máquinas nuevas, el CI se queda en el host actual del fleet"
+            },
+            {
+              "url": "https://github.com/developer-implementos/pos-platform/pull/224",
+              "label": "TASK-221: nativos fuera de cada PR, por despacho, con el aviso nativos-vencidos"
+            }
+          ]
+        }
       },
       {
         "id": "FOLLOWUP-014",
@@ -481,14 +494,14 @@
           "F01-05",
           "F05-11"
         ],
-        "summary": "Aislar el fleet de CI con runners efímeros y un pool confiable, y dar a un segundo host la capacidad de los jobs con servicios",
-        "impact": "Con la CI en el fleet propio por decisión de #161, sus agentes no son efímeros: un job de cualquier rama puede dejar estado en disco para el siguiente, y PR policy pasa a compartir ese pool hasta que exista uno confiable, con token de lectura y sin secretos, aunque un runner comprometido podría falsear su resultado. De los tres agentes del fleet, sólo los dos que comparten un host tienen Docker, que exigen api y clients, los checks obligatorios que levantan PostgreSQL como servicio; clients necesita además las bibliotecas de Chromium. El tercero está en otra máquina sin Docker y no toma esos jobs, así que si el host compartido cae, esperan en cola. F01-05 se verificó con la política ejecutada desde la base confiable en runners alojados, y su revalidación contra la configuración vigente es una tarea separada. F05-11 exige procedencia, integridad y permisos acotados del pipeline, que dependen de este aislamiento.",
+        "summary": "Aislar el fleet de CI con runners efímeros y un pool confiable",
+        "impact": "Con la CI en el fleet propio por decisión de #161, sus agentes no son efímeros: un job de cualquier rama puede dejar estado en disco para el siguiente, y PR policy pasa a compartir ese pool hasta que exista uno confiable, con token de lectura y sin secretos, aunque un runner comprometido podría falsear su resultado. De los cuatro agentes del fleet, sólo los dos del host principal tienen Docker, que exigen api y clients, los checks obligatorios que levantan PostgreSQL como servicio; clients necesita además las bibliotecas de Chromium. Los otros dos están en un segundo host, sin Docker, y no toman esos jobs: si el host principal cae, esperan en cola. Sin máquinas nuevas por decisión del responsable (ADR-0006 D3), esa falta de continuidad es un riesgo aceptado. F01-05 se verificó con la política ejecutada desde la base confiable en runners alojados, y su revalidación contra la configuración vigente es una tarea separada. F05-11 exige procedencia, integridad y permisos acotados del pipeline, que dependen de este aislamiento.",
         "impactScope": "technical",
-        "nextAction": "Ejecutar cada job en un entorno nuevo —contenedor o VM que se crea y se descarta, con el runner registrado como efímero o JIT dentro—, porque volver a registrar un runner efímero sobre el mismo disco conserva su caché y su perfil; crear un pool confiable en una máquina, VM o distribución WSL2 distinta del pool de PR, registrado con --no-default-labels y sólo la etiqueta pos-trusted para que ningún job de una rama pueda caer en él, y declararlo en POS_CI_TRUSTED_RUNS_ON como [\"pos-trusted\"]; dar continuidad a api y clients con un segundo host que tenga Docker dentro de su aislamiento, las bibliotecas de Chromium y la etiqueta docker, equipando la máquina del tercer agente o registrando otra, porque un agente sin esa capacidad no los ejecuta; y restringir los grupos de runners a los repositorios y workflows que los usan.",
+        "nextAction": "Ejecutar cada job en un entorno nuevo —contenedor o VM que se crea y se descarta, con el runner registrado como efímero o JIT dentro—, porque volver a registrar un runner efímero sobre el mismo disco conserva su caché y su perfil; crear un pool confiable en una máquina, VM o distribución WSL2 distinta del pool de PR, registrado con --no-default-labels y sólo la etiqueta pos-trusted para que ningún job de una rama pueda caer en él, y declararlo en POS_CI_TRUSTED_RUNS_ON como [\"pos-trusted\"]; y restringir los grupos de runners a los repositorios y workflows que los usan.",
         "requestedFrom": "Administrador de la organización en GitHub y responsable de la infraestructura de CI",
         "owner": null,
-        "closureCriteria": "Corrida real de PR policy en el pool confiable leída por runner_name, cada job en un entorno nuevo que se descarta al terminar, con el runner efímero o JIT dentro, corridas reales verdes de api y clients en un segundo host con Docker, las bibliotecas de Chromium y la etiqueta docker, leídas por runner_name, y grupos de runners restringidos, con evidencia de la configuración. Un agente en otro host sin esa capacidad no da esa continuidad. No verifica por sí solo F01-05 ni F05-11.",
-        "reviewedOn": "2026-11-06",
+        "closureCriteria": "Corrida real de PR policy en el pool confiable leída por runner_name, cada job en un entorno nuevo que se descarta al terminar, con el runner efímero o JIT dentro y grupos de runners restringidos, con evidencia de la configuración. No verifica por sí solo F01-05 ni F05-11.",
+        "reviewedOn": "2026-11-08",
         "evidence": [
           {
             "url": "https://github.com/developer-implementos/pos-platform/issues/207",
@@ -509,6 +522,10 @@
           {
             "url": "https://github.com/developer-implementos/pos-platform/blob/aa373b2f1507549e516dc4e3e5c5b6b8fcf35591/delivery/specs/F05-11.md",
             "label": "Criterios F05-11"
+          },
+          {
+            "url": "https://github.com/developer-implementos/devops-platform/blob/c09adf29a8f8230a02b5eac0b57abb486039c5e4/docs/architecture/adrs/ADR-0006-fleet-scope-and-capacity.md",
+            "label": "ADR-0006 D3: sin máquinas nuevas, el CI se queda en el host actual del fleet"
           }
         ],
         "resolution": null
@@ -547,7 +564,7 @@
     ]
   },
   "issues": {
-    "observedAt": "2026-11-08T17:29:03.833Z",
+    "observedAt": "2026-11-10T01:36:57.535Z",
     "repository": "https://github.com/developer-implementos/pos-platform",
     "entries": [
       {
@@ -559,7 +576,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:26:06Z"
+        "updatedAt": "2026-11-10T01:32:59Z"
       },
       {
         "code": "F01-02",
@@ -570,7 +587,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:26:11Z"
+        "updatedAt": "2026-11-10T01:33:03Z"
       },
       {
         "code": "F01-03",
@@ -581,7 +598,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:26:15Z"
+        "updatedAt": "2026-11-10T01:33:08Z"
       },
       {
         "code": "F01-04",
@@ -590,7 +607,7 @@
         "state": "CLOSED",
         "executionLabels": [],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:26:19Z"
+        "updatedAt": "2026-11-10T01:33:12Z"
       },
       {
         "code": "F01-05",
@@ -599,7 +616,7 @@
         "state": "CLOSED",
         "executionLabels": [],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:26:24Z"
+        "updatedAt": "2026-11-10T01:33:16Z"
       },
       {
         "code": "F01-06",
@@ -610,7 +627,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:26:28Z"
+        "updatedAt": "2026-11-10T01:33:20Z"
       },
       {
         "code": "F01-07",
@@ -621,7 +638,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:26:32Z"
+        "updatedAt": "2026-11-10T01:33:24Z"
       },
       {
         "code": "F01-08",
@@ -632,7 +649,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:26:37Z"
+        "updatedAt": "2026-11-10T01:33:28Z"
       },
       {
         "code": "F01-09",
@@ -643,7 +660,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:26:41Z"
+        "updatedAt": "2026-11-10T01:33:32Z"
       },
       {
         "code": "F01-10",
@@ -654,7 +671,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:26:46Z"
+        "updatedAt": "2026-11-10T01:33:37Z"
       },
       {
         "code": "F01-11",
@@ -665,7 +682,7 @@
           "status:blocked"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:26:50Z"
+        "updatedAt": "2026-11-10T01:33:41Z"
       },
       {
         "code": "F01-12",
@@ -676,7 +693,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:26:55Z"
+        "updatedAt": "2026-11-10T01:33:45Z"
       },
       {
         "code": "F01-13",
@@ -687,7 +704,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:26:59Z"
+        "updatedAt": "2026-11-10T01:33:49Z"
       },
       {
         "code": "F02-01",
@@ -698,7 +715,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:27:04Z"
+        "updatedAt": "2026-11-10T01:33:53Z"
       },
       {
         "code": "F02-02",
@@ -709,7 +726,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:27:08Z"
+        "updatedAt": "2026-11-10T01:33:58Z"
       },
       {
         "code": "F02-03",
@@ -720,7 +737,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:27:13Z"
+        "updatedAt": "2026-11-10T01:34:02Z"
       },
       {
         "code": "F02-04",
@@ -731,7 +748,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:27:17Z"
+        "updatedAt": "2026-11-10T01:34:06Z"
       },
       {
         "code": "F02-05",
@@ -742,7 +759,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:27:22Z"
+        "updatedAt": "2026-11-10T01:34:10Z"
       },
       {
         "code": "F02-06",
@@ -753,7 +770,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:27:26Z"
+        "updatedAt": "2026-11-10T01:34:14Z"
       },
       {
         "code": "F02-07",
@@ -764,7 +781,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:27:31Z"
+        "updatedAt": "2026-11-10T01:34:17Z"
       },
       {
         "code": "F02-08",
@@ -775,7 +792,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:27:35Z"
+        "updatedAt": "2026-11-10T01:34:21Z"
       },
       {
         "code": "F02-09",
@@ -786,7 +803,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:27:40Z"
+        "updatedAt": "2026-11-10T01:34:26Z"
       },
       {
         "code": "F02-10",
@@ -797,7 +814,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:27:45Z"
+        "updatedAt": "2026-11-10T01:34:30Z"
       },
       {
         "code": "F02-11",
@@ -808,7 +825,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:27:49Z"
+        "updatedAt": "2026-11-10T01:34:34Z"
       },
       {
         "code": "F02-12",
@@ -819,7 +836,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:27:53Z"
+        "updatedAt": "2026-11-10T01:34:38Z"
       },
       {
         "code": "F02-13",
@@ -830,7 +847,7 @@
         "assignees": [
           "floxcristian"
         ],
-        "updatedAt": "2026-11-08T17:27:58Z"
+        "updatedAt": "2026-11-10T01:34:42Z"
       },
       {
         "code": "F02-14",
@@ -841,7 +858,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:28:02Z"
+        "updatedAt": "2026-11-10T01:34:47Z"
       },
       {
         "code": "F03-01",
@@ -863,7 +880,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:28:07Z"
+        "updatedAt": "2026-11-10T01:34:51Z"
       },
       {
         "code": "F03-03",
@@ -874,7 +891,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:28:11Z"
+        "updatedAt": "2026-11-10T01:34:55Z"
       },
       {
         "code": "F03-04",
@@ -929,7 +946,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:28:16Z"
+        "updatedAt": "2026-11-10T01:34:59Z"
       },
       {
         "code": "F03-09",
@@ -940,7 +957,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:28:21Z"
+        "updatedAt": "2026-11-10T01:35:03Z"
       },
       {
         "code": "F03-10",
@@ -951,7 +968,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:28:25Z"
+        "updatedAt": "2026-11-10T01:35:08Z"
       },
       {
         "code": "F03-11",
@@ -1105,7 +1122,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:28:30Z"
+        "updatedAt": "2026-11-10T01:35:12Z"
       },
       {
         "code": "F05-02",
@@ -1215,7 +1232,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:28:34Z"
+        "updatedAt": "2026-11-10T01:35:16Z"
       },
       {
         "code": "F05-12",
@@ -1248,7 +1265,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-08T17:28:40Z"
+        "updatedAt": "2026-11-10T01:35:20Z"
       },
       {
         "code": "F06-03",
