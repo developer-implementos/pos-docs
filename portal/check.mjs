@@ -457,7 +457,7 @@ try {
   assert.equal(page.url(), origin + '/#constructor', 'Unknown fragments cannot resolve inherited object properties as redirects');
   assert.ok(await page.getByRole('heading', {level:1, name:'POS Platform', exact:true}).isVisible());
 
-  const noJs = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 375, height: 1000 } });
+  const noJs = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 375, height: 1000 }, reducedMotion: 'reduce' });
   const fallback = await noJs.newPage();
   observe(fallback);
   assert.equal((await fallback.goto(origin + '/', { waitUntil: 'networkidle' })).status(), 200);
