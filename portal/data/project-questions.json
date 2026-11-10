@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "48a544a4c0b75c3b50f65f3fff2c968efec6d61c",
+    "revision": "d68152951c2f9eef8925c4490207cee243e27467",
     "path": "delivery/business-questions.json",
     "sha256": "0dee0a75442150365480b9b5777f7605ffb8e2cf09372bdf08f7c7adee425a1c"
   },
   "integration": {
     "reference": "main",
-    "included": false
+    "included": true
   },
   "content": {
     "schemaVersion": 1,
