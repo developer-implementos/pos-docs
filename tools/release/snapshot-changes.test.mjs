@@ -26,10 +26,11 @@ test('each kind of project change becomes one reader-facing entry', () => {
   });
   const after = snapshots({
     items: [
-      followUpItem('FOLLOWUP-001', { state: 'resolved', resolution: { resolvedOn: '2026-11-02', summary: 'Comercial aprobó las reglas', evidence: [] } }),
+      // A resolution explains the decision and then its consequences; the entry keeps the decision.
+      followUpItem('FOLLOWUP-001', { state: 'resolved', resolution: { resolvedOn: '2026-11-02', summary: 'Comercial aprobó las reglas (acta 12). Riesgo aceptado: el catálogo se revisa cada mes.', evidence: [] } }),
       followUpItem('FOLLOWUP-002', { nextAction: 'Otra acción', impact: 'Otro impacto', reviewedOn: '2026-11-05' }),
       followUpItem('FOLLOWUP-004', { reviewedOn: '2026-11-05', evidence: ['nuevo'], owner: 'otra persona' }),
-      followUpItem('FOLLOWUP-009', { kind: 'access', summary: 'Falta el acceso   al ambiente\nde pruebas.' }),
+      followUpItem('FOLLOWUP-009', { kind: 'access', summary: 'Falta el acceso   al ambiente\nde pruebas. Lo pidió Comercial.' }),
     ],
     entries: [issue('F02-05', ['status:validation']), issue('F02-06', ['status:in-progress'], 'CLOSED'), issue('F02-09', ['status:triage'])],
     works: [work('F02-05', { status: 'verified' }), work('F02-06', { summary: 'Nuevo resumen. Detalle de la verificación con PostgreSQL 16.4 y TASK-11.' }), work('F02-07', { status: 'verified', acceptance: { revision: 'x' } }), work('F02-08'), work('F02-09', { status: 'not_started' }), work('F02-10', { status: 'not_started' })],
@@ -38,7 +39,7 @@ test('each kind of project change becomes one reader-facing entry', () => {
     increment: { id: 'I2', title: 'Incremento dos' },
   });
   assert.deepEqual(snapshotChanges(before, after), [
-    'docs(follow-up): FOLLOWUP-001 resuelto: Comercial aprobó las reglas',
+    'docs(follow-up): FOLLOWUP-001 resuelto: Comercial aprobó las reglas (acta 12)',
     'docs(follow-up): FOLLOWUP-002 actualizado (impacto, próxima acción): Resumen de FOLLOWUP-002',
     'docs(follow-up): FOLLOWUP-009 nuevo · Acceso: Falta el acceso al ambiente de pruebas',
     'docs(follow-up): FOLLOWUP-003 retirado del registro: Resumen de FOLLOWUP-003',

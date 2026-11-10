@@ -65,10 +65,10 @@ Cada cambio es una entrada en «Contenido actualizado»:
 | Seguimiento nuevo, resuelto, reabierto o retirado | `docs(follow-up): FOLLOWUP-012 nuevo · Decisión: Confirmar reglas de catálogo y contrato de precios del conector Mountain` |
 | Texto de un seguimiento: resumen, impacto, próxima acción o criterio de cierre | `docs(follow-up): FOLLOWUP-002 actualizado (impacto): Integrar y comprobar Transbank POS integrado` |
 | Estado de un entregable, su aceptación o su ejecución en GitHub | `docs(progress): F02-05 en GitHub pasa de En revisión a En validación` |
-| Entregable nuevo o retirado, y resumen actualizado (su primera oración) | `docs(progress): F02-07 actualizado (resumen): Perfiles de pago versionados, destino fiscal congelado y asignación de instalación/época implementados` |
+| Entregable nuevo o retirado, y resumen actualizado | `docs(progress): F02-07 actualizado (resumen): Perfiles de pago versionados, destino fiscal congelado y asignación de instalación/época implementados` |
 | Incremento nuevo y trabajos que entran, salen o cambian de título, resultado o ejecución | `docs(planning): Consultar evidencia cronológica de una operación (F02-04) entra al próximo incremento` |
 
-No generan entrada los cambios que trae casi toda importación sin cambiar lo que el equipo lee: fechas de revisión o de consulta, evidencia, responsables y asignados. Los estados usan los mismos nombres que [la página del proyecto](https://pos-docs-starlight.vercel.app/project/).
+Cada entrada lleva la primera oración del resumen o de la resolución, porque esos textos explican primero qué cambió y después sus consecuencias, y se corta a los 200 caracteres. No generan entrada los cambios que trae casi toda importación sin cambiar lo que el equipo lee: fechas de revisión o de consulta, evidencia, responsables y asignados. Los estados usan los mismos nombres que [la página del proyecto](https://pos-docs-starlight.vercel.app/project/).
 
 `Editorial PR policy` recalcula las entradas desde los commits de base y head del PR y rechaza el PR si falta alguna. El bloque reemplaza al título en el historial, así que cualquier otro cambio del mismo PR, como una página editada, agrega su propia entrada al bloque. Las entradas reflejan lo importado a POS Docs, no el momento en que el cambio ocurrió en POS Platform.
 
