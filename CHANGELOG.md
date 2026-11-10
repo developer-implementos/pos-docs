@@ -11,6 +11,14 @@ Los cambios de herramientas, pruebas y CI no aparecen aquí; quedan en el [regis
 
 Este archivo lo escribe [release-please](https://github.com/googleapis/release-please) desde los títulos de los PR, y cada versión queda como [release en GitHub](https://github.com/developer-implementos/pos-docs/releases). Para recibir un aviso por versión, usa *Watch → Custom → Releases* en el repositorio. No se edita a mano: cómo se escribe una buena entrada está en la [guía de versiones](tools/release/README.md).
 
+## [0.4.2](https://github.com/developer-implementos/pos-docs/compare/v0.4.1...v0.4.2) (2026-11-10)
+
+
+### Contenido actualizado
+
+* **follow-up:** FOLLOWUP-013 resuelto: Decisión registrada de no proveer capacidad propia de Windows ni de macOS: el responsable no tiene presupuesto para más máquinas (ADR-0006 D3) ([3dc039e](https://github.com/developer-implementos/pos-docs/commit/3dc039e0e8bc58e29b0568b01589499d24fd3442))
+* **follow-up:** FOLLOWUP-014 actualizado (resumen, impacto, próxima acción, criterio de cierre): Aislar el fleet de CI con runners efímeros y un pool confiable ([3dc039e](https://github.com/developer-implementos/pos-docs/commit/3dc039e0e8bc58e29b0568b01589499d24fd3442))
+
 ## [0.4.1](https://github.com/developer-implementos/pos-docs/compare/v0.4.0...v0.4.1) (2026-11-10)
 
 
