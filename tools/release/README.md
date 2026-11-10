@@ -84,9 +84,11 @@ Entre la integración de un PR y la versión publicada pasan unos 6 minutos, lo 
 ## Identidad y permisos
 
 - **App:** `implementos-pos-docs-release`, de la organización, instalada solo en `pos-docs`, con permisos de escritura en *Contents*, *Pull requests* e *Issues* (las etiquetas de release-please). El token de cada job pide solo lo que usa: integrar no pide *Issues*.
-- **Credenciales:** la variable `RELEASE_APP_ID` y el secret `RELEASE_APP_PRIVATE_KEY` viven en el environment `release`, que solo admite la rama `main` y no tiene excepción para administradores. Un miembro con escritura puede empujar una rama con un workflow propio, pero no leer la clave desde ella.
+- **Credenciales:** la variable `RELEASE_APP_CLIENT_ID` y el secret `RELEASE_APP_PRIVATE_KEY` viven en el environment `release`, que solo admite la rama `main` y no tiene excepción para administradores. Un miembro con escritura puede empujar una rama con un workflow propio, pero no leer la clave desde ella.
 - **Excepción de revisión:** la App figura en `POS Docs reviewed main` en modo `pull_request`, igual que Renovate en core. `POS Docs protected main` sigue sin excepciones: también ella necesita PR, historia lineal y conversaciones resueltas. El auto-merge nativo de GitHub sigue deshabilitado; la integración la decide `merge.mjs`.
 - **Riesgo aceptado:** quien obtenga la clave puede integrar cualquier PR sin revisión humana. Por eso la clave solo se lee desde `main`, el cliente de [`github.mjs`](github.mjs) solo alcanza los endpoints que necesita y solo escribe para integrar, y estos archivos son CODEOWNERS de @floxcristian.
+
+El token se pide con el Client ID de la App, que es público (`GET /apps/implementos-pos-docs-release`), porque `create-github-app-token` declara deprecado el input `app-id`. El ID numérico sigue en [`policy.mjs`](policy.mjs), porque identifica a la App como excepción del ruleset.
 
 Rotar la clave: generar una nueva en la configuración de la App, reemplazar el secret del environment y borrar la anterior.
 

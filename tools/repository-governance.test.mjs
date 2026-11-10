@@ -58,6 +58,9 @@ test('release workflows hold the App token only on main and only to open, valida
     assert.doesNotMatch(workflow, /pull_request_target|secrets\.GITHUB_TOKEN|persist-credentials: true/, name);
     assert.doesNotMatch(workflow, /^\s+ref:/m, `${name}: never check out a PR revision`);
     for (const [, action] of workflow.matchAll(/uses: ([^\s#]+)/g)) assert.match(action, /@[a-f0-9]{40}$/, `${name}: pin ${action} to a commit`);
+    // create-github-app-token deprecates app-id; a major version that drops it would stop releases (TASK-254).
+    assert.match(workflow, /^ {10}client-id: \$\{\{ vars\.RELEASE_APP_CLIENT_ID \}\}$/m, `${name}: request the App token with its Client ID`);
+    assert.doesNotMatch(workflow, /^\s+app-id:/m, `${name}: app-id is deprecated; use client-id`);
     const permissions = [...workflow.matchAll(/permission-([a-z-]+): (\w+)/g)].map(match => `${match[1]}:${match[2]}`);
     assert.ok(permissions.every(entry => ['contents:write', 'pull-requests:write', 'issues:write'].includes(entry)), `${name}: ${permissions}`);
   }
