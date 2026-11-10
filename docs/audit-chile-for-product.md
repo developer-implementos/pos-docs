@@ -2,6 +2,8 @@
 
 Revisión estática: 3 de octubre de 2026. Este documento es el inventario de origen y los criterios para la maqueta; no afirma que cada función ya esté implementada en el nuevo producto. La cobertura real debe comprobarse contra sus pantallas y pruebas.
 
+Para revisar la migración, usar también el [contraste operativo del 9 de noviembre](contraste-apuntes-operacion-chile.md#10-contraste-de-reunión-y-lectura-del-9-de-noviembre-de-2026). Precisa ramas y configuración observadas, identidad local frente a maestro AX, permisos separados de NC, búsqueda/refresco, cupón/OV y límites del cierre. El alcance F03/F04 pendiente no queda implementado por una pantalla de demo; los escenarios y su evidencia técnica pertenecen a las fichas de POS Platform y a [TASK-258](https://github.com/developer-implementos/pos-platform/issues/258).
+
 ## Alcance y decisiones de producto
 
 Se revisaron rutas, páginas, componentes y servicios del POS anterior, además de los análisis existentes de sincronización, concentrador e impresión. No se ejecutaron aplicaciones corporativas, migraciones, consultas a bases ni endpoints. No se copian datos de clientes, credenciales o direcciones de infraestructura. Los registros del nuevo producto deben ser inventados.
