@@ -178,6 +178,20 @@
       "evidence": [
         "https://github.com/developer-implementos/pos-platform/issues/258"
       ]
+    },
+    {
+      "source": "docs/contraste-apuntes-operacion-chile.md",
+      "sourceSha256": "50f34ac199f3e9364f0d3ab7747199ec562939160203cbe161d8f84f444e51b9",
+      "productRevision": "2985aa799165af300f8a522349803548d4415c7b",
+      "reviewedOn": "2026-11-10",
+      "reviewer": {
+        "kind": "agent",
+        "name": "Codex · preparar_verificacion · TASK-258"
+      },
+      "scope": "Revisión independiente incremental de la ampliación del 10 de noviembre contra el informe propietario y la evidencia SQL local saneada: reconexión SSH/SQL, certificado TLS vencido, identificación de bundles servidos, diferencias de esquema e indicadores de cierre. Distingue SQL de sólo lectura de login normal con sesiones; no atribuye éxito HTTP/UI, autorización efectiva, commit del bundle, rendimiento ni paridad. No acredita comprensión humana ni repite conexiones remotas.",
+      "evidence": [
+        "https://github.com/developer-implementos/pos-platform/issues/258"
+      ]
     }
   ]
 }
