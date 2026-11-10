@@ -11,6 +11,29 @@ Los cambios de herramientas, pruebas y CI no aparecen aquí; quedan en el [regis
 
 Este archivo lo escribe [release-please](https://github.com/googleapis/release-please) desde los títulos de los PR, y cada versión queda como [release en GitHub](https://github.com/developer-implementos/pos-docs/releases). Para recibir un aviso por versión, usa *Watch → Custom → Releases* en el repositorio. No se edita a mano: cómo se escribe una buena entrada está en la [guía de versiones](tools/release/README.md).
 
+## [0.5.0](https://github.com/developer-implementos/pos-docs/compare/v0.4.2...v0.5.0) (2026-11-10)
+
+
+### Novedades
+
+* **portal:** [TASK-258] mostrar por fase las preguntas y reglas de negocio pendientes de validar ([ab2d370](https://github.com/developer-implementos/pos-docs/commit/ab2d370ab99e5763e24e41c44a6996001493dbd6))
+
+
+### Contenido actualizado
+
+* **evidence:** [TASK-258] contrastar la operación de Chile con sus sistemas de QA y producción y los límites de paridad ([ab2d370](https://github.com/developer-implementos/pos-docs/commit/ab2d370ab99e5763e24e41c44a6996001493dbd6))
+* **follow-up:** FOLLOWUP-001 actualizado (impacto, próxima acción): Completar acceso de lectura a Mountain ([ab2d370](https://github.com/developer-implementos/pos-docs/commit/ab2d370ab99e5763e24e41c44a6996001493dbd6))
+* **follow-up:** FOLLOWUP-002 actualizado (próxima acción): Integrar y comprobar Transbank POS integrado ([ab2d370](https://github.com/developer-implementos/pos-docs/commit/ab2d370ab99e5763e24e41c44a6996001493dbd6))
+* **follow-up:** FOLLOWUP-003 actualizado (impacto, próxima acción): Concretar el primer adaptador fiscal ([ab2d370](https://github.com/developer-implementos/pos-docs/commit/ab2d370ab99e5763e24e41c44a6996001493dbd6))
+* **follow-up:** FOLLOWUP-004 actualizado (próxima acción): Integrar drivers y comprobar periféricos del puesto ([ab2d370](https://github.com/developer-implementos/pos-docs/commit/ab2d370ab99e5763e24e41c44a6996001493dbd6))
+* **follow-up:** FOLLOWUP-005 actualizado (próxima acción): Validar el perfil operativo de pagos, promociones y resolución de excepciones ([ab2d370](https://github.com/developer-implementos/pos-docs/commit/ab2d370ab99e5763e24e41c44a6996001493dbd6))
+* **follow-up:** FOLLOWUP-009 actualizado (próxima acción): Definir contrato ERP y extracción de maestros ([ab2d370](https://github.com/developer-implementos/pos-docs/commit/ab2d370ab99e5763e24e41c44a6996001493dbd6))
+* **follow-up:** FOLLOWUP-016 nuevo · Investigación: Conciliar con el adquirente los pagos en curso del legacy ([ab2d370](https://github.com/developer-implementos/pos-docs/commit/ab2d370ab99e5763e24e41c44a6996001493dbd6))
+* **follow-up:** FOLLOWUP-017 actualizado (impacto): Validar el registro de preguntas y reglas de negocio de paridad ([fb51ca4](https://github.com/developer-implementos/pos-docs/commit/fb51ca4f36819657920bc1a771e705fc2e247c57))
+* **follow-up:** FOLLOWUP-017 nuevo · Validación: Validar el registro de preguntas y reglas de negocio de paridad ([ab2d370](https://github.com/developer-implementos/pos-docs/commit/ab2d370ab99e5763e24e41c44a6996001493dbd6))
+* **follow-up:** FOLLOWUP-018 nuevo · Investigación: Recorrer la interfaz legacy de QA con las cuentas aportadas ([ab2d370](https://github.com/developer-implementos/pos-docs/commit/ab2d370ab99e5763e24e41c44a6996001493dbd6))
+* **project:** [TASK-258] importar el corte cab44e4 con dos preguntas de paridad respondidas y datos para cuatro reglas ([fb51ca4](https://github.com/developer-implementos/pos-docs/commit/fb51ca4f36819657920bc1a771e705fc2e247c57))
+
 ## [0.4.2](https://github.com/developer-implementos/pos-docs/compare/v0.4.1...v0.4.2) (2026-11-10)
 
 
