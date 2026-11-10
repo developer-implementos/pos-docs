@@ -70,7 +70,8 @@ export function contentsReader(request) {
 export async function latestQualityRun(request, sha) {
   const value = await getJson(request, `${prefix}actions/workflows/docs-quality.yml/runs?head_sha=${sha}&event=pull_request&per_page=100`);
   const runs = (value?.workflow_runs ?? []).filter(run => run.head_sha === sha);
-  return runs.sort((left, right) => Date.parse(right.created_at) - Date.parse(left.created_at))[0] ?? null;
+  // created_at has one-second resolution; run ids grow monotonically and break ties between runs of the same second.
+  return runs.sort((left, right) => Date.parse(right.created_at) - Date.parse(left.created_at) || (right.id ?? 0) - (left.id ?? 0))[0] ?? null;
 }
 
 export async function pullRequestLabels(request, number) {
