@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "d68152951c2f9eef8925c4490207cee243e27467",
+    "revision": "cab44e4ac0f2e9a25425bf5aa9b09929f2536b78",
     "path": "delivery/business-questions.json",
-    "sha256": "0dee0a75442150365480b9b5777f7605ffb8e2cf09372bdf08f7c7adee425a1c"
+    "sha256": "524f9d68415785ca6da1a36ae03a5d40de156bd894bf6bb052a1d1235be1af9f"
   },
   "integration": {
     "reference": "main",
@@ -225,18 +225,22 @@
         "question": "¿Cuánto vive una venta pausada y qué ocurre con las no retomadas?",
         "kind": "rule",
         "state": "open",
-        "currentAnswer": "Legacy: sin vencimiento; 4.096 documentos venta-espera en 400 días en la sucursal productiva",
+        "currentAnswer": "Legacy: sin vencimiento ni depuración. 7.948 ventas en espera desde 2022 en la sucursal productiva; de las 4.096 de 400 días, 3.759 tienen más de 30 días y sólo 8 se modificaron después del primer día",
         "answerSources": [
-          "data"
+          "data",
+          "code"
         ],
         "auditRefs": [
           "R-07",
-          "R-08"
+          "R-08",
+          "R-20"
         ],
         "parityRefs": [
           "P-18"
         ],
-        "sources": [],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/profundizacion-preguntas.md"
+        ],
         "decider": "Operaciones",
         "owner": null,
         "followUp": "FOLLOWUP-017",
@@ -253,19 +257,22 @@
         "question": "¿Cómo se concilian los documentos pago-en-curso sin pago local con el adquirente y quién lo hace?",
         "kind": "rule",
         "state": "open",
-        "currentAnswer": "Legacy: 2.138 en 400 días; recuperación sólo manual con «Ingresar voucher»",
+        "currentAnswer": "Legacy: 2.142 en 400 días, todos en cajas con Transbank integrado y 134 en los últimos 30 días. 968 tienen después una venta vigente del mismo cliente y monto en el día (posible doble cobro si el primer intento se aprobó) y 1.174 no (posible pago sin venta). Sólo vuelven a venta en espera al expirar la sesión o reanudar una pausada; la recuperación es manual con «Ingresar voucher»",
         "answerSources": [
           "data",
           "code"
         ],
         "auditRefs": [
           "R-08",
+          "R-19",
           "P-24"
         ],
         "parityRefs": [
           "P-24"
         ],
-        "sources": [],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/profundizacion-preguntas.md"
+        ],
         "decider": "Tesorería/Finanzas",
         "owner": null,
         "followUp": "FOLLOWUP-016",
@@ -283,20 +290,24 @@
         "topic": "Estados",
         "question": "¿Qué significa el estado migrado y qué tratamiento corresponde?",
         "kind": "fact",
-        "state": "open",
-        "currentAnswer": "512 documentos en 400 días en la sucursal productiva; no se identificó su escritor",
+        "state": "answered",
+        "currentAnswer": "Es la copia local de un documento emitido en otra sucursal: la caja la crea desde AX al consultar su folio para una NC, con creado_otra_sucursal=true. La subida a AX y los informes la excluyen por diseño; no es una venta de la sucursal. 564 en 400 días en la sucursal productiva, ninguno con pago local",
         "answerSources": [
+          "code",
           "data"
         ],
         "auditRefs": [
           "R-07",
-          "R-15"
+          "R-15",
+          "R-17"
         ],
         "parityRefs": [
           "P-39"
         ],
-        "sources": [],
-        "decider": "TI legacy",
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/profundizacion-preguntas.md"
+        ],
+        "decider": "TI legacy (valida la respuesta)",
         "owner": null,
         "followUp": "FOLLOWUP-017",
         "workPackages": [
@@ -649,17 +660,21 @@
         "question": "¿Se requieren ingresos y retiros de efectivo durante el turno?",
         "kind": "rule",
         "state": "open",
-        "currentAnswer": "Legacy (2fe7991): no hay flujo; existen tablas pos_movimientos y tipo_movimientos sin flujo identificado",
+        "currentAnswer": "Legacy (2fe7991): sin flujo. En la sucursal productiva pos_movimientos no tiene filas y ninguno de los 4.470 cierres registrados desde 2022 tiene entradas ni salidas; tipo_movimientos clasifica mensajes del sincronizador",
         "answerSources": [
           "code",
-          "schema"
+          "schema",
+          "data"
         ],
-        "auditRefs": [],
+        "auditRefs": [
+          "R-21"
+        ],
         "parityRefs": [
           "P-08"
         ],
         "sources": [
-          "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude-notas.md"
+          "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude-notas.md",
+          "delivery/reviews/pos-parity-2026-11-10/profundizacion-preguntas.md"
         ],
         "decider": "Tesorería",
         "owner": null,
@@ -732,19 +747,24 @@
         "topic": "Fiscal QA",
         "question": "¿Qué ambiente fiscal usa la caja QA legacy?",
         "kind": "fact",
-        "state": "open",
-        "currentAnswer": "El simulador sirve al backend general; en la caja no se halló la clave",
+        "state": "answered",
+        "currentAnswer": "Un simulador local: con facturador=acepta, la clave del proveedor en el backend de la caja QA apunta a apifact en el mismo servidor, que no hace llamadas salientes. Los folios de QA son simulados. Corrige la evidencia de C-15, que no había hallado la clave",
         "answerSources": [
-          "configuration"
+          "configuration",
+          "data"
         ],
         "auditRefs": [
-          "C-15"
+          "C-15",
+          "R-14",
+          "R-18"
         ],
         "parityRefs": [
           "P-30"
         ],
-        "sources": [],
-        "decider": "TI legacy",
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/profundizacion-preguntas.md"
+        ],
+        "decider": "TI legacy (valida la respuesta)",
         "owner": null,
         "followUp": "FOLLOWUP-003",
         "workPackages": [
@@ -760,18 +780,22 @@
         "question": "¿Los acuerdos de cobranza con interés y cuotas entran en el alcance?",
         "kind": "rule",
         "state": "open",
-        "currentAnswer": "Existen en el legacy (cobranza_acuerdos y cobranza_cuotas)",
+        "currentAnswer": "La estructura existe, pero la sucursal productiva no la usa: de 220.526 acuerdos de cobranza de 400 días, ninguno tiene interés y sólo uno tiene más de una cuota. Las tablas guardan las deudas a crédito que la caja trae de AX",
         "answerSources": [
           "code",
-          "schema"
+          "schema",
+          "data"
         ],
         "auditRefs": [
-          "C-33"
+          "C-33",
+          "R-22"
         ],
         "parityRefs": [
           "P-35"
         ],
-        "sources": [],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/profundizacion-preguntas.md"
+        ],
         "decider": "Finanzas/Crédito",
         "owner": null,
         "followUp": "FOLLOWUP-017",

@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "d68152951c2f9eef8925c4490207cee243e27467",
+    "revision": "cab44e4ac0f2e9a25425bf5aa9b09929f2536b78",
     "path": "delivery/follow-ups.json",
-    "sha256": "d276ff3ceee812fc41ecc6d147154c707b6cffa7cb981d60281d75dc6f1e32a7"
+    "sha256": "2698a9423814175b27a46eafe64441449ab70de1915a323100f872247c5de33b"
   },
   "content": {
     "schemaVersion": 1,
@@ -627,7 +627,7 @@
           "F04-06"
         ],
         "summary": "Validar el registro de preguntas y reglas de negocio de paridad",
-        "impact": "La auditoría de paridad registra 33 preguntas y reglas con su respuesta actual y la fuente de esa respuesta (código, datos o ficha): 27 abiertas, 3 respondidas con evidencia y 3 ya decididas en fichas. Ninguna está validada por un responsable de negocio. Sin esa validación no puede aprobarse una diferencia intencional ni fijarse el resultado esperado de los casos de paridad que dependen de ellas: permisos por perfil, cuentas sin identidad ERP, ventas en espera, cancelación, reglas de cierre y liberación de OV. El comportamiento legacy citado no constituye una regla aprobada.",
+        "impact": "La auditoría de paridad registra 33 preguntas y reglas con su respuesta actual y la fuente de esa respuesta (código, datos o ficha): 25 abiertas, 5 respondidas con evidencia y 3 ya decididas en fichas. Ninguna está validada por un responsable de negocio. Sin esa validación no puede aprobarse una diferencia intencional ni fijarse el resultado esperado de los casos de paridad que dependen de ellas: permisos por perfil, cuentas sin identidad ERP, ventas en espera, cancelación, reglas de cierre y liberación de OV. El comportamiento legacy citado no constituye una regla aprobada.",
         "impactScope": "review",
         "nextAction": "Designar al responsable de reglas de negocio y revisar el registro en reuniones por tema con Comercial, Operaciones, Tesorería/Finanzas y RR. HH. Por cada entrada, registrar la decisión o la confirmación de la respuesta, con login y fecha, y trasladar a la ficha propietaria las reglas aprobadas.",
         "requestedFrom": "Responsable de reglas de negocio por designar, con Comercial, Operaciones, Tesorería/Finanzas y RR. HH. según cada entrada",
@@ -678,7 +678,7 @@
     ]
   },
   "issues": {
-    "observedAt": "2026-11-10T18:46:56.265Z",
+    "observedAt": "2026-11-10T20:56:14.249Z",
     "repository": "https://github.com/developer-implementos/pos-platform",
     "entries": [
       {
