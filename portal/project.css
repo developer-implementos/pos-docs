@@ -169,3 +169,24 @@
 .project-plan-detail ul{font-size:14px;padding-left:20px}
 .project-plan-detail li+li{margin-top:8px}
 @media(max-width:620px){.project-plan-facts,.project-plan-detail{grid-template-columns:1fr}.project-plan-item h2{font-size:20px}.project-plan-detail{gap:12px}}
+.project-question-summary{margin-bottom:24px;font-size:14px}
+.project-question-counts{list-style:none;padding:0;margin:0 0 12px;display:flex;flex-wrap:wrap;gap:8px 12px}
+.project-question-counts a{display:inline-flex;align-items:baseline;gap:6px;min-height:44px;padding:10px 14px;background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--ink);text-decoration:none}
+.project-question-counts a:hover{border-color:var(--primary);color:var(--primary)}
+.project-question-counts strong{font-size:20px;font-variant-numeric:tabular-nums}
+.project-question-phases{list-style:none;padding:0;margin:12px 0;display:flex;flex-wrap:wrap;gap:6px 20px;font-size:13px}
+.project-question-phases span{color:var(--muted);margin-left:6px}
+.project-question-rules{max-width:1000px;font-size:13px;color:var(--muted)}
+.project-question-rules p+p{margin-top:8px}
+.project-question-list{margin-top:8px}
+.project-question-group{margin-bottom:32px;scroll-margin-top:24px}
+.project-question-group>h2{margin-bottom:4px}
+.project-question-group>h2 a{color:var(--ink);text-decoration:none}
+.project-question-group>h2 a:hover{color:var(--primary);text-decoration:underline}
+.project-question-group>.project-note{margin-bottom:14px}
+.project-question-topic{margin-top:14px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.project-question h3{font-size:18px;margin-block:6px 14px}
+.project-question .project-action-facts small{display:block}
+.project-page a.project-question-refs{overflow-wrap:normal}
+@media(min-width:1151px){.project-question-filters{grid-template-columns:1.5fr repeat(3,minmax(140px,1fr)) auto}}
+@media(max-width:620px){.project-question h3{font-size:17px}.project-question-counts a{padding:8px 12px}}

@@ -67,3 +67,16 @@ test('attention filters preserve resolved actions and distinguish counterpart fr
   assert.equal(matchesProjectItem(data, 'Acceso · Infraestructura', { owner: 'unassigned', scope: 'technical' }, 'attention'), true);
   assert.equal(matchesProjectItem(data, 'Acceso · Infraestructura', { owner: 'Infraestructura' }, 'attention'), false);
 });
+
+test('question filters match state, any affected phase and the exact decider role', () => {
+  const data = { state: 'open', phases: 'phase-01 phase-04', decider: 'Comercial y Operaciones', owner: '' };
+  const text = 'Q-03 Permisos ¿El cajero debe crear y editar clientes?';
+  assert.equal(matchesProjectItem(data, text, {}, 'questions'), true);
+  assert.equal(matchesProjectItem(data, text, { state: 'open', phase: 'phase-04', decider: 'Comercial y Operaciones' }, 'questions'), true, 'A question appears under every phase it affects');
+  assert.equal(matchesProjectItem(data, text, { phase: 'phase-02' }, 'questions'), false);
+  assert.equal(matchesProjectItem(data, text, { phase: 'phase-0' }, 'questions'), false);
+  assert.equal(matchesProjectItem(data, text, { state: 'validated' }, 'questions'), false, 'An open rule is never shown as validated');
+  assert.equal(matchesProjectItem(data, text, { decider: 'Comercial' }, 'questions'), false, 'A decider filter selects one role, not a prefix');
+  assert.equal(matchesProjectItem(data, text, { query: 'cajero' }, 'questions'), true);
+  assert.equal(matchesProjectItem(data, text, { query: 'tesoreria' }, 'questions'), false);
+});

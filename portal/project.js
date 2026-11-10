@@ -7,6 +7,10 @@ export function matchesProjectItem(data, text, values, type) {
   if (type === 'attention') {
     return ['scope', 'kind', 'state'].every(key => !values[key] || data[key] === values[key]) && loginMatch(data.owner, values.owner);
   }
+  if (type === 'questions') {
+    // A question is listed under its earliest phase but concerns every phase of its packages.
+    return (!values.state || data.state === values.state) && (!values.phase || (data.phases || '').split(' ').includes(values.phase)) && (!values.decider || data.decider === values.decider);
+  }
   const statusMatch = !values.status || (values.status === 'review' ? data.review === 'true' : values.status === 'active' ? data.active === 'true' : values.status === 'remaining' ? !['verified', 'accepted'].includes(data.status) : values.status === data.status);
   return statusMatch && (!values.phase || data.phase === values.phase) && (!values.app || (data.app || '').split(' ').includes(values.app)) && loginMatch(data.assignee, values.assignee);
 }
@@ -41,6 +45,8 @@ export function initializeProject(root) {
   if (form) {
     const type = root.dataset.projectPage;
     const items = [...root.querySelectorAll('[data-project-item]')];
+    const groups = [...root.querySelectorAll('[data-project-group]')];
+    const subject = { work: 'entregables', questions: 'preguntas' }[type] || 'acciones';
     const searchable = new Map(items.map(item => [item, item.textContent]));
     const controls = [...form.querySelectorAll('input[name],select[name]')];
     const keys = controls.map(control => control.name);
@@ -48,8 +54,10 @@ export function initializeProject(root) {
     const filter = () => {
       const selected = values();
       for (const item of items) item.hidden = !matchesProjectItem(item.dataset, searchable.get(item), selected, type);
+      // A group without visible records does not leave an empty heading behind.
+      for (const group of groups) group.hidden = ![...group.querySelectorAll('[data-project-item]')].some(item => !item.hidden);
       const count = items.filter(item => !item.hidden).length;
-      root.querySelector('[data-project-count]').textContent = `${count} de ${items.length} ${type === 'work' ? 'entregables' : 'acciones'}`;
+      root.querySelector('[data-project-count]').textContent = `${count} de ${items.length} ${subject}`;
       root.querySelector('[data-project-empty]').hidden = count !== 0;
     };
     const fromAddress = () => {
