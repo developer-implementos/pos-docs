@@ -11,6 +11,25 @@ Los cambios de herramientas, pruebas y CI no aparecen aquí; quedan en el [regis
 
 Este archivo lo escribe [release-please](https://github.com/googleapis/release-please) desde los títulos de los PR, y cada versión queda como [release en GitHub](https://github.com/developer-implementos/pos-docs/releases). Para recibir un aviso por versión, usa *Watch → Custom → Releases* en el repositorio. No se edita a mano: cómo se escribe una buena entrada está en la [guía de versiones](tools/release/README.md).
 
+## [0.5.5](https://github.com/developer-implementos/pos-docs/compare/v0.5.4...v0.5.5) (2026-11-11)
+
+
+### Correcciones
+
+* **content:** [F02-05] admitir enlaces a la vista de preguntas del portal desde la documentación ([4211185](https://github.com/developer-implementos/pos-docs/commit/4211185172c6bdb3061ec7faf47dd5795fba2410))
+
+
+### Contenido actualizado
+
+* **decisions:** [F02-05] proponer el redondeo de efectivo como ajuste de pago en el ADR-20 ([4211185](https://github.com/developer-implementos/pos-docs/commit/4211185172c6bdb3061ec7faf47dd5795fba2410))
+* **follow-up:** FOLLOWUP-019 nuevo · Decisión: Definir la contabilización del ajuste de redondeo de efectivo y su concepto en el ERP ([4211185](https://github.com/developer-implementos/pos-docs/commit/4211185172c6bdb3061ec7faf47dd5795fba2410))
+* **follow-up:** FOLLOWUP-020 nuevo · Decisión: Aprobar la política de caja para el redondeo de efectivo ([4211185](https://github.com/developer-implementos/pos-docs/commit/4211185172c6bdb3061ec7faf47dd5795fba2410))
+* **follow-up:** FOLLOWUP-021 nuevo · Decisión: Aprobar devoluciones y notas de crédito de ventas con redondeo ([4211185](https://github.com/developer-implementos/pos-docs/commit/4211185172c6bdb3061ec7faf47dd5795fba2410))
+* **follow-up:** FOLLOWUP-022 nuevo · Decisión: Definir el redondeo en cobranzas, cuotas, anticipos y USD ([4211185](https://github.com/developer-implementos/pos-docs/commit/4211185172c6bdb3061ec7faf47dd5795fba2410))
+* **follow-up:** FOLLOWUP-023 nuevo · Pregunta: Confirmar con asesor o SII la representación y el tratamiento tributario del redondeo ([4211185](https://github.com/developer-implementos/pos-docs/commit/4211185172c6bdb3061ec7faf47dd5795fba2410))
+* **follow-up:** FOLLOWUP-024 nuevo · Investigación: Contrastar el redondeo del legacy con datos y con la lógica de AX ([4211185](https://github.com/developer-implementos/pos-docs/commit/4211185172c6bdb3061ec7faf47dd5795fba2410))
+* **questions:** [F02-05] Q-53 remite a FOLLOWUP-020, la política de caja del redondeo de efectivo ([4211185](https://github.com/developer-implementos/pos-docs/commit/4211185172c6bdb3061ec7faf47dd5795fba2410))
+
 ## [0.5.4](https://github.com/developer-implementos/pos-docs/compare/v0.5.3...v0.5.4) (2026-11-11)
 
 
