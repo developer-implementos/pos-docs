@@ -174,11 +174,11 @@ pnpm run test:e2e
 pnpm run desktop:info
 ```
 
-Las pruebas cubren políticas, montos, persistencia, permisos, reintentos, calendarios y recorridos de navegador. La verificación de la demo se solicita explícitamente; los builds normales conectados comienzan sin configurar cuando no reciben una política de despliegue. CI comprueba compilación y empaquetado nativo, sin acreditar por ello instalación, firma de distribución ni aceptación operativa. Las acciones de CI están fijadas por commit y tienen permisos de lectura.
+Las pruebas cubren políticas, montos, persistencia, permisos, reintentos, calendarios y recorridos de navegador. La verificación de la demo se solicita explícitamente; los builds normales conectados comienzan sin configurar cuando no reciben una política de despliegue. Las compilaciones nativas siguen un workflow separado y no corren en cada PR; la [guía de pruebas](testing.md#política-de-ci-del-producto) distingue su evidencia de instalación, firma de distribución y aceptación operativa. Las acciones de CI están fijadas por commit y sus permisos se declaran por job.
 
 Validación tras la revisión de calidad (3 de octubre de 2026): **144 pruebas de lógica e infraestructura y 37 recorridos de navegador pasan**, junto con lint, formato y compilación web de producción. Los recorridos ejecutan el bundle productivo con la CSP de Tauri, incluyen tamaños de 375 y 1440 px y verifican controles de prime-showcase y accesibilidad del dashboard/reportes en claro y oscuro. El [informe de revisión](quality-review.md) detalla correcciones y condiciones pendientes para producción.
 
-Las comprobaciones de CI se consultan en [Actions de pos-platform](https://github.com/developer-implementos/pos-platform/actions). El instalador se puede generar con `pnpm run desktop:build`.
+Las comprobaciones de CI se consultan en [Actions de pos-platform](https://github.com/developer-implementos/pos-platform/actions); la [guía del runner](https://github.com/developer-implementos/pos-platform/blob/main/tools/runner/README.md) mantiene su procedimiento, niveles y límites. El instalador se puede generar con `pnpm run desktop:build`.
 
 ## Clientes nativos
 

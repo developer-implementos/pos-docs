@@ -8,6 +8,7 @@ import { docsOrigin } from '../apps/starlight/site-config.mjs';
 import { loadCatalog } from './catalog.mjs';
 import { loadProgress } from './progress.mjs';
 import { loadFollowUp } from './follow-up.mjs';
+import { latestRelease, loadChangelog } from './changelog.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const require = createRequire(path.join(root, 'apps/starlight/package.json'));
@@ -16,6 +17,7 @@ const { servePublic } = require(path.join(root, 'apps/starlight/scripts/serve.cj
 const catalog = loadCatalog(root);
 const progress = loadProgress(root);
 const followUp = loadFollowUp(root, progress);
+const changelog = latestRelease(loadChangelog(root));
 const sourceMaterials = catalog.materials.filter(item => item.kind !== 'proposal');
 const proposalMaterials = catalog.materials.filter(item => item.kind === 'proposal');
 const comparisonHref = '/guide/evidence/country-comparison/';
@@ -162,6 +164,18 @@ try {
     assert.ok(await page.locator(`#${id} a[href="${href}"]`).isVisible(), `The home destination remains useful without a full list: ${href}`);
   }
   report.checks.push('Compact home with derived progress, review date, filtered detail links and separate human review');
+
+  const changesSection = page.locator('#changes');
+  assert.equal(await changesSection.getByRole('heading', { name: 'Qué cambió', exact: true }).count(), 1);
+  assert.match(await changesSection.innerText(), new RegExp(`Versión ${changelog.version.replace(/\./g, '\\.')}`));
+  assert.equal(await changesSection.locator('time').getAttribute('datetime'), changelog.date);
+  assert.equal(await changesSection.locator('.home-change-list li').count(), changelog.entries.length);
+  const historyLink = changesSection.getByRole('link', { name: 'Ver historial completo', exact: true });
+  assert.ok(await historyLink.isVisible());
+  const history = await context.request.get(origin + await historyLink.getAttribute('href'));
+  assert.equal(history.status(), 200, 'The full history is published under /guide/');
+  assert.match(await history.text(), new RegExp(changelog.version.replace(/\./g, '\\.')));
+  report.checks.push('Home shows the newest release with its entries and a working link to the full history');
 
   const presentationsPage = await context.newPage();
   observe(presentationsPage);
@@ -443,7 +457,7 @@ try {
   assert.equal(page.url(), origin + '/#constructor', 'Unknown fragments cannot resolve inherited object properties as redirects');
   assert.ok(await page.getByRole('heading', {level:1, name:'POS Platform', exact:true}).isVisible());
 
-  const noJs = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 375, height: 1000 } });
+  const noJs = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 375, height: 1000 }, reducedMotion: 'reduce' });
   const fallback = await noJs.newPage();
   observe(fallback);
   assert.equal((await fallback.goto(origin + '/', { waitUntil: 'networkidle' })).status(), 200);

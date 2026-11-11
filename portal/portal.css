@@ -163,6 +163,10 @@ p {
 .home-metrics span {color:var(--muted);font-size:14px;font-weight:400}
 .home-metrics a:hover span {color:var(--primary);text-decoration:underline}
 .home-status-footer {border-top:1px solid var(--line);padding-top:16px}
+.home-change-list {list-style:none;margin:18px 0;padding:0;display:grid;gap:12px}
+.home-change-list li {display:grid;grid-template-columns:minmax(120px,max-content) minmax(0,1fr);gap:4px 16px;align-items:baseline;font-size:15px}
+.change-kind {color:var(--muted);font-size:13px}
+.home-change-list code {font-size:.92em;overflow-wrap:anywhere}
 .home-destinations {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-bottom:40px}
 .destination {position:relative;border:1px solid var(--line);border-radius:var(--radius);padding:24px 28px;background:var(--surface);min-width:0}
 .destination h2 {font-size:22px;padding-right:40px;margin-bottom:12px}
@@ -184,6 +188,7 @@ p {
   .home-metrics strong {font-size:26px}
   .home-metrics span {font-size:12px}
   .home-status-footer .button {width:100%}
+  .home-change-list li {grid-template-columns:1fr}
 }
 @media(max-width:360px) {.home-metrics {grid-template-columns:1fr}.home-metrics a {grid-template-columns:auto 1fr;gap:14px;align-items:center}}
 .intro {
