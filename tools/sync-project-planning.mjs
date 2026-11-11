@@ -8,6 +8,7 @@ import {derivePlanning, planningContentHash} from '../portal/planning.mjs';
 import {loadProgress, progressContentHash} from '../portal/progress.mjs';
 import {loadFollowUp, followUpContentHash, productRepository} from '../portal/follow-up.mjs';
 import {mapGitHubIssues} from './sync-project-follow-up.mjs';
+import {StaleSnapshotError} from './project-import/stale-snapshot.mjs';
 
 const repositoryRoot = fileURLToPath(new URL('../', import.meta.url));
 const remotes = new Set([productRepository, `${productRepository}.git`, 'git@github.com:developer-implementos/pos-platform.git', 'ssh://git@github.com/developer-implementos/pos-platform.git']);
@@ -76,7 +77,7 @@ export function syncProjectPlanning({root = repositoryRoot, workspace, check = f
   const changed = previous !== serialized;
   assert.equal(git(productRoot, 'rev-parse', 'HEAD'), revision, 'Product revision changed while importing planning');
   assert.equal(git(productRoot, 'status', '--porcelain', '--untracked-files=all'), '', 'Product checkout changed while importing planning');
-  if (check) assert.ok(!changed, 'Published planning snapshot is stale; import and review it');
+  if (check && changed) throw new StaleSnapshotError('Published planning snapshot is stale; import and review it');
   else if (changed) {
     fs.mkdirSync(path.dirname(destination), {recursive: true});
     const temporary = path.join(path.dirname(destination), `.project-planning-${process.pid}-${randomUUID()}.tmp`);

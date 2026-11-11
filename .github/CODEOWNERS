@@ -35,3 +35,12 @@
 /package.json @floxcristian
 /package-lock.json @floxcristian
 /.atl/ @floxcristian
+
+# Versionado: configuración de release-please y validador del PR de release.
+# CHANGELOG.md lo escribe release-please y conserva la revisión del equipo (*).
+/release-please-config.json @floxcristian
+/.release-please-manifest.json @floxcristian
+/tools/release/ @floxcristian
+
+# Importación automática de los snapshots del producto: su App lee el repositorio privado.
+/tools/project-import/ @floxcristian

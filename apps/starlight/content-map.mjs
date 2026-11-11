@@ -160,6 +160,7 @@ export const generatedPages = [
   reference('implementation/plan', 'docs/implementation-plan.md', 'Base técnica y recorridos de demostración', 'Aplicaciones de la base actual, recorridos con datos sintéticos y controles técnicos; la entrega funcional se define en el roadmap.', 'implementation'),
   reference('implementation/quality-review', 'docs/quality-review.md', 'Revisión de la demostración', 'Hallazgos y comprobaciones de calidad de la maqueta, con su fecha y límites.', 'implementation'),
   reference('implementation/deployment', 'docs/vercel.md', 'Publicación de la documentación', 'Starlight en Vercel: configuración y verificación; clientes nativos y backend con entregas separadas.', 'reference'),
+  reference('changelog', 'CHANGELOG.md', 'Historial de cambios', 'Qué cambió en POS Docs y cuándo, versión por versión, con el PR de cada cambio.', 'reference'),
 ];
 
 export const labLinks = {
@@ -204,6 +205,7 @@ export const sidebar = [
   ] },
   { label: 'Consultar avance y bloqueos', collapsed: true, items: [
     { label: 'Gestión del proyecto', link: '/project-status/' },
+    item('changelog'),
     item('implementation/progress'),
     { label: 'Roadmap de entrega', collapsed: true, items: [item('proposal/roadmap', 'Visión general'), item('roadmap/coverage'), ...roadmap.phases.map(phase => item(`roadmap/${phase.id}`))] },
     item('operations/validation'),

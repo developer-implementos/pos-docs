@@ -2,26 +2,26 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "6e679f692aab1fa5681688f1ffae651a215c2d81",
+    "revision": "da7da6d9808521db24ba11ef75dee6e2ebbe4d86",
     "path": "delivery/progress.json",
-    "sha256": "7be0359244526eeaf668435cb82d03a6128311d70892432b05f473779b535476"
+    "sha256": "69ee68fdf26a621ebb6d1cf8e9532f7f959278e38d87dbbb57076d4cad6dfb44"
   },
   "content": {
     "schemaVersion": 2,
-    "reviewedOn": "2026-11-02",
+    "reviewedOn": "2026-11-11",
     "productRevision": "source",
     "scope": {
       "repository": "https://github.com/developer-implementos/pos-docs",
-      "revision": "81555000224766a2fb82fb7f8b0bc2c65ce8d1ee",
+      "revision": "4b1eac077827438f520fc748fbd39fac588bd35d",
       "path": "docs/roadmap.json",
       "sha256": "e91cff0a30c2162a36a05b0542eed7e5a25e0490ea898481a37969f2fb21e514"
     },
-    "summary": "Quince entregables están técnicamente verificados: doce de F01 y los pagos combinados, el protocolo de dispositivos y la recuperación de cobros de F02. El cliente recupera ventas y registra revisiones durables sin duplicar efectos. Efectivo y transferencia manual están conectados; tarjeta y fiscalidad conservan sus pendientes de proveedor operativo. La aceptación humana y la habilitación productiva se registran por separado.",
+    "summary": "Trece entregables están técnicamente verificados: diez de F01 y los pagos combinados, el protocolo de dispositivos y la recuperación de cobros de F02. F01-04 y F01-09 siguen en curso hasta demostrar un criterio con su prueba de punta a punta (#275, #272). El cliente recupera ventas y registra revisiones durables sin duplicar efectos. Efectivo y transferencia manual están conectados; tarjeta y fiscalidad conservan sus pendientes de proveedor operativo. La aceptación humana y la habilitación productiva se registran por separado.",
     "applications": [
       {
         "id": "pos-desktop",
         "stage": "functional",
-        "summary": "Cliente Angular conectado con administración POS, cestas recuperables, recotización y cobro combinado de efectivo y transferencia manual. Recupera planes y comandos sin duplicar dinero; el verificador dispone de una bandeja con permisos propios. Conserva el empaquetado Tauri Windows verificado en F01. Tarjetas, guardado real de archivos en WebView y periféricos mantienen sus límites. Incluye recuperación comercial y revisión operativa durable de pagos.",
+        "summary": "Cliente Angular conectado con administración POS, cestas recuperables, recotización y cobro combinado de efectivo y transferencia manual. Recupera planes y comandos sin duplicar dinero; el verificador dispone de una bandeja con permisos propios. Conserva el empaquetado Tauri Windows probado en F01-04, cuya verificación espera la prueba con teclado (#275). Tarjetas, guardado real de archivos en WebView y periféricos mantienen sus límites. Incluye recuperación comercial y revisión operativa durable de pagos.",
         "nextStep": "Completar los flujos de excepción y medios pendientes, validar exportación nativa y enlazar fuentes comerciales autorizadas; la evidencia de navegador no acredita proveedores ni hardware.",
         "evidence": [
           {
@@ -51,13 +51,17 @@
           {
             "path": "delivery/evidence/f02-commercial-recovery-integration.json",
             "label": "Equivalencia entre código probado y commit integrado mediante squash"
+          },
+          {
+            "path": "delivery/evidence/native-ci-aa373b2.json",
+            "label": "Instalador NSIS no configurado compilado en Windows en aa373b2; digest verificado, sin instalación ni firma"
           }
         ]
       },
       {
         "id": "pos-mobile",
         "stage": "foundation",
-        "summary": "Host Capacitor con Angular compartido y política de origen HTTPS. La evidencia de empaquetado Android se registra por separado; el CI portable no acredita ejecución instalada, dispositivos ni iOS.",
+        "summary": "Host Capacitor con Angular compartido y política de origen HTTPS. La evidencia de empaquetado se registra por separado: APK Android sin firma y, en la corrida alojada de aa373b2, también la app iOS para simulador sin firma con el mismo bundle web. No acredita instalación, ejecución en dispositivo o simulador, firma ni que revisiones posteriores compilen en iOS.",
         "nextStep": "Conservar evidencia del APK y política del paquete; validar los dispositivos y recorridos nativos del canal seleccionado en su fase correspondiente.",
         "evidence": [
           {
@@ -75,6 +79,10 @@
           {
             "path": "delivery/evidence/f01-android-package.json",
             "label": "Dos APK Android compilados y política embebida comprobada; sin instalación ni homologación"
+          },
+          {
+            "path": "delivery/evidence/native-ci-aa373b2.json",
+            "label": "APK Android y app iOS para simulador compilados sin firma en aa373b2; digests verificados, sin instalación ni ejecución"
           }
         ]
       },
@@ -187,6 +195,10 @@
           {
             "path": "delivery/evidence/f02-main-integration.json",
             "label": "Integración squash comprobada: fuentes equivalentes y referencias de CI identificadas"
+          },
+          {
+            "path": "delivery/evidence/native-ci-aa373b2.json",
+            "label": "Host win-x64 publicado en Windows con 35 pruebas aprobadas en aa373b2; sin servicio ni hardware"
           }
         ]
       }
@@ -199,16 +211,16 @@
           "branch-api"
         ],
         "status": "verified",
-        "summary": "Verificados identidad POS, permisos y apertura persistente: provisión, roles, revocación, último administrador concurrente, exclusión de turno e idempotencia. Revisión manual de la matriz de acciones pendiente; caja operativa conserva sus gates comerciales.",
+        "summary": "Verificados identidad POS, permisos y apertura persistente: provisión, roles, revocación, último administrador concurrente, exclusión de turno e idempotencia. Un reinicio conserva la caja ocupada y su monto inicial, que el rol de ejecución no puede modificar (#274). Revisión manual de la matriz de acciones pendiente; caja operativa conserva sus gates comerciales.",
         "acceptance": null,
         "verification": {
-          "revision": "8b4a776f277743868013ad91315f0c0754837cad",
-          "reviewedOn": "2026-10-31",
-          "reviewer": "Codex · revisión técnica automatizada",
+          "revision": "193f730266f709cbc7e96decd353149409aaf238",
+          "reviewedOn": "2026-11-11",
+          "reviewer": "Claude Code · verificación técnica de agente",
           "evidence": [
             {
               "path": "apps/branch-api/integration/identity-cash.test.ts",
-              "label": "Sesiones, ámbitos, apertura concurrente, idempotencia, logout y reinicio"
+              "label": "Sesiones, ámbitos, apertura concurrente, idempotencia, logout, y monto inicial que sobrevive al reinicio y no se modifica"
             },
             {
               "path": "libs/backend/administration/integration/operational-identity.test.ts",
@@ -221,6 +233,10 @@
             {
               "path": "tests/pos-clients-e2e/operational/administration.spec.ts",
               "label": "Administración POS contra HTTPS y PostgreSQL reales"
+            },
+            {
+              "path": "delivery/reviews/pos-parity-2026-11-10/cumplimiento-f01-f02.md",
+              "label": "Contraste de criterios del 11 de noviembre de 2026 y su incumplimiento resuelto"
             }
           ]
         }
@@ -293,52 +309,10 @@
           "pos-mobile",
           "branch-api"
         ],
-        "status": "verified",
-        "summary": "Verificados el recorrido Angular/API/PostgreSQL y la recuperación visible, junto con paquetes reales Android y Tauri Windows en ambos modos de política y rechazo de origen incompatible. No acredita instalación, firma, funcionamiento nativo, periféricos ni habilitación productiva.",
+        "status": "in_progress",
+        "summary": "Implementados el recorrido Angular/API/PostgreSQL y la recuperación visible, con paquetes reales Android y Tauri Windows en ambos modos de política y rechazo de origen incompatible. Vuelve a en curso porque el recorrido principal no se prueba con teclado (#275). No acredita instalación, firma, funcionamiento nativo, periféricos ni habilitación productiva.",
         "acceptance": null,
-        "verification": {
-          "revision": "a603a770c8c950dd1499158606b0ff72801d1f45",
-          "reviewedOn": "2026-10-31",
-          "reviewer": "Codex · revisión técnica automatizada",
-          "evidence": [
-            {
-              "path": "tools/verify-tauri-artifact.mjs",
-              "label": "Inspección del ejecutable Windows real y su política embebida"
-            },
-            {
-              "path": "tools/verify-tauri-artifact.test.mjs",
-              "label": "Validadores de formato, contexto, política y casos de rechazo"
-            },
-            {
-              "path": "tools/connected-client-policy.test.mjs",
-              "label": "Regresiones versionadas de política compartida y ruta Tauri en Windows"
-            },
-            {
-              "path": "apps/pos-desktop/README.md",
-              "label": "Procedimiento de compilación e inspección reproducible sin WebView"
-            },
-            {
-              "path": "tools/verify-android-artifact.mjs",
-              "label": "Inspección independiente del APK Android y sus assets"
-            },
-            {
-              "path": "tests/pos-clients-e2e/branch/cash-recovery.spec.ts",
-              "label": "API/PG reales, respuesta perdida, reapertura, teclado y rechazo visible"
-            },
-            {
-              "path": "tests/pos-clients-e2e/operational/administration.spec.ts",
-              "label": "Cliente operativo con permisos y revocación sobre HTTPS/PostgreSQL"
-            },
-            {
-              "path": "tests/pos-clients-e2e/README.md",
-              "label": "Entorno repetible, perfiles y límites de la evidencia de navegador"
-            },
-            {
-              "path": "apps/branch-api/test/cash-sale.integration.test.ts",
-              "label": "Confirmación durable, recibo y recuperación sin duplicar efectos"
-            }
-          ]
-        }
+        "verification": null
       },
       {
         "id": "F01-05",
@@ -352,12 +326,12 @@
           "device-agent"
         ],
         "status": "verified",
-        "summary": "Verificados el inventario, las instrucciones compartidas y la política alojada de PR con cuatro rechazos y restauración válida. Las reglas efectivas conservan revisión y siete checks, con bypass administrativo sólo mediante PR. No registra una práctica humana del equipo ni aceptación manual.",
+        "summary": "Verificados el inventario, las instrucciones compartidas y la política alojada de PR: rechaza cierres en el título de cualquier PR y en el cuerpo de una entrega parcial, ignora comentarios, bloques de código y <pre>, y el publicador del backlog no duplica issues ni pisa notas del equipo, también tras una respuesta perdida (#273, #292). La política vigente y su comprobación remota se consultan en .github/rulesets/README.md. No registra una práctica humana del equipo ni aceptación manual.",
         "acceptance": null,
         "verification": {
-          "revision": "4cfd5c8bd2b4c6c40ec1578c3ea52116112f5aea",
-          "reviewedOn": "2026-10-31",
-          "reviewer": "Codex · revisión técnica automatizada",
+          "revision": "c78b849a92ca8dbb0f87224286355a7311f4c675",
+          "reviewedOn": "2026-11-11",
+          "reviewer": "Claude Code · verificación técnica de agente",
           "evidence": [
             {
               "path": ".github/workflows/pr-policy.yml",
@@ -365,15 +339,15 @@
             },
             {
               "path": "tools/check-pr-policy.mjs",
-              "label": "Validación de issue, alcance, metadatos y vínculos de cierre"
+              "label": "Validación de issue, alcance, metadatos, título y vínculos de cierre"
             },
             {
               "path": "tools/check-pr-policy.test.mjs",
-              "label": "Casos positivos y negativos del contrato de PR"
+              "label": "Casos positivos y negativos del contrato de PR, incluidos cierres en el título y bloques pre"
             },
             {
               "path": ".github/rulesets/main.json",
-              "label": "Siete checks, revisión y bypass administrativo limitado a PR"
+              "label": "Reglas técnicas de main: PR, historia lineal y checks exigidos"
             },
             {
               "path": ".github/rulesets/README.md",
@@ -410,6 +384,18 @@
             {
               "path": "delivery/reviews/F01-governance-verification.md",
               "label": "Matriz de criterios técnicos y límites de la revisión humana"
+            },
+            {
+              "path": "tools/publish-delivery-issues.test.mjs",
+              "label": "Dos publicaciones sin duplicar, notas del equipo, edición no revisada y respuesta perdida"
+            },
+            {
+              "path": "tools/delivery-backlog.test.mjs",
+              "label": "Dependencias, ciclos, alcance y ficha ausente antes de publicar"
+            },
+            {
+              "path": "delivery/reviews/pos-parity-2026-11-10/cumplimiento-f01-f02.md",
+              "label": "Contraste de criterios del 11 de noviembre de 2026 y su incumplimiento resuelto"
             }
           ]
         }
@@ -516,32 +502,10 @@
           "pos-desktop",
           "branch-api"
         ],
-        "status": "verified",
-        "summary": "Verificados borradores y presupuestos persistidos, captura por código/unidad, cantidad repetida, pausa y recuperación explícita entre puestos con CAS. Se preserva el origen y no se permite modificar una cesta con pago pendiente.",
+        "status": "in_progress",
+        "summary": "Implementados borradores y presupuestos persistidos, captura por código/unidad, cantidad repetida, pausa y recuperación explícita entre puestos con CAS. Vuelve a en curso porque, al retomar una cesta pausada desde «Cestas guardadas», desde otro puesto o tras crear otra venta, no se exige aceptar el importe recotizado (#272). Se preserva el origen y no se permite modificar una cesta con pago pendiente.",
         "acceptance": null,
-        "verification": {
-          "revision": "8b4a776f277743868013ad91315f0c0754837cad",
-          "reviewedOn": "2026-10-31",
-          "reviewer": "Codex · revisión técnica automatizada",
-          "evidence": [
-            {
-              "path": "apps/branch-api/test/commercial.integration.test.ts",
-              "label": "Recuperación entre puestos, CAS, rollback y exclusión con pago"
-            },
-            {
-              "path": "libs/data-access/branch-api/src/lib/product-capture.spec.ts",
-              "label": "Cantidad explícita y escaneo repetido sin duplicar la línea"
-            },
-            {
-              "path": "tests/pos-clients-e2e/branch/draft-capture.spec.ts",
-              "label": "Captura y pausa/retoma con API y PostgreSQL"
-            },
-            {
-              "path": "libs/data-access/branch-api/src/lib/branch-sale.spec.ts",
-              "label": "Bloqueo de cambios mientras el resultado del pago está pendiente"
-            }
-          ]
-        }
+        "verification": null
       },
       {
         "id": "F01-10",
@@ -659,7 +623,7 @@
           "device-agent"
         ],
         "status": "in_progress",
-        "summary": "Intenciones, intentos y destinos durables, reserva de venta y recuperación implementados y probados en PostgreSQL. Pendientes adaptador Transbank POS integrado, evidencia del proveedor y UX conectada.",
+        "summary": "Intenciones, intentos y destinos durables, reserva de venta y recuperación implementados y probados en PostgreSQL. La consulta explícita del efecto original desde Seguimiento (TASK-165, bf05f73) y la recuperación comercial con anulación o reembolso (F02-13) ya operan en el cliente conectado. Pendientes: adaptador Transbank POS integrado y evidencia del proveedor; la UX para iniciar un cobro con tarjeta, hoy deshabilitada en el cliente conectado, donde payment.card no figura entre las capacidades soportadas del perfil operativo; y la ejecución del SDK mediante device-agent, cuyo protocolo sólo declara la capacidad receipt.print.",
         "acceptance": null,
         "verification": null
       },
@@ -694,7 +658,7 @@
           "device-agent"
         ],
         "status": "in_progress",
-        "summary": "Seguimiento conectado con estados independientes e historial de evidencia por operación. Los expedientes conservan responsables, motivos y transiciones auditadas, con permisos explícitos, concurrencia y recuperación sin modificar dinero. Pendientes las acciones seguras por efecto y los runbooks completos con escalamiento y resultados verificables; este incremento no completa F02-04.",
+        "summary": "Seguimiento conectado muestra por operación los estados independientes de venta, pago, documento fiscal e impresión con su evidencia cronológica (TASK-110, 3669873). Los expedientes asignan responsables y conservan motivos y transiciones auditadas, con permisos explícitos y concurrencia, sin modificar dinero (TASK-114, 6e679f6). Desde el detalle, un operador autorizado consulta el efecto original de un pago o documento incierto en su destino congelado y recupera la misma solicitud tras perder la respuesta (TASK-165, bf05f73; runbook en libs/backend/fiscal/README.inquiries.md), y cancela antes del despacho una reserva de anulación o reembolso sin intentos, sin devolver dinero (TASK-166, 3929549; migración 243). La anulación y el reembolso del pago se reservan y ejecutan desde el mismo detalle mediante F02-13. Pendientes: bandeja transversal ListOperationExceptions; reintento seguro y reversa por efecto donde el contrato del propietario los admita; reimpresión autorizada, cuyo contrato PrintExistingDocument pertenece a F02-10; acciones sobre trabajos de dispositivo inciertos, hoy sólo consultables; aprobación o doble control según el acuerdo de Operaciones, Finanzas y Soporte; y runbooks de dispositivo, fallo conocido y escalamiento con resultado verificable en sandbox, ya que los actuales usan proveedores controlados en fixtures. Este incremento no completa F02-04.",
         "acceptance": null,
         "verification": null
       },
@@ -767,7 +731,7 @@
           "device-agent"
         ],
         "status": "in_progress",
-        "summary": "Perfiles de pago versionados, destino fiscal congelado y asignación de instalación/época implementados. Contrato estable del protocolo de dispositivos; matriz y conformidad de proveedores/SDK pendientes.",
+        "summary": "Perfiles de pago versionados, destino fiscal congelado y asignación de instalación/época implementados. Antes de reservar saldo o crear la intención, la admisión rechaza un destino sin adaptador registrado de proveedor, versión y contrato exactos, sin capacidad de cobro o que declara consulta o compensación que ese adaptador no implementa, y conserva el recibo del rechazo (1350ad6, PR #93). Contrato estable del protocolo de dispositivos. Pendientes: comando propietario para provisionar perfiles de pago, hoy sólo una función que usan las pruebas; validación por país y entidad con CountryProfile.paymentProviderIds; kit de conformidad y simulador de fallos por capacidad para adaptadores; declaración de canales de notificación con su autenticidad; y matriz de proveedores/SDK.",
         "acceptance": null,
         "verification": null
       },
@@ -790,12 +754,12 @@
           "pos-desktop"
         ],
         "status": "verified",
-        "summary": "Verificados el contrato TypeScript/.NET, inscripción y ámbito, recepción durable, permiso de ejecución de un uso, vigencia, deduplicación y recuperación. Fixtures comunes, PostgreSQL, SQLite y HTTPS reales comprueban el intercambio y rechazo de identidad/TLS inválidos. Driver físico, instalación productiva y mTLS conservan sus entregables propios.",
+        "summary": "Verificados el contrato TypeScript/.NET, inscripción y ámbito, recepción durable, permiso de ejecución de un uso, vigencia, deduplicación y recuperación. Otra instalación controladora de la sucursal no recibe ni actúa sobre un trabajo ajeno (#276). Fixtures comunes, PostgreSQL, SQLite y HTTPS reales comprueban el intercambio y rechazo de identidad/TLS inválidos. Driver físico, instalación productiva y mTLS conservan sus entregables propios.",
         "acceptance": null,
         "verification": {
-          "revision": "2f4528fd734f4ba14130a8a6f4e12268ee876afb",
-          "reviewedOn": "2026-11-02",
-          "reviewer": "Codex · verificación técnica del commit integrado",
+          "revision": "193f730266f709cbc7e96decd353149409aaf238",
+          "reviewedOn": "2026-11-11",
+          "reviewer": "Claude Code · verificación técnica de agente",
           "evidence": [
             {
               "path": "libs/backend/devices/contracts/fixtures/device-wire.v1.json",
@@ -811,7 +775,7 @@
             },
             {
               "path": "libs/backend/devices/integration/device-jobs.test.ts",
-              "label": "PostgreSQL: identidad, ámbito, deduplicación, capacidad, vigencia y permiso único"
+              "label": "PostgreSQL: identidad, ámbito, otra instalación controladora, deduplicación, capacidad, vigencia y permiso"
             },
             {
               "path": "tests/device-agent/DeviceJournalTests.cs",
@@ -836,6 +800,10 @@
             {
               "path": "delivery/evidence/f02-device-protocol-ci.json",
               "label": "Trabajos API y Windows aprobados con interoperabilidad y pruebas del host"
+            },
+            {
+              "path": "delivery/reviews/pos-parity-2026-11-10/cumplimiento-f01-f02.md",
+              "label": "Contraste de criterios del 11 de noviembre de 2026 y su incumplimiento resuelto"
             }
           ]
         }

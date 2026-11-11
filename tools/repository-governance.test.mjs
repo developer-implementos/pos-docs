@@ -1,11 +1,13 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { test } from 'node:test';
+import { releaseApp, releaseBranch } from './release/policy.mjs';
 
 const json = (name) => JSON.parse(readFileSync(new URL(`../${name}`, import.meta.url), 'utf8'));
 const core = json('.github/rulesets/main.json');
 const review = json('.github/rulesets/review.json');
 const settings = json('.github/repository.json');
+const text = (name) => readFileSync(new URL(`../${name}`, import.meta.url), 'utf8');
 const byType = (ruleset, type) => ruleset.rules.filter(rule => rule.type === type);
 
 test('technical rules protect PR integration without hosted status checks or bypass actors', () => {
@@ -19,10 +21,14 @@ test('technical rules protect PR integration without hosted status checks or byp
   assert.equal(pr.required_review_thread_resolution, true);
 });
 
-test('only Cristian can bypass the separate human-review ruleset via a PR', () => {
+test('only Cristian and the release App can bypass the separate human-review ruleset, both via a PR', () => {
   assert.equal(review.enforcement, 'active');
   assert.deepEqual(review.conditions, core.conditions);
-  assert.deepEqual(review.bypass_actors, [{ actor_id: 28737734, actor_type: 'User', bypass_mode: 'pull_request' }]);
+  assert.ok(Number.isSafeInteger(releaseApp.id) && releaseApp.id > 0, 'Declare the release App ID in tools/release/policy.mjs');
+  assert.deepEqual(review.bypass_actors, [
+    { actor_id: releaseApp.id, actor_type: 'Integration', bypass_mode: 'pull_request' },
+    { actor_id: 28737734, actor_type: 'User', bypass_mode: 'pull_request' },
+  ]);
   assert.equal(review.rules.length, 1);
   assert.equal(review.rules[0].type, 'pull_request');
   const rule = review.rules[0].parameters;
@@ -40,5 +46,81 @@ test('merge settings and ownership protect the policy itself', () => {
   assert.equal(settings.squash_merge_commit_title, 'PR_TITLE');
   assert.equal(settings.squash_merge_commit_message, 'PR_BODY');
   const owners = readFileSync(new URL('../.github/CODEOWNERS', import.meta.url), 'utf8');
-  for (const rule of ['/.github/', '/AGENTS.md', '/.agents/', '/.claude/', '/.codex/', '/.mcp.json', '/tools/odd/', '/tools/automated-review/', '/package.json', '/package-lock.json']) assert.ok(owners.split(/\r?\n/).includes(`${rule} @floxcristian`), `${rule} requires designated governance owner`);
+  for (const rule of ['/.github/', '/AGENTS.md', '/.agents/', '/.claude/', '/.codex/', '/.mcp.json', '/tools/odd/', '/tools/automated-review/', '/tools/release/', '/package.json', '/package-lock.json', '/release-please-config.json', '/.release-please-manifest.json']) assert.ok(owners.split(/\r?\n/).includes(`${rule} @floxcristian`), `${rule} requires designated governance owner`);
+});
+
+test('release workflows hold the App token only on main and only to open, validate and merge the release PR', () => {
+  const release = text('.github/workflows/release.yml');
+  const merge = text('.github/workflows/release-merge.yml');
+  for (const [name, workflow] of [['release.yml', release], ['release-merge.yml', merge]]) {
+    assert.match(workflow, /^permissions:\n  contents: read\njobs:\n/m, `${name}: the default token stays read-only`);
+    assert.match(workflow, /^    environment: release$/m, `${name}: the App key is an environment secret limited to main`);
+    assert.doesNotMatch(workflow, /pull_request_target|secrets\.GITHUB_TOKEN|persist-credentials: true/, name);
+    assert.doesNotMatch(workflow, /^\s+ref:/m, `${name}: never check out a PR revision`);
+    for (const [, action] of workflow.matchAll(/uses: ([^\s#]+)/g)) assert.match(action, /@[a-f0-9]{40}$/, `${name}: pin ${action} to a commit`);
+    // create-github-app-token deprecates app-id; a major version that drops it would stop releases (TASK-254).
+    assert.match(workflow, /^ {10}client-id: \$\{\{ vars\.RELEASE_APP_CLIENT_ID \}\}$/m, `${name}: request the App token with its Client ID`);
+    assert.doesNotMatch(workflow, /^\s+app-id:/m, `${name}: app-id is deprecated; use client-id`);
+    const permissions = [...workflow.matchAll(/permission-([a-z-]+): (\w+)/g)].map(match => `${match[1]}:${match[2]}`);
+    assert.ok(permissions.every(entry => ['contents:write', 'pull-requests:write', 'issues:write'].includes(entry)), `${name}: ${permissions}`);
+  }
+  assert.match(release, /^on:\n  push:\n    branches: \[main\]\n  workflow_dispatch:\npermissions:/m);
+  assert.match(release, /node tools\/release\/verify\.mjs/, 'An untagged merged release must fail the run');
+  assert.match(merge, /^on:\n  workflow_run:\n    workflows: \[Documentation quality\]\n    types: \[completed\]\n  workflow_dispatch:\npermissions:/m);
+  assert.ok(merge.includes(`head_branch == '${releaseBranch}' &&`), 'The merge job runs only for the release branch the policy accepts');
+  assert.match(merge, /head_repository\.full_name == github\.repository/);
+  assert.match(merge, /run: node tools\/release\/merge\.mjs /);
+  assert.doesNotMatch(merge, /permission-issues/, 'Merging needs no issue access');
+});
+
+// The import App reads the private product repository and writes in this public one (TASK-283). Each
+// token is scoped to one repository and to the permissions its step uses; nothing from a PR executes.
+test('the project import holds its App token only on main, scoped per repository, and never merges', () => {
+  const workflow = text('.github/workflows/project-import.yml');
+  assert.match(workflow, /^on:\n  schedule:\n    - cron: '\d{1,2} \* \* \* \*'\n  workflow_dispatch:\n  repository_dispatch:\n    types: \[pos-platform-delivery-changed\]\npermissions:\n  contents: read\njobs:\n/m, 'Triggers are fixed and the default token stays read-only');
+  assert.match(workflow, /^    if: github\.event_name == 'workflow_dispatch' \|\| vars\.PROJECT_IMPORT_ENABLED == 'true'$/m, 'The scheduled run is opt-in');
+  assert.match(workflow, /^    environment: project-import$/m, 'The App key is an environment secret limited to main');
+  assert.match(workflow, /^    concurrency:\n      group: project-import\n      cancel-in-progress: false$/m, 'Runs never overlap or interrupt a publication');
+  assert.doesNotMatch(workflow, /pull_request|secrets\.GITHUB_TOKEN|persist-credentials: true|RELEASE_APP/, 'No PR trigger, default-token secret, persisted credential or release App key');
+  assert.doesNotMatch(workflow, /^\s+ref:/m, 'Always import the default branches, never a PR revision');
+  for (const [, action] of workflow.matchAll(/uses: ([^\s#]+)/g)) assert.match(action, /@[a-f0-9]{40}$/, `pin ${action} to a commit`);
+  assert.doesNotMatch(workflow, /^\s+app-id:/m, 'app-id is deprecated; use client-id');
+  const tokens = workflow.split(/\n(?= {6}- )/).filter(step => step.includes('actions/create-github-app-token@'));
+  assert.equal(tokens.length, 2);
+  const scope = step => ({
+    client: step.match(/^ {10}client-id: (.+)$/m)?.[1],
+    repositories: step.match(/^ {10}repositories: (.+)$/m)?.[1],
+    permissions: [...step.matchAll(/permission-([a-z-]+): (\w+)/g)].map(match => `${match[1]}:${match[2]}`).sort(),
+  });
+  assert.deepEqual(tokens.map(scope), [
+    { client: '${{ vars.IMPORT_APP_CLIENT_ID }}', repositories: 'pos-platform', permissions: ['contents:read', 'issues:read'] },
+    { client: '${{ vars.IMPORT_APP_CLIENT_ID }}', repositories: 'pos-docs', permissions: ['contents:write', 'pull-requests:write'] },
+  ]);
+  assert.match(workflow, /run: node tools\/project-import\/run\.mjs --workspace \.\.\/pos-platform --publish$/m);
+  assert.doesNotMatch(workflow, /merge\.mjs|gh pr merge|\/merge\b/, 'The import never merges its PR');
+  const owners = readFileSync(new URL('../.github/CODEOWNERS', import.meta.url), 'utf8');
+  assert.ok(owners.split(/\r?\n/).includes('/tools/project-import/ @floxcristian'), 'The import tooling requires the governance owner');
+});
+
+// GitHub discards a workflow whose YAML does not parse, and no other check parses it: a plain `run:`
+// value containing ": " left release.yml unloadable (TASK-253). Values that YAML would read as a
+// nested mapping must be quoted or written as block scalars. Comments and block contents are skipped.
+test('workflow values that YAML would read as a mapping are quoted or block scalars', () => {
+  const directory = new URL('../.github/workflows/', import.meta.url);
+  const problems = [];
+  for (const name of readdirSync(directory).filter(file => file.endsWith('.yml'))) {
+    let blockIndent = null;
+    readFileSync(new URL(name, directory), 'utf8').split(/\r?\n/).forEach((line, index) => {
+      const indent = line.match(/^ */)[0].length;
+      if (blockIndent !== null) {
+        if (!line.trim() || indent > blockIndent) return;
+        blockIndent = null;
+      }
+      const value = line.match(/^ *(?:- )?[\w.-]+:\s+(\S.*)$/)?.[1];
+      if (!value) return;
+      if (/^[|>]/.test(value)) blockIndent = indent;
+      else if (!/^['"[{&*!]/.test(value) && value.replace(/\s#.*$/, '').includes(': ')) problems.push(`${name}:${index + 1}: ${value}`);
+    });
+  }
+  assert.deepEqual(problems, []);
 });

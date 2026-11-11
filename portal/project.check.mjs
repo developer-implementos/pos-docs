@@ -6,6 +6,7 @@ import {createRequire} from 'node:module';
 import {loadProgress} from './progress.mjs';
 import {loadFollowUp} from './follow-up.mjs';
 import {loadPlanning} from './planning.mjs';
+import {loadQuestions} from './questions.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const require = createRequire(path.join(root, 'apps/starlight/package.json'));
@@ -14,12 +15,13 @@ const {servePublic} = require(path.join(root, 'apps/starlight/scripts/serve.cjs'
 const progress = loadProgress(root);
 const followUp = loadFollowUp(root, progress);
 const planning = loadPlanning(root, progress, followUp);
+const questions = loadQuestions(root, progress, followUp);
 const output = path.join(root, 'test-results-project');
 fs.mkdirSync(output, {recursive: true});
 const server = await servePublic(0);
 const origin = `http://127.0.0.1:${server.address().port}`;
 const browser = await chromium.launch({headless: true});
-const routes = ['/project/', '/project/plan/', '/project/work/', '/project/attention/', '/project/team/'];
+const routes = ['/project/', '/project/plan/', '/project/work/', '/project/attention/', '/project/questions/', '/project/team/'];
 try {
   const page = await browser.newPage({viewport: {width: 1440, height: 1000}, reducedMotion: 'reduce'});
   const failures = [], external = [];
@@ -175,6 +177,46 @@ try {
   await related.click();
   assert.ok(await page.locator(`#${relatedId}`).isVisible(), 'Actions link to affected deliverables');
 
+  await navigate('/project/questions/');
+  const groups = () => page.locator('[data-project-group]:visible').count();
+  assert.equal(await count(), questions.items.length);
+  assert.equal(await groups(), questions.groups.length);
+  assert.equal(await page.locator('[data-project-group] h2 a').evaluateAll(links => links.map(link => link.getAttribute('href'))).then(hrefs => hrefs.join(' ')), questions.groups.map(group => group.href).join(' '), 'Each phase group names and links its phase');
+  await form().locator('[name=state]').selectOption('open');
+  assert.equal(new URL(page.url()).searchParams.get('state'), 'open');
+  assert.equal(await count(), questions.items.filter(item => item.state === 'open').length);
+  const questionPhase = questions.phases.at(-1).id;
+  await form().locator('[name=phase]').selectOption(questionPhase);
+  const inPhase = questions.items.filter(item => item.state === 'open' && item.phases.includes(questionPhase));
+  assert.equal(await count(), inPhase.length, 'The phase filter includes every question that affects the phase');
+  assert.equal(await groups(), new Set(inPhase.map(item => item.phase)).size, 'Groups without visible questions are hidden');
+  await page.goBack({waitUntil: 'networkidle'});
+  assert.equal(await form().locator('[name=phase]').inputValue(), '', 'Back restores question filters');
+  await reset();
+  assert.equal(await groups(), questions.groups.length);
+  const decider = questions.deciders[0];
+  await form().locator('[name=decider]').selectOption(decider);
+  assert.equal(await count(), questions.items.filter(item => item.decider === decider).length);
+  await reset();
+  assert.equal(await page.locator('.project-question-counts a').count(), 4);
+  await navigate('/project/questions/?state=answered');
+  assert.equal(await form().locator('[name=state]').inputValue(), 'answered', 'Summary counts open their filtered list');
+  assert.equal(await count(), questions.items.filter(item => item.state === 'answered').length);
+  const firstQuestion = questions.items[0].id.toLowerCase();
+  await form().locator('[name=query]').fill('zz-no-coincide');
+  assert.ok(await page.locator('[data-project-empty]').isVisible());
+  assert.equal(await groups(), 0);
+  await page.evaluate(id => { location.hash = id; }, firstQuestion);
+  await page.waitForFunction(id => !document.getElementById(id).hidden, firstQuestion);
+  assert.ok(await page.locator(`#${firstQuestion}`).isVisible(), 'A permalink reveals a question excluded by filters');
+  const linkedQuestion = questions.items.find(item => item.followUpAction);
+  if (linkedQuestion) {
+    await navigate(`/project/questions/#${linkedQuestion.id.toLowerCase()}`);
+    await page.locator(`#${linkedQuestion.id.toLowerCase()} a[href^="/project/attention/#"]`).click();
+    assert.equal(new URL(page.url()).hash, `#${linkedQuestion.followUp.toLowerCase()}`);
+    assert.ok(await page.locator(`#${linkedQuestion.followUp.toLowerCase()}`).isVisible(), 'Questions link their published follow-up');
+  }
+
   await navigate('/project/team/');
   const unassignedLink = page.locator('a[href*="/project/work/?"][href*="assignee=unassigned"]').first();
   await unassignedLink.click();
@@ -206,7 +248,7 @@ try {
 
   const noJs = await browser.newContext({javaScriptEnabled: false, viewport: {width: 390, height: 844}});
   const fallback = await noJs.newPage();
-  for (const [route, expected] of [['/project/work/', followUp.workPackages.length], ['/project/attention/', followUp.items.length]]) {
+  for (const [route, expected] of [['/project/work/', followUp.workPackages.length], ['/project/attention/', followUp.items.length], ['/project/questions/', questions.items.length]]) {
     await fallback.goto(origin + route);
     assert.equal(await fallback.locator('[data-project-item]:visible').count(), expected, `${route} exposes every record without JavaScript`);
     assert.ok(await fallback.locator('[data-project-filters]').isHidden());
@@ -225,7 +267,7 @@ try {
   await noJs.close();
   assert.deepEqual(failures, [], 'No browser or CSP errors');
   assert.deepEqual(external, [], 'No external service is consulted at runtime');
-  console.log(`Project browser checks passed: ${followUp.workPackages.length} deliverables, ${followUp.items.length} actions; metrics, URL filters/history, permalinks, keyboard, 320/390px and no-JS navigation.`);
+  console.log(`Project browser checks passed: ${followUp.workPackages.length} deliverables, ${followUp.items.length} actions, ${questions.items.length} questions in ${questions.groups.length} phases; metrics, URL filters/history, permalinks, keyboard, 320/390px and no-JS navigation.`);
 } finally {
   await browser.close();
   await new Promise(resolve => server.close(resolve));

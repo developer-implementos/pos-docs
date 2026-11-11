@@ -122,6 +122,76 @@
         "https://github.com/developer-implementos/pos-platform/pull/172#issuecomment-6643511672",
         "https://github.com/developer-implementos/pos-docs/pull/30"
       ]
+    },
+    {
+      "source": "docs/mobile.md",
+      "sourceSha256": "d7235d133cce02562595adc8246c653bacb833214497316997dbcf50a6bdd33e",
+      "productRevision": "c131147216e1998321016afd87b019bacd045935",
+      "reviewedOn": "2026-11-08",
+      "reviewer": {
+        "kind": "agent",
+        "name": "Codex · TASK-242"
+      },
+      "scope": "Contraste editorial del apartado Alcance comprobable con apps/pos-mobile/src/main.ts, el contrato client-profile.ts y createClientConfig: perfiles unconfigured, branch, branch-lab y demo, validación antes del arranque y ausencia de fallback a demo. Enlaces a ADR-14 y guía F01 comprobados. No revalida el aviso de dependencias de 2026-10-21, compilaciones, instalación, hardware ni comprensión humana.",
+      "evidence": [
+        "https://github.com/developer-implementos/pos-platform/issues/242"
+      ]
+    },
+    {
+      "source": "docs/contraste-apuntes-operacion-chile.md",
+      "sourceSha256": "2d9bfb9e4307bc7e63bcba9672c2220e3c6e2707e428dc38ad857046cfe675c4",
+      "productRevision": "2985aa799165af300f8a522349803548d4415c7b",
+      "reviewedOn": "2026-11-09",
+      "reviewer": {
+        "kind": "agent",
+        "name": "Codex · preparar_verificacion · TASK-258"
+      },
+      "scope": "Contraste independiente del nuevo contexto de Chile: fuentes y observación fechada frente a hipótesis, límites de identidad/permisos, QA y despliegue, cobertura de fases y paridad. Recorridos construidos y comprobados en escritorio/móvil; no acredita login QA, efectos reales, homologación ni comprensión humana.",
+      "evidence": [
+        "https://github.com/developer-implementos/pos-platform/issues/258"
+      ]
+    },
+    {
+      "source": "docs/audit-chile-for-product.md",
+      "sourceSha256": "f0eaa11bc908b41af7f392f6f8c4cb9d6ca8be9f78fe4d8fd9bdff56776b7a19",
+      "productRevision": "2985aa799165af300f8a522349803548d4415c7b",
+      "reviewedOn": "2026-11-09",
+      "reviewer": {
+        "kind": "agent",
+        "name": "Codex · preparar_verificacion · TASK-258"
+      },
+      "scope": "Contraste independiente del nuevo contexto de Chile: fuentes y observación fechada frente a hipótesis, límites de identidad/permisos, QA y despliegue, cobertura de fases y paridad. Recorridos construidos y comprobados en escritorio/móvil; no acredita login QA, efectos reales, homologación ni comprensión humana.",
+      "evidence": [
+        "https://github.com/developer-implementos/pos-platform/issues/258"
+      ]
+    },
+    {
+      "source": "docs/flows/migration.md",
+      "sourceSha256": "171c97df457e56af7a90e08de01db231e62eaf84eea3b41b5b8aaf4f2eb4bb5e",
+      "productRevision": "2985aa799165af300f8a522349803548d4415c7b",
+      "reviewedOn": "2026-11-09",
+      "reviewer": {
+        "kind": "agent",
+        "name": "Codex · preparar_verificacion · TASK-258"
+      },
+      "scope": "Contraste independiente del nuevo contexto de Chile: fuentes y observación fechada frente a hipótesis, límites de identidad/permisos, QA y despliegue, cobertura de fases y paridad. Recorridos construidos y comprobados en escritorio/móvil; no acredita login QA, efectos reales, homologación ni comprensión humana.",
+      "evidence": [
+        "https://github.com/developer-implementos/pos-platform/issues/258"
+      ]
+    },
+    {
+      "source": "docs/contraste-apuntes-operacion-chile.md",
+      "sourceSha256": "50f34ac199f3e9364f0d3ab7747199ec562939160203cbe161d8f84f444e51b9",
+      "productRevision": "2985aa799165af300f8a522349803548d4415c7b",
+      "reviewedOn": "2026-11-10",
+      "reviewer": {
+        "kind": "agent",
+        "name": "Codex · preparar_verificacion · TASK-258"
+      },
+      "scope": "Revisión independiente incremental de la ampliación del 10 de noviembre contra el informe propietario y la evidencia SQL local saneada: reconexión SSH/SQL, certificado TLS vencido, identificación de bundles servidos, diferencias de esquema e indicadores de cierre. Distingue SQL de sólo lectura de login normal con sesiones; no atribuye éxito HTTP/UI, autorización efectiva, commit del bundle, rendimiento ni paridad. No acredita comprensión humana ni repite conexiones remotas.",
+      "evidence": [
+        "https://github.com/developer-implementos/pos-platform/issues/258"
+      ]
     }
   ]
 }
