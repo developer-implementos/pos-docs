@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "02f8bdcc208e7c7270b7398be159552119d86645",
+    "revision": "667235e1a97418325486c0ace25c0f4bee14fe44",
     "path": "delivery/follow-ups.json",
     "sha256": "2ae115fb09f6eb2b39f0a959a139e5e8661b274392cd70cafec4ddffe58f422c"
   },
@@ -678,7 +678,7 @@
     ]
   },
   "issues": {
-    "observedAt": "2026-11-11T13:27:12.101Z",
+    "observedAt": "2026-11-11T14:17:57.486Z",
     "repository": "https://github.com/developer-implementos/pos-platform",
     "entries": [
       {
@@ -687,10 +687,10 @@
         "url": "https://github.com/developer-implementos/pos-platform/issues/10",
         "state": "OPEN",
         "executionLabels": [
-          "status:validation"
+          "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:22:11Z"
+        "updatedAt": "2026-11-11T14:12:42Z"
       },
       {
         "code": "F01-02",
@@ -701,7 +701,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:22:14Z"
+        "updatedAt": "2026-11-11T14:12:46Z"
       },
       {
         "code": "F01-03",
@@ -712,25 +712,29 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:22:16Z"
+        "updatedAt": "2026-11-11T14:12:50Z"
       },
       {
         "code": "F01-04",
         "number": 13,
         "url": "https://github.com/developer-implementos/pos-platform/issues/13",
-        "state": "CLOSED",
-        "executionLabels": [],
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:22:19Z"
+        "updatedAt": "2026-11-11T14:12:54Z"
       },
       {
         "code": "F01-05",
         "number": 14,
         "url": "https://github.com/developer-implementos/pos-platform/issues/14",
-        "state": "CLOSED",
-        "executionLabels": [],
+        "state": "OPEN",
+        "executionLabels": [
+          "status:triage"
+        ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:22:22Z"
+        "updatedAt": "2026-11-11T14:12:58Z"
       },
       {
         "code": "F01-06",
@@ -741,7 +745,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:22:25Z"
+        "updatedAt": "2026-11-11T14:13:02Z"
       },
       {
         "code": "F01-07",
@@ -752,7 +756,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:22:28Z"
+        "updatedAt": "2026-11-11T14:13:07Z"
       },
       {
         "code": "F01-08",
@@ -763,7 +767,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:22:30Z"
+        "updatedAt": "2026-11-11T14:13:11Z"
       },
       {
         "code": "F01-09",
@@ -771,10 +775,10 @@
         "url": "https://github.com/developer-implementos/pos-platform/issues/18",
         "state": "OPEN",
         "executionLabels": [
-          "status:validation"
+          "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:22:33Z"
+        "updatedAt": "2026-11-11T14:13:15Z"
       },
       {
         "code": "F01-10",
@@ -785,7 +789,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:22:35Z"
+        "updatedAt": "2026-11-11T14:13:19Z"
       },
       {
         "code": "F01-11",
@@ -796,7 +800,7 @@
           "status:blocked"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:22:38Z"
+        "updatedAt": "2026-11-11T14:13:23Z"
       },
       {
         "code": "F01-12",
@@ -807,7 +811,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:22:41Z"
+        "updatedAt": "2026-11-11T14:13:27Z"
       },
       {
         "code": "F01-13",
@@ -818,7 +822,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:22:44Z"
+        "updatedAt": "2026-11-11T14:13:32Z"
       },
       {
         "code": "F02-01",
@@ -829,7 +833,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:22:46Z"
+        "updatedAt": "2026-11-11T14:13:36Z"
       },
       {
         "code": "F02-02",
@@ -840,7 +844,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:22:49Z"
+        "updatedAt": "2026-11-11T14:13:40Z"
       },
       {
         "code": "F02-03",
@@ -851,7 +855,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:22:52Z"
+        "updatedAt": "2026-11-11T14:13:44Z"
       },
       {
         "code": "F02-04",
@@ -862,7 +866,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:22:55Z"
+        "updatedAt": "2026-11-11T14:13:48Z"
       },
       {
         "code": "F02-05",
@@ -873,7 +877,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:22:57Z"
+        "updatedAt": "2026-11-11T14:13:53Z"
       },
       {
         "code": "F02-06",
@@ -884,7 +888,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:23:00Z"
+        "updatedAt": "2026-11-11T14:13:57Z"
       },
       {
         "code": "F02-07",
@@ -895,7 +899,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:23:03Z"
+        "updatedAt": "2026-11-11T14:14:01Z"
       },
       {
         "code": "F02-08",
@@ -906,7 +910,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:23:05Z"
+        "updatedAt": "2026-11-11T14:14:06Z"
       },
       {
         "code": "F02-09",
@@ -914,10 +918,10 @@
         "url": "https://github.com/developer-implementos/pos-platform/issues/31",
         "state": "OPEN",
         "executionLabels": [
-          "status:validation"
+          "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:23:08Z"
+        "updatedAt": "2026-11-11T14:14:10Z"
       },
       {
         "code": "F02-10",
@@ -928,7 +932,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:23:11Z"
+        "updatedAt": "2026-11-11T14:14:14Z"
       },
       {
         "code": "F02-11",
@@ -939,7 +943,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:23:14Z"
+        "updatedAt": "2026-11-11T14:14:18Z"
       },
       {
         "code": "F02-12",
@@ -950,7 +954,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:23:17Z"
+        "updatedAt": "2026-11-11T14:14:22Z"
       },
       {
         "code": "F02-13",
@@ -961,7 +965,7 @@
         "assignees": [
           "floxcristian"
         ],
-        "updatedAt": "2026-11-11T13:23:20Z"
+        "updatedAt": "2026-11-11T14:14:26Z"
       },
       {
         "code": "F02-14",
@@ -972,7 +976,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:23:24Z"
+        "updatedAt": "2026-11-11T14:14:30Z"
       },
       {
         "code": "F03-01",
@@ -994,7 +998,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:23:30Z"
+        "updatedAt": "2026-11-11T14:14:35Z"
       },
       {
         "code": "F03-03",
@@ -1005,7 +1009,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:23:33Z"
+        "updatedAt": "2026-11-11T14:14:39Z"
       },
       {
         "code": "F03-04",
@@ -1049,7 +1053,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:23:58Z"
+        "updatedAt": "2026-11-11T14:14:43Z"
       },
       {
         "code": "F03-08",
@@ -1060,7 +1064,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-10T01:34:59Z"
+        "updatedAt": "2026-11-11T14:14:47Z"
       },
       {
         "code": "F03-09",
@@ -1071,7 +1075,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:24:00Z"
+        "updatedAt": "2026-11-11T14:14:51Z"
       },
       {
         "code": "F03-10",
@@ -1082,7 +1086,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:24:03Z"
+        "updatedAt": "2026-11-11T14:14:55Z"
       },
       {
         "code": "F03-11",
@@ -1115,7 +1119,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:24:09Z"
+        "updatedAt": "2026-11-11T14:14:58Z"
       },
       {
         "code": "F04-02",
@@ -1137,7 +1141,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:24:14Z"
+        "updatedAt": "2026-11-11T14:15:02Z"
       },
       {
         "code": "F04-04",
@@ -1170,7 +1174,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:24:19Z"
+        "updatedAt": "2026-11-11T14:15:05Z"
       },
       {
         "code": "F04-07",
@@ -1236,7 +1240,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:24:36Z"
+        "updatedAt": "2026-11-11T14:15:09Z"
       },
       {
         "code": "F05-02",
@@ -1335,7 +1339,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-11T13:24:44Z"
+        "updatedAt": "2026-11-11T14:15:12Z"
       },
       {
         "code": "F05-11",
@@ -1346,7 +1350,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-10T01:35:16Z"
+        "updatedAt": "2026-11-11T14:15:16Z"
       },
       {
         "code": "F05-12",
@@ -1379,7 +1383,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-10T01:35:20Z"
+        "updatedAt": "2026-11-11T14:15:21Z"
       },
       {
         "code": "F06-03",
