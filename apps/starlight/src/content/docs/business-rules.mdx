@@ -1,29 +1,28 @@
 ---
 title: Reglas de negocio
-description: Registro de las reglas de negocio de la caja de Chile por fase y área, con la evidencia del POS actual, el estado en POS Platform y la decisión del negocio.
+description: Dónde se deciden las reglas de negocio de la caja de Chile y dónde está su catálogo, con la evidencia del POS actual y el estado en POS Platform.
 editUrl: false
 tableOfContents: false
 ---
 
 import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
-Las [reglas de negocio](/project/rules/) reúnen lo que hace hoy la caja de Chile, con qué evidencia y qué decidió el negocio para POS Platform. Se agrupan por fase del roadmap y por área: caja, venta, pago, cobranza, devolución, sincronización e impresión. La fuente es el registro versionado `delivery/business-rules.json` de POS Platform; esta guía publica un corte importado desde una revisión identificada.
+Las reglas de negocio de la caja de Chile se consultan en dos vistas complementarias. **Preguntas y reglas** reúne lo que el negocio debe decidir, quién decide y su validación. El **catálogo de reglas** detalla cada regla del POS actual, con su evidencia en el código y su estado en POS Platform, y enlaza las preguntas donde se decide. Ambas se publican desde registros versionados de POS Platform, importados desde una revisión identificada.
 
 <CardGrid>
-  <LinkCard title="Consultar las reglas" description="Todas las reglas por fase, con filtros por decisión, área, verificación del legacy y quién decide." href="/project/rules/" />
-  <LinkCard title="Preguntas y reglas abiertas" description="Preguntas para el negocio, quién decide y su respuesta actual." href="/project/questions/" />
+  <LinkCard title="Preguntas y reglas" description="Lo que el negocio debe decidir, por fase: quién decide, respuesta actual, seguimiento y validación." href="/project/questions/" />
+  <LinkCard title="Catálogo de reglas" description="Todas las reglas por fase, con filtros por estado de decisión, área, verificación del legacy y quién decide." href="/project/rules/" />
 </CardGrid>
 
-## Cómo leer una regla
+## Cómo leer una regla del catálogo
 
 - **Comportamiento del legacy:** lo que se observó en el código del POS actual, con repositorio, revisión y líneas. Describe lo observado, no una regla aprobada. Paridad significa conservar las capacidades necesarias, no copiar defectos.
 - **Verificación del legacy:** confirmado, parcialmente confirmado, refutado, no verificado o bloqueado. Lo observado en una sucursal o en QA no se extiende a las demás, y la versión instalada en cada tienda no está verificada.
 - **POS Platform:** especificado, implementado y probado son tres hechos distintos, cada uno con los archivos que lo muestran.
-- **Decisión:** pendiente, aceptada o con observación. Una regla sólo está aceptada cuando una persona del negocio la decidió; el registro guarda su login, la fecha y la evidencia. Un agente, una prueba o esta publicación no aceptan en su nombre.
+- **Decisión:** se toma en las preguntas que la regla enlaza, no en el catálogo. La regla figura sin pregunta, con una pregunta abierta o resuelta según el estado de esas preguntas. Sólo el responsable de negocio valida una pregunta; un agente, una prueba o esta publicación no lo hacen en su nombre.
+- **Capacidad:** cada regla se agrupa en una capacidad de la matriz de paridad, cuando ya se identificó.
 - **Documentos de trabajo:** las propuestas de los análisis previos se muestran como propuestas, no como decisiones.
-
-La vista permite filtrar por decisión, fase, área, verificación del legacy y quién decide. Las [preguntas y reglas abiertas](/project/questions/) siguen en su propio registro: una regla enlaza las preguntas que la afectan y no puede quedar aceptada mientras su pregunta siga abierta.
 
 ## Cómo se actualiza
 
-Después de una reunión con el negocio, el acta queda en la issue de la reunión y una PR de POS Platform registra la decisión de cada regla, con su evidencia. Luego POS Docs importa la nueva revisión con `npm run rules:sync`. El procedimiento completo está en la sección «Registro de reglas de negocio» de `delivery/README.md` de POS Platform.
+Después de una reunión con el negocio se actualiza la pregunta correspondiente en POS Platform, con el procedimiento de su registro de preguntas. Las reglas que la enlazan reflejan el cambio en la siguiente importación, sin repetir la decisión. Si una regla necesita una decisión que ninguna pregunta cubre, se agrega la pregunta y se enlaza desde la regla.

@@ -36,8 +36,7 @@ const rule = (id, fields = {}) => ({
   legacy: { behavior: 'Rechaza boletas sobre un monto fijo.', condition: null, observations: null, verification: 'CONFIRMADO', note: null, evidence: [{ repository: 'mountain-implementos', path: 'frontend/src/app/ejemplo.ts', lines: '10-20' }] },
   businessQuestion: null, artifacts: { catalog: null, closure: null, answers: null, management: null },
   posPlatform: { specified: { state: 'no-verificado', refs: [] }, implemented: { state: 'si', refs: ['libs/ejemplo/regla.ts#L3'] }, tested: { state: 'no', refs: [] }, note: null },
-  decision: { state: 'pendiente', decider: 'Producto', acceptedBy: null, acceptedOn: null, evidence: null, observations: [] },
-  target: null, links: { questions: ['Q-01'], parity: ['P-14'], claims: ['C-30'], followUps: ['FOLLOWUP-005'], issues: [], related: [] }, reviewedOn: '2026-11-11', ...fields,
+  decider: 'Producto', links: { questions: ['Q-01'], parity: ['P-14'], claims: ['C-30'], followUps: ['FOLLOWUP-005'], issues: [], related: [] }, reviewedOn: '2026-11-11', ...fields,
 });
 function fixture(t) {
   const base = fs.mkdtempSync(path.join(os.tmpdir(), 'pos-rules-import-'));
@@ -90,7 +89,7 @@ test('imports the reviewed register with immutable provenance and its integratio
   assert.equal(result.changed, true);
   assert.deepEqual(snapshot.source, { repository: productRepository, revision: item.revision, path: 'delivery/business-rules.json', sha256: rulesContentHash(item.content) });
   assert.deepEqual(snapshot.integration, { reference: 'main', included: true });
-  assert.deepEqual([result.total, result.pending, result.accepted], [1, 1, 0]);
+  assert.deepEqual([result.total, result.open, result.resolved], [1, 1, 0]);
   assert.equal(syncProjectRules({ ...item, check: true }).changed, false);
 });
 

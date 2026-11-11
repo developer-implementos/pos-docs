@@ -7,7 +7,8 @@ import { internalReferences } from './questions.mjs';
 
 export const rulesSourcePath = 'delivery/business-rules.json';
 export const rulesDataPath = 'portal/data/project-rules.json';
-export const decisionStates = { pendiente: 'Pendiente', aceptada: 'Aceptada', 'con-observacion': 'Con observación' };
+// A rule is decided in its business questions; its state is derived from them, never stored.
+export const decisionStates = { 'sin-pregunta': 'Sin pregunta', abierta: 'Pregunta abierta', resuelta: 'Resuelta' };
 export const verificationStates = { CONFIRMADO: 'Confirmado', 'PARCIALMENTE CONFIRMADO': 'Parcialmente confirmado', REFUTADO: 'Refutado', 'NO VERIFICADO': 'No verificado', BLOQUEADO: 'Bloqueado' };
 export const evidenceStates = { si: 'Sí', parcial: 'Parcial', no: 'No', 'no-verificado': 'No verificado' };
 export const ruleKinds = { capacidad: 'Capacidad', parametro: 'Parámetro', defecto: 'Defecto del legacy' };
@@ -18,11 +19,9 @@ export const coverages = { cubierta: 'Cubierta', 'cubierta-con-cambios': 'Cubier
 export const withoutPhase = 'sin-fase';
 const origins = ['catalogo', 'descubierta'];
 // Same rules as tools/check-business-rules.mjs in POS Platform.
-const login = /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i;
 const segment = /^(?!\.{1,2}$)[\w.@-]+$/;
 const revision = /^[a-f0-9]{7,40}$/;
 const lineRanges = /^\d+(?:-\d+)?(?:,\d+(?:-\d+)?)*$/;
-const acceptanceEvidence = /^https:\/\/github\.com\/developer-implementos\/pos-platform\/(?:issues|pull)\/[1-9]\d*(?:#issuecomment-[1-9]\d*)?$/;
 const secretPatterns = [
   ['Basic credential', /\bBasic\s+(?!<)[A-Za-z0-9+/]{8,}={0,2}/],
   ['quoted secret', /\b(?:password|passwd|secret|token|api[_-]?key|app[_-]?key)\w*\s*[:=]\s*['"](?!<)[^'"]{4,}['"]/i],
@@ -32,7 +31,7 @@ const secretPatterns = [
   ['national identifier', /\b(?!66\.?666\.?666-6\b)\d{1,2}\.?\d{3}\.?\d{3}-[\dkK]\b/],
 ];
 const topFields = ['schemaVersion', 'reviewedOn', 'audit', 'areas', 'legacyRevisions', 'posPlatformRevision', 'sourceArtifacts', 'contradictions', 'rules'];
-const ruleFields = ['id', 'area', 'title', 'origin', 'sourceArtifacts', 'type', 'layer', 'criticality', 'kind', 'workPackage', 'legacy', 'businessQuestion', 'artifacts', 'posPlatform', 'decision', 'target', 'links', 'reviewedOn'];
+const ruleFields = ['id', 'area', 'title', 'origin', 'sourceArtifacts', 'type', 'layer', 'criticality', 'kind', 'workPackage', 'legacy', 'businessQuestion', 'artifacts', 'posPlatform', 'decider', 'links', 'reviewedOn'];
 const artifactFields = { catalog: ['coverage', 'gap', 'posPlatformNote'], closure: ['action', 'targetPhase', 'scope', 'priority', 'acceptanceCriterion'], answers: ['status', 'plan', 'current'], management: ['proposal', 'decider'] };
 
 function object(value, keys, label) {
@@ -85,6 +84,12 @@ export function rulesContentHash(content) {
  * The rules of POS Platform's validator (tools/check-business-rules.mjs). The import passes the
  * product context; the published snapshot is checked again with the POS Docs roadmap and questions.
  */
+/** Decision state of a rule from the states of its linked questions. */
+export function decisionOf(rule, questionStates = new Map()) {
+  if (rule.links.questions.length === 0) return 'sin-pregunta';
+  return rule.links.questions.every(question => ['answered', 'decided', 'validated'].includes(questionStates.get(question))) ? 'resuelta' : 'abierta';
+}
+
 export function validateRulesContent(content, { workPackageIds, workPackageSource = 'the POS Docs roadmap', questionStates = null, followUpIds = null, sourceExists = null, readAudit = null }) {
   object(content, topFields, 'rules');
   assert.equal(content.schemaVersion, 1, 'rules: unsupported schema version');
@@ -165,29 +170,7 @@ export function validateRulesContent(content, { workPackageIds, workPackageSourc
       if (['si', 'parcial'].includes(value.state)) assert.ok(value.refs.length > 0, `${id}.posPlatform.${key}: ${value.state} requires the files that show it`);
     }
     optionalText(rule.posPlatform.note, `${id}.posPlatform.note`);
-    const { decision } = rule;
-    object(decision, ['state', 'decider', 'acceptedBy', 'acceptedOn', 'evidence', 'observations'], `${id}.decision`);
-    oneOf(decision.state, Object.keys(decisionStates), `${id}.decision.state`);
-    text(decision.decider, `${id}.decision.decider`);
-    for (const [position, observation] of list(decision.observations, `${id}.decision.observations`).entries()) {
-      object(observation, ['author', 'date', 'text'], `${id}.decision.observations[${position}]`);
-      assert.ok(typeof observation.author === 'string' && login.test(observation.author), `${id}.decision.observations[${position}].author: expected a GitHub login`);
-      date(observation.date, `${id}.decision.observations[${position}].date`);
-      text(observation.text, `${id}.decision.observations[${position}].text`);
-    }
-    optionalText(rule.target, `${id}.target`);
-    if (decision.state === 'aceptada') {
-      assert.ok(typeof decision.acceptedBy === 'string' && login.test(decision.acceptedBy), `${id}.decision.acceptedBy: expected the GitHub login of the person who accepted; an agent never accepts`);
-      date(decision.acceptedOn, `${id}.decision.acceptedOn`);
-      assert.ok(decision.acceptedOn <= rule.reviewedOn, `${id}: accepted after the rule review`);
-      if (String(decision.evidence).startsWith('https://')) assert.match(decision.evidence, acceptanceEvidence, `${id}.decision.evidence: expected an issue, PR or comment of POS Platform`);
-      else assert.ok(repositoryPath(decision.evidence, `${id}.decision.evidence`).startsWith('delivery/'), `${id}.decision.evidence: a meeting record lives under delivery/`);
-      assert.ok(rule.target !== null, `${id}: an accepted rule states the expected behavior in target`);
-      if (questionStates) for (const question of rule.links.questions) assert.notEqual(questionStates.get(question), 'open', `${id}: accepted while ${question} is still open`);
-    } else {
-      assert.ok(decision.acceptedBy === null && decision.acceptedOn === null && decision.evidence === null, `${id}: only an accepted rule declares an acceptance`);
-    }
-    if (decision.state === 'con-observacion') assert.ok(decision.observations.length > 0, `${id}: con-observacion requires the observation and its author`);
+    text(rule.decider, `${id}.decider`);
     object(rule.links, ['questions', 'parity', 'claims', 'followUps', 'issues', 'related'], `${id}.links`);
     for (const question of list(rule.links.questions, `${id}.links.questions`)) {
       assert.match(question, /^Q-\d{2,}$/, `${id}.links.questions: expected Q-NN`);
@@ -249,11 +232,12 @@ export function deriveRules(snapshot, progress, questions = null) {
   assert.ok(Array.isArray(progress?.workPackages) && Array.isArray(progress?.phases), 'Rules require the roadmap projection of the project progress');
   const works = new Map(progress.workPackages.map(work => [work.id, work]));
   const questionItems = questions ? new Map(questions.items.map(item => [item.id, item])) : null;
-  validateRulesContent(snapshot.content, { workPackageIds: works.keys(), questionStates: questionItems ? new Map([...questionItems].map(([id, item]) => [id, item.state])) : null });
+  const questionStates = questionItems ? new Map([...questionItems].map(([id, item]) => [id, item.state])) : null;
+  validateRulesContent(snapshot.content, { workPackageIds: works.keys(), questionStates });
   const { content } = snapshot;
   const items = content.rules.map(rule => {
     const work = rule.workPackage ? works.get(rule.workPackage) : null;
-    return { ...rule, work, phase: work ? work.phase : withoutPhase, questions: rule.links.questions.map(id => questionItems?.get(id) || { id, state: null, topic: null }) };
+    return { ...rule, work, phase: work ? work.phase : withoutPhase, decision: decisionOf(rule, questionStates || new Map()), questions: rule.links.questions.map(id => questionItems?.get(id) || { id, state: null, topic: null }) };
   });
   const groups = [
     ...progress.phases.map(phase => ({ id: phase.id, title: phase.title, href: phase.href, items: items.filter(item => item.phase === phase.id) })),
@@ -272,11 +256,12 @@ export function deriveRules(snapshot, progress, questions = null) {
     items,
     groups,
     phases: groups.map(group => ({ id: group.id, title: group.title })),
-    deciders: [...new Set(items.map(item => item.decision.decider))].sort((a, b) => a.localeCompare(b, 'es')),
+    deciders: [...new Set(items.map(item => item.decider))].sort((a, b) => a.localeCompare(b, 'es')),
     counts: {
       total: items.length,
       discovered: items.filter(item => item.origin === 'descubierta').length,
-      decisions: Object.fromEntries(Object.keys(decisionStates).map(state => [state, items.filter(item => item.decision.state === state).length])),
+      decisions: Object.fromEntries(Object.keys(decisionStates).map(state => [state, items.filter(item => item.decision === state).length])),
+      withCapability: items.filter(item => item.links.parity.length).length,
       legacy: count(items, item => item.legacy.verification),
       implemented: count(items, item => item.posPlatform.implemented.state),
       areas: count(items, item => item.area),

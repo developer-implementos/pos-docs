@@ -183,11 +183,11 @@ try {
     await navigate('/project/rules/');
     assert.equal(await count(), rules.items.length, 'Every rule is listed');
     assert.equal(await page.locator('[data-project-group]:visible').count(), rules.groups.length);
-    await form().locator('[name=decision]').selectOption('pendiente');
-    assert.equal(await count(), rules.items.filter(item => item.decision.state === 'pendiente').length);
+    await form().locator('[name=decision]').selectOption('abierta');
+    assert.equal(await count(), rules.items.filter(item => item.decision === 'abierta').length);
     const area = Object.keys(rules.areas)[0];
     await form().locator('[name=area]').selectOption(area);
-    assert.equal(await count(), rules.items.filter(item => item.decision.state === 'pendiente' && item.area === area).length, 'Filters combine');
+    assert.equal(await count(), rules.items.filter(item => item.decision === 'abierta' && item.area === area).length, 'Filters combine');
   }
   await navigate('/project/questions/');
   const groups = () => page.locator('[data-project-group]:visible').count();

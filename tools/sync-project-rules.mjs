@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { productRepository } from '../portal/follow-up.mjs';
 import { loadProgress } from '../portal/progress.mjs';
 import { csvIds } from '../portal/questions.mjs';
-import { deriveRules, rulesContentHash, rulesDataPath, rulesSourcePath, validateRulesContent } from '../portal/rules.mjs';
+import { decisionOf, deriveRules, rulesContentHash, rulesDataPath, rulesSourcePath, validateRulesContent } from '../portal/rules.mjs';
 
 const repositoryRoot = fileURLToPath(new URL('../', import.meta.url));
 const allowedRemotes = new Set([productRepository, `${productRepository}.git`, 'git@github.com:developer-implementos/pos-platform.git', 'ssh://git@github.com/developer-implementos/pos-platform.git']);
@@ -84,7 +84,8 @@ export function syncProjectRules({ root = repositoryRoot, workspace, check = fal
   const state = integration(productRoot, revision);
   const content = JSON.parse(trackedText(productRoot, revision, rulesSourcePath));
   // Product rigor first; the snapshot is then derived against the POS Docs roadmap.
-  validateRulesContent(structuredClone(content), productContext(productRoot, revision));
+  const context = productContext(productRoot, revision);
+  validateRulesContent(structuredClone(content), context);
   const snapshot = {
     schemaVersion: 1,
     source: { repository: productRepository, revision, path: rulesSourcePath, sha256: rulesContentHash(content) },
@@ -116,7 +117,7 @@ export function syncProjectRules({ root = repositoryRoot, workspace, check = fal
       if (fs.existsSync(temporary)) fs.unlinkSync(temporary);
     }
   }
-  return { changed, revision, destination, included: state.included, total: model.counts.total, pending: model.counts.decisions.pendiente, accepted: model.counts.decisions.aceptada };
+  return { changed, revision, destination, included: state.included, total: model.counts.total, open: content.rules.filter(rule => decisionOf(rule, context.questionStates) === 'abierta').length, resolved: content.rules.filter(rule => decisionOf(rule, context.questionStates) === 'resuelta').length };
 }
 
 export function parseRulesArguments(args) {
@@ -133,5 +134,5 @@ export function parseRulesArguments(args) {
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const result = syncProjectRules(parseRulesArguments(process.argv.slice(2)));
-  console.log(`Project rules: ${result.total} rules; ${result.accepted} accepted; ${result.pending} pending; revision ${result.revision.slice(0, 12)} ${result.included ? 'in main' : 'not yet in main'}; ${result.changed ? 'snapshot updated' : 'snapshot current'}.`);
+  console.log(`Project rules: ${result.total} rules; ${result.open} with an open question; ${result.resolved} resolved; revision ${result.revision.slice(0, 12)} ${result.included ? 'in main' : 'not yet in main'}; ${result.changed ? 'snapshot updated' : 'snapshot current'}.`);
 }
