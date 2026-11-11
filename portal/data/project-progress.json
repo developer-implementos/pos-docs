@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "667235e1a97418325486c0ace25c0f4bee14fe44",
+    "revision": "da7da6d9808521db24ba11ef75dee6e2ebbe4d86",
     "path": "delivery/progress.json",
-    "sha256": "561f206b4833d3c240edd499cdd3822a189cc40373c58b31d7a97e29e66023d7"
+    "sha256": "69ee68fdf26a621ebb6d1cf8e9532f7f959278e38d87dbbb57076d4cad6dfb44"
   },
   "content": {
     "schemaVersion": 2,
@@ -16,7 +16,7 @@
       "path": "docs/roadmap.json",
       "sha256": "e91cff0a30c2162a36a05b0542eed7e5a25e0490ea898481a37969f2fb21e514"
     },
-    "summary": "Diez entregables están técnicamente verificados: ocho de F01 y los pagos combinados y la recuperación de cobros de F02. El 11 de noviembre de 2026, F01-01, F01-04, F01-05, F01-09 y F02-09 volvieron a en curso porque no cumplen un criterio de su ficha; cada uno tiene su issue hija (#272 a #276). El cliente recupera ventas y registra revisiones durables sin duplicar efectos. Efectivo y transferencia manual están conectados; tarjeta y fiscalidad conservan sus pendientes de proveedor operativo. La aceptación humana y la habilitación productiva se registran por separado.",
+    "summary": "Trece entregables están técnicamente verificados: diez de F01 y los pagos combinados, el protocolo de dispositivos y la recuperación de cobros de F02. F01-04 y F01-09 siguen en curso hasta demostrar un criterio con su prueba de punta a punta (#275, #272). El cliente recupera ventas y registra revisiones durables sin duplicar efectos. Efectivo y transferencia manual están conectados; tarjeta y fiscalidad conservan sus pendientes de proveedor operativo. La aceptación humana y la habilitación productiva se registran por separado.",
     "applications": [
       {
         "id": "pos-desktop",
@@ -89,7 +89,7 @@
       {
         "id": "branch-api",
         "stage": "functional",
-        "summary": "API NestJS/Fastify sobre PostgreSQL con administración, HTTPS y venta local. Los planes congelan el importe y finalizan venta, caja por su fracción y outbox en la misma transacción. Transferencias conservan autoridad manual y evidencia privada. El protocolo de dispositivos está implementado y probado con .NET/SQLite/HTTPS, y su verificación espera la prueba de otro puesto (#276); no habilita cobros, fiscalidad o drivers externos por defecto. Incluye recuperación comercial y revisión operativa durable de pagos.",
+        "summary": "API NestJS/Fastify sobre PostgreSQL con administración, HTTPS y venta local. Los planes congelan el importe y finalizan venta, caja por su fracción y outbox en la misma transacción. Transferencias conservan autoridad manual y evidencia privada. El protocolo de dispositivos está verificado con .NET/SQLite/HTTPS; no habilita cobros, fiscalidad o drivers externos por defecto. Incluye recuperación comercial y revisión operativa durable de pagos.",
         "nextStep": "Completar la fuente comercial autorizada, los adaptadores y flujos de excepción pendientes; mantener activación explícita, permisos actuales e incertidumbre durable cuando falta una respuesta externa.",
         "evidence": [
           {
@@ -173,7 +173,7 @@
       {
         "id": "device-agent",
         "stage": "foundation",
-        "summary": "Host .NET 10 con transporte HTTPS saliente, identidad de instalación y SQLite. El protocolo de recepción durable, permiso único y reporte está implementado y probado con interoperabilidad real y recuperación sin repetir efectos; su verificación espera la prueba de otro puesto (#276). El driver runtime permanece no disponible.",
+        "summary": "Host .NET 10 con transporte HTTPS saliente, identidad de instalación y SQLite. El protocolo de recepción durable, permiso único y reporte está técnicamente verificado con interoperabilidad real y recuperación sin repetir efectos. El driver runtime permanece no disponible.",
         "nextStep": "Implementar y homologar el primer adaptador físico, su SDK/modelo/firmware y el despliegue de servicio; el protocolo verificado no acredita impresión ni cobros.",
         "evidence": [
           {
@@ -210,10 +210,36 @@
           "pos-desktop",
           "branch-api"
         ],
-        "status": "in_progress",
-        "summary": "Implementados identidad POS, permisos y apertura persistente: provisión, roles, revocación, último administrador concurrente, exclusión de turno e idempotencia. Vuelve a en curso porque ninguna prueba demuestra que un reinicio conserva el monto inicial (#274). Revisión manual de la matriz de acciones pendiente; caja operativa conserva sus gates comerciales.",
+        "status": "verified",
+        "summary": "Verificados identidad POS, permisos y apertura persistente: provisión, roles, revocación, último administrador concurrente, exclusión de turno e idempotencia. Un reinicio conserva la caja ocupada y su monto inicial, que el rol de ejecución no puede modificar (#274). Revisión manual de la matriz de acciones pendiente; caja operativa conserva sus gates comerciales.",
         "acceptance": null,
-        "verification": null
+        "verification": {
+          "revision": "193f730266f709cbc7e96decd353149409aaf238",
+          "reviewedOn": "2026-11-11",
+          "reviewer": "Claude Code · verificación técnica de agente",
+          "evidence": [
+            {
+              "path": "apps/branch-api/integration/identity-cash.test.ts",
+              "label": "Sesiones, ámbitos, apertura concurrente, idempotencia, logout, y monto inicial que sobrevive al reinicio y no se modifica"
+            },
+            {
+              "path": "libs/backend/administration/integration/operational-identity.test.ts",
+              "label": "Usuarios, roles, asignaciones, revocación y provisión operativa"
+            },
+            {
+              "path": "libs/backend/administration/integration/last-administrator.test.ts",
+              "label": "Protección del último administrador entre instancias concurrentes"
+            },
+            {
+              "path": "tests/pos-clients-e2e/operational/administration.spec.ts",
+              "label": "Administración POS contra HTTPS y PostgreSQL reales"
+            },
+            {
+              "path": "delivery/reviews/pos-parity-2026-11-10/cumplimiento-f01-f02.md",
+              "label": "Contraste de criterios del 11 de noviembre de 2026 y su incumplimiento resuelto"
+            }
+          ]
+        }
       },
       {
         "id": "F01-02",
@@ -299,10 +325,80 @@
           "erp-worker",
           "device-agent"
         ],
-        "status": "in_progress",
-        "summary": "Implementados el inventario, las instrucciones compartidas y la política alojada de PR con rechazos y restauración válida. Vuelve a en curso porque la política acepta un cierre en el título de una PR parcial y un bloque <pre> en campos obligatorios, y faltan pruebas de la publicación idempotente y de la ficha ausente (#273). La política vigente y su comprobación remota se consultan en .github/rulesets/README.md. No registra una práctica humana del equipo ni aceptación manual.",
+        "status": "verified",
+        "summary": "Verificados el inventario, las instrucciones compartidas y la política alojada de PR: rechaza cierres en el título de cualquier PR y en el cuerpo de una entrega parcial, ignora comentarios, bloques de código y <pre>, y el publicador del backlog no duplica issues ni pisa notas del equipo, también tras una respuesta perdida (#273, #292). La política vigente y su comprobación remota se consultan en .github/rulesets/README.md. No registra una práctica humana del equipo ni aceptación manual.",
         "acceptance": null,
-        "verification": null
+        "verification": {
+          "revision": "c78b849a92ca8dbb0f87224286355a7311f4c675",
+          "reviewedOn": "2026-11-11",
+          "reviewer": "Claude Code · verificación técnica de agente",
+          "evidence": [
+            {
+              "path": ".github/workflows/pr-policy.yml",
+              "label": "Política alojada desde la base confiable y token de lectura"
+            },
+            {
+              "path": "tools/check-pr-policy.mjs",
+              "label": "Validación de issue, alcance, metadatos, título y vínculos de cierre"
+            },
+            {
+              "path": "tools/check-pr-policy.test.mjs",
+              "label": "Casos positivos y negativos del contrato de PR, incluidos cierres en el título y bloques pre"
+            },
+            {
+              "path": ".github/rulesets/main.json",
+              "label": "Reglas técnicas de main: PR, historia lineal y checks exigidos"
+            },
+            {
+              "path": ".github/rulesets/README.md",
+              "label": "Procedimiento de aplicación y comprobación de reglas efectivas"
+            },
+            {
+              "path": "CONTRIBUTING.md",
+              "label": "Flujo común de tareas, revisión, traspaso y excepciones explícitas"
+            },
+            {
+              "path": "AGENTS.md",
+              "label": "Entrada común de instrucciones de agentes"
+            },
+            {
+              "path": "CLAUDE.md",
+              "label": "Importación de instrucciones compartidas para Claude Code"
+            },
+            {
+              "path": "delivery/backlog.json",
+              "label": "Alcance, códigos, fases y dependencias del inventario"
+            },
+            {
+              "path": "delivery/github-issues.json",
+              "label": "Identidades estables de issues de fase y entregables"
+            },
+            {
+              "path": "tools/publish-delivery-issues.mjs",
+              "label": "Publicador idempotente y comprobación remota del inventario"
+            },
+            {
+              "path": "delivery/evidence/f01-governance.json",
+              "label": "Resultados alojados, reglas efectivas y alcance de la evidencia remota"
+            },
+            {
+              "path": "delivery/reviews/F01-governance-verification.md",
+              "label": "Matriz de criterios técnicos y límites de la revisión humana"
+            },
+            {
+              "path": "tools/publish-delivery-issues.test.mjs",
+              "label": "Dos publicaciones sin duplicar, notas del equipo, edición no revisada y respuesta perdida"
+            },
+            {
+              "path": "tools/delivery-backlog.test.mjs",
+              "label": "Dependencias, ciclos, alcance y ficha ausente antes de publicar"
+            },
+            {
+              "path": "delivery/reviews/pos-parity-2026-11-10/cumplimiento-f01-f02.md",
+              "label": "Contraste de criterios del 11 de noviembre de 2026 y su incumplimiento resuelto"
+            }
+          ]
+        }
       },
       {
         "id": "F01-06",
@@ -657,10 +753,60 @@
           "device-agent",
           "pos-desktop"
         ],
-        "status": "in_progress",
-        "summary": "Implementados el contrato TypeScript/.NET, inscripción y ámbito, recepción durable, permiso de ejecución de un uso, vigencia, deduplicación y recuperación, probados con fixtures comunes, PostgreSQL, SQLite y HTTPS reales. Vuelve a en curso porque ninguna prueba demuestra que otra instalación controladora no recibe el trabajo (#276). Driver físico, instalación productiva y mTLS conservan sus entregables propios.",
+        "status": "verified",
+        "summary": "Verificados el contrato TypeScript/.NET, inscripción y ámbito, recepción durable, permiso de ejecución de un uso, vigencia, deduplicación y recuperación. Otra instalación controladora de la sucursal no recibe ni actúa sobre un trabajo ajeno (#276). Fixtures comunes, PostgreSQL, SQLite y HTTPS reales comprueban el intercambio y rechazo de identidad/TLS inválidos. Driver físico, instalación productiva y mTLS conservan sus entregables propios.",
         "acceptance": null,
-        "verification": null
+        "verification": {
+          "revision": "193f730266f709cbc7e96decd353149409aaf238",
+          "reviewedOn": "2026-11-11",
+          "reviewer": "Claude Code · verificación técnica de agente",
+          "evidence": [
+            {
+              "path": "libs/backend/devices/contracts/fixtures/device-wire.v1.json",
+              "label": "Fixtures comunes versionados TypeScript y C#"
+            },
+            {
+              "path": "libs/backend/devices/test/wire.test.ts",
+              "label": "Validación TypeScript de los mismos mensajes y límites"
+            },
+            {
+              "path": "tests/device-agent/DeviceWireTests.cs",
+              "label": "Validación C# de los fixtures comunes"
+            },
+            {
+              "path": "libs/backend/devices/integration/device-jobs.test.ts",
+              "label": "PostgreSQL: identidad, ámbito, otra instalación controladora, deduplicación, capacidad, vigencia y permiso"
+            },
+            {
+              "path": "tests/device-agent/DeviceJournalTests.cs",
+              "label": "SQLite: recepción y resultado durables, duplicados y recuperación"
+            },
+            {
+              "path": "tests/device-agent/ExecutionPermissionTests.cs",
+              "label": "Permiso de un uso, presupuesto monotónico y restauración sin repetir efectos"
+            },
+            {
+              "path": "tests/device-agent/TransportTests.cs",
+              "label": "Transporte y rechazo TLS antes de transmitir credenciales"
+            },
+            {
+              "path": "apps/branch-api/native-integration/device-host.test.ts",
+              "label": "Interoperabilidad real .NET, SQLite, HTTPS/Nest y PostgreSQL entre procesos"
+            },
+            {
+              "path": "delivery/reviews/F02-verification.md",
+              "label": "Dictamen técnico y límites de driver, hardware e instalación productiva"
+            },
+            {
+              "path": "delivery/evidence/f02-device-protocol-ci.json",
+              "label": "Trabajos API y Windows aprobados con interoperabilidad y pruebas del host"
+            },
+            {
+              "path": "delivery/reviews/pos-parity-2026-11-10/cumplimiento-f01-f02.md",
+              "label": "Contraste de criterios del 11 de noviembre de 2026 y su incumplimiento resuelto"
+            }
+          ]
+        }
       },
       {
         "id": "F02-10",
