@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { deriveProgress, progressContentHash } from '../portal/progress.mjs';
+import { StaleSnapshotError } from './project-import/stale-snapshot.mjs';
 
 const repository = 'https://github.com/developer-implementos/pos-platform';
 const sourcePath = 'delivery/progress.json';
@@ -104,7 +105,7 @@ export function syncProjectProgress({ root = repositoryRoot, workspace, check = 
   const existing = fs.existsSync(destination) ? fs.readFileSync(destination, 'utf8').replaceAll('\r\n', '\n') : null;
   const changed = existing !== serialized;
   if (check) {
-    assert.ok(!changed, 'Published progress snapshot is stale; run progress:sync and review the resulting change');
+    if (changed) throw new StaleSnapshotError('Published progress snapshot is stale; run progress:sync and review the resulting change');
   } else if (changed) {
     fs.mkdirSync(path.dirname(destination), { recursive: true });
     const temporary = path.join(path.dirname(destination), `.project-progress-${process.pid}-${randomUUID()}.tmp`);

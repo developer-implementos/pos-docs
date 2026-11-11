@@ -6,6 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { deriveFollowUp, followUpContentHash, productRepository } from '../portal/follow-up.mjs';
 import { deriveProgress, loadProgress, progressContentHash } from '../portal/progress.mjs';
+import { StaleSnapshotError } from './project-import/stale-snapshot.mjs';
 
 const sourcePath = 'delivery/follow-ups.json';
 const registryPath = 'delivery/github-issues.json';
@@ -106,7 +107,7 @@ export function syncProjectFollowUp({ root = repositoryRoot, workspace, check = 
   assert.equal(git(productRoot, 'rev-parse', 'HEAD'), revision, 'Product revision changed while importing follow-up');
   assert.equal(git(productRoot, 'status', '--porcelain', '--untracked-files=all'), '', 'Product checkout changed while importing follow-up');
   if (check) {
-    assert.ok(!changed, 'Published follow-up snapshot is stale; import it and review the public metadata');
+    if (changed) throw new StaleSnapshotError('Published follow-up snapshot is stale; import it and review the public metadata');
   } else if (changed) {
     fs.mkdirSync(path.dirname(destination), { recursive: true });
     const temporary = path.join(path.dirname(destination), `.project-follow-up-${process.pid}-${randomUUID()}.tmp`);

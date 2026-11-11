@@ -22,6 +22,7 @@ Decisión permanente del responsable, del 2026-11-06 ([TASK-219](https://github.
 | `docs-quality.yml` | `active` | `ubuntu-latest` |
 | `editorial-policy.yml` | `active` | `ubuntu-latest` |
 | `automated-review.yml` | `disabled_manually`, porque puede consumir la API de IA | `ubuntu-24.04`, si se autoriza |
+| `project-import.yml` | `active`; el calendario corre sólo con `PROJECT_IMPORT_ENABLED=true` ([importación automática](../../tools/project-import/README.md)) | `ubuntu-latest` |
 
 La corrida [42250964631](https://github.com/developer-implementos/pos-docs/actions/runs/42250964631) sobre `main` pasó en el grupo `GitHub Actions`, en unos 5 minutos.
 
