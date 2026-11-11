@@ -11,6 +11,23 @@ Los cambios de herramientas, pruebas y CI no aparecen aquí; quedan en el [regis
 
 Este archivo lo escribe [release-please](https://github.com/googleapis/release-please) desde los títulos de los PR, y cada versión queda como [release en GitHub](https://github.com/developer-implementos/pos-docs/releases). Para recibir un aviso por versión, usa *Watch → Custom → Releases* en el repositorio. No se edita a mano: cómo se escribe una buena entrada está en la [guía de versiones](tools/release/README.md).
 
+## [0.5.3](https://github.com/developer-implementos/pos-docs/compare/v0.5.2...v0.5.3) (2026-11-11)
+
+
+### Contenido actualizado
+
+* **progress:** F01-01 en GitHub pasa de En validación a Por clasificar ([57b1b2f](https://github.com/developer-implementos/pos-docs/commit/57b1b2f68c3639fdbb17be0616229b4c114a231c))
+* **progress:** F01-01 pasa de Verificado técnicamente a En desarrollo ([57b1b2f](https://github.com/developer-implementos/pos-docs/commit/57b1b2f68c3639fdbb17be0616229b4c114a231c))
+* **progress:** F01-04 en GitHub pasa de Cerrada a Por clasificar ([57b1b2f](https://github.com/developer-implementos/pos-docs/commit/57b1b2f68c3639fdbb17be0616229b4c114a231c))
+* **progress:** F01-04 pasa de Verificado técnicamente a En desarrollo ([57b1b2f](https://github.com/developer-implementos/pos-docs/commit/57b1b2f68c3639fdbb17be0616229b4c114a231c))
+* **progress:** F01-05 en GitHub pasa de Cerrada a Por clasificar ([57b1b2f](https://github.com/developer-implementos/pos-docs/commit/57b1b2f68c3639fdbb17be0616229b4c114a231c))
+* **progress:** F01-05 pasa de Verificado técnicamente a En desarrollo ([57b1b2f](https://github.com/developer-implementos/pos-docs/commit/57b1b2f68c3639fdbb17be0616229b4c114a231c))
+* **progress:** F01-09 en GitHub pasa de En validación a Por clasificar ([57b1b2f](https://github.com/developer-implementos/pos-docs/commit/57b1b2f68c3639fdbb17be0616229b4c114a231c))
+* **progress:** F01-09 pasa de Verificado técnicamente a En desarrollo ([57b1b2f](https://github.com/developer-implementos/pos-docs/commit/57b1b2f68c3639fdbb17be0616229b4c114a231c))
+* **progress:** F02-09 en GitHub pasa de En validación a Por clasificar ([57b1b2f](https://github.com/developer-implementos/pos-docs/commit/57b1b2f68c3639fdbb17be0616229b4c114a231c))
+* **progress:** F02-09 pasa de Verificado técnicamente a En desarrollo ([57b1b2f](https://github.com/developer-implementos/pos-docs/commit/57b1b2f68c3639fdbb17be0616229b4c114a231c))
+* **project:** [TASK-258] importar el corte 667235e con el avance corregido a 10 de 71 entregables ([57b1b2f](https://github.com/developer-implementos/pos-docs/commit/57b1b2f68c3639fdbb17be0616229b4c114a231c))
+
 ## [0.5.2](https://github.com/developer-implementos/pos-docs/compare/v0.5.1...v0.5.2) (2026-11-11)
 
 
