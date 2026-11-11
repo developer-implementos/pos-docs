@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "da7da6d9808521db24ba11ef75dee6e2ebbe4d86",
+    "revision": "38e6bf7dd5b6ba1a68934e3869324de45758ecde",
     "path": "delivery/follow-ups.json",
-    "sha256": "7969d7a68a34217341e104b4fded7dff0d0a8dc8d75e078c6d1c63f44faa959f"
+    "sha256": "47a1ccb50457781c9507bc446344fc55d8f1c8c19f6ab00355305c3654df33b1"
   },
   "content": {
     "schemaVersion": 1,
-    "reviewedOn": "2026-11-10",
+    "reviewedOn": "2026-11-11",
     "items": [
       {
         "id": "FOLLOWUP-001",
@@ -674,11 +674,180 @@
           }
         ],
         "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-019",
+        "kind": "decision",
+        "state": "open",
+        "workPackages": [
+          "F02-05",
+          "F03-03"
+        ],
+        "summary": "Definir la contabilización del ajuste de redondeo de efectivo y su concepto en el ERP",
+        "impact": "La norma chilena obliga a redondear los pagos en efectivo, y el ajuste no tiene efecto tributario. El legacy sólo envía a AX el ajuste negativo, con la forma de pago RED; su cuenta y el tratamiento del ajuste positivo no constan en el código. Sin este concepto no debería operarse efectivo real en el piloto. No impide implementar el cálculo con la política apagada en laboratorio.",
+        "impactScope": "operational",
+        "nextAction": "Preguntar a Contabilidad y al responsable de AX qué cuenta usa hoy RED y cómo se contabiliza el ajuste positivo. Decidir una o dos cuentas de resultado y su granularidad; el ADR-20 propone dos cuentas y un evento por pago, sin netear. Confirmar cómo recibirá AX ambos signos y si el piloto puede operar con el trabajo ERP retenido.",
+        "requestedFrom": "Contabilidad y dueño del ERP",
+        "owner": null,
+        "closureCriteria": "Cuentas, granularidad y contrato hacia el ERP aprobados para ambos signos, con un caso probado en un entorno autorizado y el ADR-20 actualizado.",
+        "reviewedOn": "2026-11-06",
+        "evidence": [
+          {
+            "url": "https://pos-docs-starlight.vercel.app/guide/architecture/cash-rounding/",
+            "label": "ADR-20: decisión propuesta y razonamiento"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/27",
+            "label": "F02-05: pagos combinados, asignación y vuelto"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-020",
+        "kind": "decision",
+        "state": "open",
+        "workPackages": [
+          "F02-05",
+          "F04-03"
+        ],
+        "summary": "Aprobar la política de caja para el redondeo de efectivo",
+        "impact": "El ADR-20 propone cerrar con $0 en efectivo mediante una acción explícita, no limitar la división de pagos y excluir el ajuste de las diferencias de arqueo, con tolerancia inicial 0. Son recomendaciones de ingeniería sin aprobar; la primera condiciona operar efectivo real.",
+        "impactScope": "operational",
+        "nextAction": "Confirmar con Finanzas si se admite cerrar con $0 cuando el resto en efectivo redondea a cero, si se limita la división de pagos y qué tolerancia aplica a diferencias reales. Pedir a un asesor que confirme la aplicación de la regla a montos menores a $10.",
+        "requestedFrom": "Responsable de Finanzas/Tesorería del piloto; asesor legal o tributario",
+        "owner": null,
+        "closureCriteria": "Las tres reglas aprobadas con ejemplos monetarios y criterios incorporados a las fichas afectadas.",
+        "reviewedOn": "2026-11-06",
+        "evidence": [
+          {
+            "url": "https://pos-docs-starlight.vercel.app/guide/architecture/cash-rounding/",
+            "label": "ADR-20: decisión propuesta y razonamiento"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/27",
+            "label": "F02-05: pagos combinados, asignación y vuelto"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-021",
+        "kind": "decision",
+        "state": "open",
+        "workPackages": [
+          "F04-01"
+        ],
+        "summary": "Aprobar devoluciones y notas de crédito de ventas con redondeo",
+        "impact": "El legacy calcula las devoluciones por el nominal, sin considerar el redondeo original. El ADR-20 propone un pago acumulado con tope en lo cobrado y el medio original primero. La norma no resuelve expresamente el importe.",
+        "impactScope": "operational",
+        "nextAction": "Confirmar con Finanzas el algoritmo de devoluciones parciales, el orden de medios en ventas mixtas y cuánto vale una nota de crédito aplicada a otra venta. Pedir a un asesor que confirme el importe a reembolsar cuando el dinero cobrado difiere del total del documento.",
+        "requestedFrom": "Responsable de Finanzas/Tesorería del piloto; asesor legal o tributario",
+        "owner": null,
+        "closureCriteria": "Algoritmo, medios y topes aprobados con ejemplos monetarios e incorporados a F04-01.",
+        "reviewedOn": "2026-11-06",
+        "evidence": [
+          {
+            "url": "https://pos-docs-starlight.vercel.app/guide/architecture/cash-rounding/",
+            "label": "ADR-20: decisión propuesta y razonamiento"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/27",
+            "label": "F02-05: pagos combinados, asignación y vuelto"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-022",
+        "kind": "decision",
+        "state": "open",
+        "workPackages": [
+          "F02-05",
+          "F04-02",
+          "F04-11"
+        ],
+        "summary": "Definir el redondeo en cobranzas, cuotas, anticipos y USD",
+        "impact": "El legacy reduce la deuda por el nominal y redondea los anticipos como cualquier efectivo. El ADR-20 mantiene la imputación nominal, acredita en anticipos sólo el dinero recibido y conserva USD bloqueado. El ERP sigue siendo autoridad de deuda, y falta confirmar cómo reconoce los residuos.",
+        "impactScope": "operational",
+        "nextAction": "Confirmar con Finanzas y el dueño del ERP cómo se reconocen los residuos en cuentas por cobrar y si AX admite el ajuste positivo en cobranzas. Decidir el tratamiento de anticipos y si se habilita USD. Pedir a un asesor que confirme la lectura sobre anticipos.",
+        "requestedFrom": "Responsable de Finanzas/Tesorería del piloto; dueño del ERP; asesor legal o tributario",
+        "owner": null,
+        "closureCriteria": "Reglas de imputación, anticipos y USD aprobadas con ejemplos e incorporadas a las fichas afectadas, o USD descartado de forma explícita.",
+        "reviewedOn": "2026-11-06",
+        "evidence": [
+          {
+            "url": "https://pos-docs-starlight.vercel.app/guide/architecture/cash-rounding/",
+            "label": "ADR-20: decisión propuesta y razonamiento"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/27",
+            "label": "F02-05: pagos combinados, asignación y vuelto"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-023",
+        "kind": "question",
+        "state": "open",
+        "workPackages": [
+          "F02-02",
+          "F02-05",
+          "F04-01"
+        ],
+        "summary": "Confirmar con asesor o SII la representación y el tratamiento tributario del redondeo",
+        "impact": "El art. 13 de la Ley 20.956, el Decreto 1266 y la Circular 44/2017 fijan que los documentos no cambian y que no hay efecto tributario. No resuelven expresamente los campos del documento, el texto impreso ni el reflejo en renta. El proyecto no debe inventar esos criterios.",
+        "impactScope": "operational",
+        "nextAction": "Consultar a Tributario y a un asesor, o al SII, sobre: uso de VlrPagar y MontoNF, y desglose impreso; total terminado en 0 con parte en efectivo que no; conciliación con el registro de ventas; reflejo en la renta líquida imponible según el régimen de la empresa.",
+        "requestedFrom": "Tributario y asesor legal o tributario",
+        "owner": null,
+        "closureCriteria": "Respuesta identificada para cada punto, registrada con fecha y evidencia, sin publicar opiniones privadas.",
+        "reviewedOn": "2026-11-06",
+        "evidence": [
+          {
+            "url": "https://pos-docs-starlight.vercel.app/guide/architecture/cash-rounding/",
+            "label": "ADR-20: decisión propuesta y razonamiento"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/27",
+            "label": "F02-05: pagos combinados, asignación y vuelto"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-024",
+        "kind": "investigation",
+        "state": "open",
+        "workPackages": [
+          "F02-05",
+          "F03-03"
+        ],
+        "summary": "Contrastar el redondeo del legacy con datos y con la lógica de AX",
+        "impact": "El comportamiento del legacy se obtuvo leyendo código, sin datos de producción. La lógica X++ del servicio de pagos no está en los repositorios. Estos datos no deciden políticas, pero confirman la cuenta y los asientos reales y dimensionan los casos abiertos.",
+        "impactScope": "operational",
+        "nextAction": "Solicitar a quien administra AX una exportación de la lógica del servicio de pagos y la configuración de RED. Con autorización y credenciales de sólo lectura fuera del repositorio, ejecutar primero en AX y luego en una muestra de sucursales consultas agregadas y sin datos personales. Coordinar con FOLLOWUP-001.",
+        "requestedFrom": "Responsable de AX, consultor funcional de AX e Infraestructura",
+        "owner": null,
+        "closureCriteria": "Cuenta de RED, trato del ajuste positivo y frecuencias registrados con fecha y alcance, sin publicar hosts, credenciales ni datos comerciales.",
+        "reviewedOn": "2026-11-06",
+        "evidence": [
+          {
+            "url": "https://pos-docs-starlight.vercel.app/guide/architecture/cash-rounding/",
+            "label": "ADR-20: decisión propuesta y razonamiento"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/27",
+            "label": "F02-05: pagos combinados, asignación y vuelto"
+          }
+        ],
+        "resolution": null
       }
     ]
   },
   "issues": {
-    "observedAt": "2026-11-11T17:51:08.829Z",
+    "observedAt": "2026-11-11T20:07:39.582Z",
     "repository": "https://github.com/developer-implementos/pos-platform",
     "entries": [
       {

@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "da7da6d9808521db24ba11ef75dee6e2ebbe4d86",
+    "revision": "38e6bf7dd5b6ba1a68934e3869324de45758ecde",
     "path": "delivery/business-questions.json",
-    "sha256": "4041342146dc2fb3dc944d4fff4f628dfd14afcd4a8a33bc832149397a1f6b63"
+    "sha256": "8bea6918a1a201ea808eda23320f27390e211b307c867bf5b92168dd93f3c8e4"
   },
   "integration": {
     "reference": "main",
@@ -1547,7 +1547,7 @@
         "question": "¿Qué redondeo aplica al cobro en efectivo y cómo se registra la diferencia con el total del documento?",
         "kind": "rule",
         "state": "open",
-        "currentAnswer": "Legacy: el pago combinado redondea el efectivo y entrega vuelto. F02-05 cubre asignación y vuelto, no el redondeo; hay una propuesta de decisión abierta en POS Docs",
+        "currentAnswer": "Legacy: el pago combinado redondea el efectivo y entrega vuelto. F02-05 cubre asignación y vuelto, no el redondeo. El ADR-20 de POS Docs propone tratarlo como ajuste de pago; FOLLOWUP-019 a FOLLOWUP-024 registran las decisiones abiertas de contabilización, política de caja, devoluciones, cobranzas, tributación y datos del legacy",
         "answerSources": [
           "code",
           "spec"
@@ -1563,7 +1563,7 @@
         ],
         "decider": "Finanzas y Fiscalidad",
         "owner": null,
-        "followUp": "FOLLOWUP-017",
+        "followUp": "FOLLOWUP-020",
         "workPackages": [
           "F02-05"
         ],
