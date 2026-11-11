@@ -109,18 +109,18 @@ Las respuestas usan dos fuentes. Una es el código del legacy, leído en `mounta
 
 | # | Pregunta | Legacy | Respuesta propuesta | Seguimiento |
 | --- | --- | --- | --- | --- |
-| [QF1](#qf1--contabilización-del-ajuste) | ¿Cómo se contabiliza el ajuste? | Parcial | Dos cuentas dedicadas de resultado; evento por pago, sin netear | FOLLOWUP-016 |
-| [QF2](#qf2--cierre-con-0-en-efectivo) | ¿Se cierra con $0 en efectivo? | Sin decisión | Sí, con acción explícita y alerta | FOLLOWUP-017 |
-| [QF3](#qf3--límite-a-dividir-pagos) | ¿Se limita dividir pagos? | Sin decisión | No; se monitorea | FOLLOWUP-017 |
-| [QF4](#qf4--devoluciones-parciales-en-efectivo) | ¿Cómo se calculan las devoluciones parciales? | Sin decisión | Pago acumulado sobre el nominal devuelto | FOLLOWUP-018 |
-| [QF5](#qf5--medio-y-tope-del-reembolso) | ¿Qué medio y tope tiene el reembolso? | Parcial | Medio original primero; tope en el dinero recibido | FOLLOWUP-018 |
-| [QF6](#qf6--nota-de-crédito-aplicada-a-otra-venta) | ¿Cuánto vale una NC aplicada a otra venta? | Responde | El menor entre nominal y financiado, sin saldos residuales | FOLLOWUP-018 |
-| [QF7](#qf7--cobranzas-y-cuotas) | ¿Cómo se imputan cobranzas y cuotas? | Responde | Se salda el nominal, una vez por pago | FOLLOWUP-019 |
-| [QF8](#qf8--anticipos-en-efectivo) | ¿Cómo se tratan los anticipos? | Responde | Se acredita lo recibido, sin ajuste | FOLLOWUP-019 |
-| [QF9](#qf9--usd) | ¿Se admite USD? | Responde | Sigue bloqueado | FOLLOWUP-019 |
-| [QF10](#qf10--tolerancia-y-responsabilidad-en-el-arqueo) | ¿Qué tolerancia tiene el arqueo? | Responde | `A` nunca es diferencia de caja; tolerancia inicial 0 | FOLLOWUP-017 |
-| [QF11](#qf11--habilitación-sin-concepto-erp) | ¿Se habilita sin concepto ERP? | Parcial | No para el piloto | FOLLOWUP-016 |
-| [QF12](#qf12--conciliación-y-renta) | ¿Cómo se concilia y se refleja en renta? | Parcial | Reporte con invariantes; la renta requiere asesor | FOLLOWUP-020 |
+| [QF1](#qf1--contabilización-del-ajuste) | ¿Cómo se contabiliza el ajuste? | Parcial | Dos cuentas dedicadas de resultado; evento por pago, sin netear | FOLLOWUP-019 |
+| [QF2](#qf2--cierre-con-0-en-efectivo) | ¿Se cierra con $0 en efectivo? | Sin decisión | Sí, con acción explícita y alerta | FOLLOWUP-020 |
+| [QF3](#qf3--límite-a-dividir-pagos) | ¿Se limita dividir pagos? | Sin decisión | No; se monitorea | FOLLOWUP-020 |
+| [QF4](#qf4--devoluciones-parciales-en-efectivo) | ¿Cómo se calculan las devoluciones parciales? | Sin decisión | Pago acumulado sobre el nominal devuelto | FOLLOWUP-021 |
+| [QF5](#qf5--medio-y-tope-del-reembolso) | ¿Qué medio y tope tiene el reembolso? | Parcial | Medio original primero; tope en el dinero recibido | FOLLOWUP-021 |
+| [QF6](#qf6--nota-de-crédito-aplicada-a-otra-venta) | ¿Cuánto vale una NC aplicada a otra venta? | Responde | El menor entre nominal y financiado, sin saldos residuales | FOLLOWUP-021 |
+| [QF7](#qf7--cobranzas-y-cuotas) | ¿Cómo se imputan cobranzas y cuotas? | Responde | Se salda el nominal, una vez por pago | FOLLOWUP-022 |
+| [QF8](#qf8--anticipos-en-efectivo) | ¿Cómo se tratan los anticipos? | Responde | Se acredita lo recibido, sin ajuste | FOLLOWUP-022 |
+| [QF9](#qf9--usd) | ¿Se admite USD? | Responde | Sigue bloqueado | FOLLOWUP-022 |
+| [QF10](#qf10--tolerancia-y-responsabilidad-en-el-arqueo) | ¿Qué tolerancia tiene el arqueo? | Responde | `A` nunca es diferencia de caja; tolerancia inicial 0 | FOLLOWUP-020 |
+| [QF11](#qf11--habilitación-sin-concepto-erp) | ¿Se habilita sin concepto ERP? | Parcial | No para el piloto | FOLLOWUP-019 |
+| [QF12](#qf12--conciliación-y-renta) | ¿Cómo se concilia y se refleja en renta? | Parcial | Reporte con invariantes; la renta requiere asesor | FOLLOWUP-023 |
 | [QF13](#qf13--donaciones) | ¿Hay programa de donaciones? | No responde | Fuera del primer corte | Sin seguimiento hasta que entre al alcance |
 
 ### QF1 · Contabilización del ajuste
@@ -248,10 +248,10 @@ Las respuestas usan dos fuentes. Una es el código del legacy, leído en `mounta
 
 Este ADR no modifica fichas ni avance. La ruta recomendada, a decidir por el coordinador y el mantenedor del roadmap, es:
 
-1. Enmendar F02-05. Según [el procedimiento de avance](https://github.com/developer-implementos/pos-platform/blob/aa373b2f1507549e516dc4e3e5c5b6b8fcf35591/delivery/README.md), un paquete que deja de satisfacer sus criterios cambia de estado y anula su verificación. F02-05 pasaría a `in_progress` y el avance, de 15/71 a 14/71 hasta reverificar, en la misma revisión que agrega el criterio.
+1. Enmendar F02-05. Según [el procedimiento de avance](https://github.com/developer-implementos/pos-platform/blob/aa373b2f1507549e516dc4e3e5c5b6b8fcf35591/delivery/README.md), un paquete que deja de satisfacer sus criterios cambia de estado y anula su verificación. F02-05 pasaría a `in_progress` y el avance bajaría en un entregable hasta reverificar, en la misma revisión que agrega el criterio.
 2. Ejecutar en una `TASK-N` hija de F02-05. F01-03 queda afectado en código y pruebas, porque `ConfirmCashSale` usa el mismo cálculo, aunque sus criterios sigan cumpliéndose.
 3. Añadir los criterios de cierre, ERP, devoluciones y cobranzas a sus fichas sin iniciar, y los de recibo a F02-10.
-4. Mantener las decisiones abiertas en `delivery/follow-ups.json`, publicadas en [Bloqueos y decisiones](/project/attention/), sin inventar responsable ni fecha. Al resolverse, cada seguimiento conserva su evidencia y este ADR se actualiza con la decisión.
+4. Mantener las decisiones abiertas en `delivery/follow-ups.json`, publicadas en [Bloqueos y decisiones](/project/attention/), sin inventar responsable ni fecha. La pregunta [Q-53](/project/questions/#q-53) del registro de paridad remite a `FOLLOWUP-020`, de modo que la pregunta y sus decisiones no se registran dos veces. Al resolverse, cada seguimiento conserva su evidencia y este ADR se actualiza con la decisión.
 
 Una unidad nueva como `F02-15` también es viable, pero fragmenta algo que el inventario ya pedía como P02. P02 no se marca como parcial: `audit-chile-for-product.md` es un inventario sin columna de estado, y basta enlazarlo con F02-05 y la tarea.
 
@@ -264,7 +264,7 @@ Una unidad nueva como `F02-15` también es viable, pero fragmenta algo que el in
 
 ## Límites de la evidencia
 
-Se leyeron en su texto la Ley 20.956, el Decreto 1266 y la Circular 44/2017. No se revisó la Circular 31/2021 del SII, que modificó la Circular 44, y las búsquedas en sitios del SII y del Congreso fueron limitadas. No se encontró pronunciamiento de SERNAC ni fallo específico, lo que no prueba que no existan. Parte de las fuentes de Perú, España y proveedores se leyó como extracto o por fuentes secundarias. Las trazas del legacy provienen de leer el código; su despliegue real y sus datos no se examinaron. El acceso de lectura a producción, sobre todo a AX, puede confirmar hechos como la cuenta de `RED` y medir frecuencias; los datos de QA sirven casi sólo para probar consultas y configuración. Ningún dato decide políticas, lecturas legales ni ramas de X++ que no se hayan ejercido. Ese contraste se sigue en FOLLOWUP-021.
+Se leyeron en su texto la Ley 20.956, el Decreto 1266 y la Circular 44/2017. No se revisó la Circular 31/2021 del SII, que modificó la Circular 44, y las búsquedas en sitios del SII y del Congreso fueron limitadas. No se encontró pronunciamiento de SERNAC ni fallo específico, lo que no prueba que no existan. Parte de las fuentes de Perú, España y proveedores se leyó como extracto o por fuentes secundarias. Las trazas del legacy provienen de leer el código; su despliegue real y sus datos no se examinaron. El acceso de lectura a producción, sobre todo a AX, puede confirmar hechos como la cuenta de `RED` y medir frecuencias; los datos de QA sirven casi sólo para probar consultas y configuración. Ningún dato decide políticas, lecturas legales ni ramas de X++ que no se hayan ejercido. Ese contraste se sigue en FOLLOWUP-024.
 
 Antes de aprobar, conviene consultar a un asesor o al SII sobre: campos e impreso del documento, importe de los reembolsos, total terminado en 0 con una porción en efectivo que no, pago único de varios documentos, anticipos, montos bajo $10, reflejo en renta y donaciones.
 
