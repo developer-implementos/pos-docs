@@ -32,6 +32,8 @@ El comportamiento legacy citado en la respuesta actual describe lo observado, no
 
 `tools/sync-project-questions.mjs` importa el registro sin consultar GitHub. Lo valida con las reglas de POS Platform en la revisión importada: forma y estados, paquetes del backlog, seguimientos, identificadores de la auditoría y archivos citados. También rechaza en cualquier texto hosts corporativos, alias SSH, direcciones privadas y dominios internos, con la misma regla que el producto; el build repite esa comprobación sobre el snapshot. La revisión editorial descarta además credenciales, datos de clientes y datos personales.
 
+`tools/sync-project-rules.mjs` importa del mismo modo `delivery/business-rules.json`, el registro de reglas de negocio de la caja, y lo publica en [Reglas de negocio](/project/rules/). Lo valida con las reglas de POS Platform en la revisión importada: forma, orden y estados, paquetes del backlog, preguntas, seguimientos, identificadores de la auditoría, archivos citados y coherencia de cada aceptación. Además de la infraestructura, rechaza credenciales y RUT reales. Una regla sólo aparece aceptada cuando el registro nombra el login de la persona que decidió, la fecha y la evidencia; la importación o esta publicación no aceptan reglas. Mientras no exista una primera importación, la sección explica que el registro aún no se publicó.
+
 El importador registra si `main` del repositorio corporativo contiene la revisión, según `origin/main` del checkout; conviene actualizarlo con `git fetch` antes de importar. Una revisión publicada en una rama todavía sin integrar puede importarse para revisar la vista. En ese caso, la página la identifica como **Corte previo a la integración**: su contenido puede cambiar antes de integrarse y, al integrarse, se vuelve a importar desde `main`. Una revisión que no está en ninguna rama remota se rechaza.
 
 
@@ -95,11 +97,12 @@ El snapshot conserva el contenido original, incluido `productRevision: "source"`
    node tools/sync-project-follow-up.mjs --workspace ../pos-platform
    node tools/sync-project-planning.mjs --workspace ../pos-platform
    node tools/sync-project-questions.mjs --workspace ../pos-platform
+   node tools/sync-project-rules.mjs --workspace ../pos-platform
    ```
 
    Los importadores de seguimiento y planificación consultan GitHub de forma explícita con la sesión autorizada del mantenedor. Importan sólo código, número/enlace de issue, estado abierto/cerrado, etiquetas de ejecución, asignados y fecha de actualización. La planificación añade el motivo de cierre para distinguir trabajo completado de descartado. No importan cuerpos, comentarios, tokens ni credenciales. El importador de preguntas no consulta GitHub: lee el registro, el backlog, los seguimientos y la auditoría de la revisión importada.
 
-4. Revisar los cuatro snapshots de `portal/data/`. Sus hashes y revisiones identifican las fuentes; el progreso técnico debe coincidir con el producto importado. Revisar cualquier diferencia de seguimiento: issue cerrada con etiqueta activa, etiquetas contradictorias o bloqueo técnico sin acción registrada.
+4. Revisar los snapshots de `portal/data/`. Sus hashes y revisiones identifican las fuentes; el progreso técnico debe coincidir con el producto importado. Revisar cualquier diferencia de seguimiento: issue cerrada con etiqueta activa, etiquetas contradictorias o bloqueo técnico sin acción registrada.
 5. Ejecutar las comprobaciones y publicar la PR documental:
 
    ```sh
@@ -107,10 +110,12 @@ El snapshot conserva el contenido original, incluido `productRevision: "source"`
    node tools/sync-project-follow-up.mjs --workspace ../pos-platform --check
    node tools/sync-project-planning.mjs --workspace ../pos-platform --check
    node tools/sync-project-questions.mjs --workspace ../pos-platform --check
+   node tools/sync-project-rules.mjs --workspace ../pos-platform --check
    npm run progress:test
    npm run follow-up:test
    npm run planning:test
    npm run questions:test
+   npm run rules:test
    npm run validate
    npm run typecheck
    npm run build
@@ -119,7 +124,7 @@ El snapshot conserva el contenido original, incluido `productRevision: "source"`
    npm run project:check
    ```
 
-6. Generar las entradas del historial de cambios con `npm run release:entries` y pegar el bloque que imprime en el cuerpo de la PR. Cada seguimiento nuevo o resuelto, cambio de estado o texto actualizado queda como una entrada propia en la próxima versión. La política editorial rechaza la PR si falta alguna. Ese cálculo cubre avance, seguimientos y planificación; un cambio del registro de preguntas se describe con su propia entrada. Si la PR cambia algo más, agregar su entrada al mismo bloque ([guía de versiones](https://github.com/developer-implementos/pos-docs/blob/main/tools/release/README.md#un-pr-que-importa-avance-seguimientos-o-planificación)).
+6. Generar las entradas del historial de cambios con `npm run release:entries` y pegar el bloque que imprime en el cuerpo de la PR. Cada seguimiento nuevo o resuelto, cambio de estado o texto actualizado queda como una entrada propia en la próxima versión. La política editorial rechaza la PR si falta alguna. Ese cálculo cubre avance, seguimientos y planificación; un cambio del registro de preguntas o del de reglas se describe con su propia entrada. Si la PR cambia algo más, agregar su entrada al mismo bloque ([guía de versiones](https://github.com/developer-implementos/pos-docs/blob/main/tools/release/README.md#un-pr-que-importa-avance-seguimientos-o-planificación)).
 
 `--check` no escribe. En seguimiento compara el contenido y estado observado; no falla sólo por transcurrir el reloj. La importación normal registra una nueva fecha de consulta. La fuente debe ser un commit del repositorio corporativo y un checkout limpio; las referencias de evidencia del progreso deben pertenecer a su historial. Un clon superficial necesita recuperar esos commits.
 

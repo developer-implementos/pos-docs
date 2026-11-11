@@ -7,6 +7,7 @@ import {loadProgress} from './progress.mjs';
 import {loadFollowUp} from './follow-up.mjs';
 import {loadPlanning} from './planning.mjs';
 import {loadQuestions} from './questions.mjs';
+import {loadRules} from './rules.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const require = createRequire(path.join(root, 'apps/starlight/package.json'));
@@ -16,12 +17,13 @@ const progress = loadProgress(root);
 const followUp = loadFollowUp(root, progress);
 const planning = loadPlanning(root, progress, followUp);
 const questions = loadQuestions(root, progress, followUp);
+const rules = loadRules(root, progress, questions);
 const output = path.join(root, 'test-results-project');
 fs.mkdirSync(output, {recursive: true});
 const server = await servePublic(0);
 const origin = `http://127.0.0.1:${server.address().port}`;
 const browser = await chromium.launch({headless: true});
-const routes = ['/project/', '/project/plan/', '/project/work/', '/project/attention/', '/project/questions/', '/project/team/'];
+const routes = ['/project/', '/project/plan/', '/project/work/', '/project/attention/', '/project/questions/', '/project/rules/', '/project/team/'];
 try {
   const page = await browser.newPage({viewport: {width: 1440, height: 1000}, reducedMotion: 'reduce'});
   const failures = [], external = [];
@@ -177,6 +179,16 @@ try {
   await related.click();
   assert.ok(await page.locator(`#${relatedId}`).isVisible(), 'Actions link to affected deliverables');
 
+  if (rules) {
+    await navigate('/project/rules/');
+    assert.equal(await count(), rules.items.length, 'Every rule is listed');
+    assert.equal(await page.locator('[data-project-group]:visible').count(), rules.groups.length);
+    await form().locator('[name=decision]').selectOption('pendiente');
+    assert.equal(await count(), rules.items.filter(item => item.decision.state === 'pendiente').length);
+    const area = Object.keys(rules.areas)[0];
+    await form().locator('[name=area]').selectOption(area);
+    assert.equal(await count(), rules.items.filter(item => item.decision.state === 'pendiente' && item.area === area).length, 'Filters combine');
+  }
   await navigate('/project/questions/');
   const groups = () => page.locator('[data-project-group]:visible').count();
   assert.equal(await count(), questions.items.length);
@@ -238,6 +250,9 @@ try {
         await page.locator('.project-breakdown').screenshot({path: path.join(output, `summary-apps-${width}.png`)});
       } else if (route === '/project/plan/') {
         await page.locator('[data-plan-item]').first().screenshot({path: path.join(output, `plan-item-${width}.png`)});
+      } else if (route === '/project/rules/' && !rules) {
+        assert.equal(await page.locator('[data-project-item]').count(), 0, 'An unpublished rules register shows no records');
+        await page.locator('.project-question-rules').screenshot({path: path.join(output, `rules-empty-${width}.png`)});
       } else if (route === '/project/team/') {
         await page.locator('.project-team-list > li').first().screenshot({path: path.join(output, `team-person-${width}.png`)});
       } else {

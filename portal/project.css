@@ -190,3 +190,6 @@
 .project-page a.project-question-refs{overflow-wrap:normal}
 @media(min-width:1151px){.project-question-filters{grid-template-columns:1.5fr repeat(3,minmax(140px,1fr)) auto}}
 @media(max-width:620px){.project-question h3{font-size:17px}.project-question-counts a{padding:8px 12px}}
+.project-rule-facts{margin:12px 0;display:grid;gap:10px}
+.project-rule-facts dt{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:2px}
+.project-rule-facts dd{font-size:14px;line-height:1.6;margin:0;overflow-wrap:anywhere}

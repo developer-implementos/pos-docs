@@ -13,7 +13,7 @@ const progress = loadProgress(root);
 const followUp = loadFollowUp(root, progress);
 const questions = loadQuestions(root, progress, followUp);
 const questionsSnapshot = JSON.parse(fs.readFileSync(new URL('./data/project-questions.json', import.meta.url), 'utf8'));
-const routes = ['/project/', '/project/plan/', '/project/work/', '/project/attention/', '/project/questions/', '/project/team/'];
+const routes = ['/project/', '/project/plan/', '/project/work/', '/project/attention/', '/project/questions/', '/project/rules/', '/project/team/'];
 const escapeText = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 const reviewDate = value => new Intl.DateTimeFormat('es-CL', { dateStyle: 'medium', timeZone: 'UTC' }).format(new Date(`${value}T00:00:00Z`));
 function questionsWith(mutate = () => {}, integration = questionsSnapshot.integration, followUpModel = followUp) {
