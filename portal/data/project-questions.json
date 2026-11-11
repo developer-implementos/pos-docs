@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "667235e1a97418325486c0ace25c0f4bee14fe44",
+    "revision": "da7da6d9808521db24ba11ef75dee6e2ebbe4d86",
     "path": "delivery/business-questions.json",
-    "sha256": "232ebda2a24c6e3c43bfd3ff317dd5192c338e37b6164cd012912e9943a9d07d"
+    "sha256": "4041342146dc2fb3dc944d4fff4f628dfd14afcd4a8a33bc832149397a1f6b63"
   },
   "integration": {
     "reference": "main",
@@ -196,7 +196,7 @@
         "question": "¿Se registra el vendedor además del operador de caja?",
         "kind": "rule",
         "state": "open",
-        "currentAnswer": "Legacy: la OV conserva el vendedor; usuario_id del documento suele quedar vacío",
+        "currentAnswer": "Legacy: la OV conserva el vendedor; usuario_id del documento suele quedar vacío. En el DTE, el legacy envía como código de vendedor uno derivado del nombre del cajero",
         "answerSources": [
           "data"
         ],
@@ -207,16 +207,19 @@
         "parityRefs": [
           "P-06"
         ],
-        "sources": [],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
         "decider": "Comercial",
         "owner": null,
         "followUp": "FOLLOWUP-017",
         "workPackages": [
           "F01-09",
-          "F04-08"
+          "F04-08",
+          "F02-02"
         ],
         "priority": "P2",
-        "reviewedOn": "2026-11-10",
+        "reviewedOn": "2026-11-11",
         "validation": null
       },
       {
@@ -1182,6 +1185,444 @@
         "followUp": "FOLLOWUP-017",
         "workPackages": [
           "F04-07"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-11",
+        "validation": null
+      },
+      {
+        "id": "Q-41",
+        "topic": "Clientes",
+        "question": "¿El alta de clientes desde la caja sigue derivando al formulario corporativo externo, o la caja solicita el alta al dueño del maestro?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: la caja deriva el alta a un formulario corporativo externo identificado con el código de empleado del operador. POS Platform solicita el alta al dueño del maestro de clientes (F01-08)",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-01",
+          "P-02",
+          "P-16"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Comercial y TI, como dueños del maestro de clientes",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F01-08"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-11",
+        "validation": null
+      },
+      {
+        "id": "Q-42",
+        "topic": "Usuarios",
+        "question": "¿Cómo recuperan su contraseña los usuarios del POS y qué ocurre con los que no tienen correo?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: autoservicio con un código enviado al correo. F01-01 no lo trata; si se conserva el código, debería ser de un solo uso, vencer y limitar intentos",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-01"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Operaciones y TI",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F01-01"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-11",
+        "validation": null
+      },
+      {
+        "id": "Q-43",
+        "topic": "Documentos",
+        "question": "¿Una venta puede agrupar varias OV y líneas directas con varios documentos tributarios en una sola confirmación, y cómo se asignan los pagos?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: una venta puede agrupar varias OV y líneas directas, con un documento tributario por OV en una confirmación. F01-03 y F02-02 no lo tratan, tampoco cuándo queda documentada una venta con varios documentos",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-20",
+          "P-21",
+          "P-30"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Comercial y Finanzas/Fiscal",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F01-03",
+          "F02-02"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-11",
+        "validation": null
+      },
+      {
+        "id": "Q-44",
+        "topic": "Clientes",
+        "question": "¿La venta a cliente genérico registra los datos de contacto del comprador, para qué uso y con qué retención?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: la venta a cliente genérico guarda RUT, nombre, correo y teléfono del comprador sin crear un cliente en el maestro",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-16"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Comercial y Legal (datos personales)",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F01-08"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-11",
+        "validation": null
+      },
+      {
+        "id": "Q-45",
+        "topic": "Venta en espera",
+        "question": "¿Se puede pausar una venta con pagos aprobados o en curso, y quién la retoma?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: exige al menos un producto para pausar y conserva los pagos de la venta pausada. POS Platform no permite modificar una cesta con pago pendiente (F01-09)",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-17"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Operaciones y Tesorería",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F01-09"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-11",
+        "validation": null
+      },
+      {
+        "id": "Q-46",
+        "topic": "Venta en espera",
+        "question": "¿Una venta pausada se retoma sólo en la misma caja, o en cualquier puesto de la sucursal?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: la recuperación se limita a la misma caja. POS Platform permite la recuperación explícita entre puestos con control de versión; la ficha deja la regla a Operaciones (F01-09)",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-13",
+          "P-17"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md",
+          "delivery/specs/F01-09.md#L53"
+        ],
+        "decider": "Operaciones",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F01-09"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-11",
+        "validation": null
+      },
+      {
+        "id": "Q-47",
+        "topic": "Cupones",
+        "question": "¿Algún cupón aplica a la venta a cliente genérico, o existen cupones al portador?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: ningún cupón aplica a la venta a cliente genérico",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-13",
+          "P-14",
+          "P-28"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Comercial",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F01-10"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-11",
+        "validation": null
+      },
+      {
+        "id": "Q-48",
+        "topic": "Promociones",
+        "question": "¿Si las promociones vigentes no están disponibles, la venta sigue sin ellas con aviso o se bloquea?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: las promociones se evalúan sólo sobre líneas directas; no se identificó qué hace la caja si no puede obtenerlas",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-14",
+          "P-17"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Comercial y Operaciones",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F01-10"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-11",
+        "validation": null
+      },
+      {
+        "id": "Q-49",
+        "topic": "Caja",
+        "question": "¿Se conserva el monto mínimo de apertura de caja del legacy o se puede abrir en cero?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: exige medios de pago habilitados y un monto de apertura mínimo de 1 peso",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-07"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Tesorería",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F01-01"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-11",
+        "validation": null
+      },
+      {
+        "id": "Q-50",
+        "topic": "Documentos",
+        "question": "¿Qué importe máximo admite una boleta a cliente anónimo y qué exige la caja al superarlo?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: limita el importe de una boleta a cliente anónimo; F01-08 y F02-02 no fijan el límite ni la alternativa (identificar al cliente o cambiar de documento)",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-16",
+          "P-20"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Finanzas/Fiscal y Comercial",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F01-08",
+          "F02-02"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-11",
+        "validation": null
+      },
+      {
+        "id": "Q-51",
+        "topic": "Catálogo",
+        "question": "¿Algún formulario de la caja necesita las plantillas de atributos de producto, y para qué?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: existe un catálogo de plantillas de atributos de producto sin uso identificado en la caja",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-16",
+          "P-40"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Comercial, como dueño del catálogo",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F01-11"
+        ],
+        "priority": "P3",
+        "reviewedOn": "2026-11-11",
+        "validation": null
+      },
+      {
+        "id": "Q-52",
+        "topic": "Documentos",
+        "question": "¿Qué tipos documentales ofrece la caja en el primer alcance y qué regla por clasificación del cliente los habilita?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: factura a clientes con clasificación CC y boleta a venta público o «sólo boleta»",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-16",
+          "P-30"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Fiscalidad y Comercial",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F02-02",
+          "F01-08"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-11",
+        "validation": null
+      },
+      {
+        "id": "Q-53",
+        "topic": "Medios",
+        "question": "¿Qué redondeo aplica al cobro en efectivo y cómo se registra la diferencia con el total del documento?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: el pago combinado redondea el efectivo y entrega vuelto. F02-05 cubre asignación y vuelto, no el redondeo; hay una propuesta de decisión abierta en POS Docs",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-21",
+          "P-24",
+          "P-36"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Finanzas y Fiscalidad",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F02-05"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-11",
+        "validation": null
+      },
+      {
+        "id": "Q-54",
+        "topic": "Cheques",
+        "question": "¿Se admite verificar un cheque sin consultar al proveedor de verificación, con qué evidencia y qué aprobación?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: basta un código seguro que no use otro cheque, validado en una ruta sin autenticación",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-29"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Tesorería",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F02-11"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-11",
+        "validation": null
+      },
+      {
+        "id": "Q-55",
+        "topic": "Cierre",
+        "question": "¿El cierre de caja exige el cierre previo del lote del terminal, sólo advierte su ausencia o lo ignora?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: el cierre de caja no exige el cierre del lote del terminal",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-26"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Tesorería",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F02-14",
+          "F04-03"
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-11",
