@@ -179,6 +179,20 @@ test('the merge waits for Documentation quality on the exact head and pins the m
     { head_sha: head, status: 'completed', conclusion: 'success', created_at: '2026-11-10T09:00:00Z' },
     { head_sha: head, status: 'completed', conclusion: 'failure', created_at: '2026-11-10T10:00:00Z', html_url: 'u' },
   ] }), config, log: quiet }), /concluded failure/);
+  // Two runs created in the same second: the higher run id is the newer one, whatever order the API lists them in.
+  // Release PR #51 was rejected when concurrency cancelled the older duplicate and the newer one passed.
+  for (const order of [[0, 1], [1, 0]]) {
+    const sameSecond = [
+      { id: 100, head_sha: head, status: 'completed', conclusion: 'cancelled', created_at: '2026-11-10T10:00:00Z', html_url: 'old' },
+      { id: 101, head_sha: head, status: 'completed', conclusion: 'success', created_at: '2026-11-10T10:00:00Z', html_url: 'new' },
+    ];
+    assert.equal((await mergeRelease({ ...fakeGitHub({ runs: order.map(index => sameSecond[index]) }), config, log: quiet })).outcome, 'merged');
+    const failedNewer = [
+      { id: 100, head_sha: head, status: 'completed', conclusion: 'success', created_at: '2026-11-10T10:00:00Z', html_url: 'old' },
+      { id: 101, head_sha: head, status: 'completed', conclusion: 'failure', created_at: '2026-11-10T10:00:00Z', html_url: 'new' },
+    ];
+    await assert.rejects(mergeRelease({ ...fakeGitHub({ runs: order.map(index => failedNewer[index]) }), config, log: quiet }), /concluded failure/);
+  }
   const github = fakeGitHub();
   const result = await mergeRelease({ ...github, config, expectedHead: head, log: quiet });
   assert.equal(result.outcome, 'merged');
