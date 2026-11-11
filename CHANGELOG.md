@@ -11,6 +11,20 @@ Los cambios de herramientas, pruebas y CI no aparecen aquí; quedan en el [regis
 
 Este archivo lo escribe [release-please](https://github.com/googleapis/release-please) desde los títulos de los PR, y cada versión queda como [release en GitHub](https://github.com/developer-implementos/pos-docs/releases). Para recibir un aviso por versión, usa *Watch → Custom → Releases* en el repositorio. No se edita a mano: cómo se escribe una buena entrada está en la [guía de versiones](tools/release/README.md).
 
+## [0.5.4](https://github.com/developer-implementos/pos-docs/compare/v0.5.3...v0.5.4) (2026-11-11)
+
+
+### Contenido actualizado
+
+* **follow-up:** FOLLOWUP-017 actualizado (impacto): Validar el registro de preguntas y reglas de negocio de paridad ([5adb800](https://github.com/developer-implementos/pos-docs/commit/5adb800d05c719b5c739d132f8d5e0fa86003e89))
+* **progress:** F01-01 en GitHub pasa de Por clasificar a En validación ([5adb800](https://github.com/developer-implementos/pos-docs/commit/5adb800d05c719b5c739d132f8d5e0fa86003e89))
+* **progress:** F01-01 pasa de En desarrollo a Verificado técnicamente ([5adb800](https://github.com/developer-implementos/pos-docs/commit/5adb800d05c719b5c739d132f8d5e0fa86003e89))
+* **progress:** F01-05 en GitHub pasa de Por clasificar a Cerrada ([5adb800](https://github.com/developer-implementos/pos-docs/commit/5adb800d05c719b5c739d132f8d5e0fa86003e89))
+* **progress:** F01-05 pasa de En desarrollo a Verificado técnicamente ([5adb800](https://github.com/developer-implementos/pos-docs/commit/5adb800d05c719b5c739d132f8d5e0fa86003e89))
+* **progress:** F02-09 en GitHub pasa de Por clasificar a En validación ([5adb800](https://github.com/developer-implementos/pos-docs/commit/5adb800d05c719b5c739d132f8d5e0fa86003e89))
+* **progress:** F02-09 pasa de En desarrollo a Verificado técnicamente ([5adb800](https://github.com/developer-implementos/pos-docs/commit/5adb800d05c719b5c739d132f8d5e0fa86003e89))
+* **project:** [TASK-258] importar el corte da7da6d con 13 de 71 verificados y quince preguntas de paridad nuevas ([5adb800](https://github.com/developer-implementos/pos-docs/commit/5adb800d05c719b5c739d132f8d5e0fa86003e89))
+
 ## [0.5.3](https://github.com/developer-implementos/pos-docs/compare/v0.5.2...v0.5.3) (2026-11-11)
 
 
