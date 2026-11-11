@@ -252,7 +252,7 @@ Un módulo de consulta simple no necesita fabricar entidades o cinco proyectos N
 
 Las aplicaciones Node comparten configuración, HTTP, errores, logging y ciclo de vida. La app compone sus módulos y selecciona su identidad; la infraestructura técnica no conoce reglas comerciales de los contextos.
 
-El logging permanece en Pino mediante `nestjs-pino`. El reporte opcional con Sentry también pertenece a esta frontera técnica y usa un cliente privado por aplicación: DSN vacío y deshabilitado por defecto, sin instrumentación global, captura automática de solicitudes o trazas distribuidas. Los contextos no deben importar el SDK ni duplicar capturas que ya resuelve la frontera HTTP o de proceso. El [contrato de observabilidad](api.md#reporte-opcional-de-errores-con-sentry) describe datos permitidos, exclusiones, cierre y límites de entrega; estas capacidades no reemplazan identidad, persistencia ni auditoría de negocio.
+El logging permanece en Pino mediante `nestjs-pino`. El reporte opcional con Sentry también pertenece a esta frontera técnica y usa un cliente privado por aplicación: DSN vacío y deshabilitado por defecto, sin instrumentación global, captura automática de solicitudes o trazas distribuidas. Los contextos no deben importar el SDK ni duplicar capturas que ya resuelve la frontera HTTP o de proceso. Los clientes tampoco importan el SDK: el `ErrorHandler` de composición vive en `client-shell` y el envío al relay de `branch-api`, en `data-access/branch-api`. El [contrato de observabilidad](api.md#reporte-opcional-de-errores-con-sentry) describe datos permitidos, exclusiones, cierre y límites de entrega; estas capacidades no reemplazan identidad, persistencia ni auditoría de negocio.
 
 ## Compilación y distribución
 
