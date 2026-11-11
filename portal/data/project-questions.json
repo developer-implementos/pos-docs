@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "cab44e4ac0f2e9a25425bf5aa9b09929f2536b78",
+    "revision": "02f8bdcc208e7c7270b7398be159552119d86645",
     "path": "delivery/business-questions.json",
-    "sha256": "524f9d68415785ca6da1a36ae03a5d40de156bd894bf6bb052a1d1235be1af9f"
+    "sha256": "232ebda2a24c6e3c43bfd3ff317dd5192c338e37b6164cd012912e9943a9d07d"
   },
   "integration": {
     "reference": "main",
@@ -12,7 +12,7 @@
   },
   "content": {
     "schemaVersion": 1,
-    "reviewedOn": "2026-11-10",
+    "reviewedOn": "2026-11-11",
     "audit": "delivery/reviews/pos-parity-2026-11-10",
     "items": [
       {
@@ -977,6 +977,214 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-10",
+        "validation": null
+      },
+      {
+        "id": "Q-34",
+        "topic": "Impresión",
+        "question": "¿Se acepta que Operaciones asigne la impresora por puesto, en vez de que cada usuario la elija en el navegador?",
+        "kind": "decision",
+        "state": "decided",
+        "currentAnswer": "Sí: F02-09 registra los dispositivos por puesto y Operaciones asigna cada destino físico. El legacy guarda la preferencia en el navegador y cualquier perfil puede cambiarla. Falta una interfaz de administración; hoy la alta es por línea de comandos",
+        "answerSources": [
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-43"
+        ],
+        "sources": [
+          "delivery/specs/F02-09.md#L35",
+          "delivery/specs/F02-09.md#L53"
+        ],
+        "decider": "Producto (ya decidido)",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F02-09"
+        ],
+        "priority": "P3",
+        "reviewedOn": "2026-11-11",
+        "validation": null
+      },
+      {
+        "id": "Q-35",
+        "topic": "Sesión",
+        "question": "¿Al expirar la sesión por inactividad, la venta en curso debe quedar pausada y recuperable?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: al cerrar la sesión por inactividad, los documentos en pago en curso de esa sesión pasan a venta en espera. POS Platform: la expiración impide nuevos comandos (F01-01) y el borrador tiene vencimiento (F01-09); falta un escenario que pruebe qué queda de la venta",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-44"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/profundizacion-preguntas.md",
+          "delivery/specs/F01-01.md#L45"
+        ],
+        "decider": "Operaciones",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F01-09",
+          "F01-01"
+        ],
+        "priority": "P3",
+        "reviewedOn": "2026-11-11",
+        "validation": null
+      },
+      {
+        "id": "Q-36",
+        "topic": "Stock",
+        "question": "¿La caja muestra el stock sólo como consulta, sin descontarlo al vender?",
+        "kind": "decision",
+        "state": "decided",
+        "currentAnswer": "Sí: F01-11 define una disponibilidad informativa con origen y antigüedad, y vender no ajusta stock. El legacy no sincroniza stock y su ajuste local no tiene llamador",
+        "answerSources": [
+          "spec",
+          "code"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-45"
+        ],
+        "sources": [
+          "delivery/specs/F01-11.md#L20",
+          "delivery/specs/F01-11.md#L46"
+        ],
+        "decider": "Producto (ya decidido)",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F01-11"
+        ],
+        "priority": "P3",
+        "reviewedOn": "2026-11-11",
+        "validation": null
+      },
+      {
+        "id": "Q-37",
+        "topic": "Migración",
+        "question": "¿Qué tratamiento recibe en la migración cada estado no final del legacy y cada cuenta sin RecId?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "En la sucursal productiva: 7.948 ventas en espera desde 2022, 2.138 pagos en curso sin pago local en 400 días y copias migrado de documentos de otras sucursales, que no son ventas propias (Q-10). Hay 3 cuentas técnicas sin RecId. F05-10 exige una regla por estado; los pagos en curso se concilian antes del corte (FOLLOWUP-016)",
+        "answerSources": [
+          "data",
+          "spec"
+        ],
+        "auditRefs": [
+          "R-07",
+          "R-17",
+          "R-19",
+          "R-20"
+        ],
+        "parityRefs": [
+          "P-46",
+          "P-39"
+        ],
+        "sources": [
+          "delivery/specs/F05-10.md",
+          "delivery/reviews/pos-parity-2026-11-10/profundizacion-preguntas.md"
+        ],
+        "decider": "Operaciones, Finanzas y TI",
+        "owner": null,
+        "followUp": "FOLLOWUP-016",
+        "workPackages": [
+          "F05-10"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-11",
+        "validation": null
+      },
+      {
+        "id": "Q-38",
+        "topic": "Medios",
+        "question": "¿La caja debe aceptar efectivo en dólares y con qué tipo de cambio?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: el pago en efectivo admite dólares con el tipo de cambio observado y un factor configurable. En la sucursal productiva la base sólo registra pesos, el arqueo no tiene denominaciones en dólares y ninguno de los 635.302 pagos de 400 días lo menciona, así que su uso no es medible",
+        "answerSources": [
+          "code",
+          "data"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-50"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/trazabilidad.md"
+        ],
+        "decider": "Tesorería",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F02-05"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-11",
+        "validation": null
+      },
+      {
+        "id": "Q-39",
+        "topic": "Soporte",
+        "question": "¿Qué reparaciones de datos hace hoy soporte con las rutas de mantenimiento del legacy y cuáles necesita el nuevo POS?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: hay rutas de mantenimiento y reparación de precios y documentos expuestas sin autenticación. No se sabe quién las usa ni con qué frecuencia; POS Platform prevé acciones autorizadas en la consola operativa (F04-10)",
+        "answerSources": [
+          "code"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-41"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/trazabilidad.md"
+        ],
+        "decider": "TI legacy y Soporte",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-10"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-11",
+        "validation": null
+      },
+      {
+        "id": "Q-40",
+        "topic": "Maestros",
+        "question": "¿Qué maestros se administran desde el POS y cuáles se solicitan a su dueño?",
+        "kind": "decision",
+        "state": "open",
+        "currentAnswer": "Legacy: hay mantenedores locales de impuestos, categorías, marcas, ofertas e inventario, pero en la sucursal productiva ningún perfil los concede. Administrador sólo gestiona clientes, cajas, perfiles, módulos, variables y Transbank. F04-07 lo deja a Comercial y a los dueños de cada maestro, con las ofertas sólo en consulta",
+        "answerSources": [
+          "data",
+          "spec"
+        ],
+        "auditRefs": [
+          "R-03"
+        ],
+        "parityRefs": [
+          "P-42"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/trazabilidad.md",
+          "delivery/specs/F04-07.md"
+        ],
+        "decider": "Comercial y dueños de maestros",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-07"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-11",
         "validation": null
       }
     ]
