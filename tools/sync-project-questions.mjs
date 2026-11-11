@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { productRepository } from '../portal/follow-up.mjs';
 import { loadProgress } from '../portal/progress.mjs';
 import { csvIds, deriveQuestions, questionsContentHash, questionsSourcePath, validateQuestionsContent } from '../portal/questions.mjs';
+import { StaleSnapshotError } from './project-import/stale-snapshot.mjs';
 
 const repositoryRoot = fileURLToPath(new URL('../', import.meta.url));
 const allowedRemotes = new Set([productRepository, `${productRepository}.git`, 'git@github.com:developer-implementos/pos-platform.git', 'ssh://git@github.com/developer-implementos/pos-platform.git']);
@@ -101,7 +102,7 @@ export function syncProjectQuestions({ root = repositoryRoot, workspace, check =
   assert.equal(git(productRoot, 'rev-parse', 'HEAD'), revision, 'Product revision changed while importing questions');
   assert.equal(git(productRoot, 'status', '--porcelain', '--untracked-files=all'), '', 'Product checkout changed while importing questions');
   if (check) {
-    assert.ok(!changed, 'Published questions snapshot is stale; import it and review the public text');
+    if (changed) throw new StaleSnapshotError('Published questions snapshot is stale; import it and review the public text');
   } else if (changed) {
     fs.mkdirSync(path.dirname(destination), { recursive: true });
     const temporary = path.join(path.dirname(destination), `.project-questions-${process.pid}-${randomUUID()}.tmp`);

@@ -88,7 +88,11 @@ El snapshot conserva el contenido original, incluido `productRevision: "source"`
 
 1. En POS Platform, registrar el resultado de la sesión en la issue. Actualizar `delivery/progress.json` si cambia el alcance comprobado, `delivery/follow-ups.json` si aparece o se resuelve una acción y `delivery/business-questions.json` si cambia una pregunta, su respuesta o su validación. Conservar preguntas ya respondidas como decisiones/evidencia y no reabrirlas por cambiar de sesión. Ejecutar los controles de progreso y entrega; confirmar los archivos en Git.
 2. Publicar el resumen de ejecución desde ese checkout limpio. `pnpm run delivery:status` muestra el plan; `pnpm run delivery:status --apply` actualiza únicamente comentarios administrados de seguimiento. Conserva conversación, estado, asignados y etiquetas. `--check` detecta comentarios desactualizados.
-3. Importar desde POS Docs, usando el checkout limpio y la revisión del producto que se quiere publicar:
+3. Importar en POS Docs. El workflow [`Project import`](https://github.com/developer-implementos/pos-docs/blob/main/tools/project-import/README.md) lo hace solo, cada hora o al despacharlo:
+   - importa desde un checkout limpio de `main` del producto;
+   - si cambian los hechos, abre o actualiza la PR de la rama `automation/project-import` con el cuerpo editorial y las entradas del historial.
+
+   Una persona la revisa y la integra (pasos 4 y 5). Para importar a mano una revisión concreta, o mientras la App de importación no esté configurada, usar el checkout limpio de esa revisión:
 
    ```sh
    node tools/sync-project-progress.mjs --workspace ../pos-platform
@@ -123,7 +127,7 @@ El snapshot conserva el contenido original, incluido `productRevision: "source"`
 
 `--check` no escribe. En seguimiento compara el contenido y estado observado; no falla sólo por transcurrir el reloj. La importación normal registra una nueva fecha de consulta. La fuente debe ser un commit del repositorio corporativo y un checkout limpio; las referencias de evidencia del progreso deben pertenecer a su historial. Un clon superficial necesita recuperar esos commits.
 
-El build de Vercel es autónomo y usa los snapshots confirmados. **Un push a POS Platform o un cambio de issue no actualizan automáticamente POS Docs.** Publicar un corte requiere importar, revisar y fusionar la PR de documentación. El equipo debe hacerlo al actualizar entregables, resolver impedimentos o preparar una revisión de avance. La fecha visible permite reconocer qué corte se está consultando.
+El build de Vercel es autónomo y usa los snapshots confirmados. **Un push a POS Platform o un cambio de issue no publican nada por sí solos.** `Project import` detecta el cambio en su próxima corrida y abre la PR, pero el corte se publica sólo cuando una persona la revisa e integra. Mientras el workflow esté inactivo, el equipo importa a mano al actualizar entregables, resolver impedimentos o preparar una revisión de avance. La fecha visible permite reconocer qué corte se está consultando.
 
 Los enlaces de POS Platform requieren acceso al repositorio privado. Los datos de seguimiento incluidos en el snapshot son públicos: no incluir información que sólo deba circular dentro de la empresa.
 
