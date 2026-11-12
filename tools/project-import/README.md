@@ -1,17 +1,17 @@
 # Importación automática de los snapshots del producto
 
-[`project-import.yml`](../../.github/workflows/project-import.yml) mantiene al día lo que el portal publica de POS Platform: avance, seguimientos, planificación y preguntas. Cuando cambian en `main` del producto, o cambia el estado de sus issues en GitHub, abre o actualiza **una** PR que importa los cuatro snapshots. Una persona la revisa y la integra, como cualquier PR editorial. Issue: [TASK-283](https://github.com/developer-implementos/pos-platform/issues/283).
+[`project-import.yml`](../../.github/workflows/project-import.yml) mantiene al día lo que el portal publica de POS Platform: avance, seguimientos, planificación, preguntas y el índice de reglas. Cuando cambian en `main` del producto, o cambia el estado de sus issues en GitHub, abre o actualiza **una** PR que importa los cinco snapshots. Una persona la revisa y la integra, como cualquier PR editorial. Issue: [TASK-283](https://github.com/developer-implementos/pos-platform/issues/283).
 
 ## Qué hace cada corrida
 
 1. **Checkouts:** hace checkout de `main` de POS Docs y de `main` de POS Platform, con historia completa para validar las revisiones de la evidencia.
-2. **Importadores:** ejecuta los cuatro en orden de dependencia: avance, seguimientos, planificación y preguntas.
+2. **Importadores:** ejecuta los cinco en orden de dependencia: avance, seguimientos, planificación, preguntas y reglas.
    - Cada uno compara primero los hechos en modo de sólo lectura y sólo escribe si su snapshot está desactualizado (`StaleSnapshotError`).
    - Renovar la hora de observación de GitHub no cuenta como cambio.
    - Cualquier otro error detiene la corrida sin publicar nada.
 3. **Sin cambios:** si ningún snapshot cambió, termina. Lo mismo si sólo avanzó la revisión del producto: un commit que no toca los registros de entrega ni las issues no es noticia, así que descarta lo escrito y conserva el corte publicado (`publishedFacts` ignora sólo `source.revision` e `issues.observedAt`). Si había una PR de importación abierta, la cierra con un comentario, porque `main` ya publica el corte vigente.
 4. **Con cambios:**
-   - importa los cuatro snapshots a la misma revisión, aunque sólo cambien los datos de uno, y el cuerpo distingue cuáles cambian;
+   - importa los cinco snapshots a la misma revisión, aunque sólo cambien los datos de uno, y el cuerpo distingue cuáles cambian;
    - calcula las entradas del historial con la misma función que usa la política editorial;
    - genera el título y el cuerpo;
    - los valida con `validatePullRequest` y `validateChangelogOverride` antes de tocar GitHub.

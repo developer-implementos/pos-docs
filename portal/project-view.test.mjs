@@ -6,6 +6,7 @@ import { renderProjectPages } from './project-view.mjs';
 import { deriveProgress, loadProgress, progressContentHash } from './progress.mjs';
 import { loadFollowUp } from './follow-up.mjs';
 import { decisionOutcomes, deriveQuestions, loadQuestions, questionsContentHash } from './questions.mjs';
+import { loadRules } from './rules.mjs';
 import { teamMembers } from './team.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
@@ -13,7 +14,7 @@ const progress = loadProgress(root);
 const followUp = loadFollowUp(root, progress);
 const questions = loadQuestions(root, progress, followUp);
 const questionsSnapshot = JSON.parse(fs.readFileSync(new URL('./data/project-questions.json', import.meta.url), 'utf8'));
-const routes = ['/project/', '/project/plan/', '/project/work/', '/project/attention/', '/project/questions/', '/project/team/'];
+const routes = ['/project/', '/project/plan/', '/project/work/', '/project/attention/', '/project/questions/', '/project/rules/', '/project/team/'];
 const escapeText = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 const reviewDate = value => new Intl.DateTimeFormat('es-CL', { dateStyle: 'medium', timeZone: 'UTC' }).format(new Date(`${value}T00:00:00Z`));
 
@@ -434,10 +435,43 @@ test('overview links the questions view with its open questions and pending deci
   const model = questions;
   const html = renderProjectPages(progress, followUp, null, null, model).get('/project/').body;
   assert.ok(html.includes(`<p class="project-increment-link"><a href="/project/questions/">Preguntas y reglas de negocio</a><span>${model.counts.open} abiertas · ${model.counts.pendingDecision} pendientes de decisión.</span></p>`));
+  // Whatever the published cut holds: one open rule stays open, the other rules are decided and the
+  // open facts are answered, since a fact is never decided.
   const single = questionsWith(content => {
     const open = content.items.filter(item => item.state === 'open');
-    for (const item of open.slice(1)) Object.assign(item, { state: 'decided', decision: { answer: 'Regla decidida en el acta.', decidedBy: 'Comité comercial', decidedOn: item.reviewedOn, source: 'Acta de decisiones comerciales del 12 de noviembre de 2026', outcome: item.recommendation ? 'adopted' : null } });
+    const [first, ...rest] = open.filter(item => item.kind === 'rule');
+    assert.ok(first, 'The published cut has an open rule');
+    for (const item of open.filter(item => item.kind === 'fact')) item.state = 'answered';
+    for (const item of rest) Object.assign(item, { state: 'decided', decision: { answer: 'Regla decidida en el acta.', decidedBy: 'Comité comercial', decidedOn: item.reviewedOn, source: 'Acta de decisiones comerciales del 12 de noviembre de 2026', outcome: item.recommendation ? 'adopted' : null } });
   });
   assert.ok(renderProjectPages(progress, followUp, null, null, single).get('/project/').body.includes('<span>1 abierta · 1 pendiente de decisión.</span>'));
   assert.ok(!renderProjectPages(progress, followUp).get('/project/').body.includes('<a href="/project/questions/">Preguntas y reglas de negocio</a>'));
+});
+
+test('the rules catalog publishes an index: internal rules without title and no legacy text for any rule', () => {
+  const rules = loadRules(root, progress, questions);
+  assert.ok(rules, 'The rules projection is published');
+  const html = renderProjectPages(progress, followUp, null, null, questions, rules).get('/project/rules/').body;
+  assert.equal((html.match(/<article id="[a-z]{3}-\d{3}"/g) || []).length, rules.items.length, 'Every rule has a card');
+  for (const rule of rules.items) {
+    const ruleCard = card(html, rule.id);
+    assert.match(ruleCard, new RegExp(`data-disclosure="${rule.disclosure}"`));
+    assert.match(ruleCard, new RegExp(`data-decision="${rule.decision}"`));
+    if (rule.disclosure === 'internal') assert.doesNotMatch(ruleCard, /<h3>/, `${rule.id} is internal and publishes no title`);
+    else assert.ok(ruleCard.includes(`<h3>${escapeText(rule.title)}</h3>`), `${rule.id} shows its title`);
+    for (const question of rule.linkedQuestions) assert.ok(ruleCard.includes(`href="/project/questions/#${question.id.toLowerCase()}"`), `${rule.id} links ${question.id}`);
+  }
+  const snapshot = JSON.parse(fs.readFileSync(new URL('./data/project-rules.json', import.meta.url), 'utf8'));
+  assert.deepEqual(Object.keys(snapshot), ['schemaVersion', 'source', 'integration', 'sha256', 'register']);
+  for (const field of ['behavior', 'observations', 'evidence', 'businessQuestion', 'artifacts', 'decider', 'layer', 'refs', 'note']) {
+    assert.ok(!JSON.stringify(snapshot).includes(`"${field}"`), `The published snapshot has no ${field}`);
+  }
+  assert.match(html, /Las reglas de seguridad, los defectos del legacy y las que revelan un control débil son internas/);
+  assert.ok(html.includes(`${rules.source.repository}/blob/${rules.source.revision}/delivery/business-rules.json`), 'The detail is linked at the imported revision');
+});
+
+test('the rules catalog explains an unpublished register', () => {
+  const html = renderProjectPages(progress, followUp, null, null, questions, null).get('/project/rules/').body;
+  assert.match(html, /todavía no publica el registro de reglas/);
+  assert.doesNotMatch(html, /data-project-item/);
 });

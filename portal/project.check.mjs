@@ -7,6 +7,7 @@ import {loadProgress} from './progress.mjs';
 import {loadFollowUp} from './follow-up.mjs';
 import {loadPlanning} from './planning.mjs';
 import {loadQuestions} from './questions.mjs';
+import {loadRules} from './rules.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const require = createRequire(path.join(root, 'apps/starlight/package.json'));
@@ -16,12 +17,13 @@ const progress = loadProgress(root);
 const followUp = loadFollowUp(root, progress);
 const planning = loadPlanning(root, progress, followUp);
 const questions = loadQuestions(root, progress, followUp);
+const rules = loadRules(root, progress, questions);
 const output = path.join(root, 'test-results-project');
 fs.mkdirSync(output, {recursive: true});
 const server = await servePublic(0);
 const origin = `http://127.0.0.1:${server.address().port}`;
 const browser = await chromium.launch({headless: true});
-const routes = ['/project/', '/project/plan/', '/project/work/', '/project/attention/', '/project/questions/', '/project/team/'];
+const routes = ['/project/', '/project/plan/', '/project/work/', '/project/attention/', '/project/questions/', '/project/rules/', '/project/team/'];
 try {
   const page = await browser.newPage({viewport: {width: 1440, height: 1000}, reducedMotion: 'reduce'});
   const failures = [], external = [];
@@ -176,6 +178,32 @@ try {
   const relatedId = (await related.getAttribute('href')).split('#')[1];
   await related.click();
   assert.ok(await page.locator(`#${relatedId}`).isVisible(), 'Actions link to affected deliverables');
+
+  if (rules) {
+    await navigate('/project/rules/');
+    assert.equal(await count(), rules.items.length, 'Every rule is listed');
+    assert.equal(await page.locator('[data-project-group]:visible').count(), rules.groups.length);
+    const internal = rules.items.find(item => item.disclosure === 'internal');
+    if (internal) {
+      const card = page.locator(`#${internal.id.toLowerCase()}`);
+      assert.equal(await card.locator('h3').count(), 0, 'An internal rule publishes no title');
+      assert.equal(await card.getAttribute('data-disclosure'), 'internal');
+    }
+    await form().locator('[name=decision]').selectOption('abierta');
+    assert.equal(await count(), rules.items.filter(item => item.decision === 'abierta').length);
+    const area = Object.keys(rules.areas)[0];
+    await form().locator('[name=area]').selectOption(area);
+    assert.equal(await count(), rules.items.filter(item => item.decision === 'abierta' && item.area === area).length, 'Filters combine');
+    await reset();
+    await form().locator('[name=disclosure]').selectOption('internal');
+    assert.equal(await count(), rules.counts.disclosure.internal, 'Internal rules can be listed by themselves');
+    await reset();
+    const question = rules.items.find(item => item.linkedQuestions.length)?.linkedQuestions[0];
+    if (question) {
+      await page.locator(`[data-project-item]:visible a[href="/project/questions/#${question.id.toLowerCase()}"]`).first().click();
+      assert.equal(new URL(page.url()).hash, `#${question.id.toLowerCase()}`, 'A rule links the question where it is decided');
+    }
+  }
 
   await navigate('/project/questions/');
   const groups = () => page.locator('[data-project-group]:visible').count();
