@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "79a5111bd236b043c3f539cf3e206fb1d1e5062e",
+    "revision": "661e2df3245d1dce1cf17f43dc422b5fce71a40f",
     "path": "delivery/business-questions.json",
-    "sha256": "282ffd8a1d32c0b32b0c904768100556ddaaadbef5687899ee1b293101311ba5"
+    "sha256": "13a174aee9c6164d46d407a633305cd7f6732f9597c6d1a90607e8faa8bb306f"
   },
   "integration": {
     "reference": "main",
@@ -384,9 +384,53 @@
           "F02-02"
         ],
         "priority": "P2",
-        "reviewedOn": "2026-11-11",
+        "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "Sí, como dos identidades: el operador que confirma, siempre el de la sesión (Q-06), y el vendedor de cada línea, que es el de su OV o, en líneas directas, el que se indique entre los vendedores habilitados en la sucursal o, por defecto, quien la capturó. El DTE y el ERP reciben sus códigos del maestro, nunca uno derivado de un nombre.",
+          "scope": "country",
+          "default": "Líneas de OV: el vendedor de la OV; líneas directas: quien captura la línea, salvo que se indique otro vendedor habilitado en la sucursal",
+          "rationale": "Vendedor y cajero miden cosas distintas: el vendedor sustenta comisiones y los descuentos por vendedor que el cálculo de precios recibe como dato, y el cajero responde por el turno; separarlos es práctica habitual de POS corporativos y lo propone F04-08. El formato DTE del SII define CdgVendedor como identificador opcional del vendedor. Cada país decide si la venta directa exige indicar vendedor y su adaptador ERP mapea ambos códigos.",
+          "basis": [
+            "architecture",
+            "practice",
+            "legacy"
+          ],
+          "references": [
+            {
+              "label": "Microsoft Learn · Comisiones en el POS por vendedor, por línea y distinto del cajero",
+              "url": "https://learn.microsoft.com/en-us/dynamics365/commerce/pos-sales-groups-track-commissions"
+            },
+            {
+              "label": "SII · Formato de documentos tributarios electrónicos: campo 44, código del vendedor (CdgVendedor)",
+              "url": "https://www.sii.cl/servicios_online/docs/formato_dte.pdf"
+            },
+            {
+              "label": "POS Docs · Operación de caja: el cálculo de precios recibe cliente, sucursal y vendedor",
+              "url": "https://pos-docs-starlight.vercel.app/guide/operations/cash-management/#o02--precio-oferta-y-reglas-locales"
+            },
+            {
+              "label": "POS Docs · Roadmap F04-08: pedidos y documentos comerciales externos",
+              "url": "https://pos-docs-starlight.vercel.app/guide/roadmap/phase-04/#work-f04-08"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F04-08.md#L61-L63",
+            "delivery/specs/F04-08.md#L67",
+            "delivery/specs/F01-09.md#L28-L29",
+            "delivery/specs/F03-03.md#L55-L63",
+            "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L7",
+            "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L63",
+            "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L103",
+            "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L76"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-08",
@@ -417,9 +461,46 @@
           "F01-09"
         ],
         "priority": "P2",
-        "reviewedOn": "2026-11-10",
+        "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "Vence al terminar la fecha comercial de la sucursal en que se pausó: el servidor la marca vencida con motivo, libera las reservas que tenga, como sus OV, con resultado verificable, y la conserva como historial que no se retoma ni se edita. No se borra ni se migra como venta viva (Q-37).",
+          "scope": "country",
+          "default": "Al terminar la fecha comercial de la sucursal en que se pausó",
+          "rationale": "En la sucursal productiva consultada, de 4.096 ventas en espera de 400 días sólo 8 se modificaron después del primer día (R-20): la que cruza la jornada ya está abandonada y puede retener OV. Vencerla ese día no quita un uso real, la recotización al retomar (F01-09) cubre los cambios de precio y, para volver otro día, sirve un presupuesto, que no reserva. Cada país puede fijar otro plazo; la transición y el historial son comunes.",
+          "basis": [
+            "data",
+            "architecture",
+            "practice"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · Roadmap F01-09: borradores, pausa y recuperación de cesta",
+              "url": "https://pos-docs-starlight.vercel.app/guide/roadmap/phase-01/#work-f01-09"
+            },
+            {
+              "label": "Microsoft Learn · Suspender y retomar en Dynamics 365 Commerce: anular las suspendidas al cerrar el turno",
+              "url": "https://learn.microsoft.com/en-us/dynamics365/commerce/pos-suspend-recall-transactions"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F01-09.md#L28",
+            "delivery/specs/F01-09.md#L35-L36",
+            "delivery/specs/F01-09.md#L53",
+            "delivery/specs/F01-09.md#L57",
+            "libs/backend/sales/README.md#L7",
+            "delivery/reviews/pos-parity-2026-11-10/profundizacion-preguntas.md#L56-L59",
+            "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L19",
+            "delivery/reviews/pos-parity-2026-11-10/casos-prueba.md#L51-L56",
+            "delivery/specs/F04-08.md#L76"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-09",
@@ -552,9 +633,45 @@
           "F01-09"
         ],
         "priority": "P2",
-        "reviewedOn": "2026-11-10",
+        "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "Sí: cancelar deja el borrador en un estado final, cancelado, con motivo, actor y hora; libera las reservas de sus OV con resultado verificable y conserva su historial, sin poder retomarlo. Sólo se cancela una cesta sin pagos aprobados ni en curso; una venta confirmada no se cancela: se corrige con NC (F04-01).",
+          "scope": "core",
+          "default": null,
+          "rationale": "Una transición persistida e idempotente cierra el documento, impide que reaparezca entre las ventas por retomar y deja evidencia para revisar las cancelaciones por operador, como pide la auditoría de anulaciones de la propuesta. F01-09 ya exige motivo y no deshace pagos iniciados, y del legacy se conservan el rechazo con pagos y la liberación de la OV. La regla es igual en Chile, Perú y España: cancelar una cesta no tiene efecto fiscal.",
+          "basis": [
+            "architecture",
+            "practice",
+            "legacy"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · Acceso, permisos y operación: auditoría de descuentos, anulaciones y devoluciones",
+              "url": "https://pos-docs-starlight.vercel.app/guide/proposal/access-operations/"
+            },
+            {
+              "label": "POS Docs · Sincronización y propiedad de datos: correcciones trazables, sin reescribir historia",
+              "url": "https://pos-docs-starlight.vercel.app/guide/proposal/synchronization/#propiedad-de-datos-y-conflictos"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F01-09.md#L19",
+            "delivery/specs/F01-09.md#L30",
+            "delivery/specs/F01-09.md#L36",
+            "delivery/specs/F01-09.md#L44",
+            "delivery/reviews/pos-parity-2026-11-10/afirmaciones.csv#L35",
+            "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L20",
+            "delivery/reviews/pos-parity-2026-11-10/casos-prueba.md#L55",
+            "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L29"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-12",
@@ -562,7 +679,7 @@
         "question": "¿Se requiere descuento o precio manual y con qué autorización?",
         "kind": "rule",
         "state": "open",
-        "currentAnswer": "Legacy: no expuesto en la interfaz; el backend acepta importes recibidos. POS Platform exige autorización (F01-10)",
+        "currentAnswer": "Legacy: la interfaz no ofrece descuento ni precio manual. POS Platform exige autorización en servidor (F01-10)",
         "answerSources": [
           "code",
           "spec"
@@ -581,9 +698,53 @@
           "F01-10"
         ],
         "priority": "P2",
-        "reviewedOn": "2026-11-10",
+        "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "Sí, sólo como excepción autorizada en servidor: un precio o descuento manual exige motivo de catálogo y, sobre el límite del rol, la aprobación de un supervisor distinto del cajero, ligada a la versión de la cesta y al importe. Nunca reemplaza un precio ausente ni cambia el precio publicado.",
+          "scope": "country",
+          "default": "Límite 0 para el cajero: toda rebaja manual exige aprobación de supervisor; Comercial de cada país fija motivos y límites por moneda antes del piloto",
+          "rationale": "F01-10 ya liga cada autorización a la cesta, al importe y a quien aprueba, y la caja actual de Chile no ofrece descuento ni precio manual, así que exigir aprobación no quita un uso vigente. Se necesita para excepciones como respetar un precio exhibido: en Chile, el art. 18 de la Ley 19.496 tipifica como infracción cobrar más que lo exhibido, informado o publicitado. Motivos y límites son por moneda: los fija Comercial de cada país y Legal confirma su norma de consumo.",
+          "basis": [
+            "architecture",
+            "practice",
+            "regulation"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · Acceso, permisos y operación: límites de descuento y flujos de aprobación",
+              "url": "https://pos-docs-starlight.vercel.app/guide/proposal/access-operations/"
+            },
+            {
+              "label": "Microsoft Learn · Funciones de precio en el POS: descuento manual con máximo por grupo de permisos",
+              "url": "https://learn.microsoft.com/en-us/dynamics365/commerce/pos-pricing-functions"
+            },
+            {
+              "label": "BCN · Ley 19.496, art. 18: cobrar un precio superior al exhibido, informado o publicitado",
+              "url": "https://www.bcn.cl/leychile/navegar?idNorma=61438&idParte=8542449"
+            },
+            {
+              "label": "POS Docs · Roadmap F01-10: promociones, cupones y descuentos con autorización",
+              "url": "https://pos-docs-starlight.vercel.app/guide/roadmap/phase-01/#work-f01-10"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F01-10.md#L19",
+            "delivery/specs/F01-10.md#L29",
+            "delivery/specs/F01-10.md#L35",
+            "delivery/specs/F01-10.md#L42",
+            "delivery/specs/F01-11.md#L58",
+            "libs/backend/sales/README.md#L9",
+            "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L16",
+            "delivery/follow-ups.json#L141-L185"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-13",
@@ -611,9 +772,43 @@
           "F04-03"
         ],
         "priority": "P2",
-        "reviewedOn": "2026-11-10",
+        "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "Sí, en servidor y en todos los entornos: con un turno cuya fecha comercial ya terminó, según la zona horaria y la hora de fin de jornada de la sucursal, branch-api no inicia ventas, cobros ni devoluciones de dinero hasta cerrarlo y abrir otro; una venta con pago en curso se termina o se reembolsa (Q-45). No depende de la compilación.",
+          "scope": "branch",
+          "default": "Fin de jornada a las 00:00, hora local de la sucursal, sin excepción para seguir vendiendo",
+          "rationale": "Un turno con operaciones de dos fechas comerciales mezcla días en el arqueo y en la conciliación por tienda y día comercial que pide la propuesta de arquitectura, y aplicar el bloqueo en servidor permite probarlo igual en QA que en producción (C-28, S-08). Una hora de fin de jornada por sucursal, como en Dynamics 365 Commerce, cubre la operación nocturna sin la excepción con motivo que propone P-09; la fecha del cierre desfasado sigue Q-103.",
+          "basis": [
+            "practice",
+            "architecture",
+            "legacy"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · Integración por país: fechas con instante UTC, zona horaria y fecha comercial",
+              "url": "https://pos-docs-starlight.vercel.app/guide/proposal/integration/"
+            },
+            {
+              "label": "Microsoft Learn · Dynamics 365 Commerce: fin de jornada comercial configurado por tienda",
+              "url": "https://learn.microsoft.com/en-us/dynamics365/commerce/tasks/store-configurations-retail-statements"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F04-03.md#L14",
+            "delivery/specs/F04-03.md#L74",
+            "delivery/specs/F04-03.md#L81",
+            "delivery/reviews/pos-parity-2026-11-10/afirmaciones.csv#L29",
+            "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L10",
+            "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L64"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-14",
@@ -704,9 +899,46 @@
           "F04-08"
         ],
         "priority": "P2",
-        "reviewedOn": "2026-11-10",
+        "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "Sí, como efecto del comando de cierre, nunca de su consulta: el cierre registra en su transacción la liberación de cada OV tomada por ventas no finalizadas del turno, incluidas las pausadas, y el worker la envía al dueño por el contrato de reservas; una liberación sin resultado queda pendiente con responsable y la OV no se ofrece a otra venta.",
+          "scope": "core",
+          "default": null,
+          "rationale": "Una OV tomada que nadie finaliza bloquea a las demás cajas, y las ventas pausadas del legacy no vencen: en la sucursal consultada, 3.759 de las 4.096 ventas en espera de 400 días superan los 30 días. Se conserva el efecto del legacy, que libera las OV pausadas al validar el cierre, pero F04-03 impide que una consulta libere pedidos y F04-08 exige liberar con resultado conocido (LS-044). Es igual en los tres países; la venta pausada que se retoma vuelve a reservar la OV y valida su versión.",
+          "basis": [
+            "architecture",
+            "legacy",
+            "data"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · Operación de caja: OV pausada al cerrar sin conexión, con intención durable",
+              "url": "https://pos-docs-starlight.vercel.app/guide/operations/cash-management/#excepción-se-corta-wan-al-terminar-el-turno-y-queda-una-ov-pausada"
+            },
+            {
+              "label": "POS Docs · Roadmap F04-08: liberar reservas sólo conforme a un resultado conocido",
+              "url": "https://pos-docs-starlight.vercel.app/guide/roadmap/phase-04/#work-f04-08"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F04-03.md#L33",
+            "delivery/specs/F04-03.md#L82",
+            "delivery/specs/F04-08.md#L30",
+            "delivery/specs/F04-08.md#L47",
+            "delivery/specs/F04-08.md#L76",
+            "delivery/specs/F01-09.md#L36",
+            "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L61",
+            "delivery/reviews/pos-parity-2026-11-10/profundizacion-preguntas.md#L58",
+            "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L11"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-16",
@@ -1079,9 +1311,48 @@
           "F01-11"
         ],
         "priority": "P3",
-        "reviewedOn": "2026-11-10",
+        "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "No: la búsqueda avanzada sólo encuentra candidatos; se vende únicamente un SKU del catálogo publicado de la sucursal, con precio e impuestos vigentes. Un resultado sin producto local se muestra como no vendible, con su motivo, y no entra en la cesta.",
+          "scope": "core",
+          "default": null,
+          "rationale": "Un SKU sin proyección local no tiene precio, impuesto ni versión comercial que expliquen el importe y el documento, y F01-11 ya fija que un resultado remoto sin referencia local no habilita venta ni precio. Conserva lo que hace el legacy y es igual en Chile, Perú y España: el catálogo vendible es el que publica el dueño de cada país (F03-09), a quien se pide incorporar un artículo que falte.",
+          "basis": [
+            "architecture",
+            "legacy"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · Roadmap F01-11: catálogo autorizado, códigos y disponibilidad",
+              "url": "https://pos-docs-starlight.vercel.app/guide/roadmap/phase-01/#work-f01-11"
+            },
+            {
+              "label": "POS Docs · Servicios de IA: la búsqueda asistida no sustituye la fuente autorizada del catálogo",
+              "url": "https://pos-docs-starlight.vercel.app/guide/proposal/ai/"
+            },
+            {
+              "label": "POS Docs · Publicación de maestros: el dueño de cada dato confirma su autoridad",
+              "url": "https://pos-docs-starlight.vercel.app/guide/architecture/master-data-publication/"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F01-11.md#L28",
+            "delivery/specs/F01-11.md#L45",
+            "delivery/specs/F01-11.md#L62",
+            "delivery/specs/F01-07.md#L47",
+            "delivery/reviews/pos-parity-2026-11-10/afirmaciones.csv#L32",
+            "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L13",
+            "delivery/reviews/legacy-context-2026-11-09.md#L123",
+            "delivery/follow-ups.json#L380-L408"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-23",
@@ -1236,9 +1507,43 @@
           "F04-11"
         ],
         "priority": "P2",
-        "reviewedOn": "2026-11-10",
+        "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "Declararlas por cliente, no por tipo: el maestro de clientes indica qué referencias exige cada cliente, como OC, HES, HEM o nota de pedido (802), y branch-api no emite su factura sin ellas. El perfil fiscal de cada país fija códigos, largo y ubicación; en Chile, la sección de referencias del DTE, con tipo, folio de hasta 18 caracteres y fecha.",
+          "scope": "country",
+          "default": "Ninguna obligatoria salvo las que el maestro declare para el cliente; en Chile se ofrecen OC (801), nota de pedido (802), HES y HEM",
+          "rationale": "Son requisitos del comprador, no de la norma: el formato DTE del SII codifica la orden de compra (801) y la nota de pedido (802), admite códigos libres como HES y HEM sin validarlos y fija el largo del folio, así que el límite no depende de la columna de cada base. F04-11 ya trata la OC como condición de perfil, sin generalizarla desde Chile. El contrato del proveedor fiscal que precisa INC-01 debe admitir esa sección; Perú y España fijan dónde viaja cada referencia.",
+          "basis": [
+            "regulation",
+            "architecture",
+            "legacy"
+          ],
+          "references": [
+            {
+              "label": "SII · Formato de documentos tributarios electrónicos, sección E: información de referencia",
+              "url": "https://www.sii.cl/servicios_online/docs/formato_dte.pdf"
+            },
+            {
+              "label": "POS Docs · Fiscalidad y documentos: reglas por entidad, país, documento y modalidad",
+              "url": "https://pos-docs-starlight.vercel.app/guide/proposal/fiscal-compliance/"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F04-11.md#L18",
+            "delivery/specs/F04-11.md#L92",
+            "delivery/specs/F02-02.md#L53",
+            "delivery/specs/F03-03.md#L65",
+            "delivery/planning.json#L95-L132",
+            "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L32"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-26",
@@ -1246,7 +1551,7 @@
         "question": "¿Qué ambiente fiscal usa la caja QA legacy?",
         "kind": "fact",
         "state": "answered",
-        "currentAnswer": "Un simulador local: con facturador=acepta, la clave del proveedor en el backend de la caja QA apunta a apifact en el mismo servidor, que no hace llamadas salientes. Los folios de QA son simulados. Corrige la evidencia de C-15, que no había hallado la clave",
+        "currentAnswer": "Un simulador local: con facturador=acepta, el backend de la caja QA usa un simulador del proveedor en el mismo servidor, que no hace llamadas salientes. Los folios de QA son simulados. Corrige la evidencia de C-15",
         "answerSources": [
           "configuration",
           "data"
@@ -1269,7 +1574,7 @@
           "F02-02"
         ],
         "priority": "P1",
-        "reviewedOn": "2026-11-10",
+        "reviewedOn": "2026-11-12",
         "validation": null,
         "recommendation": null
       },
@@ -1364,9 +1669,52 @@
           "F04-05"
         ],
         "priority": "P2",
-        "reviewedOn": "2026-11-10",
+        "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "Son obligatorios los reportes con que la sucursal cierra el turno, deposita y cobra, cada uno con su definición aprobada y totales que cuadran con el cierre (F04-05); no lo son el dashboard, que es informativo y puede llegar después, ni «Ventas por tipos», que no opera en el legacy ni tiene definición.",
+          "scope": "country",
+          "default": "Chile: resumen de ventas por medio, cierre y su detalle, recaudación, informe Z, confirmación de depósito, transacciones de caja, custodia de cheques a fecha, listados del turno y cartola; Perú y España: los fija Finanzas antes de su piloto",
+          "rationale": "Sin ellos la sucursal no puede cerrar, entregar efectivo y cheques, cobrar deuda ni conciliar con el ERP, y los perfiles de caja y administración los tienen concedidos, igual en QA y en producción (R-03); un tablero no es contabilidad ni libro fiscal (F04-05). El conjunto cambia por país: Perú no informa cheques, según la síntesis por país, y si un régimen exige un informe diario, su responsable fiscal lo confirma antes del piloto.",
+          "basis": [
+            "legacy",
+            "data",
+            "architecture",
+            "meeting"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · Roadmap F04-05: reportes con permisos, corte y frescura visibles",
+              "url": "https://pos-docs-starlight.vercel.app/guide/roadmap/phase-04/#work-f04-05"
+            },
+            {
+              "label": "POS Docs · Contraste de Chile con el producto: reportes existentes que conservar",
+              "url": "https://pos-docs-starlight.vercel.app/guide/implementation/product-review/#7-tableros-reportes-y-logs"
+            },
+            {
+              "label": "POS Docs · Comparación por país: medios de pago informados",
+              "url": "https://pos-docs-starlight.vercel.app/guide/evidence/country-comparison/"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F04-05.md#L19",
+            "delivery/specs/F04-05.md#L44",
+            "delivery/specs/F04-05.md#L51",
+            "delivery/specs/F04-05.md#L58-L64",
+            "delivery/specs/F04-05.md#L70-L73",
+            "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L38",
+            "delivery/reviews/pos-parity-2026-11-10/afirmaciones.csv#L37",
+            "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L56",
+            "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L70-L73",
+            "delivery/reviews/pos-parity-2026-11-10/README.md#L138"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-29",
@@ -1392,17 +1740,56 @@
           "F02-14"
         ],
         "priority": "P2",
-        "reviewedOn": "2026-11-10",
+        "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "Agente del puesto y terminal asignado conectado, libre y en modo integrado: GetTerminalStatus lo confirma sin efecto y con tiempo acotado antes de ofrecer el cobro integrado (en Transbank, con Poll). Llaves y jornada se verifican sólo si el adquirente lo permite; si no, su rechazo se muestra con motivo y la acción de mantenimiento autorizada.",
+          "scope": "country",
+          "default": "Agente del puesto conectado y terminal asignado libre y en modo integrado; en Chile, con Poll de Transbank",
+          "rationale": "Un agente conectado no garantiza un terminal listo (C-32): F02-14 ya distingue desconectado, modo manual y listo (LP-005, LP-006), y la propuesta separa capacidad, disponibilidad y autorización. Transbank documenta que Poll sólo indica si el terminal está conectado y que las llaves se cambian cada día, por inicialización o con el cierre, sin documentar una consulta de su estado; Niubiz y BBVA/Redsys, adquirentes según la síntesis por país, declaran sus comprobaciones al homologarse.",
+          "basis": [
+            "architecture",
+            "practice",
+            "legacy"
+          ],
+          "references": [
+            {
+              "label": "Transbank Developers · POS Integrado: transacción de Poll",
+              "url": "https://www.transbankdevelopers.cl/documentacion/posintegrado#transaccion-de-poll"
+            },
+            {
+              "label": "Transbank Developers · POS Integrado: carga de llaves y cambio diario",
+              "url": "https://www.transbankdevelopers.cl/documentacion/posintegrado#transaccion-de-carga-de-llaves"
+            },
+            {
+              "label": "POS Docs · Proveedores y dispositivos: capacidad, disponibilidad y autorización por separado",
+              "url": "https://pos-docs-starlight.vercel.app/guide/architecture/providers/"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F02-14.md#L19",
+            "delivery/specs/F02-14.md#L30",
+            "delivery/specs/F02-14.md#L43",
+            "delivery/specs/F02-14.md#L64-L65",
+            "delivery/reviews/pos-parity-2026-11-10/afirmaciones.csv#L33",
+            "delivery/reviews/pos-parity-2026-11-10/inventarios/perifericos-notas.md#L88-L92",
+            "delivery/follow-ups.json#L35-L69"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-30",
         "topic": "Identidad",
-        "question": "¿Se conserva la contraseña inicial fija de las altas sincronizadas?",
+        "question": "¿Cómo se asigna la contraseña inicial de las altas sincronizadas?",
         "kind": "decision",
         "state": "decided",
-        "currentAnswer": "No: F01-01 prohíbe credenciales embebidas y exige contraseña inicial fuerte en la provisión; el legacy la fija en código",
+        "currentAnswer": "F01-01 prohíbe credenciales embebidas y exige una contraseña inicial fuerte en la provisión; el mecanismo del legacy no se conserva",
         "answerSources": [
           "spec"
         ],
@@ -1424,7 +1811,7 @@
           "F03-07"
         ],
         "priority": "P1",
-        "reviewedOn": "2026-11-10",
+        "reviewedOn": "2026-11-12",
         "validation": null,
         "recommendation": null
       },
@@ -1573,9 +1960,48 @@
           "F01-01"
         ],
         "priority": "P3",
-        "reviewedOn": "2026-11-11",
+        "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "Sí, sin perder la cesta: al expirar la sesión, el servidor pausa la cesta activa sin pagos con motivo «sesión expirada», y su dueño la retoma al volver, desde cualquier caja de la sucursal (Q-46), hasta su vencimiento (Q-08). Una venta con pago aprobado o en curso no se pausa: sigue abierta en su turno (Q-45).",
+          "scope": "core",
+          "default": null,
+          "rationale": "La expiración ya impide nuevos comandos (F01-01) y el borrador vive en el servidor con su versión, así que la cesta no depende del navegador; pausarla la hace visible desde otra caja sin dejarla activa en un puesto desatendido. Conserva la pausa por inactividad del legacy, pero no la extiende a ventas con pagos, como fija Q-45. La regla es igual en Chile, Perú y España.",
+          "basis": [
+            "architecture",
+            "legacy",
+            "practice"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · Roadmap F01-01: sesión caducable y autorización en branch-api",
+              "url": "https://pos-docs-starlight.vercel.app/guide/roadmap/phase-01/#work-f01-01"
+            },
+            {
+              "label": "POS Docs · Roadmap F01-09: borradores, pausa y recuperación de cesta",
+              "url": "https://pos-docs-starlight.vercel.app/guide/roadmap/phase-01/#work-f01-09"
+            },
+            {
+              "label": "Microsoft Learn · Suspender y retomar en Dynamics 365 Commerce: liberar la caja sin perder la transacción",
+              "url": "https://learn.microsoft.com/en-us/dynamics365/commerce/pos-suspend-recall-transactions"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F01-01.md#L45",
+            "delivery/specs/F01-09.md#L28-L30",
+            "delivery/specs/F01-09.md#L63",
+            "delivery/specs/F01-09.md#L66",
+            "delivery/reviews/pos-parity-2026-11-10/profundizacion-preguntas.md#L53",
+            "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L45",
+            "delivery/reviews/pos-parity-2026-11-10/casos-prueba.md#L54"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-36",
@@ -1702,9 +2128,48 @@
           "F02-05"
         ],
         "priority": "P2",
-        "reviewedOn": "2026-11-11",
+        "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "No por defecto: el efectivo en moneda extranjera queda deshabilitado (ADR-20, QF9) y sólo lo habilita un país, con un tipo de cambio que Tesorería publica con vigencia, nunca digitado en caja y congelado en cada pago, arqueo por moneda y una regla de vuelto aprobada. En Perú, un precio anunciado en dólares obliga a aceptar el pago en esa moneda.",
+          "scope": "country",
+          "default": "Deshabilitado en Chile y España; en Perú lo fija Tesorería antes del piloto, según publique o no precios en dólares",
+          "rationale": "En la sucursal productiva consultada ningún pago de 400 días menciona dólares y el arqueo sólo tiene pesos (R-23), y el ADR-20 mantiene el USD bloqueado. Perú opera en soles y dólares según la síntesis por país, y su Código de Protección y Defensa del Consumidor (art. 6) obliga a aceptar el pago en la moneda del precio anunciado o en soles, a elección del cliente, y a exhibir el tipo de cambio aceptado. Cada país conserva su moneda; la consolidación cambiaria es de reporting.",
+          "basis": [
+            "data",
+            "architecture",
+            "regulation",
+            "meeting"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · ADR-20, QF9: el USD sigue bloqueado",
+              "url": "https://pos-docs-starlight.vercel.app/guide/architecture/cash-rounding/#qf9--usd"
+            },
+            {
+              "label": "gob.pe · Ley 29571, Código de Protección y Defensa del Consumidor, art. 6: precios y pago en moneda extranjera",
+              "url": "https://cdn.www.gob.pe/uploads/document/file/1351847/1244218-ley-29571_spij.pdf"
+            },
+            {
+              "label": "POS Docs · Comparación por país: operación de Perú en soles y dólares (OBS-PE-01)",
+              "url": "https://pos-docs-starlight.vercel.app/guide/evidence/country-comparison/#obs-pe-01"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F02-05.md#L30",
+            "delivery/specs/F02-05.md#L49",
+            "delivery/specs/F04-03.md#L91",
+            "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L51",
+            "delivery/reviews/pos-parity-2026-11-10/trazabilidad.md#L71",
+            "delivery/follow-ups.json#L680-L702"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-39",
@@ -1712,7 +2177,7 @@
         "question": "¿Qué reparaciones de datos hace hoy soporte con las rutas de mantenimiento del legacy y cuáles necesita el nuevo POS?",
         "kind": "rule",
         "state": "open",
-        "currentAnswer": "Legacy: hay rutas de mantenimiento y reparación de precios y documentos expuestas sin autenticación. No se sabe quién las usa ni con qué frecuencia; POS Platform prevé acciones autorizadas en la consola operativa (F04-10)",
+        "currentAnswer": "Legacy: soporte dispone de rutas de mantenimiento para reparar precios y documentos; no se sabe quién las usa ni con qué frecuencia. POS Platform prevé acciones autorizadas en la consola operativa (F04-10)",
         "answerSources": [
           "code"
         ],
@@ -1730,9 +2195,53 @@
           "F04-10"
         ],
         "priority": "P2",
-        "reviewedOn": "2026-11-11",
+        "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "Ninguna reparación directa de datos: cada corrección que hoy hace soporte pasa a ser una acción tipada de la consola operativa (F04-10), que ejecuta su contexto dueño con permiso, motivo, versión esperada y auditoría, y con aprobación de otra persona si afecta dinero o documentos. Lo que no tenga acción definida se escala a su dueño.",
+          "scope": "core",
+          "default": null,
+          "rationale": "Soporte inventaría esas correcciones antes del piloto, porque ninguna fuente acredita cuáles usa. Cada una vuelve a su dueño: precios e impuestos, a una nueva publicación; clientes y direcciones, al maestro (Q-03); deuda, al ERP; medios de una caja, a la configuración versionada (F04-06); ventas y documentos, a una NC, anulación o ajuste trazable; reintentos de integración, a su política (CX-041). Es igual en los tres países; Operaciones y Soporte acuerdan qué acciones se habilitan.",
+          "basis": [
+            "architecture",
+            "practice"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · Roadmap F04-10: consola operativa de pendientes y acciones autorizadas",
+              "url": "https://pos-docs-starlight.vercel.app/guide/roadmap/phase-04/#work-f04-10"
+            },
+            {
+              "label": "POS Docs · Integración por país: quién resuelve cada discrepancia y corrección con evidencia",
+              "url": "https://pos-docs-starlight.vercel.app/guide/proposal/integration/#contrato-común-y-conciliación"
+            },
+            {
+              "label": "POS Docs · Sincronización y propiedad de datos: correcciones trazables, sin reescribir historia",
+              "url": "https://pos-docs-starlight.vercel.app/guide/proposal/synchronization/#propiedad-de-datos-y-conflictos"
+            },
+            {
+              "label": "POS Docs · Acceso, permisos y operación: separación de funciones de soporte y auditoría de replays",
+              "url": "https://pos-docs-starlight.vercel.app/guide/proposal/access-operations/"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F04-10.md#L19",
+            "delivery/specs/F04-10.md#L26",
+            "delivery/specs/F04-10.md#L31",
+            "delivery/specs/F04-10.md#L44-L47",
+            "delivery/specs/F04-10.md#L60",
+            "delivery/specs/F03-12.md#L72",
+            "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L42",
+            "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L55",
+            "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L246"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-40",
@@ -1762,9 +2271,50 @@
           "F04-07"
         ],
         "priority": "P2",
-        "reviewedOn": "2026-11-11",
+        "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "El POS no edita maestros ajenos: catálogo (con categorías y marcas), impuestos, precios, ofertas, clientes, sucursales y bodegas se consultan desde su publicación y su cambio se pide al dueño sólo si este ofrece interfaz. Administra sólo lo propio: perfiles (Q-107), asignaciones y configuración de cajas, medios e integraciones (F04-06).",
+          "scope": "country",
+          "default": "Todos los maestros en sólo consulta, incluidas las ofertas; sólo los clientes, con sus direcciones y contactos, admiten solicitudes al dueño (Q-03, Q-41)",
+          "rationale": "En la sucursal productiva ningún perfil concede los mantenedores locales (R-03), así que no se pierde un uso real, y la propuesta de arquitectura fija que una copia POS no transfiere la propiedad del dato. El dueño cambia por país: AX en Chile, ICS con precios de SIGE en Perú y GIRA en España, según la síntesis por país. Difiere de LS-033, que toma del ERP la configuración de cajas y medios: el ERP sólo publica sus referencias, como el punto de emisión.",
+          "basis": [
+            "architecture",
+            "data",
+            "meeting"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · Aplicaciones, datos y responsabilidades: una copia POS no transfiere la propiedad del dato",
+              "url": "https://pos-docs-starlight.vercel.app/guide/proposal/architecture/#contratos-de-contenedores-y-propiedad-de-datos"
+            },
+            {
+              "label": "POS Docs · Roadmap F04-07: administración autorizada de maestros y consulta de ofertas",
+              "url": "https://pos-docs-starlight.vercel.app/guide/roadmap/phase-04/#work-f04-07"
+            },
+            {
+              "label": "POS Docs · Comparación por país: ERP de cada país y precios de SIGE en Perú (OBS-PE-01)",
+              "url": "https://pos-docs-starlight.vercel.app/guide/evidence/country-comparison/#obs-pe-01"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F04-07.md#L19-L20",
+            "delivery/specs/F04-07.md#L26",
+            "delivery/specs/F04-07.md#L30",
+            "delivery/specs/F04-07.md#L44-L45",
+            "delivery/specs/F04-06.md#L46",
+            "delivery/specs/F04-06.md#L82",
+            "delivery/reviews/pos-parity-2026-11-10/trazabilidad.md#L46",
+            "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L234-L236",
+            "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L43"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-41",
@@ -1967,9 +2517,54 @@
           "F01-08"
         ],
         "priority": "P2",
-        "reviewedOn": "2026-11-11",
+        "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "No por defecto: la venta a cliente genérico no registra datos de contacto del comprador. Sólo se piden, opcionales y con aviso de su finalidad, los mínimos para un uso declarado, como enviar el comprobante o coordinar un despacho; quedan en la venta con acceso restringido durante el plazo que fije Legal y no crean cliente.",
+          "scope": "country",
+          "default": "Deshabilitado: la venta a cliente genérico no pide datos de contacto",
+          "rationale": "Las tres normas exigen fines explícitos, sólo los datos necesarios y conservarlos mientras dure el fin: en Chile, el art. 3 de la Ley 19.628 según la Ley 21.719, que rige desde el 1-12-2026; en Perú, los arts. 5 a 8 de la Ley 29733; en España, el art. 5 del RGPD. Legal de cada país fija finalidades, base, aviso y plazo antes de habilitarlo; la identificación que exige el umbral de Q-50 es otra obligación y va en el documento.",
+          "basis": [
+            "regulation",
+            "architecture"
+          ],
+          "references": [
+            {
+              "label": "BCN · Ley 19.628, art. 3, texto vigente desde el 1-12-2026 según la Ley 21.719: finalidad y proporcionalidad",
+              "url": "https://www.bcn.cl/leychile/navegar?idNorma=141599&idParte=8642684&idVersion=2026-12-01"
+            },
+            {
+              "label": "BCN · Ley 21.719, que regula la protección y el tratamiento de los datos personales",
+              "url": "https://www.bcn.cl/leychile/navegar?idNorma=1209272"
+            },
+            {
+              "label": "gob.pe · Ley 29733 de Protección de Datos Personales, arts. 5 a 8: consentimiento, finalidad, proporcionalidad y calidad",
+              "url": "https://cdn.www.gob.pe/uploads/document/file/272360/Ley%20N%C2%BA%2029733.pdf.pdf?v=1618338779"
+            },
+            {
+              "label": "BOE · Reglamento (UE) 2016/679 (RGPD), art. 5: limitación de la finalidad, minimización y plazo de conservación",
+              "url": "https://www.boe.es/buscar/doc.php?id=DOUE-L-2016-80807"
+            },
+            {
+              "label": "POS Docs · Acceso, permisos y operación: minimizar datos personales en cajas",
+              "url": "https://pos-docs-starlight.vercel.app/guide/proposal/access-operations/"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F01-08.md#L28",
+            "delivery/specs/F01-08.md#L30",
+            "delivery/specs/F01-08.md#L34-L35",
+            "delivery/specs/F02-02.md#L37",
+            "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L42",
+            "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L26"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-45",
@@ -2057,9 +2652,43 @@
           "F01-09"
         ],
         "priority": "P2",
-        "reviewedOn": "2026-11-11",
+        "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "En cualquier caja de la misma sucursal: su dueño la retoma con control de versión, y otro operador sólo con el permiso de recuperación (Q-45), que deja registrado el traspaso. Nunca desde otra sucursal; al retomarla se recotiza con la configuración de la caja que la retoma.",
+          "scope": "core",
+          "default": null,
+          "rationale": "Una venta en espera no tiene pagos (Q-45) ni pertenece al efectivo de un turno, así que limitarla a la caja que la pausó sólo impide atender al cliente en otro puesto o si esa caja falla. POS Platform ya permite a su dueño recuperarla desde otra caja de la sucursal con control de versión; otra sucursal tiene otros precios, bodegas y establecimiento fiscal. La regla es igual en los tres países; la matriz de cada país asigna el permiso.",
+          "basis": [
+            "architecture",
+            "practice"
+          ],
+          "references": [
+            {
+              "label": "Microsoft Learn · Suspender y retomar en Dynamics 365 Commerce: retomar en otra caja de la misma tienda",
+              "url": "https://learn.microsoft.com/en-us/dynamics365/commerce/pos-suspend-recall-transactions"
+            },
+            {
+              "label": "POS Docs · Roadmap F01-09: borradores, pausa y recuperación de cesta",
+              "url": "https://pos-docs-starlight.vercel.app/guide/roadmap/phase-01/#work-f01-09"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F01-09.md#L41",
+            "delivery/specs/F01-09.md#L53",
+            "delivery/specs/F01-09.md#L66",
+            "delivery/specs/F01-09.md#L68",
+            "libs/backend/sales/src/application/drafts.facade.ts#L198-L265",
+            "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L50",
+            "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L28"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-47",
@@ -2088,9 +2717,51 @@
           "F01-10"
         ],
         "priority": "P2",
-        "reviewedOn": "2026-11-11",
+        "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "Sólo si la campaña lo declara: cada cupón es nominativo, validado contra el cliente identificado, o al portador, válido también en la venta a cliente genérico; en ambos casos, su dueño confirma en línea la vigencia y el límite de uso. Sin esa declaración, el cupón es nominativo y no aplica al cliente genérico.",
+          "scope": "country",
+          "default": "Sólo cupones nominativos: ninguno aplica a la venta a cliente genérico",
+          "rationale": "Un bloqueo fijo para el cliente genérico impide campañas al portador, como un cupón impreso o publicado; F01-10 ya valida ámbito y cliente de cada cupón, y Q-01 deja las exclusiones en la regla de cada campaña. Al no ligarse a una persona, un cupón al portador depende de su dueño para no consumirse dos veces, nunca de la caja. Según el cuestionario de Perú, allí no se usan cupones; cada país habilita sus campañas.",
+          "basis": [
+            "architecture",
+            "legacy",
+            "meeting",
+            "practice"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · Precios y ofertas locales: los cupones de uso único necesitan cupos exclusivos o conexión",
+              "url": "https://pos-docs-starlight.vercel.app/guide/proposal/pricing-promotions/"
+            },
+            {
+              "label": "POS Docs · Comparación por país: Perú no usa promociones ni cupones (OBS-PE-01)",
+              "url": "https://pos-docs-starlight.vercel.app/guide/evidence/country-comparison/#obs-pe-01"
+            },
+            {
+              "label": "POS Docs · Roadmap F01-10: promociones, cupones y descuentos con autorización",
+              "url": "https://pos-docs-starlight.vercel.app/guide/roadmap/phase-01/#work-f01-10"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F01-10.md#L20",
+            "delivery/specs/F01-10.md#L30",
+            "delivery/specs/F01-10.md#L35-L36",
+            "delivery/specs/F01-10.md#L44",
+            "delivery/specs/F01-10.md#L49",
+            "delivery/specs/F01-10.md#L53",
+            "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L51",
+            "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L54",
+            "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L34"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-48",
@@ -2118,9 +2789,56 @@
           "F01-10"
         ],
         "priority": "P2",
-        "reviewedOn": "2026-11-11",
+        "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "Seguir sin ellas, con aviso: si la sucursal no tiene una versión vigente y completa de promociones, la venta sigue con los precios vigentes, avisa antes del pago y registra el motivo; nunca aplica una promoción vencida o parcial. Una promoción exhibida que no pudo aplicarse se respeta con la rebaja autorizada de Q-12.",
+          "scope": "country",
+          "default": "Continuar sin promociones, con aviso antes del pago y el motivo registrado en la venta",
+          "rationale": "Con la evaluación local (ADR-11), la caja usa la versión anterior mientras siga vigente y autorizada, y una ausente se informa como capacidad no disponible (F01-07): bloquear toda venta por ella detendría la sucursal. Pero cobrar más que lo exhibido infringe en Chile el art. 18 de la Ley 19.496 y la promoción es exigible (art. 35), como en España (art. 61 del TRLGDCU). Según su cuestionario, Perú hoy no usa promociones.",
+          "basis": [
+            "architecture",
+            "regulation",
+            "legacy",
+            "meeting"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · Operación de caja: ninguna oferta vencida se extiende y la versión anterior vale sólo si sigue autorizada",
+              "url": "https://pos-docs-starlight.vercel.app/guide/operations/cash-management/#o02--precio-oferta-y-reglas-locales"
+            },
+            {
+              "label": "BCN · Ley 19.496, art. 18: cobrar un precio superior al exhibido, informado o publicitado",
+              "url": "https://www.bcn.cl/leychile/navegar?idNorma=61438&idParte=8542449"
+            },
+            {
+              "label": "BCN · Ley 19.496, art. 35: cumplimiento de lo ofrecido en una promoción u oferta",
+              "url": "https://www.bcn.cl/leychile/navegar?idNorma=61438&idParte=8542469"
+            },
+            {
+              "label": "BOE · Real Decreto Legislativo 1/2007 (TRLGDCU), art. 61: el contenido de la promoción es exigible",
+              "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2007-20555#a61"
+            },
+            {
+              "label": "POS Docs · Comparación por país: Perú no usa promociones ni cupones (OBS-PE-01)",
+              "url": "https://pos-docs-starlight.vercel.app/guide/evidence/country-comparison/#obs-pe-01"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F01-07.md#L47",
+            "delivery/specs/F01-10.md#L11",
+            "delivery/specs/F01-10.md#L49",
+            "delivery/specs/F01-10.md#L69",
+            "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L55",
+            "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L36"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-49",
@@ -2147,9 +2865,42 @@
           "F01-01"
         ],
         "priority": "P2",
-        "reviewedOn": "2026-11-11",
+        "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "Sí, se admite abrir en cero y no se conserva el mínimo de 1 peso: la apertura declara el fondo contado por denominación, no negativo y en la moneda de la caja, y ese monto entra en el esperado del cierre (Q-102). Un mínimo mayor sólo rige si Tesorería lo fija para la sucursal.",
+          "scope": "branch",
+          "default": "0: se admite abrir sin fondo de cambio",
+          "rationale": "Un mínimo de 1 peso no asegura vuelto, está fijado en pesos chilenos y obliga a declarar efectivo inexistente en una caja que no lo recibe; lo que protege el cuadre es contar la apertura y sumarla al esperado, como fija el ADR-20 y como hace Dynamics 365 Commerce con el monto inicial. Coincide con el mínimo configurable que propone LC-057, que también conserva el rechazo de una caja sin medios habilitados. El control es igual en Chile, Perú y España; sólo el mínimo, si existe, lo fija cada sucursal.",
+          "basis": [
+            "practice",
+            "architecture"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · ADR-20: el efectivo esperado es la apertura más el efectivo cobrado",
+              "url": "https://pos-docs-starlight.vercel.app/guide/architecture/cash-rounding/#modelo"
+            },
+            {
+              "label": "Microsoft Learn · Dynamics 365 Commerce: declarar el monto inicial del turno",
+              "url": "https://learn.microsoft.com/en-us/dynamics365/commerce/shift-drawer-management#declare-start-amount"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F01-01.md#L20",
+            "delivery/specs/F01-01.md#L37",
+            "delivery/specs/F01-01.md#L76",
+            "delivery/specs/F04-03.md#L91",
+            "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L10",
+            "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L8"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-50",
@@ -2244,9 +2995,43 @@
           "F01-11"
         ],
         "priority": "P3",
-        "reviewedOn": "2026-11-11",
+        "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "No: la caja no usa plantillas de atributos en el primer alcance; no se publican, no se migran ni condicionan la venta. Si una capacidad futura necesita atributos de producto, como un filtro de búsqueda, se publican desde el dueño del catálogo en el mismo corte que sus artículos (LS-030).",
+          "scope": "core",
+          "default": null,
+          "rationale": "En el legacy no se identificó ninguna pantalla que las use, y cada artículo toma la primera plantilla local, sin relación con AX: migrarlas crearía un maestro sin dueño ni consumidor. Publicar sólo los datos con dueño y uso declarados (F03-09) vale igual para Chile, Perú y España; el recorrido de interfaz pendiente (FOLLOWUP-018) puede revelar un uso que Comercial confirme.",
+          "basis": [
+            "architecture",
+            "practice"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · Publicación de maestros: el dueño de cada dato confirma su autoridad y cobertura",
+              "url": "https://pos-docs-starlight.vercel.app/guide/architecture/master-data-publication/"
+            },
+            {
+              "label": "POS Docs · Roadmap F03-09: extracción y preparación de maestros",
+              "url": "https://pos-docs-starlight.vercel.app/guide/roadmap/phase-03/#work-f03-09"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F03-09.md#L35",
+            "delivery/specs/F03-09.md#L76",
+            "delivery/specs/F01-11.md#L28",
+            "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L22",
+            "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L120",
+            "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-codex.csv#L60",
+            "delivery/follow-ups.json#L579-L603"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-52",
@@ -2400,7 +3185,7 @@
         "question": "¿Se admite verificar un cheque sin consultar al proveedor de verificación, con qué evidencia y qué aprobación?",
         "kind": "rule",
         "state": "open",
-        "currentAnswer": "Legacy: basta un código seguro que no use otro cheque, validado en una ruta sin autenticación",
+        "currentAnswer": "Legacy: basta un código seguro que no use otro cheque",
         "answerSources": [
           "code",
           "spec"
@@ -2482,9 +3267,47 @@
           "F04-03"
         ],
         "priority": "P2",
-        "reviewedOn": "2026-11-11",
+        "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "No lo exige: el cierre de caja informa el estado del lote de cada terminal integrado de la caja, sin bloquearse por él. El cierre del lote es una operación del terminal (F02-14) que antes compara sus totales con los pagos registrados en ese terminal; una diferencia queda pendiente de conciliación con responsable, sin ajuste manual.",
+          "scope": "country",
+          "default": "Advertir sin bloquear",
+          "rationale": "El lote pertenece al terminal y al adquirente, no al turno. En Transbank, el cierre borra de la memoria del terminal las transacciones que permiten consultar o anular un pago (Q-19), y sus totales sirven para detectar pagos no informados: exigirlo en cada turno impediría esas recuperaciones y bloquearía la caja ante una falla del terminal. Coincide con el legacy en no exigirlo; cada adquirente, como Niubiz o BBVA/Redsys según la síntesis por país, declara cómo cierra su lote.",
+          "basis": [
+            "architecture",
+            "practice",
+            "legacy"
+          ],
+          "references": [
+            {
+              "label": "Transbank Developers · POS Integrado: transacción de cierre",
+              "url": "https://www.transbankdevelopers.cl/documentacion/posintegrado#transaccion-de-cierre"
+            },
+            {
+              "label": "Transbank Developers · POS Integrado: totales para detectar transacciones no informadas",
+              "url": "https://www.transbankdevelopers.cl/documentacion/posintegrado#transaccion-totales"
+            },
+            {
+              "label": "POS Docs · Roadmap F02-14: cierre del terminal distinto del cierre de caja",
+              "url": "https://pos-docs-starlight.vercel.app/guide/roadmap/phase-02/#work-f02-14"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F02-14.md#L20",
+            "delivery/specs/F02-14.md#L41",
+            "delivery/specs/F02-14.md#L57",
+            "delivery/specs/F04-03.md#L70",
+            "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L100",
+            "delivery/reviews/pos-parity-2026-11-10/inventarios/perifericos-notas.md#L69"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-93",
@@ -2639,7 +3462,52 @@
         "priority": "P2",
         "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "Sólo las que use una regla de precio aprobada: cada lista declara la decisión que alimenta, como el piso de un precio o descuento manual (Q-12), su dueño y su vigencia, y viaja en el mismo paquete y corte que los precios base; si vence o falta, la regla que la usa se bloquea, sin tomar la última recibida. Las demás no se distribuyen a la caja.",
+          "scope": "country",
+          "default": "Sin listas auxiliares hasta que Comercial de cada país apruebe la regla que usa cada una; cada lista se publica con el calendario de los precios base",
+          "rationale": "La caja legacy no compara el precio vendido con el mínimo, así que el uso de estas listas no se deduce del código; el cálculo de Chile sí considera grupos, descuentos de vendedor, históricos y mínimos, que entran en el paquete si los casos de paridad del ADR-11 los exigen. Perú toma sus precios de SIGE y no usa promociones, según la comparación por país, así que cada país fija sus listas y su calendario.",
+          "basis": [
+            "architecture",
+            "practice",
+            "meeting"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · Precios y ofertas locales: grupos, descuentos de vendedor, históricos y mínimos del cálculo",
+              "url": "https://pos-docs-starlight.vercel.app/guide/proposal/pricing-promotions/#evaluación-local-de-ofertas"
+            },
+            {
+              "label": "POS Docs · Operación de caja, O02: sin recurrir al último precio disponible",
+              "url": "https://pos-docs-starlight.vercel.app/guide/operations/cash-management/#o02--precio-oferta-y-reglas-locales"
+            },
+            {
+              "label": "POS Docs · Comparación por país: Perú toma sus precios de SIGE (OBS-PE-01)",
+              "url": "https://pos-docs-starlight.vercel.app/guide/evidence/country-comparison/#obs-pe-01"
+            },
+            {
+              "label": "POS Docs · Roadmap F03-09: autoridad por maestro y fuente, incluidos precios externos al ERP",
+              "url": "https://pos-docs-starlight.vercel.app/guide/roadmap/phase-03/#work-f03-09"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F03-09.md#L35",
+            "delivery/specs/F03-09.md#L37",
+            "delivery/specs/F03-09.md#L77",
+            "delivery/specs/F01-10.md#L37",
+            "delivery/specs/F01-10.md#L53",
+            "delivery/specs/F03-02.md#L11",
+            "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L135",
+            "delivery/reviews/pos-parity-2026-11-10/inventarios/sincronizacion.csv#L30",
+            "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L37"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-96",
@@ -3137,7 +4005,40 @@
         "priority": "P2",
         "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "A la fecha comercial de apertura: el turno pertenece entero a esa fecha, calculada con la zona horaria de la sucursal, y el cierre conserva su fecha y hora reales con una marca de cierre desfasado. Los informes de caja agrupan por fecha comercial y muestran la hora real; cada documento conserva su propia fecha de emisión.",
+          "scope": "core",
+          "default": null,
+          "rationale": "Con el bloqueo de Q-13, un turno desfasado sólo tiene operaciones de su fecha de apertura, y asignarlo al día del cierre trasladaría ventas y arqueo a otro día. Se conserva del legacy la asignación al día de apertura, sin fijar la hora del cierre a las 23:59:59, porque la propuesta pide conservar la fecha comercial y la hora real del evento. La regla es igual en los tres países; sólo cambian la zona horaria de cada sucursal y el calendario de cada país.",
+          "basis": [
+            "architecture",
+            "legacy",
+            "practice"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · Operación de caja: conservar la fecha de negocio y la hora real del cierre",
+              "url": "https://pos-docs-starlight.vercel.app/guide/operations/cash-management/"
+            },
+            {
+              "label": "Microsoft Learn · Dynamics 365 Commerce: transacciones posteriores a medianoche contabilizadas con el día comercial anterior",
+              "url": "https://learn.microsoft.com/en-us/dynamics365/commerce/tasks/store-configurations-retail-statements"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F04-03.md#L14",
+            "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L190",
+            "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L197",
+            "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L63",
+            "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L9"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-104",
@@ -3223,7 +4124,50 @@
         "priority": "P2",
         "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "Mostrar aparte y con signo: por cada medio, lo cobrado y lo devuelto en dinero en el período, con la misma definición de dinero del cierre (Q-102); las NC emitidas son una partida documental propia que rebaja la venta neta sin tocar ningún medio, y una NC usada como pago figura como medio propio. Ninguna NC aparece con importe cero.",
+          "scope": "core",
+          "default": null,
+          "rationale": "Una NC no mueve dinero por sí sola: la devolución es otro efecto, con su medio y su turno (F04-01, Q-98). Restarla de un medio sin reembolso descuadraría el resumen con el arqueo, y mostrarla en cero oculta su efecto en la venta neta. Es la separación entre documento y dinero que el ADR-20 aplica al redondeo, y vale igual en los tres países, también para las facturas rectificativas que España emite según la síntesis por país.",
+          "basis": [
+            "architecture",
+            "practice",
+            "meeting"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · Operación de caja: una NC no implica por sí sola un reembolso",
+              "url": "https://pos-docs-starlight.vercel.app/guide/operations/cash-management/#nc-y-uso-como-medio-de-pago"
+            },
+            {
+              "label": "POS Docs · ADR-20, QF12: reporte que separa documentos y dinero cobrado",
+              "url": "https://pos-docs-starlight.vercel.app/guide/architecture/cash-rounding/#qf12--conciliación-y-renta"
+            },
+            {
+              "label": "POS Docs · Contraste de Chile con el producto: ventas netas, devoluciones y anulaciones no se suman indiscriminadamente",
+              "url": "https://pos-docs-starlight.vercel.app/guide/implementation/product-review/#7-tableros-reportes-y-logs"
+            },
+            {
+              "label": "POS Docs · Comparación por país: documentos emitidos en cada país",
+              "url": "https://pos-docs-starlight.vercel.app/guide/evidence/country-comparison/"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F04-05.md#L44",
+            "delivery/specs/F04-05.md#L51",
+            "delivery/specs/F04-01.md#L8",
+            "delivery/specs/F04-01.md#L15",
+            "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L204",
+            "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L70",
+            "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L38"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-106",
@@ -3253,7 +4197,52 @@
         "priority": "P2",
         "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "Moroso es el cliente con deuda vencida a la fecha de corte de la fuente, desde los días de atraso que fije Cobranza; la cartola muestra aparte el bloqueo de crédito del ERP y el próximo vencimiento, con fecha y versión de la fuente. La marca es operativa: no califica la mora legal ni autoriza o deniega crédito (F04-11).",
+          "scope": "country",
+          "default": "Moroso desde el primer día de atraso, con la deuda vencida a la fecha de corte de la fuente",
+          "rationale": "El bloqueo es una decisión del dueño del cupo y el atraso, un hecho de sus documentos: derivar uno del otro en caja crearía otra regla de crédito. La mora legal tampoco coincide: en Chile, al no pagar en el término estipulado (art. 1551 del Código Civil); en Perú, por regla general, desde que el acreedor exige el pago (art. 1333), y en España, entre empresas, al vencer el plazo (Ley 3/2004, art. 5). Por eso Cobranza de cada país fija los días.",
+          "basis": [
+            "practice",
+            "architecture",
+            "regulation"
+          ],
+          "references": [
+            {
+              "label": "BCN · Código Civil de Chile, art. 1551: mora del deudor",
+              "url": "https://www.bcn.cl/leychile/navegar?idNorma=172986&idParte=8719492"
+            },
+            {
+              "label": "gob.pe · Código Civil del Perú, edición oficial, art. 1333: constitución en mora",
+              "url": "https://cdn.www.gob.pe/uploads/document/file/6359836/5582217-codigo-civil.pdf"
+            },
+            {
+              "label": "BOE · Ley 3/2004, art. 5: mora automática en operaciones comerciales",
+              "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2004-21830#a5"
+            },
+            {
+              "label": "POS Docs · Roadmap F04-11: una consulta de saldo no concede crédito",
+              "url": "https://pos-docs-starlight.vercel.app/guide/roadmap/phase-04/#work-f04-11"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F04-05.md#L73",
+            "delivery/specs/F04-11.md#L14",
+            "delivery/specs/F04-11.md#L22-L23",
+            "delivery/specs/F04-11.md#L105",
+            "delivery/specs/F04-02.md#L21",
+            "delivery/specs/F04-02.md#L75",
+            "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L206",
+            "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L83",
+            "delivery/reviews/pos-parity-2026-11-10/inventarios/sincronizacion.csv#L25"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-107",
@@ -3343,7 +4332,47 @@
         "priority": "P2",
         "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "Ambas, por separado: el crédito es un medio que la caja ofrece sólo si su configuración publicada lo habilita, como los demás (LC-083), y cada venta a crédito exige además la autorización del dueño del cupo (F04-11). Habilitarlo en una caja nunca concede cupo.",
+          "scope": "register",
+          "default": "Habilitado en todas las cajas de las sucursales que venden a crédito, como en el legacy",
+          "rationale": "Tratarlo como los demás medios permite restringirlo en cajas sin la conexión o la atención que exige, sin excepciones en el código (LS-033), y el diseño de proveedores ya impide que una excepción de caja amplíe la autorización de crédito. Habilitarlo por defecto en todas las cajas conserva la operación de Chile; Chile y Perú informan el crédito como medio de pago y España emite albaranes de crédito, según la síntesis por país.",
+          "basis": [
+            "architecture",
+            "legacy",
+            "practice",
+            "meeting"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · Proveedores y dispositivos: una excepción de caja no amplía la autorización de crédito",
+              "url": "https://pos-docs-starlight.vercel.app/guide/architecture/providers/"
+            },
+            {
+              "label": "POS Docs · Roadmap F04-11: venta a crédito y consumo autorizado de cupo",
+              "url": "https://pos-docs-starlight.vercel.app/guide/roadmap/phase-04/#work-f04-11"
+            },
+            {
+              "label": "POS Docs · Comparación por país: medios de pago y documentos",
+              "url": "https://pos-docs-starlight.vercel.app/guide/evidence/country-comparison/"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F04-06.md#L46",
+            "delivery/specs/F04-06.md#L80",
+            "delivery/specs/F04-06.md#L82",
+            "delivery/specs/F04-11.md#L15",
+            "delivery/specs/F04-11.md#L23",
+            "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L232",
+            "delivery/reviews/pos-parity-2026-11-10/trazabilidad.csv#L84"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-109",
@@ -3374,7 +4403,47 @@
         "priority": "P2",
         "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "Sí, sólo como contingencia: con el terminal integrado listo (Q-29), la caja no ofrece el registro manual; si queda no disponible, un supervisor lo habilita para esa caja y turno, con los datos de LP-017, y cada voucher queda pendiente de conciliar con el adquirente (Q-09). Publicar una combinación de medios inválida se rechaza (LP-016).",
+          "scope": "country",
+          "default": "Oculto con el terminal integrado listo; con el terminal no disponible, sólo con aprobación de supervisor",
+          "rationale": "Ocultarlo siempre deja sin tarjeta a una caja cuyo terminal falla, y mostrarlo siempre permite registrar cargos fuera de la integración; ante un proveedor inaccesible, la propuesta sólo admite tarjeta si el adquirente habilita esa modalidad. En España, según el diseño de proveedores, los TPV portátiles no se conectan a Gira, así que allí el registro manual sería el camino habitual. Tampoco sirve para recuperar un cobro integrado incierto, que sigue F02-04.",
+          "basis": [
+            "architecture",
+            "practice",
+            "meeting"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · Venta y continuidad: tarjeta sólo si el adquirente habilita esa modalidad",
+              "url": "https://pos-docs-starlight.vercel.app/guide/proposal/continuity/"
+            },
+            {
+              "label": "POS Docs · Proveedores y dispositivos: TPV portátiles de España sin conexión a Gira",
+              "url": "https://pos-docs-starlight.vercel.app/guide/architecture/providers/"
+            },
+            {
+              "label": "Transbank Developers · POS Integrado: cambio a POS normal",
+              "url": "https://www.transbankdevelopers.cl/documentacion/posintegrado#transaccion-de-cambio-a-pos-normal"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F02-06.md#L34",
+            "delivery/specs/F02-06.md#L61",
+            "delivery/specs/F04-06.md#L55",
+            "delivery/specs/F04-06.md#L81",
+            "delivery/specs/F02-14.md#L63",
+            "delivery/specs/F02-14.md#L65",
+            "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L233",
+            "delivery/reviews/pos-parity-2026-11-10/trazabilidad.csv#L347"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-110",
@@ -3405,7 +4474,45 @@
         "priority": "P2",
         "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "No se agregan a la OV: las líneas directas conservan su origen, precio, promociones y vendedor, y el ERP las recibe como líneas del POS aunque la agrupación de Q-43 las ponga en el documento de la OV. En caja la OV no se edita: se carga, o la fracción que autorice su dueño, o se quita; otro cambio se pide al dueño y llega como nueva versión.",
+          "scope": "country",
+          "default": "Chile: las líneas directas van en el documento de una OV del mismo cliente, como hoy, sin agregarse a ella; la OV no se edita en caja",
+          "rationale": "Agregarlas obliga a la caja a modificar un pedido ajeno que F04-08 protege y cuyo contrato sólo prevé consultar, reservar, consumir y liberar; el origen por línea permite devolver, atribuir al vendedor e integrar cada parte. Difiere del legacy, que las incorpora a la OV; el adaptador de AX debe confirmar que registra el documento mixto. Según la comparación por país, Perú debe delimitar qué se edita en sus notas de venta antes del cobro: esa edición ocurre en su sistema dueño.",
+          "basis": [
+            "architecture",
+            "practice",
+            "meeting"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · Roadmap F04-08: no editar condiciones protegidas de la OV",
+              "url": "https://pos-docs-starlight.vercel.app/guide/roadmap/phase-04/#work-f04-08"
+            },
+            {
+              "label": "POS Docs · Comparación por país: delimitar la edición de notas de venta en Perú (OBS-PE-01)",
+              "url": "https://pos-docs-starlight.vercel.app/guide/evidence/country-comparison/#obs-pe-01"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F04-08.md#L30",
+            "delivery/specs/F04-08.md#L37",
+            "delivery/specs/F04-08.md#L54",
+            "delivery/specs/F04-08.md#L56",
+            "delivery/specs/F04-08.md#L63",
+            "delivery/specs/F04-08.md#L67",
+            "delivery/specs/F01-10.md#L61",
+            "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L238",
+            "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L33",
+            "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-codex.csv#L21"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       },
       {
         "id": "Q-111",
@@ -3434,7 +4541,43 @@
         "priority": "P2",
         "reviewedOn": "2026-11-12",
         "validation": null,
-        "recommendation": null
+        "recommendation": {
+          "answer": "No por defecto: la caja no agenda despachos ni fija su costo. El despacho llega con la OV, con su flete como línea con precio del origen y su referencia; si un país habilita el despacho desde caja, fechas y costo salen del sistema logístico o de reglas publicadas por su dueño, y la caja sólo los muestra y conserva.",
+          "scope": "country",
+          "default": "Deshabilitado: el despacho llega con la OV y su flete; la caja no ofrece fechas ni costo",
+          "rationale": "Las fechas y el costo del legacy son valores fijos de ejemplo que la caja no usa, y el despacho real ya llega en la OV como ítem de flete. F04-08 excluye un OMS en el POS y sólo conserva modalidad, dirección, contacto, líneas y referencia; una agenda o tarifa local prometería capacidad logística que nadie confirma. En Dynamics 365 Commerce, con cargos automáticos, el envío se calcula con tablas configuradas en la central y no se ingresa a mano en caja.",
+          "basis": [
+            "architecture",
+            "legacy",
+            "practice"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · Roadmap F04-08: retiro o despacho con dirección, contacto, líneas y referencia externa, sin stock local",
+              "url": "https://pos-docs-starlight.vercel.app/guide/roadmap/phase-04/#work-f04-08"
+            },
+            {
+              "label": "Microsoft Learn · Cargos automáticos en Dynamics 365 Commerce: el envío se calcula con tablas de la central",
+              "url": "https://learn.microsoft.com/en-us/dynamics365/commerce/omni-auto-charges"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F04-08.md#L19",
+            "delivery/specs/F04-08.md#L48",
+            "delivery/specs/F04-08.md#L56",
+            "delivery/specs/F04-08.md#L74",
+            "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L239",
+            "delivery/reviews/pos-parity-2026-11-10/trazabilidad.md#L48",
+            "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L40",
+            "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L21"
+          ],
+          "author": {
+            "kind": "agent",
+            "name": "Claude Code · TASK-324"
+          },
+          "proposedOn": "2026-11-12",
+          "endorsement": null
+        }
       }
     ]
   }
