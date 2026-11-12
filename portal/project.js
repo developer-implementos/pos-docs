@@ -11,6 +11,9 @@ export function matchesProjectItem(data, text, values, type) {
     // A question is listed under its earliest phase but concerns every phase of its packages.
     return (!values.state || data.state === values.state) && (!values.phase || (data.phases || '').split(' ').includes(values.phase)) && (!values.decider || data.decider === values.decider) && (!values.recommendation || data.recommendation === values.recommendation) && (!values.scope || data.scope === values.scope);
   }
+  if (type === 'rules') {
+    return ['decision', 'phase', 'area', 'disclosure'].every(key => !values[key] || data[key] === values[key]);
+  }
   const statusMatch = !values.status || (values.status === 'review' ? data.review === 'true' : values.status === 'active' ? data.active === 'true' : values.status === 'remaining' ? !['verified', 'accepted'].includes(data.status) : values.status === data.status);
   return statusMatch && (!values.phase || data.phase === values.phase) && (!values.app || (data.app || '').split(' ').includes(values.app)) && loginMatch(data.assignee, values.assignee);
 }
@@ -46,7 +49,7 @@ export function initializeProject(root) {
     const type = root.dataset.projectPage;
     const items = [...root.querySelectorAll('[data-project-item]')];
     const groups = [...root.querySelectorAll('[data-project-group]')];
-    const subject = { work: 'entregables', questions: 'preguntas' }[type] || 'acciones';
+    const subject = { work: 'entregables', questions: 'preguntas', rules: 'reglas' }[type] || 'acciones';
     const searchable = new Map(items.map(item => [item, item.textContent]));
     const controls = [...form.querySelectorAll('input[name],select[name]')];
     const keys = controls.map(control => control.name);

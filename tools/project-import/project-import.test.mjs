@@ -40,7 +40,7 @@ function fakeImporter(name, { stale = false, rev = revision, onWrite = () => {} 
 }
 
 test('importers run in dependency order and only stale snapshots are written', () => {
-  assert.deepEqual(snapshots.map(item => item.name), ['progress', 'followUp', 'planning', 'questions']);
+  assert.deepEqual(snapshots.map(item => item.name), ['progress', 'followUp', 'planning', 'questions', 'rules']);
   const fakes = ['progress', 'followUp', 'planning', 'questions'].map((name, index) => fakeImporter(name, { stale: index === 1 }));
   const result = importSnapshots({ root, workspace: '.', importers: fakes.map(fake => fake.importer) });
   assert.equal(result.revision, revision);

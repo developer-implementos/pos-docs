@@ -1,0 +1,32 @@
+---
+title: Reglas de negocio
+description: Dónde se deciden las reglas de negocio de la caja de Chile, qué publica su catálogo y dónde está el detalle de cada regla.
+editUrl: false
+tableOfContents: false
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Las reglas de negocio de la caja de Chile se consultan en dos vistas complementarias. **Preguntas y reglas** reúne lo que el negocio debe decidir, quién decide y su validación. El **catálogo de reglas** es el índice de las reglas del POS actual: por fase y área, con su estado de decisión, la verificación del legacy y cómo se comporta POS Platform. Ambas se publican desde registros versionados de POS Platform, importados desde una revisión identificada.
+
+<CardGrid>
+  <LinkCard title="Preguntas y reglas" description="Lo que el negocio debe decidir, por fase: quién decide, respuesta actual, seguimiento y validación." href="/project/questions/" />
+  <LinkCard title="Catálogo de reglas" description="Índice de todas las reglas por fase, con filtros por decisión, área y publicación." href="/project/rules/" />
+</CardGrid>
+
+## Qué publica el catálogo y qué queda en el producto
+
+POS Docs es público; el registro de reglas y el código del POS actual no lo son. El catálogo publica un índice: código, área, entregable y decisión de cada regla y, si la regla es pública, su título, su clasificación, la verificación del legacy y el estado en POS Platform. El comportamiento observado en el legacy, su evidencia en el código, las notas, las preguntas candidatas y las propuestas de los documentos de trabajo se conservan completos en `delivery/business-rules.json` de POS Platform, que es donde se consultan para migrar una regla.
+
+Una regla es **interna** cuando es de seguridad, cuando es un defecto del legacy o cuando su título revela un control ausente, desactivado o que se puede eludir. De una regla interna el catálogo sólo muestra su código, su entregable y su decisión. Así el índice sirve para planificar sin publicar debilidades de un sistema en producción.
+
+## Cómo leer una regla del catálogo
+
+- **Verificación del legacy:** confirmado, parcialmente confirmado, refutado, no verificado o bloqueado. Lo observado en una sucursal o en QA no se extiende a las demás, y la versión instalada en cada tienda no está verificada. Paridad significa conservar las capacidades necesarias, no copiar defectos.
+- **POS Platform:** especificado, implementado y probado indican si POS Platform se comporta como el legacy en la revisión contrastada. Parcial y no señalan una diferencia, que el registro explica; no verificado significa que nadie lo contrastó.
+- **Decisión:** se toma en las preguntas que la regla enlaza, no en el catálogo. Una regla figura sin pregunta, con una pregunta abierta o resuelta según el estado de esas preguntas; una pregunta de hecho aporta contexto, pero no decide. Sólo el responsable de negocio valida una pregunta; un agente, una prueba o esta publicación no lo hacen en su nombre.
+- **Capacidad:** cada regla se agrupa en una capacidad de la matriz de paridad, cuando ya se identificó.
+
+## Cómo se actualiza
+
+Después de una reunión con el negocio se actualiza la pregunta correspondiente en POS Platform, con el procedimiento de su registro de preguntas. Las reglas que la enlazan reflejan el cambio en la siguiente importación, sin repetir la decisión. Si una regla necesita una decisión que ninguna pregunta cubre, se agrega la pregunta y se enlaza desde la regla.

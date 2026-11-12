@@ -1,6 +1,7 @@
 import {renderPlanning, relatedPlan, planHref} from './planning-view.mjs';
 import { deriveProject, applicationNames, technicalStatuses, executionLabel, actionKinds, impactScopes, isActiveWork } from './project.mjs';
 import { answerSourceNames, decisionOutcomes, questionKinds, questionStates, recommendationBases, recommendationScopes, recommendationStatuses } from './questions.mjs';
+import { criticalities, decisionStates, disclosureNames, evidenceStates, ruleKinds, ruleOrigins, ruleTypes, verificationStates, withoutPhase } from './rules.mjs';
 import { teamMembers } from './team.mjs';
 
 const escape = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
@@ -18,7 +19,7 @@ const plural = (count, one, many) => `${count} ${count === 1 ? one : many}`;
 const tag = (label, tone = '') => `<span class="project-tag${tone ? ` project-tag-${tone}` : ''}">${escape(label)}</span>`;
 const statusTag = work => tag(technicalStatuses[work.status], work.status === 'blocked' ? 'warning' : work.status === 'verified' || work.status === 'accepted' ? 'verified' : '');
 const heading = (title, description) => `<div class="project-heading"><p class="eyebrow">POS PLATFORM · PROYECTO</p><h1>${title}</h1><p>${description}</p></div>`;
-const navItems = [['/project/', 'Resumen'], ['/project/plan/', 'Próximo incremento'], ['/project/work/', 'Entregables'], ['/project/attention/', 'Bloqueos y decisiones'], ['/project/questions/', 'Preguntas y reglas'], ['/project/team/', 'Equipo']];
+const navItems = [['/project/', 'Resumen'], ['/project/plan/', 'Próximo incremento'], ['/project/work/', 'Entregables'], ['/project/attention/', 'Bloqueos y decisiones'], ['/project/questions/', 'Preguntas y reglas'], ['/project/rules/', 'Catálogo de reglas'], ['/project/team/', 'Equipo']];
 
 function navigation(route) {
   return `<nav class="project-navigation" aria-label="Gestión del proyecto">${navItems.map(([href, label]) => `<a href="${href}"${route === href ? ' aria-current="page"' : ''}>${label}</a>`).join('')}</nav>`;
@@ -92,9 +93,11 @@ function filters(type, model) {
     ? `${select('phase', 'Fase', model.progress.phases.map(phase => [phase.id, `F${phase.id.slice(-2)} · ${phase.title}`]))}${select('app', 'Aplicación', model.progress.applications.map(app => [app.id, applicationNames[app.id] || app.id]))}${select('status', 'Estado', [...stateOptions, ...reviewOptions, ['remaining', technical ? 'Sin verificación completa' : 'Sin aceptación registrada'], ['active', 'Ejecución activa en GitHub']])}${select('assignee', 'Desarrollador', [['unassigned', 'Sin asignar'], ...people])}`
     : type === 'questions'
       ? `${select('state', 'Estado', Object.entries(questionStates))}${select('phase', 'Fase', model.questions.phases.map(phase => [phase.id, `F${phase.id.slice(-2)} · ${phase.title}`]))}${select('decider', 'Quién decide', model.questions.deciders.map(decider => [decider, decider]))}${select('recommendation', 'Recomendación', Object.entries(recommendationStatuses))}${select('scope', 'Ámbito', Object.entries(recommendationScopes))}`
+      : type === 'rules'
+        ? `${select('decision', 'Decisión', Object.entries(decisionStates))}${select('phase', 'Fase', model.rules.phases.map(phase => [phase.id, phase.id === withoutPhase ? phase.title : `F${phase.id.slice(-2)} · ${phase.title}`]))}${select('area', 'Área', Object.entries(model.rules.areas))}${select('disclosure', 'Publicación', Object.entries(disclosureNames))}`
       : `${select('scope', 'Impacto', Object.entries(impactScopes))}${select('kind', 'Tipo', Object.entries(actionKinds))}${select('state', 'Estado', [['open', 'Abiertas'], ['resolved', 'Resueltas']])}${select('owner', 'Responsable de seguimiento', [['unassigned', 'Por asignar'], ...people])}`;
-  const subject = { work: 'entregables', questions: 'preguntas', attention: 'acciones' }[type];
-  return `<form class="project-filters${type === 'questions' ? ' project-question-filters' : ''}" data-project-filters hidden role="search" aria-label="Filtrar ${subject}"><label class="project-search">Buscar<input name="query" type="search" placeholder="${type === 'questions' ? 'Código, tema o pregunta' : 'Código, tema o responsable'}" autocomplete="off"></label>${controls}<button class="button secondary" type="reset">Limpiar filtros</button></form><noscript><p class="project-note">Todos los registros están disponibles a continuación. Usa los enlaces y despliega cada detalle para consultar su evidencia.</p></noscript><p class="project-result" data-project-count role="status" aria-live="polite"></p><div class="project-empty" data-project-empty hidden><h2>No hay resultados con esos filtros</h2><p>Prueba otra búsqueda o limpia los filtros.</p><button class="button secondary" type="button" data-project-reset>Limpiar filtros</button></div>`;
+  const subject = { work: 'entregables', questions: 'preguntas', rules: 'reglas', attention: 'acciones' }[type];
+  return `<form class="project-filters${['questions', 'rules'].includes(type) ? ' project-question-filters' : ''}" data-project-filters hidden role="search" aria-label="Filtrar ${subject}"><label class="project-search">Buscar<input name="query" type="search" placeholder="${type === 'questions' ? 'Código, tema o pregunta' : type === 'rules' ? 'Código o título' : 'Código, tema o responsable'}" autocomplete="off"></label>${controls}<button class="button secondary" type="reset">Limpiar filtros</button></form><noscript><p class="project-note">Todos los registros están disponibles a continuación. Usa los enlaces y despliega cada detalle para consultar su evidencia.</p></noscript><p class="project-result" data-project-count role="status" aria-live="polite"></p><div class="project-empty" data-project-empty hidden><h2>No hay resultados con esos filtros</h2><p>Prueba otra búsqueda o limpia los filtros.</p><button class="button secondary" type="button" data-project-reset>Limpiar filtros</button></div>`;
 }
 
 function reviewEvidence(work, repository, technical) {
@@ -197,14 +200,59 @@ function questionsPage(model) {
   return `<p class="project-page-note">Registro revisado ${time(questions.reviewedOn)} · ${questionsSourceLink(questions)} · ${integration}</p>${preview}${summary}${filters('questions', model)}<div class="project-question-list">${groups || '<p>No hay preguntas registradas en este corte.</p>'}</div>`;
 }
 
-export function renderProjectPages(progress, followUp, planning = null, changelog = null, questions = null) {
-  const model = {...deriveProject(progress, followUp, undefined, planning), planning, changelog, questions};
+const decisionTone = { resuelta: 'verified', abierta: 'warning' };
+const ruleDecisionCounts = [['abierta', 'con pregunta abierta', 'con pregunta abierta'], ['resuelta', 'resuelta', 'resueltas'], ['sin-pregunta', 'sin pregunta', 'sin pregunta']];
+const verificationTone = { CONFIRMADO: 'verified', REFUTADO: 'warning', BLOQUEADO: 'warning' };
+const rulePhaseLabel = group => group.id === withoutPhase ? escape(group.title) : `F${group.id.slice(-2)} · ${escape(group.title)}`;
+
+function rulesSourceLink(rules) {
+  return `<a href="${escape(rules.source.repository)}/blob/${rules.source.revision}/${rules.source.path}">Registro de reglas · ${rules.source.revision.slice(0, 8)}</a>`;
+}
+
+/** Where the business decides the rule; the questions are published in full in their own view. */
+function ruleDecision(rule) {
+  if (!rule.linkedQuestions.length) return '<p class="project-note"><strong>Decisión:</strong> ninguna pregunta del registro la cubre todavía.</p>';
+  return `<p class="project-note"><strong>Se decide en:</strong> ${rule.linkedQuestions.map(question => `<a href="/project/questions/#${question.id.toLowerCase()}">${question.id}</a> · ${escape(questionStates[question.state].toLowerCase())}${question.kind === 'fact' ? ' (hecho)' : ''}`).join(' · ')}</p>`;
+}
+
+function ruleWork(rule) {
+  return rule.work ? `<a href="${workHref(rule.work)}">${rule.work.id}</a>` : '<span class="project-unassigned">Sin fase</span>';
+}
+
+function ruleCard(rule, rules) {
+  const data = `data-project-item data-decision="${rule.decision}" data-phase="${escape(rule.phase)}" data-area="${rule.area}" data-disclosure="${rule.disclosure}"`;
+  const meta = `<code>${rule.id}</code>${tag(rules.areas[rule.area])}${tag(decisionStates[rule.decision], decisionTone[rule.decision] || '')}`;
+  if (rule.disclosure === 'internal') {
+    return `<article id="${rule.id.toLowerCase()}" class="project-action project-rule project-rule-internal" ${data}><div class="project-action-main"><div class="project-inline-meta">${meta}${tag(disclosureNames.internal)}</div><p class="project-note">Regla interna: su título y su evidencia se consultan en el ${rulesSourceLink(rules)} de POS Platform, con acceso al producto.</p>${ruleDecision(rule)}</div><dl class="project-action-facts"><div><dt>Entregable</dt><dd>${ruleWork(rule)}</dd></div></dl></article>`;
+  }
+  const pos = [['specified', 'Especificado'], ['implemented', 'Implementado'], ['tested', 'Probado']]
+    .map(([key, label]) => `<div><dt>${label}</dt><dd>${escape(evidenceStates[rule.posPlatform[key]])}</dd></div>`).join('');
+  const followUps = rule.followUps.map(id => `<a href="/project/attention/#${id.toLowerCase()}">${id}</a>`).join(' · ');
+  return `<article id="${rule.id.toLowerCase()}" class="project-action project-rule" ${data}><div class="project-action-main"><div class="project-inline-meta">${meta}${tag(`Legacy: ${verificationStates[rule.legacyVerification]}`, verificationTone[rule.legacyVerification] || '')}${tag(`Criticidad ${criticalities[rule.criticality].toLowerCase()}`)}${rule.kind === 'parametro' ? tag(ruleKinds.parametro) : ''}${rule.origin === 'descubierta' ? tag(ruleOrigins.descubierta) : ''}</div><h3>${escape(rule.title)}</h3>${ruleDecision(rule)}<p class="project-note"><strong>POS Platform</strong>, contrastado en ${escape(rules.posPlatformRevision.slice(0, 8))}:</p><dl class="project-rule-facts">${pos}</dl></div><dl class="project-action-facts"><div><dt>Entregable</dt><dd>${ruleWork(rule)}</dd></div>${rule.parity.length ? `<div><dt>Capacidad</dt><dd>${rule.parity.join(', ')}</dd></div>` : ''}${followUps ? `<div><dt>Seguimiento</dt><dd>${followUps}</dd></div>` : ''}<div><dt>Tipo</dt><dd>${escape(ruleTypes[rule.type])}</dd></div></dl></article>`;
+}
+
+function rulesPage(model) {
+  const { rules } = model;
+  if (!rules) return '<section class="project-question-rules"><p>Este corte todavía no publica el registro de reglas de negocio. El registro vive en <code>delivery/business-rules.json</code> de POS Platform y se importa desde una revisión identificada con <code>npm run rules:sync</code>.</p></section>';
+  const { counts } = rules;
+  const integration = rules.integration.included ? 'Revisión integrada en <code>main</code>.' : 'Revisión previa a su integración en <code>main</code>.';
+  const preview = rules.integration.included ? '' : `<aside class="project-alert project-question-preview"><h2>Corte previo a la integración</h2><p>La revisión ${rules.source.revision.slice(0, 8)} pertenece a una rama de POS Platform que todavía no está integrada en <code>main</code>. El registro puede cambiar durante su revisión; cuando se integre, se vuelve a importar desde <code>main</code>.</p></aside>`;
+  const decisionCounts = ruleDecisionCounts.map(([state, one, many]) => `<li><a href="/project/rules/?decision=${state}"><strong>${counts.decisions[state]}</strong> ${counts.decisions[state] === 1 ? one : many}</a></li>`).join('');
+  const legacy = Object.entries(counts.legacy).map(([state, value]) => `${escape(verificationStates[state].toLowerCase())} ${value}`).join(' · ');
+  const summary = `<section class="project-question-summary" aria-labelledby="rules-summary-title"><h2 id="rules-summary-title" class="project-sr-only">Resumen del registro</h2><ul class="project-question-counts">${decisionCounts}</ul><p>${plural(counts.total, 'regla', 'reglas')} · <a href="/project/rules/?disclosure=public">${counts.disclosure.public} públicas</a> · <a href="/project/rules/?disclosure=internal">${counts.disclosure.internal} internas</a> · De las públicas: ${counts.withCapability} con su capacidad de la matriz de paridad, ${plural(counts.discovered, 'descubierta', 'descubiertas')} en el legacy fuera de los documentos de trabajo · Legacy: ${legacy}</p><ul class="project-question-phases" aria-label="Reglas por fase">${rules.groups.map(group => `<li><a href="#rules-${group.id}">${rulePhaseLabel(group)}</a><span>${plural(group.items.length, 'regla', 'reglas')}</span></li>`).join('')}</ul><div class="project-question-rules"><p>Este catálogo complementa <a href="/project/questions/">Preguntas y reglas</a>. La decisión no se toma aquí: cada regla enlaza las preguntas donde el negocio la decide, y su estado se toma de ellas. Una pregunta de hecho aporta contexto, pero no decide la regla.</p><p>POS Docs es público y publica un índice del registro. El comportamiento del legacy, su evidencia en el código, las notas y las propuestas de los documentos de trabajo se consultan en el ${rulesSourceLink(rules)}, con acceso a POS Platform. Las reglas de seguridad, los defectos del legacy y las que revelan un control débil son internas: aquí sólo figuran su código, su entregable y su decisión.</p><p>Especificado, implementado y probado indican si POS Platform se comporta como el legacy en la revisión contrastada: parcial y no señalan una diferencia, y no verificado que nadie lo contrastó. Paridad significa conservar las capacidades necesarias, no copiar defectos.</p></div></section>`;
+  const groups = rules.groups.map(group => `<section id="rules-${group.id}" class="project-question-group" data-project-group aria-labelledby="rules-${group.id}-title"><h2 id="rules-${group.id}-title">${group.href ? `<a href="${escape(group.href)}">${rulePhaseLabel(group)}</a>` : rulePhaseLabel(group)}</h2><p class="project-note">${plural(group.items.length, 'regla', 'reglas')}${group.id === withoutPhase ? ' cuya fase falta decidir' : ` de los entregables de F${group.id.slice(-2)}`}.</p><div class="project-action-list">${group.items.map(item => ruleCard(item, rules)).join('')}</div></section>`).join('');
+  return `<p class="project-page-note">Registro revisado ${time(rules.reviewedOn)} · ${rulesSourceLink(rules)} · ${integration}</p>${preview}${summary}${filters('rules', model)}<div class="project-question-list">${groups}</div>`;
+}
+
+export function renderProjectPages(progress, followUp, planning = null, changelog = null, questions = null, rules = null) {
+  const model = {...deriveProject(progress, followUp, undefined, planning), planning, changelog, questions, rules};
   return new Map([
     ['/project/', page(model, '/project/', 'summary', 'Resumen del proyecto', 'Avance comprobado, trabajo activo y acciones para completar el siguiente paso.', overview(model))],
     ['/project/plan/', page(model, '/project/plan/', 'plan', 'Próximo incremento', 'Trabajo acotado, orden de ejecución y condiciones para empezar.', renderPlanning(planning))],
     ['/project/work/', page(model, '/project/work/', 'work', 'Entregables', 'Estado, responsables y evidencia de cada entregable.', workPage(model))],
     ['/project/attention/', page(model, '/project/attention/', 'attention', 'Bloqueos y decisiones', 'Accesos, preguntas y validaciones con una siguiente acción y una condición de cierre.', attentionPage(model))],
     ['/project/questions/', page(model, '/project/questions/', 'questions', 'Preguntas y reglas', 'Preguntas y reglas de negocio por fase: quién decide, respuesta actual, recomendación del agente, seguimiento y decisión final.', questionsPage(model), questions ? `<li>${questionsSourceLink(questions)}</li>` : '')],
+    ['/project/rules/', page(model, '/project/rules/', 'rules', 'Catálogo de reglas', 'Índice de las reglas de negocio de la caja por fase y área: decisión, verificación del legacy y estado en POS Platform.', rulesPage(model), rules ? `<li>${rulesSourceLink(rules)}</li>` : '')],
     ['/project/team/', page(model, '/project/team/', 'team', 'Equipo', 'Personas, trabajo activo y responsabilidades de seguimiento registradas.', teamPage(model))],
   ]);
 }
