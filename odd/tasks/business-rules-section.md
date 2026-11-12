@@ -16,7 +16,7 @@ Checks: portal, reglas, preguntas, ODD, editorial, contenido, Astro, build y che
 
 - [x] T1 · S1 · route:inline · Página `/guide/business-rules/` y entrada de la barra lateral · status:done · evidence: apps/starlight/src/content/docs/business-rules.mdx; apps/starlight/content-map.mjs; navigation.test.mjs aprobado
 - [x] T2 · S2,S3 · route:inline · Vista `/project/rules/`, importador y pruebas · status:done · evidence: portal/rules.mjs, tools/sync-project-rules.mjs, portal/rules.test.mjs, tools/sync-project-rules.test.mjs
-- [ ] T3 · S3 · route:inline · Reimportar desde `main` cuando se integre la PR del producto · status:pending · evidence: el corte actual viene de la rama del producto (`fe228e3`), identificado como previo a la integración
+- [x] T3 · S3 · route:inline · Reimportar desde `main` cuando se integre la PR del producto · status:done · evidence: los cinco snapshots importados de `9cc8a3f` (main, con #334 y #337): 477 reglas, 386 públicas y 91 internas, y 122 preguntas en el esquema 3
 - [x] T4 · S4,S5 · route:inline · Proyección, importador, vista y página reescritos sobre `e424be1` · status:done · evidence: portal/rules.mjs, tools/sync-project-rules.mjs, sus pruebas y portal/project-view.test.mjs; snapshot de 257 KB frente a 1,43 MB
 - [x] T5 · S5 · route:inline · Snapshot de reglas en la importación automática · status:done · evidence: tools/project-import/snapshots.mjs y su prueba
 
@@ -28,3 +28,4 @@ Checks: portal, reglas, preguntas, ODD, editorial, contenido, Astro, build y che
 
 - L2 · 2026-11-11 · El usuario detectó que TASK-258 ya publica «Preguntas y reglas» y pidió complementarla. La pestaña del catálogo pasa a «Catálogo de reglas», sin decisión propia, y la página de la guía presenta ambas vistas.
 - L3 · 2026-11-12 · El usuario pidió aplicar las recomendaciones de la revisión de #57 con el máximo detalle para los agentes que migran el legacy. Claude Code rehízo la sección en `work/task-280-reglas-publicas` desde `main`, sin los commits de #57, que publicaban en este repositorio público el registro completo con debilidades de seguridad del legacy. El detalle no se recorta: queda en el registro del producto, que los agentes leen con acceso a POS Platform, y aquí se publica un índice. La vista toma la decisión de las preguntas; un hecho no decide. El código de la vista y de la página parte del trabajo de Jesús en #57.
+- L4 · 2026-11-12 · Con #334 y #337 integradas en el producto, la sección se rebasó sobre el esquema 3 de preguntas de TASK-333 (#88, #92) y los cinco snapshots se importaron del mismo corte, como exige la vista para derivar la decisión de cada regla. Las preguntas pasan de 74 a 122 y las reglas con una pregunta abierta, de 86 a 282.

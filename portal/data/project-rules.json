@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "fe228e3e4ed1591abd36ea5e72d0419214d73da6",
+    "revision": "9cc8a3f135d20a097efd594cd0ac83c3587ec75b",
     "path": "delivery/business-rules.json"
   },
   "integration": {
     "reference": "main",
-    "included": false
+    "included": true
   },
-  "sha256": "d301125af943e7ee4750b148f1cae25b4717ca483968d54709c62167fcb3039c",
+  "sha256": "c9e0a68068d5a9a0ff78c40e7f578786ed40d4b7a7d57c48d71ee9352bfb2214",
   "register": {
     "schemaVersion": 2,
     "reviewedOn": "2026-11-12",
@@ -29,7 +29,9 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F01-01",
-        "questions": [],
+        "questions": [
+          "Q-56"
+        ],
         "title": "Un cajero no puede tener más de una caja abierta en la sucursal",
         "type": "validacion",
         "kind": "capacidad",
@@ -123,7 +125,9 @@
         "area": "CAJ",
         "disclosure": "internal",
         "workPackage": "F01-07",
-        "questions": []
+        "questions": [
+          "Q-104"
+        ]
       },
       {
         "id": "CAJ-006",
@@ -295,7 +299,10 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F04-03",
-        "questions": [],
+        "questions": [
+          "Q-98",
+          "Q-102"
+        ],
         "title": "Devoluciones en efectivo se restan del efectivo esperado (mínimo 0)",
         "type": "negocio",
         "kind": "capacidad",
@@ -359,14 +366,18 @@
         "area": "CAJ",
         "disclosure": "internal",
         "workPackage": "F04-03",
-        "questions": []
+        "questions": [
+          "Q-114"
+        ]
       },
       {
         "id": "CAJ-018",
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F04-03",
-        "questions": [],
+        "questions": [
+          "Q-14"
+        ],
         "title": "Criterio de caja cuadrada",
         "type": "negocio",
         "kind": "capacidad",
@@ -389,6 +400,7 @@
         "disclosure": "public",
         "workPackage": "F04-03",
         "questions": [
+          "Q-14",
           "Q-93"
         ],
         "title": "Cálculo de sobrante/faltante (diferencia de arqueo)",
@@ -412,7 +424,10 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F04-03",
-        "questions": [],
+        "questions": [
+          "Q-14",
+          "Q-104"
+        ],
         "title": "Validación previa: si la caja no cuadra se pide confirmación",
         "type": "operacion",
         "kind": "capacidad",
@@ -506,14 +521,18 @@
         "area": "CAJ",
         "disclosure": "internal",
         "workPackage": "F04-03",
-        "questions": []
+        "questions": [
+          "Q-116"
+        ]
       },
       {
         "id": "CAJ-025",
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": null,
-        "questions": [],
+        "questions": [
+          "Q-114"
+        ],
         "title": "Formas de pago que exigen confirmar transacción por transacción",
         "type": "validacion",
         "kind": "capacidad",
@@ -535,7 +554,9 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F04-03",
-        "questions": [],
+        "questions": [
+          "Q-116"
+        ],
         "title": "Solo existe el cierre completo; el cierre parcial está bloqueado",
         "type": "operacion",
         "kind": "capacidad",
@@ -557,14 +578,18 @@
         "area": "CAJ",
         "disclosure": "internal",
         "workPackage": null,
-        "questions": []
+        "questions": [
+          "Q-104"
+        ]
       },
       {
         "id": "CAJ-028",
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F04-03",
-        "questions": [],
+        "questions": [
+          "Q-114"
+        ],
         "title": "Formas de pago presentadas en el cierre",
         "type": "operacion",
         "kind": "capacidad",
@@ -606,7 +631,9 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F04-04",
-        "questions": [],
+        "questions": [
+          "Q-102"
+        ],
         "title": "Detalle de transacciones por forma de pago para confirmar",
         "type": "operacion",
         "kind": "capacidad",
@@ -635,7 +662,9 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F04-03",
-        "questions": [],
+        "questions": [
+          "Q-114"
+        ],
         "title": "Formas de pago sin movimiento ni diferencia no se guardan",
         "type": "operacion",
         "kind": "capacidad",
@@ -657,7 +686,9 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F04-03",
-        "questions": [],
+        "questions": [
+          "Q-28"
+        ],
         "title": "Tras cerrar se limpia la sesión de caja y se muestra el resumen",
         "type": "operacion",
         "kind": "capacidad",
@@ -783,7 +814,9 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F04-03",
-        "questions": [],
+        "questions": [
+          "Q-115"
+        ],
         "title": "Excel de custodia de cheques a fecha (DEC)",
         "type": "integracion",
         "kind": "capacidad",
@@ -806,7 +839,9 @@
         "area": "CAJ",
         "disclosure": "internal",
         "workPackage": "F04-05",
-        "questions": []
+        "questions": [
+          "Q-57"
+        ]
       },
       {
         "id": "CAJ-041",
@@ -835,7 +870,9 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F04-05",
-        "questions": [],
+        "questions": [
+          "Q-28"
+        ],
         "title": "Pantalla de resumen de cierre: líneas y totales",
         "type": "operacion",
         "kind": "capacidad",
@@ -862,7 +899,9 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F04-05",
-        "questions": [],
+        "questions": [
+          "Q-28"
+        ],
         "title": "Informe de recaudación excluye ventas a crédito",
         "type": "negocio",
         "kind": "capacidad",
@@ -884,7 +923,9 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F04-03",
-        "questions": [],
+        "questions": [
+          "Q-115"
+        ],
         "title": "Informe de confirmación de depósito: solo efectivo y cheques al día",
         "type": "negocio",
         "kind": "capacidad",
@@ -904,7 +945,9 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": null,
-        "questions": [],
+        "questions": [
+          "Q-28"
+        ],
         "title": "Informe Z por documento y pago",
         "type": "integracion",
         "kind": "capacidad",
@@ -924,7 +967,9 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F04-05",
-        "questions": [],
+        "questions": [
+          "Q-28"
+        ],
         "title": "Listado de cierres de caja por rango de fechas",
         "type": "operacion",
         "kind": "capacidad",
@@ -997,7 +1042,9 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F04-05",
-        "questions": [],
+        "questions": [
+          "Q-28"
+        ],
         "title": "Indicadores del dashboard: venta del día, del mes, formas de pago y top 10 productos",
         "type": "negocio",
         "kind": "capacidad",
@@ -1019,7 +1066,9 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F01-01",
-        "questions": [],
+        "questions": [
+          "Q-58"
+        ],
         "title": "Inicio de sesión con correo y contraseña",
         "type": "validacion",
         "kind": "capacidad",
@@ -1042,14 +1091,18 @@
         "area": "CAJ",
         "disclosure": "internal",
         "workPackage": "F01-01",
-        "questions": []
+        "questions": [
+          "Q-58"
+        ]
       },
       {
         "id": "CAJ-054",
         "area": "CAJ",
         "disclosure": "internal",
         "workPackage": "F01-01",
-        "questions": []
+        "questions": [
+          "Q-05"
+        ]
       },
       {
         "id": "CAJ-055",
@@ -1063,7 +1116,9 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F01-01",
-        "questions": [],
+        "questions": [
+          "Q-56"
+        ],
         "title": "Al iniciar sesión se recupera la caja abierta del usuario en la sucursal",
         "type": "operacion",
         "kind": "capacidad",
@@ -1109,7 +1164,9 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": null,
-        "questions": [],
+        "questions": [
+          "Q-41"
+        ],
         "title": "Consulta de datos del empleado a sistema externo al iniciar sesión",
         "type": "integracion",
         "kind": "capacidad",
@@ -1163,7 +1220,9 @@
         "area": "CAJ",
         "disclosure": "internal",
         "workPackage": null,
-        "questions": []
+        "questions": [
+          "Q-42"
+        ]
       },
       {
         "id": "CAJ-062",
@@ -1180,7 +1239,8 @@
         "questions": [
           "Q-02",
           "Q-03",
-          "Q-04"
+          "Q-04",
+          "Q-57"
         ]
       },
       {
@@ -1191,7 +1251,10 @@
         "questions": [
           "Q-02",
           "Q-03",
-          "Q-04"
+          "Q-04",
+          "Q-05",
+          "Q-57",
+          "Q-107"
         ]
       },
       {
@@ -1229,7 +1292,9 @@
         "area": "CAJ",
         "disclosure": "internal",
         "workPackage": "F01-01",
-        "questions": []
+        "questions": [
+          "Q-57"
+        ]
       },
       {
         "id": "CAJ-068",
@@ -1256,7 +1321,9 @@
         "area": "CAJ",
         "disclosure": "internal",
         "workPackage": "F01-01",
-        "questions": []
+        "questions": [
+          "Q-05"
+        ]
       },
       {
         "id": "CAJ-070",
@@ -1270,7 +1337,9 @@
         "area": "CAJ",
         "disclosure": "internal",
         "workPackage": "F01-01",
-        "questions": []
+        "questions": [
+          "Q-35"
+        ]
       },
       {
         "id": "CAJ-072",
@@ -1278,7 +1347,8 @@
         "disclosure": "internal",
         "workPackage": "F01-01",
         "questions": [
-          "Q-35"
+          "Q-35",
+          "Q-58"
         ]
       },
       {
@@ -1286,14 +1356,19 @@
         "area": "CAJ",
         "disclosure": "internal",
         "workPackage": "F04-06",
-        "questions": []
+        "questions": [
+          "Q-66"
+        ]
       },
       {
         "id": "CAJ-074",
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F01-08",
-        "questions": [],
+        "questions": [
+          "Q-03",
+          "Q-41"
+        ],
         "title": "Valores por defecto en formularios y campos bloqueados por configuración",
         "type": "operacion",
         "kind": "capacidad",
@@ -1316,7 +1391,9 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F01-07",
-        "questions": [],
+        "questions": [
+          "Q-66"
+        ],
         "title": "Parámetros operativos de caja y POS (valores por defecto)",
         "type": "parametro",
         "kind": "parametro",
@@ -1336,7 +1413,9 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F02-08",
-        "questions": [],
+        "questions": [
+          "Q-84"
+        ],
         "title": "Datos del emisor de DTE configurables (y diferencias entre seeds)",
         "type": "parametro",
         "kind": "parametro",
@@ -1356,7 +1435,9 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F04-01",
-        "questions": [],
+        "questions": [
+          "Q-97"
+        ],
         "title": "Plazos de validación de notas de crédito por meses",
         "type": "parametro",
         "kind": "parametro",
@@ -1376,7 +1457,9 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F01-07",
-        "questions": [],
+        "questions": [
+          "Q-66"
+        ],
         "title": "Variables de configuración por sucursal o globales",
         "type": "operacion",
         "kind": "capacidad",
@@ -1476,7 +1559,9 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": null,
-        "questions": [],
+        "questions": [
+          "Q-64"
+        ],
         "title": "Número único de comprobante con prefijo de sucursal",
         "type": "negocio",
         "kind": "capacidad",
@@ -1516,7 +1601,9 @@
         "area": "CAJ",
         "disclosure": "internal",
         "workPackage": "F04-10",
-        "questions": []
+        "questions": [
+          "Q-39"
+        ]
       },
       {
         "id": "CAJ-087",
@@ -1565,7 +1652,9 @@
         "area": "CAJ",
         "disclosure": "internal",
         "workPackage": "F04-06",
-        "questions": []
+        "questions": [
+          "Q-66"
+        ]
       },
       {
         "id": "CAJ-090",
@@ -1602,7 +1691,9 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F04-03",
-        "questions": [],
+        "questions": [
+          "Q-116"
+        ],
         "title": "Estados de caja: Abierta (Ocupada) y Cerrada (Disponible)",
         "type": "negocio",
         "kind": "capacidad",
@@ -1624,7 +1715,10 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F02-10",
-        "questions": [],
+        "questions": [
+          "Q-34",
+          "Q-86"
+        ],
         "title": "Impresión térmica de comprobante desde servidor con IP fija",
         "type": "integracion",
         "kind": "capacidad",
@@ -1647,7 +1741,9 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F02-09",
-        "questions": [],
+        "questions": [
+          "Q-34"
+        ],
         "title": "Impresoras activas por sucursal",
         "type": "operacion",
         "kind": "capacidad",
@@ -1698,7 +1794,9 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F04-02",
-        "questions": [],
+        "questions": [
+          "Q-106"
+        ],
         "title": "Trigger de base de datos que actualiza acuerdos de pago y cuotas",
         "type": "negocio",
         "kind": "capacidad",
@@ -1755,7 +1853,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F04-11",
-        "questions": [],
+        "questions": [
+          "Q-113"
+        ],
         "title": "Validación de cupo de crédito en línea antes de aceptar un pago a crédito",
         "type": "negocio",
         "kind": "capacidad",
@@ -1801,7 +1901,9 @@
         "area": "VEN",
         "disclosure": "internal",
         "workPackage": "F02-02",
-        "questions": []
+        "questions": [
+          "Q-75"
+        ]
       },
       {
         "id": "VEN-005",
@@ -1902,6 +2004,7 @@
         "disclosure": "public",
         "workPackage": "F02-02",
         "questions": [
+          "Q-25",
           "Q-43"
         ],
         "title": "OC y fecha de OC tomadas desde las líneas cuando hay varios documentos",
@@ -1985,7 +2088,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F01-04",
-        "questions": [],
+        "questions": [
+          "Q-65"
+        ],
         "title": "Finalización de venta y post-proceso",
         "type": "operacion",
         "kind": "capacidad",
@@ -2007,7 +2112,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F04-08",
-        "questions": [],
+        "questions": [
+          "Q-110"
+        ],
         "title": "Marca de OV editada",
         "type": "negocio",
         "kind": "capacidad",
@@ -2049,7 +2156,9 @@
         "area": "VEN",
         "disclosure": "internal",
         "workPackage": "F01-02",
-        "questions": []
+        "questions": [
+          "Q-61"
+        ]
       },
       {
         "id": "VEN-017",
@@ -2078,7 +2187,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F02-05",
-        "questions": [],
+        "questions": [
+          "Q-80"
+        ],
         "title": "Vuelto solo en pagos en efectivo",
         "type": "negocio",
         "kind": "capacidad",
@@ -2098,7 +2209,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F02-05",
-        "questions": [],
+        "questions": [
+          "Q-53"
+        ],
         "title": "Condición para finalizar el pago",
         "type": "validacion",
         "kind": "capacidad",
@@ -2118,7 +2231,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F01-02",
-        "questions": [],
+        "questions": [
+          "Q-62"
+        ],
         "title": "Totales mostrados en la caja",
         "type": "negocio",
         "kind": "capacidad",
@@ -2187,7 +2302,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F01-03",
-        "questions": [],
+        "questions": [
+          "Q-64"
+        ],
         "title": "Número único del comprobante por sucursal",
         "type": "negocio",
         "kind": "capacidad",
@@ -2207,7 +2324,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F02-12",
-        "questions": [],
+        "questions": [
+          "Q-91"
+        ],
         "title": "Listado de comprobantes (Mis ventas / ventas pausadas)",
         "type": "operacion",
         "kind": "capacidad",
@@ -2229,7 +2348,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F02-05",
-        "questions": [],
+        "questions": [
+          "Q-86"
+        ],
         "title": "Cálculo de vuelto, anticipo y total al consultar un comprobante",
         "type": "negocio",
         "kind": "capacidad",
@@ -2361,7 +2482,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F01-08",
-        "questions": [],
+        "questions": [
+          "Q-67"
+        ],
         "title": "Factura exige giro y dirección del cliente",
         "type": "validacion",
         "kind": "capacidad",
@@ -2381,7 +2504,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F01-09",
-        "questions": [],
+        "questions": [
+          "Q-69"
+        ],
         "title": "Máximo de líneas por tipo de documento",
         "type": "negocio",
         "kind": "capacidad",
@@ -2445,7 +2570,10 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F02-08",
-        "questions": [],
+        "questions": [
+          "Q-77",
+          "Q-84"
+        ],
         "title": "Habilitación de la facturación electrónica",
         "type": "parametro",
         "kind": "parametro",
@@ -2467,7 +2595,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F02-08",
-        "questions": [],
+        "questions": [
+          "Q-84"
+        ],
         "title": "Datos obligatorios de la sucursal emisora",
         "type": "validacion",
         "kind": "capacidad",
@@ -2487,7 +2617,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F02-08",
-        "questions": [],
+        "questions": [
+          "Q-84"
+        ],
         "title": "Variables del emisor obligatorias",
         "type": "parametro",
         "kind": "parametro",
@@ -2529,7 +2661,10 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F02-02",
-        "questions": [],
+        "questions": [
+          "Q-77",
+          "Q-85"
+        ],
         "title": "Emisión en Acepta y folio asignado por el facturador",
         "type": "integracion",
         "kind": "capacidad",
@@ -2573,7 +2708,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F02-02",
-        "questions": [],
+        "questions": [
+          "Q-78"
+        ],
         "title": "Forma y medio de pago informado en la factura",
         "type": "negocio",
         "kind": "capacidad",
@@ -2593,7 +2730,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F02-02",
-        "questions": [],
+        "questions": [
+          "Q-61"
+        ],
         "title": "Precios y montos por línea en el DTE",
         "type": "negocio",
         "kind": "capacidad",
@@ -2613,7 +2752,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F01-02",
-        "questions": [],
+        "questions": [
+          "Q-61"
+        ],
         "title": "Totales del DTE",
         "type": "negocio",
         "kind": "capacidad",
@@ -2633,7 +2774,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F02-04",
-        "questions": [],
+        "questions": [
+          "Q-76"
+        ],
         "title": "Reintento manual de facturación",
         "type": "operacion",
         "kind": "capacidad",
@@ -2720,7 +2863,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F02-02",
-        "questions": [],
+        "questions": [
+          "Q-79"
+        ],
         "title": "Boleta electrónica: indicador de servicio y vencimiento",
         "type": "negocio",
         "kind": "capacidad",
@@ -2760,7 +2905,10 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F02-02",
-        "questions": [],
+        "questions": [
+          "Q-07",
+          "Q-79"
+        ],
         "title": "Información adicional (Adjuntos) del DTE",
         "type": "negocio",
         "kind": "capacidad",
@@ -2805,7 +2953,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F02-02",
-        "questions": [],
+        "questions": [
+          "Q-76"
+        ],
         "title": "Estado del documento ante error de facturación en POS",
         "type": "negocio",
         "kind": "capacidad",
@@ -3074,7 +3224,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F01-11",
-        "questions": [],
+        "questions": [
+          "Q-22"
+        ],
         "title": "Producto no encontrado",
         "type": "validacion",
         "kind": "capacidad",
@@ -3097,7 +3249,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F01-09",
-        "questions": [],
+        "questions": [
+          "Q-70"
+        ],
         "title": "Agrupación de líneas del mismo producto",
         "type": "operacion",
         "kind": "capacidad",
@@ -3211,7 +3365,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F04-08",
-        "questions": [],
+        "questions": [
+          "Q-15"
+        ],
         "title": "Marcar OV como procesada/liberada en AX",
         "type": "integracion",
         "kind": "capacidad",
@@ -3282,7 +3438,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F04-08",
-        "questions": [],
+        "questions": [
+          "Q-110"
+        ],
         "title": "Líneas de OV no editables",
         "type": "negocio",
         "kind": "capacidad",
@@ -3328,7 +3486,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F01-02",
-        "questions": [],
+        "questions": [
+          "Q-59"
+        ],
         "title": "Precio en línea desde la API de precios Implementos",
         "type": "integracion",
         "kind": "capacidad",
@@ -3350,7 +3510,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F01-02",
-        "questions": [],
+        "questions": [
+          "Q-112"
+        ],
         "title": "Tiempo máximo de espera de la API de precios y sin respaldo",
         "type": "parametro",
         "kind": "parametro",
@@ -3403,6 +3565,7 @@
         "disclosure": "internal",
         "workPackage": "F01-10",
         "questions": [
+          "Q-12",
           "Q-95"
         ]
       },
@@ -3411,7 +3574,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F01-10",
-        "questions": [],
+        "questions": [
+          "Q-62"
+        ],
         "title": "Cálculo del porcentaje de descuento informado por la API",
         "type": "negocio",
         "kind": "capacidad",
@@ -3431,7 +3596,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F01-10",
-        "questions": [],
+        "questions": [
+          "Q-62"
+        ],
         "title": "Precio normal y ahorro por línea",
         "type": "negocio",
         "kind": "capacidad",
@@ -3454,7 +3621,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F01-02",
-        "questions": [],
+        "questions": [
+          "Q-63"
+        ],
         "title": "Recalcular precios al cambiar de cliente",
         "type": "operacion",
         "kind": "capacidad",
@@ -3570,7 +3739,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F01-02",
-        "questions": [],
+        "questions": [
+          "Q-60"
+        ],
         "title": "Precios con impuestos incluidos (parámetro general_impuestos_incluido)",
         "type": "parametro",
         "kind": "parametro",
@@ -3590,7 +3761,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F01-02",
-        "questions": [],
+        "questions": [
+          "Q-61"
+        ],
         "title": "Cálculo de neto e IVA del documento en backend por línea",
         "type": "negocio",
         "kind": "capacidad",
@@ -3612,7 +3785,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F01-02",
-        "questions": [],
+        "questions": [
+          "Q-60"
+        ],
         "title": "Impuestos adicionales suman su factor al IVA",
         "type": "negocio",
         "kind": "capacidad",
@@ -3632,14 +3807,18 @@
         "area": "VEN",
         "disclosure": "internal",
         "workPackage": "F04-07",
-        "questions": []
+        "questions": [
+          "Q-40"
+        ]
       },
       {
         "id": "VEN-094",
         "area": "VEN",
         "disclosure": "internal",
         "workPackage": "F01-02",
-        "questions": []
+        "questions": [
+          "Q-60"
+        ]
       },
       {
         "id": "VEN-095",
@@ -3673,14 +3852,19 @@
         "area": "VEN",
         "disclosure": "internal",
         "workPackage": "F01-08",
-        "questions": []
+        "questions": [
+          "Q-68"
+        ]
       },
       {
         "id": "VEN-098",
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F02-05",
-        "questions": [],
+        "questions": [
+          "Q-68",
+          "Q-81"
+        ],
         "title": "Formas de pago permitidas según cliente y documento",
         "type": "negocio",
         "kind": "capacidad",
@@ -3700,7 +3884,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F01-08",
-        "questions": [],
+        "questions": [
+          "Q-110"
+        ],
         "title": "Giro y dirección de facturación por defecto",
         "type": "operacion",
         "kind": "capacidad",
@@ -3722,7 +3908,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F01-08",
-        "questions": [],
+        "questions": [
+          "Q-67"
+        ],
         "title": "Cliente sin clasificación financiera o sin tipo de empresa",
         "type": "validacion",
         "kind": "capacidad",
@@ -3769,7 +3957,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F01-09",
-        "questions": [],
+        "questions": [
+          "Q-110"
+        ],
         "title": "Bloqueo de cambio de cliente (venta limitada)",
         "type": "negocio",
         "kind": "capacidad",
@@ -3842,7 +4032,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F04-07",
-        "questions": [],
+        "questions": [
+          "Q-48"
+        ],
         "title": "Consulta de promociones disponibles por producto",
         "type": "integracion",
         "kind": "capacidad",
@@ -3932,7 +4124,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F02-02",
-        "questions": [],
+        "questions": [
+          "Q-79"
+        ],
         "title": "Identificación de promociones en el DTE",
         "type": "negocio",
         "kind": "capacidad",
@@ -3952,7 +4146,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F01-10",
-        "questions": [],
+        "questions": [
+          "Q-72"
+        ],
         "title": "Aplicación de cupón de descuento",
         "type": "integracion",
         "kind": "capacidad",
@@ -3974,7 +4170,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F01-10",
-        "questions": [],
+        "questions": [
+          "Q-71"
+        ],
         "title": "Canje (quema) del cupón después de imprimir",
         "type": "integracion",
         "kind": "capacidad",
@@ -3997,7 +4195,8 @@
         "disclosure": "public",
         "workPackage": "F01-10",
         "questions": [
-          "Q-47"
+          "Q-47",
+          "Q-72"
         ],
         "title": "Cupón solo para cliente identificado y con productos",
         "type": "validacion",
@@ -4021,7 +4220,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F01-10",
-        "questions": [],
+        "questions": [
+          "Q-01"
+        ],
         "title": "Cupón asociado a una OV",
         "type": "negocio",
         "kind": "capacidad",
@@ -4086,7 +4287,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F02-10",
-        "questions": [],
+        "questions": [
+          "Q-87"
+        ],
         "title": "Copias impresas por tipo de documento",
         "type": "parametro",
         "kind": "parametro",
@@ -4109,7 +4312,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F02-10",
-        "questions": [],
+        "questions": [
+          "Q-86"
+        ],
         "title": "Contenido del documento impreso",
         "type": "negocio",
         "kind": "capacidad",
@@ -4132,7 +4337,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F02-10",
-        "questions": [],
+        "questions": [
+          "Q-88"
+        ],
         "title": "Códigos QR en el ticket",
         "type": "parametro",
         "kind": "parametro",
@@ -4180,7 +4387,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": null,
-        "questions": [],
+        "questions": [
+          "Q-36"
+        ],
         "title": "Montos de documentos de ingreso",
         "type": "negocio",
         "kind": "capacidad",
@@ -4316,7 +4525,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F04-06",
-        "questions": [],
+        "questions": [
+          "Q-120"
+        ],
         "title": "Visibilidad de cada forma de pago por proceso (POS, cierre de caja, cobranza, ficha cliente)",
         "type": "parametro",
         "kind": "parametro",
@@ -4338,7 +4549,10 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F02-05",
-        "questions": [],
+        "questions": [
+          "Q-78",
+          "Q-80"
+        ],
         "title": "Grupos de pago con permisos de anticipo, vuelto y código SII",
         "type": "parametro",
         "kind": "parametro",
@@ -4358,7 +4572,9 @@
         "area": "PAG",
         "disclosure": "internal",
         "workPackage": "F02-07",
-        "questions": []
+        "questions": [
+          "Q-108"
+        ]
       },
       {
         "id": "PAG-005",
@@ -4385,7 +4601,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F04-11",
-        "questions": [],
+        "questions": [
+          "Q-81"
+        ],
         "title": "Cheque y crédito bloqueados para cliente 'venta público'",
         "type": "negocio",
         "kind": "capacidad",
@@ -4406,6 +4624,7 @@
         "disclosure": "public",
         "workPackage": "F04-11",
         "questions": [
+          "Q-81",
           "Q-108"
         ],
         "title": "Crédito solo para clientes con clasificación financiera 'CC'",
@@ -4427,7 +4646,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F04-11",
-        "questions": [],
+        "questions": [
+          "Q-68"
+        ],
         "title": "Cliente bloqueado para factura no puede pagar con cheque, crédito ni NC",
         "type": "negocio",
         "kind": "capacidad",
@@ -4447,7 +4668,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": null,
-        "questions": [],
+        "questions": [
+          "Q-81"
+        ],
         "title": "No se acepta cheque cuando el documento es boleta",
         "type": "negocio",
         "kind": "capacidad",
@@ -4487,7 +4710,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F01-09",
-        "questions": [],
+        "questions": [
+          "Q-69"
+        ],
         "title": "Se bloquean los pagos si se supera el máximo de líneas del documento",
         "type": "validacion",
         "kind": "capacidad",
@@ -4507,7 +4732,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F02-05",
-        "questions": [],
+        "questions": [
+          "Q-80"
+        ],
         "title": "Una venta puede pagarse con varios medios combinados",
         "type": "negocio",
         "kind": "capacidad",
@@ -4578,7 +4805,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F02-05",
-        "questions": [],
+        "questions": [
+          "Q-53"
+        ],
         "title": "Para finalizar, lo pagado y verificado debe cubrir el total más redondeo",
         "type": "validacion",
         "kind": "capacidad",
@@ -4621,7 +4850,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F02-05",
-        "questions": [],
+        "questions": [
+          "Q-25"
+        ],
         "title": "Finalizar exige documento de venta seleccionado y formulario de pagos válido",
         "type": "validacion",
         "kind": "capacidad",
@@ -4666,7 +4897,9 @@
         "disclosure": "public",
         "workPackage": "F02-13",
         "questions": [
-          "Q-19"
+          "Q-19",
+          "Q-57",
+          "Q-92"
         ],
         "title": "Eliminar un pago con tarjeta de crédito integrada ejecuta anulación (refund) en el POS Transbank",
         "type": "operacion",
@@ -4743,7 +4976,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F02-07",
-        "questions": [],
+        "questions": [
+          "Q-83"
+        ],
         "title": "Pagos integrados (Transbank) se asocian automáticamente a la forma de pago TC/TD de la caja",
         "type": "integracion",
         "kind": "capacidad",
@@ -4814,7 +5049,9 @@
         "area": "PAG",
         "disclosure": "internal",
         "workPackage": "F02-04",
-        "questions": []
+        "questions": [
+          "Q-76"
+        ]
       },
       {
         "id": "PAG-028",
@@ -4870,7 +5107,10 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F02-05",
-        "questions": [],
+        "questions": [
+          "Q-53",
+          "Q-80"
+        ],
         "title": "Cálculo del vuelto en efectivo",
         "type": "negocio",
         "kind": "capacidad",
@@ -4890,7 +5130,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F04-02",
-        "questions": [],
+        "questions": [
+          "Q-113"
+        ],
         "title": "Vuelto puede dejarse como anticipo a favor del cliente",
         "type": "negocio",
         "kind": "capacidad",
@@ -4956,7 +5198,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F02-05",
-        "questions": [],
+        "questions": [
+          "Q-80"
+        ],
         "title": "Monto en efectivo obligatorio entre 1 y 99.999.999",
         "type": "validacion",
         "kind": "capacidad",
@@ -4976,7 +5220,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F02-06",
-        "questions": [],
+        "questions": [
+          "Q-73"
+        ],
         "title": "Pago manual con tarjeta exige código de autorización de 6 y últimos 4 dígitos",
         "type": "validacion",
         "kind": "capacidad",
@@ -4998,7 +5244,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F02-06",
-        "questions": [],
+        "questions": [
+          "Q-83"
+        ],
         "title": "La tarjeta manual se asocia a la cuenta de la caja con código TD/TC (o WP_TD/WP_TC para Webpay)",
         "type": "operacion",
         "kind": "capacidad",
@@ -5040,7 +5288,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F04-02",
-        "questions": [],
+        "questions": [
+          "Q-80"
+        ],
         "title": "Pagar de más con tarjeta, transferencia o cheque genera anticipo",
         "type": "negocio",
         "kind": "capacidad",
@@ -5062,7 +5312,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F02-06",
-        "questions": [],
+        "questions": [
+          "Q-82"
+        ],
         "title": "Transferencia exige banco de destino, monto, fecha de depósito y número de transacción",
         "type": "validacion",
         "kind": "capacidad",
@@ -5106,7 +5358,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": null,
-        "questions": [],
+        "questions": [
+          "Q-120"
+        ],
         "title": "En pago de deuda se excluyen Santander, Chile y BCI, salvo en el Centro de Distribución",
         "type": "negocio",
         "kind": "capacidad",
@@ -5126,7 +5380,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F04-02",
-        "questions": [],
+        "questions": [
+          "Q-117"
+        ],
         "title": "Búsqueda de NC por folio y RUT del cliente en AX",
         "type": "integracion",
         "kind": "capacidad",
@@ -5148,7 +5404,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F04-02",
-        "questions": [],
+        "questions": [
+          "Q-117"
+        ],
         "title": "Monto aplicado de la NC es el menor entre su saldo y el saldo de la venta",
         "type": "negocio",
         "kind": "capacidad",
@@ -5235,7 +5493,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F04-11",
-        "questions": [],
+        "questions": [
+          "Q-90"
+        ],
         "title": "Monto a crédito limitado por el cupo disponible del cliente",
         "type": "negocio",
         "kind": "capacidad",
@@ -5257,7 +5517,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F04-11",
-        "questions": [],
+        "questions": [
+          "Q-90"
+        ],
         "title": "Backend rechaza pago a crédito que excede el saldo de crédito",
         "type": "validacion",
         "kind": "capacidad",
@@ -5302,7 +5564,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F04-11",
-        "questions": [],
+        "questions": [
+          "Q-25"
+        ],
         "title": "Orden de compra obligatoria cuando hay pago a crédito",
         "type": "validacion",
         "kind": "capacidad",
@@ -5325,7 +5589,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F04-11",
-        "questions": [],
+        "questions": [
+          "Q-80"
+        ],
         "title": "No mezclar crédito con otros medios de pago (regla presente pero de uso no confirmado)",
         "type": "negocio",
         "kind": "capacidad",
@@ -5345,7 +5611,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F02-11",
-        "questions": [],
+        "questions": [
+          "Q-90"
+        ],
         "title": "Datos obligatorios del cheque",
         "type": "validacion",
         "kind": "capacidad",
@@ -5365,7 +5633,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F02-11",
-        "questions": [],
+        "questions": [
+          "Q-90"
+        ],
         "title": "No se permiten números de cheque repetidos",
         "type": "validacion",
         "kind": "capacidad",
@@ -5387,7 +5657,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F02-11",
-        "questions": [],
+        "questions": [
+          "Q-90"
+        ],
         "title": "Períodos de cobro del cheque: al día, 30, 60, 90 días o personalizado",
         "type": "negocio",
         "kind": "capacidad",
@@ -5407,7 +5679,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F02-11",
-        "questions": [],
+        "questions": [
+          "Q-90"
+        ],
         "title": "Cheque de tercero se detecta automáticamente",
         "type": "negocio",
         "kind": "capacidad",
@@ -5427,7 +5701,10 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F02-11",
-        "questions": [],
+        "questions": [
+          "Q-68",
+          "Q-90"
+        ],
         "title": "Monto de cheques limitado por cupo de crédito del cliente",
         "type": "negocio",
         "kind": "capacidad",
@@ -5493,7 +5770,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F02-11",
-        "questions": [],
+        "questions": [
+          "Q-89"
+        ],
         "title": "No se puede finalizar con cheques pendientes; cheques con error quedan anulados",
         "type": "validacion",
         "kind": "capacidad",
@@ -5516,7 +5795,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": null,
-        "questions": [],
+        "questions": [
+          "Q-83"
+        ],
         "title": "Cheque al día y cheque a fecha se registran en cuentas distintas",
         "type": "operacion",
         "kind": "capacidad",
@@ -5536,7 +5817,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": null,
-        "questions": [],
+        "questions": [
+          "Q-90"
+        ],
         "title": "Hasta 12 cheques por pago, con monto repartido en partes iguales",
         "type": "negocio",
         "kind": "capacidad",
@@ -5556,7 +5839,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": null,
-        "questions": [],
+        "questions": [
+          "Q-90"
+        ],
         "title": "Vigencia del cheque: 60 días desde emisión; 'por vencer' 3 días antes",
         "type": "parametro",
         "kind": "parametro",
@@ -5620,7 +5905,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F02-11",
-        "questions": [],
+        "questions": [
+          "Q-20"
+        ],
         "title": "Verificación con Orsan vía API REST",
         "type": "integracion",
         "kind": "capacidad",
@@ -5695,7 +5982,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F02-11",
-        "questions": [],
+        "questions": [
+          "Q-20"
+        ],
         "title": "Verificación con Instacheck por socket TCP (formato fijo)",
         "type": "integracion",
         "kind": "capacidad",
@@ -5717,7 +6006,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F02-11",
-        "questions": [],
+        "questions": [
+          "Q-20"
+        ],
         "title": "Verificación con Instacheck API (HTTP) con espera de 120 segundos",
         "type": "integracion",
         "kind": "capacidad",
@@ -5856,7 +6147,10 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F02-01",
-        "questions": [],
+        "questions": [
+          "Q-09",
+          "Q-76"
+        ],
         "title": "Validación de comprobante Transbank por número de operación",
         "type": "validacion",
         "kind": "capacidad",
@@ -5898,7 +6192,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F02-13",
-        "questions": [],
+        "questions": [
+          "Q-92"
+        ],
         "title": "Anulación (refund) en POS requiere POS conectado",
         "type": "operacion",
         "kind": "capacidad",
@@ -5920,7 +6216,9 @@
         "area": "PAG",
         "disclosure": "internal",
         "workPackage": "F02-14",
-        "questions": []
+        "questions": [
+          "Q-57"
+        ]
       },
       {
         "id": "PAG-082",
@@ -5972,7 +6270,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F02-01",
-        "questions": [],
+        "questions": [
+          "Q-74"
+        ],
         "title": "Venta con POS Transbank: mensaje al cliente y ticket por defecto",
         "type": "integracion",
         "kind": "capacidad",
@@ -5995,7 +6295,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F02-14",
-        "questions": [],
+        "questions": [
+          "Q-57"
+        ],
         "title": "Herramientas Transbank en caja: listado, última venta, totales y modo manual",
         "type": "operacion",
         "kind": "capacidad",
@@ -6045,7 +6347,9 @@
         "area": "PAG",
         "disclosure": "public",
         "workPackage": "F02-05",
-        "questions": [],
+        "questions": [
+          "Q-86"
+        ],
         "title": "El comprobante muestra solo pagos aprobados y totaliza vuelto y anticipo",
         "type": "negocio",
         "kind": "capacidad",
@@ -6065,7 +6369,9 @@
         "area": "COB",
         "disclosure": "internal",
         "workPackage": "F04-02",
-        "questions": []
+        "questions": [
+          "Q-57"
+        ]
       },
       {
         "id": "COB-002",
@@ -6094,7 +6400,9 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F04-02",
-        "questions": [],
+        "questions": [
+          "Q-119"
+        ],
         "title": "Estados de una cobranza: Pago en curso, Finalizado, Anulado",
         "type": "negocio",
         "kind": "capacidad",
@@ -6114,7 +6422,9 @@
         "area": "COB",
         "disclosure": "internal",
         "workPackage": "F04-02",
-        "questions": []
+        "questions": [
+          "Q-118"
+        ]
       },
       {
         "id": "COB-005",
@@ -6181,7 +6491,9 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F02-05",
-        "questions": [],
+        "questions": [
+          "Q-80"
+        ],
         "title": "Vuelto solo se calcula sobre el pago en efectivo; si no hay sobrepago, vuelto y anticipo quedan en cero",
         "type": "negocio",
         "kind": "capacidad",
@@ -6290,7 +6602,8 @@
         "disclosure": "public",
         "workPackage": "F04-02",
         "questions": [
-          "Q-101"
+          "Q-101",
+          "Q-118"
         ],
         "title": "Se rechaza el pago si el saldo de la deuda cambió o si el detalle no cuadra con el monto a pagar",
         "type": "validacion",
@@ -6360,7 +6673,9 @@
         "area": "COB",
         "disclosure": "internal",
         "workPackage": "F04-02",
-        "questions": []
+        "questions": [
+          "Q-100"
+        ]
       },
       {
         "id": "COB-017",
@@ -6390,7 +6705,9 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F04-06",
-        "questions": [],
+        "questions": [
+          "Q-120"
+        ],
         "title": "Medios de pago habilitados para pago de deuda según configuración 'mostrar en pago cobranza'",
         "type": "parametro",
         "kind": "parametro",
@@ -6461,7 +6778,9 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": null,
-        "questions": [],
+        "questions": [
+          "Q-121"
+        ],
         "title": "Finalizar un pago de deuda exige seleccionar la persona que paga",
         "type": "validacion",
         "kind": "capacidad",
@@ -6532,7 +6851,9 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F04-02",
-        "questions": [],
+        "questions": [
+          "Q-118"
+        ],
         "title": "Al anular un cheque, el exceso remanente se reasigna primero a anticipo y luego a vuelto",
         "type": "negocio",
         "kind": "capacidad",
@@ -6552,7 +6873,9 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F04-02",
-        "questions": [],
+        "questions": [
+          "Q-100"
+        ],
         "title": "Selección de deudas a pagar en el estado de cuenta",
         "type": "operacion",
         "kind": "capacidad",
@@ -6595,7 +6918,9 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F04-02",
-        "questions": [],
+        "questions": [
+          "Q-64"
+        ],
         "title": "Tareas posteriores al pago: número único por sucursal y actualización del estado de cuenta",
         "type": "operacion",
         "kind": "capacidad",
@@ -6617,7 +6942,9 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F02-10",
-        "questions": [],
+        "questions": [
+          "Q-86"
+        ],
         "title": "Comprobante de pago de deuda impreso automáticamente al finalizar",
         "type": "operacion",
         "kind": "capacidad",
@@ -6678,7 +7005,9 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F04-11",
-        "questions": [],
+        "questions": [
+          "Q-27"
+        ],
         "title": "Cálculo de cuotas: monto dividido sin decimales y la última cuota absorbe la diferencia",
         "type": "negocio",
         "kind": "capacidad",
@@ -6724,7 +7053,9 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F04-11",
-        "questions": [],
+        "questions": [
+          "Q-39"
+        ],
         "title": "Reproceso manual de la deuda de un comprobante o documento",
         "type": "operacion",
         "kind": "capacidad",
@@ -6747,7 +7078,9 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F04-11",
-        "questions": [],
+        "questions": [
+          "Q-27"
+        ],
         "title": "Un documento se asocia a un único acuerdo de cobranza",
         "type": "negocio",
         "kind": "capacidad",
@@ -6770,7 +7103,9 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F04-11",
-        "questions": [],
+        "questions": [
+          "Q-113"
+        ],
         "title": "Toda venta vigente con pago a crédito genera un acuerdo de cobranza (deuda) por documento",
         "type": "negocio",
         "kind": "capacidad",
@@ -6883,7 +7218,9 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F04-11",
-        "questions": [],
+        "questions": [
+          "Q-80"
+        ],
         "title": "No se puede pagar con crédito si hay otros pagos ya realizados (posible regla en plantilla)",
         "type": "negocio",
         "kind": "capacidad",
@@ -6932,7 +7269,10 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F04-11",
-        "questions": [],
+        "questions": [
+          "Q-90",
+          "Q-113"
+        ],
         "title": "Validación de cupo en el servidor al grabar la venta (solo contra saldo externo)",
         "type": "validacion",
         "kind": "capacidad",
@@ -6955,7 +7295,10 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F04-11",
-        "questions": [],
+        "questions": [
+          "Q-90",
+          "Q-113"
+        ],
         "title": "Cálculo del cupo utilizado: usado en AX + (ventas a crédito no sincronizadas - abonos y pagos no sincronizados)",
         "type": "negocio",
         "kind": "capacidad",
@@ -7020,7 +7363,9 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": null,
-        "questions": [],
+        "questions": [
+          "Q-113"
+        ],
         "title": "Nota de venta (OV) a crédito: el cupo en tiempo real devuelve el monto de la OV",
         "type": "operacion",
         "kind": "capacidad",
@@ -7104,14 +7449,18 @@
         "area": "COB",
         "disclosure": "internal",
         "workPackage": "F04-11",
-        "questions": []
+        "questions": [
+          "Q-68"
+        ]
       },
       {
         "id": "COB-056",
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F01-08",
-        "questions": [],
+        "questions": [
+          "Q-68"
+        ],
         "title": "Bloqueo 'todo' impide operar cualquier venta con el cliente",
         "type": "negocio",
         "kind": "capacidad",
@@ -7131,7 +7480,9 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F03-09",
-        "questions": [],
+        "questions": [
+          "Q-68"
+        ],
         "title": "Bloqueo y motivo de bloqueo vienen de AX y se crean automáticamente si no existen",
         "type": "integracion",
         "kind": "capacidad",
@@ -7153,7 +7504,10 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F04-11",
-        "questions": [],
+        "questions": [
+          "Q-81",
+          "Q-90"
+        ],
         "title": "Cupo de cheques según clasificación financiera EF, DN, DD y CC",
         "type": "negocio",
         "kind": "capacidad",
@@ -7173,7 +7527,10 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F01-08",
-        "questions": [],
+        "questions": [
+          "Q-52",
+          "Q-81"
+        ],
         "title": "Clientes con clasificación financiera 'CC' se tratan como cliente empresa y facturan siempre",
         "type": "negocio",
         "kind": "capacidad",
@@ -7283,7 +7640,9 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F04-02",
-        "questions": [],
+        "questions": [
+          "Q-101"
+        ],
         "title": "Sincronización de facturas pendientes del cliente desde AX",
         "type": "integracion",
         "kind": "capacidad",
@@ -7306,7 +7665,9 @@
         "area": "COB",
         "disclosure": "internal",
         "workPackage": "F03-09",
-        "questions": []
+        "questions": [
+          "Q-101"
+        ]
       },
       {
         "id": "COB-069",
@@ -7456,7 +7817,9 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F04-02",
-        "questions": [],
+        "questions": [
+          "Q-119"
+        ],
         "title": "Abono guardado como borrador por cada pago y finalizado con impresión de comprobante",
         "type": "operacion",
         "kind": "capacidad",
@@ -7564,7 +7927,10 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F01-08",
-        "questions": [],
+        "questions": [
+          "Q-03",
+          "Q-41"
+        ],
         "title": "Valores por defecto y campos bloqueados en la ficha de cliente (cupo 1.999.999)",
         "type": "parametro",
         "kind": "parametro",
@@ -7586,7 +7952,10 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F01-08",
-        "questions": [],
+        "questions": [
+          "Q-03",
+          "Q-41"
+        ],
         "title": "Al crear/editar cliente con venta a crédito habilitada se crea su estado de cuenta con cupo y plazo",
         "type": "negocio",
         "kind": "capacidad",
@@ -7628,7 +7997,9 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F01-08",
-        "questions": [],
+        "questions": [
+          "Q-67"
+        ],
         "title": "Campos obligatorios de la ficha de cliente según tipo (empresa, persona natural, solo boleta)",
         "type": "validacion",
         "kind": "capacidad",
@@ -7648,7 +8019,9 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F04-07",
-        "questions": [],
+        "questions": [
+          "Q-40"
+        ],
         "title": "En edición no se pueden cambiar nombre/razón social ni pasar de empresa a persona natural",
         "type": "negocio",
         "kind": "capacidad",
@@ -7668,7 +8041,10 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F04-07",
-        "questions": [],
+        "questions": [
+          "Q-40",
+          "Q-67"
+        ],
         "title": "Direcciones del cliente: una principal por cliente, sincronización con AX respeta cambios locales",
         "type": "operacion",
         "kind": "capacidad",
@@ -7732,7 +8108,9 @@
         "area": "COB",
         "disclosure": "public",
         "workPackage": "F04-07",
-        "questions": [],
+        "questions": [
+          "Q-67"
+        ],
         "title": "Contactos del cliente: no se repite la misma persona como contacto y el tipo de contacto debe existir",
         "type": "validacion",
         "kind": "capacidad",
@@ -7825,7 +8203,9 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F04-01",
-        "questions": [],
+        "questions": [
+          "Q-16"
+        ],
         "title": "Monto máximo de NC según motivo de devolución",
         "type": "validacion",
         "kind": "capacidad",
@@ -7847,7 +8227,9 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F04-01",
-        "questions": [],
+        "questions": [
+          "Q-76"
+        ],
         "title": "Flujo de emisión de NC: se crea 'Pendiente facturación', se factura y queda 'Vigente'",
         "type": "operacion",
         "kind": "capacidad",
@@ -7900,7 +8282,9 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F04-01",
-        "questions": [],
+        "questions": [
+          "Q-16"
+        ],
         "title": "Monto de la NC = suma de cantidad × precio unitario de las líneas devueltas",
         "type": "negocio",
         "kind": "capacidad",
@@ -7923,7 +8307,10 @@
         "area": "DEV",
         "disclosure": "internal",
         "workPackage": "F04-01",
-        "questions": []
+        "questions": [
+          "Q-04",
+          "Q-57"
+        ]
       },
       {
         "id": "DEV-010",
@@ -7950,7 +8337,9 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F04-01",
-        "questions": [],
+        "questions": [
+          "Q-122"
+        ],
         "title": "Se actualiza el cliente en línea antes de emitir la NC",
         "type": "integracion",
         "kind": "capacidad",
@@ -8063,6 +8452,7 @@
         "disclosure": "public",
         "workPackage": "F04-01",
         "questions": [
+          "Q-97",
           "Q-99"
         ],
         "title": "No se puede anular un documento que ya tiene una NC asociada",
@@ -8117,7 +8507,9 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F04-01",
-        "questions": [],
+        "questions": [
+          "Q-97"
+        ],
         "title": "La NC de anulación solo incluye líneas de tipo 'Producto'",
         "type": "negocio",
         "kind": "capacidad",
@@ -8159,7 +8551,9 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F04-01",
-        "questions": [],
+        "questions": [
+          "Q-97"
+        ],
         "title": "En la devolución se puede rebajar el precio unitario de la NC",
         "type": "negocio",
         "kind": "capacidad",
@@ -8199,7 +8593,10 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F04-01",
-        "questions": [],
+        "questions": [
+          "Q-99",
+          "Q-112"
+        ],
         "title": "Cálculo de cantidad disponible para devolver descontando NC pendientes de sincronizar",
         "type": "negocio",
         "kind": "capacidad",
@@ -8265,7 +8662,9 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F04-01",
-        "questions": [],
+        "questions": [
+          "Q-99"
+        ],
         "title": "Detalle del documento a devolver se trae de AX y se crea localmente si no existe",
         "type": "integracion",
         "kind": "capacidad",
@@ -8288,7 +8687,9 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F02-12",
-        "questions": [],
+        "questions": [
+          "Q-99"
+        ],
         "title": "Búsqueda de documentos para NC en AX por RUT y rango de fechas, o por folio",
         "type": "integracion",
         "kind": "capacidad",
@@ -8311,7 +8712,9 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F04-01",
-        "questions": [],
+        "questions": [
+          "Q-99"
+        ],
         "title": "El cliente y los productos del documento deben existir en la base local",
         "type": "validacion",
         "kind": "capacidad",
@@ -8382,7 +8785,9 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F04-01",
-        "questions": [],
+        "questions": [
+          "Q-99"
+        ],
         "title": "El documento en proceso de NC se bloquea en AX mientras se trabaja",
         "type": "integracion",
         "kind": "capacidad",
@@ -8405,7 +8810,9 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F02-02",
-        "questions": [],
+        "questions": [
+          "Q-78"
+        ],
         "title": "Datos tributarios enviados al facturador para la NC (código SII 61)",
         "type": "integracion",
         "kind": "capacidad",
@@ -8425,7 +8832,9 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F02-10",
-        "questions": [],
+        "questions": [
+          "Q-86"
+        ],
         "title": "El comprobante impreso de la NC muestra el documento de referencia y la razón",
         "type": "negocio",
         "kind": "capacidad",
@@ -8445,7 +8854,9 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F02-02",
-        "questions": [],
+        "questions": [
+          "Q-69"
+        ],
         "title": "Tipo de documento Nota de Crédito: código SII 61, solo cliente identificado, máximo 60 líneas",
         "type": "parametro",
         "kind": "parametro",
@@ -8485,7 +8896,9 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F02-13",
-        "questions": [],
+        "questions": [
+          "Q-11"
+        ],
         "title": "La anulación de una venta en curso deja el documento en estado 'Nulo'",
         "type": "operacion",
         "kind": "capacidad",
@@ -8505,14 +8918,19 @@
         "area": "DEV",
         "disclosure": "internal",
         "workPackage": "F02-13",
-        "questions": []
+        "questions": [
+          "Q-11",
+          "Q-57"
+        ]
       },
       {
         "id": "DEV-041",
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F02-13",
-        "questions": [],
+        "questions": [
+          "Q-19"
+        ],
         "title": "Medios de devolución al anular: solo efectivo, o cheque si se pagó con cheque",
         "type": "negocio",
         "kind": "capacidad",
@@ -8532,7 +8950,9 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F02-13",
-        "questions": [],
+        "questions": [
+          "Q-92"
+        ],
         "title": "Reverso de pagos con tarjeta mediante Transbank (refund)",
         "type": "integracion",
         "kind": "capacidad",
@@ -8552,7 +8972,9 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F02-13",
-        "questions": [],
+        "questions": [
+          "Q-102"
+        ],
         "title": "Pagos de devolución: cheque queda 'anulado', otros medios quedan como 'salida'",
         "type": "negocio",
         "kind": "capacidad",
@@ -8572,7 +8994,10 @@
         "area": "DEV",
         "disclosure": "internal",
         "workPackage": "F04-04",
-        "questions": []
+        "questions": [
+          "Q-66",
+          "Q-98"
+        ]
       },
       {
         "id": "DEV-045",
@@ -8623,7 +9048,9 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": null,
-        "questions": [],
+        "questions": [
+          "Q-99"
+        ],
         "title": "No se devuelve dinero de ventas pagadas en Mercado Libre (ML) o Marketplace (MKP), pero solo se advierte",
         "type": "negocio",
         "kind": "capacidad",
@@ -8710,7 +9137,9 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F04-01",
-        "questions": [],
+        "questions": [
+          "Q-98"
+        ],
         "title": "Consulta de pagos del documento original en el API de ventas",
         "type": "integracion",
         "kind": "capacidad",
@@ -8733,7 +9162,9 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F04-01",
-        "questions": [],
+        "questions": [
+          "Q-64"
+        ],
         "title": "Comprobante de pago de NC con número único por sucursal y firma de recepción",
         "type": "operacion",
         "kind": "capacidad",
@@ -8755,7 +9186,9 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F04-01",
-        "questions": [],
+        "questions": [
+          "Q-121"
+        ],
         "title": "Cliente de la devolución: el RUT de la NC o 'venta público' 66666666-6",
         "type": "negocio",
         "kind": "capacidad",
@@ -8777,7 +9210,9 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F04-05",
-        "questions": [],
+        "questions": [
+          "Q-119"
+        ],
         "title": "Listado y exportación de devoluciones por caja",
         "type": "operacion",
         "kind": "capacidad",
@@ -8799,7 +9234,9 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F04-02",
-        "questions": [],
+        "questions": [
+          "Q-113"
+        ],
         "title": "Saldo disponible de una NC = saldo AX menos usos no sincronizados",
         "type": "negocio",
         "kind": "capacidad",
@@ -8821,7 +9258,9 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F04-02",
-        "questions": [],
+        "questions": [
+          "Q-113"
+        ],
         "title": "NC en proceso de devolución (omnicanal) no se puede usar",
         "type": "validacion",
         "kind": "capacidad",
@@ -8843,7 +9282,9 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F04-02",
-        "questions": [],
+        "questions": [
+          "Q-117"
+        ],
         "title": "Pago con NC: se busca por folio y RUT del cliente de la venta",
         "type": "negocio",
         "kind": "capacidad",
@@ -8865,7 +9306,9 @@
         "area": "DEV",
         "disclosure": "public",
         "workPackage": "F04-02",
-        "questions": [],
+        "questions": [
+          "Q-117"
+        ],
         "title": "Monto del pago con NC y saldo remanente de la NC",
         "type": "negocio",
         "kind": "capacidad",
@@ -9140,7 +9583,8 @@
         "disclosure": "internal",
         "workPackage": "F02-10",
         "questions": [
-          "Q-17"
+          "Q-17",
+          "Q-71"
         ]
       }
     ]

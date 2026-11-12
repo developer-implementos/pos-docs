@@ -435,9 +435,14 @@ test('overview links the questions view with its open questions and pending deci
   const model = questions;
   const html = renderProjectPages(progress, followUp, null, null, model).get('/project/').body;
   assert.ok(html.includes(`<p class="project-increment-link"><a href="/project/questions/">Preguntas y reglas de negocio</a><span>${model.counts.open} abiertas · ${model.counts.pendingDecision} pendientes de decisión.</span></p>`));
+  // Whatever the published cut holds: one open rule stays open, the other rules are decided and the
+  // open facts are answered, since a fact is never decided.
   const single = questionsWith(content => {
     const open = content.items.filter(item => item.state === 'open');
-    for (const item of open.slice(1)) Object.assign(item, { state: 'decided', decision: { answer: 'Regla decidida en el acta.', decidedBy: 'Comité comercial', decidedOn: item.reviewedOn, source: 'Acta de decisiones comerciales del 12 de noviembre de 2026', outcome: item.recommendation ? 'adopted' : null } });
+    const [first, ...rest] = open.filter(item => item.kind === 'rule');
+    assert.ok(first, 'The published cut has an open rule');
+    for (const item of open.filter(item => item.kind === 'fact')) item.state = 'answered';
+    for (const item of rest) Object.assign(item, { state: 'decided', decision: { answer: 'Regla decidida en el acta.', decidedBy: 'Comité comercial', decidedOn: item.reviewedOn, source: 'Acta de decisiones comerciales del 12 de noviembre de 2026', outcome: item.recommendation ? 'adopted' : null } });
   });
   assert.ok(renderProjectPages(progress, followUp, null, null, single).get('/project/').body.includes('<span>1 abierta · 1 pendiente de decisión.</span>'));
   assert.ok(!renderProjectPages(progress, followUp).get('/project/').body.includes('<a href="/project/questions/">Preguntas y reglas de negocio</a>'));
