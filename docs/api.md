@@ -162,7 +162,7 @@ Fastify limita el cuerpo a 1 MiB y configura `requestTimeout` en 30 segundos par
 
 ## Reporte opcional de errores con Sentry
 
-Sentry está deshabilitado por defecto y los cuatro `.env.example` dejan el DSN vacío. Activarlo requiere configurar deliberadamente las variables de la aplicación; esta entrega no conecta ningún proyecto real de Sentry. No cambia el estado de disponibilidad de la API ni habilita operaciones de negocio.
+Esta sección describe la implementación integrada en `main` de POS Platform hasta `d55bad79c80f2743d46c46fdacfa448162633c77` (TASK-148). Sentry está deshabilitado por defecto y los cuatro `.env.example` dejan el DSN vacío. Activarlo requiere configurar deliberadamente las variables de la aplicación; esta entrega no conecta ningún proyecto real de Sentry. No cambia el estado de disponibilidad de la API ni habilita operaciones de negocio.
 
 | Sufijo de variable                    | Valor por defecto | Uso                                                                   |
 | ------------------------------------- | ----------------- | --------------------------------------------------------------------- |
