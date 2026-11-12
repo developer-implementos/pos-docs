@@ -260,8 +260,6 @@ test('owners use the team profile when it exists and business validation names i
 /** Schema 2 of the published registry: a draft and an endorsed recommendation on two open rules. */
 function questionsWithRecommendations() {
   return questionsWith(content => {
-    content.schemaVersion = 2;
-    for (const item of content.items) item.recommendation = item.recommendation ?? null;
     const [draft, endorsed] = content.items.filter(item => item.kind === 'rule' && item.state === 'open');
     draft.recommendation = {
       answer: 'Separar la emisión de la NC de la devolución de dinero.',

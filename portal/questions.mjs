@@ -28,12 +28,9 @@ const login = /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i;
 const auditRef = /^[CPRSH]-\d{2,}$/;
 const segment = /^(?!\.{1,2}$)[\w.@-]+$/;
 const official = host => officialHosts.some(domain => host === domain || host.endsWith(`.${domain}`));
-const baseItemFields = ['id', 'topic', 'question', 'kind', 'state', 'currentAnswer', 'answerSources', 'auditRefs', 'parityRefs', 'sources', 'decider', 'owner', 'followUp', 'workPackages', 'priority', 'reviewedOn', 'validation'];
-/*
- * Content schemas this portal reads. Schema 2 adds the team's recommendation. Schema 1 stays readable
- * only while POS Platform migrates and is removed once the published snapshot uses schema 2.
- */
-const itemFieldsBySchema = new Map([[1, baseItemFields], [2, [...baseItemFields, 'recommendation']]]);
+// Content schema 2 of the registry, the only one POS Platform publishes.
+const schemaVersion = 2;
+const itemFields = ['id', 'topic', 'question', 'kind', 'state', 'currentAnswer', 'answerSources', 'auditRefs', 'parityRefs', 'sources', 'decider', 'owner', 'followUp', 'workPackages', 'priority', 'reviewedOn', 'validation', 'recommendation'];
 const recommendationFields = ['answer', 'scope', 'default', 'rationale', 'basis', 'references', 'sources', 'author', 'proposedOn', 'endorsement'];
 
 /*
@@ -234,8 +231,7 @@ function validateRecommendation(item, sourceExists) {
  */
 export function validateQuestionsContent(content, { workPackageIds, workPackageSource = 'the POS Docs roadmap', followUpIds = null, sourceExists = null, readAudit = null }) {
   object(content, ['schemaVersion', 'reviewedOn', 'audit', 'items'], 'questions');
-  const itemFields = itemFieldsBySchema.get(content.schemaVersion);
-  assert.ok(itemFields, `questions: unsupported schema version; expected ${[...itemFieldsBySchema.keys()].join(' or ')}`);
+  assert.equal(content.schemaVersion, schemaVersion, `questions: unsupported schema version; expected ${schemaVersion}`);
   date(content.reviewedOn, 'questions.reviewedOn');
   const audit = repositoryPath(content.audit, 'questions.audit');
   const registers = readAudit ? readAudit(audit) : null;
@@ -289,7 +285,7 @@ export function validateQuestionsContent(content, { workPackageIds, workPackageS
     } else {
       assert.equal(item.validation, null, `${id}: only a validated record declares a validation`);
     }
-    if (content.schemaVersion >= 2) validateRecommendation(item, sourceExists);
+    validateRecommendation(item, sourceExists);
   }
   return content;
 }
@@ -329,9 +325,7 @@ export function deriveQuestions(snapshot, progress, followUp = null) {
     const packages = item.workPackages.map(id => works.get(id));
     const phases = [...new Set(packages.map(work => work.phase))].sort((a, b) => phaseOrder.get(a) - phaseOrder.get(b));
     const phase = progress.phases[phaseOrder.get(phases[0])];
-    // Schema 1 predates recommendations: none is shown for it.
-    const recommendation = item.recommendation ?? null;
-    return { ...item, recommendation, recommendationStatus: recommendationStatus({ ...item, recommendation }), packages, phases, phase: phase.id, phaseTitle: phase.title, phaseHref: phase.href, followUpAction: item.followUp ? actions.get(item.followUp) || null : null };
+    return { ...item, recommendationStatus: recommendationStatus(item), packages, phases, phase: phase.id, phaseTitle: phase.title, phaseHref: phase.href, followUpAction: item.followUp ? actions.get(item.followUp) || null : null };
   }).sort((a, b) => phaseOrder.get(a.phase) - phaseOrder.get(b.phase) || priorities.indexOf(a.priority) - priorities.indexOf(b.priority) || Number(a.id.slice(2)) - Number(b.id.slice(2)));
   const groups = progress.phases.map(phase => ({ id: phase.id, title: phase.title, href: phase.href, items: items.filter(item => item.phase === phase.id) })).filter(group => group.items.length);
   return {

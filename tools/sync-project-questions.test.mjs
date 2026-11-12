@@ -39,7 +39,7 @@ const question = (id, fields = {}) => ({
   id, topic: 'Cupones', question: `¿Pregunta ${id}?`, kind: 'rule', state: 'open',
   currentAnswer: 'Legacy: el campo de cupón se deshabilita con cualquier línea de OV.', answerSources: ['code'],
   auditRefs: ['C-30'], parityRefs: ['P-14'], sources: [], decider: 'Comercial', owner: null, followUp: 'FOLLOWUP-005',
-  workPackages: ['F01-10'], priority: 'P1', reviewedOn: '2026-11-10', validation: null, ...fields,
+  workPackages: ['F01-10'], priority: 'P1', reviewedOn: '2026-11-10', validation: null, recommendation: null, ...fields,
 });
 function fixture(t) {
   const base = fs.mkdtempSync(path.join(os.tmpdir(), 'pos-questions-import-'));
@@ -65,7 +65,7 @@ function fixture(t) {
   };
   write(root, 'portal/data/project-progress.json', json({ schemaVersion: 1, source: { repository: productRepository, revision: 'b'.repeat(40), path: 'delivery/progress.json', sha256: progressContentHash(progressContent) }, content: progressContent }));
   const content = {
-    schemaVersion: 1, reviewedOn: '2026-11-10', audit,
+    schemaVersion: 2, reviewedOn: '2026-11-10', audit,
     items: [question('Q-01'), question('Q-02', { kind: 'decision', state: 'decided', answerSources: ['spec'], sources: ['delivery/specs/F01-01.md#L3'], followUp: null, workPackages: ['F01-01'] })],
   };
   write(workspace, 'delivery/business-questions.json', json(content));
@@ -129,6 +129,7 @@ test('validates the registry with the product rules before writing', t => {
     [content => { content.items[0].workPackages = ['F09-01']; }, /unknown package F09-01 in the POS Docs roadmap/],
     [content => { content.items[0].currentAnswer = 'Responde en 10.0.4.17 desde la sucursal.'; }, /private IPv4 address; POS Docs publishes this text/],
     [content => { content.audit = 'delivery/reviews/otro-corte'; }, /audit register not found/],
+    [content => { content.schemaVersion = 1; for (const question of content.items) delete question.recommendation; }, /unsupported schema version; expected 2/],
   ];
   for (const [mutate, pattern] of cases) {
     change(item, mutate);
@@ -147,8 +148,6 @@ test('imports schema 2 with recommendations and checks their sources at the prod
     sources: ['delivery/specs/F01-01.md#L3'], author: { kind: 'agent', name: 'Claude Code · TASK-314' }, proposedOn: '2026-11-10', endorsement: null,
   };
   const upgrade = content => {
-    content.schemaVersion = 2;
-    for (const question of content.items) question.recommendation = null;
     content.items[0].recommendation = recommendation;
   };
   change(item, upgrade);
