@@ -48,7 +48,7 @@ Fuentes: [I01], [I02], [I03], [I04], [I08], [I09], [I11].
 
 ## 2. Superficie HTTP y efectos
 
-Las rutas principales se deducen de `{controller}/{action}` y `ImpresionController`, bajo `/Impresion`. El controlador tiene `[AllowAnonymous]` y CORS `*`. No hay versión de contrato ni identificador de trabajo en los DTOs observados.
+Las rutas principales se deducen de `{controller}/{action}` y `ImpresionController`, bajo `/Impresion`. La identidad del llamador se trata en [IMP-02](#imp-02--alta--hallazgo-de-seguridad). No hay versión de contrato ni identificador de trabajo en los DTOs observados.
 
 | Método / acción | Comportamiento real | Efecto y resultado |
 | --- | --- | --- |
@@ -79,13 +79,9 @@ Hay especializaciones chilenas en DTOs/formato (`rut`, datos de factura, timbre,
 
 **Acción propuesta:** propagar errores tipados y distinguir validación, aceptación, envío al spooler y confirmación física cuando el dispositivo lo soporte. Registrar trabajo/intentona e informar estado incierto si la conexión se corta después de enviar. Evitar prometer «impreso» por el solo retorno de una API Windows.
 
-### IMP-02 · Alta · La frontera local no autentica al llamador y permite cualquier origen CORS
+### IMP-02 · Alta · Hallazgo de seguridad
 
-**Evidencia:** la escucha se configura en **`localhost`**, los handlers de token aparecen comentados, CORS permite `*` y el controlador declara acceso anónimo. El instalador WiX propone `LocalSystem`. [I01: líneas 34–49], [I02: líneas 18–20], [I09: líneas 50–57].
-
-**Condición e impacto:** procesos con acceso al endpoint local y páginas cuyo navegador permita la petición a loopback pueden solicitar impresiones, entregar RAW o leer un cheque sin identidad de usuario/caja en esta capa. La política del navegador y su protección de red local importan: CORS abierto por sí solo **no demuestra** que cualquier web pueda acceder en todos los navegadores. El binding no acredita exposición remota a Internet. `LocalSystem` amplía privilegios si ese instalador/configuración se usa realmente; no prueba ejecución arbitraria ni un exploit.
-
-**Acción propuesta:** conservar un alcance local explícito, emparejar POS y agente, autenticar comandos y limitar orígenes permitidos/capacidades. Evaluar cuenta con privilegios mínimos compatibles con drivers; verificar ACL de URL, del directorio de configuración y de dispositivo. El control debe funcionar con identidad local válida durante una desconexión, según la política offline aprobada.
+Hallazgo de seguridad de un sistema en producción. Como POS Docs es público, su evidencia, su condición y la acción propuesta se conservan en el [registro de hallazgos de seguridad de POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md#imp-02), con acceso al producto. El reemplazo en POS Platform no debe replicarlo.
 
 ### IMP-03 · Alta · No hay identidad ni registro durable de trabajos de impresión en el agente
 
@@ -151,7 +147,7 @@ El destino acordado es [`apps/device-agent`, C#/.NET Windows](../decisions/devic
 | --- | --- |
 | Servicio Windows .NET Framework 4.7.2, Web API SelfHost 5.2.7 | Confirmado por proyectos/manifiestos; no versión productiva comprobada. |
 | Agente local puerto 8181 | Confirmado como configuración de fuente, con host `localhost`. |
-| HTTPS/JSON/JWT en la arista del diagrama | **No confirmado para impresión**: este servidor usa HTTP, validación de token comentada y controlador anónimo. No se generaliza al agente Transbank. |
+| HTTPS/JSON/JWT en la arista del diagrama | **No confirmado para impresión**: ver [IMP-02](#imp-02--alta--hallazgo-de-seguridad). No se generaliza al agente Transbank. |
 | Puede reportar éxito aunque falle | Confirmado directamente en controladores y en retornos ignorados del helper RAW. |
 | Impresora / lector de cheques | Confirmado; se añaden Zebra, firmas, QR y parsing MICR. |
 | Papel del agente en offline | El camino observado es local y no consulta ERP, pero depende de recibir contenido y configuración válidos. No acredita capacidad offline del flujo fiscal/comercial. |

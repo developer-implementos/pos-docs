@@ -158,11 +158,9 @@ El README recomienda `@main` y rutas de workflows ausentes, mientras release-ple
 
 **Acción recomendada.** Ejemplos que correspondan al árbol actual, un manifiesto de versión del catálogo por consumidor y comprobación de dependencias transitivas. Analizar YAML en lugar de depender del formato de la línea; actualizar pins mediante PR con validación de compatibilidad.
 
-### DEVOPS-09 · P2 · El manifiesto de secretos se imprime antes de enmascararlo
+### DEVOPS-09 · P2 · Hallazgo de seguridad
 
-`resolve-secrets` ejecuta `cat .secrets.yml` en las líneas 140–144 y enmascara referencias recién en las líneas 323–343. Un manifiesto que solo contiene nombres de secretos no expone sus valores, pero esos nombres se imprimen antes del enmascaramiento. Si alguien coloca un valor sensible en una variable estática o un default, el contenido completo puede aparecer en el log. No se afirma que exista tal valor en este repositorio. [D18]
-
-**Acción recomendada.** Validar el esquema y prohibir secretos literales; imprimir solo claves y conteos permitidos después de aplicar la política de redacción. Evitar que el audit trail sea una copia del manifiesto completo. Revisar la misma política en los consumidores.
+Hallazgo de seguridad de un sistema en producción. Como POS Docs es público, su evidencia, su condición y la acción propuesta se conservan en el [registro de hallazgos de seguridad de POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md#devops-09), con acceso al producto. El reemplazo en POS Platform no debe replicarlo.
 
 ### DEVOPS-10 · P2 · La CI del catálogo valida forma, con escasa evidencia de comportamiento
 
@@ -266,7 +264,7 @@ Todos los enlaces siguientes están fijados a commit. Las referencias histórica
 - **[D15]** [Digest opcional y outputs, líneas 823–845](https://github.com/developer-implementos/devops-platform/blob/fd423a6f2f4955bd650ee6aebba154d93c0425b8/.github/actions/build-and-push-image/action.yml#L823-L845).
 - **[D16]** [RFC-017 rechazado, líneas 1–43](https://github.com/developer-implementos/devops-platform/blob/fd423a6f2f4955bd650ee6aebba154d93c0425b8/docs/architecture/rfcs/rejected/RFC-017-slsa-level3-image-signing.md#L1-L43).
 - **[D17]** [Verificador de pins, líneas 83–110](https://github.com/developer-implementos/devops-platform/blob/fd423a6f2f4955bd650ee6aebba154d93c0425b8/.github/workflows/verify-action-pins.yml#L83-L110); [sincronizador, líneas 62–75](https://github.com/developer-implementos/devops-platform/blob/fd423a6f2f4955bd650ee6aebba154d93c0425b8/.github/workflows/sync-action-pins.yml#L62-L75); [ADR-0005](https://github.com/developer-implementos/devops-platform/blob/fd423a6f2f4955bd650ee6aebba154d93c0425b8/docs/architecture/adrs/ADR-0005-supply-chain-security-hybrid-strategy.md#L1-L62).
-- **[D18]** [Impresión de manifiesto, líneas 138–144](https://github.com/developer-implementos/devops-platform/blob/fd423a6f2f4955bd650ee6aebba154d93c0425b8/.github/actions/resolve-secrets/action.yml#L138-L144); [máscaras posteriores, líneas 323–343](https://github.com/developer-implementos/devops-platform/blob/fd423a6f2f4955bd650ee6aebba154d93c0425b8/.github/actions/resolve-secrets/action.yml#L323-L343).
+- D18 · Fuente de un hallazgo de seguridad: se conserva en el [registro de POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md).
 - **[D19]** [Jobs CI y shellcheck, líneas 45–175](https://github.com/developer-implementos/devops-platform/blob/fd423a6f2f4955bd650ee6aebba154d93c0425b8/.github/workflows/ci.yml#L45-L175); [scripts package.json, líneas 25–35](https://github.com/developer-implementos/devops-platform/blob/fd423a6f2f4955bd650ee6aebba154d93c0425b8/package.json#L25-L35).
 - **[D20]** [Timeout, código y retry, líneas 125–183](https://github.com/developer-implementos/devops-platform/blob/fd423a6f2f4955bd650ee6aebba154d93c0425b8/.github/actions/deploy-shared/lib/deploy-utils.sh#L125-L183).
 - **[D21]** [Smoke HTTP y tiempo de respuesta, líneas 216–340](https://github.com/developer-implementos/devops-platform/blob/fd423a6f2f4955bd650ee6aebba154d93c0425b8/.github/actions/cloud-run-smoke-tests/action.yml#L216-L340).

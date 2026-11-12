@@ -97,21 +97,13 @@ El controlador hace commit antes de invocar facturación. Existe una comprobaci�
 
 **Trabajo propuesto:** identidad completa de la consulta en la clave, aislamiento por ámbito, metadatos de antigüedad y política específica para decisiones monetarias. Un dato de caché no debe aparentar una confirmación actual del saldo retornable.
 
-### MI-03 · Alta · Rutas operativas fuera del middleware de autenticación
+### MI-03 · Alta · Hallazgo de seguridad
 
-**Evidencia:** el grupo principal de caja termina con `.middleware("auth")`, pero después se registran rutas de sincronización de cobranza, actualización de datos, autocierre e informes públicos. En concentrador hay rutas de reintento y limpieza sin middleware de autenticación aplicado. `AuthInit` inicializa soporte de autenticación; el middleware nombrado `auth` se aplica por separado. [Rutas de caja][mi-rutas-publicas], [rutas del concentrador][mi-rutas-central], [kernel central][mi-kernel].
+Hallazgo de seguridad de un sistema en producción. Como POS Docs es público, su evidencia, su condición y la acción propuesta se conservan en el [registro de hallazgos de seguridad de POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md#mi-03), con acceso al producto. El reemplazo en POS Platform no debe replicarlo.
 
-**Impacto condicionado:** si esos endpoints son alcanzables por un actor no autorizado, puede acceder a capacidades administrativas o de negocio. La publicación, el proxy y los controles de red no fueron inspeccionados. No se concluye exposición pública a Internet.
+### MI-04 · Alta · Hallazgo de seguridad
 
-**Trabajo propuesto:** identificar consumidores de máquina, separar APIs operativas/administrativas y aplicar autorización en servidor por capacidad. Proteger por red puede complementar esa identidad, pero necesita evidencia de configuración y pruebas.
-
-### MI-04 · Alta · Filtros de búsqueda interpolados en SQL
-
-**Evidencia:** `ProductosService._generateWhere` incorpora búsqueda en `whereRaw`; el listado de ofertas hace lo mismo con `parametros.search.value`. El controlador recibe parámetros de la solicitud y compone esos filtros. [Filtros de productos][mi-sql-productos], [filtros de ofertas][mi-sql-ofertas].
-
-**Impacto condicionado:** al alcanzar esas rutas con una búsqueda manipulada, el valor deja de tratarse exclusivamente como dato del filtro. Se requiere parametrización y pruebas negativas. En ofertas, la ruta pertenece al grupo autenticado; no se presenta como una ruta anónima.
-
-**Límite:** no se ejecutaron payloads ni consultas contra bases reales. La constatación es la construcción de SQL por interpolación, no una extracción demostrada de datos.
+Hallazgo de seguridad de un sistema en producción. Como POS Docs es público, su evidencia, su condición y la acción propuesta se conservan en el [registro de hallazgos de seguridad de POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md#mi-04), con acceso al producto. El reemplazo en POS Platform no debe replicarlo.
 
 ### MI-05 · Media/alta · Salidas de venta sin cierre explícito de transacción
 
@@ -131,13 +123,9 @@ El controlador hace commit antes de invocar facturación. Existe una comprobaci�
 
 **Trabajo propuesto:** distinguir consulta, administración y evaluación. Inventariar qué parte se usa realmente y decidir qué componentes se conservan para el nuevo módulo local.
 
-### MI-07 · Alta condicionada a vigencia · Credenciales literales en integraciones
+### MI-07 · Alta condicionada a vigencia · Hallazgo de seguridad
 
-**Evidencia:** los servicios de precios y promociones contienen una constante de autenticación Basic; se identifica su ubicación sin reproducir el valor. [Precios][mi-precios-secret], [promociones][mi-promociones-secret].
-
-**Impacto:** si el material sigue vigente, quienes acceden al repositorio pueden reutilizarlo. No se comprobó validez, permisos o exposición de esos servicios.
-
-**Trabajo propuesto:** verificar alcance y vigencia, sustituir por una identidad de servicio administrada y rotar el material activo afectado. Los ejemplos de configuración también requieren revisión sin copiar sus valores a documentación.
+Hallazgo de seguridad de un sistema en producción. Como POS Docs es público, su evidencia, su condición y la acción propuesta se conservan en el [registro de hallazgos de seguridad de POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md#mi-07), con acceso al producto. El reemplazo en POS Platform no debe replicarlo.
 
 ### MI-08 · Arquitectura · Identidad y naming ligados a convenciones locales
 
@@ -209,18 +197,11 @@ La [correspondencia del legacy con POS Platform](/guide/architecture/monorepo/#c
 [mi-cache]: https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend/app/Services/api-fallback-manager.js#L7-L94
 [mi-cache-calls]: https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend/app/Controllers/Http/NotaDeCreditoAxController.js#L447-L500
 [mi-cache-filter]: https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend/app/Controllers/Http/NotaDeCreditoAxController.js#L847-L863
-[mi-rutas-publicas]: https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend/start/routes.js#L473-L580
-[mi-rutas-central]: https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend-concentrador/start/routes.js#L19-L51
-[mi-kernel]: https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend-concentrador/start/kernel.js#L15-L63
-[mi-sql-productos]: https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend/app/Services/ProductosService.js#L92-L126
-[mi-sql-ofertas]: https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend/app/Controllers/Http/OfertaController.js#L191-L228
 [mi-retornos]: https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend/app/Controllers/Http/PuntoDeVentaController.js#L68-L118
 [mi-pagos-vacios]: https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend/app/Controllers/Http/PuntoDeVentaController.js#L673-L682
 [mi-oferta-rutas]: https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend/start/routes.js#L325-L329
 [mi-oferta-crud]: https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend/app/Controllers/Http/OfertaController.js#L47-L132
 [mi-oferta-ui]: https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/frontend/src/app/modules/ofertas/pages/oferta/oferta.component.html#L10-L78
-[mi-precios-secret]: https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend/app/Services/Precios/PreciosImplementosServices.js#L5-L6
-[mi-promociones-secret]: https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend/app/Services/Promociones/PromocionesImplementosServices.js#L7-L8
 [mi-numero]: https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend/app/Services/ConfiguracionService.js#L795-L815
 [mi-perfile]: https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend/app/Models/Perfile.js#L6-L13
 [mi-numero-call]: https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend/app/Controllers/Http/PuntoDeVentaController.js#L209-L212

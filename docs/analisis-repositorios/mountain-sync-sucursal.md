@@ -203,15 +203,9 @@ Adicionalmente, el cron de envío y el de reenvío usan claves diferentes; las r
 
 **Acción propuesta:** definir un único protocolo de adquisición de trabajo, con conexión retenida o lease durable y propietario, exclusión por operación y recuperación comprobable. Validar con dos procesos y jobs que duren más que su intervalo.
 
-### SYNC-05 · P1 · Endpoints con efectos y configuraciones sensibles versionadas
+### SYNC-05 · P1 · Hallazgo de seguridad
 
-**Evidencia:** rutas enviar-cambios, buscar-cambios, re-enviar-cambios y múltiples test/* no declaran middleware auth. kernel registra AuthInit global y define auth como middleware nominal, pero las rutas no lo aplican. QueueConnection solo normaliza el body. [S13]
-
-.env.example.prod contiene valores no vacíos en APP_KEY, DB_PASSWORD y ESB_BROKER_PASSWORD; .env_old también contiene configuraciones sensibles. Se omiten todos los valores. [S17]
-
-**Condición e impacto:** un actor con acceso de red a esas rutas puede intentar disparar reenvíos o funciones de prueba sin autenticación exigida por este código. El alcance externo real depende de firewall, proxy y despliegue. La vigencia de los secretos no se comprobó.
-
-**Acción propuesta:** autenticación de servicio y autorización explícita de soporte, retirar rutas de prueba de la distribución operativa, sustituir secretos por inyección segura y revisar/rotar con el propietario aquellos que sigan vigentes. Los clientes HTTP no añaden credenciales ni firma; AMQP usa el protocolo amqp y credenciales de entorno. Revisar el transporte efectivo y el perímetro sin inferir que exista exposición pública. [S12][S14]
+Hallazgo de seguridad de un sistema en producción. Como POS Docs es público, su evidencia, su condición y la acción propuesta se conservan en el [registro de hallazgos de seguridad de POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md#sync-05), con acceso al producto. El reemplazo en POS Platform no debe replicarlo.
 
 ### SYNC-06 · P2 · La recuperación confunde error de consulta con inexistencia
 
@@ -339,11 +333,11 @@ Los enlaces requieren acceso al repositorio privado. Rangos en master salvo secc
 - [S10 · Selección y dependencia de pagos, PagoFacturaSyncUploadService.js:93–220](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/app/Services/SyncUpload/PagoFacturaSyncUploadService.js#L93-L220).
 - [S11 · Persistencia, cola y recuperación, ColaMensajeService.js:17–199](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/app/Services/ColaMensajeService.js#L17-L199).
 - [S12 · Consumidor/publicador AMQP, start/queueHooks.js:26–130](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/start/queueHooks.js#L26-L130).
-- [S13 · Rutas sin auth declarado, start/routes.js:20–34](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/start/routes.js#L20-L34); [middleware, kernel.js:15–44](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/start/kernel.js#L15-L44); [QueueConnection.js:9–18](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/app/Middleware/QueueConnection.js#L9-L18).
+- S13 · Fuente de un hallazgo de seguridad: se conserva en el [registro de POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md).
 - [S14 · Clientes HTTP y timeouts, Axios.js:9–61](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/app/Utils/Axios.js#L9-L61).
 - [S15 · Schema de mensajes, Models/Mensaje.js:8–21](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/app/Models/Mensaje.js#L8-L21); [cola, Models/ColaMensaje.js:8–10](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/app/Models/ColaMensaje.js#L8-L10).
 - [S16 · Pool PostgreSQL, config/database.js:71–83](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/config/database.js#L71-L83).
-- [S17 · Ubicaciones de configuración sensible, .env.example.prod:6–28](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/.env.example.prod#L6-L28); [archivo histórico .env_old](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/.env_old).
+- S17 · Fuente de un hallazgo de seguridad: se conserva en el [registro de POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md).
 - [S18 · Decodificador XML, xmlDecode.js:3–34](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/app/Utils/xmlDecode.js#L3-L34).
 - [S19 · Log4js, app/Config/log4js.js:8–34](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/app/Config/log4js.js#L8-L34); [mapeo de pagos, MensajeDetalleService.js:932–963](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/app/Services/MensajeDetalleService.js#L932-L963).
 - [S20 · Migración sobre tabla preexistente, 1670947362138_sincronizacion_salidas_schema.js:7–18](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/database/migrations/1670947362138_sincronizacion_salidas_schema.js#L7-L18).

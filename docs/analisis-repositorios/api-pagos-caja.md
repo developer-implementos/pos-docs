@@ -12,7 +12,7 @@ Los hallazgos son observaciones del código, con impacto inferido y condiciones 
 
 Es una API Node.js/Express que combina **consulta federada de datos de sucursales** y **administración de estados de notas de crédito (NC)**. No es el agente Transbank, no procesa autorizaciones bancarias y no se observa escritura a PostgreSQL ni integración directa con AX en este repositorio.
 
-El alcance es mayor que «consulta de pagos»: expone devoluciones, mantiene estados de NC y recupera datos de usuarios relacionados con AX. Para consultar una sucursal, lee de MongoDB la dirección y las credenciales de PostgreSQL y abre una conexión directa a esa base. Para ciertas consultas, hace lo mismo con **todas las sucursales activas**. Esto aporta una arista arquitectónica no explicitada en la presentación: un servicio agregador accede a las bases operacionales de las tiendas. El código demuestra el acceso; la ubicación física central del servicio sigue siendo un antecedente de la presentación.
+El alcance es mayor que «consulta de pagos»: expone devoluciones, mantiene estados de NC y recupera datos de usuarios relacionados con AX. Para consultar una sucursal, obtiene de MongoDB los datos de conexión de su base y abre una conexión directa a ella. Para ciertas consultas, hace lo mismo con **todas las sucursales activas**. Esto aporta una arista arquitectónica no explicitada en la presentación: un servicio agregador accede a las bases operacionales de las tiendas. El código demuestra el acceso; la ubicación física central del servicio sigue siendo un antecedente de la presentación.
 
 ```mermaid
 flowchart LR
@@ -79,21 +79,13 @@ La prioridad indica orden recomendado de tratamiento, no una clasificación CVSS
 
 **Acción propuesta:** definir la operación de negocio —reservar, consumir, liberar—, identidad compuesta y propietario; realizar una transición condicional atómica, con clave de idempotencia y respuesta de conflicto. Verificar y sanear duplicados antes de imponer unicidad. Una liberación debe validar titular/versión. Esta corrección es previa a usar el servicio como control de crédito en varios países o durante coexistencia de ERPs.
 
-### PAG-02 · Alta · NC y consultas carecen de autenticación y autorización dentro de la aplicación
+### PAG-02 · Alta · Hallazgo de seguridad
 
-**Evidencia:** el montaje de rutas y todos los handlers carecen de middleware de identidad/permisos; CORS permite solicitudes sin `Origin`. La escucha predeterminada es en todas las interfaces. [P01: líneas 14–58 y 108–116], [P06].
+Hallazgo de seguridad de un sistema en producción. Como POS Docs es público, su evidencia, su condición y la acción propuesta se conservan en el [registro de hallazgos de seguridad de POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md#pag-02), con acceso al producto. El reemplazo en POS Platform no debe replicarlo.
 
-**Condición e impacto:** cualquier cliente con acceso de red al proceso podría consultar los datos expuestos o marcar/liberar NC. CORS limita ciertos usos desde navegador; no autentica llamadas de servidor. La exposición efectiva puede estar restringida por firewall, proxy o VPN, no incluidos aquí. No se comprobó acceso desde fuera de la red autorizada.
+### PAG-03 · Alta · Hallazgo de seguridad
 
-**Acción propuesta:** identidad de usuario y servicio, permisos diferenciados de lectura/reserva/liberación, alcance por empresa/sucursal, auditoría y política de acceso entre servicios. Revisar la red efectiva antes de estimar exposición.
-
-### PAG-03 · Alta · Hay material de conexión sensible versionado
-
-**Evidencia:** `.env` está en Git; contiene campos de credenciales PostgreSQL y dos URI MongoDB con usuario/contraseña. Se registra únicamente su ubicación: `.env`, líneas 7–14. `config/database.js` consume las URI; `cajaSucursales` proporciona credenciales de tiendas al servicio. [P04], [P09].
-
-**Condición e impacto:** quienes acceden al snapshot o su historial pueden acceder al material allí registrado; vigencia y privilegios no se probaron. MongoDB concentra a su vez acceso potencial a varias tiendas. No se reproduce ningún valor sensible en este informe.
-
-**Acción propuesta:** inventariar los consumidores, validar vigencia y rotar de forma coordinada; gestionar secretos fuera de Git, limitar privilegios y sustituir gradualmente la necesidad de almacenar credenciales de cada tienda en el agregador. Limpiar únicamente el archivo actual no revoca copias históricas.
+Hallazgo de seguridad de un sistema en producción. Como POS Docs es público, su evidencia, su condición y la acción propuesta se conservan en el [registro de hallazgos de seguridad de POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md#pag-03), con acceso al producto. El reemplazo en POS Platform no debe replicarlo.
 
 ### PAG-04 · Alta · El agregador depende en línea de las bases de todas las sucursales
 
@@ -176,7 +168,7 @@ Todos los enlaces apuntan al SHA revisado y requieren acceso al repositorio priv
 - **[P02]** [package.json, líneas 1–23](https://github.com/developer-implementos/api-pagos-caja/blob/33cd625f029aa78798f0baf307c41e17ebee92e1/package.json#L1-L23) y [package-lock.json](https://github.com/developer-implementos/api-pagos-caja/blob/33cd625f029aa78798f0baf307c41e17ebee92e1/package-lock.json): dependencias declaradas/resueltas.
 - **[P03]** [apps.json, líneas 1–7](https://github.com/developer-implementos/api-pagos-caja/blob/33cd625f029aa78798f0baf307c41e17ebee92e1/apps.json#L1-L7): configuración de proceso.
 - **[P04]** [config/database.js, líneas 1–33](https://github.com/developer-implementos/api-pagos-caja/blob/33cd625f029aa78798f0baf307c41e17ebee92e1/config/database.js#L1-L33): conexiones MongoDB separadas.
-- **[P05]** `.env`, líneas 1–14: valores de arranque y material sensible; se referencia por ubicación, sin copiar valores ni enlazar directamente al secreto.
+- **[P05]** Fuente de un hallazgo de seguridad: se conserva en el [registro de POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md).
 - **[P06]** [routes/pagos.js, líneas 1–16](https://github.com/developer-implementos/api-pagos-caja/blob/33cd625f029aa78798f0baf307c41e17ebee92e1/routes/pagos.js#L1-L16): ocho rutas.
 - **[P07]** [controllers/pagosController.js, líneas 6–169](https://github.com/developer-implementos/api-pagos-caja/blob/33cd625f029aa78798f0baf307c41e17ebee92e1/controllers/pagosController.js#L6-L169): validación, NC, consultas y respuestas.
 - **[P08]** [services/pagosService.js, líneas 4–353](https://github.com/developer-implementos/api-pagos-caja/blob/33cd625f029aa78798f0baf307c41e17ebee92e1/services/pagosService.js#L4-L353): SQL, fan-out, filtros y errores.
