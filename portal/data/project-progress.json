@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "dc535215ac5a0c6d09b5176d96ba387d79178b0a",
+    "revision": "79a5111bd236b043c3f539cf3e206fb1d1e5062e",
     "path": "delivery/progress.json",
-    "sha256": "2a7e424e5fda169383de99a0a2750b4ad55ba8d73889a67c520c34372c2d945a"
+    "sha256": "dac20e77f13f0c727a3c956427276b7d1be67c96210b710dee783e7a59fb8cba"
   },
   "content": {
     "schemaVersion": 2,
@@ -16,7 +16,7 @@
       "path": "docs/roadmap.json",
       "sha256": "e91cff0a30c2162a36a05b0542eed7e5a25e0490ea898481a37969f2fb21e514"
     },
-    "summary": "Catorce entregables están técnicamente verificados: once de F01 y los pagos combinados, el protocolo de dispositivos y la recuperación de cobros de F02. F01-09 sigue en curso hasta demostrar un criterio con su prueba de punta a punta (#272). El cliente recupera ventas y registra revisiones durables sin duplicar efectos. Efectivo y transferencia manual están conectados; tarjeta y fiscalidad conservan sus pendientes de proveedor operativo. La aceptación humana y la habilitación productiva se registran por separado.",
+    "summary": "Quince entregables están técnicamente verificados: doce de F01 y los pagos combinados, el protocolo de dispositivos y la recuperación de cobros de F02. El cliente recupera ventas y registra revisiones durables sin duplicar efectos. Efectivo y transferencia manual están conectados; tarjeta y fiscalidad conservan sus pendientes de proveedor operativo. La aceptación humana y la habilitación productiva se registran por separado.",
     "applications": [
       {
         "id": "pos-desktop",
@@ -552,10 +552,40 @@
           "pos-desktop",
           "branch-api"
         ],
-        "status": "in_progress",
-        "summary": "Implementados borradores y presupuestos persistidos, captura por código/unidad, cantidad repetida, pausa y recuperación explícita entre puestos con CAS. Vuelve a en curso porque, al retomar una cesta pausada desde «Cestas guardadas», desde otro puesto o tras crear otra venta, no se exige aceptar el importe recotizado (#272). Se preserva el origen y no se permite modificar una cesta con pago pendiente.",
+        "status": "verified",
+        "summary": "Verificados borradores y presupuestos persistidos, captura por código/unidad, cantidad repetida, pausa y recuperación explícita entre puestos con CAS. Al retomar una cesta pausada, desde «Cestas guardadas» tras otra venta, desde otro puesto o tras recargar, el importe recotizado exige aceptación explícita antes de confirmar (#272). Se preserva el origen y no se permite modificar una cesta con pago pendiente.",
         "acceptance": null,
-        "verification": null
+        "verification": {
+          "revision": "e332352920085ff9601e8667c14e208d35b5556c",
+          "reviewedOn": "2026-11-12",
+          "reviewer": "Claude Code · verificación técnica de agente",
+          "evidence": [
+            {
+              "path": "apps/branch-api/test/commercial.integration.test.ts",
+              "label": "Recuperación entre puestos, CAS, rollback y exclusión con pago"
+            },
+            {
+              "path": "libs/data-access/branch-api/src/lib/product-capture.spec.ts",
+              "label": "Cantidad explícita y escaneo repetido sin duplicar la línea"
+            },
+            {
+              "path": "tests/pos-clients-e2e/branch/draft-capture.spec.ts",
+              "label": "Captura y pausa/retoma con API y PostgreSQL"
+            },
+            {
+              "path": "libs/data-access/branch-api/src/lib/branch-sale.spec.ts",
+              "label": "Bloqueo de cambios con el pago pendiente, y aceptación obligatoria del importe recotizado al retomar tras otra venta, desde otro puesto o tras recargar"
+            },
+            {
+              "path": "tests/pos-clients-e2e/branch/paused-requote.spec.ts",
+              "label": "Cesta pausada recotizada por una publicación comercial nueva: con API y PostgreSQL reales, exige aceptar el nuevo importe al reabrirla y tras recargar"
+            },
+            {
+              "path": "delivery/reviews/pos-parity-2026-11-10/cumplimiento-f01-f02.md",
+              "label": "Contraste de criterios del 11 de noviembre de 2026 y su incumplimiento resuelto"
+            }
+          ]
+        }
       },
       {
         "id": "F01-10",
