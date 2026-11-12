@@ -41,3 +41,10 @@ Espejo Engram: pendiente. El servidor MCP no conectó en esta sesión; la ficha 
 - L5 · 2026-11-12 · Paridad comprobada con 27 registros mutados que pasan por ambos validadores: 26 coinciden en aceptar o rechazar y en el primer renglón del mensaje. La diferencia restante es la prevista durante la transición, porque POS Docs todavía lee el esquema 2.
 - L6 · 2026-11-12 · Dos PR abiertas de otra sesión leen este registro: pos-platform #334 y pos-docs #86. Las dos dan por resuelta una regla cuando todas sus preguntas que no son hechos están `decided` o `validated`. Con el esquema 3 eso sigue funcionando, porque `validated` ya no aparece. pos-docs #86 cambia los mismos archivos de la vista: quien se integre después resuelve esos conflictos.
 - L7 · 2026-11-12 · La revisión con el registro real del esquema 3 no encontró defectos. Las cinco decisiones reales no tienen `outcome`, porque se tomaron en las fichas sin una recomendación previa. Las etiquetas de resultado (adopta, ajusta, descarta) se comprueban sólo con las pruebas de la vista, hasta que llegue la primera decisión del documento de negocio.
+- L8 · 2026-11-12 · Otro agente revisó las dos ramas (pos-docs `5eae8ff`, pos-platform `b1492f5`) y no encontró defectos en los validadores, la migración ni el renderizado. Comprobó la paridad con 116 mutaciones dirigidas y 8000 aleatorias, el escape de los textos nuevos y la importación de extremo a extremo con ambos esquemas. Los hallazgos de POS Docs se corrigen aquí:
+  - la prueba del esquema 2 leía el snapshot publicado y habría fallado al importar el 3; ahora convierte el corte con `schema2()`, simétrico a `schema3()`;
+  - `project-status.mdx` todavía nombraba la validación;
+  - la guía omitía que `outcome` es nulo si la decisión es anterior a la recomendación, y que una recomendación del esquema 2 escrita por una persona detiene la importación;
+  - `project:check` no admitía el singular «1 pendiente de decisión».
+
+  Con el esquema 3 importado en local aprueban `questions:test`, `project:test`, `portal:test`, `build` y `project:check`.

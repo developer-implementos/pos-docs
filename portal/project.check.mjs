@@ -213,7 +213,8 @@ try {
   }
   assert.equal(await page.locator('.project-question-counts a').count(), 3, 'Open, answered and decided, without a separate validation');
   const summaryText = await page.locator('.project-question-summary').innerText();
-  assert.ok(summaryText.includes(`${questions.counts.pendingDecision} pendientes de decisión`), 'The summary counts the open rules as pending decisions');
+  const pending = questions.counts.pendingDecision;
+  assert.ok(summaryText.includes(`${pending} ${pending === 1 ? 'pendiente' : 'pendientes'} de decisión`), 'The summary counts the open rules as pending decisions');
   assert.doesNotMatch(await page.locator('[data-project-page]').innerText(), /Sin respaldo del equipo|Respaldada|Validación de negocio|Pendiente de validación|Validada por|por validar|Borrador de agente|Recomendaci(?:ón|ones) del equipo/, 'Nothing is endorsed or validated');
   await page.locator('.project-question-recommendations a[href="/project/questions/?recommendation=present"]').click();
   await page.waitForURL(url => url.searchParams.get('recommendation') === 'present');

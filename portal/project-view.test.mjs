@@ -53,6 +53,29 @@ function schema3(content) {
 }
 const contentV3 = schema3(questionsSnapshot.content);
 
+/**
+ * The published registry in schema 2, as POS Platform published it before schema 3, so the transitional
+ * reader is exercised whichever schema the imported cut uses. A registry still in schema 2 is kept.
+ */
+function schema2(content) {
+  if (content.schemaVersion === 2) return structuredClone(content);
+  assert.equal(content.schemaVersion, 3);
+  const items = content.items.map(({ decision, recommendation, ...source }) => {
+    const item = { ...structuredClone(source), validation: null, recommendation: null };
+    if (decision) {
+      assert.ok(specDecisions.has(source.id), `${source.id}: schema 2 only recorded the decisions of product specs`);
+      item.kind = 'decision';
+    }
+    if (recommendation) {
+      const { agent, proposedOn, ...proposal } = structuredClone(recommendation);
+      item.recommendation = { ...proposal, author: { kind: 'agent', name: agent }, proposedOn, endorsement: null };
+    }
+    return item;
+  });
+  return { ...structuredClone(content), schemaVersion: 2, items };
+}
+const contentV2 = schema2(questionsSnapshot.content);
+
 function questionsWith(mutate = () => {}, integration = questionsSnapshot.integration, followUpModel = followUp, content = questionsSnapshot.content) {
   const snapshot = structuredClone({ ...questionsSnapshot, content });
   mutate(snapshot.content);
@@ -60,6 +83,8 @@ function questionsWith(mutate = () => {}, integration = questionsSnapshot.integr
   snapshot.integration = integration;
   return deriveQuestions(snapshot, progress, followUpModel);
 }
+const questionsV2With = (mutate = () => {}) => questionsWith(mutate, questionsSnapshot.integration, followUp, contentV2);
+const questionsV2 = questionsV2With();
 const questionsV3With = (mutate = () => {}, followUpModel = followUp) => questionsWith(mutate, questionsSnapshot.integration, followUpModel, contentV3);
 const questionsV3 = questionsV3With();
 const questionsPage = (model = questions, followUpModel = followUp) => renderProjectPages(progress, followUpModel, null, null, model).get('/project/questions/').body;
@@ -226,7 +251,7 @@ test('schema 1 acceptance stays historical across summary, breakdowns, dates and
 });
 
 test('questions page summarizes the three states and pending decisions and groups every record by phase', () => {
-  for (const model of [questions, questionsV3]) {
+  for (const model of [questions, questionsV2, questionsV3]) {
     const html = questionsPage(model);
     assert.match(html, /data-project-page="questions"/);
     assert.equal((html.match(/<h1>/g) || []).length, 1);
@@ -251,7 +276,7 @@ test('questions page summarizes the three states and pending decisions and group
 });
 
 test('each question shows its answer, sources, decider, owner, follow-up, packages, priority and decision', () => {
-  for (const model of [questions, questionsV3]) {
+  for (const model of [questions, questionsV2, questionsV3]) {
     const html = questionsPage(model);
     const { repository, revision } = model.source;
     for (const item of model.items) {
@@ -437,7 +462,7 @@ test('questions page explains who recommends and who decides and links the sourc
 
 test('questions pages carry no endorsement or business validation', () => {
   const pages = model => renderProjectPages(progress, followUp, null, null, model);
-  for (const model of [questions, questionsV3, questionsWithRecommendations()]) {
+  for (const model of [questions, questionsV2, questionsV3, questionsWithRecommendations()]) {
     const page = pages(model).get('/project/questions/');
     assert.doesNotMatch(page.body, remnants);
     assert.doesNotMatch(page.description, /validación|respaldo/i);
@@ -445,22 +470,24 @@ test('questions pages carry no endorsement or business validation', () => {
   }
 });
 
-test('the published schema 2 registry renders through the model of schema 3', () => {
-  const html = questionsPage();
+test('a schema 2 registry renders through the model of schema 3', () => {
+  const html = questionsPage(questionsV2);
   assert.ok(!html.includes('class="project-question-decision"'), 'Schema 2 records no decision block');
   assert.ok(!html.includes('<span class="project-tag">Decisión</span>'), 'A decision of schema 2 is shown as a rule');
-  for (const item of questions.items.filter(entry => entry.state === 'decided')) {
+  const decided = questionsV2.items.filter(entry => entry.state === 'decided');
+  assert.deepEqual(decided.map(item => item.id).sort(), [...specDecisions.keys()], 'The decisions of product specs are shown decided');
+  for (const item of decided) {
     const body = card(html, item.id);
     assert.ok(body.includes('<span class="project-tag">Regla</span><span class="project-tag project-tag-verified">Decidida</span>'), `${item.id} is shown as a decided rule`);
     assert.ok(!body.includes('<dt>Decisión</dt>'), `${item.id} has no decision of its own to show`);
   }
-  const validated = questionsWith(content => {
+  const validated = questionsV2With(content => {
     const rule = content.items.find(item => item.kind === 'rule' && item.state === 'open');
     Object.assign(rule, { state: 'validated', validation: { validatedOn: rule.reviewedOn, validatedBy: 'pymimtos', note: 'Confirmada en la reunión de reglas.' } });
   });
   const body = card(questionsPage(validated), validated.items.find(item => item.state === 'decided' && item.recommendation).id);
   assert.ok(body.includes('data-state="decided"') && !body.includes('Confirmada en la reunión de reglas.') && !body.includes('pymimtos'), 'A validated rule of schema 2 is shown decided, without its validation');
-  assert.equal(validated.counts.decided, questions.counts.decided + 1);
+  assert.equal(validated.counts.decided, questionsV2.counts.decided + 1);
 });
 
 test('a pre-integration revision is identified on the questions page', () => {
@@ -486,7 +513,7 @@ test('questions escape authored text and render without a published registry', (
 });
 
 test('overview links the questions view with its open questions and pending decisions', () => {
-  for (const model of [questions, questionsV3]) {
+  for (const model of [questions, questionsV2, questionsV3]) {
     const html = renderProjectPages(progress, followUp, null, null, model).get('/project/').body;
     assert.ok(html.includes(`<p class="project-increment-link"><a href="/project/questions/">Preguntas y reglas de negocio</a><span>${model.counts.open} abiertas · ${model.counts.pendingDecision} pendientes de decisión.</span></p>`));
   }
