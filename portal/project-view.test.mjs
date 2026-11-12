@@ -257,10 +257,14 @@ test('owners use the team profile when it exists and business validation names i
   assert.equal(model.counts.validated, questions.counts.validated + 1);
 });
 
-/** Schema 2 of the published registry: a draft and an endorsed recommendation on two open rules. */
+/**
+ * The published registry with a draft and an endorsed recommendation on two open rules and a third
+ * open rule without one, whatever the imported cut already recommends.
+ */
 function questionsWithRecommendations() {
   return questionsWith(content => {
-    const [draft, endorsed] = content.items.filter(item => item.kind === 'rule' && item.state === 'open');
+    const [draft, endorsed, pending] = content.items.filter(item => item.kind === 'rule' && item.state === 'open');
+    pending.recommendation = null;
     draft.recommendation = {
       answer: 'Separar la emisión de la NC de la devolución de dinero.',
       scope: 'country',
