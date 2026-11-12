@@ -11,6 +11,13 @@ Los cambios de herramientas, pruebas y CI no aparecen aquí; quedan en el [regis
 
 Este archivo lo escribe [release-please](https://github.com/googleapis/release-please) desde los títulos de los PR, y cada versión queda como [release en GitHub](https://github.com/developer-implementos/pos-docs/releases). Para recibir un aviso por versión, usa *Watch → Custom → Releases* en el repositorio. No se edita a mano: cómo se escribe una buena entrada está en la [guía de versiones](tools/release/README.md).
 
+## [0.6.3](https://github.com/developer-implementos/pos-docs/compare/v0.6.2...v0.6.3) (2026-11-12)
+
+
+### Correcciones
+
+* **project:** [TASK-314] rechazar localhost con punto final y aclarar el límite de 2000 caracteres ([#79](https://github.com/developer-implementos/pos-docs/issues/79)) ([c853c35](https://github.com/developer-implementos/pos-docs/commit/c853c356688c6deb7ea42e45f96a8a3e0974053a))
+
 ## [0.6.2](https://github.com/developer-implementos/pos-docs/compare/v0.6.1...v0.6.2) (2026-11-12)
 
 
