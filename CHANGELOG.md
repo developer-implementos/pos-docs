@@ -11,6 +11,15 @@ Los cambios de herramientas, pruebas y CI no aparecen aquí; quedan en el [regis
 
 Este archivo lo escribe [release-please](https://github.com/googleapis/release-please) desde los títulos de los PR, y cada versión queda como [release en GitHub](https://github.com/developer-implementos/pos-docs/releases). Para recibir un aviso por versión, usa *Watch → Custom → Releases* en el repositorio. No se edita a mano: cómo se escribe una buena entrada está en la [guía de versiones](tools/release/README.md).
 
+## [0.7.2](https://github.com/developer-implementos/pos-docs/compare/v0.7.1...v0.7.2) (2026-11-12)
+
+
+### Contenido actualizado
+
+* **follow-up:** FOLLOWUP-017 actualizado (impacto): Obtener las decisiones de negocio del registro de preguntas y reglas de paridad ([a914586](https://github.com/developer-implementos/pos-docs/commit/a914586d980726d988b2e1032352af078df638c8))
+* **project:** [TASK-280] publicar el índice de las reglas de negocio de la caja ([a914586](https://github.com/developer-implementos/pos-docs/commit/a914586d980726d988b2e1032352af078df638c8))
+* **project:** [TASK-296] importar el corte 9cc8a3f con 122 preguntas y sus recomendaciones ([a914586](https://github.com/developer-implementos/pos-docs/commit/a914586d980726d988b2e1032352af078df638c8))
+
 ## [0.7.1](https://github.com/developer-implementos/pos-docs/compare/v0.7.0...v0.7.1) (2026-11-12)
 
 
