@@ -11,6 +11,13 @@ Los cambios de herramientas, pruebas y CI no aparecen aquí; quedan en el [regis
 
 Este archivo lo escribe [release-please](https://github.com/googleapis/release-please) desde los títulos de los PR, y cada versión queda como [release en GitHub](https://github.com/developer-implementos/pos-docs/releases). Para recibir un aviso por versión, usa *Watch → Custom → Releases* en el repositorio. No se edita a mano: cómo se escribe una buena entrada está en la [guía de versiones](tools/release/README.md).
 
+## [0.5.6](https://github.com/developer-implementos/pos-docs/compare/v0.5.5...v0.5.6) (2026-11-12)
+
+
+### Contenido actualizado
+
+* **api:** [TASK-298] declarar nx 24 en la base técnica del backend ([#64](https://github.com/developer-implementos/pos-docs/issues/64)) ([fa0c005](https://github.com/developer-implementos/pos-docs/commit/fa0c0054463b6fcd3f5bb155ca0e57bb0a172a7f))
+
 ## [0.5.5](https://github.com/developer-implementos/pos-docs/compare/v0.5.4...v0.5.5) (2026-11-11)
 
 
