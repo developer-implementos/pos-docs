@@ -9,7 +9,7 @@ export function matchesProjectItem(data, text, values, type) {
   }
   if (type === 'questions') {
     // A question is listed under its earliest phase but concerns every phase of its packages.
-    return (!values.state || data.state === values.state) && (!values.phase || (data.phases || '').split(' ').includes(values.phase)) && (!values.decider || data.decider === values.decider);
+    return (!values.state || data.state === values.state) && (!values.phase || (data.phases || '').split(' ').includes(values.phase)) && (!values.decider || data.decider === values.decider) && (!values.recommendation || data.recommendation === values.recommendation) && (!values.scope || data.scope === values.scope);
   }
   const statusMatch = !values.status || (values.status === 'review' ? data.review === 'true' : values.status === 'active' ? data.active === 'true' : values.status === 'remaining' ? !['verified', 'accepted'].includes(data.status) : values.status === data.status);
   return statusMatch && (!values.phase || data.phase === values.phase) && (!values.app || (data.app || '').split(' ').includes(values.app)) && loginMatch(data.assignee, values.assignee);

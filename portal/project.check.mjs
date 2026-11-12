@@ -198,6 +198,15 @@ try {
   await form().locator('[name=decider]').selectOption(decider);
   assert.equal(await count(), questions.items.filter(item => item.decider === decider).length);
   await reset();
+  await form().locator('[name=recommendation]').selectOption('none');
+  assert.equal(new URL(page.url()).searchParams.get('recommendation'), 'none');
+  assert.equal(await count(), questions.items.filter(item => item.recommendationStatus === 'none').length, 'Only pending rules and decisions appear as missing a recommendation');
+  await reset();
+  for (const scope of questions.scopes) {
+    await form().locator('[name=scope]').selectOption(scope);
+    assert.equal(await count(), questions.items.filter(item => item.recommendation?.scope === scope).length, `The scope filter selects ${scope}`);
+    await reset();
+  }
   assert.equal(await page.locator('.project-question-counts a').count(), 4);
   await navigate('/project/questions/?state=answered');
   assert.equal(await form().locator('[name=state]').inputValue(), 'answered', 'Summary counts open their filtered list');
