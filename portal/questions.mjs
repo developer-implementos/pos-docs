@@ -264,9 +264,11 @@ function validateDecision(item) {
   assert.ok(decision.decidedOn <= item.reviewedOn, `${label}: decided after the item review; review the item again`);
   text(decision.source, `${label}.source`);
   assert.ok(!decision.source.includes('://'), `${label}.source: cite the decision document by name and date; it is not linked`);
+  // As in POS Platform: a decision says what it did with the recommendation it could weigh; one taken
+  // before the recommendation was proposed, or without one, has no outcome.
   if (recommendation === null) assert.equal(decision.outcome, null, `${label}.outcome: null when there was no recommendation`);
-  assert.ok(decision.outcome === null || outcomes.includes(decision.outcome), `${label}.outcome: expected adopted, adapted or rejected`);
-  if (decision.outcome !== null) assert.ok(decision.decidedOn >= recommendation.proposedOn, `${label}: decided before its recommendation was proposed`);
+  else if (decision.decidedOn < recommendation.proposedOn) assert.equal(decision.outcome, null, `${label}: decided before its recommendation was proposed`);
+  else assert.ok(outcomes.includes(decision.outcome), `${label}.outcome: expected adopted, adapted or rejected`);
 }
 
 /** Schema 2 only: the recommendation of a rule or a decision, with its author and its endorsement. */

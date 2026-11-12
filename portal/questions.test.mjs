@@ -287,6 +287,7 @@ test('applies the kind, state and decision rules of schema 3 with the messages o
   rejects(decided(item => { item.source = 'https://docs.example.com/actas/2026-11-10'; }), 'Q-03.decision.source: cite the decision document by name and date; it is not linked');
   rejects(decided(item => { item.outcome = 'adopted'; }), 'Q-03.decision.outcome: null when there was no recommendation');
   rejects(adapted(item => { item.outcome = 'accepted'; }), 'Q-05.decision.outcome: expected adopted, adapted or rejected');
+  rejects(adapted(item => { item.outcome = null; }), 'Q-05.decision.outcome: expected adopted, adapted or rejected');
   rejects(adapted(item => { item.decidedOn = '2026-11-09'; }), 'Q-05.decision: decided before its recommendation was proposed');
 });
 

@@ -119,7 +119,7 @@ export function syncProjectQuestions({ root = repositoryRoot, workspace, check =
       if (fs.existsSync(temporary)) fs.unlinkSync(temporary);
     }
   }
-  return { changed, revision, destination, included: state.included, total: model.counts.total, open: model.counts.open, pendingValidation: model.counts.pendingValidation };
+  return { changed, revision, destination, included: state.included, total: model.counts.total, open: model.counts.open, pendingDecision: model.counts.pendingDecision };
 }
 
 export function parseQuestionsArguments(args) {
@@ -136,5 +136,5 @@ export function parseQuestionsArguments(args) {
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const result = syncProjectQuestions(parseQuestionsArguments(process.argv.slice(2)));
-  console.log(`Project questions: ${result.total} records; ${result.open} open; ${result.pendingValidation} pending business validation; revision ${result.revision.slice(0, 12)} ${result.included ? 'in main' : 'not yet in main'}; ${result.changed ? 'snapshot updated' : 'snapshot current'}.`);
+  console.log(`Project questions: ${result.total} records; ${result.open} open; ${result.pendingDecision} pending decision; revision ${result.revision.slice(0, 12)} ${result.included ? 'in main' : 'not yet in main'}; ${result.changed ? 'snapshot updated' : 'snapshot current'}.`);
 }
