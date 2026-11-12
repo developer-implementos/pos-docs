@@ -200,7 +200,7 @@ try {
   await reset();
   await form().locator('[name=recommendation]').selectOption('none');
   assert.equal(new URL(page.url()).searchParams.get('recommendation'), 'none');
-  assert.equal(await count(), questions.items.filter(item => item.recommendationStatus === 'none').length, 'A fact never appears as missing a recommendation');
+  assert.equal(await count(), questions.items.filter(item => item.recommendationStatus === 'none').length, 'Only pending rules and decisions appear as missing a recommendation');
   await reset();
   for (const scope of questions.scopes) {
     await form().locator('[name=scope]').selectOption(scope);

@@ -294,7 +294,9 @@ test('a question shows the team recommendation next to the current answer, with 
   const model = questionsWithRecommendations();
   const html = questionsPage(model);
   const { repository, revision } = model.source;
-  const [draft, endorsed] = model.items.filter(item => item.recommendation);
+  // The published registry may already carry recommendations: find the two this test wrote.
+  const draft = model.items.find(item => item.recommendation?.answer === 'Separar la emisión de la NC de la devolución de dinero.');
+  const endorsed = model.items.find(item => item.recommendation?.answer === 'Exigir la autorización en servidor para cada acción.');
   const draftCard = card(html, draft.id);
   assert.ok(draftCard.includes('data-recommendation="draft"') && draftCard.includes('data-scope="country"'));
   assert.ok(draftCard.indexOf('Recomendación del equipo') > draftCard.indexOf('Respuesta actual'), 'The recommendation follows the current answer');
@@ -311,10 +313,9 @@ test('a question shows the team recommendation next to the current answer, with 
   assert.ok(!endorsedCard.includes('Valor por defecto') && !endorsedCard.includes('Sujeta a la confirmación'), 'A core rule has no default and no regulation note');
   const pending = model.items.find(item => item.recommendationStatus === 'none');
   assert.ok(card(html, pending.id).includes('Sin recomendación todavía') && card(html, pending.id).includes('data-recommendation="none"'));
-  const fact = model.items.find(item => item.kind === 'fact');
-  if (fact) {
-    const factCard = card(html, fact.id);
-    assert.ok(!factCard.includes('Recomendación del equipo') && factCard.includes('data-recommendation="not_applicable"'), 'A fact is answered with evidence and shows no recommendation');
+  for (const settled of model.items.filter(item => !item.recommendation && (item.kind === 'fact' || ['decided', 'validated'].includes(item.state)))) {
+    const settledCard = card(html, settled.id);
+    assert.ok(!settledCard.includes('Recomendación del equipo') && settledCard.includes('data-recommendation="not_applicable"'), `${settled.id} has no recommendation pending`);
   }
 });
 

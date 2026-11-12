@@ -120,7 +120,7 @@ test('orders identifiers numerically within the same phase and priority', () => 
 
 test('counts states and pending business validation without inferring owners or validations', () => {
   const model = derive();
-  assert.deepEqual(model.counts, { total: 6, open: 3, answered: 1, decided: 1, validated: 1, pendingValidation: 5, unassigned: 5, recommended: 0, endorsed: 0, unrecommended: 5 });
+  assert.deepEqual(model.counts, { total: 6, open: 3, answered: 1, decided: 1, validated: 1, pendingValidation: 5, unassigned: 5, recommended: 0, endorsed: 0, unrecommended: 3 });
   assert.equal(model.items.find(item => item.id === 'Q-03').validation, null, 'A decision in a spec is not a business validation');
   assert.deepEqual(model.deciders, ['Comercial', 'Finanzas (valida la respuesta)', 'Operaciones', 'Producto (ya decidido)']);
   assert.equal(model.reviewedOn, '2026-11-10');
@@ -209,8 +209,10 @@ test('reads the previous schema without recommendations while the product migrat
 test('derives the recommendation status, its scopes and its counts from schema 2', () => {
   const model = deriveV2();
   const status = id => model.items.find(item => item.id === id).recommendationStatus;
-  assert.deepEqual(['Q-01', 'Q-02', 'Q-03', 'Q-04', 'Q-05', 'Q-10'].map(status), ['draft', 'endorsed', 'none', 'not_applicable', 'none', 'none']);
-  assert.deepEqual([model.counts.recommended, model.counts.endorsed, model.counts.unrecommended], [2, 1, 3]);
+  assert.deepEqual(['Q-01', 'Q-02', 'Q-03', 'Q-04', 'Q-05', 'Q-10'].map(status), ['draft', 'endorsed', 'not_applicable', 'not_applicable', 'not_applicable', 'none'], 'A decided, validated or factual record without a recommendation has none pending');
+  assert.deepEqual([model.counts.recommended, model.counts.endorsed, model.counts.unrecommended], [2, 1, 1]);
+  const decided = deriveV2(value => { value.items[2].recommendation = recommendation({ scope: 'core', default: null }); });
+  assert.equal(decided.items.find(item => item.id === 'Q-03').recommendationStatus, 'draft', 'A decision keeps showing the recommendation it came from');
   assert.deepEqual(model.scopes, ['core', 'country'], 'Scopes follow the configuration order, from the core to the register');
   const draft = model.items.find(item => item.id === 'Q-01');
   assert.equal(draft.state, 'open', 'A recommendation leaves the rule open');

@@ -288,11 +288,14 @@ export function validateQuestionsContent(content, { workPackageIds, workPackageS
   return content;
 }
 
-/** Whether a question shows a recommendation: a fact never does; a rule or a decision may. */
+/**
+ * Whether a question shows a recommendation. A recorded one stays visible after the decision, as its
+ * history. Without one, only a rule or a decision still pending lacks it: a fact is answered with
+ * evidence, and a decided or validated record has nothing left to recommend.
+ */
 function recommendationStatus(item) {
-  if (item.kind === 'fact') return 'not_applicable';
-  if (!item.recommendation) return 'none';
-  return item.recommendation.endorsement ? 'endorsed' : 'draft';
+  if (item.recommendation) return item.recommendation.endorsement ? 'endorsed' : 'draft';
+  return item.kind === 'fact' || item.state === 'decided' || item.state === 'validated' ? 'not_applicable' : 'none';
 }
 
 /**

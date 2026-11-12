@@ -26,7 +26,7 @@ Espejo Engram: pendiente. El servidor MCP no conectó en esta sesión; la ficha 
 ## Tasks
 
 - [x] T1 · S1,S2,S3 · route:inline · Lector de los esquemas 1 y 2, reglas replicadas, tarjeta, resumen, filtros, estilos, pruebas y `docs/project-progress.md` · status:done · evidence: RED `questions:test` sin `officialHosts` y 4 fallos de vista y filtro; GREEN `questions:test` 22/22, `project:test` 32/32, importación 6/6
-- [ ] T2 · S1,S2 · route:inline · Importar localmente la rama del producto y revisar la vista con los datos reales · status:pending · evidence: pendiente
+- [x] T2 · S1,S2 · route:inline · Importar localmente la rama del producto y revisar la vista con los datos reales · status:done · evidence: importación local de pos-platform `dd8a6a4` (74 registros, 35 con recomendación; no se versiona el snapshot); `build` y `project:check` aprobados; capturas a 1440 y 390 px revisadas. Corrigió dos defectos: una prueba que suponía un registro sin recomendaciones y el estado de una decisión ya tomada, que se mostraba como pendiente
 - [ ] T3 · S3 · route:inline · Retirar el esquema 1 del lector después de importar el 2 desde `main` · status:pending · evidence: pendiente
 
 ## Log
@@ -37,3 +37,4 @@ Espejo Engram: pendiente. El servidor MCP no conectó en esta sesión; la ficha 
 
 - L2 · 2026-11-12 · Se propuso agregar la recomendación al mismo registro, con ámbito, fundamento, autoría y respaldo, mostrarla en POS Docs y empezar por las 34 reglas P1 abiertas. La respuesta fue: «si, implementa todo de forma enterprise-grade, sin parches y como lo harian las bigtechs».
 - L3 · 2026-11-12 · El lector acepta ambas versiones (expansión) para que la importación automática no falle cuando el producto publique la 2, y la versión 1 se retira después (contracción). Las etiquetas de ámbito usan el vocabulario de la propuesta de arquitectura: núcleo común y configuración por país, sociedad, sucursal y caja.
+- L4 · 2026-11-12 · La revisión con el registro real mostró que una decisión ya tomada sin recomendación aparecía «Sin recomendación todavía» y contaba como pendiente. Ahora sólo una regla o decisión pendiente cuenta como sin recomendación; una recomendación registrada sigue visible después de decidir, como historia. La prueba de la tarjeta identifica sus fixtures por contenido, porque la importación automática traerá recomendaciones reales.
