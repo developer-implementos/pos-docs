@@ -42,7 +42,7 @@ const question = (id, fields = {}) => ({
   workPackages: ['F01-10'], priority: 'P1', reviewedOn: '2026-11-10', recommendation: null, decision: null, ...fields,
 });
 const decision = { answer: 'Sí: la autorización se exige en servidor para cada acción (F01-01)', decidedBy: 'Producto', decidedOn: '2026-11-10', source: 'Ficha F01-01 del producto', outcome: null };
-/** The fixture registry in schema 2, which POS Docs still imports while POS Platform migrates it. */
+/** The fixture registry in schema 2, as POS Platform published it before schema 3. */
 const schema2 = content => ({
   ...structuredClone(content),
   schemaVersion: 2,
@@ -176,33 +176,17 @@ test('imports schema 3 with the agent recommendation and checks its sources at t
   assert.deepEqual(JSON.parse(fs.readFileSync(item.destination, 'utf8')), snapshot, 'A rejected registry keeps the previous snapshot');
 });
 
-test('imports a schema 2 registry during the transition, as published, and reads it as schema 3', t => {
+test('rejects a schema 2 registry and keeps the previous snapshot', t => {
   const item = fixture(t);
-  const legacy = schema2(item.content);
-  legacy.items[0].recommendation = {
-    answer: 'Exigir la autorización en servidor para cada acción.', scope: 'core', default: null,
-    rationale: 'Es un invariante del producto en todos los países.', basis: ['architecture'], references: [],
-    sources: ['delivery/specs/F01-01.md#L3'], author: { kind: 'agent', name: 'Claude Code · TASK-314' }, proposedOn: '2026-11-10', endorsement: null,
-  };
-  const publish = mutate => {
-    change(item, content => {
-      for (const key of Object.keys(content)) delete content[key];
-      Object.assign(content, structuredClone(legacy));
-      mutate(content);
-    });
-    git(item.workspace, 'update-ref', 'refs/remotes/origin/main', 'HEAD');
-  };
-  publish(() => {});
   assert.equal(syncProjectQuestions(item).changed, true);
   const snapshot = JSON.parse(fs.readFileSync(item.destination, 'utf8'));
-  assert.deepEqual(snapshot.content, legacy, 'The snapshot keeps schema 2 exactly as the product published it');
-  assert.equal(snapshot.source.sha256, questionsContentHash(legacy));
-  const model = deriveQuestions(snapshot, loadProgress(item.root));
-  const decided = model.items.find(entry => entry.id === 'Q-02');
-  assert.deepEqual([decided.kind, decided.state, decided.decision], ['rule', 'decided', null], 'A decision of schema 2 is a decided rule without a decision block');
-  assert.equal(model.items.find(entry => entry.id === 'Q-01').recommendation.agent, 'Claude Code · TASK-314');
-  publish(content => { content.items[1].sources = []; });
-  assert.throws(() => syncProjectQuestions(item), /Q-02: a decided record must cite a source under delivery\/specs\//, 'Schema 2 keeps its own rules');
+  change(item, content => {
+    const legacy = schema2(content);
+    for (const key of Object.keys(content)) delete content[key];
+    Object.assign(content, legacy);
+  });
+  git(item.workspace, 'update-ref', 'refs/remotes/origin/main', 'HEAD');
+  assert.throws(() => syncProjectQuestions(item), /questions: unsupported schema version; expected 3/);
   assert.deepEqual(JSON.parse(fs.readFileSync(item.destination, 'utf8')), snapshot, 'A rejected registry keeps the previous snapshot');
 });
 

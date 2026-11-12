@@ -27,7 +27,7 @@ Espejo Engram: pendiente. El servidor MCP no conectó en esta sesión; la ficha 
 
 - [x] T1 · S1,S2,S3 · route:delegated · Lector de los esquemas 2 y 3, reglas replicadas del esquema 3, tarjeta con la decisión, resumen, filtros, estilos, pruebas y `docs/project-progress.md` · status:done · evidence: RED con el lector del esquema 2 en `questions:test` y `project:test`; GREEN `questions:test` 27/27 con la importación, `project:test` 35/35, `portal:test`, `build` y `project:check` (commits `f3b67d5`, `97cf85d` y `5eae8ff`)
 - [x] T2 · S1,S2 · route:inline · Importar localmente la rama del producto con el esquema 3 y revisar la vista con los datos reales · status:done · evidence: importación local de pos-platform `b1492f5` (esquema 3: 74 registros, 64 abiertos y 64 pendientes de decisión; no se versiona el snapshot); `build` y `project:check` aprobados; capturas a 1440 y 390 px revisadas, sin errores de página. La decisión de Q-05 aparece antes de la respuesta actual, la recomendación de Q-01 termina con «Generada por Claude Code · TASK-314», el hecho Q-10 no muestra decisión ni recomendación, y los filtros dejan 64 abiertas, 5 respondidas y 5 decididas
-- [ ] T3 · S3 · route:inline · Importar el corte del producto en `main` con el esquema 3 y retirar el esquema 2 del lector · status:pending · evidence: pendiente
+- [x] T3 · S3 · route:inline · Importar el corte del producto en `main` con el esquema 3 y retirar el esquema 2 del lector · status:done · evidence: importación del corte 2e31184 en pos-docs#90, con el `--check` de los cuatro importadores vigente y `build`, `portal:check`, `follow-up:check` y `project:check` aprobados. Retiro del esquema 2: RED `questions:test` 22/25, porque el lector todavía aceptaba el esquema 2; GREEN `questions:test` 25/25 y `project:test` 34/34, y la paridad con el validador del producto queda sin diferencias en los 27 casos
 
 ## Log
 
@@ -48,3 +48,9 @@ Espejo Engram: pendiente. El servidor MCP no conectó en esta sesión; la ficha 
   - `project:check` no admitía el singular «1 pendiente de decisión».
 
   Con el esquema 3 importado en local aprueban `questions:test`, `project:test`, `portal:test`, `build` y `project:check`.
+- L9 · 2026-11-12 · Con pos-docs#88 y pos-platform#336 integradas, el corte 2e31184 se importa en pos-docs#90 y el esquema 2 se retira del lector:
+  - `validateQuestionsContent` exige el esquema 3 con el mensaje del producto;
+  - las pruebas de la vista leen el snapshot publicado, sin migrarlo en memoria ni fijar sus cinco decisiones, así que no fallan cuando el documento de negocio agregue decisiones;
+  - la guía deja de describir la compatibilidad temporal.
+
+  Antes de importar se publicaron en ese corte los comentarios administrados de avance de las issues del producto (`delivery:status --apply`), porque FOLLOWUP-017 había cambiado; `--check` los da por vigentes. La sesión que lleva TASK-280 y TASK-296 acordó rebasar pos-docs#86 y reimportar los snapshots después de pos-platform#337.
