@@ -157,6 +157,9 @@ function sourceList(value, label, sourceExists) {
   }
 }
 
+/** A public host: not localhost and not an IP literal, as in POS Platform. */
+const publicHost = hostname => hostname !== 'localhost' && !hostname.endsWith('.localhost') && !hostname.startsWith('[') && !/^\d{1,3}(?:\.\d{1,3}){3}$/.test(hostname);
+
 /** A public HTTPS link `{label, url}`; returns its host. */
 function reference(value, label) {
   object(value, ['label', 'url'], label);
@@ -168,7 +171,9 @@ function reference(value, label) {
   } catch {
     // Reported below with the same message as any other URL that is not public HTTPS.
   }
-  assert.ok(url && url.protocol === 'https:' && url.hostname && !url.username && !url.password && !url.port, `${label}.url: expected a public HTTPS URL without credentials or port`);
+  // URL parsing drops a default port, so an explicit `:443` is detected in the written authority.
+  const authority = value.url.replace(/^https:\/\//i, '').split(/[/?#]/)[0];
+  assert.ok(url && url.protocol === 'https:' && url.hostname && publicHost(url.hostname) && !url.username && !url.password && !authority.includes(':'), `${label}.url: expected a public HTTPS URL without credentials or port`);
   return url.hostname;
 }
 
@@ -213,7 +218,8 @@ function validateRecommendation(item, sourceExists) {
   if (endorsement === null) return;
   object(endorsement, ['endorsedBy', 'endorsedOn', 'contentSha256'], `${label}.endorsement`);
   assert.ok(typeof endorsement.endorsedBy === 'string' && login.test(endorsement.endorsedBy), `${label}.endorsement.endorsedBy: expected the GitHub login of the person who endorsed`);
-  assert.ok(recommendation.author.kind !== 'person' || recommendation.author.login !== endorsement.endorsedBy, `${label}.endorsement: the author cannot endorse their own recommendation`);
+  // GitHub logins are case-insensitive, so a different capitalization is still the author.
+  assert.ok(recommendation.author.kind !== 'person' || recommendation.author.login.toLowerCase() !== endorsement.endorsedBy.toLowerCase(), `${label}.endorsement: the author cannot endorse their own recommendation`);
   date(endorsement.endorsedOn, `${label}.endorsement.endorsedOn`);
   assert.ok(endorsement.endorsedOn >= recommendation.proposedOn, `${label}.endorsement: endorsed before the recommendation was proposed`);
   assert.ok(endorsement.endorsedOn <= item.reviewedOn, `${label}.endorsement: endorsed after the item review; review the item again`);
