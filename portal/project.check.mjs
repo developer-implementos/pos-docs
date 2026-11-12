@@ -198,16 +198,36 @@ try {
   await form().locator('[name=decider]').selectOption(decider);
   assert.equal(await count(), questions.items.filter(item => item.decider === decider).length);
   await reset();
+  await form().locator('[name=recommendation]').selectOption('present');
+  assert.equal(new URL(page.url()).searchParams.get('recommendation'), 'present');
+  assert.equal(await count(), questions.counts.recommended, 'The filter selects every question with the agent recommendation');
+  await reset();
   await form().locator('[name=recommendation]').selectOption('none');
   assert.equal(new URL(page.url()).searchParams.get('recommendation'), 'none');
-  assert.equal(await count(), questions.items.filter(item => item.recommendationStatus === 'none').length, 'Only pending rules and decisions appear as missing a recommendation');
+  assert.equal(await count(), questions.items.filter(item => item.recommendationStatus === 'none').length, 'Only open rules appear as missing a recommendation');
   await reset();
   for (const scope of questions.scopes) {
     await form().locator('[name=scope]').selectOption(scope);
     assert.equal(await count(), questions.items.filter(item => item.recommendation?.scope === scope).length, `The scope filter selects ${scope}`);
     await reset();
   }
-  assert.equal(await page.locator('.project-question-counts a').count(), 4);
+  assert.equal(await page.locator('.project-question-counts a').count(), 3, 'Open, answered and decided, without a separate validation');
+  const summaryText = await page.locator('.project-question-summary').innerText();
+  const pending = questions.counts.pendingDecision;
+  assert.ok(summaryText.includes(`${pending} ${pending === 1 ? 'pendiente' : 'pendientes'} de decisión`), 'The summary counts the open rules as pending decisions');
+  assert.doesNotMatch(await page.locator('[data-project-page]').innerText(), /Sin respaldo del equipo|Respaldada|Validación de negocio|Pendiente de validación|Validada por|por validar|Borrador de agente|Recomendaci(?:ón|ones) del equipo/, 'Nothing is endorsed or validated');
+  await page.locator('.project-question-recommendations a[href="/project/questions/?recommendation=present"]').click();
+  await page.waitForURL(url => url.searchParams.get('recommendation') === 'present');
+  assert.equal(await form().locator('[name=recommendation]').inputValue(), 'present', 'The recommendation count opens its filtered list');
+  assert.equal(await count(), questions.counts.recommended);
+  await navigate('/project/questions/?state=decided');
+  assert.equal(await form().locator('[name=state]').inputValue(), 'decided');
+  assert.equal(await count(), questions.items.filter(item => item.state === 'decided').length);
+  for (const [name, value] of [['state', 'validated'], ['recommendation', 'endorsed']]) {
+    await navigate(`/project/questions/?${name}=${value}`);
+    assert.equal(await form().locator(`[name=${name}]`).inputValue(), '', `A shared link with ${name}=${value} shows every record`);
+    assert.equal(await count(), questions.items.length);
+  }
   await navigate('/project/questions/?state=answered');
   assert.equal(await form().locator('[name=state]').inputValue(), 'answered', 'Summary counts open their filtered list');
   assert.equal(await count(), questions.items.filter(item => item.state === 'answered').length);
