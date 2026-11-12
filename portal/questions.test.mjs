@@ -100,37 +100,6 @@ const reports = text => error => {
   return true;
 };
 
-/*
- * Schema 2, which POS Docs still reads while POS Platform migrates the registry (TASK-333), with the
- * rules it was published under.
- */
-const questionV2 = (id, fields = {}) => {
-  const { recommendation: _recommendation, decision: _decision, ...item } = question(id);
-  return { ...item, validation: null, recommendation: null, ...fields };
-};
-const recommendationV2 = (fields = {}) => {
-  const { agent, ...proposal } = recommendation();
-  return { ...proposal, author: { kind: 'agent', name: agent }, endorsement: null, ...fields };
-};
-// The endorsement hash that POS Platform computed for this proposal while it published schema 2.
-const endorsedHash = '45719ea2141a174e5e5b52884292fe7094d52ce14c9793e20baa75d237c1ab90';
-/** Q-01 has a draft and Q-02 an endorsed recommendation; Q-05 and Q-06 were validated. */
-const contentV2 = () => ({
-  schemaVersion: 2,
-  reviewedOn: '2026-11-10',
-  audit,
-  items: [
-    questionV2('Q-01', { workPackages: ['F04-08', 'F01-10'], recommendation: recommendationV2() }),
-    questionV2('Q-02', { priority: 'P2', workPackages: ['F01-09'], decider: 'Operaciones', recommendation: recommendationV2({ endorsement: { endorsedBy: 'pymimtos', endorsedOn: '2026-11-10', contentSha256: endorsedHash } }) }),
-    questionV2('Q-03', { kind: 'decision', state: 'decided', answerSources: ['spec'], sources: ['delivery/specs/F01-01.md#L34'], decider: 'Producto (ya decidido)', followUp: null, workPackages: ['F01-01'] }),
-    questionV2('Q-04', { kind: 'fact', state: 'answered', answerSources: ['data'], workPackages: ['F04-01'], decider: 'Finanzas (valida la respuesta)' }),
-    questionV2('Q-05', { state: 'validated', priority: 'P3', workPackages: ['F04-08'], owner: 'pymimtos', validation: { validatedOn: '2026-11-10', validatedBy: 'pymimtos', note: 'Confirmada en la reunión comercial.' } }),
-    questionV2('Q-06', { kind: 'fact', state: 'validated', answerSources: ['data'], workPackages: ['F04-01'], followUp: null, validation: { validatedOn: '2026-11-10', validatedBy: 'pymimtos', note: 'Confirmado con Finanzas.' } }),
-    questionV2('Q-10', { workPackages: ['F02-04'], priority: 'P1', followUp: 'FOLLOWUP-017' }),
-  ],
-});
-const deriveV2 = (mutate = () => {}) => derive(mutate, followUp(), contentV2);
-
 test('groups each question in the earliest phase of its packages and orders by phase, priority and id', () => {
   const before = progress();
   const input = progress();
@@ -225,7 +194,7 @@ test('validates provenance and content hash like the other project snapshots', (
 
 test('applies the product validation rules to the published content', () => {
   const rejects = (mutate, pattern) => assert.throws(() => derive(mutate), pattern);
-  for (const version of [1, 4, '3']) rejects(value => { value.schemaVersion = version; }, reports('questions: unsupported schema version; expected 3'));
+  for (const version of [1, 2, 4, '3']) rejects(value => { value.schemaVersion = version; }, reports('questions: unsupported schema version; expected 3'));
   rejects(value => { value.items[0].extra = true; }, reports('questions.items[0]: unexpected or missing fields'));
   rejects(value => { value.items[0].validation = null; }, reports('questions.items[0]: unexpected or missing fields'));
   rejects(value => { delete value.items[0].decision; }, reports('questions.items[0]: unexpected or missing fields'));
@@ -385,62 +354,16 @@ test('checks product references only when the import provides the product contex
   }
 });
 
-test('reads schema 2 during the transition and presents it in the model of schema 3', () => {
-  const model = deriveV2();
-  const item = id => model.items.find(entry => entry.id === id);
-  assert.deepEqual(model.items.map(entry => [entry.id, entry.kind, entry.state]), [
-    ['Q-01', 'rule', 'open'], ['Q-03', 'rule', 'decided'], ['Q-02', 'rule', 'open'], ['Q-10', 'rule', 'open'],
-    ['Q-04', 'fact', 'answered'], ['Q-06', 'fact', 'answered'], ['Q-05', 'rule', 'decided'],
-  ], 'A decision is a rule; a validated rule is decided and a validated fact answered');
-  const fields = ['id', 'topic', 'question', 'kind', 'state', 'currentAnswer', 'answerSources', 'auditRefs', 'parityRefs', 'sources', 'decider', 'owner', 'followUp', 'workPackages', 'priority', 'reviewedOn', 'recommendation', 'decision'];
-  for (const entry of model.items) {
-    assert.deepEqual(Object.keys(entry).slice(0, fields.length), fields, `${entry.id} has the fields of schema 3`);
-    assert.ok(!('validation' in entry), `${entry.id} drops the validation`);
-    assert.equal(entry.decision, null, `${entry.id} has no decision block`);
-  }
-  assert.deepEqual(item('Q-01').recommendation, recommendation(), 'The agent replaces the author');
-  assert.deepEqual(item('Q-02').recommendation, recommendation(), 'The endorsement is not carried over');
-  assert.deepEqual(['Q-01', 'Q-02', 'Q-03', 'Q-04', 'Q-05', 'Q-06', 'Q-10'].map(id => item(id).recommendationStatus), ['present', 'present', 'not_applicable', 'not_applicable', 'not_applicable', 'not_applicable', 'none']);
-  assert.deepEqual(model.counts, { total: 7, open: 3, answered: 2, decided: 2, pendingDecision: 3, unassigned: 6, recommended: 2, unrecommended: 1, adopted: 0, adapted: 0, rejected: 0 });
-  assert.deepEqual(model.scopes, ['country']);
-  // The importer writes the snapshot after deriving it, so the normalization must leave it as published.
-  const published = snapshot(contentV2());
-  const before = structuredClone(published);
-  deriveQuestions(published, progress(), followUp());
-  assert.deepEqual(published, before, 'Normalizing never changes the published snapshot');
-});
-
-test('keeps the rules of schema 2 while POS Docs reads it', () => {
-  const rejects = (mutate, pattern) => assert.throws(() => deriveV2(mutate), pattern);
-  const second = mutate => value => mutate(value.items[1].recommendation, value);
-  assert.doesNotThrow(() => deriveV2());
-  rejects(value => { value.schemaVersion = '2'; }, reports('questions: unsupported schema version; expected 3'));
-  rejects(value => { value.items[0].decision = null; }, reports('questions.items[0]: unexpected or missing fields'));
-  rejects(value => { value.items[0].kind = 'policy'; }, reports('Q-01.kind: expected fact, rule or decision'));
-  rejects(value => { value.items[0].state = 'closed'; }, reports('Q-01.state: expected open, answered, decided or validated'));
-  rejects(value => { value.items[0].state = 'answered'; }, reports('Q-01: an answered record must be a fact; rules need a decision'));
-  rejects(value => { value.items[2].kind = 'rule'; }, reports('Q-03: a decided record must be a decision'));
-  rejects(value => { value.items[2].sources = []; }, reports('Q-03: a decided record must cite a source under delivery/specs/'));
-  rejects(value => { value.items[4].validation = null; }, reports('Q-05.validation: expected object'));
-  rejects(value => { value.items[4].validation.validatedBy = 'Pedro Yañez'; }, /Q-05\.validation\.validatedBy/);
-  rejects(value => { value.items[4].validation.validatedOn = '2026-11-11'; }, /Q-05: validated after the item review/);
-  rejects(value => { value.items[4].validation.note = 'Confirmado en caja-01.local.'; }, /Q-05\.validation\.note/);
-  rejects(value => { value.items[0].validation = { validatedOn: '2026-11-10', validatedBy: 'pymimtos', note: 'x' }; }, reports('Q-01: only a validated record declares a validation'));
-  rejects(value => { value.items[3].recommendation = recommendationV2(); }, reports('Q-04: a fact is answered with evidence; only a rule or a decision carries a recommendation'));
-  rejects(value => { value.items[0].recommendation.author = { kind: 'person', login: '@floxcristian' }; }, /Q-01\.recommendation\.author\.login: expected a GitHub login/);
-  rejects(value => { value.items[0].recommendation.author = { kind: 'team', name: 'Equipo' }; }, /Q-01\.recommendation\.author\.kind: expected agent or person/);
-  // GitHub logins are case-insensitive: a different capitalization is still the author.
-  for (const login of ['floxcristian', 'FloxCristian', 'FLOXCRISTIAN']) rejects(second(item => { item.author = { kind: 'person', login: 'floxcristian' }; item.endorsement.endorsedBy = login; }), /Q-02\.recommendation\.endorsement: the author cannot endorse their own recommendation/);
-  rejects(second(item => { item.endorsement.endorsedOn = '2026-11-09'; }), /Q-02\.recommendation\.endorsement: endorsed before the recommendation was proposed/);
-  rejects(second(item => { item.endorsement.contentSha256 = 'A'.repeat(64); }), /Q-02\.recommendation\.endorsement\.contentSha256: expected a lowercase SHA-256/);
-  rejects(second(item => { item.answer = 'Otra regla, después del respaldo.'; }), reports('Q-02.recommendation.endorsement: the recommendation changed after it was endorsed; endorse it again or set endorsement to null'));
-});
-
-test('presents from schema 2 only a recommendation written by an agent', () => {
-  const value = contentV2();
-  value.items[0].recommendation.author = { kind: 'person', login: 'floxcristian' };
-  assert.doesNotThrow(() => validateQuestionsContent(structuredClone(value), context()), 'Schema 2 admitted a person as the author');
-  assert.throws(() => deriveQuestions(snapshot(value), progress(), followUp()), reports('Q-01.recommendation.author: only an agent\'s recommendation is published; import the registry in schema 3'));
+test('rejects the schema 2 registry that POS Platform published before schema 3', () => {
+  // The same records as POS Platform published them in schema 2: with validation, author and endorsement.
+  const published = content();
+  published.schemaVersion = 2;
+  published.items = published.items.map(({ recommendation: proposal, decision: decided, ...item }) => {
+    const { agent, ...rest } = proposal ?? {};
+    return { ...item, kind: decided ? 'decision' : item.kind, validation: null, recommendation: proposal ? { ...rest, author: { kind: 'agent', name: agent }, endorsement: null } : null };
+  });
+  assert.throws(() => validateQuestionsContent(structuredClone(published), context()), reports('questions: unsupported schema version; expected 3'));
+  assert.throws(() => deriveQuestions(snapshot(published), progress(), followUp()), reports('questions: unsupported schema version; expected 3'));
 });
 
 test('reads audit identifiers from the first CSV column with quoted fields', () => {

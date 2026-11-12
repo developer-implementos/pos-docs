@@ -163,7 +163,7 @@ function questionRecommendation(item, questions) {
 
 /**
  * Who decided a rule and when, or that its decision is pending. A fact is answered with evidence and
- * has no decision; a decided question of schema 2 records none to show.
+ * has no decision.
  */
 function decisionFact(item) {
   if (item.decision) return `<div><dt>Decisión</dt><dd>${escape(item.decision.decidedBy)} · ${time(item.decision.decidedOn)}</dd></div>`;

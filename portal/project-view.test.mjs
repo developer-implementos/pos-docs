@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { renderProjectPages } from './project-view.mjs';
 import { deriveProgress, loadProgress, progressContentHash } from './progress.mjs';
 import { loadFollowUp } from './follow-up.mjs';
-import { deriveQuestions, loadQuestions, questionsContentHash } from './questions.mjs';
+import { decisionOutcomes, deriveQuestions, loadQuestions, questionsContentHash } from './questions.mjs';
 import { teamMembers } from './team.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
@@ -17,76 +17,13 @@ const routes = ['/project/', '/project/plan/', '/project/work/', '/project/atten
 const escapeText = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 const reviewDate = value => new Intl.DateTimeFormat('es-CL', { dateStyle: 'medium', timeZone: 'UTC' }).format(new Date(`${value}T00:00:00Z`));
 
-// S5 of TASK-333: the five questions that product specs had already decided, as POS Platform migrates them.
-const specDecisions = new Map([
-  ['Q-05', ['Sí: la autorización se exige en servidor para cada acción (F01-01)', '2026-11-10', 'Ficha F01-01 del producto']],
-  ['Q-17', ['Sí: la reimpresión exige permiso propio y motivo (F02-10)', '2026-11-10', 'Ficha F02-10 del producto']],
-  ['Q-30', ['Una contraseña inicial fuerte, asignada en la provisión, sin credenciales embebidas (F01-01)', '2026-11-10', 'Ficha F01-01 del producto']],
-  ['Q-34', ['Sí: Operaciones asigna la impresora por puesto, que F02-09 registra como dispositivo (F02-09)', '2026-11-11', 'Ficha F02-09 del producto']],
-  ['Q-36', ['Sí: la caja muestra una disponibilidad informativa con origen y antigüedad, y vender no ajusta stock (F01-11)', '2026-11-11', 'Ficha F01-11 del producto']],
-]);
-
-/**
- * The published registry in schema 3, migrated in memory as S5 describes, so the view is exercised with
- * real records before POS Platform publishes that schema. A registry already in schema 3 is kept.
- */
-function schema3(content) {
-  if (content.schemaVersion === 3) return structuredClone(content);
-  assert.equal(content.schemaVersion, 2);
-  assert.deepEqual(content.items.filter(item => item.state === 'decided').map(item => item.id), [...specDecisions.keys()], 'S5 decides exactly the questions that specs had decided');
-  const items = content.items.map(({ validation, recommendation, ...source }) => {
-    assert.equal(validation, null, `${source.id} has no validation to migrate`);
-    const item = { ...structuredClone(source), kind: source.kind === 'decision' ? 'rule' : source.kind, recommendation: null, decision: null };
-    if (recommendation) {
-      assert.equal(recommendation.endorsement, null, `${source.id} has no endorsement to migrate`);
-      const { answer, scope, rationale, basis, references, sources, author, proposedOn } = structuredClone(recommendation);
-      item.recommendation = { answer, scope, default: recommendation.default, rationale, basis, references, sources, agent: author.name, proposedOn };
-    }
-    const decided = specDecisions.get(source.id);
-    if (decided) {
-      const [answer, decidedOn, origin] = decided;
-      Object.assign(item, { decider: 'Producto', reviewedOn: '2026-11-12', decision: { answer, decidedBy: 'Producto', decidedOn, source: origin, outcome: null } });
-    }
-    return item;
-  });
-  return { ...structuredClone(content), schemaVersion: 3, items };
-}
-const contentV3 = schema3(questionsSnapshot.content);
-
-/**
- * The published registry in schema 2, as POS Platform published it before schema 3, so the transitional
- * reader is exercised whichever schema the imported cut uses. A registry still in schema 2 is kept.
- */
-function schema2(content) {
-  if (content.schemaVersion === 2) return structuredClone(content);
-  assert.equal(content.schemaVersion, 3);
-  const items = content.items.map(({ decision, recommendation, ...source }) => {
-    const item = { ...structuredClone(source), validation: null, recommendation: null };
-    if (decision) {
-      assert.ok(specDecisions.has(source.id), `${source.id}: schema 2 only recorded the decisions of product specs`);
-      item.kind = 'decision';
-    }
-    if (recommendation) {
-      const { agent, proposedOn, ...proposal } = structuredClone(recommendation);
-      item.recommendation = { ...proposal, author: { kind: 'agent', name: agent }, proposedOn, endorsement: null };
-    }
-    return item;
-  });
-  return { ...structuredClone(content), schemaVersion: 2, items };
-}
-const contentV2 = schema2(questionsSnapshot.content);
-
-function questionsWith(mutate = () => {}, integration = questionsSnapshot.integration, followUpModel = followUp, content = questionsSnapshot.content) {
-  const snapshot = structuredClone({ ...questionsSnapshot, content });
+function questionsWith(mutate = () => {}, integration = questionsSnapshot.integration, followUpModel = followUp) {
+  const snapshot = structuredClone(questionsSnapshot);
   mutate(snapshot.content);
   snapshot.source.sha256 = questionsContentHash(snapshot.content);
   snapshot.integration = integration;
   return deriveQuestions(snapshot, progress, followUpModel);
 }
-const questionsV2With = (mutate = () => {}) => questionsWith(mutate, questionsSnapshot.integration, followUp, contentV2);
-const questionsV2 = questionsV2With();
-const questionsV3With = (mutate = () => {}, followUpModel = followUp) => questionsWith(mutate, questionsSnapshot.integration, followUpModel, contentV3);
-const questionsV3 = questionsV3With();
 const questionsPage = (model = questions, followUpModel = followUp) => renderProjectPages(progress, followUpModel, null, null, model).get('/project/questions/').body;
 const card = (html, id) => {
   const start = html.indexOf(`<article id="${id.toLowerCase()}"`);
@@ -251,55 +188,53 @@ test('schema 1 acceptance stays historical across summary, breakdowns, dates and
 });
 
 test('questions page summarizes the three states and pending decisions and groups every record by phase', () => {
-  for (const model of [questions, questionsV2, questionsV3]) {
-    const html = questionsPage(model);
-    assert.match(html, /data-project-page="questions"/);
-    assert.equal((html.match(/<h1>/g) || []).length, 1);
-    assert.equal((html.match(/data-project-item/g) || []).length, model.items.length);
-    const summary = summaryOf(html);
-    for (const [state, label] of [['open', 'abiertas'], ['answered', 'respondidas'], ['decided', 'decididas']]) {
-      assert.match(summary, new RegExp(`href="/project/questions/\\?state=${state}"><strong>${model.counts[state]}</strong> ${label}`));
-    }
-    assert.equal((summary.match(/href="\/project\/questions\/\?state=/g) || []).length, 3, 'Three states: a decision replaces any separate validation');
-    assert.match(summary, new RegExp(`<strong>${model.counts.pendingDecision}</strong> pendientes de decisión · <strong>${model.counts.unassigned}</strong> sin responsable de seguimiento · ${model.counts.total} registros`));
-    let previous = -1;
-    for (const group of model.groups) {
-      const index = html.indexOf(`id="questions-${group.id}"`);
-      assert.ok(index > previous, `Phase ${group.id} follows the roadmap order`);
-      previous = index;
-      const section = html.slice(index, html.indexOf('</section>', index));
-      assert.ok(section.includes(`<a href="${group.href}">F${group.id.slice(-2)} · ${escapeText(group.title)}</a>`), `${group.id} names and links its phase`);
-      assert.deepEqual([...section.matchAll(/<article id="(q-\d+)"/g)].map(match => match[1].toUpperCase()), group.items.map(item => item.id));
-    }
+  const model = questions;
+  const html = questionsPage(model);
+  assert.match(html, /data-project-page="questions"/);
+  assert.equal((html.match(/<h1>/g) || []).length, 1);
+  assert.equal((html.match(/data-project-item/g) || []).length, model.items.length);
+  const summary = summaryOf(html);
+  for (const [state, label] of [['open', 'abiertas'], ['answered', 'respondidas'], ['decided', 'decididas']]) {
+    assert.match(summary, new RegExp(`href="/project/questions/\\?state=${state}"><strong>${model.counts[state]}</strong> ${label}`));
+  }
+  assert.equal((summary.match(/href="\/project\/questions\/\?state=/g) || []).length, 3, 'Three states: a decision replaces any separate validation');
+  assert.match(summary, new RegExp(`<strong>${model.counts.pendingDecision}</strong> pendientes de decisión · <strong>${model.counts.unassigned}</strong> sin responsable de seguimiento · ${model.counts.total} registros`));
+  let previous = -1;
+  for (const group of model.groups) {
+    const index = html.indexOf(`id="questions-${group.id}"`);
+    assert.ok(index > previous, `Phase ${group.id} follows the roadmap order`);
+    previous = index;
+    const section = html.slice(index, html.indexOf('</section>', index));
+    assert.ok(section.includes(`<a href="${group.href}">F${group.id.slice(-2)} · ${escapeText(group.title)}</a>`), `${group.id} names and links its phase`);
+    assert.deepEqual([...section.matchAll(/<article id="(q-\d+)"/g)].map(match => match[1].toUpperCase()), group.items.map(item => item.id));
   }
   assert.equal(questions.counts.pendingDecision, questions.items.filter(item => item.kind === 'rule' && item.state === 'open').length, 'Pending decisions are the open rules');
 });
 
 test('each question shows its answer, sources, decider, owner, follow-up, packages, priority and decision', () => {
-  for (const model of [questions, questionsV2, questionsV3]) {
-    const html = questionsPage(model);
-    const { repository, revision } = model.source;
-    for (const item of model.items) {
-      const body = card(html, item.id);
-      assert.ok(body.includes(`<code>${item.id}</code>`));
-      for (const value of [item.topic, item.question, item.currentAnswer, item.decider]) assert.ok(body.includes(escapeText(value)), `${item.id} shows ${value}`);
-      assert.ok(body.includes(`data-state="${item.state}"`));
-      assert.ok(body.includes(`data-decider="${escapeText(item.decider)}"`));
-      assert.ok(body.includes(`data-phases="${item.phases.join(' ')}"`));
-      assert.ok(body.includes(`<dt>Prioridad</dt><dd>${item.priority}</dd>`));
-      for (const source of item.sources) assert.ok(body.includes(`href="${repository}/blob/${revision}/${source}"`), `${item.id} pins ${source}`);
-      for (const work of item.packages) assert.ok(body.includes(`href="/project/work/#work-${work.id.toLowerCase()}"`));
-      if (item.owner === null) assert.ok(body.includes('<dt>Responsable de seguimiento</dt><dd><span class="project-unassigned">Por asignar</span>'));
-      if (item.decision) assert.ok(body.includes(`<dt>Decisión</dt><dd>${escapeText(item.decision.decidedBy)} · <time datetime="${item.decision.decidedOn}">${reviewDate(item.decision.decidedOn)}</time></dd>`), `${item.id} names who decided and when`);
-      else if (item.kind === 'rule' && item.state === 'open') assert.ok(body.includes('<dt>Decisión</dt><dd><span class="project-unassigned">Pendiente</span></dd>'), `${item.id} awaits its decision`);
-      else assert.ok(!body.includes('<dt>Decisión</dt>'), `${item.id}: a fact has no decision, and schema 2 records none`);
-      if (item.followUp && item.followUpAction) assert.ok(body.includes(`href="/project/attention/#${item.followUp.toLowerCase()}"`));
-      if (item.followUp && !item.followUpAction) {
-        assert.ok(body.includes(item.followUp) && !body.includes(`/project/attention/#${item.followUp.toLowerCase()}`), `${item.followUp} stays as text when it is not published`);
-        assert.ok(body.includes('no publicado en el corte de seguimientos'));
-      }
-      if (!item.followUp) assert.ok(body.includes('<dt>Seguimiento</dt><dd><span class="project-unassigned">Sin seguimiento</span>'));
+  const model = questions;
+  const html = questionsPage(model);
+  const { repository, revision } = model.source;
+  for (const item of model.items) {
+    const body = card(html, item.id);
+    assert.ok(body.includes(`<code>${item.id}</code>`));
+    for (const value of [item.topic, item.question, item.currentAnswer, item.decider]) assert.ok(body.includes(escapeText(value)), `${item.id} shows ${value}`);
+    assert.ok(body.includes(`data-state="${item.state}"`));
+    assert.ok(body.includes(`data-decider="${escapeText(item.decider)}"`));
+    assert.ok(body.includes(`data-phases="${item.phases.join(' ')}"`));
+    assert.ok(body.includes(`<dt>Prioridad</dt><dd>${item.priority}</dd>`));
+    for (const source of item.sources) assert.ok(body.includes(`href="${repository}/blob/${revision}/${source}"`), `${item.id} pins ${source}`);
+    for (const work of item.packages) assert.ok(body.includes(`href="/project/work/#work-${work.id.toLowerCase()}"`));
+    if (item.owner === null) assert.ok(body.includes('<dt>Responsable de seguimiento</dt><dd><span class="project-unassigned">Por asignar</span>'));
+    if (item.decision) assert.ok(body.includes(`<dt>Decisión</dt><dd>${escapeText(item.decision.decidedBy)} · <time datetime="${item.decision.decidedOn}">${reviewDate(item.decision.decidedOn)}</time></dd>`), `${item.id} names who decided and when`);
+    else if (item.kind === 'rule' && item.state === 'open') assert.ok(body.includes('<dt>Decisión</dt><dd><span class="project-unassigned">Pendiente</span></dd>'), `${item.id} awaits its decision`);
+    else assert.ok(!body.includes('<dt>Decisión</dt>'), `${item.id}: a fact has no decision`);
+    if (item.followUp && item.followUpAction) assert.ok(body.includes(`href="/project/attention/#${item.followUp.toLowerCase()}"`));
+    if (item.followUp && !item.followUpAction) {
+      assert.ok(body.includes(item.followUp) && !body.includes(`/project/attention/#${item.followUp.toLowerCase()}`), `${item.followUp} stays as text when it is not published`);
+      assert.ok(body.includes('no publicado en el corte de seguimientos'));
     }
+    if (!item.followUp) assert.ok(body.includes('<dt>Seguimiento</dt><dd><span class="project-unassigned">Sin seguimiento</span>'));
   }
 });
 
@@ -329,19 +264,22 @@ test('owners use the team profile when it exists and link any other login to Git
   assert.equal(model.counts.unassigned, questions.counts.unassigned - [firstSource, secondSource].filter(item => item.owner === null).length);
 });
 
-test('a schema 3 decision appears after the question and before the current answer, with who, when, source and outcome', () => {
-  const html = questionsPage(questionsV3);
-  for (const [id, [answer, decidedOn, source]] of specDecisions) {
-    const body = card(html, id);
+test('a decision appears after the question and before the current answer, with who, when, source and outcome', () => {
+  const html = questionsPage();
+  const decidedItems = questions.items.filter(item => item.decision);
+  for (const item of decidedItems) {
+    const { answer, decidedBy, decidedOn, source, outcome } = item.decision;
+    const body = card(html, item.id);
     const [question, decision, current] = ['<h3>', 'class="project-question-decision"', '<strong>Respuesta actual</strong>'].map(marker => body.indexOf(marker));
-    assert.ok(question >= 0 && question < decision && decision < current, `${id} shows the question, its decision and then the current answer`);
-    assert.ok(body.includes(`<div class="project-question-decision"><div class="project-inline-meta"><strong>Decisión</strong></div><p>${escapeText(answer)}</p><p class="project-note">Producto · <time datetime="${decidedOn}">${reviewDate(decidedOn)}</time> · <strong>Fuente:</strong> ${escapeText(source)}</p></div>`), `${id} shows the decided rule, who and when and its source`);
-    assert.ok(body.includes('data-state="decided"') && body.includes('data-recommendation="not_applicable"') && body.includes('<dt>Quién decide</dt><dd>Producto</dd>'));
-    assert.ok(!body.includes('Recomendación del agente (IA)'), `${id} was decided without a recommendation`);
+    assert.ok(question >= 0 && question < decision && decision < current, `${item.id} shows the question, its decision and then the current answer`);
+    const label = outcome ? `<span class="project-tag">${decisionOutcomes[outcome]}</span>` : '';
+    assert.ok(body.includes(`<div class="project-question-decision"><div class="project-inline-meta"><strong>Decisión</strong>${label}</div><p>${escapeText(answer)}</p><p class="project-note">${escapeText(decidedBy)} · <time datetime="${decidedOn}">${reviewDate(decidedOn)}</time> · <strong>Fuente:</strong> ${escapeText(source)}</p></div>`), `${item.id} shows the decided rule, who and when and its source`);
+    assert.ok(body.includes('data-state="decided"') && body.includes(`data-recommendation="${item.recommendationStatus}"`));
+    assert.equal(body.includes('Recomendación del agente (IA)'), item.recommendation !== null, `${item.id} keeps the recommendation it had, if any`);
   }
-  assert.equal((html.match(/class="project-question-decision"/g) || []).length, specDecisions.size);
+  assert.equal((html.match(/class="project-question-decision"/g) || []).length, decidedItems.length, 'Only a decided rule shows a decision');
   const outcomes = [['adopted', 'Adopta la recomendación'], ['adapted', 'Ajusta la recomendación'], ['rejected', 'Descarta la recomendación']];
-  const model = questionsV3With(content => {
+  const model = questionsWith(content => {
     const recommended = content.items.filter(item => item.recommendation && item.state === 'open');
     outcomes.forEach(([outcome], index) => Object.assign(recommended[index], { state: 'decided', decision: { answer: `Regla decidida ${index + 1}, con la fuente citada.`, decidedBy: 'Comité comercial', decidedOn: recommended[index].reviewedOn, source: 'Acta de decisiones comerciales del 12 de noviembre de 2026', outcome } }));
   });
@@ -362,7 +300,7 @@ test('a schema 3 decision appears after the question and before the current answ
  * third open rule without one, whatever the imported cut already recommends.
  */
 function questionsWithRecommendations() {
-  return questionsV3With(content => {
+  return questionsWith(content => {
     const [regulated, core, pending] = content.items.filter(item => item.kind === 'rule' && item.state === 'open');
     pending.recommendation = null;
     regulated.recommendation = {
@@ -432,7 +370,7 @@ test('questions page counts recommendations and outcomes and filters by recommen
   for (const [value, label] of [['core', 'Núcleo común'], ['country', 'Por país'], ['legal_entity', 'Por sociedad'], ['branch', 'Por sucursal'], ['register', 'Por caja']]) assert.ok(html.includes(`<option value="${value}">${label}</option>`), value);
   for (const [value, label] of [['open', 'Abierta'], ['answered', 'Respondida'], ['decided', 'Decidida']]) assert.ok(html.includes(`<option value="${value}">${label}</option>`), value);
   assert.equal((html.match(/<select name="state">.*?<\/select>/)[0].match(/<option /g) || []).length, 4, 'All and the three states');
-  const outcomes = (adopted, adapted, rejected) => questionsV3With(content => {
+  const outcomes = (adopted, adapted, rejected) => questionsWith(content => {
     const recommended = content.items.filter(item => item.recommendation && item.state === 'open');
     [...Array(adopted).fill('adopted'), ...Array(adapted).fill('adapted'), ...Array(rejected).fill('rejected')].forEach((outcome, index) => Object.assign(recommended[index], { state: 'decided', decision: { answer: 'Regla decidida en el acta.', decidedBy: 'Comité comercial', decidedOn: recommended[index].reviewedOn, source: 'Acta de decisiones comerciales del 12 de noviembre de 2026', outcome } }));
   });
@@ -462,32 +400,12 @@ test('questions page explains who recommends and who decides and links the sourc
 
 test('questions pages carry no endorsement or business validation', () => {
   const pages = model => renderProjectPages(progress, followUp, null, null, model);
-  for (const model of [questions, questionsV2, questionsV3, questionsWithRecommendations()]) {
+  for (const model of [questions, questionsWithRecommendations()]) {
     const page = pages(model).get('/project/questions/');
     assert.doesNotMatch(page.body, remnants);
     assert.doesNotMatch(page.description, /validación|respaldo/i);
     assert.doesNotMatch(pages(model).get('/project/').body, remnants);
   }
-});
-
-test('a schema 2 registry renders through the model of schema 3', () => {
-  const html = questionsPage(questionsV2);
-  assert.ok(!html.includes('class="project-question-decision"'), 'Schema 2 records no decision block');
-  assert.ok(!html.includes('<span class="project-tag">Decisión</span>'), 'A decision of schema 2 is shown as a rule');
-  const decided = questionsV2.items.filter(entry => entry.state === 'decided');
-  assert.deepEqual(decided.map(item => item.id).sort(), [...specDecisions.keys()], 'The decisions of product specs are shown decided');
-  for (const item of decided) {
-    const body = card(html, item.id);
-    assert.ok(body.includes('<span class="project-tag">Regla</span><span class="project-tag project-tag-verified">Decidida</span>'), `${item.id} is shown as a decided rule`);
-    assert.ok(!body.includes('<dt>Decisión</dt>'), `${item.id} has no decision of its own to show`);
-  }
-  const validated = questionsV2With(content => {
-    const rule = content.items.find(item => item.kind === 'rule' && item.state === 'open');
-    Object.assign(rule, { state: 'validated', validation: { validatedOn: rule.reviewedOn, validatedBy: 'pymimtos', note: 'Confirmada en la reunión de reglas.' } });
-  });
-  const body = card(questionsPage(validated), validated.items.find(item => item.state === 'decided' && item.recommendation).id);
-  assert.ok(body.includes('data-state="decided"') && !body.includes('Confirmada en la reunión de reglas.') && !body.includes('pymimtos'), 'A validated rule of schema 2 is shown decided, without its validation');
-  assert.equal(validated.counts.decided, questionsV2.counts.decided + 1);
 });
 
 test('a pre-integration revision is identified on the questions page', () => {
@@ -505,7 +423,7 @@ test('questions escape authored text and render without a published registry', (
   const html = questionsPage(questionsWith(content => { content.items[0].question = '¿<img src=x onerror=alert(1)>?'; }));
   assert.match(html, /&lt;img src=x onerror=alert\(1\)&gt;/);
   assert.doesNotMatch(html, /<img src=x/);
-  const decided = questionsPage(questionsV3With(content => { content.items.find(item => item.decision).decision.source = 'Acta <script>alert(1)</script> del 10 de noviembre'; }));
+  const decided = questionsPage(questionsWith(content => { content.items.find(item => item.decision).decision.source = 'Acta <script>alert(1)</script> del 10 de noviembre'; }));
   assert.ok(decided.includes('Acta &lt;script&gt;alert(1)&lt;/script&gt; del 10 de noviembre') && !decided.includes('<script>'));
   const empty = renderProjectPages(progress, followUp).get('/project/questions/').body;
   assert.ok(empty.includes('No hay un registro de preguntas publicado en este corte.'));
@@ -513,11 +431,10 @@ test('questions escape authored text and render without a published registry', (
 });
 
 test('overview links the questions view with its open questions and pending decisions', () => {
-  for (const model of [questions, questionsV2, questionsV3]) {
-    const html = renderProjectPages(progress, followUp, null, null, model).get('/project/').body;
-    assert.ok(html.includes(`<p class="project-increment-link"><a href="/project/questions/">Preguntas y reglas de negocio</a><span>${model.counts.open} abiertas · ${model.counts.pendingDecision} pendientes de decisión.</span></p>`));
-  }
-  const single = questionsV3With(content => {
+  const model = questions;
+  const html = renderProjectPages(progress, followUp, null, null, model).get('/project/').body;
+  assert.ok(html.includes(`<p class="project-increment-link"><a href="/project/questions/">Preguntas y reglas de negocio</a><span>${model.counts.open} abiertas · ${model.counts.pendingDecision} pendientes de decisión.</span></p>`));
+  const single = questionsWith(content => {
     const open = content.items.filter(item => item.state === 'open');
     for (const item of open.slice(1)) Object.assign(item, { state: 'decided', decision: { answer: 'Regla decidida en el acta.', decidedBy: 'Comité comercial', decidedOn: item.reviewedOn, source: 'Acta de decisiones comerciales del 12 de noviembre de 2026', outcome: item.recommendation ? 'adopted' : null } });
   });
