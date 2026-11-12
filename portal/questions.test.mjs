@@ -36,10 +36,11 @@ const question = (id, fields = {}) => ({
   priority: 'P1',
   reviewedOn: '2026-11-10',
   validation: null,
+  recommendation: null,
   ...fields,
 });
 const content = () => ({
-  schemaVersion: 1,
+  schemaVersion: 2,
   reviewedOn: '2026-11-10',
   audit,
   items: [
@@ -78,11 +79,9 @@ const recommendation = (fields = {}) => ({
   ...fields,
 });
 const endorsement = value => ({ endorsedBy: 'pymimtos', endorsedOn: '2026-11-10', contentSha256: recommendationContentHash(value) });
-/** Schema 2: Q-01 has a draft, Q-02 an endorsed recommendation; the rest, none. */
+/** Q-01 has a draft and Q-02 an endorsed recommendation; the rest, none. */
 const contentV2 = () => {
   const value = content();
-  value.schemaVersion = 2;
-  for (const item of value.items) item.recommendation = null;
   value.items[0].recommendation = recommendation();
   const endorsed = recommendation({ scope: 'core', default: null, author: { kind: 'person', login: 'floxcristian' } });
   value.items[1].recommendation = { ...endorsed, endorsement: endorsement(endorsed) };
@@ -197,13 +196,14 @@ test('applies the product validation rules to the published content', () => {
   rejects(value => { value.items[0].currentAnswer = 'Primera línea\nsegunda línea'; }, /single-line text/);
 });
 
-test('reads the previous schema without recommendations while the product migrates', () => {
+test('rejects the previous schema, which predates recommendations, and requires the field in schema 2', () => {
+  assert.throws(() => derive(value => { value.schemaVersion = 1; for (const item of value.items) delete item.recommendation; }), /questions: unsupported schema version; expected 2/);
+  assert.throws(() => derive(value => { delete value.items[0].recommendation; }), /items\[0\]: unexpected or missing fields/);
   const model = derive();
-  assert.ok(model.items.every(item => item.recommendation === null), 'Schema 1 has no recommendation to show');
+  assert.ok(model.items.every(item => item.recommendation === null));
   assert.equal(model.items.find(item => item.id === 'Q-01').recommendationStatus, 'none');
   assert.equal(model.items.find(item => item.id === 'Q-04').recommendationStatus, 'not_applicable', 'A fact never carries a recommendation');
   assert.deepEqual(model.scopes, []);
-  assert.throws(() => derive(value => { value.items[0].recommendation = null; }), /Q-01|items\[0\]: unexpected or missing fields/, 'Schema 1 does not declare recommendations');
 });
 
 test('derives the recommendation status, its scopes and its counts from schema 2', () => {
