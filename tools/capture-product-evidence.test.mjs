@@ -5,6 +5,10 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {execFileSync, spawnSync} from 'node:child_process';
 import test from 'node:test';
+import { isolateFromInvokingRepository } from './git-isolation.mjs';
+
+// Sin esto, un hook o `git rebase --exec` haría que sus fixtures actuaran sobre el repositorio que la lanza.
+isolateFromInvokingRepository();
 
 const script = fileURLToPath(new URL('./capture-product-evidence.mjs', import.meta.url));
 function fixture(t) {

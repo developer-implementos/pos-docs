@@ -59,7 +59,7 @@
     "editorial:pr-check": "node tools/editorial/pr-check.mjs",
     "odd:test": "node --test tools/odd/*.test.mjs",
     "odd:check": "node tools/odd/check.mjs --check && node tools/odd/upstream.mjs --check && node tools/odd/distribute.mjs --check",
-    "governance:test": "node --test tools/repository-governance.test.mjs",
+    "governance:test": "node --test tools/repository-governance.test.mjs tools/git-isolation.test.mjs",
     "release:test": "node --test tools/release/*.test.mjs",
     "release:check": "node tools/release/check.mjs",
     "release:entries": "node tools/release/snapshot-changes.mjs",

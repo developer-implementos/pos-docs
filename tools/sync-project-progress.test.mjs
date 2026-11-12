@@ -6,6 +6,10 @@ import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import { parseProgressArguments, syncProjectProgress } from './sync-project-progress.mjs';
+import { isolateFromInvokingRepository } from './git-isolation.mjs';
+
+// Sin esto, un hook o `git rebase --exec` haría que sus fixtures actuaran sobre el repositorio que la lanza.
+isolateFromInvokingRepository();
 
 const origin = 'https://github.com/developer-implementos/pos-platform.git';
 const git = (cwd, ...args) => execFileSync('git', args, { cwd, encoding: 'utf8', windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] }).trim();
