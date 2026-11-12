@@ -16,7 +16,19 @@ concurrency:
 jobs:
   review:
     name: AI review
-    runs-on: ubuntu-24.04
+    # Usa secretos del proveedor, asi que solo corre en un pool confiable que
+    # nunca ejecuta codigo de una rama (#207). Sin ese pool, el job espera en
+    # cola un runner `pos-trusted`: no corre en el pool compartido, que no es
+    # efimero y donde un job anterior podria leer lo que este deja, ni cae a un
+    # runner alojado (#161). Tampoco se omite con un `if:` de job: un check
+    # omitido cuenta como aprobado si alguien lo vuelve obligatorio, y uno en
+    # cola nunca. El workflow sigue deshabilitado hasta que se autorice.
+    # La etiqueta por omision es SOLO `pos-trusted`, y el pool confiable se
+    # registra con `--no-default-labels`: asi sus runners no tienen
+    # `self-hosted`, `linux` ni `x64`, y ningun job que pide el pool compartido
+    # puede caer en ellos. Pedir tambien las etiquetas por omision haria al pool
+    # confiable un superconjunto del compartido y anularia la separacion.
+    runs-on: ${{ fromJSON(vars.POS_CI_TRUSTED_RUNS_ON || '["pos-trusted"]') }}
     timeout-minutes: 10
     steps:
       - name: Read trusted base only

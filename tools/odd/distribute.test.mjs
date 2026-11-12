@@ -17,6 +17,12 @@ import path from 'node:path';
 import test from 'node:test';
 import { check, distribute, run, sourceRepository } from './distribute.mjs';
 
+// Git exporta GIT_DIR y otras variables del repositorio a los hooks y a `git rebase --exec`.
+// Heredadas, cada `git` de esta prueba, y de lo que prueba, actuaría sobre ese repositorio
+// y no sobre sus fixtures (#214, #311). Se quitan las que Git declara locales a un repositorio.
+const repositoryVariables = execFileSync('git', ['rev-parse', '--local-env-vars'], { encoding: 'utf8' });
+for (const name of repositoryVariables.split(/\r?\n/)) if (name) delete process.env[name];
+
 const lockPath = 'tools/odd/source-lock.json';
 const seed = {
   'odd/README.md': '# Shared ODD protocol\n',

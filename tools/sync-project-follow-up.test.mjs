@@ -8,6 +8,10 @@ import test from 'node:test';
 import { progressContentHash } from '../portal/progress.mjs';
 import { followUpContentHash, productRepository } from '../portal/follow-up.mjs';
 import { mapGitHubIssues, parseFollowUpArguments, syncProjectFollowUp } from './sync-project-follow-up.mjs';
+import { isolateFromInvokingRepository } from './git-isolation.mjs';
+
+// Sin esto, un hook o `git rebase --exec` haría que sus fixtures actuaran sobre el repositorio que la lanza.
+isolateFromInvokingRepository();
 
 const git = (cwd, ...args) => execFileSync('git', args, { cwd, encoding: 'utf8', windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] }).trim();
 const json = value => JSON.stringify(value, null, 2) + '\n';
