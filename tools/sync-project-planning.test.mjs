@@ -7,6 +7,10 @@ import test from 'node:test';
 import {planningFixture} from '../portal/planning.test-fixture.mjs';
 import {syncProjectPlanning, parsePlanningArguments} from './sync-project-planning.mjs';
 import {productRepository} from '../portal/follow-up.mjs';
+import { isolateFromInvokingRepository } from './git-isolation.mjs';
+
+// Sin esto, un hook o `git rebase --exec` haría que sus fixtures actuaran sobre el repositorio que la lanza.
+isolateFromInvokingRepository();
 
 const git = (cwd, ...args) => execFileSync('git', args, {cwd, encoding: 'utf8', windowsHide: true, stdio: ['ignore', 'pipe', 'pipe']}).trim();
 const write = (root, relative, data) => {const file = path.join(root, relative); fs.mkdirSync(path.dirname(file), {recursive: true}); fs.writeFileSync(file, typeof data === 'string' ? data : JSON.stringify(data, null, 2) + '\n');};

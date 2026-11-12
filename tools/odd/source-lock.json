@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "repository": "https://github.com/developer-implementos/pos-platform",
-  "revision": "309cbb0ef9eecd75f86c560526c8d68a77c56bd1",
+  "revision": "6b5ad9c4fc5793bba190a3393ffbb4506283339a",
   "files": {
     ".codex/config.toml": "76cd44975c08100142a3b08e638db109fa2eb9af7402bb80093e2607cb72764b",
     ".mcp.json": "05c567deddc47939f567c90b4d517ebdeb4b34a99d572b6c5b6d4cc0d94b250e",
@@ -9,11 +9,11 @@
     "tools/odd/APACHE-2.0.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
     "tools/odd/README.md": "84f64a8618fd7a8aaae41b0d7bdb456df8b2b526c24b1d646bc93ef594f503c2",
     "tools/odd/bootstrap.ps1": "b261a2bf0c5eef50300c6afb3edcc062fa88cf4ca4ce8c25ec95f04172b35e57",
-    "tools/odd/bootstrap.test.mjs": "c72ade7b509bc0e87e4b9c7078d397f97b247b94b1e6c6a3a9f27a35c6bd5d26",
+    "tools/odd/bootstrap.test.mjs": "de47f3598b40caf033fd58368c0147b27d0f4398e56cac9d13bc80c6a8b1f372",
     "tools/odd/check.mjs": "b733c4727d2f5835ba3955af154a39339eb41558175756c3faa2c6c18689500a",
     "tools/odd/check.test.mjs": "f8a50aa6ee989d5a8d9ca37865baad3b49b19b010fffd8bc567151072bd93610",
     "tools/odd/distribute.mjs": "72ff2b5a67978d01677db39bd35768f01043ef13bee19a4f601ab2bfd47e1e54",
-    "tools/odd/distribute.test.mjs": "10933f250a0ef7bba34af237d39f064cac4bfb569cc76cc4607f37ae425b923f",
+    "tools/odd/distribute.test.mjs": "e3c0bcc61b12e0204e332e1859ca6b0893f69c25213dbe32e8c4ac28d0190462",
     "tools/odd/engram.mjs": "a926f8004bf936daf428db2b01467c7e1d4a84f7818ca7ce20352bda20d7ec7b",
     "tools/odd/engram.test.mjs": "9f8735f4d0a36863366e4e94eb98de656e7871a0444d9f02d0737b9f6735943c",
     "tools/odd/github.mjs": "b8ce246a5d0f4596a62457151115a9652a4db5150319d9c6bbaeb63b763cf056",

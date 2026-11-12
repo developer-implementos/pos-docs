@@ -12,6 +12,64 @@ const lockPath = path.join(directory, 'toolchain.lock.json');
 const shell = 'pwsh';
 const quote = (value) => `'${value.replaceAll("'", "''")}'`;
 
+/**
+ * Si estas pruebas corren aqui, y que pasa si no pueden.
+ *
+ * Las dos pruebas de PowerShell de este archivo ejecutan logica portable de
+ * `bootstrap.ps1`: integridad SHA-256, rechazo de traversal y enlaces
+ * simbolicos, y URL oficial del lock; la segunda ya distingue el caso no
+ * Windows. Hasta el 2026-11-05 corrian en Linux en `delivery-progress`, porque
+ * el runner alojado traia `pwsh`. Acotarlas por sistema operativo (TASK-185)
+ * resolvia que una maquina Linux sin `pwsh` no pudiera empujar, pero las
+ * dejaba sin ejecutarse en toda la CI con el paso en verde: la premisa de que
+ * fuera de Windows «no comprueban nada» era falsa (revision de #161).
+ *
+ * La regla correcta mira la herramienta, no el sistema. Con `pwsh`, corren. Sin
+ * el, en el equipo de una persona se omiten con su motivo -el anillo 0 no debe
+ * impedir empujar-, y en CI fallan: ahi la ausencia es un runner mal
+ * aprovisionado, y omitir seria presentar como verificado lo que no corrio.
+ * `delivery-progress` instala PowerShell fijado para que esto se cumpla.
+ */
+export function bootstrapScope({ pwshAvailable, ci }) {
+  if (pwshAvailable) return { run: true, reason: null };
+  if (ci)
+    return {
+      run: true,
+      reason:
+        'pwsh es obligatorio en CI para verificar bootstrap.ps1: el job debe instalar el PowerShell fijado antes de odd:test',
+    };
+  return {
+    run: false,
+    reason: 'pwsh no esta instalado en este equipo; la CI ejecuta estas pruebas con el PowerShell fijado',
+  };
+}
+
+const pwshAvailable = (() => {
+  const probe = spawnSync(shell, ['-NoProfile', '-NonInteractive', '-Command', 'exit 0'], {
+    encoding: 'utf8',
+    timeout: 20_000,
+  });
+  return !probe.error && probe.status === 0;
+})();
+const decision = bootstrapScope({
+  pwshAvailable,
+  ci: process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true',
+});
+const scope = decision.run ? {} : { skip: decision.reason };
+/** En CI sin pwsh la prueba corre y falla con un motivo, en vez de omitirse. */
+const requirePwsh = () => assert.ok(pwshAvailable, decision.reason ?? 'pwsh no esta disponible');
+
+test('las pruebas de PowerShell se acotan por la herramienta y nunca se omiten en CI', () => {
+  assert.deepEqual(bootstrapScope({ pwshAvailable: true, ci: true }), { run: true, reason: null });
+  assert.deepEqual(bootstrapScope({ pwshAvailable: true, ci: false }), { run: true, reason: null });
+  const local = bootstrapScope({ pwshAvailable: false, ci: false });
+  assert.equal(local.run, false, 'en un equipo sin pwsh se omiten para poder empujar');
+  assert.match(local.reason, /CI ejecuta/);
+  const ci = bootstrapScope({ pwshAvailable: false, ci: true });
+  assert.equal(ci.run, true, 'en CI sin pwsh deben correr y fallar, no omitirse');
+  assert.match(ci.reason, /obligatorio en CI/);
+});
+
 test('toolchain has immutable official artifacts and the released Gentle AI module', () => {
   const lock = JSON.parse(readFileSync(lockPath, 'utf8'));
   assert.equal(lock.schemaVersion, 1);
@@ -27,7 +85,8 @@ test('toolchain has immutable official artifacts and the released Gentle AI modu
   }
 });
 
-test('bootstrap rejects altered archives, traversal and unsafe lock data without installing', () => {
+test('bootstrap rejects altered archives, traversal and unsafe lock data without installing', scope, () => {
+  requirePwsh();
   const fixture = mkdtempSync(path.join(tmpdir(), 'pos-odd-bootstrap-test-'));
   const testScript = path.join(fixture, 'checks.ps1');
   try {
@@ -83,13 +142,17 @@ Write-Output 'bootstrap safety checks passed'
   }
 });
 
-test('bootstrap fixes the build target and restores inherited Go settings after success and failure', () => {
-  const fixture = mkdtempSync(path.join(tmpdir(), 'pos-odd-bootstrap-env-'));
-  const testScript = path.join(fixture, 'environment.ps1');
-  try {
-    writeFileSync(
-      testScript,
-      `
+test(
+  'bootstrap fixes the build target and restores inherited Go settings after success and failure',
+  scope,
+  () => {
+    requirePwsh();
+    const fixture = mkdtempSync(path.join(tmpdir(), 'pos-odd-bootstrap-env-'));
+    const testScript = path.join(fixture, 'environment.ps1');
+    try {
+      writeFileSync(
+        testScript,
+        `
 $ErrorActionPreference = 'Stop'
 . ${quote(script)}
 $lock = Read-ToolchainLock ${quote(lockPath)}
@@ -125,17 +188,18 @@ if ($IsWindows -and $env:LOCALAPPDATA) {
 } else { Write-Output 'real Windows Go probe not applicable on this host' }
 Write-Output 'build environment isolation passed'
 `,
-    );
-    const result = spawnSync(shell, ['-NoProfile', '-NonInteractive', '-File', testScript], {
-      encoding: 'utf8',
-      timeout: 20_000,
-    });
-    assert.equal(result.status, 0, `${result.error ?? ''}\n${result.stdout}\n${result.stderr}`);
-    assert.match(result.stdout, /build environment isolation passed/);
-  } finally {
-    const resolved = realpathSync(fixture);
-    assert.equal(path.dirname(resolved), realpathSync(tmpdir()));
-    assert.ok(path.basename(resolved).startsWith('pos-odd-bootstrap-env-'));
-    rmSync(resolved, { recursive: true, force: true });
-  }
-});
+      );
+      const result = spawnSync(shell, ['-NoProfile', '-NonInteractive', '-File', testScript], {
+        encoding: 'utf8',
+        timeout: 20_000,
+      });
+      assert.equal(result.status, 0, `${result.error ?? ''}\n${result.stdout}\n${result.stderr}`);
+      assert.match(result.stdout, /build environment isolation passed/);
+    } finally {
+      const resolved = realpathSync(fixture);
+      assert.equal(path.dirname(resolved), realpathSync(tmpdir()));
+      assert.ok(path.basename(resolved).startsWith('pos-odd-bootstrap-env-'));
+      rmSync(resolved, { recursive: true, force: true });
+    }
+  },
+);

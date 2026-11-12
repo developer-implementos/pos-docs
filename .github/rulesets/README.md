@@ -21,8 +21,10 @@ Decisión permanente del responsable, del 2026-11-06 ([TASK-219](https://github.
 | --- | --- | --- |
 | `docs-quality.yml` | `active` | `ubuntu-latest` |
 | `editorial-policy.yml` | `active` | `ubuntu-latest` |
-| `automated-review.yml` | `disabled_manually`, porque puede consumir la API de IA | `ubuntu-24.04`, si se autoriza |
+| `automated-review.yml` | `disabled_manually`, porque puede consumir la API de IA | `ubuntu-24.04`, mediante la variable `POS_CI_TRUSTED_RUNS_ON`, si se autoriza |
 | `project-import.yml` | `active`; el calendario corre sólo con `PROJECT_IMPORT_ENABLED=true` ([importación automática](../../tools/project-import/README.md)) | `ubuntu-latest` |
+
+**El revisor automático usa el runner de esta decisión.** Su workflow se distribuye desde POS Platform, cuyo valor por omisión es su pool confiable `pos-trusted` (pos-platform#207 y #210). Este repositorio no puede usar runners propios, así que la variable de repositorio `POS_CI_TRUSTED_RUNS_ON` vale `["ubuntu-24.04"]`. Un runner alojado es una máquina virtual nueva por job, que no comparte estado con otros jobs ([runners alojados](https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners)). Con eso cumple lo que el pool confiable exige al manejar secretos del proveedor. Si la variable faltara, el job esperaría en cola un runner `pos-trusted` y nunca correría: el fallo es cerrado, nunca hacia otro pool.
 
 La corrida [42250964631](https://github.com/developer-implementos/pos-docs/actions/runs/42250964631) sobre `main` pasó en el grupo `GitHub Actions`, en unos 5 minutos.
 

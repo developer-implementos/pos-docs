@@ -6,13 +6,14 @@
 
 El administrador debe autorizar el proveedor y su consumo antes de configurar:
 
-| Configuración de GitHub Actions  | Valor                                                                                            |
-| -------------------------------- | ------------------------------------------------------------------------------------------------ |
-| Variable `POS_AI_REVIEW_ENABLED` | `true`, únicamente tras autorizar la conexión                                                    |
-| Variable `POS_AI_REVIEW_AUTH`    | `api` para una clave del equipo; `oauth` para un token oficial autorizado                        |
-| Variable `POS_AI_REVIEW_MODEL`   | Identificador explícito del modelo `claude-…` autorizado; no se selecciona un modelo por defecto |
-| Secret `ANTHROPIC_API_KEY`       | Sólo si la modalidad elegida es `api`                                                            |
-| Secret `CLAUDE_CODE_OAUTH_TOKEN` | Sólo si se elige `oauth`, obtenido mediante el procedimiento oficial del proveedor               |
+| Configuración de GitHub Actions   | Valor                                                                                                                                          |
+| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| Variable `POS_AI_REVIEW_ENABLED`  | `true`, únicamente tras autorizar la conexión                                                                                                  |
+| Variable `POS_AI_REVIEW_AUTH`     | `api` para una clave del equipo; `oauth` para un token oficial autorizado                                                                      |
+| Variable `POS_AI_REVIEW_MODEL`    | Identificador explícito del modelo `claude-…` autorizado; no se selecciona un modelo por defecto                                               |
+| Secret `ANTHROPIC_API_KEY`        | Sólo si la modalidad elegida es `api`                                                                                                          |
+| Secret `CLAUDE_CODE_OAUTH_TOKEN`  | Sólo si se elige `oauth`, obtenido mediante el procedimiento oficial del proveedor                                                             |
+| Variable `POS_CI_TRUSTED_RUNS_ON` | `["pos-trusted"]`: pool confiable y efímero registrado sin etiquetas por omisión (#207); sin ese pool el job espera en cola y nunca se aprueba |
 
 No copiar archivos de autenticación personales, cookies, sesiones ni credenciales desde la máquina de un desarrollador. El workflow se entrega sin credenciales y no se configura como required check todavía. Tras integrar esta preparación, el administrador lo deshabilita explícitamente en GitHub hasta que el equipo autorice conectar el proveedor. Configurar las variables y el secret elegidos, habilitar después el workflow y ejecutar las pruebas reales indicadas a continuación precede a exigirlo como control de integración. Un intento sin habilitación o credencial falla explícitamente; un job omitido o un workflow deshabilitado nunca acredita una revisión.
 
@@ -28,7 +29,7 @@ Antes de exigir `AI review` en las reglas: activar el workflow, probar una PR v�
 6. Se valida un veredicto estructurado con digest, base/head, cobertura exacta y ubicaciones reales. Hallazgos altos/medios, contexto insuficiente o cualquier fallo bloquean. Un resultado favorable acredita una comprobación de máquina acotada, no ausencia de defectos ni aceptación operativa.
 7. GitHub recibe evidencia de revisiones, hashes, ubicaciones y severidades, más una descripción validada de hasta 600 caracteres que explique el defecto y su desencadenante. Antes de publicar se eliminan credenciales conocidas y patrones sensibles; el renderizador escapa Markdown/HTML activo y omite enlaces. No se publican archivos, prompts ni transcripciones. El informe conserva la misma audiencia del repositorio revisado: no se exportan hallazgos privados del producto al portal público. Esta reducción no garantiza detectar todo secreto arbitrario; el código y sus hallazgos requieren las mismas precauciones de publicación que la PR.
 
-El CLI corre en un runner hospedado limpio; no se reutilizan caches ni perfiles personales. La política administrada del proveedor conserva su autoridad según su contrato oficial; este integrador no promete desactivar controles corporativos externos.
+El CLI corre sólo en el pool confiable que declara `POS_CI_TRUSTED_RUNS_ON`: runners propios y efímeros que nunca ejecutan código de una rama (#207), sin caches ni perfiles personales. El repositorio no consume minutos alojados (#161), así que sin ese pool el job espera en cola un runner `pos-trusted`, sin omitirse ni aprobarse; el pool compartido del fleet no es efímero y no debe recibir los secretos del proveedor. La política administrada del proveedor conserva su autoridad según su contrato oficial; este integrador no promete desactivar controles corporativos externos.
 
 ## Límites que bloquean
 

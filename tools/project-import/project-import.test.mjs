@@ -12,6 +12,10 @@ import { importBranch, renderImportPullRequest } from './pull-request.mjs';
 import { planImport, publishedFacts } from './run.mjs';
 import { importSnapshots, snapshots } from './snapshots.mjs';
 import { StaleSnapshotError } from './stale-snapshot.mjs';
+import { isolateFromInvokingRepository } from '../git-isolation.mjs';
+
+// Sin esto, un hook o `git rebase --exec` haría que sus fixtures actuaran sobre el repositorio que la lanza.
+isolateFromInvokingRepository();
 
 const revision = 'a'.repeat(40);
 const base = 'b'.repeat(40);

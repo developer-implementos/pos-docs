@@ -6,6 +6,10 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import test from 'node:test';
 import { runVerification } from './run.mjs';
+import { isolateFromInvokingRepository } from '../git-isolation.mjs';
+
+// Sin esto, un hook o `git rebase --exec` haría que sus fixtures actuaran sobre el repositorio que la lanza.
+isolateFromInvokingRepository();
 
 function fixture(t, script = 'console.log("verification executed");', journeys = 'console.log("journeys executed");') {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'docs-local-ci-'));

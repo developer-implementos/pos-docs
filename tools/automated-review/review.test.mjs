@@ -41,6 +41,12 @@ import {
   renderSummary,
 } from './runtime.mjs';
 
+// Git exporta GIT_DIR y otras variables del repositorio a los hooks y a `git rebase --exec`.
+// Heredadas, cada `git` de esta prueba, y de lo que prueba, actuaría sobre ese repositorio
+// y no sobre sus fixtures (#214, #311). Se quitan las que Git declara locales a un repositorio.
+const repositoryVariables = execFileSync('git', ['rev-parse', '--local-env-vars'], { encoding: 'utf8' });
+for (const name of repositoryVariables.split(/\r?\n/)) if (name) delete process.env[name];
+
 const directory = dirname(fileURLToPath(import.meta.url));
 const repository = 'developer-implementos/pos-platform';
 const base = 'a'.repeat(40),
