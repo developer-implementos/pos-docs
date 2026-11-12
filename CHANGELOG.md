@@ -11,6 +11,14 @@ Los cambios de herramientas, pruebas y CI no aparecen aquí; quedan en el [regis
 
 Este archivo lo escribe [release-please](https://github.com/googleapis/release-please) desde los títulos de los PR, y cada versión queda como [release en GitHub](https://github.com/developer-implementos/pos-docs/releases). Para recibir un aviso por versión, usa *Watch → Custom → Releases* en el repositorio. No se edita a mano: cómo se escribe una buena entrada está en la [guía de versiones](tools/release/README.md).
 
+## [0.5.8](https://github.com/developer-implementos/pos-docs/compare/v0.5.7...v0.5.8) (2026-11-12)
+
+
+### Contenido actualizado
+
+* **follow-up:** FOLLOWUP-017 actualizado (impacto): Validar el registro de preguntas y reglas de negocio de paridad ([ab06645](https://github.com/developer-implementos/pos-docs/commit/ab0664541ab92efc29293a60b5b530cea9c9b4e2))
+* **project:** [TASK-258] importar el corte 2ada3dc con diecinueve preguntas de paridad de F03 a F05 ([ab06645](https://github.com/developer-implementos/pos-docs/commit/ab0664541ab92efc29293a60b5b530cea9c9b4e2))
+
 ## [0.5.7](https://github.com/developer-implementos/pos-docs/compare/v0.5.6...v0.5.7) (2026-11-12)
 
 
