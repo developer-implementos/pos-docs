@@ -71,7 +71,9 @@ function object(value, keys, label) {
 }
 
 function text(value, label) {
-  assert.ok(typeof value === 'string' && value.length > 0 && value.length <= 2000 && value.trim() === value && !/[\u0000-\u001f\u007f]/.test(value), `${label}: required single-line text without control characters`);
+  assert.ok(typeof value === 'string' && value.length > 0 && value.trim() === value && !/[\u0000-\u001f\u007f]/.test(value), `${label}: required single-line text without control characters`);
+  // Same limit and message as POS Platform, which rejects longer text before it is published.
+  assert.ok(value.length <= 2000, `${label}: at most 2000 characters, the limit that POS Docs publishes`);
   assertPublishable(value, label);
 }
 
@@ -155,7 +157,11 @@ function sourceList(value, label, sourceExists) {
 }
 
 /** A public host: not localhost and not an IP literal, as in POS Platform. */
-const publicHost = hostname => hostname !== 'localhost' && !hostname.endsWith('.localhost') && !hostname.startsWith('[') && !/^\d{1,3}(?:\.\d{1,3}){3}$/.test(hostname);
+const publicHost = hostname => {
+  // A fully qualified name may end with a dot that URL parsing keeps: `localhost.` is still localhost.
+  const host = hostname.replace(/\.$/, '');
+  return host !== 'localhost' && !host.endsWith('.localhost') && !host.startsWith('[') && !/^\d{1,3}(?:\.\d{1,3}){3}$/.test(host);
+};
 
 /** A public HTTPS link `{label, url}`; returns its host. */
 function reference(value, label) {
