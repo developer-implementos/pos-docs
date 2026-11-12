@@ -234,7 +234,7 @@ test('applies the product rules to the recommendations of schema 2', () => {
   rejects(first(item => { item.basis = []; }), /Q-01\.recommendation\.basis: expected nonempty list/);
   rejects(first(item => { item.basis = ['regulation']; }), /Q-01\.recommendation\.references: a recommendation grounded in a regulation cites an official source/);
   rejects(first(item => { item.references = []; item.sources = []; }), /Q-01\.recommendation: a recommendation grounded in the architecture cites the spec, ADR or proposal it follows/);
-  for (const url of ['http://www.sii.cl/circular.pdf', 'https://www.sii.cl:443/circular.pdf', 'https://localhost/manual', 'https://docs.localhost/manual', 'https://127.0.0.1/manual', 'https://[::1]/manual']) {
+  for (const url of ['http://www.sii.cl/circular.pdf', 'https://www.sii.cl:443/circular.pdf', 'https://localhost/manual', 'https://docs.localhost/manual', 'https://127.0.0.1/manual', 'https://[::1]/manual', 'https://localhost./manual', 'https://docs.localhost./manual']) {
     rejects(first(item => { item.references[0].url = url; }), /Q-01\.recommendation\.references\[0\]\.url: expected a public HTTPS URL without credentials or port/);
   }
   rejects(first(item => { item.references.push({ ...item.references[0] }); }), /Q-01\.recommendation\.references: duplicate URL/);
@@ -249,6 +249,9 @@ test('applies the product rules to the recommendations of schema 2', () => {
   rejects(second(item => { item.endorsement.endorsedOn = '2026-11-09'; }), /Q-02\.recommendation\.endorsement: endorsed before the recommendation was proposed/);
   rejects(second(item => { item.endorsement.contentSha256 = 'A'.repeat(64); }), /Q-02\.recommendation\.endorsement\.contentSha256: expected a lowercase SHA-256/);
   rejects(second(item => { item.answer = 'Otra regla, después del respaldo.'; }), /Q-02\.recommendation\.endorsement: the recommendation changed after it was endorsed; endorse it again or set endorsement to null/);
+  rejects(first(item => { item.rationale = 'b'.repeat(2001); }), /Q-01.recommendation.rationale: at most 2000 characters, the limit that POS Docs publishes/);
+  rejects(value => { value.items[0].currentAnswer = 'a'.repeat(2001); }, /Q-01.currentAnswer: at most 2000 characters, the limit that POS Docs publishes/);
+  assert.doesNotThrow(() => deriveV2(value => { value.items[0].currentAnswer = 'a'.repeat(2000); }));
   const official = url => first(item => { item.basis = ['regulation']; item.references = [{ label: 'Norma', url }]; });
   assert.doesNotThrow(() => deriveV2(official('https://cpe.sunat.gob.pe/sistema_emision/see_contribuyente')));
   rejects(official('https://sii.cl.example.com/circular.pdf'), /cites an official source/);
