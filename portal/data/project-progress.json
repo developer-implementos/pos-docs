@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "2ada3dc60d188c55b10f07d14bb8a46c43360267",
+    "revision": "95e34195acd86182a9d164aa3f77fa1e632b28b6",
     "path": "delivery/progress.json",
-    "sha256": "69ee68fdf26a621ebb6d1cf8e9532f7f959278e38d87dbbb57076d4cad6dfb44"
+    "sha256": "2a7e424e5fda169383de99a0a2750b4ad55ba8d73889a67c520c34372c2d945a"
   },
   "content": {
     "schemaVersion": 2,
-    "reviewedOn": "2026-11-11",
+    "reviewedOn": "2026-11-12",
     "productRevision": "source",
     "scope": {
       "repository": "https://github.com/developer-implementos/pos-docs",
@@ -16,7 +16,7 @@
       "path": "docs/roadmap.json",
       "sha256": "e91cff0a30c2162a36a05b0542eed7e5a25e0490ea898481a37969f2fb21e514"
     },
-    "summary": "Trece entregables están técnicamente verificados: diez de F01 y los pagos combinados, el protocolo de dispositivos y la recuperación de cobros de F02. F01-04 y F01-09 siguen en curso hasta demostrar un criterio con su prueba de punta a punta (#275, #272). El cliente recupera ventas y registra revisiones durables sin duplicar efectos. Efectivo y transferencia manual están conectados; tarjeta y fiscalidad conservan sus pendientes de proveedor operativo. La aceptación humana y la habilitación productiva se registran por separado.",
+    "summary": "Catorce entregables están técnicamente verificados: once de F01 y los pagos combinados, el protocolo de dispositivos y la recuperación de cobros de F02. F01-09 sigue en curso hasta demostrar un criterio con su prueba de punta a punta (#272). El cliente recupera ventas y registra revisiones durables sin duplicar efectos. Efectivo y transferencia manual están conectados; tarjeta y fiscalidad conservan sus pendientes de proveedor operativo. La aceptación humana y la habilitación productiva se registran por separado.",
     "applications": [
       {
         "id": "pos-desktop",
@@ -309,10 +309,60 @@
           "pos-mobile",
           "branch-api"
         ],
-        "status": "in_progress",
-        "summary": "Implementados el recorrido Angular/API/PostgreSQL y la recuperación visible, con paquetes reales Android y Tauri Windows en ambos modos de política y rechazo de origen incompatible. Vuelve a en curso porque el recorrido principal no se prueba con teclado (#275). No acredita instalación, firma, funcionamiento nativo, periféricos ni habilitación productiva.",
+        "status": "verified",
+        "summary": "Verificados el recorrido Angular/API/PostgreSQL y la recuperación visible, con paquetes reales Android y Tauri Windows en ambos modos de política y rechazo de origen incompatible. El recorrido principal se completa sólo con teclado y con foco visible en cada control (#275). No acredita instalación, firma, funcionamiento nativo, periféricos ni habilitación productiva.",
         "acceptance": null,
-        "verification": null
+        "verification": {
+          "revision": "6e5cac72d345e09cb80b86578f21c1ebe78f8915",
+          "reviewedOn": "2026-11-12",
+          "reviewer": "Claude Code · verificación técnica de agente",
+          "evidence": [
+            {
+              "path": "tools/verify-tauri-artifact.mjs",
+              "label": "Inspección del ejecutable Windows real y su política embebida"
+            },
+            {
+              "path": "tools/verify-tauri-artifact.test.mjs",
+              "label": "Validadores de formato, contexto, política y casos de rechazo"
+            },
+            {
+              "path": "tools/connected-client-policy.test.mjs",
+              "label": "Regresiones versionadas de política compartida y ruta Tauri en Windows"
+            },
+            {
+              "path": "apps/pos-desktop/README.md",
+              "label": "Procedimiento de compilación e inspección reproducible sin WebView"
+            },
+            {
+              "path": "tools/verify-android-artifact.mjs",
+              "label": "Inspección independiente del APK Android y sus assets"
+            },
+            {
+              "path": "tests/pos-clients-e2e/branch/cash-recovery.spec.ts",
+              "label": "API/PG reales, respuesta perdida, reapertura y rechazo visible"
+            },
+            {
+              "path": "tests/pos-clients-e2e/branch/keyboard-sale.spec.ts",
+              "label": "Recorrido principal sólo con teclado: cada control por Tab, operado con el teclado y con foco visible"
+            },
+            {
+              "path": "tests/pos-clients-e2e/operational/administration.spec.ts",
+              "label": "Cliente operativo con permisos y revocación sobre HTTPS/PostgreSQL"
+            },
+            {
+              "path": "tests/pos-clients-e2e/README.md",
+              "label": "Entorno repetible, perfiles y límites de la evidencia de navegador"
+            },
+            {
+              "path": "apps/branch-api/test/cash-sale.integration.test.ts",
+              "label": "Confirmación durable, recibo y recuperación sin duplicar efectos"
+            },
+            {
+              "path": "delivery/reviews/pos-parity-2026-11-10/cumplimiento-f01-f02.md",
+              "label": "Contraste de criterios del 11 de noviembre de 2026 y su incumplimiento resuelto"
+            }
+          ]
+        }
       },
       {
         "id": "F01-05",
