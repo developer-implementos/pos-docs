@@ -162,14 +162,16 @@ Fastify limita el cuerpo a 1 MiB y configura `requestTimeout` en 30 segundos par
 
 ## Reporte opcional de errores con Sentry
 
-Sentry está deshabilitado por defecto y los cuatro `.env.example` dejan el DSN vacío. Activarlo requiere configurar deliberadamente las variables de la aplicación; esta entrega no conecta ningún proyecto real de Sentry. No cambia el estado de disponibilidad de la API ni habilita operaciones de negocio.
+Esta sección describe la implementación integrada en `main` de POS Platform hasta `d55bad79c80f2743d46c46fdacfa448162633c77` (TASK-148). Sentry está deshabilitado por defecto y los cuatro `.env.example` dejan el DSN vacío. Activarlo requiere configurar deliberadamente las variables de la aplicación; esta entrega no conecta ningún proyecto real de Sentry. No cambia el estado de disponibilidad de la API ni habilita operaciones de negocio.
 
-| Sufijo de variable           | Valor por defecto | Uso                                                                   |
-| ---------------------------- | ----------------- | --------------------------------------------------------------------- |
-| `SENTRY_ENABLED`             | `false`           | Habilita el reporter; `true` exige un DSN válido                      |
-| `SENTRY_DSN`                 | vacío             | Destino autorizado de los eventos, configurado fuera del repositorio  |
-| `SENTRY_RELEASE`             | vacío             | Versión opcional del despliegue, sin datos personales ni credenciales |
-| `SENTRY_SHUTDOWN_TIMEOUT_MS` | `2000`            | Límite de cierre y envío pendiente, entre 1 y 10000 ms                |
+| Sufijo de variable                    | Valor por defecto | Uso                                                                   |
+| ------------------------------------- | ----------------- | --------------------------------------------------------------------- |
+| `SENTRY_ENABLED`                      | `false`           | Habilita el reporter; `true` exige un DSN válido                      |
+| `SENTRY_DSN`                          | vacío             | Destino autorizado de los eventos, configurado fuera del repositorio  |
+| `SENTRY_RELEASE`                      | vacío             | Versión opcional del despliegue, sin datos personales ni credenciales |
+| `SENTRY_SHUTDOWN_TIMEOUT_MS`          | `2000`            | Límite de cierre y envío pendiente, entre 1 y 10000 ms                |
+| `SENTRY_MAX_EVENTS_PER_HOUR`          | `1`               | Eventos distintos admitidos por hora y proceso, entre 1 y 1000        |
+| `SENTRY_FINGERPRINT_COOLDOWN_SECONDS` | `3600`            | Espera antes de volver a reportar el mismo origen, entre 0 y 86400 s  |
 
 Cada sufijo lleva el prefijo del proceso: `BRANCH_API_`, `COUNTRY_API_`, `BRANCH_SYNC_WORKER_` o `ERP_WORKER_`. Por ejemplo, `BRANCH_API_SENTRY_ENABLED=false` y `BRANCH_API_SENTRY_DSN=` mantienen deshabilitado el reporter de sucursal. El ambiente se obtiene de `NODE_ENV` y la identidad del servicio la fija la aplicación.
 
@@ -178,6 +180,108 @@ La captura ocurre una vez en fronteras explícitas: errores HTTP 5xx inesperados
 El reporter construye un evento mínimo y `beforeSend` vuelve a limitar sus campos. Conserva códigos técnicos propios, fase, servicio, ambiente, release opcional, identificadores UUID de solicitud/correlación y estado HTTP cuando correspondan. Conserva hasta 40 frames de error, reducidos al nombre base del archivo y sus números de línea/columna. No envía el mensaje original de la excepción, stack bruto, rutas completas, URL, query, cuerpos, cabeceras, cookies, usuario, breadcrumbs ni objetos arbitrarios en `extra` o `contexts`.
 
 Cada aplicación tiene su cliente privado, sin instalar integraciones automáticas ni modificar un SDK global compartido. El cierre es idempotente y acotado por el timeout configurado. Ese envío es de mejor esfuerzo: no constituye una cola durable ni garantiza entrega durante caída de red o terminación forzada. Los tests usan un transporte en memoria y valores sintéticos; no acreditan la recepción en un proyecto real de Sentry.
+
+### Presupuesto de la cuota
+
+La cuota de errores de Sentry pertenece a la organización, no a cada proyecto: el plan Developer da 5.000 errores al mes, unos 7 por hora. Cada proceso decide antes de construir el evento si vale la pena gastarla:
+
+- **Enfriamiento por huella.** La huella combina fase, código técnico y frame de origen. Un mismo origen se reporta una vez por enfriamiento, así que un bucle que falla mil veces produce un evento y no mil.
+- **Tope por hora.** Limita los eventos distintos que un proceso envía en una hora, aunque cada uno sea un problema nuevo. Por defecto es 1.
+
+El presupuesto vive en la memoria de cada proceso y es el único límite que el POS aplica a la cuota. Sentry sólo ofrece límites de tasa por DSN en los planes Business y Enterprise, así que en el plan Developer nada más protege la cuota. Cuando se agota, Sentry rechaza los eventos.
+
+**Dimensionamiento.** El peor caso es procesos × tope por hora × 720 horas al mes.
+
+| Escenario | Procesos | Máximo con el tope por defecto |
+| --- | --- | --- |
+| Piloto (`branch-api`, `branch-sync-worker`, `country-api` y `erp-worker`) | 4 | 2.880 eventos al mes, bajo los 5.000 |
+| Cada sucursal adicional | +2 (`branch-api` y `branch-sync-worker`) | +1.440 eventos al mes |
+| Tres sucursales | 8 | 5.760 eventos al mes, sobre la cuota |
+
+Como el tope mínimo es 1, desde la tercera sucursal hace falta un plan que aporte límites o un reparto distinto de la cuota.
+
+Con 1 evento por hora, un segundo fallo distinto en la misma hora se descarta, y Pino conserva su registro local. Los eventos descartados no se cuentan en Sentry: el número de eventos de una issue indica cuántas veces se admitió, no cuántas ocurrió.
+
+Los frames se reducen al nombre de archivo, línea y columna, con `abs_path` normalizado como `app:///<archivo>`. Si el artefacto se publicó con Debug IDs, el evento incluye sólo las imágenes `sourcemap` de los archivos presentes en sus frames. Con ellas, Sentry aplica el sourcemap subido sin depender del release.
+
+### Fallos de los clientes conectados
+
+Los clientes de escritorio y móvil no incluyen el SDK de Sentry, no reciben un DSN y no contactan servicios externos: la CSP de los artefactos sigue admitiendo sólo el origen de `branch-api`. En los perfiles `branch` y `branch-lab`, el `ErrorHandler` de composición conserva el registro en consola y carga de forma diferida un normalizador. Ese normalizador reduce el fallo al sobre `client-failure-v1` de `@pos-platform/contracts`:
+
+| Campo             | Contenido                                                                                     |
+| ----------------- | --------------------------------------------------------------------------------------------- |
+| `contractVersion` | `1`, la única versión que admite el servidor                                                  |
+| `application`     | `pos-desktop` o `pos-mobile`                                                                  |
+| `errorType`       | Clase estándar (`TypeError`, `RangeError`, `DOMException`…) u `Other`; nunca el mensaje       |
+| `route`           | Plantilla de la configuración del router, como `administration/users/:userId`; nunca la URL   |
+| `frames`          | Hasta 40 posiciones `{ file, line, column }`, con nombre de bundle sin host, ruta ni query    |
+| `debugIds`        | Hasta 20 pares `{ file, debugId }`, sólo de los bundles presentes en los frames               |
+
+El cliente lo envía a `POST /api/v1/telemetry/client-failures` (`reportClientFailureV1`) con la sesión de operador vigente. Deduplica por clase, ruta y frame de origen, y envía como máximo 10 reportes por carga de la aplicación. Si no hay sesión, si no hay conexión o si el envío falla, descarta el reporte sin reintentar ni guardarlo. La demo y el cliente sin configurar no registran el handler.
+
+**Un `BranchApiError` nunca se reporta:**
+
+- Si `branch-api` respondió con un error, el servidor ya recibió la solicitud.
+- Si la conexión se interrumpió (`CONNECTION_INTERRUPTED`, por red o tiempo agotado), el relay tampoco recibiría el reporte, porque es el mismo `branch-api`.
+- Una respuesta fuera del contrato (`INVALID_RESPONSE`) también se descarta, y ningún otro componente la reporta.
+
+`branch-api` responde siempre `{ received: true }`, se reenvíe o no el reporte. Sin sesión responde 401. Si el sobre no cumple el contrato responde 422 `VALIDATION_ERROR`: campos extra, otra `contractVersion`, más de 40 frames o más de 20 Debug IDs.
+
+Tras validar de nuevo el sobre, lo reenvía con un cliente privado separado a otro proyecto, como evento `javascript`. El reporter del backend y el relay usan el mismo presupuesto: un único tope por hora (`BRANCH_API_SENTRY_MAX_EVENTS_PER_HOUR`) y el mismo enfriamiento. Por eso el relay no cambia el dimensionamiento. Además, cada instalación del puesto tiene un tope por hora propio, para que un equipo ruidoso no consuma el presupuesto de la sucursal.
+
+El servidor genera la correlación y no añade usuario, sesión, instalación ni release, porque no conoce la versión del build que falló. La simbolización usa los Debug IDs.
+
+| Variable de `branch-api`                                        | Valor por defecto | Uso                                                          |
+| --------------------------------------------------------------- | ----------------- | ------------------------------------------------------------ |
+| `BRANCH_API_CLIENT_SENTRY_ENABLED`                              | `false`           | Habilita el relay; `true` exige un DSN válido                |
+| `BRANCH_API_CLIENT_SENTRY_DSN`                                  | vacío             | DSN del proyecto de clientes, distinto del backend           |
+| `BRANCH_API_CLIENT_SENTRY_SHUTDOWN_TIMEOUT_MS`                  | `2000`            | Límite del vaciado del cliente del relay al cerrar, entre 1 y 10000 ms |
+| `BRANCH_API_CLIENT_SENTRY_MAX_EVENTS_PER_INSTALLATION_PER_HOUR` | `1`               | Tope por instalación, entre 1 y el tope compartido           |
+
+`branch-api` no arranca si se define `BRANCH_API_CLIENT_SENTRY_RELEASE`, `BRANCH_API_CLIENT_SENTRY_MAX_EVENTS_PER_HOUR` o `BRANCH_API_CLIENT_SENTRY_FINGERPRINT_COOLDOWN_SECONDS`, aunque esté vacía. El relay no asigna release ni tiene presupuesto propio, y así una configuración que lo supone no pasa inadvertida.
+
+### Sourcemaps con Debug IDs
+
+Los builds Angular de producción no emiten sourcemaps. La configuración `production-sourcemaps` coincide con `production`, salvo por los mapas ocultos de scripts, que no añaden `sourceMappingURL`; una prueba impide que ambas diverjan. El comando `node tools/build-connected-client.mjs --target desktop|mobile --deployment <política> --sentry-sourcemaps` construye con esa configuración y ejecuta `tools/observability/sentry-sourcemaps.mjs` antes de configurar el artefacto. La herramienta sigue estos pasos:
+
+1. Falla si un script todavía referencia su mapa, antes de subir o borrar nada.
+2. Inyecta Debug IDs con la `@sentry/cli` fijada en el lockfile.
+3. Sube los mapas al proyecto indicado.
+4. Elimina todos los `.map` del artefacto, y falla si queda alguno.
+
+Requiere `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJECT` y, para la región EU, `SENTRY_URL=https://de.sentry.io`. Todo se valida antes de compilar, y el token viaja en el entorno del proceso, nunca como argumento.
+
+En el backend, el build por defecto conserva el comentario `sourceMappingURL`, que `nx serve` usa para traducir las trazas locales. Un release simbolizable usa la configuración `production-sourcemaps` de cada aplicación, que oculta ese comentario, y después ejecuta la herramienta:
+
+```sh
+pnpm nx run branch-api:build:production-sourcemaps
+node tools/observability/sentry-sourcemaps.mjs --directory dist/apps/branch-api --release <id>
+```
+
+`--release` es opcional, porque la simbolización usa los Debug IDs. Si se indica, debe coincidir con `*_SENTRY_RELEASE`. Los mapas suben con su código fuente (`sourcesContent`): publicarlos en Sentry es una decisión del destino autorizado, igual que los eventos.
+
+### Configuración recomendada en la capa gratuita
+
+El plan Developer, consultado el 2026-11-11, incluye:
+
+- 1 usuario;
+- 5.000 errores al mes;
+- 30 días de retención;
+- alertas sólo por correo;
+- ningún límite de gasto configurable ni límites de tasa por DSN;
+- 1 monitor cron y 1 monitor uptime.
+
+También incluye spans, replays y logs, que esta base no usa. Esta guía recomienda la configuración siguiente, que se aplica en la interfaz de Sentry. Ninguna parte de esta entrega conecta un proyecto real.
+
+- **Región y organización.** Elegir US o EU al crear la organización. La región no se cambia después y debe autorizarla seguridad, junto con la retención.
+- **Dos proyectos.** `node` para las cuatro apps backend y `javascript` para el relay de clientes, cada uno con su DSN, para separar agrupación, sourcemaps y alertas. El ambiente procede de `NODE_ENV`. El reporter se habilita sólo en el piloto y en producción, nunca en laboratorio, CI o demo.
+- **Cuota.** El plan no admite límites por DSN, así que el tope del POS es el control. Antes de sumar una sucursal, revisar el dimensionamiento.
+- **Privacidad del proyecto.** Activar el depurador de datos con los patrones por defecto y la opción de no almacenar direcciones IP. Es una defensa adicional: la allowlist del POS ya excluye esos datos.
+- **Token de CI.** Un token de organización sólo para subir sourcemaps y releases, guardado como secreto del pipeline de release.
+- **Alertas.** Reglas por correo de issue nueva y de regresión, con el equipo responsable que defina F05-06.
+- **Monitores.** Reservar el monitor uptime para la readiness pública de un servicio desplegado, cuando exista. El monitor cron no se usa mientras los workers no programen trabajos.
+
+Traces, session replay, logs y métricas siguen deshabilitados. Profiling y Seer no forman parte del plan gratuito. Habilitar cualquiera de ellos requiere el requisito y la revisión de privacidad de F05-06 y F05-09: un replay de caja contendría clientes, montos y medios de pago.
 
 ## Verificación
 
@@ -233,6 +337,9 @@ La [propuesta de arquitectura](propuesta-arquitectura.md) y las [opciones tecnol
 - [Clientes y scopes aislados de Sentry](https://docs.sentry.io/platforms/javascript/best-practices/shared-environments/): patrón de cliente manual sin `Sentry.init()` global; su ejemplo de navegador se adapta aquí a `NodeClient` y se comprueba con el SDK Node instalado.
 - [Integraciones de Sentry para Node](https://docs.sentry.io/platforms/javascript/guides/node/configuration/integrations/): instrumentación y contexto que pueden añadir los plugins; el cliente manual del POS usa una lista vacía y captura explícita.
 - [Filtrado de eventos de Sentry](https://docs.sentry.io/platforms/javascript/guides/node/configuration/filtering/): uso de `beforeSend` antes de enviar eventos; la base POS reconstruye sus campos permitidos.
+- [Debug IDs de sourcemaps](https://docs.sentry.io/platforms/javascript/sourcemaps/troubleshooting_js/debug-ids/): asociación entre bundle y mapa independiente del release, usada por clientes y backend.
+- [Planes y cuotas de Sentry](https://sentry.io/pricing/): límites del plan Developer, consultados el 2026-11-11.
+- [Gestión del flujo de eventos de Sentry](https://docs.sentry.io/pricing/quotas/manage-event-stream-guide/#rate-limiting): los límites de tasa por DSN sólo existen en los planes Business y Enterprise; consultado el 2026-11-11.
 - [Opciones del servidor Fastify](https://fastify.dev/docs/latest/Reference/Server/): límites de cuerpo y tiempo de recepción de solicitudes.
 - [Preparar aplicaciones para despliegue con Nx](https://nx.dev/docs/guides/ci-deployment): generación del manifiesto y lockfile del artefacto para instalar sus dependencias fuera del workspace.
 - [Rspack con Nx](https://nx.dev/docs/technologies/build-tools/rspack/introduction): integración del empaquetador con el workspace y sus tareas.
