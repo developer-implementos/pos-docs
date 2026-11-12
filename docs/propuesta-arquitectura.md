@@ -451,7 +451,7 @@ El **proveedor de facturación** es la solución de software o servicio: por eje
 
 ### Chile
 
-El formato oficial de boleta electrónica incorpora timbre, CAF y firma. Se propone reservar folios de forma exclusiva, custodiar material fiscal y generar los documentos mediante un componente validado para la operación. Una caja restaurada o reemplazada no puede reutilizar folios de la anterior. La distribución de rangos por caja debe verificarse con el emisor y la solución fiscal. [Formato oficial de boletas del SII](https://www.sii.cl/factura_electronica/factura_mercado/formato_boletas_elec_202412.pdf).
+El formato oficial de boleta electrónica incorpora timbre, CAF y firma. Se propone reservar folios de forma exclusiva, custodiar material fiscal y generar los documentos mediante un componente validado para la operación. Una caja restaurada o reemplazada no puede reutilizar folios de la anterior. La distribución de rangos por caja debe verificarse con el emisor y la solución fiscal. [Formato oficial de boletas del SII](https://www.sii.cl/factura_electronica/factura_mercado/formato_boleta_electronica.pdf).
 
 El SII publica una contingencia específica para cortes eléctricos o situaciones esporádicas que impiden emitir boletas. Esa respuesta no establece una autorización general para cualquier desconexión prolongada. Debe validarse el procedimiento para boletas, facturas y otros documentos concretos, incluyendo envío, representación y regularización. El horizonte técnico de autonomía que se acuerde no define ese permiso. [Contingencia publicada por el SII](https://www.sii.cl/preguntas_frecuentes/factura_electronica/001_003_7837.htm).
 
