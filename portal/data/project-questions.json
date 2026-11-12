@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "38e6bf7dd5b6ba1a68934e3869324de45758ecde",
+    "revision": "2ada3dc60d188c55b10f07d14bb8a46c43360267",
     "path": "delivery/business-questions.json",
-    "sha256": "8bea6918a1a201ea808eda23320f27390e211b307c867bf5b92168dd93f3c8e4"
+    "sha256": "449833f84fa9f143f6106bc6a4e1da0e9b22d9dde81725246071cb7c272f684a"
   },
   "integration": {
     "reference": "main",
@@ -12,7 +12,7 @@
   },
   "content": {
     "schemaVersion": 1,
-    "reviewedOn": "2026-11-11",
+    "reviewedOn": "2026-11-12",
     "audit": "delivery/reviews/pos-parity-2026-11-10",
     "items": [
       {
@@ -1626,6 +1626,558 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-11",
+        "validation": null
+      },
+      {
+        "id": "Q-93",
+        "topic": "Cierre",
+        "question": "¿Cómo se registra en el ERP el cierre de caja: el arqueo y los sobrantes o faltantes van en asientos separados, y se omite un cierre o una diferencia de importe cero?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: envía a AX el arqueo de la caja cerrada y sus diferencias por separado; un arqueo de importe cero no se envía y queda con una referencia fija. POS Platform: F04-03 persiste la intención de integrar el cierre y F03-03 integra una primera operación sin nombrar el arqueo",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-05",
+          "P-08",
+          "P-38"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Tesorería y Finanzas",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F03-03",
+          "F04-03"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-12",
+        "validation": null
+      },
+      {
+        "id": "Q-94",
+        "topic": "Usuarios",
+        "question": "¿Qué clases de empleado del maestro de RR. HH. reciben acceso al POS, con qué perfil, y qué ocurre con un empleado de otra clase?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: sólo cinco clases de empleado (cajero, vendedor de mesón y tres de bodega) reciben acceso, con un perfil por clase. POS Platform: F03-07 exige un mapeo aprobado de identidad a permisos, sin definirlo. Q-24 trata la desactivación de un empleado ausente",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-02",
+          "P-03",
+          "P-40"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "RR. HH. y Operaciones",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F03-07"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-12",
+        "validation": null
+      },
+      {
+        "id": "Q-95",
+        "topic": "Precios",
+        "question": "¿Qué listas auxiliares de precios usa la caja (precio mínimo, descuento de vendedores, histórico por cliente y mínimo por segmento), para qué decisión y con qué frecuencia deben actualizarse?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: estas listas llegan a la caja por una carga manual o por un aviso, sin actualización periódica; su frecuencia real no se deduce del código. POS Platform: F03-09 nombra los precios sin estas listas. Q-12 trata el descuento o precio manual",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-13",
+          "P-40"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Comercial",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F03-09"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-12",
+        "validation": null
+      },
+      {
+        "id": "Q-96",
+        "topic": "Stock",
+        "question": "¿Qué ocurre con una venta confirmada en caja que el ERP rechaza por stock insuficiente: el ERP la admite con stock negativo, queda retenida hasta que un responsable la regularice, o la caja debe validar el stock antes de confirmar?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: la caja no valida stock al vender; según el inventario, el ERP lo valida al registrar la venta. POS Platform: Q-36 fija la disponibilidad como consulta, y F01-11 recibió la propuesta de informar el rechazo como resultado de la entrega, sin regla de negocio",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-38",
+          "P-45"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Operaciones e Integración/ERP",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F03-12",
+          "F03-03"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-12",
+        "validation": null
+      },
+      {
+        "id": "Q-97",
+        "topic": "NC",
+        "question": "¿Qué tipos de NC ofrece la caja (anulación, corrección de montos por devolución y corrección de texto), qué plazo desde la venta admite cada uno y quién autoriza una excepción?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: ofrece la anulación y la corrección de montos; la corrección de texto existe pero no se muestra, y la anulación marca la NC y no el documento original. POS Platform: F04-01 deja los motivos y los plazos a negocio. Q-16 trata el importe máximo",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-03",
+          "P-32"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Finanzas/Fiscalidad y Operaciones",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-01"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-12",
+        "validation": null
+      },
+      {
+        "id": "Q-98",
+        "topic": "NC",
+        "question": "¿La devolución de dinero contra una NC se limita a NC del mismo día, se paga sólo en efectivo y por el saldo total, o admite otros medios, devoluciones parciales y un tope?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: devuelve en efectivo el saldo total de una NC del día, con un comprobante para firma. POS Platform: F04-01 separa la NC de la entrega de dinero y deja los plazos a negocio. Q-04 trata quién puede devolver y Q-19 el débito",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-03",
+          "P-34"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Tesorería y Operaciones",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-01"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-12",
+        "validation": null
+      },
+      {
+        "id": "Q-99",
+        "topic": "NC",
+        "question": "¿Una sucursal puede emitir NC sobre documentos de otra sucursal o de otro canal de venta y, en ese caso, qué sistema es la autoridad de lo ya devuelto?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: copia el documento de otra sucursal con estado migrado y descuenta lo ya devuelto sólo con sus propios registros. POS Platform: F04-01 limita la suma de devoluciones confirmadas y la concurrencia entre cajas, sin tratar documentos de otra sucursal. Q-10 explica el estado migrado",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-32"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Operaciones y Finanzas",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-01"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-12",
+        "validation": null
+      },
+      {
+        "id": "Q-100",
+        "topic": "Cobranza",
+        "question": "¿En qué orden se imputa un pago parcial de deuda: a la cuota de vencimiento más antiguo, a los documentos que elige el cliente u otra regla?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: imputa a las cuotas por orden de vencimiento. POS Platform: F04-02 deja a Finanzas las reglas de imputación y la prioridad de las cuotas, y conserva la suma de las asignaciones. Q-33 confirma que abonar y pagar deudas son un mismo flujo",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-35"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Finanzas y Cobranza",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-02"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-12",
+        "validation": null
+      },
+      {
+        "id": "Q-101",
+        "topic": "Cobranza",
+        "question": "¿Se puede cobrar una deuda sobre su última versión conocida cuando no se puede confirmar con el ERP, o la cobranza se bloquea?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: al consultar la cuenta, refresca desde el ERP las facturas pendientes y deja en cero las que el ERP ya no devuelve. POS Platform: F04-02 pide la procedencia y la frescura de la deuda, sin una regla para la deuda no confirmada",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-35",
+          "P-36",
+          "P-40"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Finanzas y Cobranza",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-02"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-12",
+        "validation": null
+      },
+      {
+        "id": "Q-102",
+        "topic": "Cierre",
+        "question": "¿Qué partidas forman el esperado de cada medio en el cierre: el monto de apertura, los documentos pendientes de emisión o con error fiscal, y los cheques sin verificar?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: nada impide cerrar con ventas pendientes de facturar ni con pagos o anticipos en curso. POS Platform: F04-03 calcula el esperado y el declarado desde los movimientos, sin fijar qué incluyen. Q-14 trata la validación de diferencias",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-08",
+          "P-10"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Tesorería y Finanzas",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-03"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-12",
+        "validation": null
+      },
+      {
+        "id": "Q-103",
+        "topic": "Cierre",
+        "question": "¿A qué fecha comercial se asigna un turno que se cierra un día posterior al de su apertura, la de apertura o la de cierre, y cómo se distingue en los informes?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: asigna el cierre desfasado al día de apertura, con un cálculo que depende de la zona horaria del proceso. POS Platform: F04-03 define la fecha de negocio y la zona horaria, sin una regla para este caso. Q-13 trata la venta con el turno abierto en otra fecha",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-08"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Tesorería y Contabilidad",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-03"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-12",
+        "validation": null
+      },
+      {
+        "id": "Q-104",
+        "topic": "Cierre",
+        "question": "¿El cierre del piloto es ciego (el cajero declara sin ver lo esperado) o guiado (ve los montos del sistema), y se fija por caja o por sucursal?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: el tipo de cierre es un parámetro. POS Platform: F04-03 exige razón o aprobación para una diferencia, sin definir el tipo de cierre. Q-14 trata la validación de diferencias",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-08"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Tesorería y Operaciones",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-03"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-12",
+        "validation": null
+      },
+      {
+        "id": "Q-105",
+        "topic": "Reportes",
+        "question": "¿Los totales por medio de pago del resumen de ventas descuentan las NC y devoluciones del período, o las muestran como partida aparte?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: el resumen muestra las NC con importe cero en los totales por medio. POS Platform: F04-05 exige separar lo aceptado, lo pendiente y lo excluido, sin regla para las NC. Q-28 trata los reportes obligatorios",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-37"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Finanzas y responsable de reportes",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-05"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-12",
+        "validation": null
+      },
+      {
+        "id": "Q-106",
+        "topic": "Cobranza",
+        "question": "¿Qué define a un cliente moroso en la cartola: la deuda vencida a la fecha de corte, un mínimo de días de mora o el bloqueo del ERP?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: la cartola filtra a los morosos y no informa el próximo vencimiento. POS Platform: F04-05 incluye la cartola entre los reportes legacy, sin criterio",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-35",
+          "P-37"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Cobranza y Finanzas",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-05"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-12",
+        "validation": null
+      },
+      {
+        "id": "Q-107",
+        "topic": "Permisos",
+        "question": "¿Quién puede crear o modificar perfiles y sus permisos (Seguridad, el administrador de país o el de sucursal), y el cambio exige doble control?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: los perfiles se administran desde la caja. POS Platform: F01-01 administra roles con versión esperada, y F04-06 prevé el alta y la asignación de perfiles sin criterio y deja a Seguridad y Operaciones la propiedad de cada campo administrable",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-03"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Seguridad y Operaciones",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-06"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-12",
+        "validation": null
+      },
+      {
+        "id": "Q-108",
+        "topic": "Medios",
+        "question": "¿La venta a crédito se habilita por caja, como los demás medios, o depende sólo de la autorización de crédito del cliente?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: los demás medios se habilitan por caja; el crédito no depende de la caja. POS Platform: F04-06 gestiona los medios habilitados con cambios versionados, y F04-11 autoriza el crédito",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-21",
+          "P-42"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Finanzas y Operaciones",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-06",
+          "F04-11"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-12",
+        "validation": null
+      },
+      {
+        "id": "Q-109",
+        "topic": "Medios",
+        "question": "¿Una caja con terminal integrado puede ofrecer también el registro manual de tarjeta, por ejemplo ante una falla del terminal, o el registro manual se oculta mientras la integración está habilitada?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: al habilitar el terminal integrado oculta las tarjetas manuales, y una asociación de medios incompleta sólo se detecta al cobrar. POS Platform: F04-06 rechaza una configuración inválida sin definir qué asociaciones son válidas; el registro manual pertenece a F02-06",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-21",
+          "P-42"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Tesorería y Operaciones",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-06",
+          "F02-06"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-12",
+        "validation": null
+      },
+      {
+        "id": "Q-110",
+        "topic": "OV",
+        "question": "¿Al cargar una OV en una venta que ya tiene líneas directas, esas líneas se incorporan a la OV en el ERP o se documentan aparte, y qué puede cambiar el cajero en una OV tomada?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: incorpora las líneas directas a la OV. POS Platform: F04-08 cubre tomar y liberar la OV y rechaza cambios indebidos en una OV protegida, sin definir qué se puede editar. Q-43 trata la agrupación de varias OV en una confirmación",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-17",
+          "P-19",
+          "P-20"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Comercial",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-08"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-12",
+        "validation": null
+      },
+      {
+        "id": "Q-111",
+        "topic": "Despacho",
+        "question": "¿La caja debe agendar despachos con fecha y costo y, si es así, qué sistema define esas fechas y ese costo?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: registra el retiro o el despacho con fechas y costo de ejemplo, que no vienen de un sistema logístico. POS Platform: F04-08 conserva la dirección, el contacto, las líneas y la referencia del retiro o despacho, y excluye un OMS en el POS",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-20"
+        ],
+        "sources": [
+          "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
+        ],
+        "decider": "Comercial y Logística",
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-08"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-12",
         "validation": null
       }
     ]
