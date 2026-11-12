@@ -2,16 +2,16 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "661e2df3245d1dce1cf17f43dc422b5fce71a40f",
+    "revision": "2e31184ab0349177d7ac0fdcb1af6d54231adb7c",
     "path": "delivery/business-questions.json",
-    "sha256": "13a174aee9c6164d46d407a633305cd7f6732f9597c6d1a90607e8faa8bb306f"
+    "sha256": "c29f64d4e828c4f14ded52719ab49c2b988178f3feb5b86146de2281d3cf1e5d"
   },
   "integration": {
     "reference": "main",
     "included": true
   },
   "content": {
-    "schemaVersion": 2,
+    "schemaVersion": 3,
     "reviewedOn": "2026-11-12",
     "audit": "delivery/reviews/pos-parity-2026-11-10",
     "items": [
@@ -41,7 +41,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Separar por origen de línea validado en servidor: el cupón preasociado de la OV se conserva y ninguna línea de OV recibe un cupón ingresado en caja; ese cupón aplica sólo a líneas directas y, en una cesta mixta, sólo si su campaña lo admite. Una exclusión como la de baterías se declara en la regla de esa campaña, no en el código.",
           "scope": "country",
@@ -71,13 +70,10 @@
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L34-L35",
             "delivery/follow-ups.json#L141-L185"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-02",
@@ -106,7 +102,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "No, por defecto: emitir NC es un permiso propio, separado de recibir la mercadería devuelta y de devolver dinero, y branch-api lo exige en cada emisión. El perfil de bodega registra la recepción o la validación física de la devolución; la NC la emite un perfil que tenga ese permiso.",
           "scope": "country",
@@ -133,13 +128,10 @@
             "delivery/reviews/pos-parity-2026-11-10/afirmaciones.csv#L22",
             "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L4"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-03",
@@ -167,7 +159,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "No crea ni edita el maestro: el cajero consulta los clientes de su ámbito y solicita al dueño del maestro altas y cambios de los campos que permita la política del país. La solicitud queda pendiente hasta su aceptación, y branch-api rechaza un campo no permitido aunque se omita la pantalla.",
           "scope": "country",
@@ -191,13 +182,10 @@
             "delivery/specs/F04-06.md#L69",
             "delivery/reviews/pos-parity-2026-11-10/afirmaciones.csv#L27"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-04",
@@ -226,7 +214,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Sí, como permisos separados: el cajero consulta las NC de su ámbito y devuelve dinero contra una NC emitida sólo desde su turno abierto; el administrador emite y consulta NC sin devolver dinero, porque no custodia el efectivo de un turno. Consultar, emitir y devolver dinero se autorizan por separado en servidor.",
           "scope": "country",
@@ -255,19 +242,16 @@
             "delivery/specs/F04-06.md#L57-L59",
             "delivery/reviews/pos-parity-2026-11-10/afirmaciones.csv#L22"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-05",
         "topic": "Permisos",
         "question": "¿La autorización se exige en servidor por acción?",
-        "kind": "decision",
+        "kind": "rule",
         "state": "decided",
         "currentAnswer": "POS Platform la exige (F01-01); el legacy sólo la controla en el menú",
         "answerSources": [
@@ -282,16 +266,22 @@
         "sources": [
           "delivery/specs/F01-01.md"
         ],
-        "decider": "Producto (ya decidido)",
+        "decider": "Producto",
         "owner": null,
         "followUp": null,
         "workPackages": [
           "F01-01"
         ],
         "priority": "P1",
-        "reviewedOn": "2026-11-10",
-        "validation": null,
-        "recommendation": null
+        "reviewedOn": "2026-11-12",
+        "recommendation": null,
+        "decision": {
+          "answer": "Sí: la autorización se exige en servidor para cada acción (F01-01)",
+          "decidedBy": "Producto",
+          "decidedOn": "2026-11-10",
+          "source": "Ficha F01-01 del producto",
+          "outcome": null
+        }
       },
       {
         "id": "Q-06",
@@ -323,7 +313,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "No: sólo opera caja una persona con identidad de empleado vigente y mapeada al ERP del país; las cuentas técnicas o compartidas no reciben permisos de venta, NC ni turno. Cada operación llega al ERP con su operador real y, si su identidad deja de estar vigente, el trabajo ERP queda retenido con motivo visible, nunca con un trabajador por defecto.",
           "scope": "core",
@@ -347,13 +336,10 @@
             "delivery/reviews/pos-parity-2026-11-10/afirmaciones.csv#L24",
             "delivery/reviews/pos-parity-2026-11-10/casos-prueba.md#L38-L43"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-07",
@@ -385,7 +371,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Sí, como dos identidades: el operador que confirma, siempre el de la sesión (Q-06), y el vendedor de cada línea, que es el de su OV o, en líneas directas, el que se indique entre los vendedores habilitados en la sucursal o, por defecto, quien la capturó. El DTE y el ERP reciben sus códigos del maestro, nunca uno derivado de un nombre.",
           "scope": "country",
@@ -424,13 +409,10 @@
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L103",
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L76"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-08",
@@ -462,7 +444,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Vence al terminar la fecha comercial de la sucursal en que se pausó: el servidor la marca vencida con motivo, libera las reservas que tenga, como sus OV, con resultado verificable, y la conserva como historial que no se retoma ni se edita. No se borra ni se migra como venta viva (Q-37).",
           "scope": "country",
@@ -494,13 +475,10 @@
             "delivery/reviews/pos-parity-2026-11-10/casos-prueba.md#L51-L56",
             "delivery/specs/F04-08.md#L76"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-09",
@@ -534,7 +512,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Conciliar cada intento sin pago local con el detalle del adquirente por terminal, fecha, importe y autorización: un cargo sin venta se regulariza o se reembolsa con aprobación, y un doble cobro se reembolsa; ninguno se migra ni se descarta sin ese resultado. Concilia el área financiera del país, no el cajero, que sólo consulta o escala.",
           "scope": "country",
@@ -568,13 +545,10 @@
             "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L25",
             "delivery/follow-ups.json#L530-L552"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-10",
@@ -598,16 +572,16 @@
         "sources": [
           "delivery/reviews/pos-parity-2026-11-10/profundizacion-preguntas.md"
         ],
-        "decider": "TI legacy (valida la respuesta)",
+        "decider": "TI legacy",
         "owner": null,
         "followUp": "FOLLOWUP-017",
         "workPackages": [
           "F05-10"
         ],
         "priority": "P1",
-        "reviewedOn": "2026-11-10",
-        "validation": null,
-        "recommendation": null
+        "reviewedOn": "2026-11-12",
+        "recommendation": null,
+        "decision": null
       },
       {
         "id": "Q-11",
@@ -634,7 +608,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Sí: cancelar deja el borrador en un estado final, cancelado, con motivo, actor y hora; libera las reservas de sus OV con resultado verificable y conserva su historial, sin poder retomarlo. Sólo se cancela una cesta sin pagos aprobados ni en curso; una venta confirmada no se cancela: se corrige con NC (F04-01).",
           "scope": "core",
@@ -665,13 +638,10 @@
             "delivery/reviews/pos-parity-2026-11-10/casos-prueba.md#L55",
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L29"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-12",
@@ -699,7 +669,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Sí, sólo como excepción autorizada en servidor: un precio o descuento manual exige motivo de catálogo y, sobre el límite del rol, la aprobación de un supervisor distinto del cajero, ligada a la versión de la cesta y al importe. Nunca reemplaza un precio ausente ni cambia el precio publicado.",
           "scope": "country",
@@ -738,13 +707,10 @@
             "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L16",
             "delivery/follow-ups.json#L141-L185"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-13",
@@ -773,7 +739,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Sí, en servidor y en todos los entornos: con un turno cuya fecha comercial ya terminó, según la zona horaria y la hora de fin de jornada de la sucursal, branch-api no inicia ventas, cobros ni devoluciones de dinero hasta cerrarlo y abrir otro; una venta con pago en curso se termina o se reembolsa (Q-45). No depende de la compilación.",
           "scope": "branch",
@@ -802,13 +767,10 @@
             "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L10",
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L64"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-14",
@@ -837,7 +799,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Sí, en servidor: una diferencia entre esperado y declarado exige motivo y, sobre la tolerancia, aprobación de un supervisor distinto del cajero; el cierre se rechaza con una venta en pago o un pago incierto sin resolver, salvo que un supervisor lo traslade como excepción visible con responsable.",
           "scope": "country",
@@ -864,13 +825,10 @@
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude-notas.md#L170-L173",
             "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L9"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-15",
@@ -900,7 +858,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Sí, como efecto del comando de cierre, nunca de su consulta: el cierre registra en su transacción la liberación de cada OV tomada por ventas no finalizadas del turno, incluidas las pausadas, y el worker la envía al dueño por el contrato de reservas; una liberación sin resultado queda pendiente con responsable y la OV no se ofrece a otra venta.",
           "scope": "core",
@@ -932,13 +889,10 @@
             "delivery/reviews/pos-parity-2026-11-10/profundizacion-preguntas.md#L58",
             "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L11"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-16",
@@ -965,7 +919,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Ningún límite fijo en el código: el tope es lo disponible del documento original, y cada país fija por moneda un umbral sobre el cual la NC exige aprobación de un rol facultado. Cada línea de NC se calcula desde la línea original, en la escala de la moneda, y la última devolución de esa línea toma el remanente exacto, sin superar lo facturado.",
           "scope": "country",
@@ -993,19 +946,16 @@
             "delivery/reviews/legacy-context-2026-11-09.md#L127",
             "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L33"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-17",
         "topic": "Reimpresión",
         "question": "¿La reimpresión exige permiso propio y motivo?",
-        "kind": "decision",
+        "kind": "rule",
         "state": "decided",
         "currentAnswer": "F02-10 lo exige; el legacy no. La implementación actual no exige motivo",
         "answerSources": [
@@ -1020,16 +970,22 @@
         "sources": [
           "delivery/specs/F02-10.md"
         ],
-        "decider": "Producto (ya decidido)",
+        "decider": "Producto",
         "owner": null,
         "followUp": null,
         "workPackages": [
           "F02-10"
         ],
         "priority": "P2",
-        "reviewedOn": "2026-11-10",
-        "validation": null,
-        "recommendation": null
+        "reviewedOn": "2026-11-12",
+        "recommendation": null,
+        "decision": {
+          "answer": "Sí: la reimpresión exige permiso propio y motivo (F02-10)",
+          "decidedBy": "Producto",
+          "decidedOn": "2026-11-10",
+          "source": "Ficha F02-10 del producto",
+          "outcome": null
+        }
       },
       {
         "id": "Q-18",
@@ -1057,7 +1013,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Retirar SumUp del alcance inicial: no tiene cajas asignadas ni figura entre los medios informados por ningún país. Un adquirente sólo entra con contrato vigente, adaptador homologado y perfil aprobado por país (F02-07), y la integración catalogada en el legacy no se migra.",
           "scope": "country",
@@ -1085,13 +1040,10 @@
             "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L22",
             "delivery/reviews/pos-parity-2026-11-10/README.md#L141"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-19",
@@ -1119,7 +1071,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Como compensación ligada al pago original y separada del cobro: por el procedimiento que confirme el adquirente o, si no existe, por otro medio que fije Tesorería, con aprobación, tope en lo cobrado y comprobante. Cada adquirente declara qué anula y qué devuelve por tipo de tarjeta, y el pago no se da por devuelto sin esa operación registrada.",
           "scope": "country",
@@ -1156,13 +1107,10 @@
             "delivery/reviews/pos-parity-2026-11-10/inventarios/perifericos-notas.md#L100",
             "delivery/follow-ups.json#L500-L528"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-20",
@@ -1189,7 +1137,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Todos: cada cheque, propio o de terceros, exige una verificación aprobada del proveedor del país, ligada a ese cheque, importe y venta, antes de finalizarla; en Chile el proveedor es Orsan y no se reintroduce Instacheck. Un país sin proveedor contratado no ofrece el medio cheque hasta que Tesorería apruebe su política.",
           "scope": "country",
@@ -1218,13 +1165,10 @@
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L89",
             "delivery/follow-ups.json#L241-L275"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-21",
@@ -1252,7 +1196,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Sólo cuando falta o supera la antigüedad máxima: la caja usa la proyección local publicada, muestra su antigüedad y refresca en segundo plano sin vaciar la cesta ni sobrescribir una versión más reciente. Las operaciones que exigen un dato fresco, como la venta a crédito, se confirman con su autoridad o se rechazan con motivo.",
           "scope": "country",
@@ -1279,13 +1222,10 @@
             "delivery/reviews/pos-parity-2026-11-10/afirmaciones.csv#L30",
             "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L17"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-22",
@@ -1312,7 +1252,6 @@
         ],
         "priority": "P3",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "No: la búsqueda avanzada sólo encuentra candidatos; se vende únicamente un SKU del catálogo publicado de la sucursal, con precio e impuestos vigentes. Un resultado sin producto local se muestra como no vendible, con su motivo, y no entra en la cesta.",
           "scope": "core",
@@ -1346,13 +1285,10 @@
             "delivery/reviews/legacy-context-2026-11-09.md#L123",
             "delivery/follow-ups.json#L380-L408"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-23",
@@ -1384,7 +1320,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Sí, como capacidad que cada sucursal habilita, sin exigirla al piloto: el ingreso de fondo de cambio y el retiro a custodia son movimientos del turno con motivo, actor, receptor que confirma y referencia, y entran en el esperado del cierre; nunca se registran como venta, devolución ni ajuste del arqueo.",
           "scope": "branch",
@@ -1417,13 +1352,10 @@
             "delivery/specs/F04-03.md#L49",
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L59"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-24",
@@ -1451,7 +1383,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "No: faltar en la lista de una sucursal sólo retira la asignación en esa sucursal. Desactivar a la persona exige una baja explícita del maestro de RR. HH. o su ausencia de una carga completa validada, y revoca sus sesiones y asignaciones; cada registro inválido se rechaza por separado con motivo, sin revertir al resto.",
           "scope": "core",
@@ -1474,13 +1405,10 @@
             "delivery/reviews/pos-parity-2026-11-10/afirmaciones.csv#L44",
             "delivery/reviews/pos-parity-2026-11-10/inventarios/sincronizacion.csv#L21"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-25",
@@ -1508,7 +1436,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Declararlas por cliente, no por tipo: el maestro de clientes indica qué referencias exige cada cliente, como OC, HES, HEM o nota de pedido (802), y branch-api no emite su factura sin ellas. El perfil fiscal de cada país fija códigos, largo y ubicación; en Chile, la sección de referencias del DTE, con tipo, folio de hasta 18 caracteres y fecha.",
           "scope": "country",
@@ -1537,13 +1464,10 @@
             "delivery/planning.json#L95-L132",
             "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L32"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-26",
@@ -1567,7 +1491,7 @@
         "sources": [
           "delivery/reviews/pos-parity-2026-11-10/profundizacion-preguntas.md"
         ],
-        "decider": "TI legacy (valida la respuesta)",
+        "decider": "TI legacy",
         "owner": null,
         "followUp": "FOLLOWUP-003",
         "workPackages": [
@@ -1575,8 +1499,8 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
-        "recommendation": null
+        "recommendation": null,
+        "decision": null
       },
       {
         "id": "Q-27",
@@ -1609,7 +1533,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "No en el primer alcance: la caja cobra los documentos y cuotas que el ERP informa con su saldo, pero no pacta acuerdos de cobranza, intereses ni refinanciaciones. Incorporarlos exige una regla aprobada por Finanzas y que el sistema dueño de la deuda calcule y confirme cada cuota e interés.",
           "scope": "core",
@@ -1636,13 +1559,10 @@
             "delivery/specs/F04-11.md#L24",
             "delivery/reviews/pos-parity-2026-11-10/afirmaciones.csv#L34"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-28",
@@ -1670,7 +1590,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Son obligatorios los reportes con que la sucursal cierra el turno, deposita y cobra, cada uno con su definición aprobada y totales que cuadran con el cierre (F04-05); no lo son el dashboard, que es informativo y puede llegar después, ni «Ventas por tipos», que no opera en el legacy ni tiene definición.",
           "scope": "country",
@@ -1708,13 +1627,10 @@
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L70-L73",
             "delivery/reviews/pos-parity-2026-11-10/README.md#L138"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-29",
@@ -1741,7 +1657,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Agente del puesto y terminal asignado conectado, libre y en modo integrado: GetTerminalStatus lo confirma sin efecto y con tiempo acotado antes de ofrecer el cobro integrado (en Transbank, con Poll). Llaves y jornada se verifican sólo si el adquirente lo permite; si no, su rechazo se muestra con motivo y la acción de mantenimiento autorizada.",
           "scope": "country",
@@ -1775,19 +1690,16 @@
             "delivery/reviews/pos-parity-2026-11-10/inventarios/perifericos-notas.md#L88-L92",
             "delivery/follow-ups.json#L35-L69"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-30",
         "topic": "Identidad",
         "question": "¿Cómo se asigna la contraseña inicial de las altas sincronizadas?",
-        "kind": "decision",
+        "kind": "rule",
         "state": "decided",
         "currentAnswer": "F01-01 prohíbe credenciales embebidas y exige una contraseña inicial fuerte en la provisión; el mecanismo del legacy no se conserva",
         "answerSources": [
@@ -1803,7 +1715,7 @@
           "delivery/specs/F01-01.md#L34",
           "delivery/specs/F01-01.md#L58"
         ],
-        "decider": "Producto (ya decidido)",
+        "decider": "Producto",
         "owner": null,
         "followUp": null,
         "workPackages": [
@@ -1812,8 +1724,14 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
-        "recommendation": null
+        "recommendation": null,
+        "decision": {
+          "answer": "Una contraseña inicial fuerte, asignada en la provisión, sin credenciales embebidas (F01-01)",
+          "decidedBy": "Producto",
+          "decidedOn": "2026-11-10",
+          "source": "Ficha F01-01 del producto",
+          "outcome": null
+        }
       },
       {
         "id": "Q-31",
@@ -1834,16 +1752,16 @@
           "P-05"
         ],
         "sources": [],
-        "decider": "Finanzas/Contabilidad (valida la respuesta)",
+        "decider": "Finanzas/Contabilidad",
         "owner": null,
         "followUp": "FOLLOWUP-017",
         "workPackages": [
           "F03-03"
         ],
         "priority": "P1",
-        "reviewedOn": "2026-11-10",
-        "validation": null,
-        "recommendation": null
+        "reviewedOn": "2026-11-12",
+        "recommendation": null,
+        "decision": null
       },
       {
         "id": "Q-32",
@@ -1865,16 +1783,16 @@
           "P-09"
         ],
         "sources": [],
-        "decider": "Tesorería (valida la respuesta)",
+        "decider": "Tesorería",
         "owner": null,
         "followUp": "FOLLOWUP-017",
         "workPackages": [
           "F04-03"
         ],
         "priority": "P2",
-        "reviewedOn": "2026-11-10",
-        "validation": null,
-        "recommendation": null
+        "reviewedOn": "2026-11-12",
+        "recommendation": null,
+        "decision": null
       },
       {
         "id": "Q-33",
@@ -1893,22 +1811,22 @@
           "P-35"
         ],
         "sources": [],
-        "decider": "Finanzas (valida la respuesta)",
+        "decider": "Finanzas",
         "owner": null,
         "followUp": "FOLLOWUP-017",
         "workPackages": [
           "F04-02"
         ],
         "priority": "P1",
-        "reviewedOn": "2026-11-10",
-        "validation": null,
-        "recommendation": null
+        "reviewedOn": "2026-11-12",
+        "recommendation": null,
+        "decision": null
       },
       {
         "id": "Q-34",
         "topic": "Impresión",
         "question": "¿Se acepta que Operaciones asigne la impresora por puesto, en vez de que cada usuario la elija en el navegador?",
-        "kind": "decision",
+        "kind": "rule",
         "state": "decided",
         "currentAnswer": "Sí: F02-09 registra los dispositivos por puesto y Operaciones asigna cada destino físico. El legacy guarda la preferencia en el navegador y cualquier perfil puede cambiarla. Falta una interfaz de administración; hoy la alta es por línea de comandos",
         "answerSources": [
@@ -1922,16 +1840,22 @@
           "delivery/specs/F02-09.md#L35",
           "delivery/specs/F02-09.md#L53"
         ],
-        "decider": "Producto (ya decidido)",
+        "decider": "Producto",
         "owner": null,
         "followUp": "FOLLOWUP-017",
         "workPackages": [
           "F02-09"
         ],
         "priority": "P3",
-        "reviewedOn": "2026-11-11",
-        "validation": null,
-        "recommendation": null
+        "reviewedOn": "2026-11-12",
+        "recommendation": null,
+        "decision": {
+          "answer": "Sí: Operaciones asigna la impresora por puesto, que F02-09 registra como dispositivo (F02-09)",
+          "decidedBy": "Producto",
+          "decidedOn": "2026-11-11",
+          "source": "Ficha F02-09 del producto",
+          "outcome": null
+        }
       },
       {
         "id": "Q-35",
@@ -1961,7 +1885,6 @@
         ],
         "priority": "P3",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Sí, sin perder la cesta: al expirar la sesión, el servidor pausa la cesta activa sin pagos con motivo «sesión expirada», y su dueño la retoma al volver, desde cualquier caja de la sucursal (Q-46), hasta su vencimiento (Q-08). Una venta con pago aprobado o en curso no se pausa: sigue abierta en su turno (Q-45).",
           "scope": "core",
@@ -1995,19 +1918,16 @@
             "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L45",
             "delivery/reviews/pos-parity-2026-11-10/casos-prueba.md#L54"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-36",
         "topic": "Stock",
         "question": "¿La caja muestra el stock sólo como consulta, sin descontarlo al vender?",
-        "kind": "decision",
+        "kind": "rule",
         "state": "decided",
         "currentAnswer": "Sí: F01-11 define una disponibilidad informativa con origen y antigüedad, y vender no ajusta stock. El legacy no sincroniza stock y su ajuste local no tiene llamador",
         "answerSources": [
@@ -2022,16 +1942,22 @@
           "delivery/specs/F01-11.md#L20",
           "delivery/specs/F01-11.md#L46"
         ],
-        "decider": "Producto (ya decidido)",
+        "decider": "Producto",
         "owner": null,
         "followUp": "FOLLOWUP-017",
         "workPackages": [
           "F01-11"
         ],
         "priority": "P3",
-        "reviewedOn": "2026-11-11",
-        "validation": null,
-        "recommendation": null
+        "reviewedOn": "2026-11-12",
+        "recommendation": null,
+        "decision": {
+          "answer": "Sí: la caja muestra una disponibilidad informativa con origen y antigüedad, y vender no ajusta stock (F01-11)",
+          "decidedBy": "Producto",
+          "decidedOn": "2026-11-11",
+          "source": "Ficha F01-11 del producto",
+          "outcome": null
+        }
       },
       {
         "id": "Q-37",
@@ -2066,7 +1992,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Ningún estado no final se migra como operación viva: las ventas en espera del día se retoman o cancelan antes del corte y las demás se archivan como historial; los pagos en curso se concilian antes con el adquirente y los documentos con estado migrado quedan sólo como referencia del documento de origen. Las cuentas sin RecId no reciben permisos de venta (Q-06).",
           "scope": "core",
@@ -2095,13 +2020,10 @@
             "delivery/reviews/pos-parity-2026-11-10/afirmaciones.csv#L23-L24",
             "delivery/follow-ups.json#L529-L553"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-38",
@@ -2129,7 +2051,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "No por defecto: el efectivo en moneda extranjera queda deshabilitado (ADR-20, QF9) y sólo lo habilita un país, con un tipo de cambio que Tesorería publica con vigencia, nunca digitado en caja y congelado en cada pago, arqueo por moneda y una regla de vuelto aprobada. En Perú, un precio anunciado en dólares obliga a aceptar el pago en esa moneda.",
           "scope": "country",
@@ -2163,13 +2084,10 @@
             "delivery/reviews/pos-parity-2026-11-10/trazabilidad.md#L71",
             "delivery/follow-ups.json#L680-L702"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-39",
@@ -2196,7 +2114,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Ninguna reparación directa de datos: cada corrección que hoy hace soporte pasa a ser una acción tipada de la consola operativa (F04-10), que ejecuta su contexto dueño con permiso, motivo, versión esperada y auditoría, y con aprobación de otra persona si afecta dinero o documentos. Lo que no tenga acción definida se escala a su dueño.",
           "scope": "core",
@@ -2235,19 +2152,16 @@
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L55",
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L246"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-40",
         "topic": "Maestros",
         "question": "¿Qué maestros se administran desde el POS y cuáles se solicitan a su dueño?",
-        "kind": "decision",
+        "kind": "rule",
         "state": "open",
         "currentAnswer": "Legacy: hay mantenedores locales de impuestos, categorías, marcas, ofertas e inventario, pero en la sucursal productiva ningún perfil los concede. Administrador sólo gestiona clientes, cajas, perfiles, módulos, variables y Transbank. F04-07 lo deja a Comercial y a los dueños de cada maestro, con las ofertas sólo en consulta",
         "answerSources": [
@@ -2272,7 +2186,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "El POS no edita maestros ajenos: catálogo (con categorías y marcas), impuestos, precios, ofertas, clientes, sucursales y bodegas se consultan desde su publicación y su cambio se pide al dueño sólo si este ofrece interfaz. Administra sólo lo propio: perfiles (Q-107), asignaciones y configuración de cajas, medios e integraciones (F04-06).",
           "scope": "country",
@@ -2308,13 +2221,10 @@
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L234-L236",
             "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L43"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-41",
@@ -2344,7 +2254,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Solicitar el alta al dueño del maestro desde la caja: RequestCustomerRegistration envía la identificación y los datos fiscales con el operador de la sesión, es idempotente, queda pendiente hasta su aceptación y no crea un cliente confirmado local. Mientras tanto, la venta sigue con un cliente existente o con el genérico.",
           "scope": "country",
@@ -2368,13 +2277,10 @@
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L39",
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L44"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-42",
@@ -2402,7 +2308,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Restablecer el acceso mediante un administrador autorizado que verifica la identidad de la persona y obliga a cambiar la contraseña al ingresar. Donde se habilite el autoservicio por correo, el código es de un solo uso, vence en minutos, limita los intentos y la respuesta no indica si la cuenta existe.",
           "scope": "legal_entity",
@@ -2421,13 +2326,10 @@
             "delivery/specs/F01-01.md",
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.md"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-43",
@@ -2458,7 +2360,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Sí, con un documento tributario independiente por cada agrupación aprobada, con identidad y estado fiscal propios. La imputación de cada pago a los documentos se confirma junto con la venta, por importes exactos que suman el total de cada documento, y la venta queda documentada sólo cuando todos sus documentos están aceptados.",
           "scope": "country",
@@ -2484,13 +2385,10 @@
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L15",
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L60"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-44",
@@ -2518,7 +2416,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "No por defecto: la venta a cliente genérico no registra datos de contacto del comprador. Sólo se piden, opcionales y con aviso de su finalidad, los mínimos para un uso declarado, como enviar el comprobante o coordinar un despacho; quedan en la venta con acceso restringido durante el plazo que fije Legal y no crean cliente.",
           "scope": "country",
@@ -2558,13 +2455,10 @@
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L42",
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L26"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-45",
@@ -2592,7 +2486,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "No: una venta con un pago aprobado o en curso no se pausa; queda abierta en su turno hasta finalizarse o reembolsar el pago, y la retoma su operador o, en su ausencia, un supervisor con permiso de recuperación. Sólo se pausa una cesta con líneas y sin pagos.",
           "scope": "core",
@@ -2617,13 +2510,10 @@
             "delivery/reviews/pos-parity-2026-11-10/afirmaciones.csv#L35",
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L49"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-46",
@@ -2653,7 +2543,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "En cualquier caja de la misma sucursal: su dueño la retoma con control de versión, y otro operador sólo con el permiso de recuperación (Q-45), que deja registrado el traspaso. Nunca desde otra sucursal; al retomarla se recotiza con la configuración de la caja que la retoma.",
           "scope": "core",
@@ -2682,13 +2571,10 @@
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L50",
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L28"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-47",
@@ -2718,7 +2604,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Sólo si la campaña lo declara: cada cupón es nominativo, validado contra el cliente identificado, o al portador, válido también en la venta a cliente genérico; en ambos casos, su dueño confirma en línea la vigencia y el límite de uso. Sin esa declaración, el cupón es nominativo y no aplica al cliente genérico.",
           "scope": "country",
@@ -2755,13 +2640,10 @@
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L54",
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L34"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-48",
@@ -2790,7 +2672,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Seguir sin ellas, con aviso: si la sucursal no tiene una versión vigente y completa de promociones, la venta sigue con los precios vigentes, avisa antes del pago y registra el motivo; nunca aplica una promoción vencida o parcial. Una promoción exhibida que no pudo aplicarse se respeta con la rebaja autorizada de Q-12.",
           "scope": "country",
@@ -2832,13 +2713,10 @@
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L55",
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L36"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-49",
@@ -2866,7 +2744,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Sí, se admite abrir en cero y no se conserva el mínimo de 1 peso: la apertura declara el fondo contado por denominación, no negativo y en la moneda de la caja, y ese monto entra en el esperado del cierre (Q-102). Un mínimo mayor sólo rige si Tesorería lo fija para la sucursal.",
           "scope": "branch",
@@ -2894,13 +2771,10 @@
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L10",
             "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L8"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-50",
@@ -2930,7 +2804,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Aplicar en branch-api el umbral legal de cada país: por encima de él no se emite un documento anónimo y la caja exige registrar la identidad del comprador en el documento o emitir factura, sin dividir la venta en varios documentos para quedar bajo el umbral. En Chile son 135 UF, con nombre, RUT y forma de pago del pagador.",
           "scope": "country",
@@ -2961,13 +2834,10 @@
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L18",
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-codex.csv#L17"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-51",
@@ -2996,7 +2866,6 @@
         ],
         "priority": "P3",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "No: la caja no usa plantillas de atributos en el primer alcance; no se publican, no se migran ni condicionan la venta. Si una capacidad futura necesita atributos de producto, como un filtro de búsqueda, se publican desde el dueño del catálogo en el mismo corte que sus artículos (LS-030).",
           "scope": "core",
@@ -3025,13 +2894,10 @@
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-codex.csv#L60",
             "delivery/follow-ups.json#L579-L603"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-52",
@@ -3061,7 +2927,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Separar el tipo documental de la clasificación comercial: el perfil fiscal de cada país publica los tipos habilitados y los datos que exige cada uno; la caja ofrece factura sólo a un receptor identificado como contribuyente y con datos fiscales completos, y boleta o ticket en los demás casos. Branch-api rechaza con motivo un tipo no permitido.",
           "scope": "country",
@@ -3101,13 +2966,10 @@
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L61",
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L25"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-53",
@@ -3137,7 +2999,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Redondear sólo el pago en efectivo, como ajuste con signo que el servidor calcula una vez con la política versionada del país: el total y el documento tributario no cambian, la caja registra el efectivo cobrado y el ajuste va al ERP en un concepto propio, separado de ventas y de diferencias de caja (ADR-20).",
           "scope": "country",
@@ -3171,13 +3032,10 @@
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L70",
             "delivery/follow-ups.json#L605-L756"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-54",
@@ -3205,7 +3063,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "No sin evidencia del proveedor: la vía manual sólo registra el código de autorización que el proveedor entrega por un canal alternativo previsto en su contrato, con aprobación en servidor de un supervisor distinto del cajero, ligado a un único cheque e importe; sin ese código, el cheque queda pendiente y no paga la venta.",
           "scope": "country",
@@ -3233,13 +3090,10 @@
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L84",
             "delivery/follow-ups.json#L241-L275"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-55",
@@ -3268,7 +3122,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "No lo exige: el cierre de caja informa el estado del lote de cada terminal integrado de la caja, sin bloquearse por él. El cierre del lote es una operación del terminal (F02-14) que antes compara sus totales con los pagos registrados en ese terminal; una diferencia queda pendiente de conciliación con responsable, sin ajuste manual.",
           "scope": "country",
@@ -3301,13 +3154,10 @@
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L100",
             "delivery/reviews/pos-parity-2026-11-10/inventarios/perifericos-notas.md#L69"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-93",
@@ -3338,7 +3188,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Separar: el arqueo y cada sobrante o faltante son trabajos ERP distintos, con identidad, importe, medio, aprobación y referencia al cierre, y reintentar uno no repite el otro. Una diferencia cero no genera trabajo, y un arqueo de importe cero queda «no aplica» con su motivo, sin referencia externa ficticia.",
           "scope": "core",
@@ -3366,13 +3215,10 @@
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L107-L108",
             "delivery/reviews/pos-parity-2026-11-10/inventarios/sincronizacion.csv#L8-L9"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-94",
@@ -3402,7 +3248,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Derivar el acceso de un mapeo versionado de clase de empleado a perfil POS, aprobado por cada país: la clase mapeada recibe su perfil en la sucursal del empleado y una clase sin mapeo queda sin acceso, con motivo y sin afectar al resto. Los perfiles de supervisión o administración sólo se asignan de forma nominativa, con aprobación.",
           "scope": "country",
@@ -3426,13 +3271,10 @@
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L117",
             "delivery/reviews/pos-parity-2026-11-10/inventarios/sincronizacion.csv#L21"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-95",
@@ -3461,7 +3303,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Sólo las que use una regla de precio aprobada: cada lista declara la decisión que alimenta, como el piso de un precio o descuento manual (Q-12), su dueño y su vigencia, y viaja en el mismo paquete y corte que los precios base; si vence o falta, la regla que la usa se bloquea, sin tomar la última recibida. Las demás no se distribuyen a la caja.",
           "scope": "country",
@@ -3501,13 +3342,10 @@
             "delivery/reviews/pos-parity-2026-11-10/inventarios/sincronizacion.csv#L30",
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L37"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-96",
@@ -3537,7 +3375,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "El ERP registra la venta aunque deje stock físico negativo, y el responsable de inventario regulariza la diferencia; la caja no valida stock antes de confirmar. Si un ERP no lo admite, la venta queda como discrepancia con responsable y, una vez regularizado el stock, se reenvía con su identidad original, sin anularla.",
           "scope": "country",
@@ -3569,13 +3406,10 @@
             "delivery/specs/F03-12.md#L72-L74",
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L150"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-97",
@@ -3604,7 +3438,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Ofrecer en caja sólo los tipos de NC del régimen de cada país que habilite Finanzas, con motivos de catálogo y un plazo máximo por tipo contado desde la entrega; fuera de plazo, la NC exige aprobación de jefatura u otro rol facultado. Una NC de anulación deja el documento original anulado y sin saldo disponible.",
           "scope": "country",
@@ -3646,13 +3479,10 @@
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L159",
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L42"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-98",
@@ -3681,7 +3511,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Admitir reembolsos parciales hasta el saldo de la NC, por el medio del pago original y hasta lo cobrado por ese medio, con el efectivo limitado al del turno. Otro medio o una NC de un día anterior exigen aprobación de supervisor; el efectivo para una venta con tarjeta sigue bloqueado por defecto (ADR-20). Todo reembolso deja comprobante.",
           "scope": "country",
@@ -3715,13 +3544,10 @@
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L164",
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L48"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-99",
@@ -3749,7 +3575,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Sí, dentro de la misma sociedad: una sucursal emite NC sobre documentos de otra sucursal o canal sólo si la autoridad única del documento, a nivel país, reserva en línea la devolución y descuenta lo ya devuelto en cualquier sucursal o canal; sin respuesta de esa autoridad no se emite. Entre sociedades, no.",
           "scope": "legal_entity",
@@ -3778,13 +3603,10 @@
             "delivery/reviews/pos-parity-2026-11-10/profundizacion-preguntas.md#L27-L34",
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L161"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-100",
@@ -3812,7 +3634,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "A los documentos o cuotas vencidas que elija el cliente y, si no elige, a la cuota o el documento de vencimiento más antiguo, con desempate por número de documento; el comprobante detalla la imputación por documento y el ERP, dueño de la deuda, recibe esa asignación.",
           "scope": "country",
@@ -3843,13 +3664,10 @@
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L184",
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L80"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-101",
@@ -3879,7 +3697,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "No: aplicar una cobranza exige confirmar en línea con el ERP la versión vigente de cada documento; si no responde, la cobranza se bloquea y la caja muestra la última lectura sólo como consulta desactualizada, sin permitir cobrar sobre ella.",
           "scope": "core",
@@ -3906,13 +3723,10 @@
             "delivery/specs/F04-02.md#L86",
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L185"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-102",
@@ -3941,7 +3755,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "El esperado de cada medio es el dinero que el turno recibió o entregó por ese medio hasta el corte, sin importar el estado fiscal: el efectivo incluye la apertura, y los documentos pendientes o con error fiscal cuentan si su pago se confirmó y se listan aparte. Un cheque sin verificación aprobada no es pago y no entra.",
           "scope": "core",
@@ -3970,13 +3783,10 @@
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L61",
             "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L9"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-103",
@@ -4004,7 +3814,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "A la fecha comercial de apertura: el turno pertenece entero a esa fecha, calculada con la zona horaria de la sucursal, y el cierre conserva su fecha y hora reales con una marca de cierre desfasado. Los informes de caja agrupan por fecha comercial y muestran la hora real; cada documento conserva su propia fecha de emisión.",
           "scope": "core",
@@ -4032,13 +3841,10 @@
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L63",
             "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L9"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-104",
@@ -4066,7 +3872,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Ciego: el cajero declara el efectivo por denominación sin ver el esperado, y sólo después el servidor calcula y muestra la diferencia, sujeta a motivo y aprobación (Q-14); los medios con confirmación detallada se cotejan transacción por transacción. Se fija por país, igual para todas sus sucursales y cajas.",
           "scope": "country",
@@ -4089,13 +3894,10 @@
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L60",
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L194"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-105",
@@ -4123,7 +3925,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Mostrar aparte y con signo: por cada medio, lo cobrado y lo devuelto en dinero en el período, con la misma definición de dinero del cierre (Q-102); las NC emitidas son una partida documental propia que rebaja la venta neta sin tocar ningún medio, y una NC usada como pago figura como medio propio. Ninguna NC aparece con importe cero.",
           "scope": "core",
@@ -4161,13 +3962,10 @@
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L70",
             "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L38"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-106",
@@ -4196,7 +3994,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Moroso es el cliente con deuda vencida a la fecha de corte de la fuente, desde los días de atraso que fije Cobranza; la cartola muestra aparte el bloqueo de crédito del ERP y el próximo vencimiento, con fecha y versión de la fuente. La marca es operativa: no califica la mora legal ni autoriza o deniega crédito (F04-11).",
           "scope": "country",
@@ -4236,13 +4033,10 @@
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L83",
             "delivery/reviews/pos-parity-2026-11-10/inventarios/sincronizacion.csv#L25"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-107",
@@ -4270,7 +4064,6 @@
         ],
         "priority": "P1",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Separar quién propone y quién aprueba: el producto publica el catálogo de acciones, el administrador de país propone crear o modificar perfiles y sus permisos, y otra persona con rol de Seguridad aprueba cada cambio, sin autoaprobación. El administrador de sucursal sólo asigna perfiles vigentes en su sucursal y nunca concede permisos que no tiene.",
           "scope": "core",
@@ -4295,13 +4088,10 @@
             "delivery/specs/F01-01.md#L35",
             "delivery/specs/F01-01.md#L62"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-314"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-314",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-108",
@@ -4331,7 +4121,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Ambas, por separado: el crédito es un medio que la caja ofrece sólo si su configuración publicada lo habilita, como los demás (LC-083), y cada venta a crédito exige además la autorización del dueño del cupo (F04-11). Habilitarlo en una caja nunca concede cupo.",
           "scope": "register",
@@ -4366,13 +4155,10 @@
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L232",
             "delivery/reviews/pos-parity-2026-11-10/trazabilidad.csv#L84"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-109",
@@ -4402,7 +4188,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "Sí, sólo como contingencia: con el terminal integrado listo (Q-29), la caja no ofrece el registro manual; si queda no disponible, un supervisor lo habilita para esa caja y turno, con los datos de LP-017, y cada voucher queda pendiente de conciliar con el adquirente (Q-09). Publicar una combinación de medios inválida se rechaza (LP-016).",
           "scope": "country",
@@ -4437,13 +4222,10 @@
             "delivery/reviews/pos-parity-2026-11-10/contraste-fichas.csv#L233",
             "delivery/reviews/pos-parity-2026-11-10/trazabilidad.csv#L347"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-110",
@@ -4473,7 +4255,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "No se agregan a la OV: las líneas directas conservan su origen, precio, promociones y vendedor, y el ERP las recibe como líneas del POS aunque la agrupación de Q-43 las ponga en el documento de la OV. En caja la OV no se edita: se carga, o la fracción que autorice su dueño, o se quita; otro cambio se pide al dueño y llega como nueva versión.",
           "scope": "country",
@@ -4506,13 +4287,10 @@
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L33",
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-codex.csv#L21"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       },
       {
         "id": "Q-111",
@@ -4540,7 +4318,6 @@
         ],
         "priority": "P2",
         "reviewedOn": "2026-11-12",
-        "validation": null,
         "recommendation": {
           "answer": "No por defecto: la caja no agenda despachos ni fija su costo. El despacho llega con la OV, con su flete como línea con precio del origen y su referencia; si un país habilita el despacho desde caja, fechas y costo salen del sistema logístico o de reglas publicadas por su dueño, y la caja sólo los muestra y conserva.",
           "scope": "country",
@@ -4571,13 +4348,10 @@
             "delivery/reviews/pos-parity-2026-11-10/inventarios/caja-claude.csv#L40",
             "delivery/reviews/pos-parity-2026-11-10/paridad.csv#L21"
           ],
-          "author": {
-            "kind": "agent",
-            "name": "Claude Code · TASK-324"
-          },
-          "proposedOn": "2026-11-12",
-          "endorsement": null
-        }
+          "agent": "Claude Code · TASK-324",
+          "proposedOn": "2026-11-12"
+        },
+        "decision": null
       }
     ]
   }
