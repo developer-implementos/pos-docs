@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { renderProjectPages } from './project-view.mjs';
 import { deriveProgress, loadProgress, progressContentHash } from './progress.mjs';
 import { loadFollowUp } from './follow-up.mjs';
-import { deriveQuestions, loadQuestions, questionsContentHash } from './questions.mjs';
+import { deriveQuestions, loadQuestions, questionsContentHash, recommendationContentHash } from './questions.mjs';
 import { teamMembers } from './team.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
@@ -257,6 +257,80 @@ test('owners use the team profile when it exists and business validation names i
   assert.equal(model.counts.validated, questions.counts.validated + 1);
 });
 
+/** Schema 2 of the published registry: a draft and an endorsed recommendation on two open rules. */
+function questionsWithRecommendations() {
+  return questionsWith(content => {
+    content.schemaVersion = 2;
+    for (const item of content.items) item.recommendation = item.recommendation ?? null;
+    const [draft, endorsed] = content.items.filter(item => item.kind === 'rule' && item.state === 'open');
+    draft.recommendation = {
+      answer: 'Separar la emisión de la NC de la devolución de dinero.',
+      scope: 'country',
+      default: 'El rol de bodega no tiene el permiso de emitir NC',
+      rationale: 'La NC es un documento tributario y cada régimen define sus plazos.',
+      basis: ['practice', 'regulation'],
+      references: [{ label: 'Fiscalidad y documentos por país', url: 'https://cpe.sunat.gob.pe/sistema_emision/see_contribuyente' }],
+      sources: ['delivery/specs/F04-01.md'],
+      author: { kind: 'agent', name: 'Claude Code · TASK-314' },
+      proposedOn: draft.reviewedOn,
+      endorsement: null,
+    };
+    const proposal = {
+      answer: 'Exigir la autorización en servidor para cada acción.',
+      scope: 'core',
+      default: null,
+      rationale: 'Es un invariante del producto en todos los países.',
+      basis: ['architecture'],
+      references: [],
+      sources: ['delivery/specs/F01-01.md'],
+      author: { kind: 'agent', name: 'Claude Code · TASK-314' },
+      proposedOn: endorsed.reviewedOn,
+    };
+    endorsed.recommendation = { ...proposal, endorsement: { endorsedBy: 'pymimtos', endorsedOn: endorsed.reviewedOn, contentSha256: recommendationContentHash(proposal) } };
+  });
+}
+
+test('a question shows the team recommendation next to the current answer, with its scope, basis, links and authorship', () => {
+  const model = questionsWithRecommendations();
+  const html = questionsPage(model);
+  const { repository, revision } = model.source;
+  const [draft, endorsed] = model.items.filter(item => item.recommendation);
+  const draftCard = card(html, draft.id);
+  assert.ok(draftCard.includes('data-recommendation="draft"') && draftCard.includes('data-scope="country"'));
+  assert.ok(draftCard.indexOf('Recomendación del equipo') > draftCard.indexOf('Respuesta actual'), 'The recommendation follows the current answer');
+  for (const value of ['Separar la emisión de la NC de la devolución de dinero.', '<strong>Valor por defecto:</strong> El rol de bodega no tiene el permiso de emitir NC', '<strong>Por qué:</strong> La NC es un documento tributario y cada régimen define sus plazos.', '<strong>Fundamento:</strong> Práctica habitual · Norma', 'Configurable por país', 'Sujeta a la confirmación del responsable fiscal o legal de cada país.', 'Borrador de agente (Claude Code · TASK-314)', '<span class="project-unassigned">Sin respaldo del equipo</span>']) {
+    assert.ok(draftCard.includes(value), `${draft.id} shows ${value}`);
+  }
+  assert.ok(draftCard.includes('href="https://cpe.sunat.gob.pe/sistema_emision/see_contribuyente">Fiscalidad y documentos por país</a>'));
+  assert.ok(draftCard.includes(`href="${repository}/blob/${revision}/delivery/specs/F04-01.md"`), 'Recommendation sources are pinned to the imported revision');
+  assert.ok(draftCard.includes(`<time datetime="${draft.reviewedOn}">`));
+  const endorsedCard = card(html, endorsed.id);
+  assert.ok(endorsedCard.includes('data-recommendation="endorsed"') && endorsedCard.includes('data-scope="core"'));
+  assert.ok(endorsedCard.includes('Núcleo común: igual en todos los países'));
+  assert.ok(endorsedCard.includes(`Respaldada por <a href="https://github.com/pymimtos">@pymimtos</a> el <time datetime="${endorsed.reviewedOn}">`));
+  assert.ok(!endorsedCard.includes('Valor por defecto') && !endorsedCard.includes('Sujeta a la confirmación'), 'A core rule has no default and no regulation note');
+  const pending = model.items.find(item => item.recommendationStatus === 'none');
+  assert.ok(card(html, pending.id).includes('Sin recomendación todavía') && card(html, pending.id).includes('data-recommendation="none"'));
+  const fact = model.items.find(item => item.kind === 'fact');
+  if (fact) {
+    const factCard = card(html, fact.id);
+    assert.ok(!factCard.includes('Recomendación del equipo') && factCard.includes('data-recommendation="not_applicable"'), 'A fact is answered with evidence and shows no recommendation');
+  }
+});
+
+test('questions page counts recommendations and filters them by status and scope', () => {
+  const model = questionsWithRecommendations();
+  const html = questionsPage(model);
+  const start = html.indexOf('class="project-question-summary"');
+  const summary = html.slice(start, html.indexOf('</section>', start));
+  assert.ok(summary.includes(`<a href="/project/questions/?recommendation=draft"><strong>${model.counts.recommended - model.counts.endorsed}</strong> sin respaldo</a>`));
+  assert.ok(summary.includes(`<a href="/project/questions/?recommendation=endorsed"><strong>${model.counts.endorsed}</strong> respaldada</a>`));
+  assert.ok(summary.includes(`<a href="/project/questions/?recommendation=none"><strong>${model.counts.unrecommended}</strong> sin recomendación</a>`));
+  assert.ok(summary.includes('La recomendación del equipo propone una regla para un POS corporativo multipaís'));
+  for (const [value, label] of [['none', 'Sin recomendación'], ['draft', 'Sin respaldo'], ['endorsed', 'Respaldada']]) assert.ok(html.includes(`<option value="${value}">${label}</option>`), value);
+  for (const [value, label] of [['core', 'Núcleo común'], ['country', 'Por país'], ['legal_entity', 'Por sociedad'], ['branch', 'Por sucursal'], ['register', 'Por caja']]) assert.ok(html.includes(`<option value="${value}">${label}</option>`), value);
+});
+
 test('questions page states that legacy behavior is not an approved rule and links the source at the imported revision', () => {
   const html = questionsPage();
   assert.ok(html.includes('El comportamiento legacy citado describe lo observado; no es una regla aprobada.'));
@@ -265,7 +339,7 @@ test('questions page states that legacy behavior is not an approved rule and lin
   assert.ok(html.includes(`href="${href}">Registro de preguntas · ${questions.source.revision.slice(0, 8)}</a>`));
   assert.ok(html.includes(`Registro revisado <time datetime="${questions.reviewedOn}">`));
   assert.match(html, /data-project-filters hidden/);
-  for (const name of ['state', 'phase', 'decider']) assert.ok(html.includes(`<select name="${name}">`), name);
+  for (const name of ['state', 'phase', 'decider', 'recommendation', 'scope']) assert.ok(html.includes(`<select name="${name}">`), name);
   for (const decider of questions.deciders) assert.ok(html.includes(`<option value="${escapeText(decider)}">`), decider);
   assert.match(html, /<noscript>/);
 });

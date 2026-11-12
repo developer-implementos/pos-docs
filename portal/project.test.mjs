@@ -80,3 +80,14 @@ test('question filters match state, any affected phase and the exact decider rol
   assert.equal(matchesProjectItem(data, text, { query: 'cajero' }, 'questions'), true);
   assert.equal(matchesProjectItem(data, text, { query: 'tesoreria' }, 'questions'), false);
 });
+
+test('question filters match the recommendation status and its exact scope', () => {
+  const draft = { state: 'open', phases: 'phase-01', decider: 'Comercial', recommendation: 'draft', scope: 'country' };
+  const fact = { state: 'answered', phases: 'phase-01', decider: 'Finanzas', recommendation: 'not_applicable', scope: '' };
+  assert.equal(matchesProjectItem(draft, 'Q-01', { recommendation: 'draft', scope: 'country' }, 'questions'), true);
+  assert.equal(matchesProjectItem(draft, 'Q-01', { recommendation: 'endorsed' }, 'questions'), false, 'A draft is never shown as endorsed');
+  assert.equal(matchesProjectItem(draft, 'Q-01', { scope: 'core' }, 'questions'), false);
+  assert.equal(matchesProjectItem(draft, 'Q-01', { scope: 'coun' }, 'questions'), false, 'A scope filter selects one level, not a prefix');
+  assert.equal(matchesProjectItem(fact, 'Q-04', { recommendation: 'none' }, 'questions'), false, 'A fact never counts as missing a recommendation');
+  assert.equal(matchesProjectItem(fact, 'Q-04', {}, 'questions'), true);
+});

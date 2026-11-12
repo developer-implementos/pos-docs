@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { productRepository } from './follow-up.mjs';
-import { csvIds, deriveQuestions, internalReferences, questionsContentHash, validateQuestionsContent } from './questions.mjs';
+import { csvIds, deriveQuestions, internalReferences, officialHosts, questionsContentHash, recommendationContentHash, validateQuestionsContent } from './questions.mjs';
 
 const revision = 'c'.repeat(40);
 const audit = 'delivery/reviews/pos-parity-2026-11-10';
@@ -63,6 +63,36 @@ const derive = (mutate = () => {}, model = followUp()) => {
   mutate(value);
   return deriveQuestions(snapshot(value), progress(), model);
 };
+// The same fixture as tools/check-business-questions.test.mjs in POS Platform, so both hash it alike.
+const recommendation = (fields = {}) => ({
+  answer: 'La exclusión aplica sólo a las líneas de la OV; un cupón manual sigue disponible para el resto de la cesta.',
+  scope: 'country',
+  default: 'Cupón manual habilitado para las líneas sin OV',
+  rationale: 'Separa la regla comercial de la OV del cupón; cada país define sus promociones.',
+  basis: ['practice', 'architecture'],
+  references: [{ label: 'Fiscalidad y documentos por país', url: 'https://pos-docs-starlight.vercel.app/guide/proposal/fiscal-compliance/' }],
+  sources: ['delivery/specs/F01-01.md#L34'],
+  author: { kind: 'agent', name: 'Claude Code · TASK-314' },
+  proposedOn: '2026-11-10',
+  endorsement: null,
+  ...fields,
+});
+const endorsement = value => ({ endorsedBy: 'pymimtos', endorsedOn: '2026-11-10', contentSha256: recommendationContentHash(value) });
+/** Schema 2: Q-01 has a draft, Q-02 an endorsed recommendation; the rest, none. */
+const contentV2 = () => {
+  const value = content();
+  value.schemaVersion = 2;
+  for (const item of value.items) item.recommendation = null;
+  value.items[0].recommendation = recommendation();
+  const endorsed = recommendation({ scope: 'core', default: null, author: { kind: 'person', login: 'floxcristian' } });
+  value.items[1].recommendation = { ...endorsed, endorsement: endorsement(endorsed) };
+  return value;
+};
+const deriveV2 = (mutate = () => {}) => {
+  const value = contentV2();
+  mutate(value);
+  return deriveQuestions(snapshot(value), progress(), followUp());
+};
 
 test('groups each question in the earliest phase of its packages and orders by phase, priority and id', () => {
   const before = progress();
@@ -90,7 +120,7 @@ test('orders identifiers numerically within the same phase and priority', () => 
 
 test('counts states and pending business validation without inferring owners or validations', () => {
   const model = derive();
-  assert.deepEqual(model.counts, { total: 6, open: 3, answered: 1, decided: 1, validated: 1, pendingValidation: 5, unassigned: 5 });
+  assert.deepEqual(model.counts, { total: 6, open: 3, answered: 1, decided: 1, validated: 1, pendingValidation: 5, unassigned: 5, recommended: 0, endorsed: 0, unrecommended: 5 });
   assert.equal(model.items.find(item => item.id === 'Q-03').validation, null, 'A decision in a spec is not a business validation');
   assert.deepEqual(model.deciders, ['Comercial', 'Finanzas (valida la respuesta)', 'Operaciones', 'Producto (ya decidido)']);
   assert.equal(model.reviewedOn, '2026-11-10');
@@ -132,7 +162,8 @@ test('validates provenance and content hash like the other project snapshots', (
 
 test('applies the product validation rules to the published content', () => {
   const rejects = (mutate, pattern) => assert.throws(() => derive(mutate), pattern);
-  rejects(value => { value.schemaVersion = 2; }, /unsupported schema version/);
+  rejects(value => { value.schemaVersion = 3; }, /unsupported schema version/);
+  rejects(value => { value.schemaVersion = '1'; }, /unsupported schema version/);
   rejects(value => { value.items[0].extra = true; }, /Q-01|items\[0\]: unexpected or missing fields/);
   rejects(value => { value.items[1].id = 'Q-01'; }, /duplicate question ID/);
   rejects(value => { value.items.reverse(); }, /out of order/);
@@ -164,6 +195,73 @@ test('applies the product validation rules to the published content', () => {
   rejects(value => { value.items[0].reviewedOn = '2026-02-30'; }, /invalid date/);
   rejects(value => { value.items[0].question = ' Pregunta con espacios '; }, /single-line text/);
   rejects(value => { value.items[0].currentAnswer = 'Primera línea\nsegunda línea'; }, /single-line text/);
+});
+
+test('reads the previous schema without recommendations while the product migrates', () => {
+  const model = derive();
+  assert.ok(model.items.every(item => item.recommendation === null), 'Schema 1 has no recommendation to show');
+  assert.equal(model.items.find(item => item.id === 'Q-01').recommendationStatus, 'none');
+  assert.equal(model.items.find(item => item.id === 'Q-04').recommendationStatus, 'not_applicable', 'A fact never carries a recommendation');
+  assert.deepEqual(model.scopes, []);
+  assert.throws(() => derive(value => { value.items[0].recommendation = null; }), /Q-01|items\[0\]: unexpected or missing fields/, 'Schema 1 does not declare recommendations');
+});
+
+test('derives the recommendation status, its scopes and its counts from schema 2', () => {
+  const model = deriveV2();
+  const status = id => model.items.find(item => item.id === id).recommendationStatus;
+  assert.deepEqual(['Q-01', 'Q-02', 'Q-03', 'Q-04', 'Q-05', 'Q-10'].map(status), ['draft', 'endorsed', 'none', 'not_applicable', 'none', 'none']);
+  assert.deepEqual([model.counts.recommended, model.counts.endorsed, model.counts.unrecommended], [2, 1, 3]);
+  assert.deepEqual(model.scopes, ['core', 'country'], 'Scopes follow the configuration order, from the core to the register');
+  const draft = model.items.find(item => item.id === 'Q-01');
+  assert.equal(draft.state, 'open', 'A recommendation leaves the rule open');
+  assert.equal(draft.validation, null, 'A recommendation is not a business validation');
+  assert.deepEqual(draft.recommendation, recommendation());
+});
+
+test('applies the product rules to the recommendations of schema 2', () => {
+  const rejects = (mutate, pattern) => assert.throws(() => deriveV2(mutate), pattern);
+  const first = mutate => value => mutate(value.items[0].recommendation, value);
+  assert.doesNotThrow(() => deriveV2());
+  rejects(value => { delete value.items[2].recommendation; }, /Q-03|items\[2\]: unexpected or missing fields/);
+  rejects(value => { value.items[3].recommendation = recommendation(); }, /Q-04: a fact is answered with evidence; only a rule or a decision carries a recommendation/);
+  rejects(first(item => { item.confidence = 'alta'; }), /Q-01\.recommendation: unexpected or missing fields/);
+  rejects(first(item => { item.scope = 'global'; }), /Q-01\.recommendation\.scope: expected core, country, legal_entity, branch or register/);
+  rejects(first(item => { item.scope = 'core'; }), /Q-01\.recommendation\.default: a core rule is the same in every country and has no default/);
+  rejects(first(item => { item.default = null; }), /Q-01\.recommendation\.default: a configurable rule states its recommended default/);
+  rejects(first(item => { item.basis = ['opinion']; }), /Q-01\.recommendation\.basis: unsupported basis opinion/);
+  rejects(first(item => { item.basis = []; }), /Q-01\.recommendation\.basis: expected nonempty list/);
+  rejects(first(item => { item.basis = ['regulation']; }), /Q-01\.recommendation\.references: a recommendation grounded in a regulation cites an official source/);
+  rejects(first(item => { item.references = []; item.sources = []; }), /Q-01\.recommendation: a recommendation grounded in the architecture cites the spec, ADR or proposal it follows/);
+  rejects(first(item => { item.references[0].url = 'http://www.sii.cl/circular.pdf'; }), /Q-01\.recommendation\.references\[0\]\.url: expected a public HTTPS URL without credentials or port/);
+  rejects(first(item => { item.references.push({ ...item.references[0] }); }), /Q-01\.recommendation\.references: duplicate URL/);
+  rejects(first(item => { item.sources = ['tmp/private/evidencia.md']; }), /Q-01\.recommendation\.sources\[0\]: tmp\//);
+  rejects(first(item => { item.author = { kind: 'person', login: '@floxcristian' }; }), /Q-01\.recommendation\.author\.login: expected a GitHub login/);
+  rejects(first(item => { item.proposedOn = '2026-11-11'; }), /Q-01\.recommendation: proposed after the item review/);
+  rejects(first(item => { item.answer = 'Consultar imp-nueva-caja antes de vender.'; }), /Q-01\.recommendation\.answer: "imp-nueva-caja" is a corporate host name; POS Docs publishes this text/);
+  rejects(first(item => { item.references[0].url = 'https://docs.caja-01.local/manual'; }), /Q-01\.recommendation\.references\[0\]\.url: ".*caja-01\.local" is a internal domain/);
+  const second = mutate => value => mutate(value.items[1].recommendation);
+  rejects(second(item => { item.endorsement.endorsedBy = 'floxcristian'; }), /Q-02\.recommendation\.endorsement: the author cannot endorse their own recommendation/);
+  rejects(second(item => { item.endorsement.endorsedOn = '2026-11-09'; }), /Q-02\.recommendation\.endorsement: endorsed before the recommendation was proposed/);
+  rejects(second(item => { item.endorsement.contentSha256 = 'A'.repeat(64); }), /Q-02\.recommendation\.endorsement\.contentSha256: expected a lowercase SHA-256/);
+  rejects(second(item => { item.answer = 'Otra regla, después del respaldo.'; }), /Q-02\.recommendation\.endorsement: the recommendation changed after it was endorsed; endorse it again or set endorsement to null/);
+  const official = url => first(item => { item.basis = ['regulation']; item.references = [{ label: 'Norma', url }]; });
+  assert.doesNotThrow(() => deriveV2(official('https://cpe.sunat.gob.pe/sistema_emision/see_contribuyente')));
+  rejects(official('https://sii.cl.example.com/circular.pdf'), /cites an official source/);
+  assert.ok(officialHosts.includes('sii.cl') && officialHosts.includes('europa.eu'));
+});
+
+test('computes the same endorsement hash as POS Platform', () => {
+  assert.equal(recommendationContentHash(recommendation()), '45719ea2141a174e5e5b52884292fe7094d52ce14c9793e20baa75d237c1ab90');
+  const reordered = Object.fromEntries(Object.entries(recommendation()).reverse());
+  reordered.references = reordered.references.map(({ label, url }) => ({ url, label }));
+  assert.equal(recommendationContentHash(reordered), recommendationContentHash(recommendation()), 'Key order does not change the hash');
+});
+
+test('checks recommendation sources only when the import provides the product context', () => {
+  const value = contentV2();
+  value.items[0].recommendation.sources = ['delivery/specs/F09-99.md'];
+  assert.doesNotThrow(() => validateQuestionsContent(structuredClone(value), { workPackageIds: progress().workPackages.map(item => item.id) }));
+  assert.throws(() => validateQuestionsContent(structuredClone(value), { workPackageIds: progress().workPackages.map(item => item.id), sourceExists: () => false }), /Q-01\.recommendation\.sources\[0\]: delivery\/specs\/F09-99\.md is not a repository file/);
 });
 
 test('rejects text that would publish infrastructure, as the product validator does', () => {

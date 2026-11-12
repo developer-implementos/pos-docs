@@ -134,6 +134,32 @@ test('validates the registry with the product rules before writing', t => {
   }
 });
 
+test('imports schema 2 with recommendations and checks their sources at the product revision', t => {
+  const item = fixture(t);
+  const recommendation = {
+    answer: 'Exigir la autorización en servidor para cada acción.', scope: 'core', default: null,
+    rationale: 'Es un invariante del producto en todos los países.', basis: ['architecture', 'regulation'],
+    references: [{ label: 'SEE del contribuyente', url: 'https://cpe.sunat.gob.pe/sistema_emision/see_contribuyente' }],
+    sources: ['delivery/specs/F01-01.md#L3'], author: { kind: 'agent', name: 'Claude Code · TASK-314' }, proposedOn: '2026-11-10', endorsement: null,
+  };
+  const upgrade = content => {
+    content.schemaVersion = 2;
+    for (const question of content.items) question.recommendation = null;
+    content.items[0].recommendation = recommendation;
+  };
+  change(item, upgrade);
+  git(item.workspace, 'update-ref', 'refs/remotes/origin/main', 'HEAD');
+  assert.equal(syncProjectQuestions(item).changed, true);
+  const snapshot = JSON.parse(fs.readFileSync(item.destination, 'utf8'));
+  assert.equal(snapshot.content.schemaVersion, 2);
+  assert.deepEqual(snapshot.content.items[0].recommendation, recommendation);
+  assert.equal(snapshot.source.sha256, questionsContentHash(snapshot.content));
+  change(item, content => { upgrade(content); content.items[0].recommendation.sources = ['delivery/specs/F01-99.md']; });
+  git(item.workspace, 'update-ref', 'refs/remotes/origin/main', 'HEAD');
+  assert.throws(() => syncProjectQuestions(item), /Q-01\.recommendation\.sources\[0\]: delivery\/specs\/F01-99\.md is not a repository file/);
+  assert.deepEqual(JSON.parse(fs.readFileSync(item.destination, 'utf8')), snapshot, 'A rejected registry keeps the previous snapshot');
+});
+
 test('rejects dirty and foreign source worktrees and keeps the previous snapshot on a failed check', t => {
   const item = fixture(t);
   write(item.workspace, 'untracked.txt', 'not reviewed');
