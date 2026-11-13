@@ -30,7 +30,7 @@ Espejo Engram: pendiente. El servidor MCP no conectó en esta sesión; la ficha 
 ## Tasks
 
 - [x] T1 · S1,S2,S3 · route:inline · Lector de los esquemas 3 y 4, catálogo de roles, roles consultados, preguntas unidas, tarjeta, filtro, resumen, estilos, pruebas y `docs/project-progress.md` · status:done · evidence: las pruebas del esquema 4 se escribieron después del lector, así que no hay un RED registrado; GREEN `questions:test` 20/20, importador 8/8, `project:test`, `portal:test` 210/210, `validate`, `typecheck`, `build`, `project:check`, `portal:check` y `editorial:check` aprobados sobre el corte vigente del esquema 3
-- [ ] T2 · S1,S2 · route:inline · Importar localmente la rama del producto con el esquema 4 y revisar la vista con los datos reales · status:pending · evidence: espera la rama del producto con el esquema 4
+- [x] T2 · S1,S2 · route:inline · Importar localmente la rama del producto con el esquema 4 y revisar la vista con los datos reales · status:done · evidence: importación local de pos-platform `71c85d0` (PR #340), sin versionar el snapshot: 108 preguntas, 98 abiertas y 96 pendientes de decisión. `portal:test` 210/210, y `build` y `project:check` aprobados con 108 preguntas en 5 fases. En el HTML generado figuran la sección con las 17 preguntas unidas (Q-46 enlaza a Q-08), el filtro con 13 roles y «Se consulta a» en las tarjetas
 - [ ] T3 · S3 · route:inline · Importar el corte del producto en `main` con el esquema 4 y retirar el esquema 3 del lector · status:pending · evidence: espera que el producto integre el esquema 4 en `main`
 
 ## Log
