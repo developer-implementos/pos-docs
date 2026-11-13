@@ -20,6 +20,10 @@ const head = 'b'.repeat(40);
 const current = manifest['.'];
 const [major, minor] = current.split('.').map(Number);
 const next = `${major}.${minor + 1}.0`;
+// The tree under test can be the release branch itself, whose manifest already holds the candidate. A fixed
+// "other" version eventually collides with `next`, so the versions that must be rejected derive from it.
+const unrelated = `${major}.${minor + 2}.0`;
+const disagreeing = `${major + 1}.0.0`;
 
 // Same insertion release-please 17.6.0 performs in src/updaters/changelog.ts.
 function releasePleaseChangelog(content, entry) {
@@ -84,7 +88,7 @@ test('the configuration keeps reader-facing types visible and tooling hidden', (
 
 test('checkRelease rejects a history that disagrees with the released version', () => {
   const packageJson = JSON.parse(text('package.json'));
-  assert.throws(() => checkRelease({ config, manifest: { '.': '9.9.9' }, packageJson, changelog: text('CHANGELOG.md') }), /must agree/);
+  assert.throws(() => checkRelease({ config, manifest: { '.': disagreeing }, packageJson, changelog: text('CHANGELOG.md') }), /must agree/);
   const stale = releasePleaseChangelog(text('CHANGELOG.md'), firstEntry());
   assert.throws(() => checkRelease({ config, manifest, packageJson, changelog: stale }), /latest CHANGELOG\.md entry/);
   assert.throws(() => checkRelease({ config: { ...config, 'bootstrap-sha': 'main' }, manifest, packageJson, changelog: text('CHANGELOG.md') }), /bootstrap-sha/);
@@ -128,7 +132,7 @@ test('release content outside the version bump is rejected', async () => {
   await reject({ entry: firstEntry().replace('### Novedades', '### Otra cosa') }, /Unknown changelog section/);
   await reject({ entry: `${firstEntry()}\n<script>alert(1)</script>` }, /Unexpected changelog line/);
   await reject({ entry: `${firstEntry()}\n* **x:** <img src=x onerror=alert(1)>` }, /must not contain HTML/);
-  await reject({ entry: firstEntry('0.9.0') }, /does not describe/);
+  await reject({ entry: firstEntry(unrelated) }, /does not describe/);
   await reject({ entry: firstEntry().split('\n')[0] }, /at least one change/);
 });
 
