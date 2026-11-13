@@ -68,10 +68,10 @@ const knownFiles = new Set(snapshots.map(item => item.path));
 test('the rendered PR passes the editorial policy and lists the title and every entry in its changelog block', () => {
   const entries = ['docs(progress): F01-01 pasa de Verificado técnicamente a En desarrollo', 'docs(follow-up): FOLLOWUP-017 actualizado (impacto): Validar el registro'];
   const { title, body } = renderImportPullRequest({ revision, results: results(['progress', 'followUp']), entries });
-  assert.equal(title, 'docs(project): [TASK-283] importar el corte aaaaaaa de avance y seguimientos');
+  assert.equal(title, 'docs(project): [TASK-361] importar el corte aaaaaaa de avance y seguimientos');
   assert.ok(title.length <= 100);
   const declaration = validatePullRequest({ body, knownFiles });
-  assert.equal(declaration.issueNumber, 283);
+  assert.equal(declaration.issueNumber, 361);
   assert.deepEqual(declaration.sources, ['portal/data/project-progress.json', 'portal/data/project-follow-up.json']);
   assert.deepEqual(readerJourneys(body), ['/project/', '/project/work/', '/guide/implementation/progress/', '/project/attention/']);
   assert.deepEqual(validateChangelogOverride(body).entries, [title, ...entries]);
@@ -82,7 +82,7 @@ test('the rendered PR passes the editorial policy and lists the title and every 
 
 test('a title that would exceed the subject limit names the source instead of every snapshot', () => {
   const { title, body } = renderImportPullRequest({ revision, results: results(['progress', 'followUp', 'planning', 'questions']), entries: [] });
-  assert.equal(title, 'docs(project): [TASK-283] importar el corte aaaaaaa de los registros de entrega del producto');
+  assert.equal(title, 'docs(project): [TASK-361] importar el corte aaaaaaa de los registros de entrega del producto');
   assert.ok(title.length <= 100);
   assert.match(body, /cambian los datos de avance, seguimientos, planificación y preguntas\./);
 });
@@ -90,7 +90,7 @@ test('a title that would exceed the subject limit names the source instead of ev
 test('snapshots re-imported only to keep one revision are named apart from those whose data changes', () => {
   const mixed = results(['progress', 'followUp', 'planning', 'questions']).map(item => ({ ...item, material: item.name === 'followUp' }));
   const { title, body } = renderImportPullRequest({ revision, results: mixed, entries: [] });
-  assert.equal(title, 'docs(project): [TASK-283] importar el corte aaaaaaa de seguimientos');
+  assert.equal(title, 'docs(project): [TASK-361] importar el corte aaaaaaa de seguimientos');
   assert.match(body, /cambian los datos de seguimientos\. Avance, planificación y preguntas se reimportan sólo para conservar una misma revisión\./);
   assert.match(body, /\| `portal\/data\/project-progress\.json` \| importado: sólo cambia la revisión de origen \|/);
   assert.match(body, /\| `portal\/data\/project-follow-up\.json` \| importado: cambian sus datos \|/);
@@ -261,4 +261,26 @@ test('current snapshots plan nothing; a dirty checkout or an unexpected file abo
   const stray = snapshots.map(item => fakeImporter(item.name, item.name === 'planning' ? { stale: true, onWrite: () => fs.writeFileSync(path.join(dir, 'stray.txt'), 'x') } : {}).importer);
   assert.throws(() => planImport({ root: dir, workspace: '.', importers: stray }), /other than the imported snapshots/);
   assert.throws(() => planImport({ root: dir, workspace: '.', importers: current }), /must be clean/);
+});
+
+// The import PRs link one permanent product issue. The job checks it with its product token before
+// publishing, because this repository's CI cannot read the private product and only reports it as
+// unverified.
+test('the import issue is read with the product token and must be open, with the expected identity', async () => {
+  const { verifyImportIssue } = await import('./issue.mjs');
+  const issue = (fields = {}) => ({ number: 361, html_url: 'https://github.com/developer-implementos/pos-platform/issues/361', state: 'open', ...fields });
+  const calls = [];
+  const fetcher = value => async (url, init) => {
+    calls.push({ url, init });
+    return { status: value === null ? 404 : 200, json: async () => value };
+  };
+  assert.deepEqual(await verifyImportIssue({ token: 'product-token', fetcher: fetcher(issue()) }), { status: 'verified-open', issueNumber: 361 });
+  assert.equal(calls[0].url, 'https://api.github.com/repos/developer-implementos/pos-platform/issues/361');
+  assert.equal(calls[0].init.method, 'GET');
+  assert.equal(calls[0].init.headers.Authorization, 'Bearer product-token');
+  await assert.rejects(verifyImportIssue({ token: 'product-token', fetcher: fetcher(issue({ state: 'closed' })) }), /Import issue #361: The linked issue is not open/);
+  await assert.rejects(verifyImportIssue({ token: 'product-token', fetcher: fetcher(issue({ number: 283 })) }), /Import issue #361: GitHub returned a different issue identity/);
+  await assert.rejects(verifyImportIssue({ token: 'product-token', fetcher: fetcher(issue({ pull_request: {} })) }), /points to a pull request/);
+  await assert.rejects(verifyImportIssue({ token: 'product-token', fetcher: fetcher(null) }), /HTTP 404/);
+  await assert.rejects(verifyImportIssue({ token: '', fetcher: fetcher(issue()) }), /token with issues: read is required/);
 });

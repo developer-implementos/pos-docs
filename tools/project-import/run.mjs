@@ -15,6 +15,7 @@ import { validatePullRequest } from '../editorial/policy.mjs';
 import { validateChangelogOverride } from '../release/policy.mjs';
 import { missingSnapshotEntries, snapshotChanges, snapshotPaths } from '../release/snapshot-changes.mjs';
 import { closeObsoleteImport, importClient, publishImport } from './github.mjs';
+import { verifyImportIssue } from './issue.mjs';
 import { renderImportPullRequest } from './pull-request.mjs';
 import { importSnapshots } from './snapshots.mjs';
 
@@ -115,6 +116,9 @@ async function main() {
     summarize(lines);
     return;
   }
+  // The PR links the permanent import issue; a closed one stops the run before anything is published.
+  const issue = await verifyImportIssue({ token: process.env.GH_TOKEN });
+  lines.push(`Issue de la importación #${issue.issueNumber}: abierta.`);
   const result = await publishImport({
     request: importClient({ token: process.env.POS_DOCS_TOKEN }),
     base: plan.base,

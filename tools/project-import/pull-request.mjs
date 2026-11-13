@@ -6,7 +6,7 @@
  */
 import { changesBlock } from '../release/snapshot-changes.mjs';
 
-export const importIssue = 283;
+export const importIssue = 361;
 export const importBranch = 'automation/project-import';
 const issueUrl = `https://github.com/developer-implementos/pos-platform/issues/${importIssue}`;
 const commitUrl = revision => `https://github.com/developer-implementos/pos-platform/commit/${revision}`;
