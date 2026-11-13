@@ -29,6 +29,7 @@
 - **Propiedad de la rama y la PR:** si la rama o la PR no las creó la App, la corrida aborta en lugar de sobrescribirlas o cerrarlas.
 - **Logs públicos:** este repositorio es público, así que la corrida sólo imprime revisiones, estados y el enlace de la PR, nunca el contenido de los snapshots ni código del producto. Los snapshots ya son públicos una vez integrados.
 - **Una corrida a la vez:** una publicación en curso nunca se interrumpe (`concurrency: project-import`).
+- **Issue permanente:** cada PR de importación enlaza [TASK-361](https://github.com/developer-implementos/pos-platform/issues/361), que queda abierta a propósito, porque la política editorial exige una issue abierta del producto. La CI de este repositorio no puede leer el producto y sólo comprueba la declaración. Por eso la corrida, con su token del producto, comprueba que la issue esté abierta antes de publicar ([`issue.mjs`](issue.mjs)), y si está cerrada falla sin abrir la PR. No cerrarla. Para detener la importación se quita `PROJECT_IMPORT_ENABLED`.
 
 Las pruebas de [`project-import.test.mjs`](project-import.test.mjs) y de [`repository-governance.test.mjs`](../repository-governance.test.mjs) fijan estas propiedades.
 
