@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "2eaf8f625fa78f07a0249dccc71b2ee3a5852b13",
+    "revision": "fd8d31deaceb295708b7aa9fdc9bc64977efa745",
     "path": "delivery/follow-ups.json",
     "sha256": "e2354daeee98d42652fdead22b12a1dbe2f40ea596a5cc2174764dfa3c464942"
   },
@@ -847,7 +847,7 @@
     ]
   },
   "issues": {
-    "observedAt": "2026-11-13T19:38:54.569Z",
+    "observedAt": "2026-11-13T21:01:43.658Z",
     "repository": "https://github.com/developer-implementos/pos-platform",
     "entries": [
       {
@@ -1099,7 +1099,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-13T18:26:55Z"
+        "updatedAt": "2026-11-13T20:43:57Z"
       },
       {
         "code": "F02-11",
