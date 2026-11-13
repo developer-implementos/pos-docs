@@ -226,6 +226,16 @@ try {
   await form().locator('[name=decider]').selectOption(decider);
   assert.equal(await count(), questions.items.filter(item => item.decider === decider).length);
   await reset();
+  const [merged] = questions.merged;
+  if (merged) {
+    // The anchor of a merged question still resolves, and leads to the question where it is decided.
+    await navigate(`/project/questions/#${merged.id.toLowerCase()}`);
+    assert.ok(await page.locator(`#${merged.id.toLowerCase()}`).isVisible(), `${merged.id} keeps its anchor`);
+    await page.locator(`#${merged.id.toLowerCase()} a[href="#${merged.into.toLowerCase()}"]`).click();
+    assert.equal(new URL(page.url()).hash, `#${merged.into.toLowerCase()}`);
+    assert.ok(await page.locator(`#${merged.into.toLowerCase()}`).isVisible(), `${merged.into} is shown`);
+    await navigate('/project/questions/');
+  }
   await form().locator('[name=recommendation]').selectOption('present');
   assert.equal(new URL(page.url()).searchParams.get('recommendation'), 'present');
   assert.equal(await count(), questions.counts.recommended, 'The filter selects every question with the agent recommendation');
