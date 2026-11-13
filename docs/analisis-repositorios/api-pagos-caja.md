@@ -12,7 +12,7 @@ Los hallazgos son observaciones del código, con impacto inferido y condiciones 
 
 Es una API Node.js/Express que combina **consulta federada de datos de sucursales** y **administración de estados de notas de crédito (NC)**. No es el agente Transbank, no procesa autorizaciones bancarias y no se observa escritura a PostgreSQL ni integración directa con AX en este repositorio.
 
-El alcance es mayor que «consulta de pagos»: expone devoluciones, mantiene estados de NC y recupera datos de usuarios relacionados con AX. Para consultar una sucursal, lee de MongoDB la dirección y las credenciales de PostgreSQL y abre una conexión directa a esa base. Para ciertas consultas, hace lo mismo con **todas las sucursales activas**. Esto aporta una arista arquitectónica no explicitada en la presentación: un servicio agregador accede a las bases operacionales de las tiendas. El código demuestra el acceso; la ubicación física central del servicio sigue siendo un antecedente de la presentación.
+El alcance es mayor que «consulta de pagos»: expone devoluciones, mantiene estados de NC y recupera datos de usuarios relacionados con AX. Para consultar una sucursal, obtiene de MongoDB los datos de conexión de su base y abre una conexión directa a ella. Para ciertas consultas, hace lo mismo con **todas las sucursales activas**. Esto aporta una arista arquitectónica no explicitada en la presentación: un servicio agregador accede a las bases operacionales de las tiendas. El código demuestra el acceso; la ubicación física central del servicio sigue siendo un antecedente de la presentación.
 
 ```mermaid
 flowchart LR
@@ -33,10 +33,9 @@ flowchart LR
 | Aplicación | `package.json`: nombre `api-pagos`, versión `1.0.0`; `app.js`; archivo `apps.json` compatible con PM2. | Un proceso HTTP; no se identificó un worker de conciliación. |
 | Dependencias declaradas | Express `^4.17.1`, pg `^8.7.3`, Mongoose `^5.13.15`, Helmet `^3.23.3`, cors `^2.8.5`, express-rate-limit `^5.5.1`. | Rangos de manifiesto, no versiones productivas. |
 | Resoluciones del lockfile | Express `4.21.2`, pg `8.16.2`, Mongoose `5.13.15`, Helmet `3.23.3`; lockfile versión 1. | La matriz de la presentación no debe tratar los rangos como versiones instaladas. |
-| Escucha | Puerto predeterminado **3366**, host `0.0.0.0`; coincide con las variables versionadas. | Discrepa del **3386** de la imagen; proxy y puerto productivo por confirmar. |
+| Escucha | Puerto predeterminado **3366**, configurable. | Discrepa del **3386** de la imagen; proxy y puerto productivo por confirmar. |
 | MongoDB | Dos conexiones Mongoose separadas; modelos `estadoNC`, `cajaSucursales` y `usuariosAX`. | MongoDB cumple más funciones que solamente NC. |
 | PostgreSQL | `new Client` por consulta y por sucursal; cierre en `finally`. | Acoplamiento al esquema físico de cada tienda y dependencia de conectividad hacia ella. |
-| Protección HTTP | Helmet, CORS con lista configurable y 100 solicitudes/IP/15 minutos para `/api/`. | Son controles auxiliares; no implementan identidad ni permisos por operación. |
 | Operación | Morgan, consola, `/health`, cierre del servidor en SIGTERM/SIGINT. | Health informa vida del proceso, no disponibilidad de MongoDB o sucursales. |
 
 Fuentes: [P01], [P02], [P03], [P04], [P05]. No se evaluaron CVEs ni ciclos actuales de soporte.
@@ -54,7 +53,7 @@ Todas las rutas siguientes usan el prefijo `/api/pagos`. No se observa versionad
 | `GET /estadoNC` | Consulta documentos por `folio`. | Lectura MongoDB; no filtra `origen`, empresa ni país. |
 | `POST /estadoNC` | Busca por `folio` y `origen`, marca existente `en uso` o crea un registro. | **Escritura MongoDB**; presenta continuación no deseada tras responder si ya existe. |
 | `PUT /estadoNC/:folio/:origen` | Cambia el primer registro encontrado a `disponible`. | Escritura MongoDB; no comprueba propietario de la reserva ni estado previo. |
-| `GET /datosUsuario/:recid` | Busca `vendedorRecid` y proyecta códigos, RUT y nombre. | Lectura `usuariosAX`; no devuelve el campo `clave` del modelo. |
+| `GET /datosUsuario/:recid` | Busca `vendedorRecid` y proyecta códigos, RUT y nombre. | Lectura `usuariosAX`. |
 
 Fuentes: [P06], [P07], [P08], [P09]. `/health` y `/` son rutas adicionales de diagnóstico. «Disponible» y «en uso» son los únicos estados del modelo NC; no equivalen a un libro de saldos, a liquidación de pagos o a confirmación en AX.
 
@@ -63,7 +62,7 @@ Fuentes: [P06], [P07], [P08], [P09]. `/health` y `/` son rutas adicionales de di
 - PostgreSQL: `dtes`, `documentos`, `pagos`, `comprobante_ventas`, `pago_comprobante_ventas`, `comprobante_venta_has_documentos`, `estado_pagos`, `caja_has_forma_pagos`, `forma_pagos`, `empresas`, `personas`, `tipo_documentos`, `nota_de_credito_externas`, `devoluciones` y `detalle_devoluciones`. Algunas referencias incluyen `public`; otras dependen del `search_path`.
 - El vínculo `detalle_devoluciones.devolucione_id` y mezclas como `puntos_emision`, `puntoEmision`, `created_at`/`createdAt`, `folio_nc`/`folioNC`, `usuariosAX`, `vendedorRecid` y `forma_pago_externo` muestran convenciones distintas y traducciones hechas dentro del agregador.
 - `estadoNC` guarda `folio: Number`, estado, origen (`caja`/`omni`), monto, punto de emisión y timestamps; no declara índices únicos, propiedad de reserva, caducidad, moneda, país o entidad legal. La existencia de índices administrados fuera del código está por verificar.
-- `cajaSucursales` define campos para usuario y clave de PostgreSQL; `usuariosAX` también define un campo `clave`, sin que este repositorio revele qué formato tiene o quién lo mantiene. No se consultaron datos reales.
+- `cajaSucursales` guarda el directorio y los datos de conexión de cada tienda, y `usuariosAX` datos de usuarios de AX. No se consultaron datos reales.
 
 Fuentes: [P07]–[P10]. Estandarizar debe incluir significado, tipos y claves; renombrar tablas de forma inmediata rompería estas consultas directas.
 
@@ -79,21 +78,13 @@ La prioridad indica orden recomendado de tratamiento, no una clasificación CVSS
 
 **Acción propuesta:** definir la operación de negocio —reservar, consumir, liberar—, identidad compuesta y propietario; realizar una transición condicional atómica, con clave de idempotencia y respuesta de conflicto. Verificar y sanear duplicados antes de imponer unicidad. Una liberación debe validar titular/versión. Esta corrección es previa a usar el servicio como control de crédito en varios países o durante coexistencia de ERPs.
 
-### PAG-02 · Alta · NC y consultas carecen de autenticación y autorización dentro de la aplicación
+### PAG-02 · Alta · Hallazgo de seguridad
 
-**Evidencia:** el montaje de rutas y todos los handlers carecen de middleware de identidad/permisos; CORS permite solicitudes sin `Origin`. La escucha predeterminada es en todas las interfaces. [P01: líneas 14–58 y 108–116], [P06].
+Hallazgo de seguridad de un sistema en producción. Como POS Docs es público, su evidencia, su condición y la acción propuesta se conservan en el [registro de hallazgos de seguridad de POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md#pag-02), con acceso al producto. El reemplazo en POS Platform no debe replicarlo.
 
-**Condición e impacto:** cualquier cliente con acceso de red al proceso podría consultar los datos expuestos o marcar/liberar NC. CORS limita ciertos usos desde navegador; no autentica llamadas de servidor. La exposición efectiva puede estar restringida por firewall, proxy o VPN, no incluidos aquí. No se comprobó acceso desde fuera de la red autorizada.
+### PAG-03 · Alta · Hallazgo de seguridad
 
-**Acción propuesta:** identidad de usuario y servicio, permisos diferenciados de lectura/reserva/liberación, alcance por empresa/sucursal, auditoría y política de acceso entre servicios. Revisar la red efectiva antes de estimar exposición.
-
-### PAG-03 · Alta · Hay material de conexión sensible versionado
-
-**Evidencia:** `.env` está en Git; contiene campos de credenciales PostgreSQL y dos URI MongoDB con usuario/contraseña. Se registra únicamente su ubicación: `.env`, líneas 7–14. `config/database.js` consume las URI; `cajaSucursales` proporciona credenciales de tiendas al servicio. [P04], [P09].
-
-**Condición e impacto:** quienes acceden al snapshot o su historial pueden acceder al material allí registrado; vigencia y privilegios no se probaron. MongoDB concentra a su vez acceso potencial a varias tiendas. No se reproduce ningún valor sensible en este informe.
-
-**Acción propuesta:** inventariar los consumidores, validar vigencia y rotar de forma coordinada; gestionar secretos fuera de Git, limitar privilegios y sustituir gradualmente la necesidad de almacenar credenciales de cada tienda en el agregador. Limpiar únicamente el archivo actual no revoca copias históricas.
+Hallazgo de seguridad de un sistema en producción. Como POS Docs es público, su evidencia, su condición y la acción propuesta se conservan en el [registro de hallazgos de seguridad de POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md#pag-03), con acceso al producto. El reemplazo en POS Platform no debe replicarlo.
 
 ### PAG-04 · Alta · El agregador depende en línea de las bases de todas las sucursales
 
@@ -163,7 +154,7 @@ La prioridad indica orden recomendado de tratamiento, no una clasificación CVSS
 
 - Con dobles de MongoDB, probar POST repetido/concurrente, NC inexistente y liberación por actor incorrecto; comprobar una sola respuesta y transición consistente.
 - Con PostgreSQL de prueba, comprobar folio repetido entre tipos DTE, tienda caída y todas caídas; ningún resultado parcial debe presentarse como exhaustivo.
-- Con una carga sintética, medir conexiones máximas, volumen antes de paginar y efecto de filtros. No usar datos reales ni credenciales versionadas.
+- Con una carga sintética, medir conexiones máximas, volumen antes de paginar y efecto de filtros. No usar datos ni credenciales reales.
 - Obtener configuración de despliegue, índices existentes, dueños de `estadoNC`/`usuariosAX`, definición productiva de `sincronizado`, inventario de consumidores y política de uso de NC offline.
 
 No se añadieron ni ejecutaron pruebas en el repositorio auditado. Estas son validaciones propuestas para resolver incertidumbres que la lectura estática no cubre.
@@ -176,7 +167,7 @@ Todos los enlaces apuntan al SHA revisado y requieren acceso al repositorio priv
 - **[P02]** [package.json, líneas 1–23](https://github.com/developer-implementos/api-pagos-caja/blob/33cd625f029aa78798f0baf307c41e17ebee92e1/package.json#L1-L23) y [package-lock.json](https://github.com/developer-implementos/api-pagos-caja/blob/33cd625f029aa78798f0baf307c41e17ebee92e1/package-lock.json): dependencias declaradas/resueltas.
 - **[P03]** [apps.json, líneas 1–7](https://github.com/developer-implementos/api-pagos-caja/blob/33cd625f029aa78798f0baf307c41e17ebee92e1/apps.json#L1-L7): configuración de proceso.
 - **[P04]** [config/database.js, líneas 1–33](https://github.com/developer-implementos/api-pagos-caja/blob/33cd625f029aa78798f0baf307c41e17ebee92e1/config/database.js#L1-L33): conexiones MongoDB separadas.
-- **[P05]** `.env`, líneas 1–14: valores de arranque y material sensible; se referencia por ubicación, sin copiar valores ni enlazar directamente al secreto.
+- **[P05]** Fuente de un hallazgo de seguridad: se conserva en el [registro de POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md).
 - **[P06]** [routes/pagos.js, líneas 1–16](https://github.com/developer-implementos/api-pagos-caja/blob/33cd625f029aa78798f0baf307c41e17ebee92e1/routes/pagos.js#L1-L16): ocho rutas.
 - **[P07]** [controllers/pagosController.js, líneas 6–169](https://github.com/developer-implementos/api-pagos-caja/blob/33cd625f029aa78798f0baf307c41e17ebee92e1/controllers/pagosController.js#L6-L169): validación, NC, consultas y respuestas.
 - **[P08]** [services/pagosService.js, líneas 4–353](https://github.com/developer-implementos/api-pagos-caja/blob/33cd625f029aa78798f0baf307c41e17ebee92e1/services/pagosService.js#L4-L353): SQL, fan-out, filtros y errores.

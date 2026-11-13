@@ -142,7 +142,7 @@ export const architecture = {
     node('devices', 'clients', 'peripherals', {
       title: 'Periféricos del puesto · F02', kind: 'external', status: 'unresolved', technology: 'USB / serie / SDK · impresora · MICR',
       summary: 'Perfil inicial dedicado; homologación por modelo.',
-      description: 'F02 conserva la ubicación física del legado: el agente vive en el puesto Windows conectado a la impresora, Zebra o lector MICR. El contrato nuevo autoriza trabajos en branch-api; no reproduce una API localhost anónima. Lectura, impresión y endoso del mismo equipo comparten exclusión física. F05 pilota ese perfil; compartir dispositivos y admitir solicitudes móviles se valida después en F06. Los terminales de pago requieren un contrato y homologación independientes.',
+      description: 'F02 conserva la ubicación física del legado: el agente vive en el puesto Windows conectado a la impresora, Zebra o lector MICR. El contrato nuevo autoriza cada trabajo en branch-api y autentica al agente del puesto. Lectura, impresión y endoso del mismo equipo comparten exclusión física. F05 pilota ese perfil; compartir dispositivos y admitir solicitudes móviles se valida después en F06. Los terminales de pago requieren un contrato y homologación independientes.',
       responsibilities: ['Ejecutar la capacidad física contratada.', 'Conservar o consultar evidencia cuando el equipo lo permita.'],
       data: ['Comandos y respuestas del dispositivo, sin autoridad sobre el importe comercial.', 'Identificadores físicos y referencias según proveedor.'],
       failure: ['Una aceptación del spooler no prueba que exista papel impreso.', 'La respuesta perdida puede dejar un efecto físico incierto.'], sources: ['devices', 'roadmap', 'providers', 'meetings'],

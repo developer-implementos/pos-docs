@@ -53,11 +53,20 @@ const endpoints = JSON.parse(fs.readFileSync(path.join(root, 'apps/starlight/src
 const configuration = JSON.parse(fs.readFileSync(path.join(root, 'apps/starlight/src/data/legacy-configuration.json'), 'utf8'));
 assert.match(endpoints.commit, /^[a-f0-9]{40}$/);
 assert.equal(configuration.commit, endpoints.commit, 'Legacy catalogs must refer to the same reviewed snapshot');
+const endpointAnchor = entry => `${entry.method.toLowerCase()}-${entry.path.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'root'}`;
 for (const [app, entries] of Object.entries(endpoints.applications)) {
   assert.equal(new Set(entries.map(entry => entry.id)).size, entries.length, `Duplicate API anchors in ${app}`);
+  for (const group of new Set(entries.map(entry => entry.group))) {
+    const routes = entries.filter(entry => entry.group === group).map(entry => `${entry.path} ${entry.method}`);
+    assert.deepEqual(routes, [...routes].sort(), `List the routes of ${group} by path, not by declaration order`);
+  }
   for (const entry of entries) {
-    assert.ok(entry.description.length > 30 && entry.line > 0, `Incomplete API description/source: ${entry.path}`);
+    assert.ok(entry.description.length > 30 && entry.target, `Incomplete API description/source: ${entry.path}`);
+    // The legacy catalog publishes no route position; AGENTS.md lists what stays out of POS Docs.
+    assert.ok(!('line' in entry), `Do not publish the declaration line of a legacy route: ${entry.path}`);
+    assert.equal(entry.id, endpointAnchor(entry), `API anchors derive from the method and path only: ${entry.path}`);
     assert.ok(endpoints.groupDescriptions[entry.group], `Undocumented functional area: ${entry.group}`);
+    for (const forbidden of ['scope', 'auth', 'middleware', 'authenticated']) assert.ok(!(forbidden in entry), `Do not publish the access control of a legacy route: ${entry.path}`);
   }
   const config = configuration.applications[app];
   assert.equal(new Set(config.variables.map(variable => variable.name)).size, config.variables.length, `Duplicate variable in ${app}`);

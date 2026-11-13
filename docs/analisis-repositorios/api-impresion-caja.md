@@ -41,14 +41,14 @@ flowchart LR
 | Proyecto alternativo | `AplicacionWeb`, ASP.NET MVC sobre `.NET Framework 4.7.2`, comparte `Biblioteca`. | Hay dos fachadas HTTP en el repositorio; no se puede asumir que ambas estén desplegadas. |
 | Drivers y spooler | `PrintDocument`, `winspool.Drv`, Microsoft POS for .NET/MICR. | Dependencias operacionales fuera del código fuente. |
 | Dependencias declaradas | ESC/POS, ZXing `0.16.6`, iText7 `7.1.14`, log4net `2.0.12`; Newtonsoft.Json `6.0.4` en paquetes del servicio. | Inventario de manifiestos; no se verificó soporte actual, CVEs ni versiones instaladas. |
-| Distribución | Proyectos WiX; instalador declara cuenta `LocalSystem`; instrucciones manuales de instalación. | Revisar privilegios, firma, actualización, rollback y correspondencia fuente/binario. |
+| Distribución | Proyectos WiX e instrucciones manuales de instalación. | Revisar privilegios, firma, actualización, rollback y correspondencia fuente/binario. |
 | Persistencia | No se identificó DB propia, registro durable de trabajos ni cola de aplicación. | Sí usa cola de Windows; no debe confundirse ausencia de cola propia con ausencia de spooler. |
 
 Fuentes: [I01], [I02], [I03], [I04], [I08], [I09], [I11].
 
 ## 2. Superficie HTTP y efectos
 
-Las rutas principales se deducen de `{controller}/{action}` y `ImpresionController`, bajo `/Impresion`. El controlador tiene `[AllowAnonymous]` y CORS `*`. No hay versión de contrato ni identificador de trabajo en los DTOs observados.
+Las rutas principales se deducen de `{controller}/{action}` y `ImpresionController`, bajo `/Impresion`. No hay versión de contrato ni identificador de trabajo en los DTOs observados.
 
 | Método / acción | Comportamiento real | Efecto y resultado |
 | --- | --- | --- |
@@ -79,13 +79,9 @@ Hay especializaciones chilenas en DTOs/formato (`rut`, datos de factura, timbre,
 
 **Acción propuesta:** propagar errores tipados y distinguir validación, aceptación, envío al spooler y confirmación física cuando el dispositivo lo soporte. Registrar trabajo/intentona e informar estado incierto si la conexión se corta después de enviar. Evitar prometer «impreso» por el solo retorno de una API Windows.
 
-### IMP-02 · Alta · La frontera local no autentica al llamador y permite cualquier origen CORS
+### IMP-02 · Alta · Hallazgo de seguridad
 
-**Evidencia:** la escucha se configura en **`localhost`**, los handlers de token aparecen comentados, CORS permite `*` y el controlador declara acceso anónimo. El instalador WiX propone `LocalSystem`. [I01: líneas 34–49], [I02: líneas 18–20], [I09: líneas 50–57].
-
-**Condición e impacto:** procesos con acceso al endpoint local y páginas cuyo navegador permita la petición a loopback pueden solicitar impresiones, entregar RAW o leer un cheque sin identidad de usuario/caja en esta capa. La política del navegador y su protección de red local importan: CORS abierto por sí solo **no demuestra** que cualquier web pueda acceder en todos los navegadores. El binding no acredita exposición remota a Internet. `LocalSystem` amplía privilegios si ese instalador/configuración se usa realmente; no prueba ejecución arbitraria ni un exploit.
-
-**Acción propuesta:** conservar un alcance local explícito, emparejar POS y agente, autenticar comandos y limitar orígenes permitidos/capacidades. Evaluar cuenta con privilegios mínimos compatibles con drivers; verificar ACL de URL, del directorio de configuración y de dispositivo. El control debe funcionar con identidad local válida durante una desconexión, según la política offline aprobada.
+Hallazgo de seguridad de un sistema en producción. Como POS Docs es público, su evidencia, su condición y la acción propuesta se conservan en el [registro de hallazgos de seguridad de POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md#imp-02), con acceso al producto. El reemplazo en POS Platform no debe replicarlo.
 
 ### IMP-03 · Alta · No hay identidad ni registro durable de trabajos de impresión en el agente
 
@@ -143,7 +139,7 @@ Se volvió a consultar `main`, que conserva el SHA identificado en este informe.
 - **Identidad del spooler:** los helpers RAW declaran `StartDocPrinter` como `bool`; Windows devuelve un identificador de trabajo `DWORD`. Se pierde esa referencia y tampoco se conserva/comprueba `dwWritten`. La nueva integración debe registrar identificador, resultado y bytes, manteniendo que aceptación no prueba papel impreso. [Contrato Windows](https://learn.microsoft.com/en-us/windows/win32/printdocs/startdocprinter), [I06], [I08].
 - **Equipo físico y compatibilidad:** la inicialización envía comandos a la cola de cheque frontal incluso antes de otras impresiones. Recibos, endoso y MICR pueden compartir mecanismos físicos; se requiere exclusión por equipo y grupos de capacidades, no sólo por nombre de cola. El proyecto referencia POS for .NET y un componente x86: arquitectura, runtime y sesión deben validarse con el fabricante. [I03], [I05].
 
-El destino acordado es [`apps/device-agent`, C#/.NET Windows](../decisions/device-agent.md), inicialmente instalado por puesto en F02/F05, con coordinación en `branch-api` y diario SQLite. El perfil de red/estación compartida y el acceso móvil se incorporan después, en F06. Se conserva la ubicación local como referencia; el nuevo protocolo no hereda las llamadas anónimas del legacy. Esta decisión no acredita migración ni homologación productiva.
+El destino acordado es [`apps/device-agent`, C#/.NET Windows](../decisions/device-agent.md), inicialmente instalado por puesto en F02/F05, con coordinación en `branch-api` y diario SQLite. El perfil de red/estación compartida y el acceso móvil se incorporan después, en F06. Se conserva la ubicación local como referencia; el nuevo protocolo autentica a cada llamador. Esta decisión no acredita migración ni homologación productiva.
 
 ## 4. Contraste con la presentación
 
@@ -151,7 +147,7 @@ El destino acordado es [`apps/device-agent`, C#/.NET Windows](../decisions/devic
 | --- | --- |
 | Servicio Windows .NET Framework 4.7.2, Web API SelfHost 5.2.7 | Confirmado por proyectos/manifiestos; no versión productiva comprobada. |
 | Agente local puerto 8181 | Confirmado como configuración de fuente, con host `localhost`. |
-| HTTPS/JSON/JWT en la arista del diagrama | **No confirmado para impresión**: este servidor usa HTTP, validación de token comentada y controlador anónimo. No se generaliza al agente Transbank. |
+| HTTPS/JSON/JWT en la arista del diagrama | **No confirmado para impresión.** No se generaliza al agente Transbank. |
 | Puede reportar éxito aunque falle | Confirmado directamente en controladores y en retornos ignorados del helper RAW. |
 | Impresora / lector de cheques | Confirmado; se añaden Zebra, firmas, QR y parsing MICR. |
 | Papel del agente en offline | El camino observado es local y no consulta ERP, pero depende de recibir contenido y configuración válidos. No acredita capacidad offline del flujo fiscal/comercial. |
@@ -171,7 +167,7 @@ El destino acordado es [`apps/device-agent`, C#/.NET Windows](../decisions/devic
 - Dobles de impresora/spooler: error de configuración, cola ausente, WritePrinter false, excepción GDI, trabajo aceptado con respuesta HTTP perdida y repetición de `jobId`.
 - Pruebas de contrato: contenido inválido, ruta Pdf, error HTTP/de aplicación, GET de salud sin efectos y cancelación de lectura.
 - Banco de periféricos: sin papel, tapa abierta, corte USB, reinicio de agente/spooler, dos solicitudes simultáneas, MICR sin documento y documento malformado.
-- Inventario productivo: servicio o MVC, identidad Windows, URL ACL, origen POS permitido, versión/hash del binario, driver, formato de configuración, proceso de instalación/actualización y consumidor de cada endpoint.
+- Inventario productivo: servicio o MVC, configuración instalada, versión/hash del binario, driver, formato de configuración, proceso de instalación/actualización y consumidor de cada endpoint.
 
 Estas validaciones se proponen para una fase controlada; **no se ejecutaron operaciones físicas ni se modificó el código auditado**.
 
@@ -179,7 +175,7 @@ Estas validaciones se proponen para una fase controlada; **no se ejecutaron oper
 
 Todos los enlaces corresponden al SHA revisado y requieren acceso al repositorio privado.
 
-- **[I01]** [WindowsServiceImpresora/ServiceImpresora.cs, líneas 30–60](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/WindowsServiceImpresora/ServiceImpresora.cs#L30-L60): binding, CORS y ciclo de servicio.
+- **[I01]** [WindowsServiceImpresora/ServiceImpresora.cs, líneas 30–60](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/WindowsServiceImpresora/ServiceImpresora.cs#L30-L60): binding y ciclo de servicio.
 - **[I02]** [WindowsServiceImpresora/Controllers/ImpresionController.cs, líneas 18–198](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/WindowsServiceImpresora/Controllers/ImpresionController.cs#L18-L198): rutas, efectos y respuestas.
 - **[I03]** [WindowsServiceImpresora/WindowsServiceImpresora.csproj, líneas 8–11](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/WindowsServiceImpresora/WindowsServiceImpresora.csproj#L8-L11) y [packages.config](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/WindowsServiceImpresora/packages.config): plataforma y dependencias.
 - **[I04]** [Biblioteca/Entities/Documento.cs, líneas 9–105](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/Biblioteca/Entities/Documento.cs#L9-L105) y [ApiResponse.cs, líneas 9–33](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/Biblioteca/Entities/ApiResponse.cs#L9-L33): DTOs y significado de `error`.
@@ -187,7 +183,7 @@ Todos los enlaces corresponden al SHA revisado y requieren acceso al repositorio
 - **[I06]** [Biblioteca/Helper/RawPrinterHelper.cs, líneas 51–101](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/Biblioteca/Helper/RawPrinterHelper.cs#L51-L101): spooler RAW y retorno ignorado.
 - **[I07]** [Biblioteca/Helper/CheckScanner.cs, líneas 22–225](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/Biblioteca/Helper/CheckScanner.cs#L22-L225): apertura, espera activa, parseo y cierre MICR.
 - **[I08]** [Biblioteca/BO/BOZebra.cs, líneas 52–126](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/Biblioteca/BO/BOZebra.cs#L52-L126) y [BOTicket.cs, líneas 90–150](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/Biblioteca/BO/BOTicket.cs#L90-L150): Zebra y efecto físico de Test.
-- **[I09]** [Setup/Product.wxs, líneas 50–57](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/Setup/Product.wxs#L50-L57): instalación de servicio y cuenta.
+- **[I09]** [Setup/Product.wxs, líneas 50–57](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/Setup/Product.wxs#L50-L57): instalación del servicio.
 - **[I10]** [Biblioteca/Utils/ConfiguracionesReader.cs, líneas 13–49](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/Biblioteca/Utils/ConfiguracionesReader.cs#L13-L49): configuración XML local.
 - **[I11]** [AplicacionWeb/Controllers/HomeController.cs, líneas 13–51](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/AplicacionWeb/Controllers/HomeController.cs#L13-L51) y [AplicacionWeb.csproj, líneas 13–17](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/AplicacionWeb/AplicacionWeb.csproj#L13-L17): fachada MVC alternativa.
 - **[I12]** [Biblioteca/Utils/GetSlugEnv.cs, líneas 12–77](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/Biblioteca/Utils/GetSlugEnv.cs#L12-L77): configuración dependiente de backend/sucursal.

@@ -14,7 +14,7 @@ Análisis estático realizado el **1 de octubre de 2026** del repositorio privad
 | Obtención | Clonación superficial de solo lectura, con `--depth 1 --filter=blob:none`. No se examina todo el historial. |
 | Ejecución | No se compilaron ni ejecutaron aplicaciones, no se instalaron dependencias ni se conectó el código a AX, bases o proveedores. |
 
-Se distingue **observación de código**, **consecuencia inferida** y **propuesta a validar**. Los archivos de configuración demuestran contenido versionado, no vigencia de las credenciales ni accesibilidad de los servicios. Este documento no incluye credenciales, direcciones de servidores internos ni datos de clientes. Los enlaces de evidencia están fijados al commit y requieren acceso al repositorio.
+Se distingue **observación de código**, **consecuencia inferida** y **propuesta a validar**. Los archivos de configuración demuestran contenido versionado, no su vigencia ni la accesibilidad de los servicios. Este documento no incluye credenciales, direcciones de servidores internos ni datos de clientes. Los enlaces de evidencia están fijados al commit y requieren acceso al repositorio.
 
 No están disponibles aquí el código X++ del servidor AX, los cuerpos de sus procedimientos almacenados, la configuración efectiva de IIS/gateway/red, el inventario de despliegues ni la alimentación de las colecciones de precios. Por tanto, no se puede certificar el comportamiento transaccional dentro de AX, la seguridad de red o qué API de precios utiliza hoy cada consumidor.
 
@@ -172,9 +172,9 @@ Las prioridades expresan relevancia para preparar la arquitectura y el saneamien
 
 | ID / prioridad | Observación comprobable | Escenario e implicación | Acción propuesta |
 | --- | --- | --- | --- |
-| API-H01 · Alta | Credenciales WCF asignadas literalmente en `servicio.cs` y valores sensibles en configuración versionada; hay también credenciales de integración documental dentro de código. [API-19] | El acceso al código puede revelar material de autenticación. No se comprobó su validez ni permisos. | Inventariar consumidores, retirar valores de código/config versionada, usar aprovisionamiento seguro y evaluar rotación de los valores todavía vigentes. No rotar sin coordinar continuidad operativa. |
-| API-H02 · Alta | No se identificó autorización local en las rutas POS/precios revisadas ni filtro global de autorización en el arranque de caja. Se declaran atributos CORS con comodines en varios controladores. [API-20] | Si la infraestructura permite llegar sin identidad, las rutas de mutación no muestran una segunda barrera dentro del código. CORS no acredita autenticación y su activación efectiva no se confirmó. | Confirmar IIS/gateway y autorización por operación/sucursal; establecer identidades de servicio y controles explícitos. No inferir exposición pública por ausencia de `[Authorize]`. |
-| API-H03 · Alta | `listaOv` concatena valores de sucursal, OV y cliente en texto SQL; la consulta PostgreSQL de `ApiCarro.concentrador` interpola folio y tipo. [API-17], [API-10] | Entradas con caracteres especiales alteran la consulta; existe un punto de inyección SQL en el código, condicionado a accesibilidad y permisos para su impacto real. | Parametrizar ambos caminos, validar contrato y acotar permisos de lectura. Que se invoque un procedimiento almacenado no protege el `EXEC` construido por concatenación. |
+| API-H01 · Alta | Hallazgo de seguridad de un sistema en producción. | Su evidencia y su condición se conservan en el [registro de hallazgos de seguridad de POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md#api-h01), con acceso al producto. | El reemplazo en POS Platform no debe replicarlo. |
+| API-H02 · Alta | Hallazgo de seguridad de un sistema en producción. | Su evidencia y su condición se conservan en el [registro de hallazgos de seguridad de POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md#api-h02), con acceso al producto. | El reemplazo en POS Platform no debe replicarlo. |
+| API-H03 · Alta | Hallazgo de seguridad de un sistema en producción. | Su evidencia y su condición se conservan en el [registro de hallazgos de seguridad de POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md#api-h03), con acceso al producto. | El reemplazo en POS Platform no debe replicarlo. |
 | API-H04 · Alta | Entrada/salida filtrada por conceptos AX y `tablasAx` con nombres de tabla/`RecId`; también acceso directo al JSON interno del concentrador. [API-05], [API-06], [API-10] | Sustituir AX o renombrar mensajes puede romper POS y consumidores corporativos. | ACL con contratos propios del POS y mapas de identidad; fachada documental para desacoplar almacenamiento de mensajes. |
 | API-H05 · Alta | Resultado exterior `error=false`/`OK` coexiste con posibles errores interiores por tabla/etapa. [API-03], [API-15] | Un consumidor que solo compruebe el sobre exterior podría dar por completada una integración parcial. | Contrato único de resultado con etapas y códigos estables; distinguir recepción, ejecución, rechazo de negocio, resultado parcial e indeterminado. Mantener compatibilidad al migrar. |
 | API-H06 · Alta | El adaptador no demuestra idempotencia uniforme; sí tiene el caso `FACTURADA`. Alta de cliente realiza varios efectos remotos. [API-16], [API-18] | Timeout posterior al efecto o reintento de un alta parcial puede requerir consultar AX y reanudar pasos, no reenviar a ciegas. | Auditar X++/bus y definir identidad durable de operación, consulta de estado y reconciliación. Probar pagos/NC de forma independiente de ventas. |
@@ -187,7 +187,7 @@ Las prioridades expresan relevancia para preparar la arquitectura y el saneamien
 
 ### Precisión de los límites de seguridad
 
-Se revisaron controladores, arranque, configuración de filtros y configuración versionada; no se autenticó ninguna llamada ni se intentó explotar hallazgos. Los controles de red, gateway e IIS pueden cambiar sustancialmente el riesgo efectivo. Los atributos CORS encontrados no implican por sí mismos que CORS esté habilitado globalmente ni que una API sea alcanzable desde Internet. Los secretos se documentan solo por ubicación y categoría.
+Se revisaron controladores, arranque y configuración. La revisión fue estática: no se autenticó ninguna llamada ni se ejercitó ninguna ruta. Los controles de red, gateway e IIS pueden cambiar sustancialmente el riesgo efectivo.
 
 ## 6. Naming y frontera ACL/fachada
 
@@ -230,7 +230,6 @@ Son implicaciones propuestas a partir del código; no fijan ERP destino, calenda
 | Cliente antes de dirección. | **Se encuentra la secuencia cliente → direcciones → contacto**, con posible avance parcial en el adaptador. No demuestra el orden de todos los mensajes del bus. |
 | Emitir DTE y registrar en AX son pasos separados. | **El adaptador recibe datos fiscales**, como `InvoiceAcepta`, código y URL del documento, y ejecuta operaciones AX. No permite establecer por sí solo el momento de habilitar sincronización tras emitir DTE. |
 | «Sincronizado» no equivale a confirmado en AX. | **Hay varios niveles de resultado y confirmaciones por entidad AX**; la marca local se debe contrastar en el backend/sincronizador. |
-| Algunas APIs no exigen autenticación y hay credenciales en archivos. | **Se encuentran credenciales literales y ausencia de controles locales en rutas revisadas.** Exposición y protecciones de infraestructura siguen sin verificar. |
 | Conteo de seis aplicaciones. | **Requiere reconciliación.** Un repositorio agrupa múltiples proyectos corporativos; app, proceso, API, biblioteca y repositorio no son unidades equivalentes. |
 | DTE Acepta / Ingydev. | **Se amplía el inventario documental** con recuperación Paperless en `ApiDocumentos`. Esto no prueba que Paperless emita las ventas actuales de caja. |
 
@@ -246,14 +245,14 @@ Son implicaciones propuestas a partir del código; no fijan ERP destino, calenda
 | Alta de cliente parcial | Cliente creado y dirección fallida; reintentar y completar solo los pasos necesarios. |
 | Backlog y fecha | Pago originado el día anterior, durante cambio de mes o periodo cerrado; validar fecha del hecho y fecha contable aceptada. |
 | Contratos AX | Obtener WCF/X++ efectivo, convenciones de arrays, códigos, restricciones de unicidad y procedimientos almacenados. |
-| Seguridad de servicio | Verificar acceso efectivo con/sin identidad en un entorno autorizado, permisos DB y custodia/rotación de secretos; no se realizó explotación. |
+| Seguridad de servicio | Verificar en un entorno autorizado los controles de acceso y la custodia de secretos de cada servicio. |
 | Corte de ERP | Venta pendiente antes del corte, pago posterior y devolución de venta anterior; probar selección de adaptador, correspondencias y reconciliación. |
 
 No se encontraron proyectos de pruebas automatizadas en la solución revisada ni archivos SQL con los procedimientos invocados. No se ejecutó compilación, por lo que esta revisión no certifica que la solución completa compile con el toolchain actual. Las verificaciones propuestas requieren entornos de prueba y contratos del ERP; no son resultados ya obtenidos.
 
 ## 10. Evidencias trazables
 
-Los rangos siguientes corresponden al commit `8fbe2f1b4d4e464a403aa3daca63ffe712a9dd70`. Se evitan fragmentos que contengan secretos.
+Los rangos siguientes corresponden al commit `8fbe2f1b4d4e464a403aa3daca63ffe712a9dd70`.
 
 | Ref. | Archivo / líneas | Evidencia |
 | --- | --- | --- |
@@ -273,10 +272,10 @@ Los rangos siguientes corresponden al commit `8fbe2f1b4d4e464a403aa3daca63ffe712
 | [API-14] | `apiMountainPosCaja/packages.config`, 14–27; `ApiPrecios/packages.config`, 14–29; `ApiCarro/packages.config`, 28; `DatosAXSql/packages.config`, 3. | Versiones de paquetes declaradas. |
 | [API-15] | `ServiciosAX/mountainPosCajaServices/Pago.cs`, 20–132, 149–155, 311–356, 451–526. | Pago, fecha local del servidor, importes, compañía fija, reversa y NC. |
 | [API-16] | `ServiciosAX/mountainPosCajaServices/Cliente.cs`, 137–260. | Secuencia cliente/direcciones/contacto y resultados parciales. |
-| [API-17] | `DatosAXSql/ordenMountainPOSdb.cs`, 19–60. | Concatenación de SQL y lectura de totales a enteros. |
+| [API-17] | `DatosAXSql/ordenMountainPOSdb.cs`, 19–60. | Acceso SQL a AX y lectura de totales a enteros. |
 | [API-18] | `ServiciosAX/mountainPosCajaServices/NotaVenta.cs`, 232–263. | Reconocimiento de factura existente. |
-| [API-19] | `ServiciosAX/mountainPosCajaServices/servicio.cs`, 39–64; `apiMountainPosCaja/Web.config`, 25–28; `Documentos/Servicios/ObtenerUrlDocumentoClientePDFServicio.cs`, 70–71. | Ubicaciones de material sensible; valores omitidos en este informe. |
-| [API-20] | `apiMountainPosCaja/Controllers/CajaController.cs`, 14–26; `App_Start/WebApiConfig.cs`, 11–25; `App_Start/FilterConfig.cs`, 8–10; `Global.asax.cs`, 14–20. | CORS declarado y arranque sin registro local de autorización observado. |
+| API-19 | Fuente de un hallazgo de seguridad. | Se conserva en el [registro de POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md). |
+| API-20 | Fuente de un hallazgo de seguridad. | Se conserva en el [registro de POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md). |
 | [API-21] | `Modelos/MountainPos/Pago/CabeceraEntity.cs`, 12–47; `Modelos/MountainPos/Pago/LineaEntity.cs`, 12–25; `CajaController.cs`, 400–427. | Fecha de origen, importes enteros, identificadores y conversión del saldo. |
 
 [API-01]: https://github.com/developer-implementos/apis-implementos/blob/8fbe2f1b4d4e464a403aa3daca63ffe712a9dd70/ApisImplementos.sln#L6-L29
@@ -297,6 +296,4 @@ Los rangos siguientes corresponden al commit `8fbe2f1b4d4e464a403aa3daca63ffe712
 [API-16]: https://github.com/developer-implementos/apis-implementos/blob/8fbe2f1b4d4e464a403aa3daca63ffe712a9dd70/ServiciosAX/mountainPosCajaServices/Cliente.cs#L137-L260
 [API-17]: https://github.com/developer-implementos/apis-implementos/blob/8fbe2f1b4d4e464a403aa3daca63ffe712a9dd70/DatosAXSql/ordenMountainPOSdb.cs#L19-L60
 [API-18]: https://github.com/developer-implementos/apis-implementos/blob/8fbe2f1b4d4e464a403aa3daca63ffe712a9dd70/ServiciosAX/mountainPosCajaServices/NotaVenta.cs#L232-L263
-[API-19]: https://github.com/developer-implementos/apis-implementos/blob/8fbe2f1b4d4e464a403aa3daca63ffe712a9dd70/ServiciosAX/mountainPosCajaServices/servicio.cs#L39-L64
-[API-20]: https://github.com/developer-implementos/apis-implementos/blob/8fbe2f1b4d4e464a403aa3daca63ffe712a9dd70/apiMountainPosCaja/App_Start/WebApiConfig.cs#L11-L25
 [API-21]: https://github.com/developer-implementos/apis-implementos/blob/8fbe2f1b4d4e464a403aa3daca63ffe712a9dd70/Modelos/MountainPos/Pago/CabeceraEntity.cs#L12-L47
