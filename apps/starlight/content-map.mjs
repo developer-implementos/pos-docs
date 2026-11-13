@@ -175,6 +175,7 @@ export const labLinks = {
 const item = (route, label) => ({ label: label || generatedPages.find(page => page.route === route)?.title || route, link: '/' + route + '/' });
 export const sidebar = [
   { label: 'Inicio', link: '/' },
+  { label: 'Reglas de negocio', link: '/business-rules/' },
   { label: 'Entender el sistema', collapsed: false, items: [
     { label: 'Visión general', link: '/overview/' },
     { label: 'Mapa y diagramas', link: '/diagrams/' },

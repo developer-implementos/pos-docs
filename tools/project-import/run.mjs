@@ -68,7 +68,7 @@ export function planImport({ root = repositoryRoot, workspace, importers, option
   if (changed.length !== expected.size || changed.some(file => !expected.has(file))) {
     throw new Error('The import changed files other than the imported snapshots; refusing to publish.');
   }
-  // Facts decide; the revision only travels with them. All four stay on one revision either way.
+  // Facts decide; the revision only travels with them. All of them stay on one revision either way.
   const results = imported.results.map(result => ({
     ...result,
     material: result.imported && publishedFacts(git(root, 'show', `${base}:${result.path}`)) !== publishedFacts(fs.readFileSync(path.join(root, result.path), 'utf8')),

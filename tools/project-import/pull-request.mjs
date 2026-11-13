@@ -28,7 +28,7 @@ export function importTitle(revision, imported) {
 
 /**
  * `material` marks an imported snapshot whose published facts change; the others are re-imported only
- * so that all four keep one product revision. It defaults to `imported`.
+ * so that all of them keep one product revision. It defaults to `imported`.
  * @param {{revision: string, results: Array<{name,label,path,journeys,imported,material?}>, entries: string[]}} input
  */
 export function renderImportPullRequest({ revision, results, entries }) {

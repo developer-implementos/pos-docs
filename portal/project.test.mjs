@@ -75,19 +75,23 @@ test('question filters match state, any affected phase and the exact decider rol
   assert.equal(matchesProjectItem(data, text, { state: 'open', phase: 'phase-04', decider: 'Comercial y Operaciones' }, 'questions'), true, 'A question appears under every phase it affects');
   assert.equal(matchesProjectItem(data, text, { phase: 'phase-02' }, 'questions'), false);
   assert.equal(matchesProjectItem(data, text, { phase: 'phase-0' }, 'questions'), false);
-  assert.equal(matchesProjectItem(data, text, { state: 'validated' }, 'questions'), false, 'An open rule is never shown as validated');
+  assert.equal(matchesProjectItem(data, text, { state: 'decided' }, 'questions'), false, 'An open rule is never shown as decided');
   assert.equal(matchesProjectItem(data, text, { decider: 'Comercial' }, 'questions'), false, 'A decider filter selects one role, not a prefix');
   assert.equal(matchesProjectItem(data, text, { query: 'cajero' }, 'questions'), true);
   assert.equal(matchesProjectItem(data, text, { query: 'tesoreria' }, 'questions'), false);
 });
 
-test('question filters match the recommendation status and its exact scope', () => {
-  const draft = { state: 'open', phases: 'phase-01', decider: 'Comercial', recommendation: 'draft', scope: 'country' };
+test('question filters match whether the agent recommended a rule and the exact scope', () => {
+  const recommended = { state: 'open', phases: 'phase-01', decider: 'Comercial', recommendation: 'present', scope: 'country' };
+  const pending = { state: 'open', phases: 'phase-01', decider: 'Comercial', recommendation: 'none', scope: '' };
   const fact = { state: 'answered', phases: 'phase-01', decider: 'Finanzas', recommendation: 'not_applicable', scope: '' };
-  assert.equal(matchesProjectItem(draft, 'Q-01', { recommendation: 'draft', scope: 'country' }, 'questions'), true);
-  assert.equal(matchesProjectItem(draft, 'Q-01', { recommendation: 'endorsed' }, 'questions'), false, 'A draft is never shown as endorsed');
-  assert.equal(matchesProjectItem(draft, 'Q-01', { scope: 'core' }, 'questions'), false);
-  assert.equal(matchesProjectItem(draft, 'Q-01', { scope: 'coun' }, 'questions'), false, 'A scope filter selects one level, not a prefix');
+  assert.equal(matchesProjectItem(recommended, 'Q-01', { recommendation: 'present', scope: 'country' }, 'questions'), true);
+  assert.equal(matchesProjectItem(recommended, 'Q-01', { recommendation: 'none' }, 'questions'), false);
+  assert.equal(matchesProjectItem(pending, 'Q-02', { recommendation: 'none' }, 'questions'), true, 'An open rule without a recommendation is missing one');
+  assert.equal(matchesProjectItem(pending, 'Q-02', { recommendation: 'present' }, 'questions'), false);
+  assert.equal(matchesProjectItem(recommended, 'Q-01', { scope: 'core' }, 'questions'), false);
+  assert.equal(matchesProjectItem(recommended, 'Q-01', { scope: 'coun' }, 'questions'), false, 'A scope filter selects one level, not a prefix');
   assert.equal(matchesProjectItem(fact, 'Q-04', { recommendation: 'none' }, 'questions'), false, 'A fact never counts as missing a recommendation');
+  assert.equal(matchesProjectItem(fact, 'Q-04', { recommendation: 'present' }, 'questions'), false);
   assert.equal(matchesProjectItem(fact, 'Q-04', {}, 'questions'), true);
 });

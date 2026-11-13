@@ -7,6 +7,7 @@ import {loadProgress} from './progress.mjs';
 import {loadFollowUp} from './follow-up.mjs';
 import {loadPlanning} from './planning.mjs';
 import {loadQuestions} from './questions.mjs';
+import {loadRules} from './rules.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const require = createRequire(path.join(root, 'apps/starlight/package.json'));
@@ -16,12 +17,13 @@ const progress = loadProgress(root);
 const followUp = loadFollowUp(root, progress);
 const planning = loadPlanning(root, progress, followUp);
 const questions = loadQuestions(root, progress, followUp);
+const rules = loadRules(root, progress, questions);
 const output = path.join(root, 'test-results-project');
 fs.mkdirSync(output, {recursive: true});
 const server = await servePublic(0);
 const origin = `http://127.0.0.1:${server.address().port}`;
 const browser = await chromium.launch({headless: true});
-const routes = ['/project/', '/project/plan/', '/project/work/', '/project/attention/', '/project/questions/', '/project/team/'];
+const routes = ['/project/', '/project/plan/', '/project/work/', '/project/attention/', '/project/questions/', '/project/rules/', '/project/team/'];
 try {
   const page = await browser.newPage({viewport: {width: 1440, height: 1000}, reducedMotion: 'reduce'});
   const failures = [], external = [];
@@ -177,6 +179,32 @@ try {
   await related.click();
   assert.ok(await page.locator(`#${relatedId}`).isVisible(), 'Actions link to affected deliverables');
 
+  if (rules) {
+    await navigate('/project/rules/');
+    assert.equal(await count(), rules.items.length, 'Every rule is listed');
+    assert.equal(await page.locator('[data-project-group]:visible').count(), rules.groups.length);
+    const internal = rules.items.find(item => item.disclosure === 'internal');
+    if (internal) {
+      const card = page.locator(`#${internal.id.toLowerCase()}`);
+      assert.equal(await card.locator('h3').count(), 0, 'An internal rule publishes no title');
+      assert.equal(await card.getAttribute('data-disclosure'), 'internal');
+    }
+    await form().locator('[name=decision]').selectOption('abierta');
+    assert.equal(await count(), rules.items.filter(item => item.decision === 'abierta').length);
+    const area = Object.keys(rules.areas)[0];
+    await form().locator('[name=area]').selectOption(area);
+    assert.equal(await count(), rules.items.filter(item => item.decision === 'abierta' && item.area === area).length, 'Filters combine');
+    await reset();
+    await form().locator('[name=disclosure]').selectOption('internal');
+    assert.equal(await count(), rules.counts.disclosure.internal, 'Internal rules can be listed by themselves');
+    await reset();
+    const question = rules.items.find(item => item.linkedQuestions.length)?.linkedQuestions[0];
+    if (question) {
+      await page.locator(`[data-project-item]:visible a[href="/project/questions/#${question.id.toLowerCase()}"]`).first().click();
+      assert.equal(new URL(page.url()).hash, `#${question.id.toLowerCase()}`, 'A rule links the question where it is decided');
+    }
+  }
+
   await navigate('/project/questions/');
   const groups = () => page.locator('[data-project-group]:visible').count();
   assert.equal(await count(), questions.items.length);
@@ -198,16 +226,36 @@ try {
   await form().locator('[name=decider]').selectOption(decider);
   assert.equal(await count(), questions.items.filter(item => item.decider === decider).length);
   await reset();
+  await form().locator('[name=recommendation]').selectOption('present');
+  assert.equal(new URL(page.url()).searchParams.get('recommendation'), 'present');
+  assert.equal(await count(), questions.counts.recommended, 'The filter selects every question with the agent recommendation');
+  await reset();
   await form().locator('[name=recommendation]').selectOption('none');
   assert.equal(new URL(page.url()).searchParams.get('recommendation'), 'none');
-  assert.equal(await count(), questions.items.filter(item => item.recommendationStatus === 'none').length, 'Only pending rules and decisions appear as missing a recommendation');
+  assert.equal(await count(), questions.items.filter(item => item.recommendationStatus === 'none').length, 'Only open rules appear as missing a recommendation');
   await reset();
   for (const scope of questions.scopes) {
     await form().locator('[name=scope]').selectOption(scope);
     assert.equal(await count(), questions.items.filter(item => item.recommendation?.scope === scope).length, `The scope filter selects ${scope}`);
     await reset();
   }
-  assert.equal(await page.locator('.project-question-counts a').count(), 4);
+  assert.equal(await page.locator('.project-question-counts a').count(), 3, 'Open, answered and decided, without a separate validation');
+  const summaryText = await page.locator('.project-question-summary').innerText();
+  const pending = questions.counts.pendingDecision;
+  assert.ok(summaryText.includes(`${pending} ${pending === 1 ? 'pendiente' : 'pendientes'} de decisión`), 'The summary counts the open rules as pending decisions');
+  assert.doesNotMatch(await page.locator('[data-project-page]').innerText(), /Sin respaldo del equipo|Respaldada|Validación de negocio|Pendiente de validación|Validada por|por validar|Borrador de agente|Recomendaci(?:ón|ones) del equipo/, 'Nothing is endorsed or validated');
+  await page.locator('.project-question-recommendations a[href="/project/questions/?recommendation=present"]').click();
+  await page.waitForURL(url => url.searchParams.get('recommendation') === 'present');
+  assert.equal(await form().locator('[name=recommendation]').inputValue(), 'present', 'The recommendation count opens its filtered list');
+  assert.equal(await count(), questions.counts.recommended);
+  await navigate('/project/questions/?state=decided');
+  assert.equal(await form().locator('[name=state]').inputValue(), 'decided');
+  assert.equal(await count(), questions.items.filter(item => item.state === 'decided').length);
+  for (const [name, value] of [['state', 'validated'], ['recommendation', 'endorsed']]) {
+    await navigate(`/project/questions/?${name}=${value}`);
+    assert.equal(await form().locator(`[name=${name}]`).inputValue(), '', `A shared link with ${name}=${value} shows every record`);
+    assert.equal(await count(), questions.items.length);
+  }
   await navigate('/project/questions/?state=answered');
   assert.equal(await form().locator('[name=state]').inputValue(), 'answered', 'Summary counts open their filtered list');
   assert.equal(await count(), questions.items.filter(item => item.state === 'answered').length);

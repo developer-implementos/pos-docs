@@ -1,5 +1,5 @@
 /**
- * Imports the four product snapshots in dependency order. Each importer first compares facts in its
+ * Imports the product snapshots in dependency order. Each importer first compares facts in its
  * read-only mode, so a refreshed GitHub observation time alone never produces a change; only a
  * StaleSnapshotError triggers the real import. Later importers read the snapshots written before them.
  */
@@ -7,14 +7,16 @@ import { syncProjectFollowUp } from '../sync-project-follow-up.mjs';
 import { syncProjectPlanning } from '../sync-project-planning.mjs';
 import { syncProjectProgress } from '../sync-project-progress.mjs';
 import { syncProjectQuestions } from '../sync-project-questions.mjs';
+import { syncProjectRules } from '../sync-project-rules.mjs';
 import { isStaleSnapshot } from './stale-snapshot.mjs';
 
-/** Order matters: follow-up, planning and questions derive from the snapshots imported before them. */
+/** Order matters: follow-up, planning, questions and rules derive from the snapshots imported before them. */
 export const snapshots = Object.freeze([
   Object.freeze({ name: 'progress', label: 'avance', path: 'portal/data/project-progress.json', journeys: ['/project/', '/project/work/', '/guide/implementation/progress/'], sync: syncProjectProgress }),
   Object.freeze({ name: 'followUp', label: 'seguimientos', path: 'portal/data/project-follow-up.json', journeys: ['/project/attention/'], sync: syncProjectFollowUp }),
   Object.freeze({ name: 'planning', label: 'planificación', path: 'portal/data/project-planning.json', journeys: ['/project/plan/'], sync: syncProjectPlanning }),
   Object.freeze({ name: 'questions', label: 'preguntas', path: 'portal/data/project-questions.json', journeys: ['/project/questions/'], sync: syncProjectQuestions }),
+  Object.freeze({ name: 'rules', label: 'reglas', path: 'portal/data/project-rules.json', journeys: ['/project/rules/'], sync: syncProjectRules }),
 ]);
 
 /**
