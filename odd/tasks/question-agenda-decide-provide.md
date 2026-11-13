@@ -27,10 +27,10 @@ Espejo Engram: pendiente. El servidor MCP no conectó en esta sesión, así que 
 
 ## Tasks
 
-- [ ] T1 · S1,S4 · route:inline · `agenda` y `participants` en `portal/questions.mjs`, con sus pruebas · status:in_progress · evidence: `questions.test.mjs` 21/21, con un hecho que cuenta en el rol que lo confirma y en el consultado, y desempates por decisiones, datos y nombre
-- [ ] T2 · S1,S2,S3 · route:inline · Tabla, filtros **Tipo** y **Rol que participa**, atributos de cada tarjeta, etiquetas del hecho, estilos y pruebas · status:in_progress · evidence: `project-view.test.mjs` 27/27 y `project.test.mjs` 15/15
-- [ ] T3 · S2 · route:inline · Comprobación de navegador y revisión visual a 1440, 1151 y 390 px · status:pending · evidence: pendiente de `build` y `project:check`
-- [ ] T4 · S1,S2,S3,S4 · route:inline · `docs/project-progress.md` y el paquete Excalidraw · status:in_progress · evidence: `package-freshness.test.mjs` aprobado tras regenerar el ZIP con `tools/diagrams/package-excalidraw.py`
+- [x] T1 · S1,S4 · route:inline · `agenda` y `participants` en `portal/questions.mjs`, con sus pruebas · status:done · evidence: `questions.test.mjs` 21/21, con un hecho que cuenta en el rol que lo confirma y en el consultado, y desempates por decisiones, datos y nombre
+- [x] T2 · S1,S2,S3 · route:inline · Tabla, filtros **Tipo** y **Rol que participa**, atributos de cada tarjeta, etiquetas del hecho, estilos y pruebas · status:done · evidence: `project-view.test.mjs` 27/27 y `project.test.mjs` 15/15
+- [x] T3 · S2 · route:inline · Comprobación de navegador y revisión visual a 1440, 1151 y 390 px · status:done · evidence: `npm run verify` sobre `0c93314`, 543 pruebas sin fallas; `project:check` sigue la cifra P1 y el total por decidir del primer rol, los datos de un rol consultado y el nombre del rol hasta listas con esa cantidad. Capturas sin desborde horizontal; filtros en dos filas de cinco desde 1151 px, y en móvil «Datos por aportar» en su propia fila
+- [x] T4 · S1,S2,S3,S4 · route:inline · `docs/project-progress.md` y el paquete Excalidraw · status:done · evidence: `package-freshness.test.mjs` aprobado tras regenerar el ZIP con `tools/diagrams/package-excalidraw.py`
 
 ## Log
 
