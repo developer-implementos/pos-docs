@@ -133,8 +133,9 @@ test('names the kinds, the states, the recommendation filter and the outcomes of
 
 test('counts states, pending decisions, recommendations and outcomes without inferring owners or decisions', () => {
   const model = derive();
-  assert.deepEqual(model.counts, { total: 6, open: 3, answered: 1, decided: 2, pendingDecision: 3, unassigned: 5, recommended: 2, unrecommended: 2, adopted: 0, adapted: 1, rejected: 0 });
-  assert.deepEqual(model.deciders, ['Comercial', 'Finanzas', 'Operaciones', 'Producto']);
+  assert.deepEqual(model.counts, { total: 6, open: 3, answered: 1, decided: 2, pendingDecision: 3, unassigned: 5, merged: 0, recommended: 2, unrecommended: 2, adopted: 0, adapted: 1, rejected: 0 });
+  assert.deepEqual(model.deciders, ['Comercial', 'Finanzas', 'Operaciones', 'Producto'].map(name => ({ key: name, name })), 'Schema 3 names each role in free text');
+  assert.deepEqual(model.merged, []);
   assert.equal(model.reviewedOn, '2026-11-10');
   assert.equal(model.audit, audit);
   assert.deepEqual(model.integration, { reference: 'main', included: true });
@@ -194,7 +195,9 @@ test('validates provenance and content hash like the other project snapshots', (
 
 test('applies the product validation rules to the published content', () => {
   const rejects = (mutate, pattern) => assert.throws(() => derive(mutate), pattern);
-  for (const version of [1, 2, 4, '3']) rejects(value => { value.schemaVersion = version; }, reports('questions: unsupported schema version; expected 3'));
+  for (const version of [1, 2, 5, '3']) rejects(value => { value.schemaVersion = version; }, reports('questions: unsupported schema version; expected 3 or 4'));
+  rejects(value => { value.items[0].consulted = []; }, reports('questions.items[0]: unexpected or missing fields'));
+  rejects(value => { value.roles = []; }, reports('questions: unexpected or missing fields'));
   rejects(value => { value.items[0].extra = true; }, reports('questions.items[0]: unexpected or missing fields'));
   rejects(value => { value.items[0].validation = null; }, reports('questions.items[0]: unexpected or missing fields'));
   rejects(value => { delete value.items[0].decision; }, reports('questions.items[0]: unexpected or missing fields'));
@@ -362,8 +365,92 @@ test('rejects the schema 2 registry that POS Platform published before schema 3'
     const { agent, ...rest } = proposal ?? {};
     return { ...item, kind: decided ? 'decision' : item.kind, validation: null, recommendation: proposal ? { ...rest, author: { kind: 'agent', name: agent }, endorsement: null } : null };
   });
-  assert.throws(() => validateQuestionsContent(structuredClone(published), context()), reports('questions: unsupported schema version; expected 3'));
-  assert.throws(() => deriveQuestions(snapshot(published), progress(), followUp()), reports('questions: unsupported schema version; expected 3'));
+  assert.throws(() => validateQuestionsContent(structuredClone(published), context()), reports('questions: unsupported schema version; expected 3 or 4'));
+  assert.throws(() => deriveQuestions(snapshot(published), progress(), followUp()), reports('questions: unsupported schema version; expected 3 or 4'));
+});
+
+/** The catalog of schema 4: a stable key, the name the view shows and what the role decides. */
+const roles = () => [
+  { key: 'comercial', name: 'Comercial', responsibility: 'Precios, promociones, cupones y clientes' },
+  { key: 'operaciones', name: 'Operaciones de tiendas', responsibility: 'Operación de las sucursales y sus cajas' },
+  { key: 'finanzas', name: 'Finanzas', responsibility: 'Control de gestión y reportes financieros' },
+  { key: 'producto', name: 'Producto POS Platform', responsibility: 'Alcance y comportamiento del producto' },
+  { key: 'legal', name: 'Legal y Protección de datos', responsibility: 'Datos personales y cumplimiento legal' },
+];
+const keyOf = { Comercial: 'comercial', Operaciones: 'operaciones', Finanzas: 'finanzas', Producto: 'producto' };
+/**
+ * The same records in schema 4: each role comes from the catalog, Q-01 consults Operaciones and Legal,
+ * and Q-06 and Q-07 were merged into Q-01 and Q-10.
+ */
+const contentV4 = () => {
+  const value = content();
+  return {
+    schemaVersion: 4,
+    reviewedOn: value.reviewedOn,
+    audit: value.audit,
+    roles: roles(),
+    items: value.items.map(({ decider, ...item }) => {
+      const fields = Object.entries(item);
+      const at = fields.findIndex(([field]) => field === 'owner');
+      const consulted = item.id === 'Q-01' ? ['operaciones', 'legal'] : [];
+      return Object.fromEntries([...fields.slice(0, at), ['decider', keyOf[decider]], ['consulted', consulted], ...fields.slice(at)]);
+    }),
+    merged: [
+      { id: 'Q-06', question: '¿El cupón de baterías excluye toda la cesta con OV?', into: 'Q-01', mergedOn: '2026-11-10', reason: 'Pregunta lo mismo que Q-01 para una campaña concreta.' },
+      { id: 'Q-07', question: '¿Quién concilia un pago en curso?', into: 'Q-10', mergedOn: '2026-11-09', reason: 'Es una parte de Q-10.' },
+    ],
+  };
+};
+
+test('reads schema 4: names each role from the catalog and keeps the questions merged into another', () => {
+  const model = derive(() => {}, followUp(), contentV4);
+  const item = id => model.items.find(entry => entry.id === id);
+  assert.equal(item('Q-01').decider, 'comercial');
+  assert.equal(item('Q-01').deciderName, 'Comercial');
+  assert.deepEqual(item('Q-01').consulted, ['operaciones', 'legal']);
+  assert.deepEqual(item('Q-01').consultedNames, ['Operaciones de tiendas', 'Legal y Protección de datos']);
+  assert.deepEqual(item('Q-02').consultedNames, []);
+  assert.deepEqual(model.deciders, [
+    { key: 'comercial', name: 'Comercial' },
+    { key: 'finanzas', name: 'Finanzas' },
+    { key: 'operaciones', name: 'Operaciones de tiendas' },
+    { key: 'producto', name: 'Producto POS Platform' },
+  ], 'The filter offers the roles that decide some question, by name; Legal is only consulted');
+  assert.deepEqual(model.merged.map(entry => [entry.id, entry.into, entry.intoQuestion]), [['Q-06', 'Q-01', '¿Pregunta Q-01?'], ['Q-07', 'Q-10', '¿Pregunta Q-10?']]);
+  assert.equal(model.counts.total, 6, 'A merged question is not a record of the register');
+  assert.equal(model.counts.merged, 2);
+  assert.equal(model.counts.open, 3);
+});
+
+test('applies the role and merge rules of schema 4 with the messages of POS Platform', () => {
+  // Character for character, the messages of tools/check-business-questions.mjs in POS Platform.
+  const rejects = (mutate, text) => assert.throws(() => derive(mutate, followUp(), contentV4), reports(text));
+  rejects(value => { delete value.merged; }, 'questions: unexpected or missing fields');
+  rejects(value => { delete value.items[0].consulted; }, 'questions.items[0]: unexpected or missing fields');
+  rejects(value => { value.roles = []; }, 'questions.roles: expected nonempty list');
+  rejects(value => { value.roles[0].extra = true; }, 'questions.roles[0]: unexpected or missing fields');
+  rejects(value => { value.roles[0].key = 'Comercial'; }, 'questions.roles[0].key: expected a lowercase key such as tesoreria');
+  rejects(value => { value.roles[0].key = 'ti--erp'; }, 'questions.roles[0].key: expected a lowercase key such as tesoreria');
+  rejects(value => { value.roles[1].key = 'comercial'; }, 'questions.roles[1].key: duplicate role comercial');
+  rejects(value => { value.roles[1].name = 'Comercial'; }, 'questions.roles[1].name: duplicate role name Comercial');
+  rejects(value => { value.roles[4].responsibility = ''; }, 'questions.roles[4].responsibility: required single-line text without control characters');
+  rejects(value => { value.items[1].decider = 'Operaciones'; }, 'Q-02.decider: unknown role Operaciones; declare it in questions.roles');
+  rejects(value => { value.items[0].consulted = ['ti']; }, 'Q-01.consulted: unknown role ti; declare it in questions.roles');
+  rejects(value => { value.items[0].consulted = ['comercial']; }, 'Q-01.consulted: comercial already decides the question');
+  rejects(value => { value.items[0].consulted = ['legal', 'legal']; }, 'Q-01.consulted: duplicate entries');
+  rejects(value => { value.items[0].consulted = 'legal'; }, 'Q-01.consulted: expected list');
+  rejects(value => { value.merged = null; }, 'questions.merged: expected list');
+  rejects(value => { value.merged[0].extra = true; }, 'questions.merged[0]: unexpected or missing fields');
+  rejects(value => { value.merged[0].id = 'Q6'; }, 'questions.merged[0].id: expected Q-NN');
+  rejects(value => { value.merged.reverse(); }, 'Q-06: merged question out of order after Q-07');
+  rejects(value => { value.merged[0].id = 'Q-02'; }, 'Q-02: listed as a question and as merged; an identifier is never reused');
+  rejects(value => { value.merged[0].into = 'Q-09'; }, 'Q-06.into: expected a question of the register, got "Q-09"');
+  rejects(value => { value.merged[0].into = 'Q-07'; }, 'Q-06.into: expected a question of the register, got "Q-07"');
+  rejects(value => { value.merged[0].reason = ' Repetida '; }, 'Q-06.reason: required single-line text without control characters');
+  rejects(value => { value.merged[0].question = 'Pregunta de ci.implementos.internal'; }, 'Q-06.question: "ci.implementos.internal" is a internal domain; POS Docs publishes this text, so describe the role instead');
+  rejects(value => { value.merged[0].mergedOn = '2026-11-11'; }, 'Q-06: merged after registry review');
+  rejects(value => { value.items[5].reviewedOn = '2026-11-08'; }, 'Q-07: Q-10 absorbed it on 2026-11-09; review Q-10 again');
+  assert.doesNotThrow(() => derive(value => { value.merged = []; }, followUp(), contentV4), 'A register without merged questions keeps an empty list');
 });
 
 test('reads audit identifiers from the first CSV column with quoted fields', () => {

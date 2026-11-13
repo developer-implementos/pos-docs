@@ -33,9 +33,26 @@ const login = /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i;
 const auditRef = /^[CPRSH]-\d{2,}$/;
 const segment = /^(?!\.{1,2}$)[\w.@-]+$/;
 const official = host => officialHosts.some(domain => host === domain || host.endsWith(`.${domain}`));
-// Content schema 3 of the registry, the one POS Platform publishes.
-const schemaVersion = 3;
-const itemFields = ['id', 'topic', 'question', 'kind', 'state', 'currentAnswer', 'answerSources', 'auditRefs', 'parityRefs', 'sources', 'decider', 'owner', 'followUp', 'workPackages', 'priority', 'reviewedOn', 'recommendation', 'decision'];
+/*
+ * Content schemas of the registry that POS Platform publishes. Schema 4 adds the catalog of roles that
+ * decide or are consulted, the roles consulted by each question, and the questions merged into another;
+ * schema 3 names the deciding role in free text. Both are read while POS Platform moves to schema 4.
+ */
+const contentFields = {
+  3: ['schemaVersion', 'reviewedOn', 'audit', 'items'],
+  4: ['schemaVersion', 'reviewedOn', 'audit', 'roles', 'items', 'merged'],
+};
+const schemaVersions = Object.keys(contentFields).map(Number);
+const itemFieldsV3 = ['id', 'topic', 'question', 'kind', 'state', 'currentAnswer', 'answerSources', 'auditRefs', 'parityRefs', 'sources', 'decider', 'owner', 'followUp', 'workPackages', 'priority', 'reviewedOn', 'recommendation', 'decision'];
+const itemFields = {
+  3: itemFieldsV3,
+  4: itemFieldsV3.flatMap(field => (field === 'decider' ? ['decider', 'consulted'] : [field])),
+};
+const roleFields = ['key', 'name', 'responsibility'];
+const mergedFields = ['id', 'question', 'into', 'mergedOn', 'reason'];
+// Same rule as tools/check-business-questions.mjs: a stable lowercase key, such as `tesoreria` or `ti-erp`.
+const roleKey = /^[a-z][a-z\d]*(?:-[a-z\d]+)*$/;
+const questionId = /^Q-[0-9]{2,}$/;
 const recommendationFields = ['answer', 'scope', 'default', 'rationale', 'basis', 'references', 'sources', 'agent', 'proposedOn'];
 const decisionFields = ['answer', 'decidedBy', 'decidedOn', 'source', 'outcome'];
 
@@ -231,15 +248,18 @@ function validateDecision(item) {
 }
 
 /**
- * The rules of POS Platform's validator (tools/check-business-questions.mjs) for schema 3, with the
+ * The rules of POS Platform's validator (tools/check-business-questions.mjs) for schemas 3 and 4, with the
  * same messages. The import passes the product context: backlog packages, follow-ups, audit registers
  * and versioned files at the imported revision. The published snapshot is checked again without that
  * context, against the POS Docs roadmap.
  */
 export function validateQuestionsContent(content, { workPackageIds, workPackageSource = 'the POS Docs roadmap', followUpIds = null, sourceExists = null, readAudit = null }) {
-  object(content, ['schemaVersion', 'reviewedOn', 'audit', 'items'], 'questions');
-  assert.equal(content.schemaVersion, schemaVersion, `questions: unsupported schema version; expected ${schemaVersion}`);
+  assert.ok(content && typeof content === 'object' && !Array.isArray(content), 'questions: expected object');
+  assert.ok(schemaVersions.includes(content.schemaVersion), `questions: unsupported schema version; expected ${schemaVersions.join(' or ')}`);
+  const version = content.schemaVersion;
+  object(content, contentFields[version], 'questions');
   date(content.reviewedOn, 'questions.reviewedOn');
+  const roles = version === 4 ? validateRoles(content.roles) : null;
   const audit = repositoryPath(content.audit, 'questions.audit');
   const registers = readAudit ? readAudit(audit) : null;
   const packages = new Set(workPackageIds);
@@ -247,8 +267,8 @@ export function validateQuestionsContent(content, { workPackageIds, workPackageS
   assert.ok(Array.isArray(content.items), 'questions.items: expected array');
   let previous = null;
   for (const [index, item] of content.items.entries()) {
-    object(item, itemFields, `questions.items[${index}]`);
-    assert.ok(typeof item.id === 'string' && /^Q-[0-9]{2,}$/.test(item.id), `questions.items[${index}].id: expected Q-NN`);
+    object(item, itemFields[version], `questions.items[${index}]`);
+    assert.ok(typeof item.id === 'string' && questionId.test(item.id), `questions.items[${index}].id: expected Q-NN`);
     const { id } = item;
     if (previous) {
       assert.notEqual(id, previous.id, `${id}: duplicate question ID`);
@@ -256,6 +276,7 @@ export function validateQuestionsContent(content, { workPackageIds, workPackageS
     }
     previous = item;
     for (const key of ['topic', 'question', 'currentAnswer', 'decider']) text(item[key], `${id}.${key}`);
+    if (roles) validateRoleAssignment(item, roles);
     assert.ok(kinds.includes(item.kind), `${id}.kind: expected fact or rule`);
     assert.ok(states.includes(item.state), `${id}.state: expected open, answered or decided`);
     for (const source of list(item.answerSources, `${id}.answerSources`, { nonempty: true })) {
@@ -287,7 +308,62 @@ export function validateQuestionsContent(content, { workPackageIds, workPackageS
     validateRecommendation(item, sourceExists);
     validateDecision(item);
   }
+  if (version === 4) validateMerged(content);
   return content;
+}
+
+/** The closed catalog of roles of schema 4; returns its keys. */
+function validateRoles(roles) {
+  assert.ok(Array.isArray(roles) && roles.length > 0, 'questions.roles: expected nonempty list');
+  const keys = new Set();
+  const names = new Set();
+  for (const [index, role] of roles.entries()) {
+    const label = `questions.roles[${index}]`;
+    object(role, roleFields, label);
+    assert.ok(typeof role.key === 'string' && roleKey.test(role.key), `${label}.key: expected a lowercase key such as tesoreria`);
+    text(role.name, `${label}.name`);
+    text(role.responsibility, `${label}.responsibility`);
+    assert.ok(!keys.has(role.key), `${label}.key: duplicate role ${role.key}`);
+    assert.ok(!names.has(role.name), `${label}.name: duplicate role name ${role.name}`);
+    keys.add(role.key);
+    names.add(role.name);
+  }
+  return keys;
+}
+
+/** In schema 4 the deciding role and the roles consulted come from the catalog, without repeating one. */
+function validateRoleAssignment(item, roles) {
+  const { id } = item;
+  assert.ok(roles.has(item.decider), `${id}.decider: unknown role ${item.decider}; declare it in questions.roles`);
+  for (const role of list(item.consulted, `${id}.consulted`)) {
+    assert.ok(roles.has(role), `${id}.consulted: unknown role ${role}; declare it in questions.roles`);
+    assert.notEqual(role, item.decider, `${id}.consulted: ${role} already decides the question`);
+  }
+}
+
+/**
+ * A question merged into another keeps its identifier, its original text and why it was merged, so its
+ * links still resolve. It is decided in the surviving question, and an identifier is never reused.
+ */
+function validateMerged(content) {
+  assert.ok(Array.isArray(content.merged), 'questions.merged: expected list');
+  const live = new Map(content.items.map(item => [item.id, item]));
+  let previous = null;
+  for (const [index, entry] of content.merged.entries()) {
+    object(entry, mergedFields, `questions.merged[${index}]`);
+    assert.ok(typeof entry.id === 'string' && questionId.test(entry.id), `questions.merged[${index}].id: expected Q-NN`);
+    const { id } = entry;
+    if (previous) assert.ok(Number(id.slice(2)) > Number(previous.slice(2)), `${id}: merged question out of order after ${previous}`);
+    previous = id;
+    assert.ok(!live.has(id), `${id}: listed as a question and as merged; an identifier is never reused`);
+    text(entry.question, `${id}.question`);
+    text(entry.reason, `${id}.reason`);
+    const survivor = live.get(entry.into);
+    assert.ok(survivor, `${id}.into: expected a question of the register, got ${JSON.stringify(entry.into)}`);
+    date(entry.mergedOn, `${id}.mergedOn`);
+    assert.ok(entry.mergedOn <= content.reviewedOn, `${id}: merged after registry review`);
+    assert.ok(survivor.reviewedOn >= entry.mergedOn, `${id}: ${entry.into} absorbed it on ${entry.mergedOn}; review ${entry.into} again`);
+  }
 }
 
 /**
@@ -319,14 +395,22 @@ export function deriveQuestions(snapshot, progress, followUp = null) {
   assert.ok(Array.isArray(progress?.workPackages) && Array.isArray(progress?.phases), 'Questions require the roadmap projection of the project progress');
   const works = new Map(progress.workPackages.map(work => [work.id, work]));
   const phaseOrder = new Map(progress.phases.map((phase, index) => [phase.id, index]));
-  validateQuestionsContent(snapshot.content, { workPackageIds: works.keys() });
+  const { content } = snapshot;
+  validateQuestionsContent(content, { workPackageIds: works.keys() });
   const actions = new Map((followUp?.items || []).map(action => [action.id, action]));
-  const items = snapshot.content.items.map(item => {
+  // Schema 3 names the deciding role in free text: that text is the role, with nobody consulted.
+  const roles = new Map(content.schemaVersion === 4
+    ? content.roles.map(role => [role.key, role])
+    : content.items.map(item => [item.decider, { key: item.decider, name: item.decider, responsibility: null }]));
+  const items = content.items.map(item => {
     const packages = item.workPackages.map(id => works.get(id));
     const phases = [...new Set(packages.map(work => work.phase))].sort((a, b) => phaseOrder.get(a) - phaseOrder.get(b));
     const phase = progress.phases[phaseOrder.get(phases[0])];
-    return { ...item, recommendationStatus: recommendationStatus(item), packages, phases, phase: phase.id, phaseTitle: phase.title, phaseHref: phase.href, followUpAction: item.followUp ? actions.get(item.followUp) || null : null };
+    const consulted = item.consulted ?? [];
+    return { ...item, consulted, deciderName: roles.get(item.decider).name, consultedNames: consulted.map(key => roles.get(key).name), recommendationStatus: recommendationStatus(item), packages, phases, phase: phase.id, phaseTitle: phase.title, phaseHref: phase.href, followUpAction: item.followUp ? actions.get(item.followUp) || null : null };
   }).sort((a, b) => phaseOrder.get(a.phase) - phaseOrder.get(b.phase) || priorities.indexOf(a.priority) - priorities.indexOf(b.priority) || Number(a.id.slice(2)) - Number(b.id.slice(2)));
+  const byId = new Map(items.map(item => [item.id, item]));
+  const merged = (content.merged ?? []).map(entry => ({ ...entry, intoQuestion: byId.get(entry.into).question }));
   const groups = progress.phases.map(phase => ({ id: phase.id, title: phase.title, href: phase.href, items: items.filter(item => item.phase === phase.id) })).filter(group => group.items.length);
   return {
     source: snapshot.source,
@@ -335,8 +419,10 @@ export function deriveQuestions(snapshot, progress, followUp = null) {
     audit: snapshot.content.audit,
     items,
     groups,
+    merged,
     phases: progress.phases.filter(phase => items.some(item => item.phases.includes(phase.id))),
-    deciders: [...new Set(items.map(item => item.decider))].sort((a, b) => a.localeCompare(b, 'es')),
+    // The roles that decide some question, for the filter; a role only consulted does not decide.
+    deciders: [...new Set(items.map(item => item.decider))].map(key => roles.get(key)).map(({ key, name }) => ({ key, name })).sort((a, b) => a.name.localeCompare(b.name, 'es')),
     scopes: scopes.filter(scope => items.some(item => item.recommendation?.scope === scope)),
     counts: {
       total: items.length,
@@ -344,6 +430,7 @@ export function deriveQuestions(snapshot, progress, followUp = null) {
       // The rules still open: a fact awaits evidence, not a decision.
       pendingDecision: items.filter(item => item.kind === 'rule' && item.state === 'open').length,
       unassigned: items.filter(item => item.owner === null).length,
+      merged: merged.length,
       recommended: items.filter(item => item.recommendation !== null).length,
       unrecommended: items.filter(item => item.recommendationStatus === 'none').length,
       ...Object.fromEntries(outcomes.map(outcome => [outcome, items.filter(item => item.decision?.outcome === outcome).length])),

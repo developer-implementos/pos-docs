@@ -219,7 +219,7 @@ test('each question shows its answer, sources, decider, owner, follow-up, packag
   for (const item of model.items) {
     const body = card(html, item.id);
     assert.ok(body.includes(`<code>${item.id}</code>`));
-    for (const value of [item.topic, item.question, item.currentAnswer, item.decider]) assert.ok(body.includes(escapeText(value)), `${item.id} shows ${value}`);
+    for (const value of [item.topic, item.question, item.currentAnswer, item.deciderName]) assert.ok(body.includes(escapeText(value)), `${item.id} shows ${value}`);
     assert.ok(body.includes(`data-state="${item.state}"`));
     assert.ok(body.includes(`data-decider="${escapeText(item.decider)}"`));
     assert.ok(body.includes(`data-phases="${item.phases.join(' ')}"`));
@@ -386,7 +386,7 @@ test('questions page explains who recommends and who decides and links the sourc
   for (const text of [
     'El comportamiento legacy citado en la respuesta actual describe lo observado; no es una regla decidida.',
     'La recomendación del agente (IA) propone una regla para un POS corporativo multipaís e indica su ámbito: el núcleo común, igual en todos los países, o una configuración por país, sociedad, sucursal o caja. Orienta la decisión y nadie la aprueba.',
-    'La decisión final la toma el rol de <strong>Quién decide</strong>. Se registra a partir del documento de decisiones de negocio, citado por nombre y fecha, e indica si adopta, ajusta o descarta la recomendación.',
+    'La decisión final la toma el rol de <strong>Quién decide</strong>, después de oír a los roles de <strong>Se consulta a</strong> cuando los hay. Se registra a partir del documento de decisiones de negocio, citado por nombre y fecha, e indica si adopta, ajusta o descarta la recomendación.',
     'El <strong>responsable de seguimiento</strong> es la persona que impulsa la pregunta.',
   ]) assert.ok(html.includes(text), text);
   const href = `${questions.source.repository}/blob/${questions.source.revision}/${questions.source.path}`;
@@ -395,8 +395,64 @@ test('questions page explains who recommends and who decides and links the sourc
   assert.match(html, /data-project-filters hidden/);
   for (const name of ['state', 'phase', 'decider', 'recommendation', 'scope']) assert.ok(html.includes(`<select name="${name}">`), name);
   assert.deepEqual([...html.matchAll(/<select name="(\w+)">/g)].map(match => match[1]), ['state', 'phase', 'decider', 'recommendation', 'scope']);
-  for (const decider of questions.deciders) assert.ok(html.includes(`<option value="${escapeText(decider)}">`), decider);
+  for (const role of questions.deciders) assert.ok(html.includes(`<option value="${escapeText(role.key)}">${escapeText(role.name)}</option>`), role.name);
   assert.match(html, /<noscript>/);
+});
+
+/**
+ * The published register in schema 4, with a catalog built from its own deciding roles: the view must
+ * work with whatever roles and merged questions the product publishes, not with the current cut.
+ */
+function questionsV4(mutate = () => {}) {
+  return questionsWith(content => {
+    const names = [...new Set(content.items.map(item => item.decider))];
+    const key = name => `rol-${names.indexOf(name) + 1}`;
+    content.schemaVersion = 4;
+    content.roles = names.map(name => ({ key: key(name), name, responsibility: `Decide lo que corresponde a ${name}` }));
+    for (const item of content.items) Object.assign(item, { decider: key(item.decider), consulted: [] });
+    content.merged = [];
+    mutate(content);
+  });
+}
+
+test('schema 4: each question names its deciding role and the roles consulted, and the filter selects by role', () => {
+  let consulting;
+  const model = questionsV4(content => {
+    assert.ok(content.roles.length >= 3, 'The published cut has at least three deciding roles');
+    consulting = content.items.find(item => item.kind === 'rule' && item.state === 'open');
+    consulting.consulted = content.roles.map(role => role.key).filter(role => role !== consulting.decider).slice(0, 2);
+  });
+  const html = questionsPage(model);
+  const item = model.items.find(entry => entry.id === consulting.id);
+  const body = card(html, item.id);
+  assert.ok(body.includes(`data-decider="${item.decider}"`), 'The filter value is the stable key of the role');
+  assert.ok(body.includes(`<dt>Quién decide</dt><dd>${escapeText(item.deciderName)}</dd>`));
+  assert.ok(body.includes(`<dt>Se consulta a</dt><dd>${item.consultedNames.map(escapeText).join(' · ')}</dd>`));
+  const other = model.items.find(entry => entry.consulted.length === 0);
+  assert.ok(!card(html, other.id).includes('<dt>Se consulta a</dt>'), 'A question without consulted roles does not show the field');
+  for (const role of model.deciders) assert.ok(html.includes(`<option value="${role.key}">${escapeText(role.name)}</option>`), role.name);
+  assert.ok(!html.includes('id="questions-merged"'), 'Without merged questions there is no merged section');
+});
+
+test('schema 4: a merged question keeps its anchor, its text and a link to the question where it is decided', () => {
+  let survivor;
+  const model = questionsV4(content => {
+    survivor = content.items.find(item => item.kind === 'rule' && item.state === 'open');
+    const last = Math.max(...content.items.map(item => Number(item.id.slice(2))));
+    content.merged = [{ id: `Q-${last + 1}`, question: '¿Pregunta que repetía otra?', into: survivor.id, mergedOn: survivor.reviewedOn, reason: `Preguntaba lo mismo que ${survivor.id}.` }];
+  });
+  const html = questionsPage(model);
+  const [entry] = model.merged;
+  const start = html.indexOf('<section id="questions-merged"');
+  assert.ok(start > html.indexOf('class="project-question-list"'), 'The merged questions follow the register');
+  const section = html.slice(start, html.indexOf('</section>', start));
+  assert.ok(section.includes(`<article id="${entry.id.toLowerCase()}"`), 'Its anchor still resolves');
+  assert.ok(section.includes(escapeText(entry.question)));
+  assert.ok(section.includes(`<a href="#${survivor.id.toLowerCase()}">${survivor.id}</a>: ${escapeText(survivor.question)}`));
+  assert.ok(section.includes(escapeText(entry.reason)));
+  assert.ok(!section.includes('data-project-item'), 'The filters and counts ignore a merged question');
+  assert.ok(html.includes('<a href="#questions-merged">1 pregunta unida</a> a otra'));
+  assert.equal(model.counts.total, model.items.length);
 });
 
 test('questions pages carry no endorsement or business validation', () => {
