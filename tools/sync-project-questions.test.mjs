@@ -38,15 +38,19 @@ function commit(root, message = 'Synthetic source') {
 const question = (id, fields = {}) => ({
   id, topic: 'Cupones', question: `¿Pregunta ${id}?`, kind: 'rule', state: 'open',
   currentAnswer: 'Legacy: el campo de cupón se deshabilita con cualquier línea de OV.', answerSources: ['code'],
-  auditRefs: ['C-30'], parityRefs: ['P-14'], sources: [], decider: 'Comercial', owner: null, followUp: 'FOLLOWUP-005',
+  auditRefs: ['C-30'], parityRefs: ['P-14'], sources: [], decider: 'comercial', consulted: [], owner: null, followUp: 'FOLLOWUP-005',
   workPackages: ['F01-10'], priority: 'P1', reviewedOn: '2026-11-10', recommendation: null, decision: null, ...fields,
 });
 const decision = { answer: 'Sí: la autorización se exige en servidor para cada acción (F01-01)', decidedBy: 'Producto', decidedOn: '2026-11-10', source: 'Ficha F01-01 del producto', outcome: null };
-/** The fixture registry in schema 2, as POS Platform published it before schema 3. */
-const schema2 = content => ({
+const roles = [
+  { key: 'comercial', name: 'Comercial', responsibility: 'Precios, promociones, cupones y clientes' },
+  { key: 'producto', name: 'Producto POS Platform', responsibility: 'Alcance y comportamiento del producto' },
+];
+/** The fixture registry in schema 3, as POS Platform published it before schema 4. */
+const schema3 = ({ roles: catalog, merged, ...content }) => ({
   ...structuredClone(content),
-  schemaVersion: 2,
-  items: content.items.map(({ recommendation, decision: decided, ...item }) => ({ ...structuredClone(item), kind: decided ? 'decision' : item.kind, validation: null, recommendation: null })),
+  schemaVersion: 3,
+  items: content.items.map(({ consulted, ...item }) => ({ ...structuredClone(item), decider: catalog.find(role => role.key === item.decider).name })),
 });
 function fixture(t) {
   const base = fs.mkdtempSync(path.join(os.tmpdir(), 'pos-questions-import-'));
@@ -72,8 +76,9 @@ function fixture(t) {
   };
   write(root, 'portal/data/project-progress.json', json({ schemaVersion: 1, source: { repository: productRepository, revision: 'b'.repeat(40), path: 'delivery/progress.json', sha256: progressContentHash(progressContent) }, content: progressContent }));
   const content = {
-    schemaVersion: 3, reviewedOn: '2026-11-10', audit,
-    items: [question('Q-01'), question('Q-02', { state: 'decided', answerSources: ['spec'], sources: ['delivery/specs/F01-01.md#L3'], decider: 'Producto', followUp: null, workPackages: ['F01-01'], decision })],
+    schemaVersion: 4, reviewedOn: '2026-11-10', audit, roles: structuredClone(roles),
+    items: [question('Q-01'), question('Q-02', { state: 'decided', answerSources: ['spec'], sources: ['delivery/specs/F01-01.md#L3'], decider: 'producto', followUp: null, workPackages: ['F01-01'], decision })],
+    merged: [],
   };
   write(workspace, 'delivery/business-questions.json', json(content));
   write(workspace, 'delivery/backlog.json', json({ schemaVersion: 1, items: [{ id: 'F01-01' }, { id: 'F01-10' }, { id: 'F09-01' }] }));
@@ -111,16 +116,11 @@ test('imports the reviewed registry with immutable provenance and its integratio
   assert.equal(fs.readFileSync(item.destination, 'utf8'), serialized);
 });
 
-test('imports schema 4 with its roles and merged questions, with the product rules of both', t => {
+test('imports the roles and the merged questions, with the product rules of both', t => {
   const item = fixture(t);
-  const roles = [
-    { key: 'comercial', name: 'Comercial', responsibility: 'Precios, promociones, cupones y clientes' },
-    { key: 'producto', name: 'Producto POS Platform', responsibility: 'Alcance y comportamiento del producto' },
-  ];
-  const keyOf = { Comercial: 'comercial', Producto: 'producto' };
   const v4 = content => {
-    Object.assign(content, { schemaVersion: 4, roles: structuredClone(roles), merged: [{ id: 'Q-03', question: '¿El cupón aplica a toda la cesta?', into: 'Q-01', mergedOn: '2026-11-10', reason: 'Pregunta lo mismo que Q-01.' }] });
-    for (const entry of content.items) Object.assign(entry, { decider: keyOf[entry.decider], consulted: entry.id === 'Q-01' ? ['producto'] : [] });
+    content.merged = [{ id: 'Q-03', question: '¿El cupón aplica a toda la cesta?', into: 'Q-01', mergedOn: '2026-11-10', reason: 'Pregunta lo mismo que Q-01.' }];
+    content.items[0].consulted = ['producto'];
   };
   const revision = change(item, v4);
   git(item.workspace, 'update-ref', 'refs/remotes/origin/main', revision);
@@ -164,7 +164,7 @@ test('validates the registry with the product rules before writing', t => {
     [content => { content.items[0].workPackages = ['F09-01']; }, /unknown package F09-01 in the POS Docs roadmap/],
     [content => { content.items[0].currentAnswer = 'Responde en 10.0.4.17 desde la sucursal.'; }, /private IPv4 address; POS Docs publishes this text/],
     [content => { content.audit = 'delivery/reviews/otro-corte'; }, /audit register not found/],
-    [content => { content.schemaVersion = 1; for (const question of content.items) { delete question.recommendation; delete question.decision; } }, /questions: unsupported schema version; expected 3/],
+    [content => { content.schemaVersion = 1; for (const question of content.items) { delete question.recommendation; delete question.decision; } }, /questions: unsupported schema version; expected 4/],
     [content => { content.items[1].decision = null; }, /Q-02: a decided record must declare its decision/],
     [content => { content.items[1].decision.source = 'https://docs.example.com/actas/2026-11-10'; }, /Q-02\.decision\.source: cite the decision document by name and date; it is not linked/],
     [content => { content.items[1].decision.outcome = 'adopted'; }, /Q-02\.decision\.outcome: null when there was no recommendation/],
@@ -177,7 +177,7 @@ test('validates the registry with the product rules before writing', t => {
   }
 });
 
-test('imports schema 3 with the agent recommendation and checks its sources at the product revision', t => {
+test('imports the agent recommendation and checks its sources at the product revision', t => {
   const item = fixture(t);
   const recommendation = {
     answer: 'Exigir la autorización en servidor para cada acción.', scope: 'core', default: null,
@@ -192,7 +192,7 @@ test('imports schema 3 with the agent recommendation and checks its sources at t
   git(item.workspace, 'update-ref', 'refs/remotes/origin/main', 'HEAD');
   assert.equal(syncProjectQuestions(item).changed, true);
   const snapshot = JSON.parse(fs.readFileSync(item.destination, 'utf8'));
-  assert.equal(snapshot.content.schemaVersion, 3);
+  assert.equal(snapshot.content.schemaVersion, 4);
   assert.deepEqual(snapshot.content.items[0].recommendation, recommendation);
   assert.equal(snapshot.source.sha256, questionsContentHash(snapshot.content));
   change(item, content => { upgrade(content); content.items[0].recommendation.sources = ['delivery/specs/F01-99.md']; });
@@ -201,17 +201,17 @@ test('imports schema 3 with the agent recommendation and checks its sources at t
   assert.deepEqual(JSON.parse(fs.readFileSync(item.destination, 'utf8')), snapshot, 'A rejected registry keeps the previous snapshot');
 });
 
-test('rejects a schema 2 registry and keeps the previous snapshot', t => {
+test('rejects a schema 3 registry and keeps the previous snapshot', t => {
   const item = fixture(t);
   assert.equal(syncProjectQuestions(item).changed, true);
   const snapshot = JSON.parse(fs.readFileSync(item.destination, 'utf8'));
   change(item, content => {
-    const legacy = schema2(content);
+    const legacy = schema3(content);
     for (const key of Object.keys(content)) delete content[key];
     Object.assign(content, legacy);
   });
   git(item.workspace, 'update-ref', 'refs/remotes/origin/main', 'HEAD');
-  assert.throws(() => syncProjectQuestions(item), /questions: unsupported schema version; expected 3/);
+  assert.throws(() => syncProjectQuestions(item), /questions: unsupported schema version; expected 4/);
   assert.deepEqual(JSON.parse(fs.readFileSync(item.destination, 'utf8')), snapshot, 'A rejected registry keeps the previous snapshot');
 });
 

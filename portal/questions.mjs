@@ -34,20 +34,12 @@ const auditRef = /^[CPRSH]-\d{2,}$/;
 const segment = /^(?!\.{1,2}$)[\w.@-]+$/;
 const official = host => officialHosts.some(domain => host === domain || host.endsWith(`.${domain}`));
 /*
- * Content schemas of the registry that POS Platform publishes. Schema 4 adds the catalog of roles that
- * decide or are consulted, the roles consulted by each question, and the questions merged into another;
- * schema 3 names the deciding role in free text. Both are read while POS Platform moves to schema 4.
+ * Content schema 4 of the registry, the one POS Platform publishes: the catalog of roles that decide or
+ * are consulted, the deciding and consulted roles of each question, and the questions merged into another.
  */
-const contentFields = {
-  3: ['schemaVersion', 'reviewedOn', 'audit', 'items'],
-  4: ['schemaVersion', 'reviewedOn', 'audit', 'roles', 'items', 'merged'],
-};
-const schemaVersions = Object.keys(contentFields).map(Number);
-const itemFieldsV3 = ['id', 'topic', 'question', 'kind', 'state', 'currentAnswer', 'answerSources', 'auditRefs', 'parityRefs', 'sources', 'decider', 'owner', 'followUp', 'workPackages', 'priority', 'reviewedOn', 'recommendation', 'decision'];
-const itemFields = {
-  3: itemFieldsV3,
-  4: itemFieldsV3.flatMap(field => (field === 'decider' ? ['decider', 'consulted'] : [field])),
-};
+const schemaVersion = 4;
+const contentFields = ['schemaVersion', 'reviewedOn', 'audit', 'roles', 'items', 'merged'];
+const itemFields = ['id', 'topic', 'question', 'kind', 'state', 'currentAnswer', 'answerSources', 'auditRefs', 'parityRefs', 'sources', 'decider', 'consulted', 'owner', 'followUp', 'workPackages', 'priority', 'reviewedOn', 'recommendation', 'decision'];
 const roleFields = ['key', 'name', 'responsibility'];
 const mergedFields = ['id', 'question', 'into', 'mergedOn', 'reason'];
 // Same rule as tools/check-business-questions.mjs: a stable lowercase key, such as `tesoreria` or `ti-erp`.
@@ -248,18 +240,18 @@ function validateDecision(item) {
 }
 
 /**
- * The rules of POS Platform's validator (tools/check-business-questions.mjs) for schemas 3 and 4, with the
+ * The rules of POS Platform's validator (tools/check-business-questions.mjs) for schema 4, with the
  * same messages. The import passes the product context: backlog packages, follow-ups, audit registers
  * and versioned files at the imported revision. The published snapshot is checked again without that
  * context, against the POS Docs roadmap.
  */
 export function validateQuestionsContent(content, { workPackageIds, workPackageSource = 'the POS Docs roadmap', followUpIds = null, sourceExists = null, readAudit = null }) {
   assert.ok(content && typeof content === 'object' && !Array.isArray(content), 'questions: expected object');
-  assert.ok(schemaVersions.includes(content.schemaVersion), `questions: unsupported schema version; expected ${schemaVersions.join(' or ')}`);
-  const version = content.schemaVersion;
-  object(content, contentFields[version], 'questions');
+  // The version first, so that importing a cut of an older schema says so instead of listing its fields.
+  assert.equal(content.schemaVersion, schemaVersion, `questions: unsupported schema version; expected ${schemaVersion}`);
+  object(content, contentFields, 'questions');
   date(content.reviewedOn, 'questions.reviewedOn');
-  const roles = version === 4 ? validateRoles(content.roles) : null;
+  const roles = validateRoles(content.roles);
   const audit = repositoryPath(content.audit, 'questions.audit');
   const registers = readAudit ? readAudit(audit) : null;
   const packages = new Set(workPackageIds);
@@ -267,7 +259,7 @@ export function validateQuestionsContent(content, { workPackageIds, workPackageS
   assert.ok(Array.isArray(content.items), 'questions.items: expected array');
   let previous = null;
   for (const [index, item] of content.items.entries()) {
-    object(item, itemFields[version], `questions.items[${index}]`);
+    object(item, itemFields, `questions.items[${index}]`);
     assert.ok(typeof item.id === 'string' && questionId.test(item.id), `questions.items[${index}].id: expected Q-NN`);
     const { id } = item;
     if (previous) {
@@ -276,7 +268,7 @@ export function validateQuestionsContent(content, { workPackageIds, workPackageS
     }
     previous = item;
     for (const key of ['topic', 'question', 'currentAnswer', 'decider']) text(item[key], `${id}.${key}`);
-    if (roles) validateRoleAssignment(item, roles);
+    validateRoleAssignment(item, roles);
     assert.ok(kinds.includes(item.kind), `${id}.kind: expected fact or rule`);
     assert.ok(states.includes(item.state), `${id}.state: expected open, answered or decided`);
     for (const source of list(item.answerSources, `${id}.answerSources`, { nonempty: true })) {
@@ -308,7 +300,7 @@ export function validateQuestionsContent(content, { workPackageIds, workPackageS
     validateRecommendation(item, sourceExists);
     validateDecision(item);
   }
-  if (version === 4) validateMerged(content);
+  validateMerged(content);
   return content;
 }
 
@@ -398,19 +390,15 @@ export function deriveQuestions(snapshot, progress, followUp = null) {
   const { content } = snapshot;
   validateQuestionsContent(content, { workPackageIds: works.keys() });
   const actions = new Map((followUp?.items || []).map(action => [action.id, action]));
-  // Schema 3 names the deciding role in free text: that text is the role, with nobody consulted.
-  const roles = new Map(content.schemaVersion === 4
-    ? content.roles.map(role => [role.key, role])
-    : content.items.map(item => [item.decider, { key: item.decider, name: item.decider, responsibility: null }]));
+  const roles = new Map(content.roles.map(role => [role.key, role]));
   const items = content.items.map(item => {
     const packages = item.workPackages.map(id => works.get(id));
     const phases = [...new Set(packages.map(work => work.phase))].sort((a, b) => phaseOrder.get(a) - phaseOrder.get(b));
     const phase = progress.phases[phaseOrder.get(phases[0])];
-    const consulted = item.consulted ?? [];
-    return { ...item, consulted, deciderName: roles.get(item.decider).name, consultedNames: consulted.map(key => roles.get(key).name), recommendationStatus: recommendationStatus(item), packages, phases, phase: phase.id, phaseTitle: phase.title, phaseHref: phase.href, followUpAction: item.followUp ? actions.get(item.followUp) || null : null };
+    return { ...item, deciderName: roles.get(item.decider).name, consultedNames: item.consulted.map(key => roles.get(key).name), recommendationStatus: recommendationStatus(item), packages, phases, phase: phase.id, phaseTitle: phase.title, phaseHref: phase.href, followUpAction: item.followUp ? actions.get(item.followUp) || null : null };
   }).sort((a, b) => phaseOrder.get(a.phase) - phaseOrder.get(b.phase) || priorities.indexOf(a.priority) - priorities.indexOf(b.priority) || Number(a.id.slice(2)) - Number(b.id.slice(2)));
   const byId = new Map(items.map(item => [item.id, item]));
-  const merged = (content.merged ?? []).map(entry => ({ ...entry, intoQuestion: byId.get(entry.into).question }));
+  const merged = content.merged.map(entry => ({ ...entry, intoQuestion: byId.get(entry.into).question }));
   const groups = progress.phases.map(phase => ({ id: phase.id, title: phase.title, href: phase.href, items: items.filter(item => item.phase === phase.id) })).filter(group => group.items.length);
   return {
     source: snapshot.source,

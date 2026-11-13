@@ -18,6 +18,14 @@ const progress = () => ({
     work('F04-08', 'phase-04', 'Operación', 'Atribución'),
   ],
 });
+/** The catalog of schema 4: a stable key, the name the view shows and what the role decides. */
+const roles = () => [
+  { key: 'comercial', name: 'Comercial', responsibility: 'Precios, promociones, cupones y clientes' },
+  { key: 'operaciones', name: 'Operaciones de tiendas', responsibility: 'Operación de las sucursales y sus cajas' },
+  { key: 'finanzas', name: 'Finanzas', responsibility: 'Control de gestión y reportes financieros' },
+  { key: 'producto', name: 'Producto POS Platform', responsibility: 'Alcance y comportamiento del producto' },
+  { key: 'legal', name: 'Legal y Protección de datos', responsibility: 'Datos personales y cumplimiento legal' },
+];
 /** The agent's proposal, with the content of the fixture of tools/check-business-questions.test.mjs in POS Platform. */
 const recommendation = (fields = {}) => ({
   answer: 'La exclusión aplica sólo a las líneas de la OV; un cupón manual sigue disponible para el resto de la cesta.',
@@ -51,7 +59,8 @@ const question = (id, fields = {}) => ({
   auditRefs: ['C-30'],
   parityRefs: ['P-14'],
   sources: [],
-  decider: 'Comercial',
+  decider: 'comercial',
+  consulted: [],
   owner: null,
   followUp: 'FOLLOWUP-005',
   workPackages: ['F01-10'],
@@ -62,21 +71,23 @@ const question = (id, fields = {}) => ({
   ...fields,
 });
 /**
- * Schema 3: Q-01, Q-02 and Q-10 are open rules, Q-01 with the agent's recommendation; Q-03 was decided
+ * Schema 4: Q-01, Q-02 and Q-10 are open rules, Q-01 with the agent's recommendation; Q-03 was decided
  * without one, Q-04 is an answered fact and Q-05 a decision that adapts its recommendation.
  */
 const content = () => ({
-  schemaVersion: 3,
+  schemaVersion: 4,
   reviewedOn: '2026-11-10',
   audit,
+  roles: roles(),
   items: [
     question('Q-01', { workPackages: ['F04-08', 'F01-10'], recommendation: recommendation() }),
-    question('Q-02', { priority: 'P2', workPackages: ['F01-09'], decider: 'Operaciones' }),
-    question('Q-03', { state: 'decided', answerSources: ['spec'], sources: ['delivery/specs/F01-01.md#L34'], decider: 'Producto', followUp: null, workPackages: ['F01-01'], decision: decision() }),
-    question('Q-04', { kind: 'fact', state: 'answered', answerSources: ['data'], workPackages: ['F04-01'], decider: 'Finanzas' }),
+    question('Q-02', { priority: 'P2', workPackages: ['F01-09'], decider: 'operaciones' }),
+    question('Q-03', { state: 'decided', answerSources: ['spec'], sources: ['delivery/specs/F01-01.md#L34'], decider: 'producto', followUp: null, workPackages: ['F01-01'], decision: decision() }),
+    question('Q-04', { kind: 'fact', state: 'answered', answerSources: ['data'], workPackages: ['F04-01'], decider: 'finanzas' }),
     question('Q-05', { state: 'decided', priority: 'P3', workPackages: ['F04-08'], owner: 'pymimtos', recommendation: recommendation({ scope: 'core', default: null }), decision: decision({ answer: 'El cupón manual se habilita en todos los países para las líneas sin OV.', decidedBy: 'Comité comercial', source: 'Acta de decisiones comerciales del 10 de noviembre de 2026', outcome: 'adapted' }) }),
     question('Q-10', { workPackages: ['F02-04'], priority: 'P1', followUp: 'FOLLOWUP-017' }),
   ],
+  merged: [],
 });
 const snapshot = (value = content(), integration = { reference: 'main', included: true }) => ({
   schemaVersion: 1,
@@ -124,7 +135,7 @@ test('orders identifiers numerically within the same phase and priority', () => 
   assert.deepEqual(model.items.map(item => item.id), ['Q-09', 'Q-10', 'Q-100']);
 });
 
-test('names the kinds, the states, the recommendation filter and the outcomes of schema 3', () => {
+test('names the kinds, the states, the recommendation filter and the outcomes of the registry', () => {
   assert.deepEqual(questionKinds, { fact: 'Hecho', rule: 'Regla' });
   assert.deepEqual(questionStates, { open: 'Abierta', answered: 'Respondida', decided: 'Decidida' });
   assert.deepEqual(recommendationStatuses, { present: 'Con recomendación', none: 'Sin recomendación' });
@@ -134,7 +145,7 @@ test('names the kinds, the states, the recommendation filter and the outcomes of
 test('counts states, pending decisions, recommendations and outcomes without inferring owners or decisions', () => {
   const model = derive();
   assert.deepEqual(model.counts, { total: 6, open: 3, answered: 1, decided: 2, pendingDecision: 3, unassigned: 5, merged: 0, recommended: 2, unrecommended: 2, adopted: 0, adapted: 1, rejected: 0 });
-  assert.deepEqual(model.deciders, ['Comercial', 'Finanzas', 'Operaciones', 'Producto'].map(name => ({ key: name, name })), 'Schema 3 names each role in free text');
+  assert.deepEqual(model.deciders, [['comercial', 'Comercial'], ['finanzas', 'Finanzas'], ['operaciones', 'Operaciones de tiendas'], ['producto', 'Producto POS Platform']].map(([key, name]) => ({ key, name })), 'The roles that decide, by name; Legal decides nothing');
   assert.deepEqual(model.merged, []);
   assert.equal(model.reviewedOn, '2026-11-10');
   assert.equal(model.audit, audit);
@@ -195,9 +206,7 @@ test('validates provenance and content hash like the other project snapshots', (
 
 test('applies the product validation rules to the published content', () => {
   const rejects = (mutate, pattern) => assert.throws(() => derive(mutate), pattern);
-  for (const version of [1, 2, 5, '3']) rejects(value => { value.schemaVersion = version; }, reports('questions: unsupported schema version; expected 3 or 4'));
-  rejects(value => { value.items[0].consulted = []; }, reports('questions.items[0]: unexpected or missing fields'));
-  rejects(value => { value.roles = []; }, reports('questions: unexpected or missing fields'));
+  for (const version of [1, 2, 3, 5, '4']) rejects(value => { value.schemaVersion = version; }, reports('questions: unsupported schema version; expected 4'));
   rejects(value => { value.items[0].extra = true; }, reports('questions.items[0]: unexpected or missing fields'));
   rejects(value => { value.items[0].validation = null; }, reports('questions.items[0]: unexpected or missing fields'));
   rejects(value => { delete value.items[0].decision; }, reports('questions.items[0]: unexpected or missing fields'));
@@ -225,7 +234,7 @@ test('applies the product validation rules to the published content', () => {
   rejects(value => { value.items[0].currentAnswer = 'Primera línea\nsegunda línea'; }, /single-line text/);
 });
 
-test('applies the kind, state and decision rules of schema 3 with the messages of POS Platform', () => {
+test('applies the kind, state and decision rules with the messages of POS Platform', () => {
   // Character for character, the messages of tools/check-business-questions.mjs in POS Platform (S4).
   const rejects = (mutate, text) => assert.throws(() => derive(mutate), reports(text));
   const decided = mutate => value => mutate(value.items[2].decision, value);
@@ -263,7 +272,7 @@ test('applies the kind, state and decision rules of schema 3 with the messages o
   rejects(adapted(item => { item.decidedOn = '2026-11-09'; }), 'Q-05.decision: decided before its recommendation was proposed');
 });
 
-test('accepts what schema 3 allows a decision to be', () => {
+test('accepts what the registry allows a decision to be', () => {
   assert.doesNotThrow(() => derive(value => { value.items[2].sources = []; }), 'A decision no longer cites a source under delivery/specs/');
   assert.doesNotThrow(() => derive(value => { value.items[3].state = 'open'; }), 'A fact may still await its answer');
   assert.doesNotThrow(() => derive(value => { value.items[2].decision.source = 'Acta del comité de producto, 10 de noviembre de 2026'; }));
@@ -272,7 +281,7 @@ test('accepts what schema 3 allows a decision to be', () => {
   assert.doesNotThrow(() => derive(value => { Object.assign(value.items[4].decision, { decidedOn: '2026-11-09', outcome: null }); }));
 });
 
-test('applies the product rules to the recommendations of schema 3', () => {
+test('applies the product rules to the recommendations', () => {
   const rejects = (mutate, pattern) => assert.throws(() => derive(mutate), pattern);
   const first = mutate => value => mutate(value.items[0].recommendation, value);
   assert.doesNotThrow(() => derive());
@@ -357,52 +366,27 @@ test('checks product references only when the import provides the product contex
   }
 });
 
-test('rejects the schema 2 registry that POS Platform published before schema 3', () => {
-  // The same records as POS Platform published them in schema 2: with validation, author and endorsement.
-  const published = content();
-  published.schemaVersion = 2;
-  published.items = published.items.map(({ recommendation: proposal, decision: decided, ...item }) => {
-    const { agent, ...rest } = proposal ?? {};
-    return { ...item, kind: decided ? 'decision' : item.kind, validation: null, recommendation: proposal ? { ...rest, author: { kind: 'agent', name: agent }, endorsement: null } : null };
-  });
-  assert.throws(() => validateQuestionsContent(structuredClone(published), context()), reports('questions: unsupported schema version; expected 3 or 4'));
-  assert.throws(() => deriveQuestions(snapshot(published), progress(), followUp()), reports('questions: unsupported schema version; expected 3 or 4'));
+test('rejects the schema 3 registry that POS Platform published before schema 4', () => {
+  // The same records as POS Platform published them in schema 3: who decides in free text, without catalog.
+  const names = Object.fromEntries(roles().map(role => [role.key, role.name]));
+  const { roles: catalog, merged, ...rest } = content();
+  const published = { ...rest, schemaVersion: 3, items: rest.items.map(({ consulted, ...item }) => ({ ...item, decider: names[item.decider] })) };
+  assert.throws(() => validateQuestionsContent(structuredClone(published), context()), reports('questions: unsupported schema version; expected 4'));
+  assert.throws(() => deriveQuestions(snapshot(published), progress(), followUp()), reports('questions: unsupported schema version; expected 4'));
 });
 
-/** The catalog of schema 4: a stable key, the name the view shows and what the role decides. */
-const roles = () => [
-  { key: 'comercial', name: 'Comercial', responsibility: 'Precios, promociones, cupones y clientes' },
-  { key: 'operaciones', name: 'Operaciones de tiendas', responsibility: 'Operación de las sucursales y sus cajas' },
-  { key: 'finanzas', name: 'Finanzas', responsibility: 'Control de gestión y reportes financieros' },
-  { key: 'producto', name: 'Producto POS Platform', responsibility: 'Alcance y comportamiento del producto' },
-  { key: 'legal', name: 'Legal y Protección de datos', responsibility: 'Datos personales y cumplimiento legal' },
-];
-const keyOf = { Comercial: 'comercial', Operaciones: 'operaciones', Finanzas: 'finanzas', Producto: 'producto' };
-/**
- * The same records in schema 4: each role comes from the catalog, Q-01 consults Operaciones and Legal,
- * and Q-06 and Q-07 were merged into Q-01 and Q-10.
- */
+/** Q-01 consults Operaciones and Legal, and Q-06 and Q-07 were merged into Q-01 and Q-10. */
 const contentV4 = () => {
   const value = content();
-  return {
-    schemaVersion: 4,
-    reviewedOn: value.reviewedOn,
-    audit: value.audit,
-    roles: roles(),
-    items: value.items.map(({ decider, ...item }) => {
-      const fields = Object.entries(item);
-      const at = fields.findIndex(([field]) => field === 'owner');
-      const consulted = item.id === 'Q-01' ? ['operaciones', 'legal'] : [];
-      return Object.fromEntries([...fields.slice(0, at), ['decider', keyOf[decider]], ['consulted', consulted], ...fields.slice(at)]);
-    }),
-    merged: [
-      { id: 'Q-06', question: '¿El cupón de baterías excluye toda la cesta con OV?', into: 'Q-01', mergedOn: '2026-11-10', reason: 'Pregunta lo mismo que Q-01 para una campaña concreta.' },
-      { id: 'Q-07', question: '¿Quién concilia un pago en curso?', into: 'Q-10', mergedOn: '2026-11-09', reason: 'Es una parte de Q-10.' },
-    ],
-  };
+  value.items[0].consulted = ['operaciones', 'legal'];
+  value.merged = [
+    { id: 'Q-06', question: '¿El cupón de baterías excluye toda la cesta con OV?', into: 'Q-01', mergedOn: '2026-11-10', reason: 'Pregunta lo mismo que Q-01 para una campaña concreta.' },
+    { id: 'Q-07', question: '¿Quién concilia un pago en curso?', into: 'Q-10', mergedOn: '2026-11-09', reason: 'Es una parte de Q-10.' },
+  ];
+  return value;
 };
 
-test('reads schema 4: names each role from the catalog and keeps the questions merged into another', () => {
+test('names each role from the catalog and keeps the questions merged into another', () => {
   const model = derive(() => {}, followUp(), contentV4);
   const item = id => model.items.find(entry => entry.id === id);
   assert.equal(item('Q-01').decider, 'comercial');
@@ -422,7 +406,7 @@ test('reads schema 4: names each role from the catalog and keeps the questions m
   assert.equal(model.counts.open, 3);
 });
 
-test('applies the role and merge rules of schema 4 with the messages of POS Platform', () => {
+test('applies the role and merge rules with the messages of POS Platform', () => {
   // Character for character, the messages of tools/check-business-questions.mjs in POS Platform.
   const rejects = (mutate, text) => assert.throws(() => derive(mutate, followUp(), contentV4), reports(text));
   rejects(value => { delete value.merged; }, 'questions: unexpected or missing fields');
