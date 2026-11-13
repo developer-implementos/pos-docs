@@ -2,9 +2,9 @@
 
 Objetivo: que **Preguntas abiertas por rol**, en `/project/questions/`, muestre a cada rol por separado lo que debe decidir y los datos que debe aportar. Así sirve de punto de partida para las reuniones con los involucrados de FOLLOWUP-017. Issue: https://github.com/developer-implementos/pos-platform/issues/356 (TASK-356).
 
-Rama: `work/task-356-agenda-decidir-aportar` desde `bb3eb72`.
+Rama: `work/task-356-agenda-decidir-aportar`, rebasada sobre `873c799`.
 
-Entrega: una PR a `main`. Importa el corte de POS Platform que integra pos-platform#357, donde el catálogo de roles queda como propuesta, cambia FOLLOWUP-017 y Q-60 consulta también a Soporte.
+Entrega: una PR a `main`, sin snapshots. El corte de POS Platform con pos-platform#357 lo importa el workflow Project import en su propia PR (ver L3). En ese corte, el catálogo de roles queda como propuesta, cambia FOLLOWUP-017 y Q-60 consulta también a Soporte.
 
 Pruebas: `questions.test.mjs`, `project:test`, `portal:test`, `diagrams:test` y `npm run verify` completo, con `build` y `project:check` incluidos.
 
@@ -31,7 +31,6 @@ Espejo Engram: pendiente. El servidor MCP no conectó en esta sesión, así que 
 - [ ] T2 · S1,S2,S3 · route:inline · Tabla, filtros **Tipo** y **Rol que participa**, atributos de cada tarjeta, etiquetas del hecho, estilos y pruebas · status:in_progress · evidence: `project-view.test.mjs` 27/27 y `project.test.mjs` 15/15
 - [ ] T3 · S2 · route:inline · Comprobación de navegador y revisión visual a 1440, 1151 y 390 px · status:pending · evidence: pendiente de `build` y `project:check`
 - [ ] T4 · S1,S2,S3,S4 · route:inline · `docs/project-progress.md` y el paquete Excalidraw · status:in_progress · evidence: `package-freshness.test.mjs` aprobado tras regenerar el ZIP con `tools/diagrams/package-excalidraw.py`
-- [ ] T5 · S4 · route:inline · Importar el corte de POS Platform con pos-platform#357 · status:pending · evidence: pendiente de integrar #357
 
 ## Log
 
@@ -45,3 +44,5 @@ Espejo Engram: pendiente. El servidor MCP no conectó en esta sesión, así que 
   - el móvil depende de `.project-agenda-table tbody th:first-child`.
 
   Con ocho selectores, la grilla pasa a dos filas de cinco a partir de 1151 px, sin tocar la regla base que comparte la página de reglas. En móvil, «Datos por aportar» ocupa su propia fila.
+
+- L3 · 2026-11-13 · pos-platform#357 se integró en `2eaf8f6`. Esta rama llegó a importar ese corte en un commit local sin publicar. La sesión que mantiene la importación automática avisó que despachaba el workflow Project import (TASK-283), que abre su propia PR con los snapshots. Para no abrir dos PR de importación, se retiró ese commit y se retiró T5. Esta PR queda sólo con la vista, que funciona con cualquiera de los dos cortes, y la importación de `2eaf8f6` llega por la PR del workflow.
