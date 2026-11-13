@@ -96,6 +96,15 @@ test('the project import holds its App token only on main, scoped per repository
     { client: '${{ vars.IMPORT_APP_CLIENT_ID }}', repositories: 'pos-platform', permissions: ['contents:read', 'issues:read'] },
     { client: '${{ vars.IMPORT_APP_CLIENT_ID }}', repositories: 'pos-docs', permissions: ['contents:write', 'pull-requests:write'] },
   ]);
+  // The progress importer reads the roadmap that delivery/progress.json pins (`scope.revision`) with
+  // `git show`, an old commit of this repository. A shallow checkout lacks it: the first real run failed
+  // on «docs/roadmap.json exists on disk, but not in 4b1eac0», although every local run, from a full
+  // clone, passed. Both checkouts keep their full history.
+  const checkouts = workflow.split(/\n(?= {6}- )/).filter(step => step.includes('actions/checkout@'));
+  assert.deepEqual(checkouts.map(step => [step.match(/^ {10}path: (.+)$/m)?.[1], step.match(/^ {10}fetch-depth: (\d+)$/m)?.[1]]), [
+    ['pos-docs', '0'],
+    ['pos-platform', '0'],
+  ], 'Both repositories are checked out with their full history');
   assert.match(workflow, /run: node tools\/project-import\/run\.mjs --workspace \.\.\/pos-platform --publish$/m);
   assert.doesNotMatch(workflow, /merge\.mjs|gh pr merge|\/merge\b/, 'The import never merges its PR');
   const owners = readFileSync(new URL('../.github/CODEOWNERS', import.meta.url), 'utf8');
