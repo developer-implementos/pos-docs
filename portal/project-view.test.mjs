@@ -224,6 +224,7 @@ test('each question shows its answer, sources, decider, owner, follow-up, packag
     assert.ok(body.includes(`data-decider="${escapeText(item.decider)}"`));
     assert.ok(body.includes(`data-phases="${item.phases.join(' ')}"`));
     assert.ok(body.includes(`<dt>Prioridad</dt><dd>${item.priority}</dd>`));
+    assert.ok(body.includes(`data-priority="${item.priority}"`), `${item.id} can be filtered by its priority`);
     for (const source of item.sources) assert.ok(body.includes(`href="${repository}/blob/${revision}/${source}"`), `${item.id} pins ${source}`);
     for (const work of item.packages) assert.ok(body.includes(`href="/project/work/#work-${work.id.toLowerCase()}"`));
     if (item.owner === null) assert.ok(body.includes('<dt>Responsable de seguimiento</dt><dd><span class="project-unassigned">Por asignar</span>'));
@@ -393,8 +394,8 @@ test('questions page explains who recommends and who decides and links the sourc
   assert.ok(html.includes(`href="${href}">Registro de preguntas · ${questions.source.revision.slice(0, 8)}</a>`));
   assert.ok(html.includes(`Registro revisado <time datetime="${questions.reviewedOn}">`));
   assert.match(html, /data-project-filters hidden/);
-  for (const name of ['state', 'phase', 'decider', 'recommendation', 'scope']) assert.ok(html.includes(`<select name="${name}">`), name);
-  assert.deepEqual([...html.matchAll(/<select name="(\w+)">/g)].map(match => match[1]), ['state', 'phase', 'decider', 'recommendation', 'scope']);
+  assert.deepEqual([...html.matchAll(/<select name="(\w+)">/g)].map(match => match[1]), ['state', 'phase', 'decider', 'priority', 'recommendation', 'scope']);
+  assert.ok(html.includes('<select name="priority"><option value="">Todos</option><option value="P1">P1</option><option value="P2">P2</option><option value="P3">P3</option></select>'));
   for (const role of questions.deciders) assert.ok(html.includes(`<option value="${escapeText(role.key)}">${escapeText(role.name)}</option>`), role.name);
   assert.match(html, /<noscript>/);
 });
@@ -432,6 +433,28 @@ test('schema 4: each question names its deciding role and the roles consulted, a
   assert.ok(!card(html, other.id).includes('<dt>Se consulta a</dt>'), 'A question without consulted roles does not show the field');
   for (const role of model.deciders) assert.ok(html.includes(`<option value="${role.key}">${escapeText(role.name)}</option>`), role.name);
   assert.ok(!html.includes('id="questions-merged"'), 'Without merged questions there is no merged section');
+});
+
+test('the agenda lists the open questions of each deciding role, and each count opens that same list', () => {
+  const html = questionsPage();
+  const start = html.indexOf('<section id="questions-agenda"');
+  assert.ok(start > html.indexOf('class="project-question-summary"') && start < html.indexOf('data-project-filters'), 'The agenda follows the summary, before the filters');
+  const section = html.slice(start, html.indexOf('</section>', start));
+  assert.deepEqual([...section.matchAll(/<tr><th scope="row"><a href="[^"]+">([^<]+)<\/a>/g)].map(match => match[1]), questions.agenda.map(role => escapeText(role.name)), 'One row per deciding role with open questions, in the order of the agenda');
+  for (const role of questions.agenda) {
+    const list = `/project/questions/?decider=${role.key}&amp;state=open`;
+    assert.ok(section.includes(`<th scope="row"><a href="${list}">${escapeText(role.name)}</a><span class="project-agenda-responsibility">${escapeText(role.responsibility)}</span></th>`), role.key);
+    assert.ok(section.includes(`<td data-label="Abiertas"><a href="${list}">${role.open}<`), `${role.key} opens its list`);
+    for (const [priority, value] of Object.entries(role.priorities)) {
+      const cell = value ? `<td data-label="${priority}"><a href="${list}&amp;priority=${priority}">${value}<` : `<td data-label="${priority}"><span aria-label="ninguna">0</span></td>`;
+      assert.ok(section.includes(cell), `${role.key} ${priority}`);
+    }
+  }
+  assert.equal(questions.agenda.reduce((sum, role) => sum + role.open, 0), questions.counts.open, 'Every open question is on the agenda of the role that decides it');
+  const closed = questionsV4(content => {
+    content.items = content.items.filter(item => item.state !== 'open');
+  });
+  assert.ok(!questionsPage(closed).includes('id="questions-agenda"'), 'Without open questions there is no agenda');
 });
 
 test('schema 4: a merged question keeps its anchor, its text and a link to the question where it is decided', () => {

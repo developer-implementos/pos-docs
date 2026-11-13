@@ -226,6 +226,21 @@ try {
   await form().locator('[name=decider]').selectOption(decider);
   assert.equal(await count(), questions.items.filter(item => item.decider === decider).length);
   await reset();
+  // The agenda: a row per deciding role, and each count opens a list with as many questions.
+  assert.equal(await page.locator('#questions-agenda tbody tr').count(), questions.agenda.length);
+  const [busiest] = questions.agenda;
+  if (busiest) {
+    const priority = Object.keys(busiest.priorities).find(key => busiest.priorities[key] > 0);
+    await page.locator(`#questions-agenda a[href="/project/questions/?decider=${busiest.key}&state=open&priority=${priority}"]`).click();
+    await page.waitForURL(url => url.searchParams.get('priority') === priority);
+    assert.equal(await form().locator('[name=decider]').inputValue(), busiest.key, 'The agenda link selects the role');
+    assert.equal(await form().locator('[name=state]').inputValue(), 'open');
+    assert.equal(await form().locator('[name=priority]').inputValue(), priority);
+    assert.equal(await count(), busiest.priorities[priority], `The ${priority} count of ${busiest.key} opens as many questions`);
+    await navigate(`/project/questions/?decider=${busiest.key}&state=open`);
+    assert.equal(await count(), busiest.open, `The open count of ${busiest.key} matches its list`);
+    await navigate('/project/questions/');
+  }
   const [merged] = questions.merged;
   if (merged) {
     // The anchor of a merged question still resolves, and leads to the question where it is decided.
