@@ -11,6 +11,13 @@ Los cambios de herramientas, pruebas y CI no aparecen aquí; quedan en el [regis
 
 Este archivo lo escribe [release-please](https://github.com/googleapis/release-please) desde los títulos de los PR, y cada versión queda como [release en GitHub](https://github.com/developer-implementos/pos-docs/releases). Para recibir un aviso por versión, usa *Watch → Custom → Releases* en el repositorio. No se edita a mano: cómo se escribe una buena entrada está en la [guía de versiones](tools/release/README.md).
 
+## [0.9.0](https://github.com/developer-implementos/pos-docs/compare/v0.8.0...v0.9.0) (2026-11-13)
+
+
+### Novedades
+
+* **project:** [TASK-258] mostrar las preguntas abiertas de cada rol y filtrar por prioridad ([#98](https://github.com/developer-implementos/pos-docs/issues/98)) ([1a7d77a](https://github.com/developer-implementos/pos-docs/commit/1a7d77ada04efe73696216eb478fe8b488a7994e))
+
 ## [0.8.0](https://github.com/developer-implementos/pos-docs/compare/v0.7.2...v0.8.0) (2026-11-13)
 
 
