@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "9cc8a3f135d20a097efd594cd0ac83c3587ec75b",
+    "revision": "55ba70ae533014a0f0b43dd924415d449aa9bfd3",
     "path": "delivery/follow-ups.json",
-    "sha256": "6551f7e9e44b9d905f78c540e8d35f8eabacff30b7adf129fc9fff6160d25911"
+    "sha256": "f458e89d8e6cc6ec40a9394bb463a274f20428ea0fec57fd477ef79ac4b53c87"
   },
   "content": {
     "schemaVersion": 1,
@@ -627,10 +627,10 @@
           "F04-06"
         ],
         "summary": "Obtener las decisiones de negocio del registro de preguntas y reglas de paridad",
-        "impact": "La auditoría de paridad y el catálogo de reglas legacy registran 122 preguntas y reglas con su respuesta actual, la fuente de esa respuesta y, en las 110 reglas abiertas, la recomendación del agente; los 2 hechos abiertos esperan su respuesta. Sólo las 5 decididas en fichas tienen una decisión registrada. Sin decisión no puede aprobarse una diferencia intencional ni fijarse el resultado esperado de los casos de paridad que dependen de ellas: permisos por perfil, cuentas sin identidad ERP, ventas en espera, cancelación, reglas de cierre y liberación de OV. El comportamiento legacy y la recomendación del agente no constituyen reglas aprobadas.",
+        "impact": "La auditoría de paridad y el catálogo de reglas legacy registran 108 preguntas y reglas, después de unir a otra las 17 que la repetían o formaban parte de ella, con su respuesta actual, la fuente de esa respuesta y, en las 96 reglas abiertas, la recomendación del agente; los 2 hechos abiertos esperan su respuesta. Sólo las 5 decididas en fichas tienen una decisión registrada. Sin decisión no puede aprobarse una diferencia intencional ni fijarse el resultado esperado de los casos de paridad que dependen de ellas: permisos por perfil, cuentas sin identidad ERP, ventas en espera, cancelación, reglas de cierre y liberación de OV. El comportamiento legacy y la recomendación del agente no constituyen reglas aprobadas.",
         "impactScope": "review",
-        "nextAction": "Designar al responsable de reglas de negocio y revisar el registro en reuniones por tema con Comercial, Operaciones, Tesorería/Finanzas y RR. HH. El resultado se entrega en un documento de decisiones, que no se sube al repositorio; un agente registra cada decisión según delivery/README.md, con quién decidió, la fecha y el documento citado por nombre, y la traslada a la ficha propietaria.",
-        "requestedFrom": "Responsable de reglas de negocio por designar, con Comercial, Operaciones, Tesorería/Finanzas y RR. HH. según cada entrada",
+        "nextAction": "Designar al responsable de reglas de negocio y revisar el registro en reuniones con cada rol que decide, según el catálogo de roles del registro, consultando a los roles que cada pregunta indica. El resultado se entrega en un documento de decisiones, que no se sube al repositorio; un agente registra cada decisión según delivery/README.md, con quién decidió, la fecha y el documento citado por nombre, y la traslada a la ficha propietaria.",
+        "requestedFrom": "Responsable de reglas de negocio por designar, con el rol que decide cada entrada según el catálogo de roles del registro",
         "owner": null,
         "closureCriteria": "Cada regla abierta del registro tiene su decisión registrada, con quién decidió, la fecha y el documento de origen, y las reglas decididas quedan en sus fichas. Una regla sin decisión permanece abierta.",
         "reviewedOn": "2026-11-12",
@@ -847,7 +847,7 @@
     ]
   },
   "issues": {
-    "observedAt": "2026-11-12T22:51:15.957Z",
+    "observedAt": "2026-11-13T02:32:44.306Z",
     "repository": "https://github.com/developer-implementos/pos-platform",
     "entries": [
       {
@@ -859,7 +859,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:46:30Z"
+        "updatedAt": "2026-11-13T02:28:27Z"
       },
       {
         "code": "F01-02",
@@ -870,7 +870,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:46:35Z"
+        "updatedAt": "2026-11-13T02:28:31Z"
       },
       {
         "code": "F01-03",
@@ -881,7 +881,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:46:40Z"
+        "updatedAt": "2026-11-13T02:28:35Z"
       },
       {
         "code": "F01-04",
@@ -892,7 +892,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:46:44Z"
+        "updatedAt": "2026-11-13T02:28:39Z"
       },
       {
         "code": "F01-05",
@@ -901,7 +901,7 @@
         "state": "CLOSED",
         "executionLabels": [],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:46:49Z"
+        "updatedAt": "2026-11-13T02:28:43Z"
       },
       {
         "code": "F01-06",
@@ -912,7 +912,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:46:54Z"
+        "updatedAt": "2026-11-13T02:28:48Z"
       },
       {
         "code": "F01-07",
@@ -923,7 +923,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:47:00Z"
+        "updatedAt": "2026-11-13T02:28:51Z"
       },
       {
         "code": "F01-08",
@@ -934,7 +934,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:47:05Z"
+        "updatedAt": "2026-11-13T02:28:55Z"
       },
       {
         "code": "F01-09",
@@ -945,7 +945,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:47:09Z"
+        "updatedAt": "2026-11-13T02:28:59Z"
       },
       {
         "code": "F01-10",
@@ -956,7 +956,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:47:14Z"
+        "updatedAt": "2026-11-13T02:29:04Z"
       },
       {
         "code": "F01-11",
@@ -967,7 +967,7 @@
           "status:blocked"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:47:19Z"
+        "updatedAt": "2026-11-13T02:29:08Z"
       },
       {
         "code": "F01-12",
@@ -978,7 +978,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:47:25Z"
+        "updatedAt": "2026-11-13T02:29:12Z"
       },
       {
         "code": "F01-13",
@@ -989,7 +989,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:47:29Z"
+        "updatedAt": "2026-11-13T02:29:15Z"
       },
       {
         "code": "F02-01",
@@ -1000,7 +1000,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:47:34Z"
+        "updatedAt": "2026-11-13T02:29:19Z"
       },
       {
         "code": "F02-02",
@@ -1011,7 +1011,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:47:38Z"
+        "updatedAt": "2026-11-13T02:29:23Z"
       },
       {
         "code": "F02-03",
@@ -1022,7 +1022,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:47:43Z"
+        "updatedAt": "2026-11-13T02:29:28Z"
       },
       {
         "code": "F02-04",
@@ -1033,7 +1033,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:47:47Z"
+        "updatedAt": "2026-11-13T02:29:31Z"
       },
       {
         "code": "F02-05",
@@ -1044,7 +1044,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:47:52Z"
+        "updatedAt": "2026-11-13T02:29:36Z"
       },
       {
         "code": "F02-06",
@@ -1055,7 +1055,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:47:56Z"
+        "updatedAt": "2026-11-13T02:29:40Z"
       },
       {
         "code": "F02-07",
@@ -1066,7 +1066,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:48:00Z"
+        "updatedAt": "2026-11-13T02:29:43Z"
       },
       {
         "code": "F02-08",
@@ -1077,7 +1077,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:48:04Z"
+        "updatedAt": "2026-11-13T02:29:48Z"
       },
       {
         "code": "F02-09",
@@ -1088,7 +1088,7 @@
           "status:validation"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:48:09Z"
+        "updatedAt": "2026-11-13T02:29:52Z"
       },
       {
         "code": "F02-10",
@@ -1099,7 +1099,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:48:13Z"
+        "updatedAt": "2026-11-13T02:29:56Z"
       },
       {
         "code": "F02-11",
@@ -1110,7 +1110,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:48:17Z"
+        "updatedAt": "2026-11-13T02:30:00Z"
       },
       {
         "code": "F02-12",
@@ -1121,7 +1121,7 @@
           "status:in-progress"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:48:21Z"
+        "updatedAt": "2026-11-13T02:30:04Z"
       },
       {
         "code": "F02-13",
@@ -1132,7 +1132,7 @@
         "assignees": [
           "floxcristian"
         ],
-        "updatedAt": "2026-11-12T22:48:25Z"
+        "updatedAt": "2026-11-13T02:30:08Z"
       },
       {
         "code": "F02-14",
@@ -1143,7 +1143,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:48:30Z"
+        "updatedAt": "2026-11-13T02:30:12Z"
       },
       {
         "code": "F03-01",
@@ -1165,7 +1165,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:48:35Z"
+        "updatedAt": "2026-11-13T02:30:16Z"
       },
       {
         "code": "F03-03",
@@ -1176,7 +1176,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:48:40Z"
+        "updatedAt": "2026-11-13T02:30:20Z"
       },
       {
         "code": "F03-04",
@@ -1220,7 +1220,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:48:44Z"
+        "updatedAt": "2026-11-13T02:30:24Z"
       },
       {
         "code": "F03-08",
@@ -1231,7 +1231,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:48:48Z"
+        "updatedAt": "2026-11-13T02:30:28Z"
       },
       {
         "code": "F03-09",
@@ -1242,7 +1242,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:48:53Z"
+        "updatedAt": "2026-11-13T02:30:32Z"
       },
       {
         "code": "F03-10",
@@ -1253,7 +1253,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:48:58Z"
+        "updatedAt": "2026-11-13T02:30:36Z"
       },
       {
         "code": "F03-11",
@@ -1286,7 +1286,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:49:02Z"
+        "updatedAt": "2026-11-13T02:30:40Z"
       },
       {
         "code": "F04-02",
@@ -1297,7 +1297,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:49:06Z"
+        "updatedAt": "2026-11-13T02:30:44Z"
       },
       {
         "code": "F04-03",
@@ -1308,7 +1308,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:49:11Z"
+        "updatedAt": "2026-11-13T02:30:48Z"
       },
       {
         "code": "F04-04",
@@ -1341,7 +1341,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:49:16Z"
+        "updatedAt": "2026-11-13T02:30:52Z"
       },
       {
         "code": "F04-07",
@@ -1396,7 +1396,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:49:21Z"
+        "updatedAt": "2026-11-13T02:30:56Z"
       },
       {
         "code": "F05-01",
@@ -1407,7 +1407,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:49:26Z"
+        "updatedAt": "2026-11-13T02:31:00Z"
       },
       {
         "code": "F05-02",
@@ -1506,7 +1506,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:49:30Z"
+        "updatedAt": "2026-11-13T02:31:04Z"
       },
       {
         "code": "F05-11",
@@ -1517,7 +1517,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:49:34Z"
+        "updatedAt": "2026-11-13T02:31:09Z"
       },
       {
         "code": "F05-12",
@@ -1550,7 +1550,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T22:49:39Z"
+        "updatedAt": "2026-11-13T02:31:13Z"
       },
       {
         "code": "F06-03",
