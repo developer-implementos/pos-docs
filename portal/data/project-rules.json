@@ -2,17 +2,17 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "ba1d279e703764a12f416bb13436f2cc4649f843",
+    "revision": "0625f93ed6cf09bca3fb234ba86953f6e616bcb3",
     "path": "delivery/business-rules.json"
   },
   "integration": {
     "reference": "main",
     "included": true
   },
-  "sha256": "bfc31cc01b23c3a3774123bc1e4905b291069ab14d2da807226ec6e7ab093681",
+  "sha256": "6cc351a8030b0cb104395005dbf2388f2597d7517414daf618cb113e367b9040",
   "register": {
     "schemaVersion": 2,
-    "reviewedOn": "2026-11-12",
+    "reviewedOn": "2026-11-13",
     "posPlatformRevision": "00faf56f1f4205c54fd52bb3e77d880b808b42a2",
     "areas": {
       "CAJ": "Caja",
@@ -2457,6 +2457,7 @@
         "disclosure": "public",
         "workPackage": "F01-08",
         "questions": [
+          "Q-50",
           "Q-52"
         ],
         "title": "Documento por defecto según el cliente",
@@ -3059,7 +3060,8 @@
         "disclosure": "public",
         "workPackage": "F01-09",
         "questions": [
-          "Q-08"
+          "Q-08",
+          "Q-45"
         ],
         "title": "Autoguardado de ventas en curso al cerrar sesión",
         "type": "operacion",
@@ -3716,7 +3718,9 @@
         "area": "VEN",
         "disclosure": "public",
         "workPackage": "F01-10",
-        "questions": [],
+        "questions": [
+          "Q-70"
+        ],
         "title": "Consulta de precio escala por producto",
         "type": "integracion",
         "kind": "capacidad",
@@ -8115,6 +8119,7 @@
         "disclosure": "public",
         "workPackage": "F01-08",
         "questions": [
+          "Q-03",
           "Q-52"
         ],
         "title": "Campos obligatorios de la ficha de cliente según tipo (empresa, persona natural, solo boleta)",
