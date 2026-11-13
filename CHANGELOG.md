@@ -11,6 +11,26 @@ Los cambios de herramientas, pruebas y CI no aparecen aquí; quedan en el [regis
 
 Este archivo lo escribe [release-please](https://github.com/googleapis/release-please) desde los títulos de los PR, y cada versión queda como [release en GitHub](https://github.com/developer-implementos/pos-docs/releases). Para recibir un aviso por versión, usa *Watch → Custom → Releases* en el repositorio. No se edita a mano: cómo se escribe una buena entrada está en la [guía de versiones](tools/release/README.md).
 
+## [0.8.0](https://github.com/developer-implementos/pos-docs/compare/v0.7.2...v0.8.0) (2026-11-13)
+
+
+### Novedades
+
+* **project:** [TASK-339] aceptar sólo el esquema 4 del registro de preguntas ([66a54ac](https://github.com/developer-implementos/pos-docs/commit/66a54ac9f2ede7a2c4090a9bd922d73ab0397846))
+* **project:** [TASK-339] leer el esquema 4 de preguntas con roles y preguntas unidas ([#94](https://github.com/developer-implementos/pos-docs/issues/94)) ([8ecdbd9](https://github.com/developer-implementos/pos-docs/commit/8ecdbd9a343a45c3896bed35c65aaf934632cdf0))
+
+
+### Correcciones
+
+* **release:** [TASK-341] derivar de la versión candidata las versiones ajenas de las pruebas ([#97](https://github.com/developer-implementos/pos-docs/issues/97)) ([31b8294](https://github.com/developer-implementos/pos-docs/commit/31b82949861d2e42ad4771341446a0903cce8156))
+
+
+### Contenido actualizado
+
+* **evidence:** [TASK-258] publicar los hallazgos de seguridad del legacy sólo por identificador ([#87](https://github.com/developer-implementos/pos-docs/issues/87)) ([638363e](https://github.com/developer-implementos/pos-docs/commit/638363ea52eacf5887d6b1c5f45194b1a6333cd0))
+* **follow-up:** FOLLOWUP-017 actualizado (impacto, próxima acción): Obtener las decisiones de negocio del registro de preguntas y reglas de paridad ([66a54ac](https://github.com/developer-implementos/pos-docs/commit/66a54ac9f2ede7a2c4090a9bd922d73ab0397846))
+* **project:** [TASK-339] importar el corte 55ba70a con 108 preguntas, 17 unidas y el catálogo de roles ([66a54ac](https://github.com/developer-implementos/pos-docs/commit/66a54ac9f2ede7a2c4090a9bd922d73ab0397846))
+
 ## [0.7.2](https://github.com/developer-implementos/pos-docs/compare/v0.7.1...v0.7.2) (2026-11-12)
 
 
