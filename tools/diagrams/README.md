@@ -67,6 +67,8 @@ python tools/diagrams/package-excalidraw.py
 python tools/diagrams/export-drawio.py
 ```
 
+La colección ZIP empaqueta también los documentos de `docs/`, y el sitio la publica para descargar: cualquier cambio en ellos exige volver a ejecutar `package-excalidraw.py`. `tools/diagrams/package-freshness.test.mjs`, dentro de `npm run diagrams:test`, falla si alguna copia del ZIP difiere de su fuente.
+
 Si solo cambian notas o contratos del modelo y la geometría permanece válida, no hace falta volver a renderizar Mermaid. `EXCALIDRAW_RUNTIME` permite usar otro directorio instalado con el mismo lockfile. La exportación nativa usa Arial para medir el texto de Helvetica; la verificación completa se realizó originalmente en Windows y necesita esas fuentes. No asumir equivalencia visual entre sistemas operativos sin revisar los resultados.
 
 ### Regenerar una sola vista

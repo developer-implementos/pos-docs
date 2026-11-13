@@ -167,7 +167,7 @@ El destino acordado es [`apps/device-agent`, C#/.NET Windows](../decisions/devic
 - Dobles de impresora/spooler: error de configuración, cola ausente, WritePrinter false, excepción GDI, trabajo aceptado con respuesta HTTP perdida y repetición de `jobId`.
 - Pruebas de contrato: contenido inválido, ruta Pdf, error HTTP/de aplicación, GET de salud sin efectos y cancelación de lectura.
 - Banco de periféricos: sin papel, tapa abierta, corte USB, reinicio de agente/spooler, dos solicitudes simultáneas, MICR sin documento y documento malformado.
-- Inventario productivo: servicio o MVC, identidad Windows, URL ACL, origen POS permitido, versión/hash del binario, driver, formato de configuración, proceso de instalación/actualización y consumidor de cada endpoint.
+- Inventario productivo: servicio o MVC, configuración instalada, versión/hash del binario, driver, formato de configuración, proceso de instalación/actualización y consumidor de cada endpoint.
 
 Estas validaciones se proponen para una fase controlada; **no se ejecutaron operaciones físicas ni se modificó el código auditado**.
 
@@ -175,7 +175,7 @@ Estas validaciones se proponen para una fase controlada; **no se ejecutaron oper
 
 Todos los enlaces corresponden al SHA revisado y requieren acceso al repositorio privado.
 
-- **[I01]** [WindowsServiceImpresora/ServiceImpresora.cs, líneas 30–60](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/WindowsServiceImpresora/ServiceImpresora.cs#L30-L60): binding, CORS y ciclo de servicio.
+- **[I01]** [WindowsServiceImpresora/ServiceImpresora.cs, líneas 30–60](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/WindowsServiceImpresora/ServiceImpresora.cs#L30-L60): binding y ciclo de servicio.
 - **[I02]** [WindowsServiceImpresora/Controllers/ImpresionController.cs, líneas 18–198](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/WindowsServiceImpresora/Controllers/ImpresionController.cs#L18-L198): rutas, efectos y respuestas.
 - **[I03]** [WindowsServiceImpresora/WindowsServiceImpresora.csproj, líneas 8–11](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/WindowsServiceImpresora/WindowsServiceImpresora.csproj#L8-L11) y [packages.config](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/WindowsServiceImpresora/packages.config): plataforma y dependencias.
 - **[I04]** [Biblioteca/Entities/Documento.cs, líneas 9–105](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/Biblioteca/Entities/Documento.cs#L9-L105) y [ApiResponse.cs, líneas 9–33](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/Biblioteca/Entities/ApiResponse.cs#L9-L33): DTOs y significado de `error`.

@@ -76,7 +76,7 @@ const statusLabels: Record<string, string> = {
             <summary>Ver implementación y declaración</summary>
             <p><code>{entry.target}</code></p>
             <p>
-              <a href={`${sourceBase}${app}/start/routes.js#L${entry.line}`}>Declaración de la ruta</a>
+              <a href={`${sourceBase}${app}/start/routes.js`}>Declaraciones de rutas</a>
               {entry.handlerFile && entry.handlerLine && <> · <a href={`${sourceBase}${entry.handlerFile}#L${entry.handlerLine}`}>Método del controlador</a></>}
             </p>
           </details>

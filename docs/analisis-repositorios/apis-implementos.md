@@ -187,7 +187,7 @@ Las prioridades expresan relevancia para preparar la arquitectura y el saneamien
 
 ### Precisión de los límites de seguridad
 
-Se revisaron controladores, arranque, configuración de filtros y configuración versionada; no se autenticó ninguna llamada ni se intentó explotar hallazgos. Los controles de red, gateway e IIS pueden cambiar sustancialmente el riesgo efectivo. Los atributos CORS encontrados no implican por sí mismos que CORS esté habilitado globalmente ni que una API sea alcanzable desde Internet. Los secretos se documentan solo por ubicación y categoría.
+Se revisaron controladores, arranque, configuración de filtros y configuración versionada. La revisión fue estática: no se autenticó ninguna llamada ni se ejercitó ninguna ruta. Los controles de red, gateway e IIS pueden cambiar sustancialmente el riesgo efectivo.
 
 ## 6. Naming y frontera ACL/fachada
 
@@ -230,7 +230,6 @@ Son implicaciones propuestas a partir del código; no fijan ERP destino, calenda
 | Cliente antes de dirección. | **Se encuentra la secuencia cliente → direcciones → contacto**, con posible avance parcial en el adaptador. No demuestra el orden de todos los mensajes del bus. |
 | Emitir DTE y registrar en AX son pasos separados. | **El adaptador recibe datos fiscales**, como `InvoiceAcepta`, código y URL del documento, y ejecuta operaciones AX. No permite establecer por sí solo el momento de habilitar sincronización tras emitir DTE. |
 | «Sincronizado» no equivale a confirmado en AX. | **Hay varios niveles de resultado y confirmaciones por entidad AX**; la marca local se debe contrastar en el backend/sincronizador. |
-| Algunas APIs no exigen autenticación y hay credenciales en archivos. | Su contraste forma parte de los hallazgos de seguridad, que se publican sólo por identificador; el detalle está en el [registro de hallazgos de seguridad de POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md). Exposición y protecciones de infraestructura siguen sin verificar. |
 | Conteo de seis aplicaciones. | **Requiere reconciliación.** Un repositorio agrupa múltiples proyectos corporativos; app, proceso, API, biblioteca y repositorio no son unidades equivalentes. |
 | DTE Acepta / Ingydev. | **Se amplía el inventario documental** con recuperación Paperless en `ApiDocumentos`. Esto no prueba que Paperless emita las ventas actuales de caja. |
 
@@ -246,14 +245,14 @@ Son implicaciones propuestas a partir del código; no fijan ERP destino, calenda
 | Alta de cliente parcial | Cliente creado y dirección fallida; reintentar y completar solo los pasos necesarios. |
 | Backlog y fecha | Pago originado el día anterior, durante cambio de mes o periodo cerrado; validar fecha del hecho y fecha contable aceptada. |
 | Contratos AX | Obtener WCF/X++ efectivo, convenciones de arrays, códigos, restricciones de unicidad y procedimientos almacenados. |
-| Seguridad de servicio | Verificar acceso efectivo con/sin identidad en un entorno autorizado, permisos DB y custodia/rotación de secretos; no se realizó explotación. |
+| Seguridad de servicio | Verificar en un entorno autorizado los controles de acceso y la custodia de secretos de cada servicio. |
 | Corte de ERP | Venta pendiente antes del corte, pago posterior y devolución de venta anterior; probar selección de adaptador, correspondencias y reconciliación. |
 
 No se encontraron proyectos de pruebas automatizadas en la solución revisada ni archivos SQL con los procedimientos invocados. No se ejecutó compilación, por lo que esta revisión no certifica que la solución completa compile con el toolchain actual. Las verificaciones propuestas requieren entornos de prueba y contratos del ERP; no son resultados ya obtenidos.
 
 ## 10. Evidencias trazables
 
-Los rangos siguientes corresponden al commit `8fbe2f1b4d4e464a403aa3daca63ffe712a9dd70`. Se evitan fragmentos que contengan secretos.
+Los rangos siguientes corresponden al commit `8fbe2f1b4d4e464a403aa3daca63ffe712a9dd70`.
 
 | Ref. | Archivo / líneas | Evidencia |
 | --- | --- | --- |

@@ -78,7 +78,7 @@ Fuentes: [mountain-implementos/backend/app/Controllers/Http/PuntoDeVentaControll
 
 Fuentes: [mountain-sync-sucursal/package.json:1–46](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/package.json#L1-L46); [mountain-sync-sucursal/start/cronHooks.js:13–217](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/start/cronHooks.js#L13-L217); [PPTX original: zonas, componentes y versiones declaradas (diap. 5–11)](../docs/antecedentes-presentacion-chile.md).
 
-**Aplicación local de impresión (`print`).** Binding loopback y Windows Service; se ejecuta en el PC de caja con Windows. Evidencia: Código de binding; instalación/binario pendiente. Pendiente: Servicio vs proyecto MVC alternativo, identidad Windows, drivers, impresoras y origen permitido.
+**Aplicación local de impresión (`print`).** Binding loopback y Windows Service; se ejecuta en el PC de caja con Windows. Evidencia: Código de binding; instalación/binario pendiente. Pendiente: servicio vs proyecto MVC alternativo, drivers, impresoras y configuración instalada.
 
 Fuentes: [api-impresion-caja/WindowsServiceImpresora/ServiceImpresora.cs:30–60](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/WindowsServiceImpresora/ServiceImpresora.cs#L30-L60); [api-impresion-caja/WindowsServiceImpresora/WindowsServiceImpresora.csproj:8–11](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/WindowsServiceImpresora/WindowsServiceImpresora.csproj#L8-L11); [PPTX original: zonas, componentes y versiones declaradas (diap. 5–11)](../docs/antecedentes-presentacion-chile.md).
 
@@ -478,19 +478,19 @@ Llamadas del sincronizador y receptores compatibles en mountain-concentrador; bi
 
 #### e-sync-manual · `GET /sincronizador/enviar-cambios`
 
-**Origen → destino:** Consumidor corporativo por identificar (`integration-caller`) → Sincronizador de sucursal (`sync`). **Evidencia:** ruta receptora declarada; Ruta receptora; llamador operativo y exposición no comprobados.
+**Origen → destino:** Consumidor corporativo por identificar (`integration-caller`) → Sincronizador de sucursal (`sync`). **Evidencia:** ruta receptora declarada; Ruta receptora; llamador operativo no comprobado.
 
 **Función:** Disparar manualmente el envío de cambios con parámetros de entidad.
 
 **Ejecución y continuidad:** HTTP síncrono de control que ejecuta un efecto de integración. No sustituye acceso WAN; solo invoca trabajo que puede quedar pendiente o fallar.
 
-**Condición / límite:** GET produce efectos. Exposición de red y controles desplegados requieren inventario.
+**Condición / límite:** GET produce efectos.
 
 **Código:** `mountain-sync-sucursal`, commit `540ab9a70e7b`. [mountain-sync-sucursal/start/routes.js:19–23](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/start/routes.js#L19-L23); [mountain-sync-sucursal/app/Controllers/Http/SincronizadorController.js:12–17](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/app/Controllers/Http/SincronizadorController.js#L12-L17).
 
 #### e-sync-backend · `POST /public/punto-de-venta/sinc-guarda-documento-cobranza`
 
-**Origen → destino:** Sincronizador de sucursal (`sync`) → Servidor de sucursal · backend Mountain (`backend`). **Evidencia:** llamada saliente observada; Llamada y receptor observados; topología y controles de red pendientes.
+**Origen → destino:** Sincronizador de sucursal (`sync`) → Servidor de sucursal · backend Mountain (`backend`). **Evidencia:** llamada saliente observada; Llamada y receptor observados; topología pendiente.
 
 **Función:** Solicitar al backend local que guarde derivados documentales/de cobranza recibidos por integración.
 
@@ -707,6 +707,6 @@ El [antecedente editorial del ecosistema](../presentation/index.html) consume es
 
 **Ejecución y continuidad:** HTTP de administración; ejecuta efectos pese a utilizar GET. Necesita acceso a la integración central; no es una operación local de venta.
 
-**Condición / límite:** Reenviar un efecto incierto exige identidad y conciliación. La ruta no demuestra permisos ni seguridad del despliegue.
+**Condición / límite:** Reenviar un efecto incierto exige identidad y conciliación.
 
 **Código:** [mountain-implementos/backend-concentrador/app/Controllers/Http/ConcentradorController.js:126-155](https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend-concentrador/app/Controllers/Http/ConcentradorController.js#L126-L155); [mountain-concentrador/ESBImplementos/src/main/synapse-config/api/API_reintentar.xml:2-37](https://github.com/developer-implementos/mountain-concentrador/blob/b2fd1ec266d131abb54b7076d41acce30f045119/ESBImplementos/src/main/synapse-config/api/API_reintentar.xml#L2-L37); [mountain-implementos/backend-concentrador/start/routes.js:19-51](https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend-concentrador/start/routes.js#L19-L51).

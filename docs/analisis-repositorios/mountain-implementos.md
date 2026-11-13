@@ -123,7 +123,7 @@ Hallazgo de seguridad de un sistema en producción. Como POS Docs es público, s
 
 **Trabajo propuesto:** distinguir consulta, administración y evaluación. Inventariar qué parte se usa realmente y decidir qué componentes se conservan para el nuevo módulo local.
 
-### MI-07 · Alta condicionada a vigencia · Hallazgo de seguridad
+### MI-07 · Alta · Hallazgo de seguridad
 
 Hallazgo de seguridad de un sistema en producción. Como POS Docs es público, su evidencia, su condición y la acción propuesta se conservan en el [registro de hallazgos de seguridad de POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md#mi-07), con acceso al producto. El reemplazo en POS Platform no debe replicarlo.
 

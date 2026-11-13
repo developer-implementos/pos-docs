@@ -29,7 +29,7 @@
     "architecture:build": "node tools/architecture/build.mjs",
     "architecture:check": "node tools/architecture/check.mjs",
     "architecture:test": "node --test tools/architecture/model.test.mjs tools/architecture/lifecycles.test.mjs",
-    "diagrams:test": "node --test tools/diagrams/selective-generation.test.mjs tools/diagrams/route-layout.test.mjs",
+    "diagrams:test": "node --test tools/diagrams/selective-generation.test.mjs tools/diagrams/route-layout.test.mjs tools/diagrams/package-freshness.test.mjs",
     "diagrams:test:integration": "node --test tools/diagrams/selective-generation.integration.test.mjs",
     "presentations:test": "node --test presentations/tools/diagrams.test.mjs presentations/tools/navigation.test.mjs presentations/tools/source-text.test.mjs tools/roadmap.test.mjs",
     "presentations:check": "node presentations/tools/check.mjs",

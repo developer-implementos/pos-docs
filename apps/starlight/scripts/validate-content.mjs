@@ -56,7 +56,9 @@ assert.equal(configuration.commit, endpoints.commit, 'Legacy catalogs must refer
 for (const [app, entries] of Object.entries(endpoints.applications)) {
   assert.equal(new Set(entries.map(entry => entry.id)).size, entries.length, `Duplicate API anchors in ${app}`);
   for (const entry of entries) {
-    assert.ok(entry.description.length > 30 && entry.line > 0, `Incomplete API description/source: ${entry.path}`);
+    assert.ok(entry.description.length > 30 && entry.target, `Incomplete API description/source: ${entry.path}`);
+    // Route lines and their group boundaries let a reader rebuild which routes skip authentication.
+    assert.ok(!('line' in entry), `Do not publish the declaration line of a legacy route: ${entry.path}`);
     assert.ok(endpoints.groupDescriptions[entry.group], `Undocumented functional area: ${entry.group}`);
     for (const forbidden of ['scope', 'auth', 'middleware', 'authenticated']) assert.ok(!(forbidden in entry), `Do not publish the access control of a legacy route: ${entry.path}`);
   }

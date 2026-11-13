@@ -36,7 +36,6 @@ flowchart LR
 | Escucha | Puerto predeterminado **3366**, configurable. | Discrepa del **3386** de la imagen; proxy y puerto productivo por confirmar. |
 | MongoDB | Dos conexiones Mongoose separadas; modelos `estadoNC`, `cajaSucursales` y `usuariosAX`. | MongoDB cumple más funciones que solamente NC. |
 | PostgreSQL | `new Client` por consulta y por sucursal; cierre en `finally`. | Acoplamiento al esquema físico de cada tienda y dependencia de conectividad hacia ella. |
-| Protección HTTP | Helmet, CORS con lista configurable y 100 solicitudes/IP/15 minutos para `/api/`. | Son controles auxiliares de HTTP. |
 | Operación | Morgan, consola, `/health`, cierre del servidor en SIGTERM/SIGINT. | Health informa vida del proceso, no disponibilidad de MongoDB o sucursales. |
 
 Fuentes: [P01], [P02], [P03], [P04], [P05]. No se evaluaron CVEs ni ciclos actuales de soporte.
