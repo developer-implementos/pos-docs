@@ -71,7 +71,6 @@ const statusLabels: Record<string, string> = {
           {entry.notes && <p class="endpoint-note">{entry.notes}</p>}
           <p class="endpoint-meta" data-pagefind-ignore>
             <span class:list={{ 'endpoint-incomplete': ['empty', 'missing'].includes(entry.handlerStatus) }}>{statusLabels[entry.handlerStatus]}</span>
-            <span>{entry.scope === 'auth group' ? 'Grupo con auth' : 'Sin auth declarado en la ruta'}</span>
           </p>
           <details class="endpoint-source" data-pagefind-ignore>
             <summary>Ver implementación y declaración</summary>

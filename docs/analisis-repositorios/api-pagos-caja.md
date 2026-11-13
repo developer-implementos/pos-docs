@@ -33,10 +33,10 @@ flowchart LR
 | Aplicación | `package.json`: nombre `api-pagos`, versión `1.0.0`; `app.js`; archivo `apps.json` compatible con PM2. | Un proceso HTTP; no se identificó un worker de conciliación. |
 | Dependencias declaradas | Express `^4.17.1`, pg `^8.7.3`, Mongoose `^5.13.15`, Helmet `^3.23.3`, cors `^2.8.5`, express-rate-limit `^5.5.1`. | Rangos de manifiesto, no versiones productivas. |
 | Resoluciones del lockfile | Express `4.21.2`, pg `8.16.2`, Mongoose `5.13.15`, Helmet `3.23.3`; lockfile versión 1. | La matriz de la presentación no debe tratar los rangos como versiones instaladas. |
-| Escucha | Puerto predeterminado **3366**, host `0.0.0.0`; coincide con las variables versionadas. | Discrepa del **3386** de la imagen; proxy y puerto productivo por confirmar. |
+| Escucha | Puerto predeterminado **3366**, configurable. | Discrepa del **3386** de la imagen; proxy y puerto productivo por confirmar. |
 | MongoDB | Dos conexiones Mongoose separadas; modelos `estadoNC`, `cajaSucursales` y `usuariosAX`. | MongoDB cumple más funciones que solamente NC. |
 | PostgreSQL | `new Client` por consulta y por sucursal; cierre en `finally`. | Acoplamiento al esquema físico de cada tienda y dependencia de conectividad hacia ella. |
-| Protección HTTP | Helmet, CORS con lista configurable y 100 solicitudes/IP/15 minutos para `/api/`. | Son controles auxiliares; no implementan identidad ni permisos por operación. |
+| Protección HTTP | Helmet, CORS con lista configurable y 100 solicitudes/IP/15 minutos para `/api/`. | Son controles auxiliares de HTTP. |
 | Operación | Morgan, consola, `/health`, cierre del servidor en SIGTERM/SIGINT. | Health informa vida del proceso, no disponibilidad de MongoDB o sucursales. |
 
 Fuentes: [P01], [P02], [P03], [P04], [P05]. No se evaluaron CVEs ni ciclos actuales de soporte.
@@ -54,7 +54,7 @@ Todas las rutas siguientes usan el prefijo `/api/pagos`. No se observa versionad
 | `GET /estadoNC` | Consulta documentos por `folio`. | Lectura MongoDB; no filtra `origen`, empresa ni país. |
 | `POST /estadoNC` | Busca por `folio` y `origen`, marca existente `en uso` o crea un registro. | **Escritura MongoDB**; presenta continuación no deseada tras responder si ya existe. |
 | `PUT /estadoNC/:folio/:origen` | Cambia el primer registro encontrado a `disponible`. | Escritura MongoDB; no comprueba propietario de la reserva ni estado previo. |
-| `GET /datosUsuario/:recid` | Busca `vendedorRecid` y proyecta códigos, RUT y nombre. | Lectura `usuariosAX`; no devuelve el campo `clave` del modelo. |
+| `GET /datosUsuario/:recid` | Busca `vendedorRecid` y proyecta códigos, RUT y nombre. | Lectura `usuariosAX`. |
 
 Fuentes: [P06], [P07], [P08], [P09]. `/health` y `/` son rutas adicionales de diagnóstico. «Disponible» y «en uso» son los únicos estados del modelo NC; no equivalen a un libro de saldos, a liquidación de pagos o a confirmación en AX.
 
@@ -63,7 +63,7 @@ Fuentes: [P06], [P07], [P08], [P09]. `/health` y `/` son rutas adicionales de di
 - PostgreSQL: `dtes`, `documentos`, `pagos`, `comprobante_ventas`, `pago_comprobante_ventas`, `comprobante_venta_has_documentos`, `estado_pagos`, `caja_has_forma_pagos`, `forma_pagos`, `empresas`, `personas`, `tipo_documentos`, `nota_de_credito_externas`, `devoluciones` y `detalle_devoluciones`. Algunas referencias incluyen `public`; otras dependen del `search_path`.
 - El vínculo `detalle_devoluciones.devolucione_id` y mezclas como `puntos_emision`, `puntoEmision`, `created_at`/`createdAt`, `folio_nc`/`folioNC`, `usuariosAX`, `vendedorRecid` y `forma_pago_externo` muestran convenciones distintas y traducciones hechas dentro del agregador.
 - `estadoNC` guarda `folio: Number`, estado, origen (`caja`/`omni`), monto, punto de emisión y timestamps; no declara índices únicos, propiedad de reserva, caducidad, moneda, país o entidad legal. La existencia de índices administrados fuera del código está por verificar.
-- `cajaSucursales` define campos para usuario y clave de PostgreSQL; `usuariosAX` también define un campo `clave`, sin que este repositorio revele qué formato tiene o quién lo mantiene. No se consultaron datos reales.
+- `cajaSucursales` guarda el directorio y los datos de conexión de cada tienda, y `usuariosAX` datos de usuarios de AX. No se consultaron datos reales.
 
 Fuentes: [P07]–[P10]. Estandarizar debe incluir significado, tipos y claves; renombrar tablas de forma inmediata rompería estas consultas directas.
 
@@ -155,7 +155,7 @@ Hallazgo de seguridad de un sistema en producción. Como POS Docs es público, s
 
 - Con dobles de MongoDB, probar POST repetido/concurrente, NC inexistente y liberación por actor incorrecto; comprobar una sola respuesta y transición consistente.
 - Con PostgreSQL de prueba, comprobar folio repetido entre tipos DTE, tienda caída y todas caídas; ningún resultado parcial debe presentarse como exhaustivo.
-- Con una carga sintética, medir conexiones máximas, volumen antes de paginar y efecto de filtros. No usar datos reales ni credenciales versionadas.
+- Con una carga sintética, medir conexiones máximas, volumen antes de paginar y efecto de filtros. No usar datos ni credenciales reales.
 - Obtener configuración de despliegue, índices existentes, dueños de `estadoNC`/`usuariosAX`, definición productiva de `sincronizado`, inventario de consumidores y política de uso de NC offline.
 
 No se añadieron ni ejecutaron pruebas en el repositorio auditado. Estas son validaciones propuestas para resolver incertidumbres que la lectura estática no cubre.

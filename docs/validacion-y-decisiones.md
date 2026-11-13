@@ -157,8 +157,8 @@ Ejecutar en un entorno aislado con datos sintéticos, dobles de proveedores y, d
 | AX devuelve éxito exterior y error interior, respuesta incompleta o timeout | Resultado parcial/desconocido se conserva, no se declara contabilizado por el sobre exterior y se consulta el efecto antes de repetir. | API-H05, API-H06, API-H10 |
 | Pago offline atraviesa cambio de día, periodo cerrado o corte ERP | Se conserva fecha del hecho y se aplica la política explícita de fecha contable y destino; nunca cambia por usar accidentalmente el reloj del worker. | API-H07 |
 | Fallo RAW, excepción de impresión o pérdida de respuesta tras enviar al spooler | No se informa éxito físico sin evidencia; trabajo consultable, reimpresión identificada y ningún nuevo cargo o folio. | IMP-01, IMP-03 |
-| Origen web no autorizado intenta usar el agente local | Rechazo según identidad/origen y autorización; CORS por sí solo no se acepta como autenticación. | IMP-02 |
-| Solicitudes sin permiso y valores especiales en filtros SQL | Rutas protegidas en servidor y consultas parametrizadas; validación negativa en servicios aislados, sin operar bases reales. | MI-03, MI-04, SYNC-05, API-H02, API-H03, PAG-02 |
+| Origen web no autorizado intenta usar el agente local | Rechazo según identidad/origen y autorización; CORS por sí solo no se acepta como autenticación. | [Hallazgos de seguridad del legacy](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md) |
+| Solicitudes sin permiso y valores especiales en filtros SQL | Rutas protegidas en servidor y consultas parametrizadas; validación negativa en servicios aislados, sin operar bases reales. | [Hallazgos de seguridad del legacy](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md) |
 
 Antes de ejecutar, registrar el commit/artefacto del candidato y acordar los resultados esperados con operación y finanzas. Los valores de secretos no forman parte de los datasets, logs ni informes de prueba. La ausencia de incidentes conocidos no sustituye estas evidencias.
 

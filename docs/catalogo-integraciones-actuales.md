@@ -181,7 +181,7 @@ Fuentes: [OrsanService.js:234–283](https://github.com/developer-implementos/mo
 ### 2.2. Diferencias que afectan el inventario
 
 - **Pagos:** el diagrama indica `3386`; el código arranca con `process.env.PORT` y valor predeterminado `3366`. Ninguno acredita el puerto activo. Esta API consulta pagos y estados de NC; no sustituye a la aplicación de conexión con Transbank.
-- **Impresión:** el diagrama menciona HTTPS/JSON/JWT en dispositivos, pero el servicio revisado enlaza HTTP en `localhost:8181`, permite llamadas anónimas y CORS amplio. Loopback limita el binding observado; no acredita exposición LAN. Debe confirmarse el binario instalado y su control de orígenes.
+- **Impresión:** el diagrama menciona HTTPS/JSON/JWT en dispositivos; el servicio revisado enlaza HTTP en `localhost:8181`, y el resto no se confirma para la impresión. Loopback limita el binding observado; no acredita exposición LAN. Debe confirmarse el binario instalado.
 - **MongoDB:** hay escrituras de `estadoNC`, directorio de sucursales y usuarios, además de otros consumidores .NET/precios. No se puede equiparar todo ello con una sola base o instancia dedicada exclusivamente a NC.
 - **PostgreSQL:** la API de pagos se conecta directamente a sucursales. ApiCarro consulta tablas/JSON del concentrador. Estas dependencias deben incluirse en consolidación, permisos, recuperación y migración de esquemas.
 - **.NET AX:** se recibieron controladores, bibliotecas SQL y proxies WCF en `apis-implementos`; faltan principalmente implementación X++/AOS, DDL/procedimientos y configuración desplegada. La solución contiene nueve proyectos API y tres bibliotecas; no equivale a doce servidores.
@@ -484,7 +484,7 @@ Llamadas del sincronizador y receptores compatibles en mountain-concentrador; bi
 
 **Ejecución y continuidad:** HTTP síncrono de control que ejecuta un efecto de integración. No sustituye acceso WAN; solo invoca trabajo que puede quedar pendiente o fallar.
 
-**Condición / límite:** GET produce efectos y las rutas mostradas no declaran middleware de autenticación. Exposición de red y controles desplegados requieren inventario.
+**Condición / límite:** GET produce efectos. Exposición de red y controles desplegados requieren inventario.
 
 **Código:** `mountain-sync-sucursal`, commit `540ab9a70e7b`. [mountain-sync-sucursal/start/routes.js:19–23](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/start/routes.js#L19-L23); [mountain-sync-sucursal/app/Controllers/Http/SincronizadorController.js:12–17](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/app/Controllers/Http/SincronizadorController.js#L12-L17).
 
@@ -496,7 +496,7 @@ Llamadas del sincronizador y receptores compatibles en mountain-concentrador; bi
 
 **Ejecución y continuidad:** HTTP síncrono por LAN; cliente hacia backend declara timeout de hasta 20 minutos. No requiere WAN para el salto local, pero su origen de datos pertenece al proceso de sincronización.
 
-**Condición / límite:** Endpoint public queda fuera del grupo auth inspeccionado. Timeout extenso y respuesta perdida requieren reconciliar por identidad, no repetir a ciegas.
+**Condición / límite:** Timeout extenso y respuesta perdida requieren reconciliar por identidad, no repetir a ciegas.
 
 **Código:** `mountain-sync-sucursal`, commit `540ab9a70e7b`. [mountain-sync-sucursal/app/Services/LlamadaApis/BackendSucursalService.js:16–44](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/app/Services/LlamadaApis/BackendSucursalService.js#L16-L44); [mountain-sync-sucursal/app/Utils/Axios.js:46–61](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/app/Utils/Axios.js#L46-L61); [mountain-implementos/backend/start/routes.js:549](https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend/start/routes.js#L549).
 
@@ -508,7 +508,7 @@ Llamadas del sincronizador y receptores compatibles en mountain-concentrador; bi
 
 **Ejecución y continuidad:** HTTP síncrono con acceso SQL directo a tablas de integración. Depende de conectividad de ApiCarro al concentrador y de que el mensaje/DTE esté disponible allí.
 
-**Condición / límite:** SQL construida por interpolación de parámetros y acoplamiento a estructura JSON/tablas. No representa descarga de maestros ni una API de lectura intercambiable.
+**Condición / límite:** Acoplamiento a estructura JSON/tablas. No representa descarga de maestros ni una API de lectura intercambiable.
 
 **Código:** `apis-implementos`, commit `8fbe2f1b4d4e`. [apis-implementos/ApiCarro/Controllers/CarroController.cs:331–355](https://github.com/developer-implementos/apis-implementos/blob/8fbe2f1b4d4e464a403aa3daca63ffe712a9dd70/ApiCarro/Controllers/CarroController.cs#L331-L355).
 
@@ -666,9 +666,7 @@ API Windows de loopback y efectos físicos; respuesta HTTP no acredita impresió
 
 ## 5. Límites transversales que deben conservar los contratos
 
-**Autenticación y red.** La mayoría de rutas de negocio seleccionadas en Mountain pertenece al grupo con middleware `auth`; las rutas `public/*` están fuera de ese grupo. Las rutas mostradas de sincronización manual y API de pagos no declaran un middleware equivalente. Impresión es anónima en el controlador, pero el binding observado es loopback. Esto exige inventariar los controles realmente desplegados; no permite afirmar exposición pública ni ausencia de controles de red.
-
-Fuentes: [grupo y middleware Mountain](https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend/start/routes.js#L473), [ruta pública de sincronización](https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend/start/routes.js#L549), [rutas sync](https://github.com/developer-implementos/mountain-sync-sucursal/blob/540ab9a70e7befbca27a2f7eb88b87b25109e4d1/start/routes.js#L19-L23), [montaje pagos](https://github.com/developer-implementos/api-pagos-caja/blob/33cd625f029aa78798f0baf307c41e17ebee92e1/app.js#L58), [controlador impresión](https://github.com/developer-implementos/api-impresion-caja/blob/2e74b2d64985902f5fdfb52902016a5f65d7b577/WindowsServiceImpresora/Controllers/ImpresionController.cs#L18-L20).
+**Autenticación y red.** Este catálogo no publica el control de acceso de las rutas legacy: los hallazgos de seguridad de estos sistemas se consultan en el [registro de hallazgos de seguridad de POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md). Antes de afirmar exposición pública o ausencia de controles de red, hay que inventariar los controles realmente desplegados.
 
 **Identidades y confirmaciones.** Folio, id local, comprobante, mensaje, intento, documento fiscal y referencia AX no son identidades intercambiables. `cv.sincronizado` puede marcar preparación antes del resultado AX. Un HTTP 200, un ACK AMQP, una marca Mongo o la aceptación del spooler tampoco son prueba equivalente de resultado monetario/fiscal/físico. Los informes de [sincronización](analisis-repositorios/mountain-sync-sucursal.md) y [pagos](analisis-repositorios/api-pagos-caja.md) describen las ventanas y sus límites; no se ha demostrado un incidente productivo de doble uso de NC.
 

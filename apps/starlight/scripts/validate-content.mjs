@@ -58,6 +58,7 @@ for (const [app, entries] of Object.entries(endpoints.applications)) {
   for (const entry of entries) {
     assert.ok(entry.description.length > 30 && entry.line > 0, `Incomplete API description/source: ${entry.path}`);
     assert.ok(endpoints.groupDescriptions[entry.group], `Undocumented functional area: ${entry.group}`);
+    for (const forbidden of ['scope', 'auth', 'middleware', 'authenticated']) assert.ok(!(forbidden in entry), `Do not publish the access control of a legacy route: ${entry.path}`);
   }
   const config = configuration.applications[app];
   assert.equal(new Set(config.variables.map(variable => variable.name)).size, config.variables.length, `Duplicate variable in ${app}`);

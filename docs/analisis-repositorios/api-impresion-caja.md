@@ -41,14 +41,14 @@ flowchart LR
 | Proyecto alternativo | `AplicacionWeb`, ASP.NET MVC sobre `.NET Framework 4.7.2`, comparte `Biblioteca`. | Hay dos fachadas HTTP en el repositorio; no se puede asumir que ambas estén desplegadas. |
 | Drivers y spooler | `PrintDocument`, `winspool.Drv`, Microsoft POS for .NET/MICR. | Dependencias operacionales fuera del código fuente. |
 | Dependencias declaradas | ESC/POS, ZXing `0.16.6`, iText7 `7.1.14`, log4net `2.0.12`; Newtonsoft.Json `6.0.4` en paquetes del servicio. | Inventario de manifiestos; no se verificó soporte actual, CVEs ni versiones instaladas. |
-| Distribución | Proyectos WiX; instalador declara cuenta `LocalSystem`; instrucciones manuales de instalación. | Revisar privilegios, firma, actualización, rollback y correspondencia fuente/binario. |
+| Distribución | Proyectos WiX e instrucciones manuales de instalación. | Revisar privilegios, firma, actualización, rollback y correspondencia fuente/binario. |
 | Persistencia | No se identificó DB propia, registro durable de trabajos ni cola de aplicación. | Sí usa cola de Windows; no debe confundirse ausencia de cola propia con ausencia de spooler. |
 
 Fuentes: [I01], [I02], [I03], [I04], [I08], [I09], [I11].
 
 ## 2. Superficie HTTP y efectos
 
-Las rutas principales se deducen de `{controller}/{action}` y `ImpresionController`, bajo `/Impresion`. La identidad del llamador se trata en [IMP-02](#imp-02--alta--hallazgo-de-seguridad). No hay versión de contrato ni identificador de trabajo en los DTOs observados.
+Las rutas principales se deducen de `{controller}/{action}` y `ImpresionController`, bajo `/Impresion`. No hay versión de contrato ni identificador de trabajo en los DTOs observados.
 
 | Método / acción | Comportamiento real | Efecto y resultado |
 | --- | --- | --- |
@@ -147,7 +147,7 @@ El destino acordado es [`apps/device-agent`, C#/.NET Windows](../decisions/devic
 | --- | --- |
 | Servicio Windows .NET Framework 4.7.2, Web API SelfHost 5.2.7 | Confirmado por proyectos/manifiestos; no versión productiva comprobada. |
 | Agente local puerto 8181 | Confirmado como configuración de fuente, con host `localhost`. |
-| HTTPS/JSON/JWT en la arista del diagrama | **No confirmado para impresión**: ver [IMP-02](#imp-02--alta--hallazgo-de-seguridad). No se generaliza al agente Transbank. |
+| HTTPS/JSON/JWT en la arista del diagrama | **No confirmado para impresión.** No se generaliza al agente Transbank. |
 | Puede reportar éxito aunque falle | Confirmado directamente en controladores y en retornos ignorados del helper RAW. |
 | Impresora / lector de cheques | Confirmado; se añaden Zebra, firmas, QR y parsing MICR. |
 | Papel del agente en offline | El camino observado es local y no consulta ERP, pero depende de recibir contenido y configuración válidos. No acredita capacidad offline del flujo fiscal/comercial. |

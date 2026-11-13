@@ -14,7 +14,7 @@ Análisis estático realizado el **1 de octubre de 2026** del repositorio privad
 | Obtención | Clonación superficial de solo lectura, con `--depth 1 --filter=blob:none`. No se examina todo el historial. |
 | Ejecución | No se compilaron ni ejecutaron aplicaciones, no se instalaron dependencias ni se conectó el código a AX, bases o proveedores. |
 
-Se distingue **observación de código**, **consecuencia inferida** y **propuesta a validar**. Los archivos de configuración demuestran contenido versionado, no vigencia de las credenciales ni accesibilidad de los servicios. Este documento no incluye credenciales, direcciones de servidores internos ni datos de clientes. Los enlaces de evidencia están fijados al commit y requieren acceso al repositorio.
+Se distingue **observación de código**, **consecuencia inferida** y **propuesta a validar**. Los archivos de configuración demuestran contenido versionado, no su vigencia ni la accesibilidad de los servicios. Este documento no incluye credenciales, direcciones de servidores internos ni datos de clientes. Los enlaces de evidencia están fijados al commit y requieren acceso al repositorio.
 
 No están disponibles aquí el código X++ del servidor AX, los cuerpos de sus procedimientos almacenados, la configuración efectiva de IIS/gateway/red, el inventario de despliegues ni la alimentación de las colecciones de precios. Por tanto, no se puede certificar el comportamiento transaccional dentro de AX, la seguridad de red o qué API de precios utiliza hoy cada consumidor.
 
@@ -230,7 +230,7 @@ Son implicaciones propuestas a partir del código; no fijan ERP destino, calenda
 | Cliente antes de dirección. | **Se encuentra la secuencia cliente → direcciones → contacto**, con posible avance parcial en el adaptador. No demuestra el orden de todos los mensajes del bus. |
 | Emitir DTE y registrar en AX son pasos separados. | **El adaptador recibe datos fiscales**, como `InvoiceAcepta`, código y URL del documento, y ejecuta operaciones AX. No permite establecer por sí solo el momento de habilitar sincronización tras emitir DTE. |
 | «Sincronizado» no equivale a confirmado en AX. | **Hay varios niveles de resultado y confirmaciones por entidad AX**; la marca local se debe contrastar en el backend/sincronizador. |
-| Algunas APIs no exigen autenticación y hay credenciales en archivos. | **Se encuentran credenciales literales y ausencia de controles locales en rutas revisadas.** Exposición y protecciones de infraestructura siguen sin verificar. |
+| Algunas APIs no exigen autenticación y hay credenciales en archivos. | Su contraste forma parte de los hallazgos de seguridad, que se publican sólo por identificador; el detalle está en el [registro de hallazgos de seguridad de POS Platform](https://github.com/developer-implementos/pos-platform/blob/main/delivery/reviews/legacy-security-findings.md). Exposición y protecciones de infraestructura siguen sin verificar. |
 | Conteo de seis aplicaciones. | **Requiere reconciliación.** Un repositorio agrupa múltiples proyectos corporativos; app, proceso, API, biblioteca y repositorio no son unidades equivalentes. |
 | DTE Acepta / Ingydev. | **Se amplía el inventario documental** con recuperación Paperless en `ApiDocumentos`. Esto no prueba que Paperless emita las ventas actuales de caja. |
 

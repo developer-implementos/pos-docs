@@ -34,7 +34,7 @@ El sistema revisado tiene **login con correo y contraseña**, comprobación de c
 
 Los datos iniciales incluyen los perfiles Administrador, Cajero, Bodeguero, Desarrollador y `monitor_lectura`. Son **seeds**, no evidencia de los perfiles activos en producción. La administración permite consultar y asignar submódulos a perfiles; Angular comprueba esos accesos y redirige al login cuando no encuentra un usuario guardado. [Seeds de perfiles][mi-perfiles-seed], [asignación de accesos][mi-perfiles-accesos], [guard de navegación][mi-auth-guard].
 
-El grupo principal de rutas del backend exige `auth`; esto prueba autenticación, pero no acredita por sí solo autorización granular para cada operación. La revisión no confirmó un mecanismo uniforme de permisos por acción, ámbito de sucursal y aprobación de supervisor. La pantalla de devolución pide solicitar autorización por correo: evidencia un paso externo al sistema, sin demostrar que toda devolución siga ese procedimiento en producción. Las excepciones de rutas se describen en MI-03. [Rutas autenticadas][mi-auth-routes], [autorización por correo][mi-devolucion-autorizacion].
+El grupo principal de rutas del backend exige `auth`; esto prueba autenticación, pero no acredita por sí solo autorización granular para cada operación. La revisión no confirmó un mecanismo uniforme de permisos por acción, ámbito de sucursal y aprobación de supervisor. La pantalla de devolución pide solicitar autorización por correo: evidencia un paso externo al sistema, sin demostrar que toda devolución siga ese procedimiento en producción. [Rutas autenticadas][mi-auth-routes], [autorización por correo][mi-devolucion-autorizacion].
 
 **Consecuencia para la propuesta:** conservar y mapear los usuarios, perfiles y accesos existentes. Los permisos detallados para descuentos, devoluciones o cierres, sus ámbitos y las autorizaciones offline son una evolución por diseñar y validar con negocio. El actor «supervisor» de los diagramas representa una responsabilidad propuesta, no un perfil legacy confirmado. La configuración productiva y los controles adicionales no observados siguen pendientes de inventario.
 
@@ -180,7 +180,7 @@ La [correspondencia del legacy con POS Platform](/guide/architecture/monorepo/#c
 [mi-perfiles-seed]: https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend/database/seeds/PerfileSeeder.js#L10-L68
 [mi-perfiles-accesos]: https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend/app/Controllers/Http/PerfileController.js#L112-L180
 [mi-auth-guard]: https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/frontend/src/app/shared/security/auth.guard.ts#L28-L79
-[mi-auth-routes]: https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend/start/routes.js#L15-L473
+[mi-auth-routes]: https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/backend/start/routes.js
 [mi-devolucion-autorizacion]: https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/frontend/src/app/modules/pos/pages/devolucion-pago/devolucion-pago-nota-credito.component.html#L307-L308
 
 [mi-frontend]: https://github.com/developer-implementos/mountain-implementos/blob/711f97fd7948c696bf45c992c5b121683bdbacd7/frontend/package.json#L1-L103
