@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "reviewedOn": "2026-11-12",
+  "reviewedOn": "2026-11-13",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "e965808feeeb33ccf94e2c4b0966df764510b284",
+  "revision": "61d3f04436a6d11982138391c43f67014fca2b78",
   "sourceStatus": "Fuentes documentales verificadas en la revisión indicada; F01 incluye administración POS y entregables técnicamente verificados. F02 incluye cobro combinado y protocolo de dispositivos técnicamente verificados, junto con persistencia fiscal y host .NET/SQLite; no habilita proveedores operativos ni drivers físicos. La aceptación manual y la habilitación productiva se mantienen separadas.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "inputs": [
@@ -20,7 +20,7 @@
     },
     {
       "path": "docs/validacion-y-decisiones.md",
-      "sha256": "eb3e00d92ad9bb9200a797b5b1c504fadedca5cfa47848df0b432958ae12e787"
+      "sha256": "6b52ff3ca5991e4755620acf7e2784431eee0cef40230be9210ccb9c5a97e05b"
     },
     {
       "path": "apps/starlight/src/data/product-evidence.json",
