@@ -209,8 +209,8 @@
 .project-question-recommendation{margin-top:16px;padding:14px 16px;background:var(--tonal);border-left:3px solid var(--primary);border-radius:6px;font-size:14px}
 .project-question-recommendation>p,.project-question-recommendation>.project-evidence{margin-top:8px}
 .project-question-recommendation-empty{background:var(--canvas);border-left-color:var(--line);color:var(--muted)}
-@media(min-width:1151px){.project-question-filters{grid-template-columns:1.5fr repeat(5,minmax(120px,1fr)) auto}[data-project-page=questions] .project-question-filters{grid-template-columns:1.5fr repeat(6,minmax(104px,1fr)) auto}}
-@media(max-width:620px){.project-question h3{font-size:17px}.project-question-counts a{padding:8px 12px}.project-agenda-table tr{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));column-gap:8px}.project-agenda-table tbody th:first-child{grid-column:1/-1;display:block;width:auto;padding:0 0 8px;border-bottom:0}.project-agenda-table td{text-align:left}}
+@media(min-width:1151px){.project-question-filters{grid-template-columns:1.5fr repeat(5,minmax(120px,1fr)) auto}[data-project-page=questions] .project-question-filters{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media(max-width:620px){.project-question h3{font-size:17px}.project-question-counts a{padding:8px 12px}.project-agenda-table tr{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));column-gap:8px}.project-agenda-table tbody th:first-child{grid-column:1/-1;display:block;width:auto;padding:0 0 8px;border-bottom:0}.project-agenda-table td{text-align:left}.project-agenda-table td[data-label="Datos por aportar"]{grid-column:1/-1}}
 .project-rule-facts{margin:8px 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
 .project-rule-facts dt{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:2px}
 .project-rule-facts dd{font-size:14px;line-height:1.6;margin:0;overflow-wrap:anywhere}

@@ -400,28 +400,37 @@ test('names each role from the catalog and keeps the questions merged into anoth
     { key: 'operaciones', name: 'Operaciones de tiendas' },
     { key: 'producto', name: 'Producto POS Platform' },
   ], 'The filter offers the roles that decide some question, by name; Legal is only consulted');
+  assert.deepEqual(model.participants.map(role => role.key), ['comercial', 'finanzas', 'legal', 'operaciones', 'producto'], 'The role filter also offers the roles only consulted, by name');
   assert.deepEqual(model.merged.map(entry => [entry.id, entry.into, entry.intoQuestion]), [['Q-06', 'Q-01', '¿Pregunta Q-01?'], ['Q-07', 'Q-10', '¿Pregunta Q-10?']]);
   assert.equal(model.counts.total, 6, 'A merged question is not a record of the register');
   assert.equal(model.counts.merged, 2);
   assert.equal(model.counts.open, 3);
 });
 
-test('lists what each role has to answer, the roles with more P1 questions first', () => {
+test('lists what each role has to decide apart from the data it has to provide, the roles with more P1 decisions first', () => {
   const model = derive(() => {}, followUp(), contentV4);
   assert.deepEqual(model.agenda, [
-    { key: 'comercial', name: 'Comercial', responsibility: 'Precios, promociones, cupones y clientes', open: 2, priorities: { P1: 2, P2: 0, P3: 0 } },
-    { key: 'operaciones', name: 'Operaciones de tiendas', responsibility: 'Operación de las sucursales y sus cajas', open: 1, priorities: { P1: 0, P2: 1, P3: 0 } },
-  ], 'Producto and Finanzas have nothing open, and Legal is only consulted');
-  // An open fact awaits the role's evidence just as an open rule awaits its decision: both are on it.
+    { key: 'comercial', name: 'Comercial', responsibility: 'Precios, promociones, cupones y clientes', decide: 2, priorities: { P1: 2, P2: 0, P3: 0 }, data: 0 },
+    { key: 'operaciones', name: 'Operaciones de tiendas', responsibility: 'Operación de las sucursales y sus cajas', decide: 1, priorities: { P1: 0, P2: 1, P3: 0 }, data: 0 },
+  ], 'Producto and Finanzas have nothing open, and Legal is only consulted on a rule');
+  // An open fact asks for data, not for a decision: it is on the row of the role that confirms it and
+  // of every role consulted for it, and it never counts as a decision.
   const withFact = derive(value => {
-    value.items.push(question('Q-11', { kind: 'fact', decider: 'finanzas', priority: 'P3', workPackages: ['F04-01'] }), question('Q-12', { decider: 'operaciones', workPackages: ['F01-09'] }));
+    value.items.push(question('Q-11', { kind: 'fact', decider: 'finanzas', consulted: ['legal'], priority: 'P1', workPackages: ['F04-01'] }), question('Q-12', { decider: 'operaciones', workPackages: ['F01-09'] }));
   }, followUp(), contentV4);
-  assert.deepEqual(withFact.agenda.map(role => [role.key, role.open, role.priorities.P1]), [['comercial', 2, 2], ['operaciones', 2, 1], ['finanzas', 1, 0]]);
-  // Ties keep a stable order: more open questions first, then the name.
+  assert.deepEqual(withFact.agenda.map(role => [role.key, role.decide, role.priorities.P1, role.data]), [['comercial', 2, 2, 0], ['operaciones', 2, 1, 0], ['finanzas', 0, 0, 1], ['legal', 0, 0, 1]]);
+  assert.equal(withFact.agenda.reduce((sum, role) => sum + role.decide, 0), withFact.counts.pendingDecision, 'Each open rule is counted once, on the row of the role that decides it');
+  // An answered fact or a decided rule asks nothing more.
+  const closed = derive(value => {
+    value.items.push(question('Q-11', { kind: 'fact', state: 'answered', decider: 'finanzas', consulted: ['legal'], workPackages: ['F04-01'] }));
+  }, followUp(), contentV4);
+  assert.deepEqual(closed.agenda.map(role => role.key), ['comercial', 'operaciones']);
+  // Ties keep a stable order: more decisions first, then more data, then the name.
   const tie = derive(value => {
     value.items.push(question('Q-13', { decider: 'finanzas', workPackages: ['F04-01'] }), question('Q-14', { decider: 'finanzas', workPackages: ['F04-01'] }));
+    value.items.push(question('Q-15', { kind: 'fact', decider: 'producto', consulted: ['legal'], workPackages: ['F04-01'] }), question('Q-16', { kind: 'fact', decider: 'producto', workPackages: ['F04-01'] }));
   }, followUp(), contentV4);
-  assert.deepEqual(tie.agenda.map(role => role.key), ['comercial', 'finanzas', 'operaciones']);
+  assert.deepEqual(tie.agenda.map(role => [role.key, role.data]), [['comercial', 0], ['finanzas', 0], ['operaciones', 0], ['producto', 2], ['legal', 1]]);
 });
 
 test('applies the role and merge rules with the messages of POS Platform', () => {

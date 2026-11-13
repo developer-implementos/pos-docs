@@ -370,16 +370,22 @@ function recommendationStatus(item) {
 }
 
 /**
- * What each role still has to answer: its open questions, an open rule to decide or an open fact to
- * confirm, counted by priority. It lists the roles that decide some open question, those with more P1
- * questions first, then more open ones, then by name. A role only consulted is not on it, and nothing
- * is assigned here: the register names who decides.
+ * What each role still has to answer, split by what is asked of it. `decide` counts the open rules it
+ * decides, also by priority; `data` counts the open facts whose data it holds, because it confirms the
+ * answer (`decider`) or is consulted for it (`consulted`). So a fact is on the row of every role that
+ * holds its data, while a rule is only on the row of the role that decides it.
+ *
+ * Roles come first by their P1 decisions, then by more decisions, then by more data, then by name. A
+ * role that is only consulted on rules is not listed, and nothing is assigned here: the register names
+ * roles from a catalog that the business has yet to confirm (FOLLOWUP-017).
  */
 function agenda(items, roles) {
+  const open = items.filter(item => item.state === 'open');
   return roles.map(({ key, name, responsibility }) => {
-    const open = items.filter(item => item.decider === key && item.state === 'open');
-    return { key, name, responsibility, open: open.length, priorities: Object.fromEntries(priorities.map(priority => [priority, open.filter(item => item.priority === priority).length])) };
-  }).filter(role => role.open > 0).sort((a, b) => b.priorities.P1 - a.priorities.P1 || b.open - a.open || a.name.localeCompare(b.name, 'es'));
+    const decide = open.filter(item => item.kind === 'rule' && item.decider === key);
+    const data = open.filter(item => item.kind === 'fact' && (item.decider === key || item.consulted.includes(key)));
+    return { key, name, responsibility, decide: decide.length, priorities: Object.fromEntries(priorities.map(priority => [priority, decide.filter(item => item.priority === priority).length])), data: data.length };
+  }).filter(role => role.decide + role.data > 0).sort((a, b) => b.priorities.P1 - a.priorities.P1 || b.decide - a.decide || b.data - a.data || a.name.localeCompare(b.name, 'es'));
 }
 
 /**
@@ -425,6 +431,8 @@ export function deriveQuestions(snapshot, progress, followUp = null) {
     phases: progress.phases.filter(phase => items.some(item => item.phases.includes(phase.id))),
     // The roles that decide some question, for the filter; a role only consulted does not decide.
     deciders: [...new Set(items.map(item => item.decider))].map(key => roles.get(key)).map(({ key, name }) => ({ key, name })).sort((a, b) => a.name.localeCompare(b.name, 'es')),
+    // The roles that take part in some question, deciding it or consulted for it, for the role filter.
+    participants: [...new Set(items.flatMap(item => [item.decider, ...item.consulted]))].map(key => roles.get(key)).map(({ key, name }) => ({ key, name })).sort((a, b) => a.name.localeCompare(b.name, 'es')),
     agenda: agenda(items, content.roles),
     scopes: scopes.filter(scope => items.some(item => item.recommendation?.scope === scope)),
     counts: {

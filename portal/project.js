@@ -8,8 +8,9 @@ export function matchesProjectItem(data, text, values, type) {
     return ['scope', 'kind', 'state'].every(key => !values[key] || data[key] === values[key]) && loginMatch(data.owner, values.owner);
   }
   if (type === 'questions') {
-    // A question is listed under its earliest phase but concerns every phase of its packages.
-    return (!values.state || data.state === values.state) && (!values.phase || (data.phases || '').split(' ').includes(values.phase)) && (!values.decider || data.decider === values.decider) && (!values.priority || data.priority === values.priority) && (!values.recommendation || data.recommendation === values.recommendation) && (!values.scope || data.scope === values.scope);
+    // A question is listed under its earliest phase but concerns every phase of its packages, and a
+    // role takes part in it when it decides it or is consulted for it.
+    return (!values.state || data.state === values.state) && (!values.kind || data.kind === values.kind) && (!values.phase || (data.phases || '').split(' ').includes(values.phase)) && (!values.decider || data.decider === values.decider) && (!values.role || (data.roles || '').split(' ').includes(values.role)) && (!values.priority || data.priority === values.priority) && (!values.recommendation || data.recommendation === values.recommendation) && (!values.scope || data.scope === values.scope);
   }
   if (type === 'rules') {
     return ['decision', 'phase', 'area', 'disclosure'].every(key => !values[key] || data[key] === values[key]);
