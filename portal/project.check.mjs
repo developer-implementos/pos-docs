@@ -222,7 +222,7 @@ try {
   assert.equal(await form().locator('[name=phase]').inputValue(), '', 'Back restores question filters');
   await reset();
   assert.equal(await groups(), questions.groups.length);
-  const decider = questions.deciders[0];
+  const decider = questions.deciders[0].key;
   await form().locator('[name=decider]').selectOption(decider);
   assert.equal(await count(), questions.items.filter(item => item.decider === decider).length);
   await reset();
