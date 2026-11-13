@@ -27,7 +27,8 @@ const outcomes = Object.keys(decisionOutcomes);
 const answerSources = new Set(Object.keys(answerSourceNames));
 const scopes = Object.keys(recommendationScopes);
 const bases = new Set(Object.keys(recommendationBases));
-const priorities = ['P1', 'P2', 'P3'];
+export const questionPriorities = Object.freeze(['P1', 'P2', 'P3']);
+const priorities = questionPriorities;
 // Same rules as tools/check-business-questions.mjs and the follow-up owner in POS Platform.
 const login = /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i;
 const auditRef = /^[CPRSH]-\d{2,}$/;
@@ -369,6 +370,19 @@ function recommendationStatus(item) {
 }
 
 /**
+ * What each role still has to answer: its open questions, an open rule to decide or an open fact to
+ * confirm, counted by priority. It lists the roles that decide some open question, those with more P1
+ * questions first, then more open ones, then by name. A role only consulted is not on it, and nothing
+ * is assigned here: the register names who decides.
+ */
+function agenda(items, roles) {
+  return roles.map(({ key, name, responsibility }) => {
+    const open = items.filter(item => item.decider === key && item.state === 'open');
+    return { key, name, responsibility, open: open.length, priorities: Object.fromEntries(priorities.map(priority => [priority, open.filter(item => item.priority === priority).length])) };
+  }).filter(role => role.open > 0).sort((a, b) => b.priorities.P1 - a.priorities.P1 || b.open - a.open || a.name.localeCompare(b.name, 'es'));
+}
+
+/**
  * Offline view of the register: each question belongs to the earliest roadmap phase of its packages
  * and is ordered by phase, priority and identifier. Nothing is decided, assigned or answered here.
  */
@@ -411,6 +425,7 @@ export function deriveQuestions(snapshot, progress, followUp = null) {
     phases: progress.phases.filter(phase => items.some(item => item.phases.includes(phase.id))),
     // The roles that decide some question, for the filter; a role only consulted does not decide.
     deciders: [...new Set(items.map(item => item.decider))].map(key => roles.get(key)).map(({ key, name }) => ({ key, name })).sort((a, b) => a.name.localeCompare(b.name, 'es')),
+    agenda: agenda(items, content.roles),
     scopes: scopes.filter(scope => items.some(item => item.recommendation?.scope === scope)),
     counts: {
       total: items.length,

@@ -406,6 +406,24 @@ test('names each role from the catalog and keeps the questions merged into anoth
   assert.equal(model.counts.open, 3);
 });
 
+test('lists what each role has to answer, the roles with more P1 questions first', () => {
+  const model = derive(() => {}, followUp(), contentV4);
+  assert.deepEqual(model.agenda, [
+    { key: 'comercial', name: 'Comercial', responsibility: 'Precios, promociones, cupones y clientes', open: 2, priorities: { P1: 2, P2: 0, P3: 0 } },
+    { key: 'operaciones', name: 'Operaciones de tiendas', responsibility: 'Operación de las sucursales y sus cajas', open: 1, priorities: { P1: 0, P2: 1, P3: 0 } },
+  ], 'Producto and Finanzas have nothing open, and Legal is only consulted');
+  // An open fact awaits the role's evidence just as an open rule awaits its decision: both are on it.
+  const withFact = derive(value => {
+    value.items.push(question('Q-11', { kind: 'fact', decider: 'finanzas', priority: 'P3', workPackages: ['F04-01'] }), question('Q-12', { decider: 'operaciones', workPackages: ['F01-09'] }));
+  }, followUp(), contentV4);
+  assert.deepEqual(withFact.agenda.map(role => [role.key, role.open, role.priorities.P1]), [['comercial', 2, 2], ['operaciones', 2, 1], ['finanzas', 1, 0]]);
+  // Ties keep a stable order: more open questions first, then the name.
+  const tie = derive(value => {
+    value.items.push(question('Q-13', { decider: 'finanzas', workPackages: ['F04-01'] }), question('Q-14', { decider: 'finanzas', workPackages: ['F04-01'] }));
+  }, followUp(), contentV4);
+  assert.deepEqual(tie.agenda.map(role => role.key), ['comercial', 'finanzas', 'operaciones']);
+});
+
 test('applies the role and merge rules with the messages of POS Platform', () => {
   // Character for character, the messages of tools/check-business-questions.mjs in POS Platform.
   const rejects = (mutate, text) => assert.throws(() => derive(mutate, followUp(), contentV4), reports(text));

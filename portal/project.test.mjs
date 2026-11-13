@@ -81,6 +81,15 @@ test('question filters match state, any affected phase and the exact decider rol
   assert.equal(matchesProjectItem(data, text, { query: 'tesoreria' }, 'questions'), false);
 });
 
+test('question filters match the exact priority, combined with the role and the state', () => {
+  const data = { state: 'open', phases: 'phase-01', decider: 'tesoreria', priority: 'P1', owner: '' };
+  const text = 'Q-08 Pagos ¿Quién concilia un pago en curso?';
+  assert.equal(matchesProjectItem(data, text, { decider: 'tesoreria', state: 'open', priority: 'P1' }, 'questions'), true, 'The agenda link of a role and a priority selects its question');
+  assert.equal(matchesProjectItem(data, text, { priority: 'P2' }, 'questions'), false);
+  assert.equal(matchesProjectItem(data, text, { priority: 'P' }, 'questions'), false, 'A priority filter selects one priority, not a prefix');
+  assert.equal(matchesProjectItem(data, text, { decider: 'cobranza', priority: 'P1' }, 'questions'), false);
+});
+
 test('question filters match whether the agent recommended a rule and the exact scope', () => {
   const recommended = { state: 'open', phases: 'phase-01', decider: 'Comercial', recommendation: 'present', scope: 'country' };
   const pending = { state: 'open', phases: 'phase-01', decider: 'Comercial', recommendation: 'none', scope: '' };
