@@ -226,19 +226,35 @@ try {
   await form().locator('[name=decider]').selectOption(decider);
   assert.equal(await count(), questions.items.filter(item => item.decider === decider).length);
   await reset();
-  // The agenda: a row per deciding role, and each count opens a list with as many questions.
+  // The agenda: a row per role with something to decide or data to provide, and each count opens a
+  // list with as many questions.
   assert.equal(await page.locator('#questions-agenda tbody tr').count(), questions.agenda.length);
   const [busiest] = questions.agenda;
   if (busiest) {
     const priority = Object.keys(busiest.priorities).find(key => busiest.priorities[key] > 0);
-    await page.locator(`#questions-agenda a[href="/project/questions/?decider=${busiest.key}&state=open&priority=${priority}"]`).click();
-    await page.waitForURL(url => url.searchParams.get('priority') === priority);
-    assert.equal(await form().locator('[name=decider]').inputValue(), busiest.key, 'The agenda link selects the role');
-    assert.equal(await form().locator('[name=state]').inputValue(), 'open');
-    assert.equal(await form().locator('[name=priority]').inputValue(), priority);
-    assert.equal(await count(), busiest.priorities[priority], `The ${priority} count of ${busiest.key} opens as many questions`);
-    await navigate(`/project/questions/?decider=${busiest.key}&state=open`);
-    assert.equal(await count(), busiest.open, `The open count of ${busiest.key} matches its list`);
+    if (priority) {
+      await page.locator(`#questions-agenda a[href="/project/questions/?decider=${busiest.key}&kind=rule&state=open&priority=${priority}"]`).click();
+      await page.waitForURL(url => url.searchParams.get('priority') === priority);
+      assert.equal(await form().locator('[name=decider]').inputValue(), busiest.key, 'The agenda link selects the role');
+      assert.equal(await form().locator('[name=kind]').inputValue(), 'rule', 'A decision count lists only rules');
+      assert.equal(await form().locator('[name=state]').inputValue(), 'open');
+      assert.equal(await form().locator('[name=priority]').inputValue(), priority);
+      assert.equal(await count(), busiest.priorities[priority], `The ${priority} decisions of ${busiest.key} open as many questions`);
+    }
+    await navigate(`/project/questions/?decider=${busiest.key}&kind=rule&state=open`);
+    assert.equal(await count(), busiest.decide, `The decisions of ${busiest.key} match their list`);
+    await navigate('/project/questions/');
+  }
+  // A fact is also on the row of each role consulted for its data, and that count opens those facts.
+  const provider = questions.agenda.find(role => role.data > 0 && questions.items.some(item => item.kind === 'fact' && item.state === 'open' && item.consulted.includes(role.key)));
+  if (provider) {
+    await page.locator(`#questions-agenda a[href="/project/questions/?role=${provider.key}&kind=fact&state=open"]`).click();
+    await page.waitForURL(url => url.searchParams.get('role') === provider.key);
+    assert.equal(await form().locator('[name=role]').inputValue(), provider.key, 'The data link selects the role that takes part');
+    assert.equal(await form().locator('[name=kind]').inputValue(), 'fact', 'A data count lists only facts');
+    assert.equal(await count(), provider.data, `The data of ${provider.key} opens as many facts`);
+    await navigate(`/project/questions/?role=${provider.key}&state=open`);
+    assert.equal(await count(), questions.items.filter(item => item.state === 'open' && [item.decider, ...item.consulted].includes(provider.key)).length, `The name of ${provider.key} opens everything open in which it takes part`);
     await navigate('/project/questions/');
   }
   const [merged] = questions.merged;

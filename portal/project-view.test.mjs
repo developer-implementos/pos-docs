@@ -394,9 +394,12 @@ test('questions page explains who recommends and who decides and links the sourc
   assert.ok(html.includes(`href="${href}">Registro de preguntas · ${questions.source.revision.slice(0, 8)}</a>`));
   assert.ok(html.includes(`Registro revisado <time datetime="${questions.reviewedOn}">`));
   assert.match(html, /data-project-filters hidden/);
-  assert.deepEqual([...html.matchAll(/<select name="(\w+)">/g)].map(match => match[1]), ['state', 'phase', 'decider', 'priority', 'recommendation', 'scope']);
+  assert.deepEqual([...html.matchAll(/<select name="(\w+)">/g)].map(match => match[1]), ['state', 'kind', 'phase', 'decider', 'role', 'priority', 'recommendation', 'scope']);
   assert.ok(html.includes('<select name="priority"><option value="">Todos</option><option value="P1">P1</option><option value="P2">P2</option><option value="P3">P3</option></select>'));
+  assert.ok(html.includes('<select name="kind"><option value="">Todos</option><option value="fact">Hecho</option><option value="rule">Regla</option></select>'), 'The kind filter separates facts from rules');
   for (const role of questions.deciders) assert.ok(html.includes(`<option value="${escapeText(role.key)}">${escapeText(role.name)}</option>`), role.name);
+  const roleFilter = html.slice(html.indexOf('<select name="role">'), html.indexOf('</select>', html.indexOf('<select name="role">')));
+  assert.deepEqual([...roleFilter.matchAll(/<option value="([^"]+)">/g)].map(match => match[1]), questions.participants.map(role => role.key), 'The role filter offers every role that decides or is consulted');
   assert.match(html, /<noscript>/);
 });
 
@@ -433,24 +436,45 @@ test('schema 4: each question names its deciding role and the roles consulted, a
   assert.ok(!card(html, other.id).includes('<dt>Se consulta a</dt>'), 'A question without consulted roles does not show the field');
   for (const role of model.deciders) assert.ok(html.includes(`<option value="${role.key}">${escapeText(role.name)}</option>`), role.name);
   assert.ok(!html.includes('id="questions-merged"'), 'Without merged questions there is no merged section');
+  assert.ok(body.includes('data-kind="rule"') && body.includes(`data-roles="${[item.decider, ...item.consulted].join(' ')}"`), 'A question takes part in the role filter through the role that decides it and those consulted');
 });
 
-test('the agenda lists the open questions of each deciding role, and each count opens that same list', () => {
+test('schema 4: a fact names the role that confirms it and the roles that provide its data', () => {
+  let fact;
+  const model = questionsV4(content => {
+    fact = content.items.find(item => item.kind === 'fact' && item.state === 'open');
+    assert.ok(fact, 'The published cut has an open fact');
+    fact.consulted = content.roles.map(role => role.key).filter(role => role !== fact.decider).slice(0, 2);
+  });
+  const item = model.items.find(entry => entry.id === fact.id);
+  const body = card(questionsPage(model), item.id);
+  assert.ok(body.includes(`<dt>Quién confirma</dt><dd>${escapeText(item.deciderName)}</dd>`), 'A fact is confirmed, not decided');
+  assert.ok(body.includes(`<dt>Aportan datos</dt><dd>${item.consultedNames.map(escapeText).join(' · ')}</dd>`), 'The roles consulted for a fact provide its data');
+  assert.ok(body.includes('data-kind="fact"') && body.includes(`data-roles="${[item.decider, ...item.consulted].join(' ')}"`));
+});
+
+test('the agenda splits what each role decides from the data it provides, and each count opens that same list', () => {
   const html = questionsPage();
   const start = html.indexOf('<section id="questions-agenda"');
   assert.ok(start > html.indexOf('class="project-question-summary"') && start < html.indexOf('data-project-filters'), 'The agenda follows the summary, before the filters');
   const section = html.slice(start, html.indexOf('</section>', start));
-  assert.deepEqual([...section.matchAll(/<tr><th scope="row"><a href="[^"]+">([^<]+)<\/a>/g)].map(match => match[1]), questions.agenda.map(role => escapeText(role.name)), 'One row per deciding role with open questions, in the order of the agenda');
+  assert.deepEqual([...section.matchAll(/<tr><th scope="row"><a href="[^"]+">([^<]+)<\/a>/g)].map(match => match[1]), questions.agenda.map(role => escapeText(role.name)), 'One row per role with something to decide or data to provide, in the order of the agenda');
+  assert.ok(section.includes('<thead><tr><th scope="col">Rol</th><th scope="col">Por decidir</th><th scope="col">P1</th><th scope="col">P2</th><th scope="col">P3</th><th scope="col">Datos por aportar</th></tr></thead>'));
+  assert.ok(section.includes('una propuesta que el negocio aún debe confirmar (<a href="/project/attention/#followup-017">FOLLOWUP-017</a>)'), 'The agenda says that the role catalog is still a proposal');
+  const zero = label => `<td data-label="${label}"><span aria-label="ninguna">0</span></td>`;
   for (const role of questions.agenda) {
-    const list = `/project/questions/?decider=${role.key}&amp;state=open`;
-    assert.ok(section.includes(`<th scope="row"><a href="${list}">${escapeText(role.name)}</a><span class="project-agenda-responsibility">${escapeText(role.responsibility)}</span></th>`), role.key);
-    assert.ok(section.includes(`<td data-label="Abiertas"><a href="${list}">${role.open}<`), `${role.key} opens its list`);
+    const decide = `/project/questions/?decider=${role.key}&amp;kind=rule&amp;state=open`;
+    const data = `/project/questions/?role=${role.key}&amp;kind=fact&amp;state=open`;
+    assert.ok(section.includes(`<th scope="row"><a href="/project/questions/?role=${role.key}&amp;state=open">${escapeText(role.name)}</a><span class="project-agenda-responsibility">${escapeText(role.responsibility)}</span></th>`), `${role.key}: its name opens everything open in which it takes part`);
+    assert.ok(section.includes(role.decide ? `<td data-label="Por decidir"><a href="${decide}">${role.decide}<` : zero('Por decidir')), `${role.key} opens its decisions`);
     for (const [priority, value] of Object.entries(role.priorities)) {
-      const cell = value ? `<td data-label="${priority}"><a href="${list}&amp;priority=${priority}">${value}<` : `<td data-label="${priority}"><span aria-label="ninguna">0</span></td>`;
-      assert.ok(section.includes(cell), `${role.key} ${priority}`);
+      assert.ok(section.includes(value ? `<td data-label="${priority}"><a href="${decide}&amp;priority=${priority}">${value}<` : zero(priority)), `${role.key} ${priority}`);
     }
+    assert.ok(section.includes(role.data ? `<td data-label="Datos por aportar"><a href="${data}">${role.data}<` : zero('Datos por aportar')), `${role.key} opens the facts whose data it holds`);
   }
-  assert.equal(questions.agenda.reduce((sum, role) => sum + role.open, 0), questions.counts.open, 'Every open question is on the agenda of the role that decides it');
+  assert.equal(questions.agenda.reduce((sum, role) => sum + role.decide, 0), questions.counts.pendingDecision, 'Every open rule is on the row of the role that decides it');
+  const openFacts = questions.items.filter(item => item.kind === 'fact' && item.state === 'open');
+  assert.equal(questions.agenda.reduce((sum, role) => sum + role.data, 0), openFacts.reduce((sum, item) => sum + 1 + item.consulted.length, 0), 'Every open fact is on the row of each role that holds its data');
   const closed = questionsV4(content => {
     content.items = content.items.filter(item => item.state !== 'open');
   });

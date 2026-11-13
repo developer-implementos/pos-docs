@@ -90,6 +90,20 @@ test('question filters match the exact priority, combined with the role and the 
   assert.equal(matchesProjectItem(data, text, { decider: 'cobranza', priority: 'P1' }, 'questions'), false);
 });
 
+test('question filters select the kind and every role that takes part, deciding or consulted', () => {
+  const fact = { state: 'open', kind: 'fact', phases: 'phase-01', decider: 'tributario', roles: 'tributario comercial ti-erp soporte', priority: 'P1', owner: '' };
+  const text = 'Q-60 Impuestos ¿La fuente de precios publica los precios con IVA incluido?';
+  assert.equal(matchesProjectItem(fact, text, { role: 'ti-erp', kind: 'fact', state: 'open' }, 'questions'), true, 'The data link of a consulted role selects the fact');
+  assert.equal(matchesProjectItem(fact, text, { role: 'tributario', kind: 'fact', state: 'open' }, 'questions'), true, 'The role that confirms a fact also provides its data');
+  assert.equal(matchesProjectItem(fact, text, { decider: 'ti-erp' }, 'questions'), false, 'Being consulted is not deciding');
+  assert.equal(matchesProjectItem(fact, text, { role: 'ti' }, 'questions'), false, 'A role filter selects one role, not a prefix');
+  assert.equal(matchesProjectItem(fact, text, { kind: 'rule' }, 'questions'), false, 'A fact is not a rule to decide');
+  const rule = { ...fact, kind: 'rule', decider: 'tesoreria', roles: 'tesoreria cobranza' };
+  assert.equal(matchesProjectItem(rule, text, { decider: 'tesoreria', kind: 'rule', state: 'open', priority: 'P1' }, 'questions'), true, 'The decision link of a role and a priority selects its rule');
+  assert.equal(matchesProjectItem(rule, text, { role: 'cobranza', state: 'open' }, 'questions'), true, 'The name of a role opens also the rules where it is only consulted');
+  assert.equal(matchesProjectItem(rule, text, { role: 'cobranza', kind: 'fact' }, 'questions'), false);
+});
+
 test('question filters match whether the agent recommended a rule and the exact scope', () => {
   const recommended = { state: 'open', phases: 'phase-01', decider: 'Comercial', recommendation: 'present', scope: 'country' };
   const pending = { state: 'open', phases: 'phase-01', decider: 'Comercial', recommendation: 'none', scope: '' };
