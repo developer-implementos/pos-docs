@@ -111,6 +111,31 @@ test('imports the reviewed registry with immutable provenance and its integratio
   assert.equal(fs.readFileSync(item.destination, 'utf8'), serialized);
 });
 
+test('imports schema 4 with its roles and merged questions, with the product rules of both', t => {
+  const item = fixture(t);
+  const roles = [
+    { key: 'comercial', name: 'Comercial', responsibility: 'Precios, promociones, cupones y clientes' },
+    { key: 'producto', name: 'Producto POS Platform', responsibility: 'Alcance y comportamiento del producto' },
+  ];
+  const keyOf = { Comercial: 'comercial', Producto: 'producto' };
+  const v4 = content => {
+    Object.assign(content, { schemaVersion: 4, roles: structuredClone(roles), merged: [{ id: 'Q-03', question: '¿El cupón aplica a toda la cesta?', into: 'Q-01', mergedOn: '2026-11-10', reason: 'Pregunta lo mismo que Q-01.' }] });
+    for (const entry of content.items) Object.assign(entry, { decider: keyOf[entry.decider], consulted: entry.id === 'Q-01' ? ['producto'] : [] });
+  };
+  const revision = change(item, v4);
+  git(item.workspace, 'update-ref', 'refs/remotes/origin/main', revision);
+  const result = syncProjectQuestions(item);
+  const snapshot = JSON.parse(fs.readFileSync(item.destination, 'utf8'));
+  assert.equal(snapshot.content.schemaVersion, 4);
+  assert.deepEqual([result.total, result.open], [2, 1], 'A merged question is not a record of the register');
+  const model = deriveQuestions(snapshot, loadProgress(item.root));
+  assert.deepEqual(model.items.find(entry => entry.id === 'Q-01').consultedNames, ['Producto POS Platform']);
+  assert.deepEqual(model.merged.map(entry => [entry.id, entry.into]), [['Q-03', 'Q-01']]);
+  const broken = change(item, content => { v4(content); content.merged[0].into = 'Q-09'; });
+  git(item.workspace, 'update-ref', 'refs/remotes/origin/main', broken);
+  assert.throws(() => syncProjectQuestions(item), /Q-03\.into: expected a question of the register/);
+});
+
 test('identifies a published revision that main does not contain yet and rejects unpublished ones', t => {
   const item = fixture(t);
   const branch = change(item, content => { content.items[0].question = '¿La exclusión del cupón aplica a toda cesta con OV?'; });

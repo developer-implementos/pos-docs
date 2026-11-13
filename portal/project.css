@@ -184,6 +184,10 @@
 .project-question-group>h2 a{color:var(--ink);text-decoration:none}
 .project-question-group>h2 a:hover{color:var(--primary);text-decoration:underline}
 .project-question-group>.project-note{margin-bottom:14px}
+.project-question-merged{margin-top:32px;scroll-margin-top:24px}
+.project-question-merged>h2{margin-bottom:4px}
+.project-question-merged>.project-note{margin-bottom:14px}
+.project-question-merged-item{scroll-margin-top:24px}
 .project-question-topic{margin-top:14px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
 .project-question h3{font-size:18px;margin-block:6px 14px}
 .project-question .project-action-facts small{display:block}
