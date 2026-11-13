@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "0625f93ed6cf09bca3fb234ba86953f6e616bcb3",
+    "revision": "2eaf8f625fa78f07a0249dccc71b2ee3a5852b13",
     "path": "delivery/follow-ups.json",
-    "sha256": "f458e89d8e6cc6ec40a9394bb463a274f20428ea0fec57fd477ef79ac4b53c87"
+    "sha256": "e2354daeee98d42652fdead22b12a1dbe2f40ea596a5cc2174764dfa3c464942"
   },
   "content": {
     "schemaVersion": 1,
-    "reviewedOn": "2026-11-12",
+    "reviewedOn": "2026-11-13",
     "items": [
       {
         "id": "FOLLOWUP-001",
@@ -629,11 +629,11 @@
         "summary": "Obtener las decisiones de negocio del registro de preguntas y reglas de paridad",
         "impact": "La auditoría de paridad y el catálogo de reglas legacy registran 108 preguntas y reglas, después de unir a otra las 17 que la repetían o formaban parte de ella, con su respuesta actual, la fuente de esa respuesta y, en las 96 reglas abiertas, la recomendación del agente; los 2 hechos abiertos esperan su respuesta. Sólo las 5 decididas en fichas tienen una decisión registrada. Sin decisión no puede aprobarse una diferencia intencional ni fijarse el resultado esperado de los casos de paridad que dependen de ellas: permisos por perfil, cuentas sin identidad ERP, ventas en espera, cancelación, reglas de cierre y liberación de OV. El comportamiento legacy y la recomendación del agente no constituyen reglas aprobadas.",
         "impactScope": "review",
-        "nextAction": "Designar al responsable de reglas de negocio y revisar el registro en reuniones con cada rol que decide, según el catálogo de roles del registro, consultando a los roles que cada pregunta indica. El resultado se entrega en un documento de decisiones, que no se sube al repositorio; un agente registra cada decisión según delivery/README.md, con quién decidió, la fecha y el documento citado por nombre, y la traslada a la ficha propietaria.",
-        "requestedFrom": "Responsable de reglas de negocio por designar, con el rol que decide cada entrada según el catálogo de roles del registro",
+        "nextAction": "Confirmar primero con el negocio el catálogo de roles del registro, que es una propuesta: qué roles existen y qué decide cada uno. Después, designar al responsable de reglas de negocio y revisar el registro en reuniones con cada rol que decide, consultando a los roles que cada pregunta indica; en un hecho, esos roles aportan sus datos. El resultado se entrega en un documento de decisiones, que no se sube al repositorio; un agente registra cada decisión según delivery/README.md, con quién decidió, la fecha y el documento citado por nombre, y la traslada a la ficha propietaria.",
+        "requestedFrom": "Responsable de reglas de negocio por designar, con el negocio para confirmar el catálogo de roles propuesto y, después, el rol que decide cada entrada",
         "owner": null,
         "closureCriteria": "Cada regla abierta del registro tiene su decisión registrada, con quién decidió, la fecha y el documento de origen, y las reglas decididas quedan en sus fichas. Una regla sin decisión permanece abierta.",
-        "reviewedOn": "2026-11-12",
+        "reviewedOn": "2026-11-13",
         "evidence": [
           {
             "url": "https://github.com/developer-implementos/pos-platform/issues/258",
@@ -847,7 +847,7 @@
     ]
   },
   "issues": {
-    "observedAt": "2026-11-13T18:29:59.520Z",
+    "observedAt": "2026-11-13T19:38:54.569Z",
     "repository": "https://github.com/developer-implementos/pos-platform",
     "entries": [
       {

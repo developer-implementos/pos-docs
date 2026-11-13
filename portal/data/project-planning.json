@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "0625f93ed6cf09bca3fb234ba86953f6e616bcb3",
+    "revision": "2eaf8f625fa78f07a0249dccc71b2ee3a5852b13",
     "path": "delivery/planning.json",
     "sha256": "138e28368466769e22f72e172f36e20e467353a0c1a46c53bb7af108bd4463ab"
   },
@@ -280,7 +280,7 @@
     ]
   },
   "issues": {
-    "observedAt": "2026-11-13T18:30:06.618Z",
+    "observedAt": "2026-11-13T19:38:59.325Z",
     "repository": "https://github.com/developer-implementos/pos-platform",
     "entries": [
       {
