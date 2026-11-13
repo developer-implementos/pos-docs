@@ -187,7 +187,7 @@ Las prioridades expresan relevancia para preparar la arquitectura y el saneamien
 
 ### Precisión de los límites de seguridad
 
-Se revisaron controladores, arranque, configuración de filtros y configuración versionada. La revisión fue estática: no se autenticó ninguna llamada ni se ejercitó ninguna ruta. Los controles de red, gateway e IIS pueden cambiar sustancialmente el riesgo efectivo.
+Se revisaron controladores, arranque y configuración. La revisión fue estática: no se autenticó ninguna llamada ni se ejercitó ninguna ruta. Los controles de red, gateway e IIS pueden cambiar sustancialmente el riesgo efectivo.
 
 ## 6. Naming y frontera ACL/fachada
 
