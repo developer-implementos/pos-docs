@@ -147,7 +147,7 @@ const recommendationScope = scope => scope === 'core' ? 'Núcleo común: igual e
 
 /**
  * The final decision of the business: the decided rule, who decided and when, the decision document
- * and what it does with the agent's recommendation. Only a rule decided in schema 3 has one.
+ * and what it does with the agent's recommendation. Only a decided rule has one.
  */
 function questionDecision(decision) {
   if (!decision) return '';
