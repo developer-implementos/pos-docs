@@ -22,9 +22,12 @@ jobs:
       group: project-import
       cancel-in-progress: false
     steps:
+      # Full history: the progress importer reads, with `git show`, the roadmap revision that
+      # delivery/progress.json pins, an older commit of this repository.
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           path: pos-docs
+          fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
