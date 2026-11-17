@@ -15,11 +15,18 @@ Espejo Engram: pendiente. La herramienta no está disponible en esta sesión; la
 ## Tasks
 
 - [x] T1 · S1,S3 · route:inline · Redactar el ADR-21 · status:done · evidence: `docs/decisions/web-client.md`
-- [x] T2 · S2 · route:inline · Registrar la decisión en la tabla, el mapa de contenido, el ADR-14 y el glosario · status:done · evidence: diff de esta rama
-- [ ] T3 · S1,S2,S3 · route:inline · Ejecutar las comprobaciones editoriales y de build, y abrir la PR · status:in_progress · evidence: L2
+- [x] T2 · S2 · route:inline · Registrar la decisión en la tabla, el mapa de contenido, el ADR-14 y el glosario · status:done · evidence: `233cf7f`; fuentes del deck revisadas en `8f4dbb8` (L2)
+- [x] T3 · S1,S2,S3 · route:inline · Ejecutar las comprobaciones editoriales y de build, y abrir la PR · status:done · evidence: L2
 
 ## Log
 
 - L1 · 2026-11-17 · Solicitud original, literal:
 
 > si. haz todo lo necesario. la idea es ir desplegando la app por partes y que nuestro jefe pueda ver la app corriendo, conectarse a la db, etc. para el pos front no solo queremos desktop y app movil, tambien queremos web. nose si eso esta incluido en el roadmap o como tarea. sino hazlo e implementalo tambien
+- L2 · 2026-11-17 · Sobre `8f4dbb8`, con Node 22.23.3:
+  - `editorial:check`, `editorial:test` 28/28 y `odd:check` en verde.
+  - `validate` (120 rutas alcanzables), `typecheck` (0 errores), `build` (122 páginas de la guía) y `check` (sin enlaces rotos) en verde.
+  - Existen en `dist` las rutas `/guide/architecture/web-client/`, `/guide/architecture/native-clients/`, `/guide/glossary/` y `/guide/proposal/decisions/#adr-21`.
+  - El build exigió revisar el deck de arquitectura porque cambió `docs/propuesta-arquitectura.md`. El deck no enumera ADR y lo que afirma de `pos-desktop` y `pos-mobile` sigue siendo correcto. No menciona `pos-web`: corresponde agregarlo cuando el producto integre TASK-403. `sources.json` se refrescó con `presentations/tools/review-sources.mjs`.
+  - No se corrió `npm run verify` completo: falta, entre otros, `project:check`, que depende del snapshot del producto.
+  - Revisión de agente; falta la revisión humana.
