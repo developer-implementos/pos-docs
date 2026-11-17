@@ -85,7 +85,9 @@ test('the project import holds its App token only on main, scoped per repository
   assert.doesNotMatch(workflow, /^\s+ref:/m, 'Always import the default branches, never a PR revision');
   for (const [, action] of workflow.matchAll(/uses: ([^\s#]+)/g)) assert.match(action, /@[a-f0-9]{40}$/, `pin ${action} to a commit`);
   assert.doesNotMatch(workflow, /^\s+app-id:/m, 'app-id is deprecated; use client-id');
-  const tokens = workflow.split(/\n(?= {6}- )/).filter(step => step.includes('actions/create-github-app-token@'));
+  const [importJob, alertJob, ...others] = workflow.split('\njobs:\n')[1].split(/\n(?= {2}[a-z][a-z-]*:\n)/);
+  assert.deepEqual([importJob?.split('\n')[0], alertJob?.split('\n')[0], others.length], ['  import:', '  alert:', 0], 'Two jobs: the import and its alert');
+  const tokens = importJob.split(/\n(?= {6}- )/).filter(step => step.includes('actions/create-github-app-token@'));
   assert.equal(tokens.length, 2);
   const scope = step => ({
     client: step.match(/^ {10}client-id: (.+)$/m)?.[1],
@@ -100,13 +102,21 @@ test('the project import holds its App token only on main, scoped per repository
   // `git show`, an old commit of this repository. A shallow checkout lacks it: the first real run failed
   // on «docs/roadmap.json exists on disk, but not in 4b1eac0», although every local run, from a full
   // clone, passed. Both checkouts keep their full history.
-  const checkouts = workflow.split(/\n(?= {6}- )/).filter(step => step.includes('actions/checkout@'));
+  const checkouts = importJob.split(/\n(?= {6}- )/).filter(step => step.includes('actions/checkout@'));
   assert.deepEqual(checkouts.map(step => [step.match(/^ {10}path: (.+)$/m)?.[1], step.match(/^ {10}fetch-depth: (\d+)$/m)?.[1]]), [
     ['pos-docs', '0'],
     ['pos-platform', '0'],
   ], 'Both repositories are checked out with their full history');
   assert.match(workflow, /run: node tools\/project-import\/run\.mjs --workspace \.\.\/pos-platform --publish$/m);
   assert.doesNotMatch(workflow, /merge\.mjs|gh pr merge|\/merge\b/, 'The import never merges its PR');
+  // A failing schedule went unread for days (TASK-386). The alert reads only the import's result: no
+  // environment, App key or product checkout, and its token writes issues and nothing else.
+  assert.match(alertJob, /^    needs: import\n    if: always\(\) && needs\.import\.result != 'skipped' && github\.ref == 'refs\/heads\/main'$/m, 'The alert follows every import that ran on main');
+  assert.match(alertJob, /^    permissions:\n      contents: read\n      issues: write\n    steps:$/m, 'The alert token writes issues only');
+  assert.match(alertJob, /^    concurrency:\n      group: project-import-alert\n      cancel-in-progress: false$/m, 'Concurrent failures never open two alerts');
+  assert.doesNotMatch(alertJob, /environment:|create-github-app-token|secrets\.|repository: /, 'The alert holds no App key and reads no product code');
+  assert.match(alertJob, /^ {10}GH_TOKEN: \$\{\{ github\.token \}\}\n {10}IMPORT_RESULT: \$\{\{ needs\.import\.result \}\}\n {8}run: node tools\/project-import\/alert\.mjs$/m);
+  assert.doesNotMatch(importJob, /^    permissions:/m, 'The import job keeps the read-only default token');
   const owners = readFileSync(new URL('../.github/CODEOWNERS', import.meta.url), 'utf8');
   assert.ok(owners.split(/\r?\n/).includes('/tools/project-import/ @floxcristian'), 'The import tooling requires the governance owner');
 });

@@ -65,6 +65,13 @@ No agregar la App a los rulesets ni a `CODEOWNERS`: sus PR las revisa e integra 
 - **Despachar a mano:** `gh workflow run project-import.yml -R developer-implementos/pos-docs`.
 - **Disparo desde POS Platform:** el workflow acepta `repository_dispatch` con el tipo `pos-platform-delivery-changed`. Ignora la carga del evento e importa `main`. Configurar ese emisor es una mejora opcional: requiere un token de POS Platform con permiso para despachar aquí. Sin él, la latencia máxima es de una hora.
 - **Si una corrida falla:** el resumen del job dice en qué paso. Una validación fallida significa que el registro o la evidencia del producto no son coherentes: se corrige en POS Platform, no aquí.
+- **Alerta:** el job `alert` ([`alert.mjs`](alert.mjs)) sigue a cada importación que corrió en `main`.
+  - Una corrida programada o despachada desde POS Platform que falla, o que se cancela por su tope, abre una sola issue con la etiqueta `importacion-en-rojo`.
+  - Mientras esa issue siga abierta, la comenta como mucho una vez al día, para que un fallo horario no la entierre en notificaciones.
+  - La primera corrida que termina bien la comenta y la cierra.
+  - Un despacho manual fallido no alerta, porque quien lo lanzó lo está mirando.
+
+  El texto sólo nombra la corrida, el commit y el evento, porque las issues de este repositorio son públicas. El job usa el token por defecto con `issues: write`, sin el environment ni la clave de la App. La alerta existe porque, desde el 2026-11-13, la corrida horaria falló más de 88 veces seguidas sin que nadie lo notara ([TASK-386](https://github.com/developer-implementos/pos-platform/issues/386)).
 - **Desactivar:** quitar `PROJECT_IMPORT_ENABLED` o deshabilitar el workflow (`gh workflow disable project-import.yml -R developer-implementos/pos-docs`). La importación manual de [`docs/project-progress.md`](../../docs/project-progress.md) sigue disponible.
 - **Rotar la clave:** generar una nueva en la App, reemplazar el secreto y revocar la anterior.
 
