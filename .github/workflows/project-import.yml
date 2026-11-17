@@ -76,7 +76,7 @@ jobs:
     # `always()` runs it after a failed or cancelled import; a skipped import (opt-in schedule) does not.
     needs: import
     if: always() && needs.import.result != 'skipped' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     # Two runs that fail together would both see no open issue and open two.
     concurrency:
