@@ -1,6 +1,6 @@
 # ADR-14 · Clientes de escritorio y móvil independientes
 
-**Estado:** decisión aceptada el 21 de octubre de 2026. **Alcance:** composición del cliente y artefactos de entrega. No acredita operación productiva ni homologación de sistemas operativos, dispositivos o proveedores.
+**Estado:** decisión aceptada el 21 de octubre de 2026 y ampliada por el [ADR-21](web-client.md), que agrega el cliente web conectado. **Alcance:** composición del cliente y artefactos de entrega. No acredita operación productiva ni homologación de sistemas operativos, dispositivos o proveedores.
 
 ## Decisión
 

@@ -11,7 +11,7 @@ Estas definiciones precisan el uso de los términos **en esta propuesta**. Los e
 | Término | Significado en POS Platform | Detalle |
 | --- | --- | --- |
 | Módulos de negocio compartidos | Casos de uso y reglas reutilizables de venta, caja, precios y otras capacidades; conservan límites de responsabilidad y datos. | [Producto](/guide/proposal/product/) |
-| Aplicación cliente completa | `pos-desktop` o `pos-mobile`: reúne la shell nativa y el frontend Angular que aloja. | [Composición de clientes](/guide/architecture/native-clients/#shell-nativa-y-frontend) |
+| Aplicación cliente completa | `pos-desktop`, `pos-mobile` o `pos-web`: reúne el frontend Angular con su host, que es una shell nativa o el navegador. | [Composición de clientes](/guide/architecture/native-clients/#shell-nativa-y-frontend) y [cliente web](/guide/architecture/web-client/) |
 | Shell nativa (host) | Envoltura Tauri en escritorio o Capacitor en móvil; aloja el frontend en un WebView y gestiona su integración con el sistema operativo. | [Shell y frontend](/guide/architecture/native-clients/#shell-nativa-y-frontend) |
 | Frontend Angular | Pantallas, navegación y estado de interfaz dentro de la shell nativa; reutiliza código compartido y consume contratos autorizados. | [Composición Angular](/guide/architecture/native-clients/#código-compartido-y-dependencias) |
 | `libs/client-shell` | Biblioteca de composición Angular: componente raíz, configuración, rutas, guards y marco de navegación. Forma parte del frontend de ambas aplicaciones. | [Código compartido](/guide/architecture/native-clients/#código-compartido-y-dependencias) |
