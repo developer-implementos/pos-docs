@@ -11,6 +11,22 @@ Los cambios de herramientas, pruebas y CI no aparecen aquí; quedan en el [regis
 
 Este archivo lo escribe [release-please](https://github.com/googleapis/release-please) desde los títulos de los PR, y cada versión queda como [release en GitHub](https://github.com/developer-implementos/pos-docs/releases). Para recibir un aviso por versión, usa *Watch → Custom → Releases* en el repositorio. No se edita a mano: cómo se escribe una buena entrada está en la [guía de versiones](tools/release/README.md).
 
+## [0.10.2](https://github.com/developer-implementos/pos-docs/compare/v0.10.1...v0.10.2) (2026-11-17)
+
+
+### Correcciones
+
+* **project:** [TASK-386] reconocer los commits que GitHub firma para la App de importación ([#114](https://github.com/developer-implementos/pos-docs/issues/114)) ([624767e](https://github.com/developer-implementos/pos-docs/commit/624767e1ab51e92cbf48c7c91103139696c9e9e5))
+
+
+### Contenido actualizado
+
+* **decisions:** [TASK-389] ADR-20 sigue en propuesta; su política pura de redondeo del efectivo existe sin consumidores ([abfb770](https://github.com/developer-implementos/pos-docs/commit/abfb770a38f3479264dd9630a12336ae89cd9d28))
+* **payments:** [TASK-389] F02-01 y F02-06 explican el cobro con tarjeta en la caja conectada y el voucher manual ([abfb770](https://github.com/developer-implementos/pos-docs/commit/abfb770a38f3479264dd9630a12336ae89cd9d28))
+* **payments:** [TASK-389] F02-07 explica la ejecutabilidad de los perfiles de pago y el canal de notificación del proveedor ([abfb770](https://github.com/developer-implementos/pos-docs/commit/abfb770a38f3479264dd9630a12336ae89cd9d28))
+* **payments:** [TASK-389] F02-14 explica el estado y mantenimiento del terminal y el cierre de su lote sin tocar la caja ([abfb770](https://github.com/developer-implementos/pos-docs/commit/abfb770a38f3479264dd9630a12336ae89cd9d28))
+* **recovery:** [TASK-389] F02-04 explica la bandeja de efectos sin resolver de Seguimiento de operaciones ([abfb770](https://github.com/developer-implementos/pos-docs/commit/abfb770a38f3479264dd9630a12336ae89cd9d28))
+
 ## [0.10.1](https://github.com/developer-implementos/pos-docs/compare/v0.10.0...v0.10.1) (2026-11-13)
 
 
