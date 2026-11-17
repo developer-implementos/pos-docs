@@ -141,6 +141,22 @@
         {
           "checksum": "c48ceb2453d9180906b633cfd0f7d97ce0515ccbd9b5121abe4ea4b2a9ccaebd",
           "id": "243_compensation_cancellation"
+        },
+        {
+          "checksum": "62a4bb5edc275fe0d083a6792f6e4cf20e0a085c3db0be44c47329bec93fdf15",
+          "id": "246_terminal_maintenance"
+        },
+        {
+          "checksum": "3e5dae90df17fdf3898c4d97e5ab2728d8b12a761b7620840a3a81716e1f170a",
+          "id": "247_terminal_maintenance_access"
+        },
+        {
+          "checksum": "e22210d22a13405c215e2dc8f7993933e6f13f279c58561ab0cde9b573633041",
+          "id": "250_card_vouchers"
+        },
+        {
+          "checksum": "45a375f4eb097736ead90a3b3cac5d98a610d156bfedccb0e4fe211f28e91da8",
+          "id": "252_terminal_batch"
         }
       ],
       "schemas": [
@@ -8143,6 +8159,1039 @@
               "comment": null,
               "default": null,
               "documentation": {
+                "description": "Identificador del voucher registrado.",
+                "example": "10000000-0000-4000-8000-000000000072",
+                "usage": "Es también el identificador de la asignación card-voucher del plan."
+              },
+              "name": "id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Plan de cobro al que se aplica el voucher.",
+                "example": "10000000-0000-4000-8000-000000000050",
+                "usage": "Relaciona el voucher con la venta; el disparador exige un plan abierto del mismo ámbito y moneda."
+              },
+              "name": "plan_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Revisión de la política que admitió el registro.",
+                "example": "10000000-0000-4000-8000-000000000071",
+                "usage": "Conserva el modo y el formato vigentes al registrar, aunque la política cambie después."
+              },
+              "name": "policy_revision_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Comercio copiado de la política al registrar.",
+                "example": "COMERCIO-SINTETICO-01",
+                "usage": "Forma parte de la clave única del voucher."
+              },
+              "name": "merchant_ref",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Terminal copiado de la política al registrar.",
+                "example": "TERMINAL-MANUAL-01",
+                "usage": "Forma parte de la clave única del voucher."
+              },
+              "name": "terminal_ref",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Código de autorización impreso en el voucher, normalizado a mayúsculas.",
+                "example": "A1B2C3",
+                "usage": "Completa la clave única; su formato lo valida el patrón de la política antes de insertar."
+              },
+              "name": "authorization_code",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Últimos 4 dígitos de la tarjeta.",
+                "example": "4242",
+                "usage": "Permite al verificador cotejar el voucher físico. Es el único dato de la tarjeta que se conserva."
+              },
+              "name": "card_last4",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Importe del voucher aplicado a la venta.",
+                "example": "1190",
+                "usage": "No puede superar el saldo por asignar del plan; suma a confirmado o a reservado según el estado."
+              },
+              "name": "amount",
+              "nullable": false,
+              "type": "numeric(20,4)"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Modo de confirmación copiado de la política al registrar.",
+                "example": "independent-verifier",
+                "usage": "on-registration confirma al registrar; independent-verifier deja el voucher declarado hasta la verificación de otro usuario."
+              },
+              "name": "confirmation_mode",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Estado del voucher: declared, confirmed o rejected.",
+                "example": "declared",
+                "usage": "declared reserva el importe y bloquea la finalización; confirmed lo aplica a la venta; rejected lo libera sin permitir reutilizar el voucher."
+              },
+              "name": "state",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": "1",
+              "documentation": {
+                "description": "Versión del voucher para la verificación optimista.",
+                "example": 1,
+                "usage": "La verificación exige la versión vista por el verificador."
+              },
+              "name": "version",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Operador que registró el voucher.",
+                "example": "10000000-0000-4000-8000-000000000006",
+                "usage": "No puede verificarlo: lo impiden la aplicación y una restricción de la tabla."
+              },
+              "name": "registered_by",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Operador que confirmó o rechazó el voucher en modo independent-verifier.",
+                "example": "10000000-0000-4000-8000-000000000010",
+                "usage": "Nulo mientras está declarado y siempre nulo en modo on-registration."
+              },
+              "name": "verified_by",
+              "nullable": true,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Instante en que se registró el voucher.",
+                "example": "2026-11-16T14:30:00.000Z",
+                "usage": "Ordena el plan y la bandeja de verificación."
+              },
+              "name": "created_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "amount"
+              ],
+              "definition": "CHECK (amount > 0::numeric)",
+              "name": "card_voucher_evidence_amount_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "amount"
+              ],
+              "definition": "NOT NULL amount",
+              "name": "card_voucher_evidence_amount_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "authorization_code"
+              ],
+              "definition": "CHECK (authorization_code ~ '^[A-Z0-9]{1,32}$'::text)",
+              "name": "card_voucher_evidence_authorization_code_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "authorization_code"
+              ],
+              "definition": "NOT NULL authorization_code",
+              "name": "card_voucher_evidence_authorization_code_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "card_last4"
+              ],
+              "definition": "CHECK (card_last4 ~ '^[0-9]{4}$'::text)",
+              "name": "card_voucher_evidence_card_last4_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "card_last4"
+              ],
+              "definition": "NOT NULL card_last4",
+              "name": "card_voucher_evidence_card_last4_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "confirmation_mode",
+                "state",
+                "verified_by"
+              ],
+              "definition": "CHECK (confirmation_mode = 'independent-verifier'::text OR state = 'confirmed'::text AND verified_by IS NULL)",
+              "name": "card_voucher_evidence_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "confirmation_mode",
+                "state",
+                "verified_by"
+              ],
+              "definition": "CHECK (confirmation_mode = 'on-registration'::text OR (state = 'declared'::text) = (verified_by IS NULL))",
+              "name": "card_voucher_evidence_check1",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "verified_by",
+                "registered_by"
+              ],
+              "definition": "CHECK (verified_by IS DISTINCT FROM registered_by)",
+              "name": "card_voucher_evidence_check2",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "confirmation_mode"
+              ],
+              "definition": "CHECK (confirmation_mode = ANY (ARRAY['on-registration'::text, 'independent-verifier'::text]))",
+              "name": "card_voucher_evidence_confirmation_mode_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "confirmation_mode"
+              ],
+              "definition": "NOT NULL confirmation_mode",
+              "name": "card_voucher_evidence_confirmation_mode_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "created_at"
+              ],
+              "definition": "NOT NULL created_at",
+              "name": "card_voucher_evidence_created_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "NOT NULL id",
+              "name": "card_voucher_evidence_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "merchant_ref",
+                "terminal_ref",
+                "authorization_code"
+              ],
+              "definition": "UNIQUE (merchant_ref, terminal_ref, authorization_code)",
+              "name": "card_voucher_evidence_identity",
+              "type": "u"
+            },
+            {
+              "columns": [
+                "merchant_ref"
+              ],
+              "definition": "NOT NULL merchant_ref",
+              "name": "card_voucher_evidence_merchant_ref_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "PRIMARY KEY (id)",
+              "name": "card_voucher_evidence_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "plan_id"
+              ],
+              "definition": "FOREIGN KEY (plan_id) REFERENCES payments.payment_plan(id)",
+              "name": "card_voucher_evidence_plan_id_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "payments",
+                "table": "payment_plan"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "plan_id"
+              ],
+              "definition": "NOT NULL plan_id",
+              "name": "card_voucher_evidence_plan_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "policy_revision_id"
+              ],
+              "definition": "FOREIGN KEY (policy_revision_id) REFERENCES payments.card_voucher_policy(id)",
+              "name": "card_voucher_evidence_policy_revision_id_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "payments",
+                "table": "card_voucher_policy"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "policy_revision_id"
+              ],
+              "definition": "NOT NULL policy_revision_id",
+              "name": "card_voucher_evidence_policy_revision_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "registered_by"
+              ],
+              "definition": "NOT NULL registered_by",
+              "name": "card_voucher_evidence_registered_by_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "state"
+              ],
+              "definition": "CHECK (state = ANY (ARRAY['declared'::text, 'confirmed'::text, 'rejected'::text]))",
+              "name": "card_voucher_evidence_state_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "state"
+              ],
+              "definition": "NOT NULL state",
+              "name": "card_voucher_evidence_state_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "terminal_ref"
+              ],
+              "definition": "NOT NULL terminal_ref",
+              "name": "card_voucher_evidence_terminal_ref_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "version"
+              ],
+              "definition": "CHECK (version > 0)",
+              "name": "card_voucher_evidence_version_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "version"
+              ],
+              "definition": "NOT NULL version",
+              "name": "card_voucher_evidence_version_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "payments",
+          "documentation": {
+            "description": "Voucher manual de tarjeta registrado en un plan de cobro, con su código de autorización y los últimos 4 dígitos.",
+            "sources": [
+              {
+                "path": "libs/backend/payments/src/infrastructure/card-voucher.migration.ts",
+                "symbol": "cardVoucherMigration"
+              },
+              {
+                "path": "libs/backend/payments/src/infrastructure/card-voucher.store.ts"
+              },
+              {
+                "path": "libs/backend/payments/src/infrastructure/payment-plan.store.ts",
+                "symbol": "SqlPaymentPlanStore"
+              },
+              {
+                "path": "libs/backend/payments/contracts/src/card-vouchers.ts"
+              }
+            ],
+            "usage": "Lo escribe el registro con payment.voucher.record y lo resuelve la verificación con payment.voucher.verify; el plan lo lee como asignación card-voucher. La unicidad por comercio, terminal y código impide reutilizar el voucher en otra venta, también ante solicitudes concurrentes; un voucher rechazado tampoco se reutiliza. Nunca guarda el número completo de la tarjeta, la fecha de vencimiento ni el código de seguridad."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE INDEX card_voucher_evidence_declared ON payments.card_voucher_evidence USING btree (created_at DESC, id DESC) WHERE (state = 'declared'::text)",
+              "name": "card_voucher_evidence_declared"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX card_voucher_evidence_identity ON payments.card_voucher_evidence USING btree (merchant_ref, terminal_ref, authorization_code)",
+              "name": "card_voucher_evidence_identity"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX card_voucher_evidence_pkey ON payments.card_voucher_evidence USING btree (id)",
+              "name": "card_voucher_evidence_pkey"
+            },
+            {
+              "definition": "CREATE INDEX card_voucher_evidence_plan ON payments.card_voucher_evidence USING btree (plan_id, id)",
+              "name": "card_voucher_evidence_plan"
+            }
+          ],
+          "name": "card_voucher_evidence",
+          "schema": "payments"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identificador de esta revisión de la política.",
+                "example": "10000000-0000-4000-8000-000000000071",
+                "usage": "Lo referencia cada voucher registrado para conservar la política exacta que lo admitió."
+              },
+              "name": "id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identidad estable de la política del terminal.",
+                "example": "10000000-0000-4000-8000-000000000070",
+                "usage": "Agrupa sus revisiones; el cliente elige la política por este identificador."
+              },
+              "name": "policy_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Número correlativo de la revisión dentro de la política.",
+                "example": 1,
+                "usage": "Sólo se admite la siguiente revisión; un registro rechaza una revisión que ya no es la vigente."
+              },
+              "name": "revision",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Sucursal a la que pertenece el terminal.",
+                "example": "10000000-0000-4000-8000-000000000001",
+                "usage": "Limita la lista y el registro al ámbito de la sesión."
+              },
+              "name": "branch_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identificador público del comercio en el adquirente.",
+                "example": "COMERCIO-SINTETICO-01",
+                "usage": "Forma parte de la unicidad del voucher; una pareja comercio-terminal pertenece a una sola política."
+              },
+              "name": "merchant_ref",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identificador público del terminal no integrado.",
+                "example": "TERMINAL-MANUAL-01",
+                "usage": "Forma parte de la unicidad del voucher y se muestra al cajero y al verificador."
+              },
+              "name": "terminal_ref",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Moneda del terminal.",
+                "example": "CLP",
+                "usage": "Un registro exige la misma moneda que el plan de cobro."
+              },
+              "name": "currency",
+              "nullable": false,
+              "type": "character(3)"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Decimales de la moneda del terminal.",
+                "example": 0,
+                "usage": "Un registro exige la misma escala que el plan de cobro."
+              },
+              "name": "currency_scale",
+              "nullable": false,
+              "type": "smallint"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Indica si la revisión admite registros nuevos.",
+                "example": true,
+                "usage": "false deja la política con el motivo policy-disabled; no impide resolver vouchers ya declarados."
+              },
+              "name": "enabled",
+              "nullable": false,
+              "type": "boolean"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Modo de confirmación declarado: on-registration o independent-verifier. Sin valor por defecto.",
+                "example": "independent-verifier",
+                "usage": "Nulo significa decisión pendiente (Q-73) y deja la política no admisible con el motivo confirmation-mode-missing. Cada voucher copia el modo con que se registró."
+              },
+              "name": "confirmation_mode",
+              "nullable": true,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Expresión regular de ECMAScript anclada que describe el formato del código de autorización del adquirente.",
+                "example": "^[A-Z0-9]{6}$",
+                "usage": "La aplicación la evalúa sobre el código normalizado a mayúsculas. Nula significa formato pendiente (FOLLOWUP-002) y deja la política no admisible con el motivo authorization-pattern-missing."
+              },
+              "name": "authorization_pattern",
+              "nullable": true,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Instante en que se aprovisionó la revisión.",
+                "example": "2026-11-16T14:00:00.000Z",
+                "usage": "Permite auditar cuándo cambió la política."
+              },
+              "name": "created_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "authorization_pattern"
+              ],
+              "definition": "CHECK (authorization_pattern IS NULL OR char_length(authorization_pattern) >= 3 AND char_length(authorization_pattern) <= 200 AND \"left\"(authorization_pattern, 1) = '^'::text AND \"right\"(authorization_pattern, 1) = '$'::text)",
+              "name": "card_voucher_policy_authorization_pattern_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "branch_id"
+              ],
+              "definition": "FOREIGN KEY (branch_id) REFERENCES platform.database_realm(realm_id)",
+              "name": "card_voucher_policy_branch_id_fkey",
+              "references": {
+                "columns": [
+                  "realm_id"
+                ],
+                "schema": "platform",
+                "table": "database_realm"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "branch_id"
+              ],
+              "definition": "NOT NULL branch_id",
+              "name": "card_voucher_policy_branch_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "confirmation_mode"
+              ],
+              "definition": "CHECK (confirmation_mode = ANY (ARRAY['on-registration'::text, 'independent-verifier'::text]))",
+              "name": "card_voucher_policy_confirmation_mode_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "created_at"
+              ],
+              "definition": "NOT NULL created_at",
+              "name": "card_voucher_policy_created_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "currency"
+              ],
+              "definition": "CHECK (currency ~ '^[A-Z]{3}$'::text)",
+              "name": "card_voucher_policy_currency_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "currency"
+              ],
+              "definition": "NOT NULL currency",
+              "name": "card_voucher_policy_currency_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "currency_scale"
+              ],
+              "definition": "CHECK (currency_scale >= 0 AND currency_scale <= 4)",
+              "name": "card_voucher_policy_currency_scale_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "currency_scale"
+              ],
+              "definition": "NOT NULL currency_scale",
+              "name": "card_voucher_policy_currency_scale_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "enabled"
+              ],
+              "definition": "NOT NULL enabled",
+              "name": "card_voucher_policy_enabled_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "NOT NULL id",
+              "name": "card_voucher_policy_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "merchant_ref"
+              ],
+              "definition": "CHECK (merchant_ref ~ '^[A-Z0-9][A-Z0-9_.:/-]{0,119}$'::text)",
+              "name": "card_voucher_policy_merchant_ref_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "merchant_ref"
+              ],
+              "definition": "NOT NULL merchant_ref",
+              "name": "card_voucher_policy_merchant_ref_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "PRIMARY KEY (id)",
+              "name": "card_voucher_policy_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "policy_id"
+              ],
+              "definition": "NOT NULL policy_id",
+              "name": "card_voucher_policy_policy_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "policy_id",
+                "revision"
+              ],
+              "definition": "UNIQUE (policy_id, revision)",
+              "name": "card_voucher_policy_policy_id_revision_key",
+              "type": "u"
+            },
+            {
+              "columns": [
+                "revision"
+              ],
+              "definition": "CHECK (revision > 0)",
+              "name": "card_voucher_policy_revision_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "revision"
+              ],
+              "definition": "NOT NULL revision",
+              "name": "card_voucher_policy_revision_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "terminal_ref"
+              ],
+              "definition": "CHECK (terminal_ref ~ '^[A-Z0-9][A-Z0-9_.:/-]{0,119}$'::text)",
+              "name": "card_voucher_policy_terminal_ref_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "terminal_ref"
+              ],
+              "definition": "NOT NULL terminal_ref",
+              "name": "card_voucher_policy_terminal_ref_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "payments",
+          "documentation": {
+            "description": "Revisión inmutable de la política de voucher manual de un terminal de tarjeta no integrado de la sucursal.",
+            "sources": [
+              {
+                "path": "libs/backend/payments/src/infrastructure/card-voucher.migration.ts",
+                "symbol": "cardVoucherMigration"
+              },
+              {
+                "path": "libs/backend/payments/src/infrastructure/card-voucher-policy.ts",
+                "symbol": "provisionCardVoucherPolicy"
+              },
+              {
+                "path": "libs/backend/payments/src/infrastructure/card-voucher.store.ts"
+              },
+              {
+                "path": "libs/backend/payments/contracts/src/card-vouchers.ts"
+              }
+            ],
+            "usage": "La escribe sólo el rol propietario con provisionCardVoucherPolicy, fuera del runtime; el runtime la lee para listar políticas y admitir un registro. La revisión vigente es la de número mayor; un modo o patrón nulo deja la política no admisible (Q-73, FOLLOWUP-002)."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE INDEX card_voucher_policy_current ON payments.card_voucher_policy USING btree (branch_id, policy_id, revision DESC)",
+              "name": "card_voucher_policy_current"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX card_voucher_policy_pkey ON payments.card_voucher_policy USING btree (id)",
+              "name": "card_voucher_policy_pkey"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX card_voucher_policy_policy_id_revision_key ON payments.card_voucher_policy USING btree (policy_id, revision)",
+              "name": "card_voucher_policy_policy_id_revision_key"
+            }
+          ],
+          "name": "card_voucher_policy",
+          "schema": "payments"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identificador de la decisión.",
+                "example": "10000000-0000-4000-8000-000000000073",
+                "usage": "Distingue cada decisión del historial."
+              },
+              "name": "id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Voucher sobre el que se tomó la decisión.",
+                "example": "10000000-0000-4000-8000-000000000072",
+                "usage": "Relaciona la decisión con el voucher y su estado vigente."
+              },
+              "name": "evidence_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Verificador que registró la decisión.",
+                "example": "10000000-0000-4000-8000-000000000010",
+                "usage": "Conserva al responsable, distinto de quien registró el voucher."
+              },
+              "name": "actor_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Decisión registrada: confirm o reject.",
+                "example": "confirm",
+                "usage": "confirm aplica el voucher a la venta; reject lo libera."
+              },
+              "name": "action",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Motivo registrado por el verificador.",
+                "example": "Voucher físico cotejado con código, dígitos e importe.",
+                "usage": "Aporta contexto a la decisión sin convertirla en evidencia del adquirente."
+              },
+              "name": "reason",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Política, código, últimos 4 dígitos e importe que el verificador declara haber observado.",
+                "example": {
+                  "amount": {
+                    "amount": "1190",
+                    "currency": "CLP",
+                    "scale": 0
+                  },
+                  "authorizationCode": "A1B2C3",
+                  "last4": "4242",
+                  "policyId": "10000000-0000-4000-8000-000000000070"
+                },
+                "usage": "Se conserva para cotejar la declaración; una confirmación exige que coincida con lo registrado."
+              },
+              "name": "observation",
+              "nullable": false,
+              "type": "jsonb"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Instante de la decisión.",
+                "example": "2026-11-16T14:40:00.000Z",
+                "usage": "Ordena el historial de verificación."
+              },
+              "name": "created_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "action"
+              ],
+              "definition": "CHECK (action = ANY (ARRAY['confirm'::text, 'reject'::text]))",
+              "name": "card_voucher_verification_action_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "action"
+              ],
+              "definition": "NOT NULL action",
+              "name": "card_voucher_verification_action_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "actor_id"
+              ],
+              "definition": "NOT NULL actor_id",
+              "name": "card_voucher_verification_actor_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "created_at"
+              ],
+              "definition": "NOT NULL created_at",
+              "name": "card_voucher_verification_created_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "evidence_id"
+              ],
+              "definition": "FOREIGN KEY (evidence_id) REFERENCES payments.card_voucher_evidence(id)",
+              "name": "card_voucher_verification_evidence_id_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "payments",
+                "table": "card_voucher_evidence"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "evidence_id"
+              ],
+              "definition": "NOT NULL evidence_id",
+              "name": "card_voucher_verification_evidence_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "NOT NULL id",
+              "name": "card_voucher_verification_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "observation"
+              ],
+              "definition": "CHECK (jsonb_typeof(observation) = 'object'::text AND observation ?& ARRAY['policyId'::text, 'authorizationCode'::text, 'last4'::text, 'amount'::text])",
+              "name": "card_voucher_verification_observation_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "observation"
+              ],
+              "definition": "NOT NULL observation",
+              "name": "card_voucher_verification_observation_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "PRIMARY KEY (id)",
+              "name": "card_voucher_verification_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "reason"
+              ],
+              "definition": "CHECK (char_length(reason) >= 3 AND char_length(reason) <= 200)",
+              "name": "card_voucher_verification_reason_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "reason"
+              ],
+              "definition": "NOT NULL reason",
+              "name": "card_voucher_verification_reason_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "payments",
+          "documentation": {
+            "description": "Historial inmutable de decisiones de verificación sobre un voucher manual declarado.",
+            "sources": [
+              {
+                "path": "libs/backend/payments/src/infrastructure/card-voucher.migration.ts",
+                "symbol": "cardVoucherMigration"
+              },
+              {
+                "path": "libs/backend/payments/src/infrastructure/card-voucher.store.ts"
+              },
+              {
+                "path": "libs/backend/payments/contracts/src/card-vouchers.ts"
+              }
+            ],
+            "usage": "Lo escribe la verificación con payment.voucher.verify. Conserva lo que el verificador declara haber observado; no acredita conciliación con el adquirente (FOLLOWUP-002, FOLLOWUP-015)."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE INDEX card_voucher_verification_evidence ON payments.card_voucher_verification USING btree (evidence_id)",
+              "name": "card_voucher_verification_evidence"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX card_voucher_verification_pkey ON payments.card_voucher_verification USING btree (id)",
+              "name": "card_voucher_verification_pkey"
+            }
+          ],
+          "name": "card_voucher_verification",
+          "schema": "payments"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
                 "description": "Identificador de la asignación de efectivo.",
                 "example": "10000000-0000-4000-8000-000000000057",
                 "usage": "Se reutiliza como referencia de la asignación al finalizar la venta y al registrar su devolución si se cancela."
@@ -11541,7 +12590,7 @@
               "documentation": {
                 "description": "Habilitación de esta revisión para crear o despachar un cobro nuevo.",
                 "example": true,
-                "usage": "El primer despacho revalida que siga siendo la revisión vigente habilitada; no cambia el destino de operaciones previas."
+                "usage": "El primer despacho revalida que siga siendo la revisión vigente habilitada; no cambia el destino de operaciones previas. La lista de perfiles del puesto informa una revisión vigente deshabilitada con el motivo profile-disabled."
               },
               "name": "enabled",
               "nullable": false,
@@ -11571,7 +12620,7 @@
                   "providerId": "synthetic-provider",
                   "terminalRef": "synthetic-terminal"
                 },
-                "usage": "PaymentDestinationSchema fija el enrutamiento y las acciones admitidas; no contiene credenciales ni direcciones de red."
+                "usage": "PaymentDestinationSchema fija el enrutamiento y las acciones admitidas; no contiene credenciales ni direcciones de red. capabilities.notification es opcional: su ausencia, como en los destinos anteriores a ese campo, significa que la notificación no aplica; si se declara, la admisión exige un adaptador con verificador."
               },
               "name": "destination",
               "nullable": false,
@@ -11763,7 +12812,7 @@
                 "path": "libs/backend/payments/contracts/src/intents.ts"
               }
             ],
-            "usage": "El aprovisionamiento incorpora revisiones consecutivas. Una nueva intención fija la revisión vigente y su destino; las consultas y compensaciones conservan el destino original. Los ejemplos de proveedores son sintéticos y no acreditan una integración homologada."
+            "usage": "El aprovisionamiento incorpora revisiones consecutivas. Una nueva intención fija la revisión vigente y su destino; las consultas y compensaciones conservan el destino original. GET /payment-profiles lista la revisión vigente de cada perfil de la sucursal y la caja de la sesión, sin leer credential_ref. Los ejemplos de proveedores son sintéticos y no acreditan una integración homologada."
           },
           "indexes": [
             {
@@ -12225,6 +13274,840 @@
               "comment": null,
               "default": null,
               "documentation": {
+                "description": "Identificador del intento de cierre.",
+                "example": "10000000-0000-4000-8000-000000000081",
+                "usage": "Es la clave propia que recibe el adaptador al cerrar y al consultar, y el dueño de la guarda mientras dura; se expone como batchCloseId."
+              },
+              "name": "id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Sucursal donde se solicitó el cierre.",
+                "example": "10000000-0000-4000-8000-000000000002",
+                "usage": "Delimita el intento y la guarda que toma."
+              },
+              "name": "branch_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Caja del actor que lo solicitó.",
+                "example": "10000000-0000-4000-8000-000000000003",
+                "usage": "La consulta, la recuperación y el último cierre informado se limitan a la caja del actor."
+              },
+              "name": "register_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instalación desde la que se solicitó.",
+                "example": "10000000-0000-4000-8000-000000000005",
+                "usage": "Identifica el puesto de la solicitud para auditoría."
+              },
+              "name": "installation_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Operador que solicitó el cierre.",
+                "example": "10000000-0000-4000-8000-000000000006",
+                "usage": "Se expone como requestedBy; el permiso terminal.maintain se comprobó en servidor."
+              },
+              "name": "actor_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identificador estable del comando de cierre.",
+                "example": "10000000-0000-4000-8000-000000000082",
+                "usage": "Único por sucursal: el mismo comando devuelve el mismo cierre y nunca vuelve a cerrar."
+              },
+              "name": "command_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Revisión del perfil de pago cuyo destino identifica el terminal.",
+                "example": "10000000-0000-4000-8000-000000000073",
+                "usage": "Un disparador comprueba que el perfil esté habilitado, corresponda al ámbito y al terminal y que batch-close esté habilitada; la consulta del lote usa este destino original."
+              },
+              "name": "profile_revision_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Proveedor del terminal.",
+                "example": "synthetic-provider",
+                "usage": "Se combina con cuenta y terminal para la guarda."
+              },
+              "name": "provider_id",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Cuenta comercial del terminal.",
+                "example": "synthetic-account",
+                "usage": "Se combina con proveedor y terminal para la guarda."
+              },
+              "name": "account_ref",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Terminal cuyo lote se cierra.",
+                "example": "synthetic-terminal",
+                "usage": "Identifica el destino del perfil de pago y ordena los cierres del terminal."
+              },
+              "name": "terminal_ref",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Estado del cierre: requested, closed, failed o uncertain.",
+                "example": "closed",
+                "usage": "requested significa admitido y con la guarda tomada, no un lote cerrado; uncertain nunca se convierte en closed sin evidencia concluyente."
+              },
+              "name": "state",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Momento de registro del intento.",
+                "example": "2026-11-16T22:00:00.000Z",
+                "usage": "Ordena los cierres del terminal y se informa como requestedAt."
+              },
+              "name": "requested_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Momento en que se registró el primer resultado.",
+                "example": "2026-11-16T22:00:02.000Z",
+                "usage": "Vacío mientras el cierre sigue requested; una consulta posterior no lo cambia."
+              },
+              "name": "finished_at",
+              "nullable": true,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Momento en que una consulta del lote resolvió un cierre incierto.",
+                "example": "2026-11-16T22:05:00.000Z",
+                "usage": "Sólo existe en un cierre closed o failed que antes fue uncertain; se informa como resolvedBy inquiry."
+              },
+              "name": "resolved_at",
+              "nullable": true,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Referencia del lote que informa el proveedor.",
+                "example": "synthetic-batch-0042",
+                "usage": "Sólo existe en un cierre closed; es el batchRef que se recupera ante una respuesta perdida."
+              },
+              "name": "batch_ref",
+              "nullable": true,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Apertura del lote según el proveedor.",
+                "example": "2026-11-16T12:00:00.000Z",
+                "usage": "Opcional, sólo en un cierre closed; el servidor no la deduce."
+              },
+              "name": "opened_at",
+              "nullable": true,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Cierre del lote según el proveedor.",
+                "example": "2026-11-16T22:00:01.000Z",
+                "usage": "Obligatorio en un cierre closed."
+              },
+              "name": "closed_at",
+              "nullable": true,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Totales del lote por categoría del proveedor, con cantidad y monto.",
+                "example": [
+                  {
+                    "amount": {
+                      "amount": "3570",
+                      "currency": "CLP",
+                      "scale": 0
+                    },
+                    "category": "sale",
+                    "count": 3
+                  }
+                ],
+                "usage": "Evidencia del proveedor, sólo en un cierre closed; no reemplaza el libro de caja ni se compara aquí con los pagos registrados (F04, Q-55)."
+              },
+              "name": "totals",
+              "nullable": true,
+              "type": "jsonb"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Huella de la evidencia que devolvió el adaptador.",
+                "example": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "usage": "Vacía cuando el adaptador no respondió dentro del plazo."
+              },
+              "name": "evidence_hash",
+              "nullable": true,
+              "type": "character(64)"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Observación normalizada que devolvió el adaptador al cerrar o al consultar.",
+                "example": {
+                  "batchRef": "synthetic-batch-0042",
+                  "status": "closed"
+                },
+                "usage": "Conserva la evidencia validada, sin respuesta cruda del proveedor, llaves ni datos de tarjeta; la de una consulta concluyente reemplaza a la de un resultado incierto."
+              },
+              "name": "observation",
+              "nullable": true,
+              "type": "jsonb"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "account_ref"
+              ],
+              "definition": "NOT NULL account_ref",
+              "name": "terminal_batch_account_ref_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "actor_id"
+              ],
+              "definition": "NOT NULL actor_id",
+              "name": "terminal_batch_actor_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "batch_ref"
+              ],
+              "definition": "CHECK (batch_ref ~ '^[A-Za-z0-9][A-Za-z0-9_.:/-]{0,119}$'::text)",
+              "name": "terminal_batch_batch_ref_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "branch_id",
+                "command_id"
+              ],
+              "definition": "UNIQUE (branch_id, command_id)",
+              "name": "terminal_batch_branch_id_command_id_key",
+              "type": "u"
+            },
+            {
+              "columns": [
+                "branch_id"
+              ],
+              "definition": "FOREIGN KEY (branch_id) REFERENCES platform.database_realm(realm_id)",
+              "name": "terminal_batch_branch_id_fkey",
+              "references": {
+                "columns": [
+                  "realm_id"
+                ],
+                "schema": "platform",
+                "table": "database_realm"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "branch_id"
+              ],
+              "definition": "NOT NULL branch_id",
+              "name": "terminal_batch_branch_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "state",
+                "finished_at"
+              ],
+              "definition": "CHECK ((state = 'requested'::text) = (finished_at IS NULL))",
+              "name": "terminal_batch_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "observation",
+                "evidence_hash"
+              ],
+              "definition": "CHECK ((observation IS NULL) = (evidence_hash IS NULL))",
+              "name": "terminal_batch_check1",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "state",
+                "observation"
+              ],
+              "definition": "CHECK ((state <> ALL (ARRAY['closed'::text, 'failed'::text])) OR observation IS NOT NULL)",
+              "name": "terminal_batch_check2",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "state",
+                "batch_ref"
+              ],
+              "definition": "CHECK ((state = 'closed'::text) = (batch_ref IS NOT NULL))",
+              "name": "terminal_batch_check3",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "state",
+                "opened_at",
+                "closed_at",
+                "totals"
+              ],
+              "definition": "CHECK (state = 'closed'::text OR opened_at IS NULL AND closed_at IS NULL AND totals IS NULL)",
+              "name": "terminal_batch_check4",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "state",
+                "closed_at",
+                "totals"
+              ],
+              "definition": "CHECK (state <> 'closed'::text OR closed_at IS NOT NULL AND totals IS NOT NULL)",
+              "name": "terminal_batch_check5",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "opened_at",
+                "closed_at"
+              ],
+              "definition": "CHECK (opened_at IS NULL OR closed_at IS NULL OR opened_at <= closed_at)",
+              "name": "terminal_batch_check6",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "resolved_at",
+                "state",
+                "finished_at"
+              ],
+              "definition": "CHECK (resolved_at IS NULL OR (state = ANY (ARRAY['closed'::text, 'failed'::text])) AND resolved_at >= finished_at)",
+              "name": "terminal_batch_check7",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "command_id"
+              ],
+              "definition": "NOT NULL command_id",
+              "name": "terminal_batch_command_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "evidence_hash"
+              ],
+              "definition": "CHECK (evidence_hash ~ '^[a-f0-9]{64}$'::text)",
+              "name": "terminal_batch_evidence_hash_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "NOT NULL id",
+              "name": "terminal_batch_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "installation_id"
+              ],
+              "definition": "NOT NULL installation_id",
+              "name": "terminal_batch_installation_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "observation"
+              ],
+              "definition": "CHECK (observation IS NULL OR jsonb_typeof(observation) = 'object'::text)",
+              "name": "terminal_batch_observation_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "PRIMARY KEY (id)",
+              "name": "terminal_batch_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "profile_revision_id"
+              ],
+              "definition": "FOREIGN KEY (profile_revision_id) REFERENCES payments.provider_profile(id)",
+              "name": "terminal_batch_profile_revision_id_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "payments",
+                "table": "provider_profile"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "profile_revision_id"
+              ],
+              "definition": "NOT NULL profile_revision_id",
+              "name": "terminal_batch_profile_revision_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "provider_id"
+              ],
+              "definition": "NOT NULL provider_id",
+              "name": "terminal_batch_provider_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "register_id"
+              ],
+              "definition": "NOT NULL register_id",
+              "name": "terminal_batch_register_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "requested_at"
+              ],
+              "definition": "NOT NULL requested_at",
+              "name": "terminal_batch_requested_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "state"
+              ],
+              "definition": "CHECK (state = ANY (ARRAY['requested'::text, 'closed'::text, 'failed'::text, 'uncertain'::text]))",
+              "name": "terminal_batch_state_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "state"
+              ],
+              "definition": "NOT NULL state",
+              "name": "terminal_batch_state_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "terminal_ref"
+              ],
+              "definition": "NOT NULL terminal_ref",
+              "name": "terminal_batch_terminal_ref_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "totals"
+              ],
+              "definition": "CHECK (totals IS NULL OR jsonb_typeof(totals) = 'array'::text AND jsonb_array_length(totals) <= 32)",
+              "name": "terminal_batch_totals_check",
+              "type": "c"
+            }
+          ],
+          "context": "payments",
+          "documentation": {
+            "description": "Intento durable de cierre del lote del terminal de pago, con la referencia de lote y los totales que informa el proveedor (F02-14).",
+            "sources": [
+              {
+                "path": "libs/backend/payments/src/infrastructure/terminal-batch.migration.ts",
+                "symbol": "terminalBatchMigration"
+              },
+              {
+                "path": "libs/backend/payments/src/infrastructure/terminal-batch.store.ts",
+                "symbol": "SqlTerminalBatchStore"
+              },
+              {
+                "path": "libs/backend/payments/src/application/terminal-batch.service.ts",
+                "symbol": "TerminalBatchService"
+              },
+              {
+                "path": "libs/backend/payments/src/infrastructure/terminal-maintenance.store.ts",
+                "symbol": "SqlTerminalMaintenanceStore"
+              },
+              {
+                "path": "libs/backend/payments/integration/terminal-batch.test.ts"
+              }
+            ],
+            "usage": "CloseTerminalBatch lo inserta en estado requested y toma la guarda del terminal en la misma transacción, antes de llamar al adaptador. Un cierre concluyente queda closed, con batch_ref, closed_at y totales, o failed, y libera la guarda. Sin respuesta, con un resultado desconocido o con evidencia de otro terminal queda uncertain, conserva la guarda y excluye el terminal; sólo la consulta del lote por su propia clave, al repetir el mismo comando, puede resolverlo. Los totales son evidencia del proveedor: no cierran la caja ni reemplazan el libro de caja, y su diferencia con los pagos se concilia fuera de esta tabla. No se borra ni se reescribe."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE UNIQUE INDEX terminal_batch_branch_id_command_id_key ON payments.terminal_batch USING btree (branch_id, command_id)",
+              "name": "terminal_batch_branch_id_command_id_key"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX terminal_batch_pkey ON payments.terminal_batch USING btree (id)",
+              "name": "terminal_batch_pkey"
+            },
+            {
+              "definition": "CREATE INDEX terminal_batch_terminal ON payments.terminal_batch USING btree (branch_id, provider_id, account_ref, terminal_ref, requested_at DESC, id)",
+              "name": "terminal_batch_terminal"
+            }
+          ],
+          "name": "terminal_batch",
+          "schema": "payments"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Sucursal a la que pertenece el terminal.",
+                "example": "10000000-0000-4000-8000-000000000002",
+                "usage": "Delimita la declaración a la base local, igual que la guarda del terminal."
+              },
+              "name": "branch_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Proveedor del destino de pago del terminal.",
+                "example": "synthetic-provider",
+                "usage": "Con cuenta y terminal identifica el mismo recurso que la guarda."
+              },
+              "name": "provider_id",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Cuenta comercial del destino del terminal.",
+                "example": "synthetic-account",
+                "usage": "Evita confundir terminales de cuentas distintas."
+              },
+              "name": "account_ref",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Terminal del destino de los perfiles de pago de la caja.",
+                "example": "synthetic-terminal",
+                "usage": "Es la referencia con la que el operador consulta el estado y solicita mantenimiento."
+              },
+              "name": "terminal_ref",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Capacidad administrativa declarada: prueba de conexión, inicialización, última transacción, totales, listado, modo manual o cierre de lote.",
+                "example": "connection-test",
+                "usage": "El cierre de lote se declara aquí pero no se admite como mantenimiento: pertenece al cierre de lote del segundo corte de F02-14."
+              },
+              "name": "capability",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Indica si el modelo homologado soporta la capacidad.",
+                "example": true,
+                "usage": "Una capacidad no soportada no puede habilitarse."
+              },
+              "name": "supported",
+              "nullable": false,
+              "type": "boolean"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Indica si la sucursal habilita la capacidad declarada.",
+                "example": false,
+                "usage": "Sin habilitación, la consulta la informa como no disponible y la solicitud se rechaza."
+              },
+              "name": "enabled",
+              "nullable": false,
+              "type": "boolean"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Revisión monótona de la declaración.",
+                "example": 1,
+                "usage": "El aprovisionamiento exige la revisión siguiente; repetir la misma con otro contenido es un conflicto."
+              },
+              "name": "revision",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Momento en que se registró la revisión vigente.",
+                "example": "2026-11-16T12:00:00.000Z",
+                "usage": "Indica desde cuándo rige la declaración; no es la antigüedad del estado del terminal."
+              },
+              "name": "declared_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "account_ref"
+              ],
+              "definition": "NOT NULL account_ref",
+              "name": "terminal_capability_state_account_ref_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "branch_id"
+              ],
+              "definition": "FOREIGN KEY (branch_id) REFERENCES platform.database_realm(realm_id)",
+              "name": "terminal_capability_state_branch_id_fkey",
+              "references": {
+                "columns": [
+                  "realm_id"
+                ],
+                "schema": "platform",
+                "table": "database_realm"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "branch_id"
+              ],
+              "definition": "NOT NULL branch_id",
+              "name": "terminal_capability_state_branch_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "capability"
+              ],
+              "definition": "CHECK (capability = ANY (ARRAY['connection-test'::text, 'key-initialization'::text, 'last-transaction'::text, 'totals'::text, 'transaction-list'::text, 'manual-mode'::text, 'batch-close'::text]))",
+              "name": "terminal_capability_state_capability_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "capability"
+              ],
+              "definition": "NOT NULL capability",
+              "name": "terminal_capability_state_capability_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "supported",
+                "enabled"
+              ],
+              "definition": "CHECK (supported OR NOT enabled)",
+              "name": "terminal_capability_state_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "declared_at"
+              ],
+              "definition": "NOT NULL declared_at",
+              "name": "terminal_capability_state_declared_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "enabled"
+              ],
+              "definition": "NOT NULL enabled",
+              "name": "terminal_capability_state_enabled_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "branch_id",
+                "provider_id",
+                "account_ref",
+                "terminal_ref",
+                "capability"
+              ],
+              "definition": "PRIMARY KEY (branch_id, provider_id, account_ref, terminal_ref, capability)",
+              "name": "terminal_capability_state_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "provider_id"
+              ],
+              "definition": "NOT NULL provider_id",
+              "name": "terminal_capability_state_provider_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "revision"
+              ],
+              "definition": "CHECK (revision > 0)",
+              "name": "terminal_capability_state_revision_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "revision"
+              ],
+              "definition": "NOT NULL revision",
+              "name": "terminal_capability_state_revision_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "supported"
+              ],
+              "definition": "NOT NULL supported",
+              "name": "terminal_capability_state_supported_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "terminal_ref"
+              ],
+              "definition": "NOT NULL terminal_ref",
+              "name": "terminal_capability_state_terminal_ref_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "payments",
+          "documentation": {
+            "description": "Declaración, por terminal, de las capacidades administrativas que el modelo homologado soporta y que la sucursal habilita (F02-14).",
+            "sources": [
+              {
+                "path": "libs/backend/payments/src/infrastructure/terminal-capability.ts",
+                "symbol": "provisionTerminalCapability"
+              },
+              {
+                "path": "libs/backend/payments/src/infrastructure/terminal-maintenance.migration.ts",
+                "symbol": "terminalMaintenanceMigration"
+              },
+              {
+                "path": "libs/backend/payments/src/infrastructure/terminal-maintenance.store.ts",
+                "symbol": "SqlTerminalMaintenanceStore"
+              },
+              {
+                "path": "libs/backend/payments/src/application/terminal-maintenance.service.ts",
+                "symbol": "TerminalMaintenanceService"
+              },
+              {
+                "path": "libs/backend/payments/integration/terminal-maintenance.test.ts"
+              }
+            ],
+            "usage": "La escribe sólo el aprovisionamiento del propietario con una revisión creciente; el runtime la lee para el inventario de GetTerminalStatus y para admitir RequestTerminalMaintenance. No concede permisos al operador ni guarda llaves o datos de tarjeta. La disponibilidad no se persiste: se calcula en cada consulta con el adaptador compuesto y la guarda del terminal."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE UNIQUE INDEX terminal_capability_state_pkey ON payments.terminal_capability_state USING btree (branch_id, provider_id, account_ref, terminal_ref, capability)",
+              "name": "terminal_capability_state_pkey"
+            }
+          ],
+          "name": "terminal_capability_state",
+          "schema": "payments"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
                 "description": "Sucursal propietaria de la reserva del terminal.",
                 "example": "10000000-0000-4000-8000-000000000002",
                 "usage": "Delimita la exclusión persistida en la base local."
@@ -12273,7 +14156,7 @@
               "comment": null,
               "default": null,
               "documentation": {
-                "description": "Intención de pago o compensación que mantiene ocupado el terminal.",
+                "description": "Intención de pago, compensación, operación de mantenimiento o cierre de lote del terminal que lo mantiene ocupado.",
                 "example": "10000000-0000-4000-8000-000000000052",
                 "usage": "Conserva la reserva hasta obtener un desenlace terminal permitido; vacío significa que ninguna operación mantiene esa reserva."
               },
@@ -12381,9 +14264,25 @@
               },
               {
                 "path": "libs/backend/payments/integration/payment-intents.test.ts"
+              },
+              {
+                "path": "libs/backend/payments/src/infrastructure/terminal-maintenance.migration.ts",
+                "symbol": "terminalMaintenanceMigration"
+              },
+              {
+                "path": "libs/backend/payments/src/infrastructure/terminal-maintenance.store.ts",
+                "symbol": "SqlTerminalMaintenanceStore"
+              },
+              {
+                "path": "libs/backend/payments/src/infrastructure/terminal-batch.migration.ts",
+                "symbol": "terminalBatchMigration"
+              },
+              {
+                "path": "libs/backend/payments/src/infrastructure/terminal-batch.store.ts",
+                "symbol": "SqlTerminalBatchStore"
               }
             ],
-            "usage": "Antes de un despacho, el repositorio bloquea la fila y reserva el terminal para la operación. Una operación incierta no se libera por expirar un proceso. Las contradicciones ponen el destino en cuarentena y requieren resolución fuera del flujo normal."
+            "usage": "Antes de un despacho, el repositorio bloquea la fila y reserva el terminal para la operación. Una operación incierta no se libera por expirar un proceso. Las contradicciones ponen el destino en cuarentena y requieren resolución fuera del flujo normal. Una operación de mantenimiento del terminal toma la misma reserva antes de llamar al adaptador y sólo la libera con un resultado concluyente; un mantenimiento incierto la conserva. Un cierre de lote del terminal toma la misma reserva y sólo la libera con un cierre concluyente, por respuesta o por consulta de su clave; un cierre incierto la conserva."
           },
           "indexes": [
             {
@@ -12392,6 +14291,484 @@
             }
           ],
           "name": "terminal_guard",
+          "schema": "payments"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identificador de la operación de mantenimiento.",
+                "example": "10000000-0000-4000-8000-000000000071",
+                "usage": "Es la clave de operación que recibe el adaptador y el dueño de la guarda mientras dura."
+              },
+              "name": "id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Sucursal donde se solicitó.",
+                "example": "10000000-0000-4000-8000-000000000002",
+                "usage": "Delimita la operación y la guarda que toma."
+              },
+              "name": "branch_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Caja del actor que la solicitó.",
+                "example": "10000000-0000-4000-8000-000000000003",
+                "usage": "La consulta y la recuperación se limitan a la caja del actor."
+              },
+              "name": "register_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instalación desde la que se solicitó.",
+                "example": "10000000-0000-4000-8000-000000000005",
+                "usage": "Identifica el puesto de la solicitud para auditoría."
+              },
+              "name": "installation_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Operador que la solicitó.",
+                "example": "10000000-0000-4000-8000-000000000006",
+                "usage": "Se expone como requestedBy; el permiso terminal.maintain se comprobó en servidor."
+              },
+              "name": "actor_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identificador estable del comando de la solicitud.",
+                "example": "10000000-0000-4000-8000-000000000072",
+                "usage": "Único por sucursal: el mismo comando devuelve la misma operación."
+              },
+              "name": "command_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Revisión del perfil de pago cuyo destino identifica el terminal.",
+                "example": "10000000-0000-4000-8000-000000000073",
+                "usage": "Un disparador comprueba que el perfil esté habilitado y corresponda al ámbito, al terminal y a una capacidad habilitada."
+              },
+              "name": "profile_revision_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Proveedor del terminal.",
+                "example": "synthetic-provider",
+                "usage": "Se combina con cuenta y terminal para la guarda."
+              },
+              "name": "provider_id",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Cuenta comercial del terminal.",
+                "example": "synthetic-account",
+                "usage": "Se combina con proveedor y terminal para la guarda."
+              },
+              "name": "account_ref",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Terminal sobre el que se solicita la operación.",
+                "example": "synthetic-terminal",
+                "usage": "Identifica el destino del perfil de pago."
+              },
+              "name": "terminal_ref",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Capacidad de mantenimiento solicitada.",
+                "example": "connection-test",
+                "usage": "Debe estar declarada y habilitada en terminal_capability_state; el cierre de lote no se admite aquí."
+              },
+              "name": "capability",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Motivo que declara el operador.",
+                "example": "Prueba de conexión antes de abrir la caja",
+                "usage": "Se conserva como evidencia de auditoría de la solicitud."
+              },
+              "name": "reason",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Estado de la operación: requested, succeeded, failed o uncertain.",
+                "example": "succeeded",
+                "usage": "requested significa admitida y con la guarda tomada, no un efecto confirmado; uncertain no se convierte en éxito."
+              },
+              "name": "state",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Momento de registro de la solicitud.",
+                "example": "2026-11-16T12:00:00.000Z",
+                "usage": "Ordena las operaciones del terminal y se informa como requestedAt."
+              },
+              "name": "requested_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Momento en que se registró el resultado.",
+                "example": "2026-11-16T12:00:01.000Z",
+                "usage": "Vacío mientras la operación sigue requested."
+              },
+              "name": "finished_at",
+              "nullable": true,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Huella de la evidencia que devolvió el adaptador.",
+                "example": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "usage": "Vacía cuando el adaptador no respondió dentro del plazo."
+              },
+              "name": "evidence_hash",
+              "nullable": true,
+              "type": "character(64)"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Observación normalizada que devolvió el adaptador.",
+                "example": {
+                  "capability": "connection-test",
+                  "status": "succeeded"
+                },
+                "usage": "Conserva la evidencia validada, sin respuesta cruda del proveedor, llaves ni datos de tarjeta; vacía si no hubo respuesta."
+              },
+              "name": "observation",
+              "nullable": true,
+              "type": "jsonb"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "account_ref"
+              ],
+              "definition": "NOT NULL account_ref",
+              "name": "terminal_operation_account_ref_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "actor_id"
+              ],
+              "definition": "NOT NULL actor_id",
+              "name": "terminal_operation_actor_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "branch_id",
+                "command_id"
+              ],
+              "definition": "UNIQUE (branch_id, command_id)",
+              "name": "terminal_operation_branch_id_command_id_key",
+              "type": "u"
+            },
+            {
+              "columns": [
+                "branch_id"
+              ],
+              "definition": "FOREIGN KEY (branch_id) REFERENCES platform.database_realm(realm_id)",
+              "name": "terminal_operation_branch_id_fkey",
+              "references": {
+                "columns": [
+                  "realm_id"
+                ],
+                "schema": "platform",
+                "table": "database_realm"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "branch_id"
+              ],
+              "definition": "NOT NULL branch_id",
+              "name": "terminal_operation_branch_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "capability"
+              ],
+              "definition": "CHECK (capability = ANY (ARRAY['connection-test'::text, 'key-initialization'::text, 'last-transaction'::text, 'totals'::text, 'transaction-list'::text, 'manual-mode'::text]))",
+              "name": "terminal_operation_capability_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "capability"
+              ],
+              "definition": "NOT NULL capability",
+              "name": "terminal_operation_capability_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "state",
+                "finished_at"
+              ],
+              "definition": "CHECK ((state = 'requested'::text) = (finished_at IS NULL))",
+              "name": "terminal_operation_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "observation",
+                "evidence_hash"
+              ],
+              "definition": "CHECK ((observation IS NULL) = (evidence_hash IS NULL))",
+              "name": "terminal_operation_check1",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "state",
+                "observation"
+              ],
+              "definition": "CHECK ((state <> ALL (ARRAY['succeeded'::text, 'failed'::text])) OR observation IS NOT NULL)",
+              "name": "terminal_operation_check2",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "command_id"
+              ],
+              "definition": "NOT NULL command_id",
+              "name": "terminal_operation_command_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "evidence_hash"
+              ],
+              "definition": "CHECK (evidence_hash ~ '^[a-f0-9]{64}$'::text)",
+              "name": "terminal_operation_evidence_hash_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "NOT NULL id",
+              "name": "terminal_operation_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "installation_id"
+              ],
+              "definition": "NOT NULL installation_id",
+              "name": "terminal_operation_installation_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "observation"
+              ],
+              "definition": "CHECK (observation IS NULL OR jsonb_typeof(observation) = 'object'::text)",
+              "name": "terminal_operation_observation_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "PRIMARY KEY (id)",
+              "name": "terminal_operation_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "profile_revision_id"
+              ],
+              "definition": "FOREIGN KEY (profile_revision_id) REFERENCES payments.provider_profile(id)",
+              "name": "terminal_operation_profile_revision_id_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "payments",
+                "table": "provider_profile"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "profile_revision_id"
+              ],
+              "definition": "NOT NULL profile_revision_id",
+              "name": "terminal_operation_profile_revision_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "provider_id"
+              ],
+              "definition": "NOT NULL provider_id",
+              "name": "terminal_operation_provider_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "reason"
+              ],
+              "definition": "CHECK (reason = btrim(reason) AND char_length(reason) >= 3 AND char_length(reason) <= 200)",
+              "name": "terminal_operation_reason_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "reason"
+              ],
+              "definition": "NOT NULL reason",
+              "name": "terminal_operation_reason_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "register_id"
+              ],
+              "definition": "NOT NULL register_id",
+              "name": "terminal_operation_register_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "requested_at"
+              ],
+              "definition": "NOT NULL requested_at",
+              "name": "terminal_operation_requested_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "state"
+              ],
+              "definition": "CHECK (state = ANY (ARRAY['requested'::text, 'succeeded'::text, 'failed'::text, 'uncertain'::text]))",
+              "name": "terminal_operation_state_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "state"
+              ],
+              "definition": "NOT NULL state",
+              "name": "terminal_operation_state_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "terminal_ref"
+              ],
+              "definition": "NOT NULL terminal_ref",
+              "name": "terminal_operation_terminal_ref_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "payments",
+          "documentation": {
+            "description": "Solicitud durable de mantenimiento del terminal de pago y su resultado (F02-14).",
+            "sources": [
+              {
+                "path": "libs/backend/payments/src/infrastructure/terminal-maintenance.migration.ts",
+                "symbol": "terminalMaintenanceMigration"
+              },
+              {
+                "path": "libs/backend/payments/src/infrastructure/terminal-maintenance.store.ts",
+                "symbol": "SqlTerminalMaintenanceStore"
+              },
+              {
+                "path": "libs/backend/payments/src/application/terminal-maintenance.service.ts",
+                "symbol": "TerminalMaintenanceService"
+              },
+              {
+                "path": "libs/backend/payments/integration/terminal-maintenance.test.ts"
+              }
+            ],
+            "usage": "RequestTerminalMaintenance la inserta en estado requested y toma la guarda del terminal en la misma transacción, antes de llamar al adaptador; un resultado concluyente la cierra como succeeded o failed y libera la guarda. Un resultado desconocido o una evidencia que no corresponde queda uncertain, conserva la guarda y excluye el terminal. Se identifica por commandId para recuperar una respuesta perdida sin repetir el efecto. No se borra ni se reescribe."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE UNIQUE INDEX terminal_operation_branch_id_command_id_key ON payments.terminal_operation USING btree (branch_id, command_id)",
+              "name": "terminal_operation_branch_id_command_id_key"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX terminal_operation_pkey ON payments.terminal_operation USING btree (id)",
+              "name": "terminal_operation_pkey"
+            },
+            {
+              "definition": "CREATE INDEX terminal_operation_terminal ON payments.terminal_operation USING btree (branch_id, provider_id, account_ref, terminal_ref, requested_at DESC, id)",
+              "name": "terminal_operation_terminal"
+            }
+          ],
+          "name": "terminal_operation",
           "schema": "payments"
         },
         {
