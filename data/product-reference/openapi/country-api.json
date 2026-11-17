@@ -216,6 +216,10 @@
     {
       "description": "Identificación y versión de la API de POS Platform.",
       "name": "Plataforma"
+    },
+    {
+      "description": "Recepción acotada de fallos técnicos de los clientes, sin datos de negocio ni personales.",
+      "name": "Telemetría"
     }
   ]
 }
