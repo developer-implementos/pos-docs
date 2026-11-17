@@ -16,7 +16,7 @@ Espejo Engram: pendiente. La herramienta no está disponible en esta sesión; la
 
 - [x] T1 · S1,S3 · route:inline · Redactar el ADR-22 · status:done · evidence: `docs/decisions/environments.md`
 - [x] T2 · S2 · route:inline · Registrar la decisión en la tabla de decisiones, el mapa de contenidos y el glosario · status:done · evidence: `docs/propuesta-arquitectura.md`, `apps/starlight/content-map.mjs`, `apps/starlight/src/content/docs/glossary.md`
-- [x] T3 · S1,S2,S3 · route:inline · Ejecutar las comprobaciones editoriales y de build, y abrir la PR · status:done · evidence: `082437f`; fuentes del deck revisadas en `705bdd6` (L4)
+- [x] T3 · S1,S2,S3 · route:inline · Ejecutar las comprobaciones editoriales y de build, y abrir la PR · status:done · evidence: `082437f`; fuentes del deck revisadas en `705bdd6` (L4); ZIP de la colección reempaquetado en `1fbbbdd` y `npm run verify` completo en verde (L5)
 
 ## Log
 
@@ -33,3 +33,4 @@ Espejo Engram: pendiente. La herramienta no está disponible en esta sesión; la
   - La propuesta y el deck nombran un anillo «laboratorio» antes de la tienda piloto; el ADR no lo redefine, porque los anillos pertenecen a F06-03.
   - No se corrió `npm run verify` completo: falta, entre otros, `project:check`, que depende del snapshot del producto.
   - Revisión de agente; falta la revisión humana.
+- L5 · 2026-11-17 · El job `documentation` de la PR falló en `diagrams:test` (`package-freshness.test.mjs`): el ZIP publicado de la colección Excalidraw empaqueta `docs/*.md` y `docs/decisions/*.md`, y quedó sin el ADR-22. Se regeneró con `python tools/diagrams/package-excalidraw.py` en `1fbbbdd`. Sobre `1fbbbdd`, con Node 22.23.3, `npm run verify` completo terminó en verde, incluido `project:check`.
