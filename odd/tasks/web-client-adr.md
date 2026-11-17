@@ -23,6 +23,7 @@ Espejo Engram: pendiente. La herramienta no está disponible en esta sesión; la
 - L1 · 2026-11-17 · Solicitud original, literal:
 
 > si. haz todo lo necesario. la idea es ir desplegando la app por partes y que nuestro jefe pueda ver la app corriendo, conectarse a la db, etc. para el pos front no solo queremos desktop y app movil, tambien queremos web. nose si eso esta incluido en el roadmap o como tarea. sino hazlo e implementalo tambien
+
 - L2 · 2026-11-17 · Sobre `8f4dbb8`, con Node 22.23.3:
   - `editorial:check`, `editorial:test` 28/28 y `odd:check` en verde.
   - `validate` (120 rutas alcanzables), `typecheck` (0 errores), `build` (122 páginas de la guía) y `check` (sin enlaces rotos) en verde.
@@ -30,3 +31,4 @@ Espejo Engram: pendiente. La herramienta no está disponible en esta sesión; la
   - El build exigió revisar el deck de arquitectura porque cambió `docs/propuesta-arquitectura.md`. El deck no enumera ADR y lo que afirma de `pos-desktop` y `pos-mobile` sigue siendo correcto. No menciona `pos-web`: corresponde agregarlo cuando el producto integre TASK-403. `sources.json` se refrescó con `presentations/tools/review-sources.mjs`.
   - No se corrió `npm run verify` completo: falta, entre otros, `project:check`, que depende del snapshot del producto.
   - Revisión de agente; falta la revisión humana.
+- L3 · 2026-11-17 · La CI de la PR #123 falló en `documentation`: la colección Excalidraw (`docs/diagramas-excalidraw/diagramas-c4-excalidraw.zip`) empaqueta todos los `docs/decisions/*.md` y no traía el ADR-21. Se regeneró con `python tools/diagrams/package-excalidraw.py`, igual que en la PR del ADR-22 (#124). Si las dos PR se integran, la segunda vuelve a regenerar el ZIP al resolver el conflicto.
