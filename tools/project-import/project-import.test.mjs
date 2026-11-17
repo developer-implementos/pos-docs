@@ -7,7 +7,7 @@ import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { readerJourneys, validatePullRequest } from '../editorial/policy.mjs';
 import { validateChangelogOverride } from '../release/policy.mjs';
-import { botLogin, closeObsoleteImport, importClient, publishImport } from './github.mjs';
+import { botLogin, closeObsoleteImport, createdByApp, githubSigner, importClient, publishImport } from './github.mjs';
 import { importBranch, renderImportPullRequest } from './pull-request.mjs';
 import { planImport, publishedFacts } from './run.mjs';
 import { importSnapshots, snapshots } from './snapshots.mjs';
@@ -130,10 +130,18 @@ test('the client only reaches the import endpoints of this repository', async ()
   assert.throws(() => botLogin('Not A Slug'), /App slug/);
 });
 
+/**
+ * What `GET commits/{sha}` returns for a commit that the App created through the Git Data API, as GitHub
+ * really reports it: the author is the bot, but GitHub signs the commit and records itself (`web-flow`)
+ * as the committer. Commit 474da4bd on automation/project-import is one; a fake that reported the bot as
+ * the committer hid that the ownership guard rejected the App's own branch (TASK-386).
+ */
+const appCommit = { author: { login: bot }, committer: { login: 'web-flow' }, commit: { verification: { verified: true, reason: 'valid' } } };
+
 /** An in-memory GitHub with one repository, enough for the import flow. */
 function fakeGitHub({ pulls = [], branch = null } = {}) {
   const state = { pulls: [...pulls], branch, commits: new Map([[base, { tree: 'tree-base', parents: [] }]]), trees: 0, calls: [] };
-  if (branch) state.commits.set(branch.sha, { tree: branch.tree, parents: [branch.parent], author: branch.author });
+  if (branch) state.commits.set(branch.sha, { tree: branch.tree, parents: [branch.parent], listing: branch.listing });
   const prefix = 'repos/developer-implementos/pos-docs/';
   const request = async (method, url, body) => {
     const local = url.slice(prefix.length);
@@ -145,13 +153,13 @@ function fakeGitHub({ pulls = [], branch = null } = {}) {
     }
     if (method === 'GET' && local.startsWith('commits/')) {
       const commit = state.commits.get(local.slice('commits/'.length));
-      return { status: 200, value: { author: { login: commit.author }, committer: { login: commit.author } } };
+      return { status: 200, value: commit.listing };
     }
     if (method === 'POST' && local === 'git/trees') { state.trees += 1; return { status: 201, value: { sha: `tree-${JSON.stringify(body.tree.map(item => [item.path, item.content]))}` } }; }
     if (method === 'GET' && local.startsWith('git/ref/')) return state.branch ? { status: 200, value: { object: { sha: state.branch.sha } } } : { status: 404, value: null };
     if (method === 'POST' && local === 'git/commits') {
       const sha = String(state.commits.size).padStart(40, 'c');
-      state.commits.set(sha, { tree: body.tree, parents: body.parents, author: bot });
+      state.commits.set(sha, { tree: body.tree, parents: body.parents, listing: appCommit });
       return { status: 201, value: { sha } };
     }
     if (method === 'POST' && local === 'git/refs') { state.branch = { sha: body.sha }; return { status: 201, value: {} }; }
@@ -196,8 +204,34 @@ test('a branch or PR that the App did not create is never overwritten or closed'
   await assert.rejects(closeObsoleteImport({ request: fakeGitHub({ pulls: [human] }).request, appSlug: slug, revision }), /refusing to close/);
   const fork = { ...human, user: { login: bot }, head: { repo: { full_name: 'someone/pos-docs' } } };
   await assert.rejects(publishImport({ request: fakeGitHub({ pulls: [fork] }).request, base, files, title: 'T', body: 'B', appSlug: slug }), /was not opened by/);
-  const foreignBranch = { sha: 'd'.repeat(40), tree: 'tree-x', parent: base, author: 'someone' };
+  const foreignBranch = { sha: 'd'.repeat(40), tree: 'tree-x', parent: base, listing: { author: { login: 'someone' }, committer: { login: 'someone' }, commit: { verification: { verified: false, reason: 'unsigned' } } } };
   await assert.rejects(publishImport({ request: fakeGitHub({ branch: foreignBranch }).request, base, files, title: 'T', body: 'B', appSlug: slug }), /did not create/);
+});
+
+test('only a commit that GitHub signed for the App counts as the App\'s own', async () => {
+  assert.equal(createdByApp(appCommit, bot), true);
+  const foreign = {
+    'a person committing in the web UI or with "Update branch"': { author: { login: 'someone' }, committer: { login: githubSigner }, commit: { verification: { verified: true, reason: 'valid' } } },
+    'a local commit that reuses the bot e-mail as author and committer': { author: { login: bot }, committer: { login: bot }, commit: { verification: { verified: false, reason: 'unsigned' } } },
+    'a bot-authored commit without a valid GitHub signature': { author: { login: bot }, committer: { login: githubSigner }, commit: { verification: { verified: false, reason: 'unsigned' } } },
+    'a signature that GitHub does not accept': { ...appCommit, commit: { verification: { verified: true, reason: 'expired_key' } } },
+    'another App signed by GitHub': { ...appCommit, author: { login: 'other-app[bot]' } },
+    'a commit GitHub could not attribute to an account': { ...appCommit, author: null },
+  };
+  for (const [name, listing] of Object.entries(foreign)) {
+    assert.equal(createdByApp(listing, bot), false, name);
+    const branch = { sha: 'e'.repeat(40), tree: 'tree-x', parent: base, listing };
+    await assert.rejects(publishImport({ request: fakeGitHub({ branch }).request, base, files, title: 'T', body: 'B', appSlug: slug }), /did not create/, name);
+  }
+});
+
+test('a later run updates the branch that an earlier run created', async () => {
+  // The production failure: the first run created the branch; every later run refused its own commit.
+  const existing = { sha: 'f'.repeat(40), tree: 'tree-old', parent: base, listing: appCommit };
+  const github = fakeGitHub({ branch: existing });
+  const result = await publishImport({ request: github.request, base, files, title: 'T', body: 'B', appSlug: slug });
+  assert.deepEqual([result.branch, result.pullRequest], ['updated', 'created']);
+  assert.notEqual(github.state.branch.sha, existing.sha);
 });
 
 test('an obsolete bot PR is closed with a comment when main is already current', async () => {
