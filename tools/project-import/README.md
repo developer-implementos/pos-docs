@@ -26,7 +26,12 @@
   - POS Platform: `contents:read` e `issues:read`;
   - POS Docs: `contents:write` y `pull-requests:write`.
 - **Endpoints acotados:** el cliente de [`github.mjs`](github.mjs) sólo alcanza los endpoints que la publicación necesita. Rechaza integrar, borrar ramas, escribir en `main` o tocar otro repositorio.
-- **Propiedad de la rama y la PR:** si la rama o la PR no las creó la App, la corrida aborta en lugar de sobrescribirlas o cerrarlas.
+- **Propiedad de la rama y la PR:** si la rama o la PR no las creó la App, la corrida aborta en lugar de sobrescribirlas o cerrarlas. Un commit es de la App sólo si GitHub cumple las tres condiciones de [`createdByApp`](github.mjs):
+  - lo atribuye al bot como autor;
+  - lo registra con su firmante `web-flow` como committer, como hace con todo commit que una App crea por la API;
+  - le da una firma válida.
+
+  Un push, un commit desde la web o «Update branch», u otro que sólo copie el nombre o el correo del bot, no cumplen esas condiciones. La guarda protege el trabajo de una persona en la rama; no es una frontera de autenticación, porque quien puede escribir la rama también puede integrarla.
 - **Logs públicos:** este repositorio es público, así que la corrida sólo imprime revisiones, estados y el enlace de la PR, nunca el contenido de los snapshots ni código del producto. Los snapshots ya son públicos una vez integrados.
 - **Una corrida a la vez:** una publicación en curso nunca se interrumpe (`concurrency: project-import`).
 - **Issue permanente:** cada PR de importación enlaza [TASK-361](https://github.com/developer-implementos/pos-platform/issues/361), que queda abierta a propósito, porque la política editorial exige una issue abierta del producto. La CI de este repositorio no puede leer el producto y sólo comprueba la declaración. Por eso la corrida, con su token del producto, comprueba que la issue esté abierta antes de publicar ([`issue.mjs`](issue.mjs)), y si está cerrada falla sin abrir la PR. No cerrarla. Para detener la importación se quita `PROJECT_IMPORT_ENABLED`.

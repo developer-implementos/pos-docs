@@ -61,6 +61,27 @@ export function botLogin(appSlug) {
   return `${appSlug}[bot]`;
 }
 
+/** The account GitHub records as committer of the commits it creates and signs through its API. */
+export const githubSigner = 'web-flow';
+
+/**
+ * Whether a commit, as `GET commits/{sha}` reports it, is one that `publishImport` created. A commit
+ * written through the Git Data API with the App's token has the bot as author, GitHub's signer as
+ * committer and a valid GitHub signature; it never has the bot as committer.
+ *
+ * This guards people's work on the branch from being overwritten by mistake, which is its purpose.
+ * Anything else — a push, a commit from the web UI or "Update branch", a local commit that merely
+ * reuses the bot's name or e-mail — has another author, another committer or no valid signature.
+ * It is not an authentication boundary: whoever can write the branch can also merge.
+ */
+export function createdByApp(commit, bot) {
+  const verification = commit?.commit?.verification;
+  return commit?.author?.login === bot
+    && commit?.committer?.login === githubSigner
+    && verification?.verified === true
+    && verification?.reason === 'valid';
+}
+
 /**
  * Creates or updates the import branch and PR. `files` maps repository paths to their new UTF-8
  * content; `base` is the main commit the import was computed from. Returns what it did.
@@ -85,8 +106,8 @@ export async function publishImport({ request, base, files, title, body, appSlug
   let head = null;
   if (ref.status === 200) {
     const current = ref.value.object.sha;
-    const author = (await call(request, 'GET', `commits/${current}`, null, [200])).value;
-    if (author.author?.login !== bot || author.committer?.login !== bot) {
+    const listed = (await call(request, 'GET', `commits/${current}`, null, [200])).value;
+    if (!createdByApp(listed, bot)) {
       throw new Error(`The branch ${importBranch} has a commit that ${bot} did not create; refusing to overwrite it.`);
     }
     const commit = (await call(request, 'GET', `git/commits/${current}`, null, [200])).value;
