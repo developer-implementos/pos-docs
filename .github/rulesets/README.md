@@ -19,10 +19,12 @@ Decisión permanente del responsable, del 2026-11-06 ([TASK-219](https://github.
 
 | Workflow | Estado | Runner |
 | --- | --- | --- |
-| `docs-quality.yml` | `active` | `ubuntu-latest` |
-| `editorial-policy.yml` | `active` | `ubuntu-latest` |
+| `docs-quality.yml` | `active` | `ubuntu-24.04` |
+| `editorial-policy.yml` | `active` | `ubuntu-24.04` |
 | `automated-review.yml` | `disabled_manually`, porque puede consumir la API de IA | `ubuntu-24.04`, mediante la variable `POS_CI_TRUSTED_RUNS_ON`, si se autoriza |
-| `project-import.yml` | `active`; el calendario corre sólo con `PROJECT_IMPORT_ENABLED=true` ([importación automática](../../tools/project-import/README.md)) | `ubuntu-latest` |
+| `project-import.yml` | `active`; el calendario corre sólo con `PROJECT_IMPORT_ENABLED=true` ([importación automática](../../tools/project-import/README.md)) | `ubuntu-24.04` |
+
+**La imagen del runner está fijada.** Todos los workflows declaran `ubuntu-24.04`, también `release.yml` y `release-merge.yml`, y `repository-governance.test.mjs` rechaza cualquier etiqueta `-latest`. Una etiqueta `-latest` cambia de sistema operativo cuando GitHub lo decide. El 2026-11-17, `ubuntu-latest` pasó a Ubuntu 26.04, Playwright 1.59.1 dejó de instalar Chromium, y `Documentation quality` falló en toda PR sin ningún cambio del repositorio ([TASK-392](https://github.com/developer-implementos/pos-platform/issues/392)). Para subir la imagen, una PR propia cambia la etiqueta junto con una versión de Playwright que soporte el sistema nuevo, y la verifica con `npm run verify` y los recorridos de navegador.
 
 **El revisor automático usa el runner de esta decisión.** Su workflow se distribuye desde POS Platform, cuyo valor por omisión es su pool confiable `pos-trusted` (pos-platform#207 y #210). Este repositorio no puede usar runners propios, así que la variable de repositorio `POS_CI_TRUSTED_RUNS_ON` vale `["ubuntu-24.04"]`. Un runner alojado es una máquina virtual nueva por job, que no comparte estado con otros jobs ([runners alojados](https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners)). Con eso cumple lo que el pool confiable exige al manejar secretos del proveedor. Si la variable faltara, el job esperaría en cola un runner `pos-trusted` y nunca correría: el fallo es cerrado, nunca hacia otro pool.
 

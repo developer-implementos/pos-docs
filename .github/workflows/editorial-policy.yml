@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   editorial-policy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       # Execute only the policy from the trusted base. Never checkout PR code,
