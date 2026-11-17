@@ -133,3 +133,17 @@ test('workflow values that YAML would read as a mapping are quoted or block scal
   }
   assert.deepEqual(problems, []);
 });
+
+// `ubuntu-latest` moved to Ubuntu 26.04 on its own, Playwright 1.59.1 stopped installing Chromium and
+// Documentation quality failed on every PR with no change here (TASK-392). The image changes only in a
+// PR that also moves Playwright, so every hosted job names a fixed image and no `-latest` label remains.
+test('every workflow job runs on a fixed runner image, never a -latest label', () => {
+  const directory = new URL('../.github/workflows/', import.meta.url);
+  const labels = readdirSync(directory).filter(file => file.endsWith('.yml')).flatMap(name =>
+    [...readFileSync(new URL(name, directory), 'utf8').matchAll(/^ +runs-on: (.+)$/gm)].map(match => [name, match[1]]));
+  assert.ok(labels.length >= 6, 'Every workflow job declares where it runs');
+  assert.deepEqual(labels.filter(([, label]) => /-latest\b/.test(label)), [], 'No job runs on an image that GitHub can change');
+  for (const [name, label] of labels) {
+    assert.ok(label === 'ubuntu-24.04' || label.startsWith('${{ fromJSON(vars.'), `${name}: ${label} is the pinned image or an administrator variable`);
+  }
+});
