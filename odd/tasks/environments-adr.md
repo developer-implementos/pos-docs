@@ -35,7 +35,7 @@ Espejo Engram: pendiente. La herramienta no está disponible en esta sesión; la
   - No se corrió `npm run verify` completo: falta, entre otros, `project:check`, que depende del snapshot del producto.
   - Revisión de agente; falta la revisión humana.
 - L5 · 2026-11-17 · El job `documentation` de la PR falló en `diagrams:test` (`package-freshness.test.mjs`): el ZIP publicado de la colección Excalidraw empaqueta `docs/*.md` y `docs/decisions/*.md`, y quedó sin el ADR-22. Se regeneró con `python tools/diagrams/package-excalidraw.py` en `1fbbbdd`. Sobre `1fbbbdd`, con Node 22.23.3, `npm run verify` completo terminó en verde, incluido `project:check`.
-- L5 · 2026-11-17 · El ADR-21 se integró antes (`894d0d88`, pos-docs#123) y la rama se actualizó con `main` por merge. Resolución de los conflictos esperados:
+- L6 · 2026-11-17 · El ADR-21 se integró antes (`894d0d88`, pos-docs#123) y la rama se actualizó con `main` por merge. Resolución de los conflictos esperados:
   - Tabla de decisiones de `docs/propuesta-arquitectura.md`: quedan las filas ADR-21 y ADR-22, en ese orden.
   - Barra lateral de `content-map.mjs`: la entrada `architecture/web-client` de `main` y `architecture/environments` después de «Tecnología y despliegue».
   - El ZIP de Excalidraw se regeneró con ambos ADR y `presentations/architecture/sources.json` se refrescó con `review-sources.mjs` sobre el árbol limpio.
