@@ -8,9 +8,12 @@ La recuperación depende de qué se perdió. Una respuesta HTTP ausente, un resu
 | --- | --- |
 | Necesito entender qué ocurrió en una operación | [Historial de evidencia por operación](/guide/implementation/phase-2/#historial-de-evidencia-por-operación): estados independientes y registros persistidos |
 | Debo asignar seguimiento o documentar una conclusión | [Expediente operativo](/guide/implementation/phase-2/#autoridad-del-seguimiento-de-excepciones): responsable, evidencia y cierre sin modificar estados financieros |
+| Necesito encontrar las operaciones con efectos sin resolver | [Bandeja de efectos sin resolver](/guide/implementation/phase-2/#bandeja-de-efectos-sin-resolver): pagos, compensaciones, documentos e impresiones pendientes, con cobertura por permiso y sin ejecutar acciones |
 | Se perdió la respuesta al confirmar | [Recuperar el comando original](/guide/implementation/phase-1/#resolver-un-resultado-incierto) |
 | Hay cobro confirmado y venta pendiente | [Recuperación comercial y compensación explícita](/guide/implementation/phase-2/#recuperación-de-venta-y-compensación-explícita) |
 | Se desconoce si hubo cobro externo | [Pago incierto](payments.md): conservar identidad, destino y reserva |
+| Se perdió la respuesta de un cobro con tarjeta en la caja | [Cobro con tarjeta](/guide/implementation/phase-2/#cobro-con-tarjeta-desde-la-caja-conectada): recuperar la misma solicitud; un resultado incierto bloquea otro cobro con tarjeta |
+| Se perdió la respuesta al cerrar el lote del terminal | [Cierre del lote](/guide/implementation/phase-2/#cierre-del-lote-del-terminal): repetir el mismo comando, que sólo consulta y nunca vuelve a cerrar |
 | Necesito consultar al proveedor el resultado del pago o documento original | [Consulta explícita del efecto original](/guide/implementation/phase-2/#consulta-explícita-del-efecto-original): disponibilidad, autorización y recuperación de la misma solicitud |
 | Necesito retirar una reserva de compensación que nunca se envió | [Cancelación de una reserva antes del envío](/guide/implementation/phase-2/#cancelación-de-una-reserva-antes-del-envío): decisión local con motivo; no devuelve dinero |
 | El host no recibió el acuse de un resultado | [Trabajo de impresión](printing.md): recuperar evidencia sin repetir efecto |
@@ -24,4 +27,4 @@ La [prueba de recuperación comercial](https://github.com/developer-implementos/
 
 El recorrido de restauración de instalaciones es una propuesta operativa: exige copia independiente, exclusión del escritor anterior, retención y conciliación. No acredita RPO cero ni un ensayo de recuperación de sucursal. La [fase piloto](/guide/roadmap/phase-05/) conserva sus entregables y aceptación; ninguna acción documental debe marcar esos ensayos como ejecutados.
 
-F02-04 mantiene las acciones por efecto y los runbooks que aún deben completarse y verificarse según su ficha. La revisión técnica de los incrementos y la aceptación humana conservan registros separados; disponer de historial y responsables no completa ese entregable.
+F02-04 mantiene las acciones por efecto y los runbooks que aún deben completarse y verificarse según su ficha. La revisión técnica de los incrementos y la aceptación humana conservan registros separados; disponer de historial y responsables no completa ese entregable. La bandeja de efectos sin resolver localiza los pendientes, pero no agrega esas acciones.

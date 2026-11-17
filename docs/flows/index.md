@@ -6,7 +6,7 @@ Elige la operación que necesitas entender o modificar. Cada recorrido enlaza el
 | --- | --- |
 | [Registrar una venta](sale.md) | Cotización, confirmación local, resultado del comando y entrega posterior |
 | [Abrir y operar una caja](cash.md) | Identidad, turno, movimientos y alcance pendiente del cierre |
-| [Cobrar y resolver un pago](payments.md) | Efectivo, transferencia, intento externo y resultado incierto |
+| [Cobrar y resolver un pago](payments.md) | Efectivo, transferencia, tarjeta, voucher manual, terminal, intento externo y resultado incierto |
 | [Emitir y consultar un documento](fiscal.md) | Fuente comercial, identidad fiscal, envío y evidencia del emisor |
 | [Imprimir y recuperar un trabajo](printing.md) | Autorización, recepción SQLite, permiso de ejecución y resultado |
 | [Publicar y aplicar precios](pricing.md) | Origen, versión comercial, preparación, validación y activación |
