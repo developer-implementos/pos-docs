@@ -16,7 +16,7 @@ Espejo Engram: pendiente. La herramienta no está disponible en esta sesión; la
 
 - [x] T1 · S1,S3 · route:inline · Redactar el ADR-22 · status:done · evidence: `docs/decisions/environments.md`
 - [x] T2 · S2 · route:inline · Registrar la decisión en la tabla de decisiones, el mapa de contenidos y el glosario · status:done · evidence: `docs/propuesta-arquitectura.md`, `apps/starlight/content-map.mjs`, `apps/starlight/src/content/docs/glossary.md`
-- [ ] T3 · S1,S2,S3 · route:inline · Ejecutar las comprobaciones editoriales y de build, y abrir la PR · status:in_progress · evidence: pendiente
+- [x] T3 · S1,S2,S3 · route:inline · Ejecutar las comprobaciones editoriales y de build, y abrir la PR · status:done · evidence: `082437f`; fuentes del deck revisadas en `705bdd6` (L4)
 
 ## Log
 
@@ -25,3 +25,11 @@ Espejo Engram: pendiente. La herramienta no está disponible en esta sesión; la
 > quiero desplegar el POS y sus componentes (apps y db) en algun servidor para que jefatura pueda ver el avance de las fases 1 y 2 y pueda hacer qa manual. que opinas?
 - L2 · 2026-11-17 · Decisión del responsable (@floxcristian), recibida por la sesión coordinadora: dos ambientes desplegados (QA y producción), un solo modo de ejecución, QA sin datos personales reales, QA en el servidor on-prem del QA del legacy, despliegue manual con el workflow `Deploy` (`authorize`, `build`, `deploy`), topología de QA con TLS verificado y dos riesgos aceptados. La fuente técnica es la rama de pos-platform#408 en `25b28d0`.
 - L3 · 2026-11-17 · Los dos riesgos aceptados se publican por nombre y se enlazan a la guía de operación del producto, sin su clase de debilidad: `AGENTS.md` prohíbe publicar la clase de debilidad de un componente concreto, y el servidor de QA es el del QA del legacy. Tampoco se publican puertos ni cuentas.
+- L4 · 2026-11-17 · Sobre `705bdd6`, con Node 22.23.3:
+  - `editorial:check`, `editorial:test` 28/28 y `odd:check` en verde.
+  - `validate` (120 rutas alcanzables), `typecheck` (0 errores), `build` (121 páginas) y `check` (24 124 enlaces, sin errores) en verde.
+  - Existen en `dist` las rutas `/guide/architecture/environments/`, `/guide/glossary/` y `/guide/proposal/decisions/#adr-22`; `pr-check` y `journeys-check` validan el cuerpo de la PR.
+  - El build exigió revisar el deck de arquitectura porque cambió `docs/propuesta-arquitectura.md`. El deck no enumera ADR y su flujo de entrega (QA y producción por país, misma versión aprobada y flota por anillos) sigue siendo coherente. `sources.json` se refrescó con `presentations/tools/review-sources.mjs`.
+  - La propuesta y el deck nombran un anillo «laboratorio» antes de la tienda piloto; el ADR no lo redefine, porque los anillos pertenecen a F06-03.
+  - No se corrió `npm run verify` completo: falta, entre otros, `project:check`, que depende del snapshot del producto.
+  - Revisión de agente; falta la revisión humana.
