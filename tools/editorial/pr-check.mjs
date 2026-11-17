@@ -7,6 +7,7 @@ import { assertPullRequestUnchanged, checkLinkedIssue, githubClient, githubOddRe
 import { readLocalDocument, validateDeclaration } from '../odd/check.mjs';
 import { loadReleaseConfig, validateChangelogOverride } from '../release/policy.mjs';
 import { checkReleasePullRequest, gitReader } from '../release/pr.mjs';
+import { checkDependencyPullRequest } from '../dependencies/pr.mjs';
 import { missingSnapshotEntries, requiredSnapshotEntries } from '../release/snapshot-changes.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
@@ -31,6 +32,7 @@ const get = githubClient({ token: process.env.GH_TOKEN || process.env.GITHUB_TOK
 let body;
 let snapshot;
 let release = null;
+let dependency = null;
 let pullRequest = null;
 let revision = 'local body; remote PR revision not inspected';
 if (options['--body-file']) {
@@ -51,7 +53,9 @@ if (options['--body-file']) {
   }
   // A release PR carries no editorial declaration: its identity and file scope are checked instead.
   release = await checkReleasePullRequest(get, number, { expectedHead, expectedBase, config: loadReleaseConfig().config });
-  if (!release) {
+  // A Renovate PR carries no editorial declaration either: its identity and file contents are checked (tools/dependencies).
+  if (!release) dependency = await checkDependencyPullRequest(get, number, { expectedHead, expectedBase });
+  if (!release && !dependency) {
     const pr = await loadPullRequest(get, number, expectedHead, expectedBase);
     pullRequest = pr;
     body = pr.body;
@@ -59,6 +63,20 @@ if (options['--body-file']) {
     revision = pr.head;
     snapshot = pr.snapshot;
   }
+}
+if (dependency) {
+  // release-please reads the squashed PR body: a dependency PR must not replace changelog entries.
+  const override = validateChangelogOverride(dependency.body);
+  if (override.entries.length) throw new Error('A dependency PR may not carry changelog entries.');
+  const summary = [
+    `Dependency PR #${dependency.number}: identity and scope valid.`,
+    `PR revision: ${dependency.head}.`,
+    `Changed: ${dependency.files.join(', ')}; registry versions, registry-only lockfile with integrity, and action pins only.`,
+    'This validates what Renovate changed. A person still reviews and merges it after Documentation quality passes.',
+  ];
+  console.log(summary.join('\n'));
+  if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary.map(line => `- ${line}`).join('\n') + '\n');
+  process.exit(0);
 }
 if (release) {
   const summary = [

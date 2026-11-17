@@ -1,0 +1,40 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "description": "Actualizaciones de dependencias de POS Docs (TASK-399). Mismo calendario mensual que POS Platform (TASK-294); las alertas de vulnerabilidad no esperan la ventana. El alcance coincide con lo que acepta tools/dependencies/policy.mjs: el sitio publicado (apps/starlight) y los SHA de las acciones. Los runtimes fijados de tools/ (Archify, diagramas, revisor automático) y la raíz siguen su propio procedimiento. Las PR las revisa e integra una persona.",
+  "timezone": "America/Santiago",
+  "schedule": ["* 0-6 1 * *"],
+  "minimumReleaseAge": "3 days",
+  "internalChecksFilter": "strict",
+  "prConcurrentLimit": 3,
+  "prHourlyLimit": 2,
+  "rebaseWhen": "conflicted",
+  "rangeStrategy": "pin",
+  "semanticCommits": "enabled",
+  "semanticCommitType": "chore",
+  "semanticCommitScope": "deps",
+  "dependencyDashboard": true,
+  "automerge": false,
+  "enabledManagers": ["npm", "github-actions"],
+  "includePaths": ["apps/starlight/package.json", ".github/workflows/**"],
+  "lockFileMaintenance": { "enabled": true, "schedule": ["* 0-6 1 * *"] },
+  "vulnerabilityAlerts": { "schedule": ["at any time"] },
+  "github-actions": { "pinDigests": true },
+  "packageRules": [
+    {
+      "description": "overrides es un fijado decidido por una persona (por ejemplo, una corrección de seguridad); la política rechaza que Renovate lo cambie.",
+      "matchDepTypes": ["overrides"],
+      "enabled": false
+    },
+    {
+      "description": "Astro, Starlight y sus integraciones se mueven juntos.",
+      "matchPackageNames": ["astro", "/^@astrojs\\//"],
+      "groupName": "astro"
+    },
+    {
+      "description": "Playwright fija el sistema que soporta: subirlo permite pasar los workflows a ubuntu-26.04 en una PR propia (TASK-392).",
+      "matchPackageNames": ["playwright", "@playwright/test"],
+      "groupName": "playwright"
+    }
+  ]
+}

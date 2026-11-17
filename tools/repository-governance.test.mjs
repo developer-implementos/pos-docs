@@ -46,7 +46,7 @@ test('merge settings and ownership protect the policy itself', () => {
   assert.equal(settings.squash_merge_commit_title, 'PR_TITLE');
   assert.equal(settings.squash_merge_commit_message, 'PR_BODY');
   const owners = readFileSync(new URL('../.github/CODEOWNERS', import.meta.url), 'utf8');
-  for (const rule of ['/.github/', '/AGENTS.md', '/.agents/', '/.claude/', '/.codex/', '/.mcp.json', '/tools/odd/', '/tools/automated-review/', '/tools/release/', '/package.json', '/package-lock.json', '/release-please-config.json', '/.release-please-manifest.json']) assert.ok(owners.split(/\r?\n/).includes(`${rule} @floxcristian`), `${rule} requires designated governance owner`);
+  for (const rule of ['/.github/', '/AGENTS.md', '/.agents/', '/.claude/', '/.codex/', '/.mcp.json', '/tools/odd/', '/tools/automated-review/', '/tools/release/', '/tools/dependencies/', '/renovate.json', '/package.json', '/package-lock.json', '/release-please-config.json', '/.release-please-manifest.json']) assert.ok(owners.split(/\r?\n/).includes(`${rule} @floxcristian`), `${rule} requires designated governance owner`);
 });
 
 test('release workflows hold the App token only on main and only to open, validate and merge the release PR', () => {
@@ -75,6 +75,21 @@ test('release workflows hold the App token only on main and only to open, valida
 
 // The import App reads the private product repository and writes in this public one (TASK-283). Each
 // token is scoped to one repository and to the permissions its step uses; nothing from a PR executes.
+// Renovate is the only automated author besides the release App, and it never bypasses review
+// (TASK-399). Its configuration must keep to what tools/dependencies/policy.mjs accepts.
+test('Renovate updates only the site and the action pins, monthly, after a waiting period, never auto-merging', () => {
+  const renovate = json('renovate.json');
+  assert.equal(renovate.automerge, false, 'A person reviews and merges every dependency PR');
+  assert.deepEqual(renovate.schedule, ['* 0-6 1 * *'], 'Same monthly window as POS Platform (TASK-294)');
+  assert.equal(renovate.minimumReleaseAge, '3 days', 'A release must age before it is proposed');
+  assert.equal(renovate.internalChecksFilter, 'strict', 'The waiting period holds the PR, not just a status');
+  assert.deepEqual([...renovate.enabledManagers].sort(), ['github-actions', 'npm']);
+  assert.deepEqual(renovate.includePaths, ['apps/starlight/package.json', '.github/workflows/**'], 'Pinned runtimes in tools/ and the root keep their own procedure');
+  assert.equal(renovate['github-actions']?.pinDigests, true, 'Actions stay pinned to a commit');
+  assert.ok(renovate.packageRules.some(rule => rule.enabled === false && JSON.stringify(rule.matchDepTypes) === '["overrides"]'), 'Overrides are pins decided by a person');
+  assert.deepEqual(renovate.vulnerabilityAlerts?.schedule, ['at any time']);
+});
+
 test('the project import holds its App token only on main, scoped per repository, and never merges', () => {
   const workflow = text('.github/workflows/project-import.yml');
   assert.match(workflow, /^on:\n  schedule:\n    - cron: '\d{1,2} \* \* \* \*'\n  workflow_dispatch:\n  repository_dispatch:\n    types: \[pos-platform-delivery-changed\]\npermissions:\n  contents: read\njobs:\n/m, 'Triggers are fixed and the default token stays read-only');
