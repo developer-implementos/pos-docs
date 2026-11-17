@@ -89,7 +89,7 @@ Este repositorio es público: la descripción, el alcance y las mitigaciones de 
 
 - En QA se despliegan la API (`branch-api`) y el cliente web (`pos-web`).
 - Los clientes de escritorio y móvil del [ADR-14](native-clients.md) se entregan con sus propios artefactos; este ADR no cambia esa entrega.
-- El cliente web es el ADR-21, en revisión en [pos-docs#123](https://github.com/developer-implementos/pos-docs/pull/123).
+- El cliente web es el [ADR-21](web-client.md).
 - Producción y sus anillos pertenecen a [F06-03](/guide/roadmap/phase-06/#work-f06-03).
 
 ## Verificación

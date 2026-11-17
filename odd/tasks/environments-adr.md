@@ -23,6 +23,7 @@ Espejo Engram: pendiente. La herramienta no está disponible en esta sesión; la
 - L1 · 2026-11-17 · Solicitud original, literal:
 
 > quiero desplegar el POS y sus componentes (apps y db) en algun servidor para que jefatura pueda ver el avance de las fases 1 y 2 y pueda hacer qa manual. que opinas?
+
 - L2 · 2026-11-17 · Decisión del responsable (@floxcristian), recibida por la sesión coordinadora: dos ambientes desplegados (QA y producción), un solo modo de ejecución, QA sin datos personales reales, QA en el servidor on-prem del QA del legacy, despliegue manual con el workflow `Deploy` (`authorize`, `build`, `deploy`), topología de QA con TLS verificado y dos riesgos aceptados. La fuente técnica es la rama de pos-platform#408 en `25b28d0`.
 - L3 · 2026-11-17 · Los dos riesgos aceptados se publican por nombre y se enlazan a la guía de operación del producto, sin su clase de debilidad: `AGENTS.md` prohíbe publicar la clase de debilidad de un componente concreto, y el servidor de QA es el del QA del legacy. Tampoco se publican puertos ni cuentas.
 - L4 · 2026-11-17 · Sobre `705bdd6`, con Node 22.23.3:
@@ -34,3 +35,8 @@ Espejo Engram: pendiente. La herramienta no está disponible en esta sesión; la
   - No se corrió `npm run verify` completo: falta, entre otros, `project:check`, que depende del snapshot del producto.
   - Revisión de agente; falta la revisión humana.
 - L5 · 2026-11-17 · El job `documentation` de la PR falló en `diagrams:test` (`package-freshness.test.mjs`): el ZIP publicado de la colección Excalidraw empaqueta `docs/*.md` y `docs/decisions/*.md`, y quedó sin el ADR-22. Se regeneró con `python tools/diagrams/package-excalidraw.py` en `1fbbbdd`. Sobre `1fbbbdd`, con Node 22.23.3, `npm run verify` completo terminó en verde, incluido `project:check`.
+- L5 · 2026-11-17 · El ADR-21 se integró antes (`894d0d88`, pos-docs#123) y la rama se actualizó con `main` por merge. Resolución de los conflictos esperados:
+  - Tabla de decisiones de `docs/propuesta-arquitectura.md`: quedan las filas ADR-21 y ADR-22, en ese orden.
+  - Barra lateral de `content-map.mjs`: la entrada `architecture/web-client` de `main` y `architecture/environments` después de «Tecnología y despliegue».
+  - El ZIP de Excalidraw se regeneró con ambos ADR y `presentations/architecture/sources.json` se refrescó con `review-sources.mjs` sobre el árbol limpio.
+  - El ADR-22 enlaza ahora la página del ADR-21 (`web-client.md`) en vez de la PR.
