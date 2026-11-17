@@ -8,6 +8,8 @@ La guía [F01](/guide/implementation/phase-1/) describe la apertura persistida y
 
 La [operación de caja](/guide/operations/cash-management/) conserva la separación entre venta, cobranza de deuda, devolución y movimientos de efectivo. Abrir un turno no acredita el cierre completo, custodia o conciliación de toda la jornada.
 
+El [cierre del lote del terminal](/guide/implementation/phase-2/#cierre-del-lote-del-terminal) no cierra el turno ni registra movimientos de caja. Si el cierre de caja debe exigirlo, advertirlo o ignorarlo es la pregunta [Q-55](/project/questions/#q-55). El [redondeo legal del efectivo](/guide/architecture/cash-rounding/) tampoco se aplica todavía a los movimientos de caja.
+
 ## Dónde trabajar y comprobar
 
 | Fuente | Qué revisar |

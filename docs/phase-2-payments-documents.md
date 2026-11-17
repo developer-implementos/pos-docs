@@ -31,16 +31,29 @@ Los siguientes incrementos están integrados en `main`, hasta la [revisión `6e6
 
 Las PR conservan sus comprobaciones y límites. Las pruebas del código nativo, la verificación del artefacto y el recorrido dentro de Tauri conservan evidencia separada; no se deducen de las pruebas del frontend. F02-07 y F02-12 mantienen los pendientes descritos en esta guía. F02-13 cuenta con la verificación de sus cuatro criterios de software; no acredita homologación bancaria ni aceptación humana.
 
+Entre el 16 y el 17-11-2026 se integraron los incrementos siguientes, hasta la [revisión `6eb9804`](https://github.com/developer-implementos/pos-platform/tree/6eb980489cc936f6f81fb3a57cbf65501658ad45). La composición operativa de `branch-api` sigue sin adaptadores de pago ni de terminal: lo que depende de un proveedor responde como no disponible, y el adaptador real sigue en [FOLLOWUP-002](/project/attention/#followup-002) y [FOLLOWUP-004](/project/attention/#followup-004). La [CI de `main` sobre `6eb9804`](https://github.com/developer-implementos/pos-platform/actions/runs/44002489011) aprobó las pruebas de la API y los recorridos conectados de cobro combinado, recuperación y consultas. Cerrar estas tareas no verifica sus entregables ni registra aceptación humana.
+
+| Incremento | Revisión de producto | Resultado acotado |
+| --- | --- | --- |
+| F02-05 · Redondeo legal del efectivo (TASK-366) | [PR #368](https://github.com/developer-implementos/pos-platform/pull/368), commit [`80e0f0c`](https://github.com/developer-implementos/pos-platform/commit/80e0f0c40650b3526125a41c8cc83b79b9f55516) | Política pura por país en `libs/country-policies`, sin consumidores en pagos, ventas ni caja; el [ADR-20](decisions/cash-rounding.md) sigue en propuesta |
+| F02-07 · [Perfiles de pago del puesto](#perfiles-de-pago-y-su-ejecutabilidad) (TASK-363) | [PR #369](https://github.com/developer-implementos/pos-platform/pull/369), commit [`b9164c1`](https://github.com/developer-implementos/pos-platform/commit/b9164c1f25227eae727e83d538297fd9655a543e) | Listar los perfiles vigentes con su ejecutabilidad, calculada con el mismo diagnóstico que la admisión |
+| F02-04 · [Bandeja de efectos sin resolver](#bandeja-de-efectos-sin-resolver) (TASK-364) | [PR #371](https://github.com/developer-implementos/pos-platform/pull/371), commit [`635b643`](https://github.com/developer-implementos/pos-platform/commit/635b64363fa6c2a589032d4ca2a2f2ef2c499fff) | Localizar pagos, compensaciones, documentos e impresiones sin resolver, sin ejecutar efectos |
+| F02-07 · [Canal de notificación y kit de conformidad](#canal-de-notificación-y-kit-de-conformidad) (TASK-367) | [PR #370](https://github.com/developer-implementos/pos-platform/pull/370), commit [`8728d6e`](https://github.com/developer-implementos/pos-platform/commit/8728d6e36567a12a9af10d2cfd7729ddf8d706c2) | Rechazar en la admisión un canal declarado sin verificador; kit de pruebas para adaptadores |
+| F02-14 · [Estado y mantenimiento del terminal](#estado-y-mantenimiento-del-terminal-de-pago) (TASK-365) | [PR #372](https://github.com/developer-implementos/pos-platform/pull/372), commit [`d6c0d14`](https://github.com/developer-implementos/pos-platform/commit/d6c0d144aa3ee3fedfe70fc139df056a34679a02) | Consultar el estado sin efectos y registrar mantenimientos idempotentes; uno incierto excluye el terminal |
+| F02-01 · [Cobro con tarjeta en la caja conectada](#cobro-con-tarjeta-desde-la-caja-conectada) (TASK-375) | [PR #378](https://github.com/developer-implementos/pos-platform/pull/378), commit [`f3d2713`](https://github.com/developer-implementos/pos-platform/commit/f3d2713b328b425ca078a172b0b923a1d487691c) | Ofrecer tarjeta sólo con un perfil ejecutable y recuperar el mismo comando sin otro cobro |
+| F02-06 · [Voucher manual de tarjeta](#voucher-manual-de-tarjeta) (TASK-377) | [PR #379](https://github.com/developer-implementos/pos-platform/pull/379), commit [`e260b8f`](https://github.com/developer-implementos/pos-platform/commit/e260b8f143160ad94798c5da92eecc0a2c192736) | Registrar un voucher una sola vez por comercio, terminal y código, con verificador independiente si la política lo declara |
+| F02-14 · [Cierre del lote del terminal](#cierre-del-lote-del-terminal) (TASK-376) | [PR #380](https://github.com/developer-implementos/pos-platform/pull/380), commit [`db49e43`](https://github.com/developer-implementos/pos-platform/commit/db49e43f4d002b2492b2d759deee1196f7e5c956) | Cerrar el lote sin tocar la caja y recuperar su resultado sin repetirlo |
+
 ## Aplicaciones y autoridad
 
 | Pieza | Implementación y estado | Límite |
 | --- | --- | --- |
-| `branch-api` · `payments` | Intenciones e intentos durables, destino fijo, consulta y compensación separada. El incremento añade plan, asignaciones y verificación manual de transferencias en PostgreSQL | Sin adaptador Transbank operativo; no interpreta una respuesta desconocida como rechazo seguro ni una declaración como dinero confirmado |
+| `branch-api` · `payments` | Intenciones e intentos durables, destino fijo, consulta y compensación separada. El incremento añade plan, asignaciones y verificación manual de transferencias en PostgreSQL; después, perfiles con su ejecutabilidad, voucher manual, estado y mantenimiento del terminal y cierre de lote | Sin adaptador Transbank ni de terminal compuesto; no interpreta una respuesta desconocida como rechazo seguro ni una declaración como dinero confirmado |
 | `branch-api` · `fiscal` | Solicitud y fuente inmutable, identidad autorizada, intento de envío, consulta y estados diferenciados | Sin emisor/material fiscal habilitado ni adaptador Acepta/Ingydev operativo; no genera folios ficticios |
 | `branch-api` · `devices` | Inscripción y asignación por puesto, trabajos, recepción, permiso de ejecución de un uso y resultados durables | No ejecuta drivers Windows ni convierte un recibo local en documento fiscal |
-| `branch-api` · `reporting` | Historial de evidencia y expedientes con responsables e historial durable integrados mediante TASK-110 y TASK-114 | Lee mediante contratos propietarios; las decisiones del expediente no modifican estados financieros ni trabajos físicos |
+| `branch-api` · `reporting` | Historial de evidencia y expedientes con responsables e historial durable integrados mediante TASK-110 y TASK-114; bandeja de efectos sin resolver de TASK-364 | Lee mediante contratos propietarios; las decisiones del expediente no modifican estados financieros ni trabajos físicos |
 | `device-agent` | Host C#/.NET independiente del cliente, HTTPS saliente y registro SQLite por instalación | Publicación Windows x64 comprobada; driver runtime no disponible. Instalación como servicio, firma, cuenta y hardware requieren su evidencia |
-| `pos-desktop` / `pos-mobile` | Perfiles conectados, seguimiento paginado, historial por operación, expedientes y recuperación de comandos | No habilita tarjeta, no completa resolución de excepciones ni acredita entrega nativa de documentos |
+| `pos-desktop` / `pos-mobile` | Perfiles conectados, seguimiento paginado, historial por operación, expedientes y recuperación de comandos; en `pos-desktop`, tarjeta condicionada a un perfil ejecutable, voucher manual, bandeja y terminales de pago | Sin perfil ejecutable no ofrece tarjeta, y la composición actual no tiene ninguno; no completa resolución de excepciones ni acredita entrega nativa de documentos |
 
 `country-api`, los workers, BullMQ y Redis no intervienen en el recorrido local del host. La coordinación del puesto usa HTTPS y persistencia en sucursal; no necesita una cola Redis en el PC. La [decisión de dispositivos](decisions/device-agent.md) fija la ubicación por puesto y la evolución de dispositivos de red en F06.
 
@@ -98,6 +111,24 @@ Un recibo de admisión anterior mantiene su resultado. Consultar o recuperar un 
 
 Esta comprobación es local: no llama al proveedor, no prueba conectividad o credenciales y no homologa la semántica de un método por el hecho de existir. La matriz de proveedores, sus contratos y los canales de evidencia restantes conservan su alcance en F02-07.
 
+### Perfiles de pago y su ejecutabilidad
+
+**TASK-363 · integrado en `main` mediante la [PR #369](https://github.com/developer-implementos/pos-platform/pull/369), revisión [`b9164c1`](https://github.com/developer-implementos/pos-platform/commit/b9164c1f25227eae727e83d538297fd9655a543e).**
+
+`GET /api/v1/payment-profiles` (`listPaymentProfilesV1`) devuelve, para la sucursal y la caja de la sesión, la revisión vigente de cada perfil con su destino público, `executable` y `reasonCodes`: `profile-disabled`, `adapter-unavailable` o `capability-unsupported`. Exige `payment.read` y no selecciona la referencia de credencial ni expone direcciones o secretos. Una caja con más de 50 perfiles vigentes responde `CONFIGURATION_INCOMPATIBLE` en lugar de truncar la lista.
+
+La ejecutabilidad sale del mismo diagnóstico que la admisión: `PROVIDER_CAPABILITY_UNAVAILABLE` se produce exactamente cuando ese diagnóstico informa un motivo. La lista es orientativa. Crear la intención vuelve a resolver la revisión vigente y a comprobarla, de modo que un perfil listado como ejecutable que deja de serlo se rechaza sin reservar saldo. Con la composición actual, todo perfil sale no ejecutable con `adapter-unavailable`.
+
+La PR conserva sus pruebas en PostgreSQL, con un adaptador controlado que sólo existe en ellas, y en la frontera HTTP. El incremento no decide [Q-18](/project/questions/#q-18) ni [Q-83](/project/questions/#q-83), y no acredita la homologación de [FOLLOWUP-002](/project/attention/#followup-002) ni de [FOLLOWUP-003](/project/attention/#followup-003). Cerrar la tarea no verifica [F02-07](https://github.com/developer-implementos/pos-platform/issues/29).
+
+### Canal de notificación y kit de conformidad
+
+**TASK-367 · integrado en `main` mediante la [PR #370](https://github.com/developer-implementos/pos-platform/pull/370), revisión [`8728d6e`](https://github.com/developer-implementos/pos-platform/commit/8728d6e36567a12a9af10d2cfd7729ddf8d706c2).**
+
+Las capacidades del destino admiten un campo opcional `notification`: `channelRef`, un identificador de contrato que nunca es una dirección; `authentication`, `signature` o `mutual-tls`, y `deduplication`, `provider-event-id`. Si falta, la evidencia llega por la respuesta o por la consulta declarada. Los destinos guardados antes de este campo se leen sin migrar. Un perfil que declara un canal cuyo adaptador no expone el verificador se rechaza con `PROVIDER_CAPABILITY_UNAVAILABLE` antes de reservar saldo o crear la intención, y la [lista de perfiles](#perfiles-de-pago-y-su-ejecutabilidad) lo informa como `capability-unsupported`. No hay un receptor de notificaciones: el verificador no se invoca, y una notificación sin verificar no es evidencia financiera.
+
+El [kit de conformidad](https://github.com/developer-implementos/pos-platform/tree/6eb980489cc936f6f81fb3a57cbf65501658ad45/libs/backend/payments/test/conformance) es sólo de pruebas y corre contra cualquier adaptador. Comprueba la correlación por clave de operación y destino, el importe y la moneda exactos, que la llamada termine poco después de cancelarla, que una respuesta tardía se recupere sólo por su clave, que un acuse perdido nunca se informe como éxito y que cada canal declarado tenga verificador. Pasar el kit no homologa un proveedor. Qué proveedores ofrecen notificación, y con qué autenticidad, protección contra repeticiones y rotación, sigue en [FOLLOWUP-002](/project/attention/#followup-002) y [FOLLOWUP-003](/project/attention/#followup-003). El criterio de F02-07 sobre esos canales no tiene evidencia hasta que exista uno real.
+
 ## Cobro combinado y transferencia manual
 
 La recomendación adoptada permite avanzar con reglas explícitas del primer perfil: **una moneda por plan, importes exactos, vuelto sólo de efectivo y verificación manual autorizada de transferencias**. Implementar y probar esas reglas no queda condicionado a un documento formal de Finanzas. La habilitación de cuentas, permisos y puestos para operar dinero real sigue siendo una decisión de despliegue identificada.
@@ -126,7 +157,7 @@ El cliente conserva el comando pendiente con su ID y payload, separados del toke
 
 Preparar un plan o añadir dinero exige las capacidades habilitadas. Finalizar fondos ya admitidos, consultar o devolver efectivo no depende de volver a habilitar una capacidad para admitir fondos nuevos; conserva sus permisos y validaciones. Tampoco se recalcula silenciosamente una cotización congelada después de recibir el pago. Si no puede completarse, se mantiene un estado recuperable y la compensación conserva su propio contrato.
 
-Cancelar un aporte de efectivo exige confirmar que se devolvió **todo lo recibido** y registrar el motivo. La devolución queda como evidencia inmutable. Un plan no se cancela para ocultar fondos externos confirmados, declaraciones pendientes o resultados inciertos. La interfaz de este incremento permite efectivo y transferencia; tarjeta continúa deshabilitada hasta contar con su adaptador operativo.
+Cancelar un aporte de efectivo exige confirmar que se devolvió **todo lo recibido** y registrar el motivo. La devolución queda como evidencia inmutable. Un plan no se cancela para ocultar fondos externos confirmados, declaraciones pendientes o resultados inciertos. La interfaz de este incremento permite efectivo y transferencia; la tarjeta se ofrece sólo con un perfil ejecutable, según el [cobro con tarjeta desde la caja conectada](#cobro-con-tarjeta-desde-la-caja-conectada).
 
 ### Activación del puesto
 
@@ -145,9 +176,35 @@ La cuenta declara `receiverAccountId`, `accountRef`, `bankRef`, `currency`, `sca
 
 Las migraciones 235–238 añaden planes/asignaciones, evidencia de transferencia, snapshot congelado de ventas y registro de activación. Conservar respaldos, historial y recibos al actualizar. Ante un fallo se detienen nuevas admisiones y se recuperan los pendientes; no se borran evidencias para volver a cobrar. Un binario anterior que no entiende ventas y eventos v2 no es una reversión compatible después de escribirlos.
 
+### Cobro con tarjeta desde la caja conectada
+
+**TASK-375 · integrado en `main` mediante la [PR #378](https://github.com/developer-implementos/pos-platform/pull/378), revisión [`f3d2713`](https://github.com/developer-implementos/pos-platform/commit/f3d2713b328b425ca078a172b0b923a1d487691c).** Cambia sólo el cliente: consume los contratos de intenciones y la [lista de perfiles](#perfiles-de-pago-y-su-ejecutabilidad) ya publicados.
+
+El bloque «Tarjeta» del plan ofrece el cobro sólo si la capacidad `payment.card` está activa, la sesión tiene `payment.read`, `payment.create` y `payment.execute`, y la lista incluye al menos un perfil ejecutable. Si no, oculta la opción y muestra el motivo, incluidos los `reasonCodes` del servidor. Con la composición actual todo perfil sale `adapter-unavailable` y la tarjeta no se ofrece; la API rechaza igualmente una admisión intentada por otra vía.
+
+El cajero elige el perfil y el importe. El cliente crea la intención con el plan, la cesta, la cotización y la versión del plan, y la ejecuta con la versión vigente. Cada comando lleva su `commandId` y queda en un diario local, sin credenciales ni datos del cliente. Ante una respuesta perdida, **Recuperar misma solicitud** reenvía el comando guardado sin crear otra intención ni otro intento; recargar no lo reenvía solo. Una intención admitida y sin despachar se cobra o se retira desde el mismo bloque, después de consultar su estado.
+
+El aviso repite el estado que devuelve el servidor: sólo `approved` dice que el cobro se confirmó, `declined` permite elegir otro medio, y `uncertain`, `dispatching` y `reconciliation-required` piden no cobrar de nuevo. Una asignación con tarjeta `uncertain` o `reconciliation-required` bloquea otro cobro con tarjeta en la venta y enlaza a la [consulta del efecto original](#consulta-explícita-del-efecto-original) en Seguimiento de operaciones.
+
+Sin adaptador no existe un recorrido conectado de un cobro aprobado: la evidencia son las pruebas del store y del componente contra el contrato. La [CI de `main`](https://github.com/developer-implementos/pos-platform/actions/runs/44002489011) aprobó el recorrido conectado de cobro combinado, que comprueba que la opción no existe sin perfil ejecutable. El incremento no decide [Q-74](/project/questions/#q-74) y no acredita el terminal ni el adaptador de [FOLLOWUP-002](/project/attention/#followup-002). Cerrar la tarea no verifica [F02-01](https://github.com/developer-implementos/pos-platform/issues/23).
+
+### Voucher manual de tarjeta
+
+**TASK-377 · integrado en `main` mediante la [PR #379](https://github.com/developer-implementos/pos-platform/pull/379), revisión [`e260b8f`](https://github.com/developer-implementos/pos-platform/commit/e260b8f143160ad94798c5da92eecc0a2c192736).**
+
+Un pago con tarjeta hecho en un terminal no integrado se registra en el plan como asignación `card-voucher`, con código de autorización, últimos 4 dígitos, importe y terminal. Lo hace `POST /api/v1/payment-plans/:planId/card-vouchers` (`registerCardVoucherV1`), que exige `payment.voucher.record`, la capacidad `payment.plan`, `commandId` y la versión esperada del plan. El contrato no tiene campo para el número completo de la tarjeta, y tampoco se guardan su vencimiento ni su código de seguridad.
+
+**La capacidad nace apagada.** La política de cada terminal (`payments.card_voucher_policy`) declara el modo de confirmación, `on-registration` o `independent-verifier`, y el patrón del código, sin valores por defecto. La aprovisiona el rol propietario con `database.js provision-card-voucher-policy --file <ruta>`, como la cuenta receptora de la transferencia. Sin una política admisible, la API responde `CARD_VOUCHER_UNAVAILABLE`; `GET /api/v1/payment-card-voucher-policies` informa `admissible` y sus motivos. Un código que no cumple el patrón responde `CARD_VOUCHER_FORMAT_INVALID`, y un importe mayor que el saldo o en otra moneda, `PAYMENT_RESULT_MISMATCH`.
+
+El mismo voucher, identificado por comercio, terminal y código, no se acepta en otra venta, tampoco con solicitudes concurrentes ni después de rechazarlo: responde `CARD_VOUCHER_ALREADY_USED`. Como la referencia de una transferencia, la unicidad vale dentro de la base de la sucursal; no hay una autoridad central entre sucursales. Con `independent-verifier`, el voucher queda `declared`, reserva el importe e impide finalizar la venta. Otro usuario con `payment.voucher.verify` lo confirma o rechaza desde «Verificación de vouchers manuales», en Seguimiento de operaciones (`GET /api/v1/payment-card-vouchers` y `POST /api/v1/payment-card-vouchers/:evidenceId/verify`). El servicio, una restricción y un disparador de PostgreSQL impiden que lo verifique quien lo registró.
+
+La migración aditiva `250_card_vouchers` agrega la política, la evidencia y la verificación. `card-voucher` se suma a los métodos de las asignaciones del plan y de la venta pagada, y por lo tanto de `SaleConfirmed` v2. Ningún rol ni fixture de laboratorio recibe `payment.voucher.record` o `payment.voucher.verify` por defecto. El voucher todavía no aparece en el historial de evidencia por operación, y su vista no tiene un recorrido de navegador conectado: la evidencia son las pruebas en PostgreSQL, HTTP y del cliente que conserva la PR.
+
+El incremento no decide [Q-73](/project/questions/#q-73), [Q-109](/project/questions/#q-109), [Q-83](/project/questions/#q-83) ni [Q-57](/project/questions/#q-57). El formato del código del adquirente sigue en [FOLLOWUP-002](/project/attention/#followup-002) y la conciliación con el adquirente, en [FOLLOWUP-015](/project/attention/#followup-015). Cerrar la tarea no verifica [F02-06](https://github.com/developer-implementos/pos-platform/issues/28).
+
 ## Seguimiento conectado
 
-La ruta `/operations` presenta tres listados independientes: **Pagos**, **Documentos fiscales** y **Dispositivos**. El operador puede filtrar por estado, recorrer páginas y abrir un detalle. El incremento añade la bandeja de revisión de transferencias descrita arriba, con acciones explícitas y permisos propios. La pantalla consulta datos persistidos mediante la API de sucursal; no activa una demo si la consulta falla. Las secciones disponibles dependen de los permisos de la sesión, que la API vuelve a exigir.
+La ruta `/operations` presenta tres listados independientes: **Pagos**, **Documentos fiscales** y **Dispositivos**. El operador puede filtrar por estado, recorrer páginas y abrir un detalle. El incremento añade la bandeja de revisión de transferencias descrita arriba, con acciones explícitas y permisos propios. Con sus permisos, la misma ruta muestra también la [bandeja de efectos sin resolver](#bandeja-de-efectos-sin-resolver), los [terminales de pago](#estado-y-mantenimiento-del-terminal-de-pago) y la [verificación de vouchers manuales](#voucher-manual-de-tarjeta). La pantalla consulta datos persistidos mediante la API de sucursal; no activa una demo si la consulta falla. Las secciones disponibles dependen de los permisos de la sesión, que la API vuelve a exigir.
 
 | Sección | Consulta y permiso | Ámbito de lectura |
 | --- | --- | --- |
@@ -164,6 +221,24 @@ El seguimiento permite conocer el estado persistido, con estos límites:
 - **Dispositivo:** `spooled` acredita recepción por el spooler, no salida física del papel. Consultar un resultado incierto no vuelve a ejecutar el trabajo.
 
 Este incremento integrado aporta parte de **F02-04** y **F02-12**. El [historial por operación](#historial-de-evidencia-por-operación) y los [expedientes con responsables](#autoridad-del-seguimiento-de-excepciones) están integrados. **F02-04 sigue incompleto:** falta completar las acciones de recuperación por efecto que exigen sus criterios y comprobar los runbooks de resultado desconocido, rechazo, fallo conocido y pérdida de LAN en el entorno acordado. Cerrar un expediente no ejecuta esas acciones. La aceptación humana se registra por separado; la búsqueda y descarga fiscal tampoco acreditan un proveedor fiscal operativo ni el guardado desde las WebView nativas.
+
+### Bandeja de efectos sin resolver
+
+**TASK-364 · integrado en `main` mediante la [PR #371](https://github.com/developer-implementos/pos-platform/pull/371), revisión [`635b643`](https://github.com/developer-implementos/pos-platform/commit/635b64363fa6c2a589032d4ca2a2f2ef2c499fff).** La PR se declaró parcial porque su recorrido de navegador no se ejecutó antes de integrar. La [CI de `main` sobre `6eb9804`](https://github.com/developer-implementos/pos-platform/actions/runs/44002489011) aprobó después la suite conectada de recuperación, que lo incluye.
+
+`GET /api/v1/operation-exceptions` (`listOperationExceptionsV1`) lista los efectos que su contexto propietario deja sin resolver. La sección «Efectos sin resolver» de Seguimiento los muestra sin necesidad de conocer su identificador:
+
+| Efecto | Estados listados | Permiso |
+| --- | --- | --- |
+| Pago con tarjeta y compensación | `uncertain`, `reconciliation-required` | `payment.read` |
+| Documento fiscal | `unknown`, `rejected` | `fiscal.read` |
+| Trabajo de impresión | `uncertain` | `device.read` |
+
+Cada fila trae el registro de origen y su ancla de evidencia, que en una compensación es su cobro, la fecha de origen, la antigüedad respecto de la hora de PostgreSQL (`asOf`), `reasonCodes` y `allowedActions`. Las acciones sólo abren lecturas existentes: el [historial de evidencia](#historial-de-evidencia-por-operación) y, con `operation.case.read`, los [expedientes](#autoridad-del-seguimiento-de-excepciones). La bandeja no consulta proveedores ni ejecuta cobros, emisiones o impresiones. `coverage` declara por efecto si se incluyó, si no se pidió o si quedó excluido por permiso, de modo que una bandeja vacía no se lea como «todo resuelto». Filtrar un efecto sin su permiso responde 403.
+
+Las tres lecturas ocurren en una transacción `REPEATABLE READ READ ONLY`, y los permisos se vuelven a comprobar después. El orden es la fecha de origen y el identificador. El cursor es opaco y queda ligado al actor, el ámbito, los permisos y el filtro; uno alterado responde 422. Un efecto que cambia de estado entre páginas no se duplica. Los estados `dispatching` o `executing` detenidos no se listan.
+
+La bandeja no asigna responsables ni agrega acciones de recuperación, que dependen de [Q-76](/project/questions/#q-76) y [FOLLOWUP-005](/project/attention/#followup-005). La conciliación de los pagos inciertos con el adquirente es [Q-09](/project/questions/#q-09). Este incremento no completa F02-04.
 
 ### Consulta explícita del efecto original
 
@@ -286,6 +361,39 @@ El vínculo con la venta original se conserva en la fuente fiscal inmutable. **L
 Las migraciones aditivas `230_payment_lookup_index`, `231_fiscal_document_lookup` y `232_device_job_lookup` incorporan índices de lectura en sus contextos. No reescriben las migraciones anteriores ni modifican estados financieros, documentos o permisos de ejecución.
 
 `233_operation_read_access` añade `payment.read`, `fiscal.read` y `device.read` al rol protegido `branch-administrator` de sucursales operativas cuando faltan. Incrementa la versión de los roles actualizados y revoca sus sesiones activas: el administrador debe autenticarse nuevamente para obtener los permisos efectivos. Los roles ordinarios conservan sus permisos y sesiones. Esta ampliación de lectura no autoriza comandos de cobro, fiscalidad ni dispositivos.
+
+### Estado y mantenimiento del terminal de pago
+
+**TASK-365 · integrado en `main` mediante la [PR #372](https://github.com/developer-implementos/pos-platform/pull/372), revisión [`d6c0d14`](https://github.com/developer-implementos/pos-platform/commit/d6c0d144aa3ee3fedfe70fc139df056a34679a02).** Es el primer corte de [F02-14](https://github.com/developer-implementos/pos-platform/issues/36). La vista «Terminales de pago» de Seguimiento de operaciones usa estos contratos:
+
+| Acción | Contrato y permiso | Resultado |
+| --- | --- | --- |
+| Consultar los terminales y su estado | `GET /api/v1/payment-terminals` y `GET /api/v1/payment-terminals/status?terminalRef=`, `terminal.read` | Consulta sin efectos y con tiempo acotado; no crea venta, pago ni cierre de caja |
+| Solicitar un mantenimiento | `POST /api/v1/payment-terminals/maintenance-operations`, `terminal.maintain` | Registra la solicitud y toma la exclusión del terminal antes de llamar al adaptador; es idempotente por `commandId` |
+
+El estado distingue `disconnected`, `connected-manual`, `ready` y `unavailable` con motivo, e informa su origen (`adapter` o `server`) y su antigüedad. Sólo un adaptador puede afirmar `ready`: el contrato impide que el servidor lo deduzca, y «conectado» no se presenta como «listo». Sin adaptador compuesto, todo terminal responde `unavailable` con `adapter-unavailable` y no se admite ningún mantenimiento. El inventario de capacidades administrativas por terminal (`payments.terminal_capability_state`) lo escribe sólo el aprovisionamiento del propietario.
+
+El mantenimiento comparte con los cobros la exclusión del terminal. Con un cobro en curso, incierto o en cuarentena, se rechaza con `PAYMENT_RECONCILIATION_REQUIRED` sin descartar el intento previo. Repetir el mismo `commandId` tras una respuesta perdida devuelve la misma operación sin otro efecto. Un resultado desconocido queda `uncertain` en `payments.terminal_operation` y mantiene el terminal excluido de los cobros; todavía no existe un comando para resolverlo.
+
+La migración `246_terminal_maintenance` agrega esas dos tablas y amplía la protección de la exclusión. `247_terminal_maintenance_access` concede `terminal.read` y `terminal.maintain` sólo al administrador protegido y revoca sus sesiones; el administrador puede delegarlos con el mecanismo existente. El incremento no decide qué otro rol los recibe ([Q-57](/project/questions/#q-57)), qué valida «terminal listo» ([Q-29](/project/questions/#q-29)) ni cómo se relacionan el cierre de caja y el lote ([Q-55](/project/questions/#q-55)). El adaptador real del terminal llega por el host y sigue en [FOLLOWUP-002](/project/attention/#followup-002) y [FOLLOWUP-004](/project/attention/#followup-004); este corte no modifica `apps/device-agent`.
+
+### Cierre del lote del terminal
+
+**TASK-376 · integrado en `main` mediante la [PR #380](https://github.com/developer-implementos/pos-platform/pull/380), revisión [`db49e43`](https://github.com/developer-implementos/pos-platform/commit/db49e43f4d002b2492b2d759deee1196f7e5c956).** Es el segundo corte de F02-14.
+
+`POST /api/v1/payment-terminals/batch-closures` (`closePaymentTerminalBatchV1`) exige `terminal.maintain` y es idempotente por `commandId`. Registra el intento en `payments.terminal_batch`, de la migración `252_terminal_batch`, y toma la exclusión del terminal en la misma transacción, antes de llamar al adaptador con tiempo acotado. Un cobro en curso, incierto o en cuarentena lo impide, igual que al mantenimiento. El estado del terminal agrega el último cierre y si se admite otro, y la vista pide confirmación antes de cerrar.
+
+| Resultado | Qué conserva |
+| --- | --- |
+| `closed` | `batchRef`, fecha de cierre y totales del proveedor por categoría; libera el terminal |
+| `failed` | Un fallo concluyente; libera el terminal |
+| `uncertain` | Sin respuesta, con `unknown` o con evidencia de otro terminal u otra clave; el terminal queda excluido de cobros, mantenimientos y cierres |
+
+El mismo `commandId` nunca vuelve a llamar al cierre. Si se perdió la respuesta HTTP, repetirlo devuelve el cierre registrado con su `batchRef`; la vista lo ofrece como **Recuperar mismo cierre**. Si se perdió la respuesta del adaptador y este implementa la consulta opcional del lote, la repetición explícita consulta por la clave propia del cierre y registra el resultado concluyente (`resolvedBy: inquiry`). Sin esa consulta, el cierre sigue `uncertain`. Un cierre `requested` cuyo proceso se cayó, y un mantenimiento incierto, siguen excluyendo el terminal: su resolución queda fuera de este corte.
+
+**El cierre del lote no cierra la caja.** No modifica el turno ni crea ventas, pagos o movimientos de caja; los totales son evidencia del proveedor y no reemplazan el libro de caja. En runtime todo cierre responde `PROVIDER_CAPABILITY_UNAVAILABLE`, porque no hay adaptador. El recorrido conectado de consultas cubre la sección con un adaptador controlado de prueba, y la [CI de `main`](https://github.com/developer-implementos/pos-platform/actions/runs/44002489011) lo aprobó.
+
+El incremento no decide si el cierre de caja exige, advierte o ignora el cierre del lote ([Q-55](/project/questions/#q-55)) ni qué rol puede cerrarlo ([Q-57](/project/questions/#q-57)); la conciliación entre los totales y los pagos registrados pertenece a F04. El cierre real y la restricción homologada frente a un cobro siguen en [FOLLOWUP-002](/project/attention/#followup-002) y [FOLLOWUP-004](/project/attention/#followup-004). Cerrar la tarea no verifica F02-14.
 
 ## Recorrido durable del host
 

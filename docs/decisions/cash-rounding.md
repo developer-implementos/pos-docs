@@ -1,6 +1,6 @@
 # ADR-20 · Redondeo de efectivo como ajuste de pago
 
-**Estado:** propuesta del 6-11-2026, pendiente de revisión. No está implementada en el backend ni aprobada por Finanzas, Tributario o el dueño del ERP. No acredita homologación ni operación productiva.
+**Estado:** propuesta del 6-11-2026, pendiente de revisión. No está aprobada por Finanzas, Tributario o el dueño del ERP. El producto tiene la definición pura de la política en `libs/country-policies`, [integrada en `80e0f0c`](#implementación-de-la-política-pura), pero ningún flujo la usa: pagos, ventas y caja siguen exigiendo el total exacto. No acredita homologación ni operación productiva.
 
 **Decisión:** el total de la venta y el documento tributario no cambian. El redondeo legal es un ajuste con signo del pago en efectivo, que el servidor fija una sola vez con una política versionada por país y congela junto a la operación. Los demás medios de pago van exactos y la caja registra sólo dinero real.
 
@@ -8,7 +8,7 @@
 
 En Chile, "en todos los pagos cuya solución se realice en dinero efectivo, las cantidades iguales o inferiores a $5 se depreciarán a la decena inferior, y las cantidades iguales o superiores a $6 se elevarán a la decena superior" ([Ley 20.956, art. 13](https://www.leychile.cl/Consulta/obtxml?opt=7&idLey=20956)). Rige desde el 1-11-2017 y no es un redondeo siempre al alza: $1.231 se cobra $1.230 y $1.237 se cobra $1.240.
 
-El backend exige hoy cobrar el total exacto. Rechaza una venta de $1.004 pagada con $1.000 (`CASH_INSUFFICIENT`) y acepta $1.006 con $1.006, cuando corresponde cobrar $1.010. La regla existe sólo en la maqueta, y [F02-05](https://github.com/developer-implementos/pos-platform/issues/27) se verificó con el criterio "no redondear para ocultar diferencias". Hasta implementar esta decisión, el producto no debe operar efectivo real en Chile.
+El backend exige hoy cobrar el total exacto. Rechaza una venta de $1.004 pagada con $1.000 (`CASH_INSUFFICIENT`) y acepta $1.006 con $1.006, cuando corresponde cobrar $1.010. La regla se aplica sólo en la maqueta, y [F02-05](https://github.com/developer-implementos/pos-platform/issues/27) se verificó con el criterio "no redondear para ocultar diferencias". Hasta implementar esta decisión, el producto no debe operar efectivo real en Chile.
 
 ## Qué fija la norma y qué queda abierto
 
@@ -254,6 +254,18 @@ Este ADR no modifica fichas ni avance. La ruta recomendada, a decidir por el coo
 4. Mantener las decisiones abiertas en `delivery/follow-ups.json`, publicadas en [Bloqueos y decisiones](/project/attention/), sin inventar responsable ni fecha. La pregunta [Q-53](/project/questions/#q-53) del registro de paridad remite a `FOLLOWUP-020`, de modo que la pregunta y sus decisiones no se registran dos veces. Al resolverse, cada seguimiento conserva su evidencia y este ADR se actualiza con la decisión.
 
 Una unidad nueva como `F02-15` también es viable, pero fragmenta algo que el inventario ya pedía como P02. P02 no se marca como parcial: `audit-chile-for-product.md` es un inventario sin columna de estado, y basta enlazarlo con F02-05 y la tarea.
+
+### Implementación de la política pura
+
+[TASK-366](https://github.com/developer-implementos/pos-platform/issues/366), integrada mediante la [PR #368](https://github.com/developer-implementos/pos-platform/pull/368) en [`80e0f0c`](https://github.com/developer-implementos/pos-platform/commit/80e0f0c40650b3526125a41c8cc83b79b9f55516), implementa sólo la definición pura que este ADR asigna a `libs/country-policies`. La función `roundCashPayment` devuelve el efectivo cobrado `C` y el ajuste `A` de una porción nominal en efectivo:
+
+| País | Política | Resultado |
+| --- | --- | --- |
+| Chile | `cl-cash-rounding-v1`, vigente desde el 1-11-2017 | Múltiplo de 10 más cercano, con empate a la baja; `A` entre −5 y +4 |
+| España | `es-cash-rounding-none-v1` | Sin redondeo: `A = null` y se cobra el nominal |
+| Perú | Sin política declarada | `policy-not-declared`, sin importe a cobrar, para que nadie asuma el nominal por defecto |
+
+Usa aritmética entera sobre la cadena decimal y no reutiliza el `HALF_UP` de `pricing`. Un pago anterior a la vigencia no se redondea, y una entrada inválida, como un importe no positivo, una fecha inexistente o una moneda o escala distinta de la política, se rechaza con su motivo. Las pruebas fijan los vectores chilenos de este ADR, la cota de `A` y las políticas sin redondeo o sin declarar. El [README de la librería](https://github.com/developer-implementos/pos-platform/blob/6eb980489cc936f6f81fb3a57cbf65501658ad45/libs/country-policies/README.md#redondeo-del-efectivo) la describe. Ningún flujo de pagos, ventas o caja la llama: conectarla sigue la ruta anterior, y las decisiones pendientes se siguen en `FOLLOWUP-019` a `FOLLOWUP-024`, publicadas en [Bloqueos y decisiones](/project/attention/).
 
 ## Riesgos y reversión
 
