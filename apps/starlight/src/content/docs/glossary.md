@@ -41,6 +41,7 @@ Estas definiciones precisan el uso de los términos **en esta propuesta**. Los e
 | Redis de trabajos | Almacén de ejecución BullMQ con persistencia y sin eviction; separado entre país y red ERP y de la caché opcional. No sustituye outbox/inbox ni obliga a instalar Redis en sucursal. | [Trabajos y recuperación](/guide/architecture/job-processing/) |
 | Redis de caché | Acelerador opcional para lecturas reconstruibles de país, en otra instancia. El espejo comercial offline permanece en PostgreSQL de sucursal. | [Contrato de caché](/guide/architecture/c4-model/#caché-de-país-opcional) |
 | Homologación | Evidencia de compatibilidad de una combinación de país, reglas, versiones, proveedor y dispositivo para las operaciones admitidas. | [Validación](/guide/operations/validation/) |
+| Ambiente | Instalación desplegada y persistente del POS: QA o producción. Ambos ejecutan el mismo artefacto y difieren solo en configuración y datos. El desarrollo local y la CI son efímeros y no son ambientes. | [Ambientes QA y producción](/guide/architecture/environments/) |
 
 ## Red, aplicaciones y código
 
