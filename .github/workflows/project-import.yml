@@ -3,6 +3,7 @@ name: Project import
 # planning and questions) from a clean checkout of its main branch. A person reviews and merges it.
 # The import App key lives in the `project-import` environment, which only admits `main`, and the
 # hourly run stays off until the PROJECT_IMPORT_ENABLED variable is `true`; see tools/project-import/README.md.
+# The `alert` job keeps one issue open while the import fails and closes it when a run succeeds.
 on:
   schedule:
     - cron: '23 * * * *'
@@ -68,3 +69,34 @@ jobs:
           POS_DOCS_TOKEN: ${{ steps.docs.outputs.token }}
           IMPORT_APP_SLUG: ${{ steps.docs.outputs.app-slug }}
         run: node tools/project-import/run.mjs --workspace ../pos-platform --publish
+  alert:
+    name: Alert on a failing import
+    # A scheduled run that fails is read by nobody (TASK-386). Opens or reminds one labelled issue
+    # while the import fails and closes it when a run succeeds; see tools/project-import/alert.mjs.
+    # `always()` runs it after a failed or cancelled import; a skipped import (opt-in schedule) does not.
+    needs: import
+    if: always() && needs.import.result != 'skipped' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # Two runs that fail together would both see no open issue and open two.
+    concurrency:
+      group: project-import-alert
+      cancel-in-progress: false
+    # The only write permission in this workflow's default token, and only on issues. No environment,
+    # no App key and nothing from the product: the step reads the result of the job above.
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '22.23.3'
+          package-manager-cache: false
+      - name: Open, remind or close the import alert
+        env:
+          GH_TOKEN: ${{ github.token }}
+          IMPORT_RESULT: ${{ needs.import.result }}
+        run: node tools/project-import/alert.mjs
