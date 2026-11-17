@@ -11,6 +11,13 @@ Los cambios de herramientas, pruebas y CI no aparecen aquí; quedan en el [regis
 
 Este archivo lo escribe [release-please](https://github.com/googleapis/release-please) desde los títulos de los PR, y cada versión queda como [release en GitHub](https://github.com/developer-implementos/pos-docs/releases). Para recibir un aviso por versión, usa *Watch → Custom → Releases* en el repositorio. No se edita a mano: cómo se escribe una buena entrada está en la [guía de versiones](tools/release/README.md).
 
+## [0.10.3](https://github.com/developer-implementos/pos-docs/compare/v0.10.2...v0.10.3) (2026-11-17)
+
+
+### Contenido actualizado
+
+* **project:** [TASK-361] importar el corte f3290b5 de seguimientos y preguntas ([e738342](https://github.com/developer-implementos/pos-docs/commit/e7383425388db4bd4797655523634122bc84d774))
+
 ## [0.10.2](https://github.com/developer-implementos/pos-docs/compare/v0.10.1...v0.10.2) (2026-11-17)
 
 
