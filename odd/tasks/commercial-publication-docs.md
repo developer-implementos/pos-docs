@@ -18,7 +18,7 @@ Espejo Engram: pendiente. La herramienta no está disponible en esta sesión; la
 
 - [x] T1 · S1,S5 · route:inline · Redactar la sección del contrato de publicación · status:done · evidence: `docs/contracts/master-data-publication.md`
 - [x] T2 · S2 · route:inline · Enlazar la sección desde ADR-22, la guía F02 y el recorrido de precios · status:done · evidence: `docs/decisions/environments.md`, `docs/phase-2-payments-documents.md`, `docs/flows/pricing.md`
-- [ ] T3 · S2,S4,S5 · route:inline · Regenerar derivados, ejecutar las comprobaciones y abrir la PR · status:in_progress · evidence: pendiente
+- [x] T3 · S2,S4,S5 · route:inline · Regenerar derivados, ejecutar las comprobaciones y abrir la PR · status:done · evidence: `b53608c`, L3
 - [ ] T4 · S3 · route:inline · Importar el diccionario de datos desde `main` cuando TASK-404 se integre · status:blocked · evidence: pendiente de la integración de pos-platform#417
 
 ## Log
@@ -33,3 +33,8 @@ Encargo de la sesión coordinadora a esta sesión: preparar y abrir, sin integra
   - Una sección en el contrato de publicación y no una página nueva: el contrato del archivo pertenece al producto, que ya mantiene su esquema, límites, ejemplo y guía operativa; una página propia repetiría esa tabla. El contrato de publicación es la página canónica de la activación en sucursal y ya enlaza F03-02.
   - No es un ADR: concreta operaciones ya propuestas en F03-10. La activación por reemplazo de proyecciones en lugar de un puntero sobre tablas versionadas es una decisión de diseño del producto (L2 de su ficha) que se publica como diferencia pendiente de revisión, no como decisión aprobada.
   - El roadmap (`docs/roadmap.json`) no cambia y la vista de Archify `/explore/commercial-version/` sigue describiendo la propuesta.
+- L3 · 2026-11-18 · Sobre `b53608c`, con Node 22.23.3:
+  - `npm run verify` completo en verde, incluidos `odd:check`, `editorial:check`, `editorial:test` 28/28, `diagrams:test` 7/7, `validate`, `typecheck`, `build`, `check` (24 768 enlaces, sin errores), `presentations:check` y `project:check`.
+  - El deck de arquitectura no describe la carga en sucursal; su texto sigue correcto y `sources.json` se refrescó con `presentations/tools/review-sources.mjs`. El ZIP de Excalidraw se regeneró con `tools/diagrams/package-excalidraw.py`.
+  - Con el cuerpo de la PR: `pr-check` valida la declaración (offline, sin consultar la issue) y `journeys-check` encuentra las 4 rutas en `dist`.
+  - Revisión de agente; falta la revisión humana.
