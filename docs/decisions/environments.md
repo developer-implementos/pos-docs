@@ -90,6 +90,7 @@ Este repositorio es público: la descripción, el alcance y las mitigaciones de 
 - En QA se despliegan la API (`branch-api`) y el cliente web (`pos-web`).
 - Los clientes de escritorio y móvil del [ADR-14](native-clients.md) se entregan con sus propios artefactos; este ADR no cambia esa entrega.
 - El cliente web es el [ADR-21](web-client.md).
+- El acceso sigue el [ADR-23](device-activation.md), en implementación en TASK-412: jefatura abre el cliente web, elige «Activar este equipo» con el usuario y la contraseña inicial del administrador, elige su caja web, inicia sesión y cambia la contraseña inicial. Los archivos de registro de caja que genera la preparación del servidor dejan de usarse para el login cuando se integre la PR de clientes, que también actualiza la guía de despliegue.
 - Producción y sus anillos pertenecen a [F06-03](/guide/roadmap/phase-06/#work-f06-03).
 
 ## Verificación

@@ -1,13 +1,13 @@
 # Identidad y confianza entre fronteras
 
-**Estado: propuesta de implementación — ADR-16.** Precisa autenticación, autorización y continuidad para las siete aplicaciones. F01 utiliza usuarios, roles y asignaciones propios del POS para Chile, además del laboratorio segregado. La federación, PKI e identidad criptográfica de dispositivos descritas aquí siguen siendo propuestas; no se ha seleccionado ni integrado un proveedor corporativo. F03/F05 deben comprobar sus fronteras y ciclo de vida antes de una habilitación productiva.
+**Estado: propuesta de implementación — ADR-16.** Precisa autenticación, autorización y continuidad para las siete aplicaciones. F01 utiliza usuarios, roles y asignaciones propios del POS para Chile, además del laboratorio segregado. El [ADR-23](../decisions/device-activation.md) concreta el alta y la prueba de posesión de las instalaciones cliente, con su implementación en revisión en [TASK-412](https://github.com/developer-implementos/pos-platform/issues/412). La federación, la PKI, la vinculación de tokens y las identidades de workloads descritas aquí siguen siendo propuestas; no se ha seleccionado ni integrado un proveedor corporativo. F03/F05 deben comprobar sus fronteras y ciclo de vida antes de una habilitación productiva.
 
 ## Identidades distintas
 
 | Identidad | Qué representa | Quién comprueba su autoridad |
 | --- | --- | --- |
 | Operador | Persona autorizada para operaciones y ámbitos concretos | `branch-api` verifica sesión, permisos, país/entidad/sucursal/caja y límites del comando |
-| Puesto | Instalación de `pos-desktop` o `pos-mobile`, identificada por `deviceId` y época de instalación | Registro de dispositivos y backend de sucursal; posesión de una clave no concede permisos del operador |
+| Puesto | Instalación de `pos-desktop`, `pos-mobile` o `pos-web`, identificada por `deviceId` y época de instalación; su equipo activado, por la credencial y su época ([ADR-23](../decisions/device-activation.md)) | Registro de dispositivos y backend de sucursal; posesión de una clave no concede permisos del operador |
 | Sucursal | Instalación y escritor autorizado del backend local, con época de recuperación | Registro de instalaciones en país; restaurar una copia no crea otro escritor autorizado |
 | Workload | Instancia/capacidad de `branch-sync-worker`, `erp-worker`, `device-agent` y de las APIs | API receptora valida audiencia, identidad, ámbito y capacidades; un worker no usa la sesión personal de un administrador |
 
@@ -27,7 +27,7 @@ En la arquitectura propuesta, `country-api` mantendrá el registro POS de instal
 
 Estos perfiles deben validarse con bibliotecas y componentes mantenidos; no se diseña un algoritmo criptográfico propio. OAuth y OIDC no conceden autorización de negocio por sí solos. El receptor comprueba el permiso sobre la operación y su objeto: una venta o un resultado no se autoriza sólo porque el token contenga un rol.
 
-La clave del puesto se genera y protege en el almacén nativo; nunca se incluye un secreto compartido en el bundle Angular. El perfil DPoP debe validarse en Tauri y Capacitor, incluido ciclo de vida y reloj; si no es interoperable con los componentes elegidos, requiere una decisión de seguridad equivalente antes de habilitar ese cliente. No se degrada silenciosamente a un token reutilizable en cualquier equipo.
+La clave del puesto se genera y protege en el almacén nativo; nunca se incluye un secreto compartido en el bundle Angular. El paso implementado en TASK-412 ([ADR-23](../decisions/device-activation.md)) usa una llave ECDSA P-256 no extraíble de WebCrypto, guardada en IndexedDB en los tres clientes, y prueba su posesión al iniciar sesión firmando un desafío de un solo uso; la sesión resultante queda ligada en el servidor a esa credencial. El almacén nativo y la prueba en cada petición siguen siendo el perfil propuesto. El perfil DPoP debe validarse en Tauri y Capacitor, incluido ciclo de vida y reloj; si no es interoperable con los componentes elegidos, requiere una decisión de seguridad equivalente antes de habilitar ese cliente. No se degrada silenciosamente a un token reutilizable en cualquier equipo.
 
 ## Datos del contrato y comprobaciones
 
@@ -41,7 +41,7 @@ Si TLS termina en un proxy, sólo se aceptan atributos certificados desde ese pr
 
 | Etapa | Cambio durable | Qué se comprueba |
 | --- | --- | --- |
-| Alta | Administrador autorizado registra equipo/instalación, genera un desafío de uso único y aprueba el ámbito; se prueba posesión de la clave antes de activar | Caducidad y consumo único del desafío, inventario y auditoría. Requiere conexión y no permite autoasignar una sucursal |
+| Alta | Administrador autorizado registra equipo/instalación, genera un desafío de uso único y aprueba el ámbito; se prueba posesión de la clave antes de activar | Caducidad y consumo único del desafío, inventario y auditoría. Requiere conexión y no permite autoasignar una sucursal. Para las instalaciones cliente, en revisión en el [ADR-23](../decisions/device-activation.md): token de activación de un uso, instalación ya aprovisionada del mismo canal y época nueva en cada activación |
 | Rotación | Se registra la nueva clave/certificado, se prueba posesión y se publica la transición; el solapamiento y sus fechas son acotados | La clave anterior deja de autorizar al terminar su ventana. Rotar no altera IDs de negocio ni reclamos pendientes |
 | Revocación | Se marca identidad/clave/política revocada, se incrementa su versión y se distribuye a receptores | Online se deniegan nuevos comandos y claims según el estado vigente; el TTL no reemplaza la revocación conocida |
 | Cambio de equipo o restore | Se crea una época nueva y se excluye al escritor anterior antes de admitir negocio | Una copia de disco no puede clonar indefinidamente la autoridad. Se recuperan pendientes sin duplicar efectos ni renovar permisos por restaurar datos viejos |
