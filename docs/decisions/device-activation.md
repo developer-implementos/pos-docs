@@ -25,7 +25,7 @@ Reglas:
 
 ## Iniciar sesión con prueba de posesión
 
-1. `POST /auth/challenges` (`createLoginChallengeV1`) entrega un desafío de un solo uso que vence a los 60 segundos.
+1. `POST /auth/challenges` (`createLoginChallengeV1`) entrega un desafío que vence a los 60 segundos **sin guardarlo**: su `nonce` es un HMAC-SHA256 del servidor, con una llave propia de la base, sobre el identificador del desafío, la instalación, la época de su credencial y el vencimiento. Pedir muchos desafíos no consume nada, así que no deja a una caja sin login. Una instalación desconocida o sin credencial recibe uno de la misma forma que nunca verifica.
 2. El cliente firma con la llave del equipo (ECDSA P-256 con SHA-256, firma en formato IEEE P1363) este mensaje canónico, una línea por campo:
 
    ```text
@@ -36,7 +36,7 @@ Reglas:
    <epoch>
    ```
 
-3. `POST /auth/installation-login` (`operationalLoginV2`) recibe usuario, contraseña, instalación, desafío y firma. El servidor verifica la firma, consume el desafío y deriva la caja de la instalación: el cliente no la declara.
+3. `POST /auth/installation-login` (`operationalLoginV2`) recibe usuario, contraseña, instalación, el desafío tal como se recibió y la firma. El servidor autentica el desafío, registra su uso una sola vez (un segundo uso se rechaza, también en otra réplica), verifica la firma y deriva la caja de la instalación: el cliente no la declara.
 
 Todo rechazo responde igual: firma de otra llave, desafío repetido, vencido o de otra instalación, época anterior, instalación desactivada o sin credencial. La causa queda solo en la auditoría (`authorization_audit.reason_code`). La sesión queda ligada a su credencial y deja de valer al revocarla.
 
@@ -61,14 +61,15 @@ Si un equipo pierde su llave, por ejemplo porque se borraron los datos del naveg
 
 La migración aditiva `254_installation_credentials` agrega:
 
-| Cambio | Qué guarda |
-| --- | --- |
-| `installation_credential` | La credencial de cada instalación: época, identificador y llave pública, algoritmo `ES256`, quién la activó y cuándo, y su revocación. Como máximo una activa por instalación; no se borra. |
-| `installation_activation` | El token de activación (solo su hash), el canal, el vencimiento y su consumo. |
-| `login_challenge` | Los desafíos de login, en ocho ranuras por instalación que se reciclan: emitir desafíos sin autenticar no hace crecer la tabla. |
-| `operator_account.password_change_required` | La marca de cambio obligatorio. |
-| `authorization_audit.reason_code` | La causa de un rechazo, sin revelarla a quien llama. |
-| `lab_session.credential_id` | La credencial a la que queda ligada una sesión operativa. |
+| Cambio                                      | Qué guarda                                                                                                                                                                                  |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `installation_credential`                   | La credencial de cada instalación: época, identificador y llave pública, algoritmo `ES256`, quién la activó y cuándo, y su revocación. Como máximo una activa por instalación; no se borra. |
+| `installation_activation`                   | El token de activación (solo su hash), el canal, el vencimiento y su consumo.                                                                                                               |
+| `login_challenge_key`                       | La llave de la base con la que el servidor autentica los desafíos. La genera la migración y la cuenta de ejecución solo la lee.                                                             |
+| `login_challenge_use`                       | Los desafíos ya usados, para que cada uno sirva una sola vez. Emitir desafíos no escribe aquí; la cuenta propietaria purga los vencidos (`database.js purge-login-challenges`).             |
+| `operator_account.password_change_required` | La marca de cambio obligatorio.                                                                                                                                                             |
+| `authorization_audit.reason_code`           | La causa de un rechazo, sin revelarla a quien llama.                                                                                                                                        |
+| `lab_session.credential_id`                 | La credencial a la que queda ligada una sesión operativa.                                                                                                                                   |
 
 Aplicar la migración revoca las sesiones operativas abiertas. La [referencia de APIs](/guide/api/pos-platform/) y el [diccionario de datos](/guide/api/data-model/) del portal muestran todavía la revisión anterior: se actualizarán al importar el artefacto del producto cuando TASK-412 se integre en `main`.
 
@@ -99,7 +100,7 @@ La política de origen que fija el build (`client-deployment.json`) no cambia.
 
 ## Verificación
 
-El producto prueba con PostgreSQL real cada rechazo de la issue: firma de otra llave; desafío repetido, vencido o de otra instalación; época anterior; instalación desactivada; activación sin permiso, de otro canal o de otra sucursal. También prueba que activar de nuevo cierra las sesiones del equipo anterior y que una sesión con cambio obligatorio no puede hacer otra cosa. La [ficha de la tarea](https://github.com/developer-implementos/pos-platform/blob/7e20fcc2372ee0fd7966b4746ac0c205fbc023b1/odd/tasks/device-activation.md) del producto, en `7e20fcc`, registra esa evidencia local; la CI de #413 todavía no la acredita.
+El producto prueba con PostgreSQL real cada rechazo de la issue: firma de otra llave; desafío repetido, vencido o de otra instalación; época anterior; instalación desactivada; activación sin permiso, de otro canal o de otra sucursal. También prueba que activar de nuevo cierra las sesiones del equipo anterior y que una sesión con cambio obligatorio no puede hacer otra cosa. La [ficha de la tarea](https://github.com/developer-implementos/pos-platform/blob/ebc4e5045d8a323077e75a194821ae4369a4cdb8/odd/tasks/device-activation.md) del producto, en `ebc4e50`, registra esa evidencia local, incluida la prueba de que pedir 50 desafíos para una caja no impide entrar al equipo legítimo; la CI de #413 todavía no la acredita.
 
 Esa evidencia no acredita:
 
