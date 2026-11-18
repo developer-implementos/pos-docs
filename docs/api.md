@@ -111,7 +111,7 @@ Las rutas llevan el prefijo `/api/v1`; cada perfil y capacidad limita su ejecuci
 | Rutas | Responsabilidad |
 | --- | --- |
 | `POST /auth/lab/login`, `GET /auth/session`, `POST /auth/logout` | Crear, consultar y revocar una sesión limitada a actor, caja e instalación |
-| `POST /auth/login`, `POST /auth/password` | Acceso operativo con usuario propio POS y cambio de contraseña; no acepta identidad de laboratorio |
+| `POST /auth/password` | Cambio de la contraseña propia; el acceso operativo usa la activación y el login con prueba de posesión de la tabla siguiente |
 | `GET /administration/access-options` | Consultar puestos autorizados y permisos otorgables |
 | `GET/POST /administration/operators`, `PUT /administration/operators/:operatorId` | Consultar, crear y actualizar operadores propios del POS con permisos y versiones |
 | `POST /administration/operators/:operatorId/password`, `/revoke-sessions` | Restablecer contraseña o revocar sesiones autorizadamente |
@@ -129,15 +129,22 @@ Las rutas llevan el prefijo `/api/v1`; cada perfil y capacidad limita su ejecuci
 | `GET /commands/:commandId` | Recuperar el resultado terminal `completed` o `rejected` de la confirmación |
 | `GET /sales/:saleId` | Consultar el comprobante histórico de laboratorio, con detalle y reglas conservadas |
 
-La tabla describe `main`. [TASK-412](https://github.com/developer-implementos/pos-platform/issues/412), en revisión en [pos-platform#413](https://github.com/developer-implementos/pos-platform/pull/413), retira `POST /auth/login` y agrega la activación de equipos y el login con prueba de posesión que describe el [ADR-23](decisions/device-activation.md):
+[TASK-412](https://github.com/developer-implementos/pos-platform/issues/412), integrada en `main` con [pos-platform#413](https://github.com/developer-implementos/pos-platform/pull/413) y [#414](https://github.com/developer-implementos/pos-platform/pull/414), retiró `POST /auth/login` y agregó la activación de equipos y el login con prueba de posesión que describe el [ADR-23](decisions/device-activation.md):
 
-| Rutas en revisión | Responsabilidad |
+| Rutas de TASK-412 | Responsabilidad |
 | --- | --- |
 | `POST /auth/activations`, `POST /auth/installation-credentials` | Activar un equipo: token de un solo uso con `installation.activate` y vínculo de la llave pública a una instalación del mismo canal |
 | `POST /auth/challenges`, `POST /auth/installation-login` | Emitir un desafío de un solo uso e iniciar sesión con la firma del equipo; la caja se deriva de la instalación |
 | `GET /administration/installations`, `POST /administration/installations/:installationId/deactivate` | Consultar el equipo de cada caja y desactivarlo con `installation.manage` |
 
-Con una contraseña marcada para cambio obligatorio, el servidor solo admite consultar la sesión, cambiar la contraseña y cerrar sesión (`PASSWORD_CHANGE_REQUIRED`). La [referencia de APIs](/guide/api/pos-platform/) incorporará estas operaciones al importar el artefacto del producto después de la integración.
+Con una contraseña marcada para cambio obligatorio, el servidor solo admite consultar la sesión, cambiar la contraseña y cerrar sesión (`PASSWORD_CHANGE_REQUIRED`). La [referencia de APIs](/guide/api/pos-platform/) incorporará estas operaciones al importar desde `main` el artefacto del producto.
+
+Las tablas describen `main`. [TASK-416](https://github.com/developer-implementos/pos-platform/issues/416), en revisión y sin integrar, reemplaza el usuario por el correo en el login de laboratorio y operativo, en la activación con la cuenta y en el alta y la edición de operadores (`email`, con `OPERATOR_EMAIL_TAKEN` para un correo repetido), agrega a cada operador su origen y la referencia opcional al trabajador del ERP, y agrega la activación con un código de un solo uso que describe el [ADR-24](decisions/email-sign-in.md):
+
+| Rutas en revisión | Responsabilidad |
+| --- | --- |
+| `POST /administration/installations/:installationId/activation-codes` | Generar con `installation.activate` un código de diez minutos y un solo uso para el equipo de una caja; reemplaza el código abierto de esa caja |
+| `POST /auth/activation-code-redemptions` | Canjear el código desde un cliente del mismo canal y vincular la llave pública del equipo a esa instalación; todo rechazo responde igual |
 
 Los comandos usan `contractVersion`, `commandId` y versión esperada cuando existe un agregado. Los importes viajan como cadenas decimales; UUID y fechas se normalizan en contrato. La identidad, permisos y capacidades se verifican en el servidor, independientemente de lo que muestre la UI. Los tokens de sesión se conservan en memoria en el cliente; el servidor guarda su hash y vencimiento.
 
