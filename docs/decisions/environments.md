@@ -27,7 +27,7 @@ QA ejecuta el mismo artefacto y el mismo camino que producción:
 
 Las diferencias entre ambientes son solo de configuración (origen, certificados, secretos y cajas aprovisionadas) y de datos. QA no tiene un modo propio ni atajos de prueba.
 
-Como consecuencia, ningún ambiente usa el perfil de laboratorio ni la demo. Retirarlos del producto es [TASK-406](https://github.com/developer-implementos/pos-platform/issues/406), todavía abierta: hasta que se integre, siguen en el código y en las guías de F01.
+Como consecuencia, ningún ambiente usa el perfil de laboratorio ni la demo. El [ADR-25](single-operational-mode.md) extiende ese modo único al desarrollo local y a la CI y retira ambos del producto en [TASK-406](https://github.com/developer-implementos/pos-platform/issues/406), en revisión: hasta que se integre, siguen en el código y en las guías de F01.
 
 ## Datos de QA
 
