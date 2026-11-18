@@ -17,7 +17,7 @@ Espejo Engram: pendiente. La herramienta no está disponible en esta sesión; la
 
 - [x] T1 · S1,S4 · route:inline · Redactar el ADR-23 · status:done · evidence: `docs/decisions/device-activation.md`
 - [x] T2 · S2 · route:inline · Registrar la decisión y actualizar las páginas que describían el registro por JSON · status:done · evidence: `docs/propuesta-arquitectura.md`, `apps/starlight/content-map.mjs`, glosario, `docs/contracts/identity-and-trust.md`, `docs/decisions/{native-clients,web-client,environments}.md`, `docs/phase-1-laboratory.md`, `docs/api.md`, `docs/flows/recovery.md`
-- [ ] T3 · S1,S2,S4 · route:inline · Ejecutar las comprobaciones editoriales y de build, y abrir la PR · status:in_progress · evidence: L3
+- [x] T3 · S1,S2,S4 · route:inline · Ejecutar las comprobaciones editoriales y de build, y abrir la PR · status:done · evidence: `f9c08ce`, pos-docs#127 (L3)
 - [ ] T4 · S3 · route:inline · Importar contratos y esquema desde `main` cuando TASK-412 se integre · status:blocked · evidence: pendiente de la integración de pos-platform#413 y de la PR de clientes
 
 ## Log
@@ -33,3 +33,8 @@ Encargo de la sesión coordinadora a esta sesión: preparar y abrir, sin integra
   - El roadmap (`docs/roadmap.json`) no cambia: TASK-412 es de mantenimiento y F03-06 conserva su alcance en el producto.
   - La referencia de APIs y el diccionario de datos siguen en `f3290b5`: el importador exige el commit exacto de un checkout limpio y el portal no tiene una etiqueta de corte previo para ellos; `docs/api.md` lista las rutas en revisión aparte de la tabla de `main`.
   - La PR de clientes todavía no está abierta; las páginas la nombran como pendiente.
+- L3 · 2026-11-17 · Sobre `f9c08ce`, con Node 22.23.3:
+  - `npm run verify` completo en verde, incluidos `odd:check`, `editorial:check`, `editorial:test` 28/28, `diagrams:test` 7/7, `validate`, `typecheck`, `build`, `check` (24 752 enlaces, sin errores) y `project:check`.
+  - El build exigió revisar el deck de arquitectura porque cambió `docs/propuesta-arquitectura.md`. No enumera ADR y su nota de F01 describe `main`, que sigue vigente; `sources.json` se refrescó con `presentations/tools/review-sources.mjs`. El ZIP de Excalidraw se regeneró con `tools/diagrams/package-excalidraw.py`.
+  - PR [pos-docs#127](https://github.com/developer-implementos/pos-docs/pull/127): `pr-check --github --require-issue` valida la declaración y verifica abierta la issue #412; `journeys-check` encuentra las 11 rutas en `dist`. En la PR, `Documentation quality`, `Editorial PR policy` y la vista previa de Vercel terminaron en verde.
+  - Revisión de agente; falta la revisión humana.
