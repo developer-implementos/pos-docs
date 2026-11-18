@@ -17,7 +17,7 @@ Espejo Engram: pendiente. La herramienta no está disponible en esta sesión; la
 
 - [x] T1 · S1,S4 · route:inline · Redactar el ADR-25 · status:done · evidence: `docs/decisions/single-operational-mode.md`
 - [x] T2 · S2 · route:inline · Registrar la decisión y enlazarla desde el ADR-22 · status:done · evidence: `docs/propuesta-arquitectura.md`, `apps/starlight/content-map.mjs`, `docs/decisions/environments.md`
-- [ ] T3 · S1,S2,S4 · route:inline · Ejecutar las comprobaciones editoriales y de build, y abrir la PR · status:in_progress · evidence: pendiente
+- [x] T3 · S1,S2,S4 · route:inline · Ejecutar las comprobaciones editoriales y de build, y abrir la PR · status:done · evidence: `c1e7fbe`, pos-docs#133 (L3)
 - [ ] T4 · S3 · route:inline · Actualizar las guías que describen el laboratorio y la demo e importar contrato y diccionario cuando TASK-406 se integre · status:blocked · evidence: pendiente de la integración de las PR del producto
 
 ## Log
@@ -33,3 +33,4 @@ Espejo Engram: pendiente. La herramienta no está disponible en esta sesión; la
   - El catálogo único de capacidades se describe como «soportar no es habilitar»: el producto no cambia el comportamiento de QA ni producción mientras su activación no incluya las capacidades nuevas.
   - El inventario detallado de recorridos y la cobertura antes y después viven en la ficha del producto; el ADR los resume y la enlaza.
   - Las guías que describen el laboratorio y la demo (F01, pruebas, API, escritorio y móvil) siguen siendo ciertas para `main` hasta la integración; se actualizan en otra PR editorial (S3).
+- L3 · 2026-11-18 · Evidencia local con Node 22.23.3: el primer `npm run verify`, sobre el árbol sin commit, falló solo porque el build exige revisar el deck después de cambiar `docs/propuesta-arquitectura.md`; tras confirmar `2ce96b9`, `presentations/tools/review-sources.mjs` refrescó `sources.json` en `c1e7fbe` y `npm run verify` completo pasó sobre ese commit. El ZIP de Excalidraw se regeneró con `tools/diagrams/package-excalidraw.py`. PR [pos-docs#133](https://github.com/developer-implementos/pos-docs/pull/133) abierta. Revisión de agente; falta la revisión humana.
