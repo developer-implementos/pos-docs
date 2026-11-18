@@ -129,6 +129,16 @@ Las rutas llevan el prefijo `/api/v1`; cada perfil y capacidad limita su ejecuci
 | `GET /commands/:commandId` | Recuperar el resultado terminal `completed` o `rejected` de la confirmación |
 | `GET /sales/:saleId` | Consultar el comprobante histórico de laboratorio, con detalle y reglas conservadas |
 
+La tabla describe `main`. [TASK-412](https://github.com/developer-implementos/pos-platform/issues/412), en revisión en [pos-platform#413](https://github.com/developer-implementos/pos-platform/pull/413), retira `POST /auth/login` y agrega la activación de equipos y el login con prueba de posesión que describe el [ADR-23](decisions/device-activation.md):
+
+| Rutas en revisión | Responsabilidad |
+| --- | --- |
+| `POST /auth/activations`, `POST /auth/installation-credentials` | Activar un equipo: token de un solo uso con `installation.activate` y vínculo de la llave pública a una instalación del mismo canal |
+| `POST /auth/challenges`, `POST /auth/installation-login` | Emitir un desafío de un solo uso e iniciar sesión con la firma del equipo; la caja se deriva de la instalación |
+| `GET /administration/installations`, `POST /administration/installations/:installationId/deactivate` | Consultar el equipo de cada caja y desactivarlo con `installation.manage` |
+
+Con una contraseña marcada para cambio obligatorio, el servidor solo admite consultar la sesión, cambiar la contraseña y cerrar sesión (`PASSWORD_CHANGE_REQUIRED`). La [referencia de APIs](/guide/api/pos-platform/) incorporará estas operaciones al importar el artefacto del producto después de la integración.
+
 Los comandos usan `contractVersion`, `commandId` y versión esperada cuando existe un agregado. Los importes viajan como cadenas decimales; UUID y fechas se normalizan en contrato. La identidad, permisos y capacidades se verifican en el servidor, independientemente de lo que muestre la UI. Los tokens de sesión se conservan en memoria en el cliente; el servidor guarda su hash y vencimiento.
 
 F01-09 incorpora dos rutas v1 sin cambiar el DTO de cesta existente: `GET /sales/drafts/recoverable` lista las cestas propias pausadas en otros puestos de la misma sucursal; `POST /sales/drafts/:cartId/recover` toma una mediante `commandId` y `expectedVersion`. El destino se deriva de la sesión, no del cuerpo. La operación conserva el origen, valida la configuración de la instalación destino y exige una nueva cotización. La [guía F01](phase-1-laboratory.md#revisión-de-datos-y-recuperación-entre-puestos) explica la interacción, los conflictos y la frescura de clientes; la evidencia de este corte se registra en el producto.

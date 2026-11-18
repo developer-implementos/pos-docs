@@ -25,7 +25,7 @@ El ADR-14 definió dos aplicaciones completas, cada una con su shell nativa, y d
 
 - **Canal verdadero.** El canal es parte de la identidad inmutable de la instalación. La base acepta `desktop`, `mobile` y `web` mediante una migración de expansión; las instalaciones existentes no cambian.
 - **Solo cliente conectado.** El build de `pos-web` exige una política con un origen HTTPS exacto, como los otros clientes. Su CSP no declara el origen IPC de Tauri. La composición rechaza la demo y el modo de laboratorio en la web: un archivo de perfil reemplazado en el servidor no la convierte en demo.
-- **Registro por navegador.** Cada navegador y perfil de usuario es una instalación distinta, con su `registerId` e `installationId` aprovisionados. El navegador guarda la URL y los IDs, nunca contraseñas ni tokens.
+- **Registro por navegador.** Cada navegador y perfil de usuario es una instalación distinta, con su `registerId` e `installationId` aprovisionados. El navegador guarda la URL y los IDs, nunca contraseñas ni tokens. El [ADR-23](device-activation.md), en implementación en TASK-412, reemplaza la importación de esos IDs por la activación del equipo: el navegador guarda una llave no extraíble y solo activa instalaciones `web`.
 - **Publicación.** El servidor que publica el cliente lo sirve solo por HTTPS confiable y envía la misma CSP como cabecera, más `frame-ancestors 'none'`, que el `<meta>` no puede expresar.
 - **Telemetría.** Los fallos del cliente se identifican como `pos-web` en el contrato `client-failure-v1`.
 
