@@ -15,6 +15,7 @@ La [evaluación de precios y ofertas](/guide/proposal/pricing-promotions/) disti
 | [Publicación: fallos y límites](/guide/architecture/master-data-publication/#fallos-y-límites-que-deben-probarse) | Paquete incompleto, ámbito incorrecto, hashes y activación |
 | [Motor local de precios](https://github.com/developer-implementos/pos-platform/blob/98f8987bfa8764ab77f6a55a7686f2ed7884d541/libs/backend/pricing/test/pricing-engine.test.ts) | Reglas de cálculo implementadas en la revisión indicada |
 | [F03-02](https://github.com/developer-implementos/pos-platform/issues/38) | Publicación comercial y calendario durable |
+| [Carga desde archivo en la sucursal](/guide/architecture/master-data-publication/#carga-desde-archivo-en-la-sucursal) | Contrato `commercial-publication-v1`, staging, validación y activación con versión base de TASK-404, en revisión |
 | [BullMQ por ámbito](/explore/optional-jobs/) | Programación y ejecución propuestas con Redis dedicado |
 
-Probar el motor local no acredita el circuito de distribución. La publicación completa y BullMQ conservan su estado de propuesta pendiente de implementación; su progreso se consulta en [F03](/guide/roadmap/phase-03/) y en el [registro del producto](/guide/implementation/progress/).
+Probar el motor local no acredita el circuito de distribución. La publicación completa y BullMQ conservan su estado de propuesta pendiente de implementación, y la carga desde archivo de TASK-404, en revisión, no los reemplaza; su progreso se consulta en [F03](/guide/roadmap/phase-03/) y en el [registro del producto](/guide/implementation/progress/).

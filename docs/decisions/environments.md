@@ -32,8 +32,8 @@ Como consecuencia, ningún ambiente usa el perfil de laboratorio ni la demo. Ret
 ## Datos de QA
 
 - QA no contiene datos personales reales.
-- Los datos comerciales llegarán por la misma puerta de carga que producción ([TASK-404](https://github.com/developer-implementos/pos-platform/issues/404)). Los extraerá del QA del legacy un extractor que anonimiza a los clientes ([TASK-405](https://github.com/developer-implementos/pos-platform/issues/405)), conforme a la Ley 21.719 de protección de datos personales, vigente desde el 1-12-2026.
-- Hasta entonces, QA tiene sucursal, cajas y usuarios, pero no catálogo ni precios.
+- Los datos comerciales llegarán por la misma puerta de carga que producción ([TASK-404](https://github.com/developer-implementos/pos-platform/issues/404)): el comando `import-commercial` de `branch-api`, que carga un archivo `commercial-publication-v1` y está [en revisión](/guide/architecture/master-data-publication/#carga-desde-archivo-en-la-sucursal) en [pos-platform#417](https://github.com/developer-implementos/pos-platform/pull/417), sin integrar. Los extraerá del QA del legacy un extractor que anonimiza a los clientes ([TASK-405](https://github.com/developer-implementos/pos-platform/issues/405)), conforme a la Ley 21.719 de protección de datos personales, vigente desde el 1-12-2026.
+- Hasta que ambas se integren y se cargue una publicación, QA tiene sucursal, cajas y usuarios, pero no catálogo ni precios, y cotizar responde `SOURCE_UNAVAILABLE`.
 
 ## Topología de QA
 
