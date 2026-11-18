@@ -1,6 +1,6 @@
 # ADR-24 · Ingreso con correo y códigos de activación
 
-**Estado:** decisión del responsable del producto del 18-11-2026, en implementación en [TASK-416](https://github.com/developer-implementos/pos-platform/issues/416). La implementación (backend, clientes, pruebas E2E y guía de despliegue) está en revisión en la rama `work/task-416-correo-codigos` de POS Platform, todavía sin integrar en `main`. Completa el modelo de identidad del [ADR-23](device-activation.md) y prepara [F03-07](/guide/roadmap/phase-03/#work-f03-07) sin implementarla. No acredita despliegue en QA, homologación, operación productiva ni aceptación de QA.
+**Estado:** decisión del responsable del producto del 18-11-2026, en implementación en [TASK-416](https://github.com/developer-implementos/pos-platform/issues/416). La implementación (backend, clientes, pruebas E2E y guía de despliegue) está en revisión en [pos-platform#418](https://github.com/developer-implementos/pos-platform/pull/418) (borrador, `76cf139`), todavía sin integrar en `main`. Completa el modelo de identidad del [ADR-23](device-activation.md) y prepara [F03-07](/guide/roadmap/phase-03/#work-f03-07) sin implementarla. No acredita despliegue en QA, homologación, operación productiva ni aceptación de QA.
 
 **Decisión:** la persona ingresa al POS con su correo y su contraseña. El correo es un dato normalizado y único de la cuenta, no su llave: `operatorId` sigue siendo la identidad inmutable. Cada cuenta declara su origen, `local` o `erp`, y puede guardar la referencia del trabajador del ERP como dato. Un equipo se activa por defecto con un código de un solo uso que genera una persona autorizada desde su sesión, sin que nadie escriba una contraseña de administrador en el equipo nuevo; la activación con la cuenta del [ADR-23](device-activation.md) queda como alternativa. El administrador inicial se fija en el aprovisionamiento y su recuperación de emergencia es un comando propietario: no hay cuentas ni correos por defecto.
 
@@ -132,10 +132,11 @@ Los números de migración son los de la rama; si otra serie se integra antes en
 
 ## Verificación
 
-El producto prueba con PostgreSQL real, en `account-identity.test.ts`: la misma respuesta HTTP para un correo inexistente y una contraseña equivocada; la unicidad y el cambio de correo con la sesión intacta; el origen y la referencia del ERP; la emisión y el canje con solo el hash y su auditoría; el código vencido, desconocido, de otro canal, reemplazado, agotado y repetido con la misma respuesta; el canje concurrente; el emisor sin permiso; otra sucursal en otra base, y la recuperación de emergencia. La prueba de actualización de migraciones cubre la transición de las cuentas previas. La ficha de la tarea del producto (`odd/tasks/email-identity-activation-codes.md`) registra esa evidencia local; la CI de la PR del producto todavía no la acredita.
+El producto prueba con PostgreSQL real, en `account-identity.test.ts`: la misma respuesta HTTP para un correo inexistente y una contraseña equivocada; la unicidad y el cambio de correo con la sesión intacta; el origen y la referencia del ERP; la emisión y el canje con solo el hash y su auditoría; el código vencido, desconocido, de otro canal, reemplazado, agotado y repetido con la misma respuesta; el canje concurrente; el emisor sin permiso; otra sucursal en otra base, y la recuperación de emergencia. La prueba de actualización de migraciones cubre la transición de las cuentas previas. La [ficha de la tarea](https://github.com/developer-implementos/pos-platform/blob/76cf13969c19b5b0e1730498d63e955d7815f9a9/odd/tasks/email-identity-activation-codes.md) del producto, en `76cf139`, registra esa evidencia local; la CI de #418 todavía no la acredita.
 
 Esa evidencia no acredita:
 
 - la integración en `main` ni la importación del contrato y del diccionario de datos;
+- los recorridos Playwright de login, activación y «Usuarios y accesos», que la ficha deja en curso (T5);
 - el despliegue en QA ni la entrada de jefatura con correo y código;
 - la homologación del almacén de llaves en cada navegador, Tauri y Capacitor, que sigue pendiente según el ADR-23.
