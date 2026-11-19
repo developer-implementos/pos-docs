@@ -17,7 +17,7 @@ Espejo Engram: pendiente. La herramienta no está disponible en esta sesión; la
 
 - [x] T1 · S1,S3 · route:inline · Redactar el ADR-28 · status:done · evidence: `docs/decisions/tax-included-pricing.md`
 - [x] T2 · S2 · route:inline · Registrar la decisión y enlazarla desde el contrato de publicación · status:done · evidence: `docs/propuesta-arquitectura.md`, `apps/starlight/content-map.mjs`, `docs/contracts/master-data-publication.md`
-- [ ] T3 · S1,S2,S3 · route:inline · Ejecutar las comprobaciones editoriales y de build, y abrir la PR · status:in_progress · evidence: pendiente de `npm run verify`.
+- [ ] T3 · S1,S2,S3 · route:inline · Ejecutar las comprobaciones editoriales y de build, y abrir la PR · status:in_progress · evidence: `npm run verify` en verde sobre `5511c27` (L3); falta la corrida sobre el head final y abrir la PR.
 - [ ] T4 · S4 · route:inline · Marcar implementado e importar contrato y diccionario cuando TASK-445 se integre · status:pending · evidence: la PR del producto no está integrada.
 
 ## Log
@@ -31,3 +31,4 @@ Espejo Engram: pendiente. La herramienta no está disponible en esta sesión; la
   - La regla del legacy se publica con rutas y líneas como evidencia, sin copiar código y sin describir cómo el backend legacy valida lo que recibe de la caja.
   - Las cifras son de barridos sintéticos (brutos de 1 a 300 000) y de tres precios sondeados, sin productos, sucursales ni volúmenes del QA.
   - Por pedido de la sesión coordinadora se agrega la convivencia de versiones: los clientes validan la cotización con objetos estrictos, así que primero se despliegan `branch-api` y los clientes, y después se activa un libro con impuesto incluido.
+- L3 · 2026-11-19 · `npm run verify` completo en verde sobre `5511c27`, con las páginas, el ZIP de Excalidraw regenerado y las fuentes del deck refrescadas. La PR del producto es [pos-platform#448](https://github.com/developer-implementos/pos-platform/pull/448), con head `08fa388` tras rebasar sobre `main`: el ADR la enlaza con ese commit y deja de enlazar la rama.

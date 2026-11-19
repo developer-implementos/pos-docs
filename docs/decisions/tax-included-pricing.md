@@ -1,6 +1,6 @@
 # ADR-28 · Precios con impuesto incluido, declarados por cada país
 
-**Estado:** decisión del responsable del producto del 19-11-2026: «sí, hazlo como el legacy». Implementada en [TASK-445](https://github.com/developer-implementos/pos-platform/issues/445), en revisión en la PR del producto y sin integrar en `main`. Resuelve el primer punto del seguimiento FOLLOWUP-025; los otros tres siguen abiertos. No acredita una carga en QA, homologación ni aceptación.
+**Estado:** decisión del responsable del producto del 19-11-2026: «sí, hazlo como el legacy». Implementada en [TASK-445](https://github.com/developer-implementos/pos-platform/issues/445), en revisión en [pos-platform#448](https://github.com/developer-implementos/pos-platform/pull/448) ([`08fa388`](https://github.com/developer-implementos/pos-platform/commit/08fa388ff20b6232f4991db8bd6060ad3620df67)) y sin integrar en `main`. Resuelve el primer punto del seguimiento FOLLOWUP-025; los otros tres siguen abiertos. No acredita una carga en QA, homologación ni aceptación.
 
 **Decisión:** cada país declara en su publicación comercial si los montos de su lista de precios incluyen el impuesto. Con `tax-included`, la cotización cobra lo que suman las líneas, como la caja legacy de Chile, y obtiene de ese total el neto y el impuesto. El motor aplica esa propiedad sin preguntar por el país. Chile la declara con impuesto incluido y con el neto y el IVA calculados por documento.
 
@@ -92,4 +92,4 @@ Pruebas del producto:
 - un libro sin base cotiza igual que antes;
 - con PostgreSQL real, una publicación con impuesto incluido se importa, su libro guarda la base y la cotización cobra el bruto, mientras el libro neto anterior conserva su forma.
 
-El detalle está en la [ficha del producto](https://github.com/developer-implementos/pos-platform/blob/work/task-445-redondeo-legacy/odd/tasks/tax-included-pricing.md).
+El detalle está en la [ficha del producto](https://github.com/developer-implementos/pos-platform/blob/08fa388ff20b6232f4991db8bd6060ad3620df67/odd/tasks/tax-included-pricing.md).
