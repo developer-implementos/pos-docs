@@ -1,6 +1,6 @@
 # ADR-27 · Proyección de clientes separada de la publicación comercial
 
-**Estado:** propuesta del 19-11-2026, en revisión en [TASK-431](https://github.com/developer-implementos/pos-platform/issues/431) con la PR [pos-platform#440](https://github.com/developer-implementos/pos-platform/pull/440), apilada sobre la del [ADR-26](price-book-rows.md) y sin integrar. El responsable del producto delegó la elección del formato en la recomendación medida. No acredita una carga en QA, homologación ni aceptación.
+**Estado:** decisión del 19-11-2026, implementada en [TASK-431](https://github.com/developer-implementos/pos-platform/issues/431) e integrada en `main` el 19-11-2026 con [pos-platform#440](https://github.com/developer-implementos/pos-platform/pull/440) ([`3561274`](https://github.com/developer-implementos/pos-platform/commit/3561274a)), después de la del [ADR-26](price-book-rows.md). El responsable del producto delegó la elección del formato en la recomendación medida. No acredita una carga en QA, homologación ni aceptación.
 
 **Decisión:** con el volumen de una sucursal real, los clientes dejan de viajar dentro de la publicación comercial:
 
