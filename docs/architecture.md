@@ -8,7 +8,7 @@ Un producto multipaís con siete aplicaciones: `pos-desktop`, `pos-mobile`, `bra
 
 Las aplicaciones cliente `pos-desktop` y `pos-mobile` tienen entradas independientes. Cada una incluye un frontend Angular/PrimeNG alojado en una shell nativa (host): Tauri en escritorio y Capacitor en Android/iOS. Comparten `libs/client-shell`, la composición Angular de raíz, configuración, rutas, guards y layout, y `shared/frontend/ui`, que concentra componentes, activos y estilos. La [decisión de clientes nativos](decisions/native-clients.md) fija sus límites. Vercel publica el portal, la documentación y las presentaciones desde POS Docs.
 
-El perfil demo conserva `domain`, que no importa Angular, y `data-access`, que implementa las mutaciones mock. El perfil conectado utiliza `data-access/branch-api` y `features/branch-operation`, con contratos puros y sin importar el store demo. Las features no se importan entre sí; `libs/client-shell` compone sus rutas y no es el host nativo. `ui` contiene presentación y formatos, sin acceso a persistencia ni reglas de operación. El backend dispone de contextos en `libs/backend`, contratos y políticas puras en `shared/contracts`, `shared/kernel` y `country-policies`, y reutiliza la infraestructura técnica de `shared/backend/runtime`. ESLint verifica las direcciones de importación y Nx conoce los proyectos.
+El cliente conectado utiliza `data-access/branch-api` y `features/branch-operation`, con contratos puros. La demo y sus bibliotecas (`domain`, el `data-access` simulado y sus features) se retiraron con el [ADR-25](decisions/single-operational-mode.md). Las features no se importan entre sí; `libs/client-shell` compone sus rutas y no es el host nativo. `ui` contiene presentación y formatos, sin acceso a persistencia ni reglas de operación. El backend dispone de contextos en `libs/backend`, contratos y políticas puras en `shared/contracts`, `shared/kernel` y `country-policies`, y reutiliza la infraestructura técnica de `shared/backend/runtime`. ESLint verifica las direcciones de importación y Nx conoce los proyectos.
 
 Las aplicaciones Node se empaquetan con Rspack/SWC y el plugin oficial de Nx para incluir las librerías fuente internas; TSC conserva la comprobación de tipos. Las dependencias externas se instalan desde el manifiesto y lockfile de cada artefacto, cuya ejecución se verifica fuera del workspace. Las bibliotecas internas se consumen desde el monorepo y no requieren publicación como paquetes independientes.
 
@@ -38,13 +38,13 @@ Las dependencias de servidor se limitan a adaptación/composición; el dominio p
 
 ## 2. Estado y puertos
 
-`PosStore` expone un snapshot signal de solo lectura y comandos que retornan `Result<T>`. Los fallos esperados se muestran como mensajes accionables. Las features nunca alteran las colecciones directamente. El reloj, la generación de identificadores y las esperas de simulación son sustituibles para probar casos deterministas.
+El cliente no es autoridad de estado comercial. `data-access/branch-api` expone un gateway tipado y stores de sesión, caja, catálogo, venta y comprobantes que reflejan respuestas del servidor; los importes, permisos y capacidades los calcula y comprueba `branch-api`. Los fallos esperados del contrato se muestran como mensajes accionables. El token de sesión vive sólo en memoria. Antes de confirmar una venta, el cliente conserva únicamente la referencia de recuperación y la solicitud mínima, sin tokens ni contraseñas.
 
-`POS_REPOSITORY` permite sustituir el adaptador local. El formato se valida al cargar y tiene una versión explícita. Cada mutación se construye sobre una copia; la aplicación solo anuncia éxito después de persistirla. El almacenamiento web es suficiente para una demostración, pero tiene límites de tamaño, concurrencia y seguridad. No tiene las garantías de una base de datos.
+La operación se persiste en PostgreSQL de sucursal, con una unidad de trabajo por operación y resultados durables por comando ([ADR-19](decisions/postgresql-unit-of-work.md)). El almacenamiento del navegador no conserva datos de negocio: al arrancar, el cliente borra las claves que dejaba la demo retirada.
 
 La dirección de producto propone un backend de sucursal NestJS/Fastify compartido por las cajas y conectado a PostgreSQL de sucursal. Ambas aplicaciones cliente consumen su API, sin acceso SQL directo ni una base transaccional por terminal en el perfil de continuidad ante caída de WAN. La LAN y el servidor de sucursal siguen siendo dependencias de ese perfil. La sincronización duradera y el planificador pasarían a procesos supervisados que no dependan de la pestaña abierta. SQLite por terminal es una alternativa del perfil adicional sin LAN/servidor, pendiente de validación; no es la persistencia seleccionada por defecto. Esta dirección sigue la [propuesta de arquitectura](propuesta-arquitectura.md) y sus [opciones tecnológicas](opciones-tecnologicas.md).
 
-`apps/branch-api` compone la [API F01](api.md) con identidad de laboratorio, configuración, caja, catálogo, clientes, cestas, precios y confirmación en efectivo en PostgreSQL. `branch-lab` conecta Angular con esos contratos; `demo` conserva sus adaptadores sintéticos. La [guía F01](phase-1-laboratory.md) delimita el recorrido en revisión y la recuperación; la producción permanece cerrada.
+`apps/branch-api` compone la [API F01](api.md) con identidad operativa, configuración, caja, catálogo, clientes, cestas, precios y confirmación en efectivo en PostgreSQL, siempre por HTTPS y sobre una sucursal aprovisionada. El cliente `branch` conecta Angular con esos contratos. La [guía F01](phase-1-laboratory.md) delimita el recorrido en revisión y la recuperación; la producción permanece cerrada.
 
 El [ADR-18](decisions/job-processing.md) selecciona BullMQ con Redis exclusivo para programación breve en `country-api` y ejecución, preparación de lotes y conciliación en `erp-worker`. Son dominios de cola aislados; PostgreSQL conserva solicitudes/resultados y permite reconstruir jobs. No añade Redis a sucursal ni cambia el protocolo PostgreSQL/HTTPS de `branch-sync-worker`. Colas, relay, consumidores y recuperación están pendientes de implementación.
 
@@ -61,29 +61,29 @@ Una nota de crédito conserva las cantidades y valores del documento original. E
 
 ## 4. Sincronización
 
-Los flujos tienen dirección, entidades, programación, siguiente ejecución y ejecuciones históricas. Admiten manual, intervalo y hora diaria con selección de días en `America/Santiago`. Las ejecuciones en curso no se duplican. Un cierre interrumpido se recupera como error revisable.
+El diseño prevé flujos con dirección, entidades, programación, siguiente ejecución y ejecuciones históricas, que admiten ejecución manual, por intervalo y a una hora diaria con selección de días en `America/Santiago`, sin duplicar ejecuciones en curso y recuperando un cierre interrumpido como error revisable.
 
-Ese comportamiento sigue siendo el mock del frontend. La arquitectura asigna la ejecución supervisada a `branch-sync-worker` y los contratos/progreso a `libs/backend/sync`. Persistencia durable, locks, transportes, programación fuera de la pestaña y conciliación entre aplicaciones quedan pendientes.
+Ninguna parte del producto los ejecuta todavía: la demo que los simulaba en el navegador se retiró con el ADR-25. La arquitectura asigna la ejecución supervisada a `branch-sync-worker` y los contratos/progreso a `libs/backend/sync`. Persistencia durable, locks, transportes, programación fuera de la pestaña y conciliación entre aplicaciones quedan pendientes.
 
-La cola de salida conserva la identidad de la operación y del evento durante los reintentos. Fiscal y ERP tienen confirmación independiente. El modo offline conserva el trabajo local autorizado y bloquea acciones que exigen un proveedor. En el producto real, la deduplicación debe existir también en el receptor; el mock no prueba garantías de servicios externos.
+La cola de salida conserva la identidad de la operación y del evento durante los reintentos. Fiscal y ERP tienen confirmación independiente. El modo offline conserva el trabajo local autorizado y bloquea acciones que exigen un proveedor. La deduplicación debe existir también en el receptor; una simulación no prueba garantías de servicios externos.
 
 ## 5. Permisos y módulos
 
-Los perfiles Administrador, Supervisor, Cajero y Auditor tienen políticas explícitas. La navegación, las rutas y los comandos verifican permiso y disponibilidad del módulo. Deshabilitar una capacidad conserva su historial. Los registros de auditoría incluyen actor, rol, acción y entidad.
+Los roles operativos contienen una lista explícita de permisos y los administra la propia sucursal; agregar un permiso al contrato no lo concede, y el rol inicial de administración está protegido. La navegación y las rutas del cliente muestran sólo lo que la sesión permite, y el servidor vuelve a comprobar permiso, asignación y capacidad en cada solicitud. Deshabilitar una capacidad conserva su historial. Las decisiones de autorización se auditan sin contraseñas ni tokens.
 
-En `demo`, el selector de perfil es una herramienta de demostración. No constituye autenticación ni una barrera contra alguien que controle el navegador. En producción se necesita identidad verificable, sesiones y autorización de servidor por empresa/sucursal/caja. La auditoría local mock tampoco sustituye un registro remoto inmutable.
+La identidad, las sesiones y la autorización por sucursal, caja e instalación se resuelven en el servidor, con la llave del equipo activado. La auditoría en PostgreSQL no se modifica desde el servicio; un registro remoto inmutable sigue pendiente.
 
 ## 6. Multisucursal y producto comercial
 
 La interfaz separa operación de caja, gestión comercial y plataforma. Los maestros y políticas son compartidos, con filtros de sucursal en análisis y asignaciones en usuarios. El diseño debe evolucionar a configuración corporativa con herencia por sucursal, aprobaciones de cambios, despliegue gradual y contratos versionados. Esa administración remota no se simula como si hubiera dispositivos reales conectados.
 
-`country-policies` concentra la variación nacional y `fiscal` delimita emisión/proveedores; las reglas comunes no se duplican en una app distinta por país. Los perfiles iniciales y contratos no acreditan homologación fiscal, pagos o reglas comerciales fuera de la demostración chilena. Una app de backoffice separada se evaluará si existe una experiencia o ciclo de despliegue que la requiera.
+`country-policies` concentra la variación nacional y `fiscal` delimita emisión/proveedores; las reglas comunes no se duplican en una app distinta por país. Los perfiles iniciales y contratos no acreditan homologación fiscal, pagos o reglas comerciales fuera de las reglas sintéticas de Chile. Una app de backoffice separada se evaluará si existe una experiencia o ciclo de despliegue que la requiera.
 
 ## 7. Escritorio seguro
 
-La shell nativa Tauri aloja el build estático del frontend de `pos-desktop`. La navegación por hash funciona sin un servidor de rutas. La CSP limita conexiones y recursos; los assets y fuentes son locales. No se habilitan plugins de shell, filesystem o HTTP para la maqueta. Las futuras integraciones nativas necesitan comandos y capacidades específicas, cancelación y límites de tiempo, sin exponer credenciales al frontend.
+La shell nativa Tauri aloja el build estático del frontend de `pos-desktop`. La navegación por hash funciona sin un servidor de rutas. La CSP limita conexiones y recursos; los assets y fuentes son locales. No se habilitan plugins genéricos de shell, filesystem o HTTP; el único comando nativo es el guardado protegido de PDF del [corte F02](phase-2-payments-documents.md#guardado-nativo-en-windows). Las futuras integraciones nativas necesitan comandos y capacidades específicas, cancelación y límites de tiempo, sin exponer credenciales al frontend.
 
-La actualización del producto requiere firma de instaladores, firma de manifiestos, protección contra downgrade, canales y validación de compatibilidad de la base local. La pantalla actual ilustra el recorrido y conserva su estado mock; no instala binarios.
+La actualización del producto requiere firma de instaladores, firma de manifiestos, protección contra downgrade, canales y validación de compatibilidad de la base local. No hay un canal de actualización conectado ni una pantalla que instale binarios.
 
 ## 8. Calidad
 

@@ -1,6 +1,6 @@
 # ADR-25 · Un solo modo de operación, sin laboratorio ni demo
 
-**Estado:** decisión del responsable del producto del 18-11-2026, en implementación en [TASK-406](https://github.com/developer-implementos/pos-platform/issues/406) mediante PR encadenadas del producto, todavía sin integrar en `main`: las pruebas al modo operativo en [pos-platform#420](https://github.com/developer-implementos/pos-platform/pull/420), el retiro del cliente en [pos-platform#421](https://github.com/developer-implementos/pos-platform/pull/421), el retiro del backend y el ambiente local en [pos-platform#422](https://github.com/developer-implementos/pos-platform/pull/422) y las instrucciones del repositorio en [pos-platform#423](https://github.com/developer-implementos/pos-platform/pull/423). Completa el [ADR-22](environments.md), que ya fijaba un solo modo de ejecución para QA y producción. No acredita despliegue en QA, homologación, operación productiva ni aceptación de QA.
+**Estado:** decisión del responsable del producto del 18-11-2026, implementada en [TASK-406](https://github.com/developer-implementos/pos-platform/issues/406) mediante PR encadenadas del producto, integradas en `main` hasta [`fe8f52e`](https://github.com/developer-implementos/pos-platform/commit/fe8f52e474761d7be023054d0b2525ddd1fbeb69): las pruebas al modo operativo en [pos-platform#420](https://github.com/developer-implementos/pos-platform/pull/420), el retiro del cliente en [pos-platform#421](https://github.com/developer-implementos/pos-platform/pull/421), el retiro del backend y el ambiente local en [pos-platform#422](https://github.com/developer-implementos/pos-platform/pull/422) y las instrucciones del repositorio en [pos-platform#423](https://github.com/developer-implementos/pos-platform/pull/423). Completa el [ADR-22](environments.md), que ya fijaba un solo modo de ejecución para QA y producción. No acredita despliegue en QA, homologación, operación productiva ni aceptación de QA.
 
 **Decisión:** POS Platform corre de una sola forma en todas partes: en el equipo de un desarrollador, en la CI, en QA y en producción. `branch-api` siempre usa identidad operativa, HTTPS, una sucursal aprovisionada, y usuarios y roles propios del POS. Los clientes siempre se conectan a esa API. Se retiran el perfil `laboratory` de `branch-api`, el modo `branch-lab` de los clientes y la demo con datos en el navegador. Las diferencias entre ambientes quedan solo en la configuración y en los datos, y las pruebas cargan sus datos por las mismas puertas que QA y producción.
 
@@ -53,7 +53,7 @@ Las pruebas usan las mismas puertas que QA y producción:
   - las que verificaban contratos transversales de la interfaz pasan al cliente conectado, contra la API real: ayudas, foco de los diálogos, estados de interacción, contraste y alto contraste, accesibilidad, navegación por teclado, diseño a 375 px y el cliente móvil.
 - **Dónde corre cada suite.** La suite de navegador de cada PR (`test:e2e`) deja de compilar la demo: corre contra `branch-api` por HTTPS y un PostgreSQL efímero. `test:e2e:mobile` prueba el cliente móvil conectado, y `test:e2e:branch` los recorridos de venta que antes usaban el laboratorio.
 
-El inventario recorrido por recorrido, con el conteo de pruebas antes y después, está en la [ficha de la tarea](https://github.com/developer-implementos/pos-platform/blob/work/task-406-retirar-laboratorio/odd/tasks/retire-laboratory-demo.md).
+El inventario recorrido por recorrido, con el conteo de pruebas antes y después, está en la [ficha de la tarea](https://github.com/developer-implementos/pos-platform/blob/fe8f52e474761d7be023054d0b2525ddd1fbeb69/odd/tasks/retire-laboratory-demo.md).
 
 ## Clientes
 
@@ -69,7 +69,7 @@ El inventario recorrido por recorrido, con el conteo de pruebas antes y después
   - Una restricción `NOT VALID` y el valor por defecto `operational` impiden crear cuentas con perfil `laboratory` sin tocar las existentes. Se retira el disparador que separaba los dos perfiles.
   - `administration.lab_session`, que ya guardaba también las sesiones operativas, pasa a llamarse `administration.operator_session`.
 - **Sin vista de compatibilidad.** Como establece el [ADR-22](environments.md), la API se detiene durante el despliegue, así que dos versiones no conviven y el cambio de nombre no necesita una vista.
-- El diccionario de datos y el contrato exportado se actualizan en el producto y se importan aquí después de la integración.
+- El diccionario de datos y el contrato exportado se actualizaron en el producto y la [referencia de APIs](/guide/api/pos-platform/) y el [modelo de datos](/guide/api/data-model/) de POS Docs los importan desde `main`: `labLoginV1` y `administration.lab_session` ya no figuran, y `administration.operator_session` sí.
 
 ## Ambiente local
 
@@ -97,4 +97,4 @@ El desarrollador entra con el correo del administrador inicial y cambia su contr
 
 ## Verificación
 
-La implementación está en revisión, sin integrar. Su evidencia local, sobre revisiones identificadas de cada PR, consta en ellas: pruebas de integración contra PostgreSQL 18.6, los nueve recorridos de navegador contra la API real por HTTPS, `backend:smoke` y `documentation:export`. La cobertura re-alojada de la demo encontró y corrigió tres defectos del cliente conectado: contraste de los avisos de éxito y advertencia, y el desborde de la venta en un teléfono. Esta evidencia no acredita despliegue en QA, homologación ni aceptación; se completa aquí al integrar la cadena.
+La implementación está integrada en `main`. Su evidencia local, sobre revisiones identificadas de cada PR, consta en ellas: pruebas de integración contra PostgreSQL 18.6, los nueve recorridos de navegador contra la API real por HTTPS, `backend:smoke` y `documentation:export`. En `main`, la corrida de `Validate POS Platform` sobre `76b8e11` ([pos-platform#422](https://github.com/developer-implementos/pos-platform/pull/422), el retiro del backend) terminó en verde, y su artefacto `documentation-contracts` es la fuente del contrato y el esquema importados. La cobertura re-alojada de la demo encontró y corrigió tres defectos del cliente conectado: contraste de los avisos de éxito y advertencia, y el desborde de la venta en un teléfono. Esta evidencia no acredita despliegue en QA, homologación ni aceptación.

@@ -1,12 +1,12 @@
 # API de sucursal y persistencia
 
-**Implementación en revisión:** F01 conecta Angular con `branch-api` y PostgreSQL. El incremento operativo Chile incorpora identidad propia POS, administración de accesos, provisión y HTTPS, separado del laboratorio transaccional. La infraestructura técnica pertenece a `libs/shared/backend/runtime`, `persistence` y `testing`; los casos de uso conservan su contexto de negocio. La [guía F01](phase-1-laboratory.md) distingue ambos perfiles y sus límites.
+**Implementación en revisión:** F01 conecta Angular con `branch-api` y PostgreSQL. El incremento operativo Chile incorpora identidad propia POS, administración de accesos, provisión y HTTPS. Desde el [ADR-25](decisions/single-operational-mode.md) la API tiene un solo modo de operación, también en el ambiente local y en la CI. La infraestructura técnica pertenece a `libs/shared/backend/runtime`, `persistence` y `testing`; los casos de uso conservan su contexto de negocio. La [guía F01](phase-1-laboratory.md) describe el recorrido y sus límites.
 
-> **Alcance:** el perfil operativo administra usuarios, roles, puestos y configuración persistentes. El laboratorio valida apertura, catálogo, clientes, cestas, cotización y efectivo con datos sintéticos. No se habilitan cobros operativos sin precios verificados, emisión fiscal, tarjetas ni envío ERP. El código está integrado en `main`; la aceptación de F01 se registra por separado en el producto. Esta documentación y la CI no acreditan habilitación productiva.
+> **Alcance:** la API administra usuarios, roles, puestos y configuración persistentes. Apertura, catálogo, clientes, cestas, cotización y efectivo se verifican sobre una sucursal aprovisionada con datos sintéticos que entran por las puertas oficiales. No se habilitan cobros operativos sin precios verificados, emisión fiscal, tarjetas ni envío ERP. El código está integrado en `main`; la aceptación de F01 se registra por separado en el producto. Esta documentación y la CI no acreditan habilitación productiva.
 
 `apps/branch-api` compone el backend modular de sucursal con NestJS 12, Fastify 5 y TypeScript. Publica contratos HTTP v1 desde las bibliotecas de cada contexto, valida solicitudes con Zod y ejecuta los casos de uso mediante puertos. PostgreSQL 18.6 y `pg` 8.23.1 conservan la operación y su resultado durable. El [ADR-19](decisions/postgresql-unit-of-work.md) fija transacciones, migraciones y privilegios.
 
-Los clientes `pos-desktop` y `pos-mobile` distinguen `branch`, `branch-lab`, `demo` y el estado inicial `unconfigured`. El perfil conectado usa la API; no cambia a mocks ante un fallo. `country-api` tiene persistencia y sonda de ámbito propias, todavía sin recepción comercial. Los workers no procesan jobs de negocio; `erp-worker` incorpora una CLI separada de consultas Mountain que aún no alimenta el espejo ni la UI.
+Los clientes `pos-desktop`, `pos-mobile` y `pos-web` sólo admiten el estado inicial `unconfigured` y el perfil conectado `branch`, que usa la API; un perfil inválido detiene el arranque. `country-api` tiene persistencia y sonda de ámbito propias, todavía sin recepción comercial. Los workers no procesan jobs de negocio; `erp-worker` incorpora una CLI separada de consultas Mountain que aún no alimenta el espejo ni la UI.
 
 ## Corte parcial F02 integrado
 
@@ -67,7 +67,7 @@ pnpm install --frozen-lockfile
 pnpm run api:dev
 ```
 
-El laboratorio utiliza HTTP en loopback. La operación requiere perfil `operational`, HTTPS explícito, base migrada/aprovisionada y credencial runtime independiente de migración. Nx recompila cambios y reinicia la API; no aprovisiona una base automáticamente.
+La API exige siempre HTTPS explícito, una base migrada y aprovisionada y una credencial runtime independiente de la de migración. `pnpm run local:api` la inicia con el ambiente local que prepara `local:provision`, igual que QA ([ambiente local](phase-1-laboratory.md#ambiente-local-y-comprobaciones)). Nx recompila cambios y reinicia la API; no aprovisiona una base automáticamente.
 
 `pnpm run country:dev` inicia la base HTTP de país en `http://127.0.0.1:3001`. Las aplicaciones tienen identidades y composición separadas; iniciar ambas no establece una conexión entre ellas. Los [comandos del workspace](monorepo.md#comandos-del-workspace) también incluyen las verificaciones de los workers, que componen y cierran su contexto sin ejecutar trabajos de negocio.
 
@@ -78,15 +78,15 @@ La validación ocurre antes de escuchar conexiones. `RuntimeConfigModule` regist
 | Variable               | Valor por defecto                                | Uso                                                                                            |
 | ---------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
 | `NODE_ENV`             | `development`                                    | `development`, `test` o `production`                                                           |
-| `BRANCH_API_HOST`         | `127.0.0.1`                                      | Dirección de escucha explícita; laboratorio HTTP sólo en loopback, operación con TLS configurado |
+| `BRANCH_API_HOST`         | `127.0.0.1`                                      | Dirección de escucha explícita, siempre con TLS configurado                                    |
 | `BRANCH_API_PORT`         | `3000`                                           | Puerto TCP del servicio                                                                        |
 | `BRANCH_API_LOG_LEVEL`    | `info`                                           | `trace`, `debug`, `info`, `warn`, `error`, `fatal` o `silent`                                  |
 | `BRANCH_API_DOCS_ENABLED` | `true` en desarrollo/test; `false` en producción | Habilita el documento OpenAPI JSON                                                     |
 | `BRANCH_API_CORS_ORIGINS` | vacío                                            | Orígenes HTTP/HTTPS exactos separados por comas; sin permisos entre orígenes por defecto       |
 
-Para el cliente conectado, `BRANCH_API_CORS_ORIGINS` admite únicamente orígenes autorizados exactos, incluidos los de los canales nativos configurados. CORS no constituye autenticación ni autorización. Se requieren `BRANCH_API_PROFILE` (`laboratory` u `operational`), `BRANCH_API_BRANCH_ID` y `BRANCH_API_DATABASE_URL`. La migración usa `BRANCH_API_MIGRATION_DATABASE_URL` con otra credencial. Las URLs y credenciales de instalaciones nunca se publican ni se registran en logs.
+Para el cliente conectado, `BRANCH_API_CORS_ORIGINS` admite únicamente orígenes autorizados exactos, incluidos los de los canales nativos configurados. CORS no constituye autenticación ni autorización. Se requieren `BRANCH_API_BRANCH_ID` y `BRANCH_API_DATABASE_URL`. `BRANCH_API_PROFILE` está retirado: `operational` se acepta sin efecto mientras los servidores ya preparados lo conserven, y cualquier otro valor, como `laboratory`, detiene el arranque con un mensaje que nombra el ADR-25. La migración usa `BRANCH_API_MIGRATION_DATABASE_URL` con otra credencial. Las URLs y credenciales de instalaciones nunca se publican ni se registran en logs.
 
-`BRANCH_API_DATABASE_TLS_MODE` usa `verify-full`; `disable-local` sólo se admite para una base en loopback, nunca para SQL remoto. HTTPS de la API utiliza `BRANCH_API_TLS_ENABLED`, `BRANCH_API_TLS_CERT_FILE` y `BRANCH_API_TLS_KEY_FILE`, con archivos externos protegidos. La sesión operativa usa `BRANCH_API_SESSION_TTL_MS`; el laboratorio conserva `BRANCH_API_LAB_SESSION_TTL_MS`. Los límites de búsqueda se configuran mediante `BRANCH_API_CATALOG_BURST` y `BRANCH_API_CATALOG_REFILL_PER_SECOND`. Los ejemplos del producto son la referencia de claves y defaults; la guía no conserva secretos ni replica la configuración de una instalación.
+`BRANCH_API_DATABASE_TLS_MODE` usa `verify-full`; `disable-local` sólo se admite para una base en loopback, nunca para SQL remoto. HTTPS de la API utiliza `BRANCH_API_TLS_ENABLED`, `BRANCH_API_TLS_CERT_FILE` y `BRANCH_API_TLS_KEY_FILE`, con archivos externos protegidos. La sesión usa `BRANCH_API_SESSION_TTL_MS`. Los límites de búsqueda se configuran mediante `BRANCH_API_CATALOG_BURST` y `BRANCH_API_CATALOG_REFILL_PER_SECOND`. Los ejemplos del producto son la referencia de claves y defaults; la guía no conserva secretos ni replica la configuración de una instalación.
 
 Estas variables corresponden a `branch-api`. `country-api` usa el prefijo `COUNTRY_API_` para las mismas opciones HTTP, con puerto predeterminado 3001. Los workers consumen `NODE_ENV`, su nivel de log (`BRANCH_SYNC_WORKER_LOG_LEVEL` o `ERP_WORKER_LOG_LEVEL`) y las opciones de reporte de errores descritas abajo; no configuran listener HTTP, CORS ni OpenAPI.
 
@@ -100,18 +100,20 @@ Estas variables corresponden a `branch-api`. `country-api` usa el prefijo `COUNT
 | `GET /api/openapi.json` | Contrato OpenAPI, solo con `BRANCH_API_DOCS_ENABLED=true` |
 
 ```sh
-curl http://127.0.0.1:3000/api/v1
-curl http://127.0.0.1:3000/health/ready
+curl --cacert <certificado-local> https://127.0.0.1:3333/api/v1
+curl --cacert <certificado-local> https://127.0.0.1:3333/health/ready
 ```
+
+El puerto 3333 es el predeterminado del ambiente local; `<certificado-local>` es el certificado de loopback que `local:provision` deja en `tmp/local/`.
 
 Readiness de sucursal y país consulta su PostgreSQL correspondiente. Un esquema o ámbito incompatible impide declarar disponibilidad. La sonda no acredita ERP, dispositivos, pagos, permisos del operador o caja abierta; esas condiciones se validan en el caso de uso.
 
-Las rutas llevan el prefijo `/api/v1`; cada perfil y capacidad limita su ejecución. El recorrido comercial completo siguiente está verificado con datos de laboratorio; la presencia de una ruta no habilita su uso comercial operativo. Los contratos de cada contexto son la fuente de sus DTO; OpenAPI se genera desde esa misma definición.
+Las rutas llevan el prefijo `/api/v1`; los permisos de la sesión y las capacidades activadas en cada caja limitan su ejecución. El recorrido comercial completo siguiente está verificado sobre una sucursal aprovisionada con la publicación comercial ficticia; la presencia de una ruta no habilita su uso comercial operativo. Los contratos de cada contexto son la fuente de sus DTO; OpenAPI se genera desde esa misma definición.
 
 | Rutas | Responsabilidad |
 | --- | --- |
-| `POST /auth/lab/login`, `GET /auth/session`, `POST /auth/logout` | Crear, consultar y revocar una sesión limitada a actor, caja e instalación |
-| `POST /auth/password` | Cambio de la contraseña propia; el acceso operativo usa la activación y el login con prueba de posesión de la tabla siguiente |
+| `GET /auth/session`, `POST /auth/logout` | Consultar y revocar la sesión, limitada a actor, caja e instalación; se crea con el login con prueba de posesión de la tabla siguiente |
+| `POST /auth/password` | Cambio de la contraseña propia |
 | `GET /administration/access-options` | Consultar puestos autorizados y permisos otorgables |
 | `GET/POST /administration/operators`, `PUT /administration/operators/:operatorId` | Consultar, crear y actualizar operadores propios del POS con permisos y versiones |
 | `POST /administration/operators/:operatorId/password`, `/revoke-sessions` | Restablecer contraseña o revocar sesiones autorizadamente |
@@ -127,7 +129,7 @@ Las rutas llevan el prefijo `/api/v1`; cada perfil y capacidad limita su ejecuci
 | `POST /pricing/quotes`, `/pricing/discount-authorizations` | Cotizar y registrar aprobación separada para un descuento limitado |
 | `POST /sales/cash-confirmations` | Confirmar efectivo con identidad de comando, versión y cotización vigente |
 | `GET /commands/:commandId` | Recuperar el resultado terminal `completed` o `rejected` de la confirmación |
-| `GET /sales/:saleId` | Consultar el comprobante histórico de laboratorio, con detalle y reglas conservadas |
+| `GET /sales/:saleId` | Consultar el comprobante histórico, con detalle y reglas conservadas |
 
 [TASK-412](https://github.com/developer-implementos/pos-platform/issues/412), integrada en `main` con [pos-platform#413](https://github.com/developer-implementos/pos-platform/pull/413) y [#414](https://github.com/developer-implementos/pos-platform/pull/414), retiró `POST /auth/login` y agregó la activación de equipos y el login con prueba de posesión que describe el [ADR-23](decisions/device-activation.md):
 
@@ -137,14 +139,16 @@ Las rutas llevan el prefijo `/api/v1`; cada perfil y capacidad limita su ejecuci
 | `POST /auth/challenges`, `POST /auth/installation-login` | Emitir un desafío de un solo uso e iniciar sesión con la firma del equipo; la caja se deriva de la instalación |
 | `GET /administration/installations`, `POST /administration/installations/:installationId/deactivate` | Consultar el equipo de cada caja y desactivarlo con `installation.manage` |
 
-Con una contraseña marcada para cambio obligatorio, el servidor solo admite consultar la sesión, cambiar la contraseña y cerrar sesión (`PASSWORD_CHANGE_REQUIRED`). La [referencia de APIs](/guide/api/pos-platform/) incorporará estas operaciones al importar desde `main` el artefacto del producto.
+Con una contraseña marcada para cambio obligatorio, el servidor solo admite consultar la sesión, cambiar la contraseña y cerrar sesión (`PASSWORD_CHANGE_REQUIRED`).
 
-Las tablas describen `main`. [TASK-416](https://github.com/developer-implementos/pos-platform/issues/416), en revisión y sin integrar, reemplaza el usuario por el correo en el login de laboratorio y operativo, en la activación con la cuenta y en el alta y la edición de operadores (`email`, con `OPERATOR_EMAIL_TAKEN` para un correo repetido), agrega a cada operador su origen y la referencia opcional al trabajador del ERP, y agrega la activación con un código de un solo uso que describe el [ADR-24](decisions/email-sign-in.md):
+[TASK-416](https://github.com/developer-implementos/pos-platform/issues/416), integrada con [pos-platform#418](https://github.com/developer-implementos/pos-platform/pull/418), reemplazó el usuario por el correo en el login, en la activación con la cuenta y en el alta y la edición de operadores (`email`, con `OPERATOR_EMAIL_TAKEN` para un correo repetido), agregó a cada operador su origen y la referencia opcional al trabajador del ERP, y agregó la activación con un código de un solo uso que describe el [ADR-24](decisions/email-sign-in.md):
 
-| Rutas en revisión | Responsabilidad |
+| Rutas de TASK-416 | Responsabilidad |
 | --- | --- |
 | `POST /administration/installations/:installationId/activation-codes` | Generar con `installation.activate` un código de diez minutos y un solo uso para el equipo de una caja; reemplaza el código abierto de esa caja |
 | `POST /auth/activation-code-redemptions` | Canjear el código desde un cliente del mismo canal y vincular la llave pública del equipo a esa instalación; todo rechazo responde igual |
+
+[TASK-406](https://github.com/developer-implementos/pos-platform/issues/406) retiró `POST /auth/lab/login` (`labLoginV1`) con el perfil de laboratorio ([ADR-25](decisions/single-operational-mode.md)): responde 404 y todo inicio de sesión exige la llave del equipo. `GET /api/v1` informa `mode: operational` y la configuración efectiva `profile: operational`; ambos campos conservan ese único valor para los clientes instalados antes del cambio. La [referencia de APIs](/guide/api/pos-platform/) contiene todas las operaciones de estas tablas, importadas del artefacto del producto.
 
 Los comandos usan `contractVersion`, `commandId` y versión esperada cuando existe un agregado. Los importes viajan como cadenas decimales; UUID y fechas se normalizan en contrato. La identidad, permisos y capacidades se verifican en el servidor, independientemente de lo que muestre la UI. Los tokens de sesión se conservan en memoria en el cliente; el servidor guarda su hash y vencimiento.
 
@@ -223,7 +227,7 @@ Los frames se reducen al nombre de archivo, línea y columna, con `abs_path` nor
 
 ### Fallos de los clientes conectados
 
-Los clientes de escritorio y móvil no incluyen el SDK de Sentry, no reciben un DSN y no contactan servicios externos: la CSP de los artefactos sigue admitiendo sólo el origen de `branch-api`. En los perfiles `branch` y `branch-lab`, el `ErrorHandler` de composición conserva el registro en consola y carga de forma diferida un normalizador. Ese normalizador reduce el fallo al sobre `client-failure-v1` de `@pos-platform/contracts`:
+Los clientes de escritorio y móvil no incluyen el SDK de Sentry, no reciben un DSN y no contactan servicios externos: la CSP de los artefactos sigue admitiendo sólo el origen de `branch-api`. En el perfil `branch`, el `ErrorHandler` de composición conserva el registro en consola y carga de forma diferida un normalizador. Ese normalizador reduce el fallo al sobre `client-failure-v1` de `@pos-platform/contracts`:
 
 | Campo             | Contenido                                                                                     |
 | ----------------- | --------------------------------------------------------------------------------------------- |
@@ -234,7 +238,7 @@ Los clientes de escritorio y móvil no incluyen el SDK de Sentry, no reciben un 
 | `frames`          | Hasta 40 posiciones `{ file, line, column }`, con nombre de bundle sin host, ruta ni query    |
 | `debugIds`        | Hasta 20 pares `{ file, debugId }`, sólo de los bundles presentes en los frames               |
 
-El cliente lo envía a `POST /api/v1/telemetry/client-failures` (`reportClientFailureV1`) con la sesión de operador vigente. Deduplica por clase, ruta y frame de origen, y envía como máximo 10 reportes por carga de la aplicación. Si no hay sesión, si no hay conexión o si el envío falla, descarta el reporte sin reintentar ni guardarlo. La demo y el cliente sin configurar no registran el handler.
+El cliente lo envía a `POST /api/v1/telemetry/client-failures` (`reportClientFailureV1`) con la sesión de operador vigente. Deduplica por clase, ruta y frame de origen, y envía como máximo 10 reportes por carga de la aplicación. Si no hay sesión, si no hay conexión o si el envío falla, descarta el reporte sin reintentar ni guardarlo. El cliente sin configurar no registra el handler.
 
 **Un `BranchApiError` nunca se reporta:**
 
@@ -291,7 +295,7 @@ El plan Developer, consultado el 2026-11-11, incluye:
 También incluye spans, replays y logs, que esta base no usa. Esta guía recomienda la configuración siguiente, que se aplica en la interfaz de Sentry. Ninguna parte de esta entrega conecta un proyecto real.
 
 - **Región y organización.** Elegir US o EU al crear la organización. La región no se cambia después y debe autorizarla seguridad, junto con la retención.
-- **Dos proyectos.** `node` para las cuatro apps backend y `javascript` para el relay de clientes, cada uno con su DSN, para separar agrupación, sourcemaps y alertas. El ambiente procede de `NODE_ENV`. El reporter se habilita sólo en el piloto y en producción, nunca en laboratorio, CI o demo.
+- **Dos proyectos.** `node` para las cuatro apps backend y `javascript` para el relay de clientes, cada uno con su DSN, para separar agrupación, sourcemaps y alertas. El ambiente procede de `NODE_ENV`. El reporter se habilita sólo en el piloto y en producción, nunca en el ambiente local ni en la CI.
 - **Cuota.** El plan no admite límites por DSN, así que el tope del POS es el control. Antes de sumar una sucursal, revisar el dimensionamiento.
 - **Privacidad del proyecto.** Activar el depurador de datos con los patrones por defecto y la opción de no almacenar direcciones IP. Es una defensa adicional: la allowlist del POS ya excluye esos datos.
 - **Token de CI.** Un token de organización sólo para subir sourcemaps y releases, guardado como secreto del pipeline de release.
@@ -310,9 +314,9 @@ pnpm run api:smoke
 
 `api:check` ejecuta los targets Nx `lint`, `typecheck`, `test` y `build` de `branch-api`.
 
-Las pruebas usan Vitest y SWC con metadata de decoradores para la inyección de Nest. Los casos HTTP de laboratorio y persistencia requieren PostgreSQL real aislado mediante `POS_TEST_ADMIN_URL`; las pruebas puras no requieren ese servicio. Se verifican permisos, ámbitos, versiones, concurrencia y recuperación. Rspack/SWC genera el bundle distribuible; TSC comprueba tipos por separado.
+Las pruebas usan Vitest y SWC con metadata de decoradores para la inyección de Nest. Los casos HTTP y de persistencia requieren PostgreSQL real aislado mediante `POS_TEST_ADMIN_URL` y preparan su sucursal con `provision`, `activate-checkout` e `import-commercial`, como QA; las pruebas puras no requieren ese servicio. Se verifican permisos, ámbitos, versiones, concurrencia y recuperación. Rspack/SWC genera el bundle distribuible; TSC comprueba tipos por separado.
 
-El smoke del artefacto lo instala fuera del monorepo con `pnpm install --prod --frozen-lockfile`, para detectar dependencias resueltas accidentalmente desde el workspace. La composición de laboratorio usa base, roles y seed sintéticos; verifica los comandos de migración/comprobación y el arranque configurado. También comprueba que el perfil no abra operación productiva. La instalación requiere acceso al registro npm. Los checks de Sentry usan transporte en memoria y canarios sintéticos, sin enviar eventos a un servicio real.
+El smoke del artefacto lo instala fuera del monorepo con `pnpm install --prod --frozen-lockfile`, para detectar dependencias resueltas accidentalmente desde el workspace. Migra una base aislada con roles sintéticos y comprueba los comandos de migración y comprobación, el arranque por HTTPS, la autenticación, la readiness y los logs. La instalación requiere acceso al registro npm. Los checks de Sentry usan transporte en memoria y canarios sintéticos, sin enviar eventos a un servicio real.
 
 El job `api` de CI ejecuta `backend:check`, `structure:check` y `backend:smoke`, separado de los jobs del frontend y escritorio. Cubre las cuatro aplicaciones backend y sus librerías; los comandos `api:*` siguen disponibles para trabajar solo sobre `branch-api`.
 
@@ -335,7 +339,7 @@ pnpm install --prod --frozen-lockfile
 node --env-file=/ruta/api.env main.js
 ```
 
-El comando requiere una base previamente migrada, credenciales runtime y un perfil explícito. `operational` usa la provisión de sucursal y usuarios propios POS; `laboratory` conserva sus semillas y restricciones de prueba. Cambiar `NODE_ENV` no habilita capacidades comerciales: las controla la configuración efectiva y sus contratos. El archivo de configuración es externo al artefacto y no se versiona. El CLI `database.js` ejecuta migraciones con la credencial separada; el servidor no hace auto-migraciones.
+El comando requiere una base previamente migrada y aprovisionada, credenciales runtime y el certificado y la llave TLS. No hay otro perfil: la sucursal y los usuarios propios POS salen siempre de la provisión. Cambiar `NODE_ENV` no habilita capacidades comerciales: las controla la configuración efectiva y sus contratos. El archivo de configuración es externo al artefacto y no se versiona. El CLI `database.js` ejecuta migraciones con la credencial separada; el servidor no hace auto-migraciones.
 
 Esta API es un proceso Node independiente dentro de **pos-platform**. La configuración `vercel.json` del repositorio editorial **pos-docs** publica únicamente Starlight; no publica `branch-api` ni las demás aplicaciones backend. El despliegue del backend de sucursal necesita su propia supervisión de proceso, terminación TLS, identidad y política de acceso antes de incorporar operaciones reales.
 
@@ -343,7 +347,7 @@ Esta API es un proceso Node independiente dentro de **pos-platform**. La configu
 
 La organización distingue infraestructura compartida de propiedad de negocio: conexiones y ejecutores técnicos en `shared/backend`; modelos, repositorios y migraciones en cada contexto. Los contratos comerciales se publican desde su contexto; `shared/contracts` contiene sobres, metadatos y errores transversales, no un catálogo global de DTO de negocio.
 
-La venta en efectivo de laboratorio tiene autenticación, autorización, PostgreSQL, migraciones y una unidad de trabajo que conserva sus efectos y outbox. El incremento operativo añade identidades propias y provisión real, sin reutilizar las semillas como fuente comercial. La CLI legacy de `erp-worker` consulta referencias puntuales mediante HTTPS y cuenta técnica propia; no publica maestros ni cotiza. La entrega de outbox, recepción de país, espejos completos, jobs BullMQ y ERP permanecen en sus fases. F02 añade persistencia y protocolo de pagos, fiscalidad y dispositivos, sin acreditar sus proveedores ni hardware operativos. Las reglas CL sintéticas no homologan Chile, Perú o España. Los clientes hablan con la API y nunca consultan SQL directamente.
+La venta en efectivo tiene autenticación, autorización, PostgreSQL, migraciones y una unidad de trabajo que conserva sus efectos y outbox, sobre identidades propias y provisión real. Sus datos comerciales entran por `import-commercial`; en las pruebas, desde una publicación ficticia. La CLI legacy de `erp-worker` consulta referencias puntuales mediante HTTPS y cuenta técnica propia; no publica maestros ni cotiza. La entrega de outbox, recepción de país, espejos completos, jobs BullMQ y ERP permanecen en sus fases. F02 añade persistencia y protocolo de pagos, fiscalidad y dispositivos, sin acreditar sus proveedores ni hardware operativos. Las reglas CL sintéticas no homologan Chile, Perú o España. Los clientes hablan con la API y nunca consultan SQL directamente.
 
 La [propuesta de arquitectura](propuesta-arquitectura.md) y las [opciones tecnológicas](opciones-tecnologicas.md) explican la ubicación del backend y los límites del perfil sin WAN. El servicio no promete autonomía de una caja ante caída de la LAN o del servidor de sucursal.
 

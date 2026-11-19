@@ -1,5 +1,7 @@
 # API de la maqueta y límites de simulación
 
+> **Retirada.** Esta página describe los adaptadores de la demo, que el [ADR-25](decisions/single-operational-mode.md) retiró de POS Platform con [TASK-406](https://github.com/developer-implementos/pos-platform/issues/406) ([pos-platform#421](https://github.com/developer-implementos/pos-platform/pull/421)). Se conserva como registro de lo que existió hasta la revisión [`d824646`](https://github.com/developer-implementos/pos-platform/tree/d824646cdccd3dac358f6d7ee8e79ea9faa8730a), anterior a ese retiro; no describe el producto actual. Hoy los clientes sólo se conectan a `branch-api` y, al arrancar, borran la clave `corporate-pos:demo:v1` que se menciona abajo.
+
 La interfaz consume `PosStore` de `@pos-platform/data-access`. No accede a `localStorage`, endpoints empresariales ni dispositivos reales. `@pos-platform/domain` no depende de Angular. Todos los nombres, correos, RUT, ventas y cuentas iniciales son sintéticos y se identifican como demostración; un RUT con dígito verificador válido no acredita una identidad.
 
 ## Estado y comandos

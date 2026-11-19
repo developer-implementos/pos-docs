@@ -1,16 +1,18 @@
-# Base técnica y recorridos de demostración
+# Base técnica y recorridos de la interfaz
 
 <span id="caja-corporativa--plan-de-entrega"></span>
 
-El monorepo dispone de identidad y administración operativas propias de POS, un laboratorio transaccional conectado a PostgreSQL y una demo explícita con adaptadores sintéticos. Esta página distingue los recorridos de la interfaz, las bases de APIs y workers y los controles para trabajar en el código. La [guía F01](phase-1-laboratory.md) delimita la implementación; la [evidencia del producto](product-repository.md) identifica su revisión y sus límites.
+El monorepo dispone de identidad y administración operativas propias de POS y de un recorrido de venta conectado a PostgreSQL, y corre de una sola forma en local, CI, QA y producción ([ADR-25](decisions/single-operational-mode.md)). Esta página distingue los recorridos de la interfaz, las bases de APIs y workers y los controles para trabajar en el código. La [guía F01](phase-1-laboratory.md) delimita la implementación; la [evidencia del producto](product-repository.md) identifica su revisión y sus límites.
 
 El [roadmap de POS Platform](roadmap.md) define la secuencia de entrega funcional, con un plan detallado por fase. Sus entregables, dependencias y pruebas de aceptación son la referencia para desarrollar el producto; la organización del código y los controles técnicos de esta página no acreditan esos resultados.
 
 <span id="producto"></span>
 
-## Alcance de la demostración
+<span id="alcance-de-la-demostración"></span>
 
-La interfaz permite recorrer una caja corporativa para Chile con datos sintéticos, separando operación, gestión comercial y administración técnica. Las políticas, los pagos, la fiscalidad, la persistencia local y las integraciones representadas por adaptadores mock sirven para desarrollar y revisar esos flujos. No prueban autenticación de servidor, durabilidad transaccional de sucursal ni integración con proveedores reales. La cobertura y las variantes del sistema anterior están detalladas en [el inventario de Chile](audit-chile-for-product.md).
+## Alcance de la interfaz
+
+El cliente conectado recorre una caja para Chile contra `branch-api`: turno y efectivo, venta y presupuesto, seguimiento de operaciones y administración de accesos, según el rol y las capacidades activadas en cada caja. En el ambiente local y en las pruebas usa una sucursal aprovisionada igual que QA, con productos, precios y clientes sintéticos de una publicación comercial ficticia. Las pantallas que sólo existían en la demo retirada no tienen reemplazo hasta que su entregable las implemente contra la API. La cobertura y las variantes del sistema anterior están detalladas en [el inventario de Chile](audit-chile-for-product.md).
 
 <span id="base"></span>
 
@@ -28,7 +30,7 @@ El corte F02 contiene siete aplicaciones y añade `device-agent` con persistenci
 | `erp-worker` | Composición técnica y CLI de consultas HTTPS acotadas a Mountain; acceso corporativo pendiente | BullMQ + Redis de trabajos en red ERP para ejecución, preparación de maestros y consulta/conciliación; contratos, reconstrucción e idempotencia comprobados |
 | `device-agent` | Host .NET 10, SQLite y protocolo HTTPS con `branch-api`; publicación Windows x64 e interoperabilidad real comprobadas | Instalación de servicio y primer driver/modelo; red compartida y móvil en F06 tras homologación |
 
-Los dos clientes comparten bibliotecas de presentación y flujos. Las cuatro aplicaciones backend reutilizan mecanismos técnicos y delimitan sus contextos de negocio. La [arquitectura de la implementación](architecture.md), la [base de API](api.md) y los [contratos mock](mock-api.md) detallan sus alcances. El [catálogo del monorepo](monorepo.md) distingue la estructura objetivo de la evidencia del código.
+Los dos clientes comparten bibliotecas de presentación y flujos. Las cuatro aplicaciones backend reutilizan mecanismos técnicos y delimitan sus contextos de negocio. La [arquitectura de la implementación](architecture.md) y la [base de API](api.md) detallan sus alcances. El [catálogo del monorepo](monorepo.md) distingue la estructura objetivo de la evidencia del código.
 
 <span id="reorganización-del-monorepo-acordada"></span>
 
@@ -57,20 +59,17 @@ Persistencia, identidad e integraciones se desarrollan por recorridos verificabl
 
 ## Recorridos de la interfaz
 
-Estos recorridos describen la demostración con datos sintéticos. Su presencia en la UI no equivale a una integración comercial aceptada:
+El cliente conectado ofrece las áreas que su sucursal habilita, según el rol de quien entra. Su presencia en la UI no equivale a una integración comercial aceptada:
 
-1. Inicio: métricas, gráficos, actividad, alertas y accesos por rol.
-2. Venta: cliente, productos, precios, descuentos, retiro/despacho, boleta/factura, pagos mixtos, cheque/Orsan, crédito, vuelto/anticipo, pausar/retomar y resultado local/fiscal/ERP.
-3. Caja: apertura, movimientos, arqueo por denominaciones, cierre parcial/total, custodia, diferencias e impresión Z.
-4. Documentos: búsqueda, detalle, reimpresión, estado fiscal/ERP; cobranzas, anticipos, NC y devolución de pago con trazabilidad.
-5. Maestros: clientes/RUT, direcciones/contactos, productos, precios/ofertas, sucursales, empleados, bancos y motivos. Búsqueda, edición local simulada, exportación y validación.
-6. Sincronización: flujos separados, cola durable simulada, progreso, errores/reintentos, ejecución manual, horarios por zona, pausa/mantenimiento e historial.
-7. Reportes: ventas, recaudación, cierres, medios de pago, pendientes/conciliación y rendimiento; filtros, gráficos y exportación.
-8. Administración: módulos/capacidades, perfiles/roles, usuarios, tiendas/cajas, política offline, dispositivos, integraciones y versiones.
-9. Observabilidad: logs estructurados, auditoría, correlación y diagnósticos simulados.
+1. Mi caja: apertura de turno y efectivo.
+2. Ventas y presupuestos: cliente, productos, cotización en servidor, promociones, descuento autorizado por supervisor, confirmación y recuperación.
+3. Seguimiento de operaciones: pagos, documentos fiscales, trabajos de impresión, expedientes y consultas al proveedor original.
+4. Administración: usuarios y accesos, roles y permisos, y equipos de las cajas.
+
+Inicio con indicadores, documentos, cobranzas, devoluciones, maestros, sincronización, reportes y observabilidad sólo existían en la demo, con datos simulados; se implementan con su entregable del [roadmap](roadmap.md).
 
 <span id="comprobación"></span>
 
 ## Comprobación técnica
 
-Los controles del monorepo deben comprobar tipos, dependencias, builds, importes, políticas y recorridos de UI, además de accesibilidad en escritorio y móvil. Las pruebas sobre adaptadores mock verifican su comportamiento; la aceptación de persistencia, permisos, pagos y sincronización reales corresponde a los escenarios de cada fase del [roadmap](roadmap.md). Cada artefacto debe tener una revisión identificada e instrucciones reproducibles de construcción y ejecución.
+Los controles del monorepo deben comprobar tipos, dependencias, builds, importes, políticas y recorridos de UI, además de accesibilidad en escritorio y móvil. Las pruebas de navegador corren contra la API real y una sucursal aprovisionada; la aceptación de persistencia, permisos, pagos y sincronización reales corresponde a los escenarios de cada fase del [roadmap](roadmap.md). Cada artefacto debe tener una revisión identificada e instrucciones reproducibles de construcción y ejecución.

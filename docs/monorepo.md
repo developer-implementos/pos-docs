@@ -1,8 +1,8 @@
 # Monorepo POS Platform
 
-> **Alcance del código integrado en `main`:** **pos-platform** reúne los clientes Angular/PrimeNG para escritorio (Tauri) y móvil (Capacitor), las APIs NestJS/Fastify y sus workers. F01 combina el laboratorio transaccional con un incremento operativo Chile de usuarios/permisos propios POS, provisión persistente y HTTPS. La consulta legacy acotada todavía no alimenta el espejo ni la UI. La documentación se publica en [POS Docs](https://github.com/developer-implementos/pos-docs); la aceptación de los entregables y las capacidades productivas no se deducen del inventario.
+> **Alcance del código integrado en `main`:** **pos-platform** reúne los clientes Angular/PrimeNG para escritorio (Tauri) y móvil (Capacitor), las APIs NestJS/Fastify y sus workers. F01 incorpora un incremento operativo Chile de usuarios/permisos propios POS, provisión persistente y HTTPS, y el producto corre de una sola forma en local, CI, QA y producción ([ADR-25](decisions/single-operational-mode.md)). La consulta legacy acotada todavía no alimenta el espejo ni la UI. La documentación se publica en [POS Docs](https://github.com/developer-implementos/pos-docs); la aceptación de los entregables y las capacidades productivas no se deducen del inventario.
 
-POS Platform es la base de un producto corporativo para varios países. El monorepo reúne clientes de escritorio y móvil, backend de sucursal, backend de país y workers con ciclos de ejecución propios. La demostración funcional actual cubre Chile; la estructura multipaís permite organizar la evolución sin afirmar que las reglas fiscales o integraciones de otros países estén implementadas.
+POS Platform es la base de un producto corporativo para varios países. El monorepo reúne clientes de escritorio y móvil, backend de sucursal, backend de país y workers con ciclos de ejecución propios. El recorrido funcional actual cubre Chile; la estructura multipaís permite organizar la evolución sin afirmar que las reglas fiscales o integraciones de otros países estén implementadas.
 
 `apps/pos-desktop` y `apps/pos-mobile` tienen arranques Angular independientes y comparten `libs/client-shell`, que define configuración por plataforma, rutas, guards y navegación. La [decisión de clientes nativos](decisions/native-clients.md) describe los artefactos Tauri y Capacitor. La API de sucursal está en `apps/branch-api`. Todos se versionan en [pos-platform](https://github.com/developer-implementos/pos-platform), con builds separados: compartir repositorio no implica compartir proceso ni persistencia.
 
@@ -56,14 +56,15 @@ libs/
       persistence/              # Driver pg, unidad de trabajo, migraciones y comandos durables
       testing/                  # Bases/roles sintéticos para integración real
   country-policies/             # Perfiles nacionales; reglas específicas bajo su contexto
-  domain/                       # Reglas puras del prototipo frontend
-  data-access/                  # Adaptadores demo y gateway branch-api en proyectos separados
+  data-access/                  # Acceso a datos del cliente conectado; la demo se retiró con el ADR-25
     branch-api/                 # HTTP y estado de la operación conectada
 tests/
   device-agent/                 # Pruebas .NET/SQLite, recuperación y helper de interoperabilidad HTTPS
-  pos-clients-e2e/              # Playwright demo y API real; proyecto Nx sin despliegue
-    mobile/                     # Suite Angular móvil; no homologa Capacitor
+  pos-clients-e2e/              # Playwright de los clientes contra la API real; proyecto Nx sin despliegue
+    interface/                  # Contratos transversales de interfaz del cliente conectado
+    mobile/                     # Cliente móvil conectado; no homologa Capacitor
     branch/                     # Recorridos Angular → API → PostgreSQL con recuperación
+    operational/                # Administración, cobro y recuperación contra la API real
 tools/                          # Herramientas de build, lint y pruebas del producto
 .github/
   workflows/                    # Validaciones y entrega
@@ -81,7 +82,7 @@ El corte F02 contiene siete aplicaciones, con `apps/device-agent` implementado e
 
 El historial por operación y los expedientes con responsables se componen en `branch-api`, con contratos y casos de uso en `libs/backend/reporting` y controles de identidad en `administration`; los clientes comparten su interfaz conectada. No añaden una aplicación, no conceden autoridad financiera a `reporting` y no completan por sí solos F02-04. La [guía F02](phase-2-payments-documents.md#historial-de-evidencia-por-operación) identifica su revisión, estado de integración y límites.
 
-El perfil `operational` conserva usuarios, roles, asignaciones y provisión Chile; el laboratorio prueba catálogo, cestas, cotización y efectivo con datos sintéticos. `country-api` comprueba su PostgreSQL y ámbito sin recibir ventas. Los workers no sincronizan ni registran operaciones ERP; la CLI separada de `erp-worker` consulta referencias Mountain por HTTPS. El [recorrido F01](phase-1-laboratory.md) detalla esos límites.
+`branch-api` conserva usuarios, roles, asignaciones y provisión Chile en su único modo; catálogo, cestas, cotización y efectivo se prueban sobre una sucursal aprovisionada, con la publicación comercial ficticia cargada por `import-commercial`. `country-api` comprueba su PostgreSQL y ámbito sin recibir ventas. Los workers no sincronizan ni registran operaciones ERP; la CLI separada de `erp-worker` consulta referencias Mountain por HTTPS. El [recorrido F01](phase-1-laboratory.md) detalla esos límites.
 
 La [guía de API](api.md), la [guía de pruebas](testing.md) y la [evidencia del producto](product-repository.md) delimitan el código revisado. El árbol conserva el estado pendiente de los componentes futuros; una carpeta no acredita operación o aceptación.
 
@@ -95,7 +96,7 @@ Las bibliotecas se consumen por entradas públicas `@pos-platform/<nombre>`; las
 
 La UI reutilizable pertenece a `shared/frontend/ui`. Los contratos puros pueden ser consumidos por ambos clientes; las implementaciones Nest, SQL y SDK de servidor permanecen fuera de sus dependencias.
 
-Los perfiles `branch` y `branch-lab` componen `libs/data-access/branch-api` y `libs/features/branch-operation`: gateway tipado, sesión en memoria y stores separados. `branch` usa el perfil API `operational`, administración de usuarios/roles y capacidades efectivas; no habilita caja o cobros sin contratos comerciales verificados. `branch-lab` conserva el recorrido sintético de pruebas. `unconfigured` bloquea login hasta configurar un puesto; `demo` compone sus propios adaptadores y un fallo de API no cambia de perfil. El cliente conserva referencias de operaciones pendientes y muestra los importes del servidor sin asumir autoridad comercial.
+El perfil `branch` compone `libs/data-access/branch-api` y `libs/features/branch-operation`: gateway tipado, sesión en memoria y stores separados, con administración de usuarios/roles y capacidades efectivas; no habilita caja o cobros sin contratos comerciales verificados. `unconfigured` bloquea el login mientras el paquete no declare el origen de su API. Son los dos únicos perfiles: `demo` y `branch-lab` se retiraron con sus bibliotecas (`libs/domain`, el `data-access` de la demo y sus features) y el arranque los rechaza. El cliente conserva referencias de operaciones pendientes y muestra los importes del servidor sin asumir autoridad comercial.
 
 ## Límites DDD de shared
 
@@ -126,17 +127,17 @@ Los límites se comprueban mediante tags Nx, restricciones de importación y pru
 
 ### Infraestructura y propiedad de datos
 
-F01 incorpora usuarios/permisos propios POS para Chile, provisión operativa segregada del laboratorio, PostgreSQL, migraciones y resultados durables de comandos. La entrega de outbox, recepción de país y jobs externos siguen sus fases. Caché, alertas y controles operativos se incorporan con un consumidor, contrato y criterio de aceptación concretos.
+F01 incorpora usuarios/permisos propios POS para Chile, provisión operativa, PostgreSQL, migraciones y resultados durables de comandos. La entrega de outbox, recepción de país y jobs externos siguen sus fases. Caché, alertas y controles operativos se incorporan con un consumidor, contrato y criterio de aceptación concretos.
 
 La conexión y el ejecutor técnico de transacciones pueden compartirse; las tablas, repositorios y migraciones de ventas siguen perteneciendo a ventas. La escritura comercial y su outbox deben compartir la transacción correspondiente. Una utilidad de reintentos no decide repetir un pago de resultado desconocido: esa política pertenece a pagos.
 
 ## Proyectos de pruebas y herramientas
 
-`tests/pos-clients-e2e/` agrupa Playwright de las interfaces Angular con dependencias explícitas de clientes y `branch-api`. La carpeta `branch/` contiene recorridos contra API y PostgreSQL reales, incluidas respuestas perdidas y aprobación secundaria. Las suites demo y móvil mantienen su composición específica. Es un proyecto de pruebas, sin artefacto de despliegue.
+`tests/pos-clients-e2e/` agrupa Playwright de las interfaces Angular con dependencias explícitas de clientes y `branch-api`. Todas sus suites corren contra `branch-api` por HTTPS y un PostgreSQL efímero, con la sucursal preparada por las puertas oficiales: `interface/` verifica contratos transversales de interfaz, `mobile/` el cliente móvil conectado, `branch/` la venta con respuestas perdidas y aprobación secundaria, y `operational/` administración, cobro y recuperación. Es un proyecto de pruebas, sin artefacto de despliegue.
 
 `tests/device-agent/` prueba contratos y persistencia SQLite, reinicios, transporte y límites del host .NET. El helper de interoperabilidad ejecuta el coordinador y transporte reales contra la API HTTPS en `apps/branch-api/native-integration/`; no incluye un driver físico simulado en el artefacto del producto. Nx coordina las tareas y el SDK .NET se fija mediante `global.json`.
 
-Las pruebas HTTP permanecen junto a cada API; unitarias e integración quedan cerca de su código. `shared/backend/testing` aporta fixtures técnicas; los datos comerciales conservan su contexto dueño. `tools/backend` y los runners de laboratorio son herramientas del workspace, no dependencias del runtime.
+Las pruebas HTTP permanecen junto a cada API; unitarias e integración quedan cerca de su código. `shared/backend/testing` aporta fixtures técnicas; los datos comerciales conservan su contexto dueño. `tools/backend`, `tools/local` y los runners de los recorridos son herramientas del workspace, no dependencias del runtime.
 
 Una suite `pos-system-e2e` requerirá un recorrido real sucursal–persistencia–país. `pos-desktop-e2e` se justificará con capacidades nativas de Tauri: probar Angular en Chromium no verifica instalación ni periféricos. Esas suites son futuras y no forman parte del inventario existente. La [guía de pruebas](testing.md) detalla alcances y criterios.
 
@@ -145,7 +146,7 @@ Una suite `pos-system-e2e` requerirá un recorrido real sucursal–persistencia�
 <!-- monorepo:applications:start -->
 | Aplicación | Lugar previsto | Responsabilidad | Estado revisado |
 | --- | --- | --- | --- |
-| `pos-desktop` | Puesto Windows | Aplicación completa: shell nativa Tauri y frontend Angular | Cliente conectado con administración POS, frescura del cliente y recotización con consentimiento; demo y laboratorio explícitos. Dos ejecutables Windows Tauri y política HTTPS embebida comprobados; instalación y capacidades nativas se homologan en sus fases |
+| `pos-desktop` | Puesto Windows | Aplicación completa: shell nativa Tauri y frontend Angular | Cliente conectado con administración POS, frescura del cliente y recotización con consentimiento; sin demo ni modo de laboratorio (ADR-25). Dos ejecutables Windows Tauri y política HTTPS embebida comprobados; instalación y capacidades nativas se homologan en sus fases |
 | `pos-mobile` | Dispositivo Android/iOS | Aplicación completa: shell nativa Capacitor y frontend Angular | Cliente conectado compartido; dos APK Android y política HTTPS embebida comprobados. Instalación, distribución y capacidades nativas se homologan en sus fases |
 | `device-agent` | PC Windows de cada puesto (F02/F05); estación de red compartida posterior (F06) | Host C#/.NET por puesto; trabajos HTTPS con branch-api y registro SQLite; perfil de red compartido en F06 | Host .NET 10/SQLite y protocolo durable integrados en el corte parcial F02; publicación Windows x64 e interoperabilidad HTTPS/PostgreSQL comprobadas. Driver no disponible; instalación de servicio y hardware pendientes |
 | `branch-api` | Sucursal | API y composición de negocio de sucursal | Identidad y administración POS Chile, configuración compatible, cestas y motor comercial con PostgreSQL. F02 añade persistencia de pagos, fiscalidad y dispositivos en el corte parcial integrado; sin proveedores operativos. Precios y cobros sujetos a fuente validada |
@@ -183,6 +184,9 @@ Dos diferencias operativas respecto de npm afectan a cualquier comando que se do
 | `pnpm run mobile:android` / `mobile:ios` | Ejecuta el cliente en el entorno nativo disponible |
 | `pnpm run api:dev`         | API de sucursal en `http://127.0.0.1:3000`                                       |
 | `pnpm run country:dev`     | API de país en `http://127.0.0.1:3001`                                           |
+| `pnpm run local:provision` | Prepara el ambiente local igual que QA: bases, roles, certificado, sucursal, publicación ficticia y activación de la caja |
+| `pnpm run local:api` / `local:country` / `local:client` | Inicia la API de sucursal por HTTPS, la de país o un cliente contra el ambiente local |
+| `pnpm run local:migrate` / `local:check` / `local:remove` | Migra, comprueba o elimina el ambiente local; `remove` exige `--confirm` |
 | `pnpm run sync:check`      | Compone y cierra el contexto del worker de sincronización; no ejecuta jobs       |
 | `pnpm run erp:check`       | Compone y cierra el contexto del worker ERP; no envía operaciones                |
 | `pnpm run backend:check`   | Lint, tipos, pruebas y build de proyectos backend y librerías puras del producto |
@@ -213,7 +217,7 @@ Esta tabla fija la responsabilidad de los contextos, incluidos los pendientes de
 | `reporting`      | Proyecciones de consulta y seguimiento de expedientes operativos                               | Las proyecciones se reconstruyen; los expedientes conservan decisiones auditadas. Ninguno modifica los estados financieros de origen. |
 | `administration` | Ámbito empresa/país/sucursal/caja, identidad propia POS, roles, políticas y asignaciones       | Autoriza en servidor; un rol o capacidad del cliente no concede acceso                                      |
 
-PostgreSQL de sucursal conserva identidades, configuración y operación de su perfil; una instalación operativa no incorpora semillas comerciales de laboratorio. La base de país tiene ámbito y esquema independientes y sus recepciones comerciales están pendientes. Los clientes no acceden a SQL. La migración usa otro rol y el runtime recibe grants explícitos; el [ADR-19](decisions/postgresql-unit-of-work.md) concreta esa frontera.
+PostgreSQL de sucursal conserva identidades, configuración y operación; los datos comerciales entran sólo por la publicación comercial, también en las pruebas. La base de país tiene ámbito y esquema independientes y sus recepciones comerciales están pendientes. Los clientes no acceden a SQL. La migración usa otro rol y el runtime recibe grants explícitos; el [ADR-19](decisions/postgresql-unit-of-work.md) concreta esa frontera.
 
 BullMQ se integra como mecanismo técnico de `shared/backend` compuesto por `country-api` y `erp-worker`, con puertos y handlers propiedad de sus contextos. Los jobs no contienen reglas comerciales en una biblioteca genérica. `country-api` programa solicitudes breves con Redis de trabajos de país; `erp-worker` ejecuta operaciones, lotes y conciliación con Redis de trabajos en la red ERP. Son instancias separadas y sin conexión Redis/SQL WAN. PostgreSQL conserva autoridad y recuperación; `branch-sync-worker` permanece en PostgreSQL/HTTPS. Este alcance del [ADR-18](decisions/job-processing.md) no acredita nuevos proyectos o dependencias ya instalados.
 
@@ -300,7 +304,7 @@ En esta revisión también se contrastó el checkout `desarrollo` del sincroniza
 
 | Estado       | Alcance                                                                                                                                                    |
 | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Laboratorio integrado | Angular conectado, identidad y permisos de servidor sintéticos, configuración, caja, catálogo, clientes, cestas, precios y efectivo en PostgreSQL; evidencia técnica por entregable |
+| Recorrido de venta integrado | Angular conectado, configuración, caja, catálogo, clientes, cestas, precios y efectivo en PostgreSQL, verificados sobre una sucursal aprovisionada con datos sintéticos; evidencia técnica por entregable |
 | Incremento operativo integrado | Usuarios y roles propios POS Chile, asignaciones, provisión persistente, HTTPS y clientes con origen aprobado; CLI de referencias legacy separada del espejo y la UI |
 | Base técnica | HTTP, Pino/Sentry opcional, migraciones, roles separados, unidad de trabajo, artefactos y comprobaciones de ámbito/esquema |
 | Historial integrado | TASK-110: evidencia por operación y estados independientes, integrado mediante la [PR #117](https://github.com/developer-implementos/pos-platform/pull/117) en `3669873`; no completa por sí solo F02-04 |
@@ -321,7 +325,7 @@ El repositorio corporativo es [developer-implementos/pos-platform](https://githu
 git clone https://github.com/developer-implementos/pos-platform.git
 ```
 
-Las claves de almacenamiento de la demostración son `corporate-pos:demo:v1` y `corporate-pos:auth:v1`. El identificador Tauri `com.floxcristian.corporatepos` determina la identidad instalada y el directorio de datos del WebView. Son identificadores técnicos persistentes; cualquier cambio requiere comprobar la compatibilidad de datos y la actualización del instalador en Windows.
+El identificador Tauri `com.floxcristian.corporatepos` determina la identidad instalada y el directorio de datos del WebView. Es un identificador técnico persistente; cualquier cambio requiere comprobar la compatibilidad de datos y la actualización del instalador en Windows. Las claves `corporate-pos:demo:v1` y `corporate-pos:auth:v1` de la demo retirada sólo se borran: el cliente las elimina al arrancar.
 
 ## Aplicación nativa de periféricos
 

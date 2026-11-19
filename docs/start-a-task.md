@@ -21,12 +21,12 @@ Empieza por el [recorrido de operación](/guide/flows/) afectado: cada ficha con
 | Trabajo | Punto de entrada |
 | --- | --- |
 | Administración y acceso de sucursal | [Incremento operativo F01](/guide/implementation/phase-1/#incremento-operativo-integrado), que enlaza la puesta en marcha con PostgreSQL, HTTPS y aprovisionamiento explícito. |
-| Venta sintética y recuperación | [Laboratorio transaccional F01](/guide/implementation/phase-1/#recorrido-del-laboratorio-transaccional) y sus [comprobaciones](/guide/implementation/phase-1/#ejecutar-las-comprobaciones-del-laboratorio). |
+| Venta y recuperación | [Recorrido de venta F01](/guide/implementation/phase-1/#recorrido-de-venta-conectado), el [ambiente local y sus comprobaciones](/guide/implementation/phase-1/#ambiente-local-y-comprobaciones). |
 | Cobros, fiscalidad o periféricos | [Corte F02](/guide/implementation/phase-2/): persistencia, protocolo, comprobaciones y límites de proveedores o equipos. |
-| Interfaz con datos de ejemplo | [Demostración](/guide/implementation/repository/#iniciar-la-demostración) y [adaptadores sintéticos](/guide/implementation/mock-api/). |
+| Interfaz con datos de ejemplo | [Ambiente local](/guide/implementation/phase-1/#ambiente-local-y-comprobaciones), que aprovisiona una sucursal igual que QA con una publicación comercial ficticia. |
 | Empaquetado nativo | [Escritorio](/guide/implementation/desktop/) o [móvil](/guide/implementation/mobile/), según la aplicación. |
 
-El perfil y las dependencias elegidos deben corresponder al comportamiento que se quiere verificar. La demostración, el laboratorio y el perfil operativo tienen propósitos distintos, descritos en [F01](/guide/implementation/phase-1/#perfiles-del-cliente). La disponibilidad de un proveedor, una VPN o un equipo se confirma para la tarea; una prueba histórica de acceso no acredita acceso actual.
+Las dependencias elegidas deben corresponder al comportamiento que se quiere verificar. El producto corre de una sola forma en local, CI, QA y producción ([ADR-25](/guide/architecture/single-operational-mode/)): los ambientes difieren sólo en configuración y datos, y los perfiles del cliente se describen en [F01](/guide/implementation/phase-1/#perfiles-del-cliente). La disponibilidad de un proveedor, una VPN o un equipo se confirma para la tarea; una prueba histórica de acceso no acredita acceso actual.
 
 ## Verificar y preparar la entrega
 

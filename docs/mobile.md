@@ -35,7 +35,7 @@ La alerta sigue pendiente: esta revisión de la llamada no significa que el paqu
 
 ## Alcance comprobable
 
-El cliente móvil utiliza los mismos perfiles explícitos que escritorio, definidos en la [decisión de clientes nativos](decisions/native-clients.md#datos-y-acceso): parte sin registrar (`unconfigured`), se conecta con identidad propia POS mediante `branch`, reserva `branch-lab` para el laboratorio y `demo` para adaptadores sintéticos. La configuración se valida antes del arranque; un fallo de configuración o de API no activa la demo. El perfil operativo requiere el origen HTTPS autorizado y el registro del puesto.
+El cliente móvil utiliza los mismos dos perfiles que escritorio ([ADR-25](decisions/single-operational-mode.md#clientes)): parte sin configurar (`unconfigured`) y se conecta con identidad propia POS mediante `branch`. La configuración se valida antes del arranque y un perfil inválido lo detiene, sin caer en otro modo. El perfil `branch` requiere el origen HTTPS autorizado del paquete, y una persona autorizada activa el equipo con una llave propia.
 
 La [guía F01](phase-1-laboratory.md#perfiles-del-cliente) delimita configuración, identidad y sesiones en memoria. Compartir estos perfiles no acredita homologación de los recorridos en Android o iOS. El cliente no incorpora un almacén seguro de credenciales nativas, persistencia transaccional móvil ni sincronización en segundo plano. Tampoco habilita pagos, cámara, lectores, impresoras u otras capacidades nativas sin sus contratos, permisos e integración específica.
 

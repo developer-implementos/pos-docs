@@ -1,24 +1,16 @@
 {
   "schemaVersion": 2,
   "repository": "https://github.com/developer-implementos/pos-platform",
-  "revision": "39295496b2e9488b60ce57f9165205c066f687c4",
-  "capturedAt": "2026-11-04T22:18:53.349Z",
+  "revision": "b170bf10239a16aa50c9f753f36eaf9f9ba5c9a4",
+  "capturedAt": "2026-11-19T02:36:25.776Z",
   "notice": "Automated capture of a clean product revision. It does not certify editorial review, human comprehension or product acceptance.",
   "productGuide": {
     "source": "docs/product-repository.md",
     "relationship": "Editorial synthesis adapted from the product README; it is not a byte-for-byte snapshot.",
     "upstreamPath": "README.md",
-    "upstreamSha256": "d58af93f616866b9413cc9c5bc89ccc985a12ae67df4339978fb8d3b7595568e"
+    "upstreamSha256": "4a6e14c95965699c086ef3c0265c6f20d05d1850bc9b369e60a1f64416097498"
   },
   "references": [
-    {
-      "path": ".github/rulesets/README.md",
-      "kind": "blob"
-    },
-    {
-      "path": "CONTRIBUTING.md",
-      "kind": "blob"
-    },
     {
       "path": "README.md",
       "kind": "blob"
