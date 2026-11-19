@@ -11,6 +11,14 @@ Los cambios de herramientas, pruebas y CI no aparecen aquí; quedan en el [regis
 
 Este archivo lo escribe [release-please](https://github.com/googleapis/release-please) desde los títulos de los PR, y cada versión queda como [release en GitHub](https://github.com/developer-implementos/pos-docs/releases). Para recibir un aviso por versión, usa *Watch → Custom → Releases* en el repositorio. No se edita a mano: cómo se escribe una buena entrada está en la [guía de versiones](tools/release/README.md).
 
+## [0.10.11](https://github.com/developer-implementos/pos-docs/compare/v0.10.10...v0.10.11) (2026-11-19)
+
+
+### Contenido actualizado
+
+* **api:** [TASK-406] importar los contratos y el esquema del producto en 76b8e11 ([352d559](https://github.com/developer-implementos/pos-docs/commit/352d55941ee0da8657c7aacb4b6a6c3f24be68ed))
+* **implementation:** [TASK-406] las guías describen el modo único de operación y el ambiente local preparado igual que QA, y el ADR-25 pasa a implementado ([352d559](https://github.com/developer-implementos/pos-docs/commit/352d55941ee0da8657c7aacb4b6a6c3f24be68ed))
+
 ## [0.10.10](https://github.com/developer-implementos/pos-docs/compare/v0.10.9...v0.10.10) (2026-11-18)
 
 
