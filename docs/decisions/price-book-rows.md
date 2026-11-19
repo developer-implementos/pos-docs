@@ -73,7 +73,7 @@ Medición sintética en una estación de trabajo, con PostgreSQL limitado a 2 CP
 
 ## Límites
 
-- No cambia los topes ni el formato del archivo. La memoria del comando sigue en 11 a 13 veces el tamaño del archivo, y con el volumen real la transacción de activación tarda 16–23 s, contra un presupuesto de 30 s. Ambos quedan para la decisión de formato de TASK-431.
+- No cambia los topes ni el formato del archivo. La memoria del comando sigue en 11 a 13 veces el tamaño del archivo, y con el volumen real la transacción de activación tarda 16–23 s, contra un presupuesto de 30 s. Ambos los trata el [ADR-27](customer-projection-split.md).
 - Lo medido corresponde a una estación de trabajo, no al servidor de QA.
 - Todo escritor futuro de productos o unidades debe pasar por la activación, o la cotización queda cerrada hasta la siguiente publicación.
 
