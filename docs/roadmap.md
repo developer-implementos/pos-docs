@@ -16,7 +16,7 @@ F03 implementa **BullMQ con Redis dedicado a trabajos**: programación de public
 
 Esta secuencia es la referencia compartida por Starlight y [la presentación de arquitectura](/presentations/architecture/). Los títulos, resultados y criterios de las seis fases proceden de `docs/roadmap.json`; las dos vistas se generan desde ese archivo. La fecha de revisión identifica esta propuesta editorial y no una entrega de producto.
 
-La [base técnica y los recorridos de demostración](implementation-plan.md) describen las aplicaciones disponibles, la interfaz con datos sintéticos y los controles del monorepo. El roadmap define el trabajo pendiente y la aceptación funcional; disponer de esa base no completa ninguna fase.
+La [base técnica y los recorridos de la interfaz](implementation-plan.md) describen las aplicaciones disponibles, el cliente conectado y los controles del monorepo. El roadmap define el trabajo pendiente y la aceptación funcional; disponer de esa base no completa ninguna fase.
 
 La [validación de la entrega](validacion-y-decisiones.md#etapas-de-entrega) agrupa las condiciones de descubrimiento, prueba vertical, piloto y despliegue. La [migración al ERP común](propuesta-arquitectura.md#coexistencia-y-corte-de-erp) mantiene su propio programa: el piloto POS no acredita que un nuevo ERP esté listo ni requiere automáticamente sustituir el actual.
 
@@ -24,7 +24,7 @@ Las dependencias de las fases expresan el orden de aceptación del recorrido. La
 
 ## Evidencia para aceptar un incremento
 
-La [evidencia del producto](product-repository.md) distingue lo implementado de la demostración. Para aceptar una fase se necesita un recorrido integrado con el alcance acordado; la presencia de carpetas, interfaces, pantallas o sondas no demuestra ese comportamiento.
+La [evidencia del producto](product-repository.md) identifica lo implementado y su revisión. Para aceptar una fase se necesita un recorrido integrado con el alcance acordado; la presencia de carpetas, interfaces, pantallas o sondas no demuestra ese comportamiento.
 
 Cada revisión debe registrar:
 

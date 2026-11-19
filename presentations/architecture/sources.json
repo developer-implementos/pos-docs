@@ -1,22 +1,22 @@
 {
   "schemaVersion": 1,
-  "reviewedOn": "2026-11-18",
+  "reviewedOn": "2026-11-19",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "2ce96b90b166c3128e4ff000410a20570d864e87",
+  "revision": "51e4c424678603cf0f29d23c350def03001b2989",
   "sourceStatus": "Fuentes documentales verificadas en la revisión indicada; F01 incluye administración POS y entregables técnicamente verificados. F02 incluye cobro combinado y protocolo de dispositivos técnicamente verificados, junto con persistencia fiscal y host .NET/SQLite; no habilita proveedores operativos ni drivers físicos. La aceptación manual y la habilitación productiva se mantienen separadas.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "inputs": [
     {
       "path": "docs/monorepo.md",
-      "sha256": "b2d873a987c6329e090219ce84cc6e56bebebe737a7a11688a1ecf02d88d9096"
+      "sha256": "7c1d1074529777826eef2aef925159722eeaf90ee71e8319e904dd584043d52f"
     },
     {
       "path": "docs/propuesta-arquitectura.md",
-      "sha256": "f87c0b95d1ff1c9514bc82aa38c8007fc45fa40fb0c1c0b3a899fa75a61e973e"
+      "sha256": "f606430e5a6fe200181a0067cf613e33a0eb7b81c59322807c3d841e4259a98f"
     },
     {
       "path": "docs/implementation-plan.md",
-      "sha256": "64a8da595ac6fe59864ffcb294bf0c6b850af660f5b7898cc07c4c477c2e49a9"
+      "sha256": "403fe1d544ebd2294dce465cd46ca59713c8cc14c3c06a9be13c7e1e7e4bd551"
     },
     {
       "path": "docs/validacion-y-decisiones.md",
@@ -24,11 +24,11 @@
     },
     {
       "path": "apps/starlight/src/data/product-evidence.json",
-      "sha256": "54acf1735e0f0b8831a116ecc6604ae16b71deb80c854e2ce65404834146d77a"
+      "sha256": "ac056e6d1d32f4715ee52c3737a71c4d1d21a3a9f20bc9b3f3ba806197c63015"
     },
     {
       "path": "docs/roadmap.md",
-      "sha256": "ea502e3e4dcf92c62727207312fd2ed4cd6693aa43324363d11416d60bc464e1"
+      "sha256": "6b5d1cf5cbf5844e1bdbc1fce9acc9abe7c320a84341a046de672e71c755c65a"
     },
     {
       "path": "docs/roadmap.json",
@@ -36,7 +36,7 @@
     },
     {
       "path": "docs/c4-arquitectura-propuesta.md",
-      "sha256": "d6857455f8ec2b661fa3d18e8d624256714d82d830631cbc7e57d0d0baf8b156"
+      "sha256": "de3c17f256aaa3342f81fecee502df1cf710256ab92ee1011077958168712144"
     },
     {
       "path": "docs/contracts/master-data-publication.md",
@@ -44,7 +44,7 @@
     },
     {
       "path": "docs/contracts/identity-and-trust.md",
-      "sha256": "34bdee3bfdcfa6405584dd65d2b7b5dbc6912ad6408ff63e57b865cbe8dc4509"
+      "sha256": "bd1a00a8977d1b89fca007473915603fcc7a38cc57d44b18ad06590b3c07d7e9"
     },
     {
       "path": "tools/architecture/model.mjs",
@@ -68,7 +68,7 @@
     },
     {
       "path": "apps/starlight/src/data/monorepo-catalog.json",
-      "sha256": "78e1aa64ff7552bb5c1470b1da40e8fba25ac3f082f7f77e1903b4739c1e3c08"
+      "sha256": "218d878283b22392a6ce6fb208aa1dc7a72794b455c4b165267c6c835e4c4e89"
     },
     {
       "path": "docs/decisions/device-agent.md",

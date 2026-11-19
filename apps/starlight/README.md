@@ -26,7 +26,7 @@ npm --prefix apps/starlight run check
 npm --prefix apps/starlight run preview
 ```
 
-El build usa este repositorio y sus dependencias fijadas. No importa bibliotecas del producto ni forma parte de los procesos de caja, sucursal o país. El catálogo describe siete aplicaciones objetivo de **pos-platform**: escritorio, móvil, cuatro entradas backend y `device-agent` para periféricos. Starlight pertenece a otro repositorio y queda fuera del producto operativo. El catálogo distingue la demo, F01 conectado en laboratorio, la base de país, los esqueletos de workers y el agente pendiente; disponer de un proyecto no acredita capacidades productivas ni integraciones.
+El build usa este repositorio y sus dependencias fijadas. No importa bibliotecas del producto ni forma parte de los procesos de caja, sucursal o país. El catálogo describe siete aplicaciones objetivo de **pos-platform**: escritorio, móvil, cuatro entradas backend y `device-agent` para periféricos. Starlight pertenece a otro repositorio y queda fuera del producto operativo. El catálogo distingue F01 conectado sobre una sucursal aprovisionada, la base de país, los esqueletos de workers y el agente pendiente; disponer de un proyecto no acredita capacidades productivas ni integraciones.
 
 <span id="fuente-de-cada-contenido"></span>
 <span id="diagramas-e-interacción"></span>

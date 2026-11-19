@@ -1,6 +1,6 @@
 # Opciones tecnológicas del POS
 
-Selección tecnológica y condiciones de adopción de la [propuesta de arquitectura](propuesta-arquitectura.md). **El cliente de escritorio `pos-desktop`, con frontend Angular/PrimeNG alojado en la shell nativa Tauri, y el uso de Nx son decisiones de producto. NestJS/Fastify y PostgreSQL son las tecnologías utilizadas en F01 de laboratorio; su habilitación operativa sigue sujeta a los gates de piloto.** Aceptar cliente y Nx no aprueba automáticamente backend, datos, topología, operación ni todos los dispositivos. Este documento no acredita implementación ni despliegue del producto POS objetivo.
+Selección tecnológica y condiciones de adopción de la [propuesta de arquitectura](propuesta-arquitectura.md). **El cliente de escritorio `pos-desktop`, con frontend Angular/PrimeNG alojado en la shell nativa Tauri, y el uso de Nx son decisiones de producto. NestJS/Fastify y PostgreSQL son las tecnologías utilizadas en F01; su habilitación operativa sigue sujeta a los gates de piloto.** Aceptar cliente y Nx no aprueba automáticamente backend, datos, topología, operación ni todos los dispositivos. Este documento no acredita implementación ni despliegue del producto POS objetivo.
 
 **BullMQ con Redis exclusivo de trabajos es la decisión aceptada para país e integración ERP; implementación pendiente.** El [ADR-18](decisions/job-processing.md) delimita programación breve en `country-api` y ejecución, lotes y conciliación en `erp-worker`, con instancias separadas. PostgreSQL + outbox/inbox conserva autoridad y permite reconstruir jobs; HTTPS cruza los entornos. Redis de caché sigue siendo opcional y separado. La [guía de mensajería](investigacion-mensajeria-pos.md) explica los recorridos y la [revisión corporativa](revision-arquitectura-corporativa.md) conserva el contexto de mediación y retirada del legado.
 
@@ -176,7 +176,7 @@ El requisito de variantes por país/sucursal se desarrolla en [Extensibilidad de
 
 El producto y su monorepo se llaman **POS Platform**, con aliases `@pos-platform/*`. El [repositorio del producto](https://github.com/floxcristian/pos-platform) reúne el software operativo. Esta propuesta, sus evidencias, los diagramas y Starlight se mantienen en el repositorio editorial [POS Docs](https://github.com/developer-implementos/pos-docs). Cada revisión documental identifica el código que describe.
 
-**Estado de implementación:** la composición F01 en revisión conecta Angular/PrimeNG con NestJS/Fastify y PostgreSQL para operación de laboratorio. El perfil demo y las shells nativas conservan límites propios; los workers aún no ejecutan integraciones. La [guía F01](phase-1-laboratory.md) es la referencia del recorrido disponible. Esta implementación no acredita producción, homologación fiscal ni integración ERP.
+**Estado de implementación:** la composición F01 en revisión conecta Angular/PrimeNG con NestJS/Fastify y PostgreSQL sobre una sucursal aprovisionada, en un solo modo de operación ([ADR-25](decisions/single-operational-mode.md)). Las shells nativas conservan límites propios; los workers aún no ejecutan integraciones. La [guía F01](phase-1-laboratory.md) es la referencia del recorrido disponible. Esta implementación no acredita producción, homologación fiscal ni integración ERP.
 
 Monorepo define cómo se organiza el código. Nx aporta un grafo de proyectos y tareas, caché y ejecución de tareas afectadas por cambios. Esto no determina cuántos procesos, bases o despliegues existen en producción. Su caché de compilación tampoco es una caché de datos del POS ni una solución offline de negocio. [Tareas Nx](https://nx.dev/docs/features/run-tasks), [caché de tareas](https://nx.dev/docs/features/cache-task-results), [tareas afectadas](https://nx.dev/docs/features/ci-features/affected).
 
@@ -224,14 +224,15 @@ libs/
       persistence/              # Driver pg, unidad de trabajo, migraciones y comandos durables
       testing/                  # Bases/roles sintéticos para integración real
   country-policies/             # Perfiles nacionales; reglas específicas bajo su contexto
-  domain/                       # Reglas puras del prototipo frontend
-  data-access/                  # Adaptadores demo y gateway branch-api en proyectos separados
+  data-access/                  # Acceso a datos del cliente conectado; la demo se retiró con el ADR-25
     branch-api/                 # HTTP y estado de la operación conectada
 tests/
   device-agent/                 # Pruebas .NET/SQLite, recuperación y helper de interoperabilidad HTTPS
-  pos-clients-e2e/              # Playwright demo y API real; proyecto Nx sin despliegue
-    mobile/                     # Suite Angular móvil; no homologa Capacitor
+  pos-clients-e2e/              # Playwright de los clientes contra la API real; proyecto Nx sin despliegue
+    interface/                  # Contratos transversales de interfaz del cliente conectado
+    mobile/                     # Cliente móvil conectado; no homologa Capacitor
     branch/                     # Recorridos Angular → API → PostgreSQL con recuperación
+    operational/                # Administración, cobro y recuperación contra la API real
 tools/                          # Herramientas de build, lint y pruebas del producto
 .github/
   workflows/                    # Validaciones y entrega
@@ -242,14 +243,14 @@ El árbol expresa la organización del producto, con siete aplicaciones objetivo
 
 `shared` es una agrupación, no una biblioteca universal. `shared/backend` contiene mecanismos técnicos; `shared/kernel`, conceptos de dominio mínimos acordados; `shared/contracts`, sobres y metadatos comunes. Los eventos y DTO de negocio conservan propietario en su contexto. El dominio permanece independiente de Nest, Angular, ORM y transporte.
 
-El prototipo utiliza `libs/domain` y `libs/data-access` para reglas y adaptadores mock. Esa cobertura no acredita los contextos comerciales del backend. `country-policies` contiene perfiles puros; las reglas nacionales concretas pertenecen a fiscalidad, pagos o al contexto correspondiente.
+El prototipo con `libs/domain` y adaptadores mock se retiró con el [ADR-25](decisions/single-operational-mode.md); `libs/data-access` conserva sólo el gateway del cliente conectado. `country-policies` contiene perfiles puros; las reglas nacionales concretas pertenecen a fiscalidad, pagos o al contexto correspondiente.
 
 ### Estado de las aplicaciones
 
 <!-- monorepo:applications:start -->
 | Aplicación | Lugar previsto | Responsabilidad | Estado revisado |
 | --- | --- | --- | --- |
-| `pos-desktop` | Puesto Windows | Aplicación completa: shell nativa Tauri y frontend Angular | Cliente conectado con administración POS, frescura del cliente y recotización con consentimiento; demo y laboratorio explícitos. Dos ejecutables Windows Tauri y política HTTPS embebida comprobados; instalación y capacidades nativas se homologan en sus fases |
+| `pos-desktop` | Puesto Windows | Aplicación completa: shell nativa Tauri y frontend Angular | Cliente conectado con administración POS, frescura del cliente y recotización con consentimiento; sin demo ni modo de laboratorio (ADR-25). Dos ejecutables Windows Tauri y política HTTPS embebida comprobados; instalación y capacidades nativas se homologan en sus fases |
 | `pos-mobile` | Dispositivo Android/iOS | Aplicación completa: shell nativa Capacitor y frontend Angular | Cliente conectado compartido; dos APK Android y política HTTPS embebida comprobados. Instalación, distribución y capacidades nativas se homologan en sus fases |
 | `device-agent` | PC Windows de cada puesto (F02/F05); estación de red compartida posterior (F06) | Host C#/.NET por puesto; trabajos HTTPS con branch-api y registro SQLite; perfil de red compartido en F06 | Host .NET 10/SQLite y protocolo durable integrados en el corte parcial F02; publicación Windows x64 e interoperabilidad HTTPS/PostgreSQL comprobadas. Driver no disponible; instalación de servicio y hardware pendientes |
 | `branch-api` | Sucursal | API y composición de negocio de sucursal | Identidad y administración POS Chile, configuración compatible, cestas y motor comercial con PostgreSQL. F02 añade persistencia de pagos, fiscalidad y dispositivos en el corte parcial integrado; sin proveedores operativos. Precios y cobros sujetos a fuente validada |
@@ -258,7 +259,7 @@ El prototipo utiliza `libs/domain` y `libs/data-access` para reglas y adaptadore
 | `erp-worker` | Red autorizada del ERP | Proceso de integración, traducción y conciliación ERP | CLI de lectura Mountain para productos/clientes con transporte HTTPS acotado; la prueba de red registrada resolvió el nombre con VPN y recibió rechazo antes de TLS. Esa evidencia histórica no acredita acceso actual; sin consulta corporativa, publicación de espejos ni procesamiento de jobs |
 <!-- monorepo:applications:end -->
 
-F01 implementa casos de uso de sucursal y persistencia PostgreSQL en laboratorio; el estado canónico se describe en la [guía F01](phase-1-laboratory.md). Los módulos de fases posteriores conservan su estructura sin operaciones reales. `shared/contracts`, `shared/kernel` y `country-policies` mantienen contratos y reglas puras; no acreditan homologación productiva. La base técnica de Node incorpora configuración, logging con `nestjs-pino` y reporte opcional de errores a Sentry; su política exacta se mantiene junto al código del producto.
+F01 implementa casos de uso de sucursal y persistencia PostgreSQL; el estado canónico se describe en la [guía F01](phase-1-laboratory.md). Los módulos de fases posteriores conservan su estructura sin operaciones reales. `shared/contracts`, `shared/kernel` y `country-policies` mantienen contratos y reglas puras; no acreditan homologación productiva. La base técnica de Node incorpora configuración, logging con `nestjs-pino` y reporte opcional de errores a Sentry; su política exacta se mantiene junto al código del producto.
 
 `device-agent` es la séptima aplicación objetivo: C#/.NET Windows con diario técnico SQLite, sin implementación acreditada. Su host, adaptadores y ciclo de vida se definen en [ADR-17](decisions/device-agent.md). Un backoffice separado requiere su propia necesidad; Starlight pertenece a POS Docs. La administración de demostración se compone desde `client-shell` y sus features.
 
@@ -291,14 +292,14 @@ El [mapa de repositorios](mapa-repositorios-y-conexiones.md), los [informes con 
 | API de país | `country-api` + contextos de sus casos de uso | Base PostgreSQL y sonda por ámbito; recepción comercial e integración pendientes. |
 | Adaptador ERP / ACL | `erp-worker` + `erp` como composición inicial | La vista C2 muestra una frontera lógica y una opción de proceso separado; un servicio HTTP de ACL separado no está creado ni es requisito del scaffold. |
 | Publicación de maestros | Capacidad propuesta de `erp-worker` y `country-api` | El [contrato de publicación](contracts/master-data-publication.md) asigna extracción/preparación al worker en red autorizada y autoridad de versiones a país; no existe un publicador productivo acreditado ni una aplicación adicional. |
-| PostgreSQL de sucursal y país | Persistencia con ámbitos y roles separados; F01 en laboratorio | Sucursal conserva la operación local; país tiene base y sonda sin recepción comercial. Ver [ADR-19](decisions/postgresql-unit-of-work.md). |
+| PostgreSQL de sucursal y país | Persistencia con ámbitos y roles separados; F01 integrado | Sucursal conserva la operación local; país tiene base y sonda sin recepción comercial. Ver [ADR-19](decisions/postgresql-unit-of-work.md). |
 | `device-agent` | `apps/device-agent`, C#/.NET Windows; SQLite técnico | Aplicación acordada, sin implementar. Obtiene trabajo y reporta evidencia por HTTPS LAN a `branch-api`; adaptadores sujetos a homologación. |
 
 Las vistas [C4](c4-arquitectura-propuesta.md) representan responsabilidades y topología objetivo. El árbol muestra proyectos de código y su estado; no debe interpretarse como un inventario de servicios desplegados.
 
 ### Recorrido de una solicitud por el código
 
-Recorrido implementado en **F01 de laboratorio**: confirmar una venta en efectivo con una versión de precios válida y una intención documental permitida. No emite un documento fiscal ni acredita operación productiva.
+Recorrido implementado en **F01**: confirmar una venta en efectivo con una versión de precios válida y una intención documental permitida. No emite un documento fiscal ni acredita operación productiva.
 
 1. El cliente autorizado (`pos-desktop` o `pos-mobile`) recoge la confirmación del operador y envía un comando identificado a `branch-api`. Su shell nativa, Tauri o Capacitor, aloja el frontend Angular/PrimeNG; el cliente no escribe SQL ni decide otro importe.
 2. La entrada HTTP valida contrato e identidad. El caso de uso de `sales` comprueba ámbito, turno y condiciones comerciales mediante interfaces de los módulos propietarios.
@@ -306,7 +307,7 @@ Recorrido implementado en **F01 de laboratorio**: confirmar una venta en efectiv
 4. Los adaptadores de persistencia escriben la venta, los cambios asociados, auditoría y outbox en **la misma transacción PostgreSQL**, utilizando la unidad de trabajo de [ADR-19](decisions/postgresql-unit-of-work.md). No se llama al ERP dentro de la transacción.
 5. Tras el commit, la API devuelve la confirmación local. `branch-sync-worker` entregará el evento posteriormente; la recepción de país y la confirmación ERP mantendrán estados independientes.
 
-El flujo fija dirección de dependencia y autoridad. Los [contratos de confirmación](propuesta-arquitectura.md#confirmación-local-de-una-venta) y la [recuperación ante fallos](revision-resiliencia-datos-pos.md) definen qué ocurre si se pierde una respuesta o falla una dependencia. El perfil `branch-lab` prueba este recorrido con Angular, HTTP y PostgreSQL reales; el perfil demo utiliza adaptadores sintéticos independientes. La [guía F01](phase-1-laboratory.md) delimita la recuperación verificada y las integraciones posteriores pendientes.
+El flujo fija dirección de dependencia y autoridad. Los [contratos de confirmación](propuesta-arquitectura.md#confirmación-local-de-una-venta) y la [recuperación ante fallos](revision-resiliencia-datos-pos.md) definen qué ocurre si se pierde una respuesta o falla una dependencia. `test:e2e:branch` prueba este recorrido con Angular, HTTPS y PostgreSQL reales, sobre una sucursal aprovisionada por las mismas puertas que QA. La [guía F01](phase-1-laboratory.md) delimita la recuperación verificada y las integraciones posteriores pendientes.
 
 La disposición de carpetas no crea por sí sola proyectos Nx ni límites verificables. Se definirán proyectos en las fronteras que deban controlarse. Cada módulo puede separar dominio, aplicación e infraestructura sin generar una biblioteca por cada clase o función. Evitar una librería `shared` que exponga todos los modelos ORM y reglas de todos los dominios.
 

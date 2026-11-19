@@ -2,7 +2,7 @@
 
 `apps/pos-desktop` contiene la aplicación cliente de escritorio: un frontend Angular/PrimeNG con arranque y build propios, alojado en la shell nativa (host) Tauri 2 para Windows. Comparte composición y funcionalidades con `pos-mobile` mediante `libs/client-shell`, la librería de composición Angular de raíz, configuración, rutas, guards y layout; esta librería no es el host nativo. Cada aplicación conserva su arranque independiente. La [decisión de clientes nativos](decisions/native-clients.md) delimita ambos clientes. El resultado histórico de un instalador no acredita el nuevo artefacto hasta comprobar su build y ejecución.
 
-El cliente distingue `unconfigured`, `branch`, `branch-lab` y `demo`. El perfil operativo `branch` usa identidad propia POS y servicios persistidos de `branch-api`; el laboratorio y la demo mantienen sus fuentes aisladas. La [guía F01](phase-1-laboratory.md) identifica qué recorridos están comprobados en cada perfil. El perfil y CSP deben quedar configurados para el origen autorizado del artefacto antes de probar el host. Un build Angular no homologa el binario Tauri.
+El cliente sólo admite `unconfigured` y `branch`. El perfil `branch` usa identidad propia POS y servicios persistidos de `branch-api`; la demo y el modo `branch-lab` se retiraron con el [ADR-25](decisions/single-operational-mode.md). La [guía F01](phase-1-laboratory.md) identifica qué recorridos están comprobados. El perfil y CSP deben quedar configurados para el origen autorizado del artefacto antes de probar el host. Un build Angular no homologa el binario Tauri.
 
 ## Prerrequisitos Windows
 
@@ -41,7 +41,7 @@ La [guía F02](phase-2-payments-documents.md#guardado-nativo-en-windows) describ
 
 La CSP productiva admite assets incorporados y el transporte interno de Tauri; la política de desarrollo permite además el servidor y WebSocket local de Angular. PrimeNG y Angular necesitan estilos dinámicos, por eso `style-src` conserva `unsafe-inline`; `script-src` productivo no lo admite. Referencia: [capabilities de Tauri](https://v2.tauri.app/security/capabilities/).
 
-Los perfiles conectados usan la autoridad transaccional de `branch-api` y PostgreSQL. El almacenamiento local de la demo no es esa autoridad ni implementa sincronización con la aplicación cerrada. La distribución productiva conserva sus comprobaciones de instalador, firma, cierre con operaciones pendientes y equipos objetivo. Un updater futuro debe validar firmas, usar un canal autenticado de distribución, controlar el despliegue gradual y definir recuperación; no hay un canal de actualización productiva habilitado.
+El cliente conectado usa la autoridad transaccional de `branch-api` y PostgreSQL; no tiene persistencia transaccional propia ni sincroniza con la aplicación cerrada. La distribución productiva conserva sus comprobaciones de instalador, firma, cierre con operaciones pendientes y equipos objetivo. Un updater futuro debe validar firmas, usar un canal autenticado de distribución, controlar el despliegue gradual y definir recuperación; no hay un canal de actualización productiva habilitado.
 
 ## Verificación y límite actual
 

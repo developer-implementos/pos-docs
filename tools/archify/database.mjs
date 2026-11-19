@@ -35,9 +35,11 @@ export function projectDatabase(schema, source) {
     // Placement only: these positions neither introduce tables nor alter keys.
     const placement = context === 'administration' ? {
       'platform.database_realm': [0, 0], 'administration.country': [1, 0], 'administration.legal_entity': [2, 0], 'administration.branch': [3, 0],
-      'administration.register': [4, 0], 'administration.device': [5, 0], 'administration.installation': [6, 0], 'administration.operational_profile': [7, 0],
+      'administration.register': [4, 0], 'administration.device': [5, 0], 'administration.installation': [6, 0], 'administration.installation_credential': [7, 0],
+      'administration.installation_activation': [8, 0], 'administration.installation_activation_code': [9, 0], 'administration.login_challenge_use': [8, 1],
       'administration.operator_account': [0, 1], 'administration.authorization_audit': [1, 1], 'administration.checkout_activation': [2, 1], 'administration.configuration_revision': [3, 1],
-      'administration.operator_assignment': [4, 1], 'administration.lab_session': [5, 1], 'administration.login_throttle': [6, 1], 'administration.operational_role': [7, 1],
+      'administration.operator_assignment': [4, 1], 'administration.operator_session': [5, 1], 'administration.operational_profile': [6, 1], 'administration.operational_role': [7, 1],
+      'administration.login_throttle': [9, 1], 'administration.login_challenge_key': [10, 1],
     } : context === 'devices' ? {
       'platform.database_realm': [0, 0], 'devices.controller': [1, 0], 'devices.registration': [2, 0], 'devices.job': [3, 0], 'devices.result': [4, 0],
     } : context === 'fiscal' ? {

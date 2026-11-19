@@ -157,6 +157,46 @@
         {
           "checksum": "45a375f4eb097736ead90a3b3cac5d98a610d156bfedccb0e4fe211f28e91da8",
           "id": "252_terminal_batch"
+        },
+        {
+          "checksum": "eea53d63d7b3695277d31357e533e0027531e74a954ef102d9ad2a697d13eab3",
+          "id": "253_installation_web_channel"
+        },
+        {
+          "checksum": "d492a44c22bf050298297bb007b770fb2b04e40ac9dcb08b4f9998c47c5443b4",
+          "id": "254_installation_credentials"
+        },
+        {
+          "checksum": "fa69cb7772b766dc910546b9da216249779fdf0fe32b8d1f55b48f5e98e81542",
+          "id": "404_commercial_publication"
+        },
+        {
+          "checksum": "e55c3e73f480da8136d96ee9f8ccc9b93d5f6bea7185d1fc09116fd9222fce47",
+          "id": "404_price_book_candidate"
+        },
+        {
+          "checksum": "3517ffadd80e04f002ac7337272d9c8f52fecdb689ffd05f9ffc47c7f8953888",
+          "id": "405_operator_email_expansion"
+        },
+        {
+          "checksum": "fee1f29ad9a77ab2dc9543c2e6d731d05e9279682d9b769d76d357f606c485de",
+          "id": "406_operator_email_transition"
+        },
+        {
+          "checksum": "13103b8aab6e5fbd94202f217b12e3fd4769ccc99b3a94a0f7c84d0c35322682",
+          "id": "407_operator_username_retirement"
+        },
+        {
+          "checksum": "c350e94736bb7b0ba645e1abec75728a9a40f3976b823bbd5183fc142d0a804d",
+          "id": "408_installation_activation_codes"
+        },
+        {
+          "checksum": "7c43431e5e9d1ff7be3ee34c6957645720c20c05b673c3a2f9a54063482696c0",
+          "id": "409_laboratory_identity_retirement"
+        },
+        {
+          "checksum": "007531c1b0f341847bf5ae8f5b8a3aa519f698c7855514619a0f84410067ed7c",
+          "id": "410_operator_session"
         }
       ],
       "schemas": [
@@ -193,7 +233,7 @@
               "documentation": {
                 "description": "Cuenta de operador identificada al evaluar la solicitud.",
                 "example": "10000000-0000-4000-8000-000000000006",
-                "usage": "Relaciona la decisión con operator_account; puede quedar vacío cuando todavía no se conoce una cuenta válida."
+                "usage": "Relaciona la decisión con operator_account; puede quedar vacío cuando todavía no se conoce una cuenta válida, y lo está en la recuperación de emergencia (administrator.recover), que ejecuta la credencial propietaria fuera de banda. En el canje de un código de activación es quien lo generó."
               },
               "name": "actor_id",
               "nullable": true,
@@ -229,7 +269,7 @@
               "documentation": {
                 "description": "Referencia del recurso al que se intentó acceder.",
                 "example": "10000000-0000-4000-8000-000000000003",
-                "usage": "Sitúa la decisión en una caja, instalación u otro recurso concreto; no contiene el resultado de la operación."
+                "usage": "Sitúa la decisión en una caja, instalación u otro recurso concreto; no contiene el resultado de la operación. Al generar un código de activación es el id del código, y al canjearlo, la credencial del equipo que lo canjeó."
               },
               "name": "resource_id",
               "nullable": false,
@@ -270,6 +310,18 @@
               "name": "occurred_at",
               "nullable": false,
               "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Causa interna de una decisión denegada de identidad o activación.",
+                "example": "ACTIVATION_CODE_EXHAUSTED",
+                "usage": "Distingue, solo en la auditoría, una firma inválida, un desafío repetido o vencido, una época anterior, una instalación desactivada, un permiso ausente o, en el canje de un código, uno desconocido, cerrado, vencido, mal escrito, agotado o de otro canal. La respuesta pública es la misma para todas; vacío en las decisiones permitidas y en las anteriores a TASK-412."
+              },
+              "name": "reason_code",
+              "nullable": true,
+              "type": "text"
             }
           ],
           "comment": null,
@@ -363,6 +415,14 @@
             },
             {
               "columns": [
+                "reason_code"
+              ],
+              "definition": "CHECK (reason_code ~ '^[A-Z][A-Z0-9_]{0,63}$'::text)",
+              "name": "authorization_audit_reason_code_check",
+              "type": "c"
+            },
+            {
+              "columns": [
                 "resource_id"
               ],
               "definition": "CHECK (length(resource_id) <= 120)",
@@ -390,6 +450,18 @@
               },
               {
                 "path": "libs/backend/administration/src/application/transaction-authorization.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/application/local-identity.service.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/application/installation-activation.service.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/application/operator-management.service.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/administrator-recovery.ts"
               }
             ],
             "usage": "Permite reconstruir quién solicitó una acción, sobre qué recurso y con qué política. Una decisión denegada también se registra; una fila no demuestra que la operación de negocio se haya completado."
@@ -1282,9 +1354,9 @@
               "comment": null,
               "default": null,
               "documentation": {
-                "description": "Familia del cliente enrolado: escritorio o móvil.",
+                "description": "Familia del cliente enrolado: escritorio, móvil o navegador web.",
                 "example": "desktop",
-                "usage": "Identifica el canal de la instalación; por sí solo no concede permisos de negocio."
+                "usage": "Identifica el canal de la instalación: `web` corresponde a un navegador sin shell nativa ni acceso a periféricos. Por sí solo no concede permisos de negocio."
               },
               "name": "channel",
               "nullable": false,
@@ -1319,7 +1391,7 @@
               "columns": [
                 "channel"
               ],
-              "definition": "CHECK (channel = ANY (ARRAY['desktop'::text, 'mobile'::text]))",
+              "definition": "CHECK (channel = ANY (ARRAY['desktop'::text, 'mobile'::text, 'web'::text]))",
               "name": "installation_channel_check",
               "type": "c"
             },
@@ -1475,6 +1547,9 @@
               },
               {
                 "path": "libs/backend/administration/src/infrastructure/checkout-activation.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/installation-channel-migration.ts"
               }
             ],
             "usage": "La autorización comprueba esta identidad y su habilitación. El enrolamiento controla la generación del dispositivo y la activación coteja la generación declarada. La publicación de configuración verifica compatibilidad con las capacidades de la caja."
@@ -1506,9 +1581,9 @@
               "comment": null,
               "default": null,
               "documentation": {
-                "description": "Identificador interno de la sesión local emitida.",
-                "example": "10000000-0000-4000-8000-000000000012",
-                "usage": "Distingue emisiones de sesión para una misma asignación sin exponer el token al consultar referencias."
+                "description": "Identificador de la autorización de activación.",
+                "example": "10000000-0000-4000-8000-000000000031",
+                "usage": "Distingue cada inicio de activación auditado."
               },
               "name": "id",
               "nullable": false,
@@ -1518,9 +1593,9 @@
               "comment": null,
               "default": null,
               "documentation": {
-                "description": "Huella criptográfica del token secreto de sesión.",
-                "exampleOmittedReason": "Se omite cualquier huella de credencial; los ejemplos públicos no deben contener tokens ni valores reutilizables para autenticación.",
-                "usage": "Permite localizar y revocar la sesión sin almacenar el token presentado por el cliente."
+                "description": "Huella SHA-256 del token de activación entregado al cliente.",
+                "exampleOmittedReason": "Se omite cualquier huella de credencial; los ejemplos públicos no deben contener valores reutilizables para autenticación.",
+                "usage": "Localiza la autorización sin almacenar el token."
               },
               "name": "token_hash",
               "nullable": false,
@@ -1530,11 +1605,11 @@
               "comment": null,
               "default": null,
               "documentation": {
-                "description": "Asignación de operador para la que se emitió la sesión.",
-                "example": "10000000-0000-4000-8000-000000000007",
-                "usage": "Recupera el alcance de caja e instalación y los permisos que siguen vigentes al usarla."
+                "description": "Operador con installation.activate que inició la activación.",
+                "example": "10000000-0000-4000-8000-000000000006",
+                "usage": "Se vuelve a comprobar su permiso al activar, porque pudo perderlo entre ambos pasos."
               },
-              "name": "assignment_id",
+              "name": "subject_id",
               "nullable": false,
               "type": "uuid"
             },
@@ -1542,9 +1617,21 @@
               "comment": null,
               "default": null,
               "documentation": {
-                "description": "Instante de emisión de la sesión local.",
-                "example": "2026-01-15T10:00:00.000Z",
-                "usage": "Junto con expires_at registra la duración otorgada por el servicio de identidad."
+                "description": "Canal del cliente que pidió la activación.",
+                "example": "web",
+                "usage": "Limita las instalaciones activables: un navegador solo activa instalaciones web."
+              },
+              "name": "channel",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instante de emisión.",
+                "example": "2026-11-17T12:00:00.000Z",
+                "usage": "Junto con expires_at fija la vida corta de la autorización."
               },
               "name": "issued_at",
               "nullable": false,
@@ -1554,9 +1641,9 @@
               "comment": null,
               "default": null,
               "documentation": {
-                "description": "Instante a partir del cual la sesión deja de ser válida.",
-                "example": "2026-01-15T18:00:00.000Z",
-                "usage": "La consulta de autenticación exige que este valor sea posterior al reloj actual de la base."
+                "description": "Instante a partir del cual la autorización ya no sirve.",
+                "example": "2026-11-17T12:05:00.000Z",
+                "usage": "Una activación posterior se rechaza y se audita como ACTIVATION_EXPIRED."
               },
               "name": "expires_at",
               "nullable": false,
@@ -1566,38 +1653,43 @@
               "comment": null,
               "default": null,
               "documentation": {
-                "description": "Instante de revocación explícita de la sesión.",
-                "example": null,
-                "usage": "Cerrar sesión o modificar accesos puede invalidarla antes del vencimiento; vacío significa que no hay revocación registrada."
+                "description": "Instante del primer intento de activación con este token.",
+                "example": "2026-11-17T12:01:00.000Z",
+                "usage": "Un segundo intento se rechaza y se audita como ACTIVATION_REPLAYED."
               },
-              "name": "revoked_at",
+              "name": "consumed_at",
               "nullable": true,
               "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Credencial creada cuando el intento tuvo éxito.",
+                "example": "10000000-0000-4000-8000-000000000021",
+                "usage": "Vacío si el intento fue rechazado; enlaza la autorización con su resultado."
+              },
+              "name": "credential_id",
+              "nullable": true,
+              "type": "uuid"
             }
           ],
           "comment": null,
           "constraints": [
             {
               "columns": [
-                "assignment_id"
+                "channel"
               ],
-              "definition": "FOREIGN KEY (assignment_id) REFERENCES administration.operator_assignment(id)",
-              "name": "lab_session_assignment_id_fkey",
-              "references": {
-                "columns": [
-                  "id"
-                ],
-                "schema": "administration",
-                "table": "operator_assignment"
-              },
-              "type": "f"
+              "definition": "CHECK (channel = ANY (ARRAY['desktop'::text, 'mobile'::text, 'web'::text]))",
+              "name": "installation_activation_channel_check",
+              "type": "c"
             },
             {
               "columns": [
-                "assignment_id"
+                "channel"
               ],
-              "definition": "NOT NULL assignment_id",
-              "name": "lab_session_assignment_id_not_null",
+              "definition": "NOT NULL channel",
+              "name": "installation_activation_channel_not_null",
               "type": "n"
             },
             {
@@ -1606,15 +1698,39 @@
                 "issued_at"
               ],
               "definition": "CHECK (expires_at > issued_at)",
-              "name": "lab_session_check",
+              "name": "installation_activation_check",
               "type": "c"
+            },
+            {
+              "columns": [
+                "credential_id",
+                "consumed_at"
+              ],
+              "definition": "CHECK (credential_id IS NULL OR consumed_at IS NOT NULL)",
+              "name": "installation_activation_check1",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "credential_id"
+              ],
+              "definition": "FOREIGN KEY (credential_id) REFERENCES administration.installation_credential(id)",
+              "name": "installation_activation_credential_id_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "administration",
+                "table": "installation_credential"
+              },
+              "type": "f"
             },
             {
               "columns": [
                 "expires_at"
               ],
               "definition": "NOT NULL expires_at",
-              "name": "lab_session_expires_at_not_null",
+              "name": "installation_activation_expires_at_not_null",
               "type": "n"
             },
             {
@@ -1622,7 +1738,7 @@
                 "id"
               ],
               "definition": "NOT NULL id",
-              "name": "lab_session_id_not_null",
+              "name": "installation_activation_id_not_null",
               "type": "n"
             },
             {
@@ -1630,7 +1746,7 @@
                 "issued_at"
               ],
               "definition": "NOT NULL issued_at",
-              "name": "lab_session_issued_at_not_null",
+              "name": "installation_activation_issued_at_not_null",
               "type": "n"
             },
             {
@@ -1638,15 +1754,38 @@
                 "id"
               ],
               "definition": "PRIMARY KEY (id)",
-              "name": "lab_session_pkey",
+              "name": "installation_activation_pkey",
               "type": "p"
+            },
+            {
+              "columns": [
+                "subject_id"
+              ],
+              "definition": "FOREIGN KEY (subject_id) REFERENCES administration.operator_account(id)",
+              "name": "installation_activation_subject_id_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "administration",
+                "table": "operator_account"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "subject_id"
+              ],
+              "definition": "NOT NULL subject_id",
+              "name": "installation_activation_subject_id_not_null",
+              "type": "n"
             },
             {
               "columns": [
                 "token_hash"
               ],
               "definition": "CHECK (token_hash ~ '^[a-f0-9]{64}$'::text)",
-              "name": "lab_session_token_hash_check",
+              "name": "installation_activation_token_hash_check",
               "type": "c"
             },
             {
@@ -1654,7 +1793,7 @@
                 "token_hash"
               ],
               "definition": "UNIQUE (token_hash)",
-              "name": "lab_session_token_hash_key",
+              "name": "installation_activation_token_hash_key",
               "type": "u"
             },
             {
@@ -1662,41 +1801,774 @@
                 "token_hash"
               ],
               "definition": "NOT NULL token_hash",
-              "name": "lab_session_token_hash_not_null",
+              "name": "installation_activation_token_hash_not_null",
               "type": "n"
             }
           ],
           "context": "administration",
           "documentation": {
-            "description": "Sesión local emitida para una asignación de operador, tanto en perfil laboratory como operational.",
+            "description": "Autorización de un solo uso para activar un equipo, emitida tras validar usuario, contraseña y permiso.",
             "sources": [
               {
-                "path": "libs/backend/administration/src/infrastructure/administration-migrations.ts"
+                "path": "libs/backend/administration/src/infrastructure/installation-credential-migration.ts"
               },
               {
-                "path": "libs/backend/administration/src/infrastructure/identity.store.ts"
+                "path": "libs/backend/administration/src/infrastructure/installation-credential.store.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/application/installation-activation.service.ts"
+              }
+            ],
+            "usage": "La crea el inicio de activación con una vida de cinco minutos y la consume el primer intento de activación, tenga éxito o no. El servidor guarda solo la huella del token."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE INDEX installation_activation_expiration ON administration.installation_activation USING btree (expires_at)",
+              "name": "installation_activation_expiration"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX installation_activation_pkey ON administration.installation_activation USING btree (id)",
+              "name": "installation_activation_pkey"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX installation_activation_token_hash_key ON administration.installation_activation USING btree (token_hash)",
+              "name": "installation_activation_token_hash_key"
+            }
+          ],
+          "name": "installation_activation",
+          "schema": "administration"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identificador del código.",
+                "example": "10000000-0000-4000-8000-000000000041",
+                "usage": "Lo citan las auditorías de emisión y de canje."
+              },
+              "name": "id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Seis primeros caracteres del código, que lo localizan.",
+                "example": "K7M2Q9",
+                "usage": "Único entre los códigos abiertos; por sí solo no activa nada: el canje exige también el verificador."
+              },
+              "name": "selector",
+              "nullable": false,
+              "type": "character(6)"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "HMAC-SHA256 del código completo, con la llave derivada de login_challenge_key.",
+                "exampleOmittedReason": "Se omite cualquier huella de credencial; los ejemplos públicos no deben contener valores reutilizables para autenticación.",
+                "usage": "El canje lo compara en tiempo constante con el del código presentado; el código nunca se guarda en claro."
+              },
+              "name": "verifier_hash",
+              "nullable": false,
+              "type": "character(64)"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instalación de la caja que el código activa.",
+                "example": "10000000-0000-4000-8000-000000000005",
+                "usage": "El equipo que lo canjea queda vinculado a ella, y solo si su canal coincide."
+              },
+              "name": "installation_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Persona con installation.activate que generó el código.",
+                "example": "10000000-0000-4000-8000-000000000006",
+                "usage": "Al canjearlo se vuelve a comprobar su permiso, y la credencial queda activada a su nombre."
+              },
+              "name": "issued_by",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instante de emisión.",
+                "example": "2026-11-18T12:00:00.000Z",
+                "usage": "Junto con expires_at acota la vida del código a diez minutos como máximo."
+              },
+              "name": "issued_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instante desde el cual el código ya no sirve.",
+                "example": "2026-11-18T12:10:00.000Z",
+                "usage": "Un canje posterior se rechaza y se audita como ACTIVATION_CODE_EXPIRED."
+              },
+              "name": "expires_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": "0",
+              "documentation": {
+                "description": "Intentos fallidos con el selector de este código.",
+                "example": 0,
+                "usage": "Cuenta verificadores equivocados y canjes desde otro canal; el quinto cierra el código como attempts-exhausted."
+              },
+              "name": "failed_attempts",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instante en que el código dejó de poder canjearse.",
+                "example": "2026-11-18T12:03:00.000Z",
+                "usage": "Vacío mientras está abierto; un código cerrado no vuelve a abrirse."
+              },
+              "name": "closed_at",
+              "nullable": true,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Por qué se cerró: canjeado, reemplazado por otro o con los intentos agotados.",
+                "example": "redeemed",
+                "usage": "Un canje posterior de un código cerrado se audita como ACTIVATION_CODE_CLOSED."
+              },
+              "name": "closed_reason",
+              "nullable": true,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Credencial del equipo que canjeó el código.",
+                "example": "10000000-0000-4000-8000-000000000021",
+                "usage": "Presente solo en un código canjeado: identifica qué equipo lo usó."
+              },
+              "name": "credential_id",
+              "nullable": true,
+              "type": "uuid"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "expires_at",
+                "issued_at"
+              ],
+              "definition": "CHECK (expires_at > issued_at AND expires_at <= (issued_at + '00:10:00'::interval))",
+              "name": "installation_activation_code_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "closed_at",
+                "closed_reason"
+              ],
+              "definition": "CHECK ((closed_at IS NULL) = (closed_reason IS NULL))",
+              "name": "installation_activation_code_check1",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "credential_id",
+                "closed_reason"
+              ],
+              "definition": "CHECK (credential_id IS NULL OR closed_reason = 'redeemed'::text)",
+              "name": "installation_activation_code_check2",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "closed_reason",
+                "credential_id"
+              ],
+              "definition": "CHECK (closed_reason IS DISTINCT FROM 'redeemed'::text OR credential_id IS NOT NULL)",
+              "name": "installation_activation_code_check3",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "closed_reason"
+              ],
+              "definition": "CHECK (closed_reason = ANY (ARRAY['redeemed'::text, 'superseded'::text, 'attempts-exhausted'::text]))",
+              "name": "installation_activation_code_closed_reason_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "credential_id"
+              ],
+              "definition": "FOREIGN KEY (credential_id) REFERENCES administration.installation_credential(id)",
+              "name": "installation_activation_code_credential_id_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "administration",
+                "table": "installation_credential"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "credential_id"
+              ],
+              "definition": "UNIQUE (credential_id)",
+              "name": "installation_activation_code_credential_id_key",
+              "type": "u"
+            },
+            {
+              "columns": [
+                "expires_at"
+              ],
+              "definition": "NOT NULL expires_at",
+              "name": "installation_activation_code_expires_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "failed_attempts"
+              ],
+              "definition": "CHECK (failed_attempts >= 0 AND failed_attempts <= 5)",
+              "name": "installation_activation_code_failed_attempts_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "failed_attempts"
+              ],
+              "definition": "NOT NULL failed_attempts",
+              "name": "installation_activation_code_failed_attempts_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "NOT NULL id",
+              "name": "installation_activation_code_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "installation_id"
+              ],
+              "definition": "FOREIGN KEY (installation_id) REFERENCES administration.installation(id)",
+              "name": "installation_activation_code_installation_id_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "administration",
+                "table": "installation"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "installation_id"
+              ],
+              "definition": "NOT NULL installation_id",
+              "name": "installation_activation_code_installation_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "issued_at"
+              ],
+              "definition": "NOT NULL issued_at",
+              "name": "installation_activation_code_issued_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "issued_by"
+              ],
+              "definition": "FOREIGN KEY (issued_by) REFERENCES administration.operator_account(id)",
+              "name": "installation_activation_code_issued_by_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "administration",
+                "table": "operator_account"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "issued_by"
+              ],
+              "definition": "NOT NULL issued_by",
+              "name": "installation_activation_code_issued_by_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "PRIMARY KEY (id)",
+              "name": "installation_activation_code_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "selector"
+              ],
+              "definition": "CHECK (selector ~ '^[0-9A-HJKMNP-TV-Z]{6}$'::text)",
+              "name": "installation_activation_code_selector_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "selector"
+              ],
+              "definition": "NOT NULL selector",
+              "name": "installation_activation_code_selector_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "verifier_hash"
+              ],
+              "definition": "CHECK (verifier_hash ~ '^[a-f0-9]{64}$'::text)",
+              "name": "installation_activation_code_verifier_hash_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "verifier_hash"
+              ],
+              "definition": "NOT NULL verifier_hash",
+              "name": "installation_activation_code_verifier_hash_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "administration",
+          "documentation": {
+            "description": "Código de un solo uso con que un equipo se activa sin que nadie escriba ahí una contraseña de administrador.",
+            "sources": [
+              {
+                "path": "libs/backend/administration/src/infrastructure/activation-code-migration.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/installation-credential.store.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/application/installation-activation.service.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/application/operator-management.service.ts"
+              }
+            ],
+            "usage": "Lo genera desde su sesión una persona con installation.activate para una caja de la sucursal; vive diez minutos y activa solo la instalación para la que se generó, desde un cliente de su canal. Son doce caracteres Crockford base32: los seis primeros lo seleccionan y los seis últimos se comparan con su HMAC, de modo que los intentos fallidos se cuentan en el código y el quinto lo cierra. Generar otro para la misma caja cierra el anterior. Las filas se conservan cerradas como registro de quién lo generó, para qué caja y qué credencial lo canjeó."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE UNIQUE INDEX installation_activation_code_credential_id_key ON administration.installation_activation_code USING btree (credential_id)",
+              "name": "installation_activation_code_credential_id_key"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX installation_activation_code_open ON administration.installation_activation_code USING btree (installation_id) WHERE (closed_at IS NULL)",
+              "name": "installation_activation_code_open"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX installation_activation_code_pkey ON administration.installation_activation_code USING btree (id)",
+              "name": "installation_activation_code_pkey"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX installation_activation_code_selector ON administration.installation_activation_code USING btree (selector) WHERE (closed_at IS NULL)",
+              "name": "installation_activation_code_selector"
+            }
+          ],
+          "name": "installation_activation_code",
+          "schema": "administration"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identificador de la credencial del equipo.",
+                "example": "10000000-0000-4000-8000-000000000021",
+                "usage": "Vincula las sesiones operativas y los desafíos con la credencial que los emitió."
+              },
+              "name": "id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instalación aprovisionada que representa este equipo.",
+                "example": "10000000-0000-4000-8000-000000000005",
+                "usage": "Deriva la caja de la sesión: el cliente no la declara."
+              },
+              "name": "installation_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Número de activación de la instalación, creciente desde 1.",
+                "example": 2,
+                "usage": "Forma parte del mensaje firmado; una firma hecha con la época de una credencial revocada se registra como EPOCH_STALE."
+              },
+              "name": "epoch",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "SHA-256 en hexadecimal del SubjectPublicKeyInfo DER de la llave.",
+                "example": "a3f5c2d1e0b9a8f7e6d5c4b3a2918070f6e5d4c3b2a19080706f5e4d3c2b1a09",
+                "usage": "Identifica la llave y rechaza que la misma llave se vincule a dos credenciales."
+              },
+              "name": "key_id",
+              "nullable": false,
+              "type": "character(64)"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Algoritmo de firma de la credencial.",
+                "example": "ES256",
+                "usage": "Por ahora solo ES256: ECDSA P-256 con SHA-256 y firma IEEE P1363."
+              },
+              "name": "algorithm",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "SubjectPublicKeyInfo DER de la llave pública P-256 del equipo.",
+                "exampleOmittedReason": "Se omite: aunque una llave pública no es secreta, identifica a un equipo real y no aporta a la explicación.",
+                "usage": "Verifica en el servidor, con node:crypto, la firma del desafío de un solo uso."
+              },
+              "name": "public_key",
+              "nullable": false,
+              "type": "bytea"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Operador con installation.activate que autorizó la activación.",
+                "example": "10000000-0000-4000-8000-000000000006",
+                "usage": "Atribuye la vinculación del equipo en la vista de administración y en la auditoría."
+              },
+              "name": "activated_by",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Instante en que se vinculó la llave.",
+                "example": "2026-11-17T12:00:00.000Z",
+                "usage": "Se muestra en la vista de equipos por caja."
+              },
+              "name": "activated_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instante de revocación de la credencial.",
+                "example": null,
+                "usage": "Vacío mientras está activa. Al llenarse, las sesiones y los desafíos que dependían de ella dejan de servir."
+              },
+              "name": "revoked_at",
+              "nullable": true,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Operador que provocó la revocación.",
+                "example": null,
+                "usage": "Es quien activó otro equipo en la instalación o quien lo desactivó desde administración."
+              },
+              "name": "revoked_by",
+              "nullable": true,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Causa de la revocación.",
+                "example": null,
+                "usage": "superseded cuando otra activación la reemplazó y deactivated cuando se desactivó el equipo desde administración."
+              },
+              "name": "revocation_reason",
+              "nullable": true,
+              "type": "text"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "activated_at"
+              ],
+              "definition": "NOT NULL activated_at",
+              "name": "installation_credential_activated_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "activated_by"
+              ],
+              "definition": "FOREIGN KEY (activated_by) REFERENCES administration.operator_account(id)",
+              "name": "installation_credential_activated_by_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "administration",
+                "table": "operator_account"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "activated_by"
+              ],
+              "definition": "NOT NULL activated_by",
+              "name": "installation_credential_activated_by_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "algorithm"
+              ],
+              "definition": "CHECK (algorithm = 'ES256'::text)",
+              "name": "installation_credential_algorithm_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "algorithm"
+              ],
+              "definition": "NOT NULL algorithm",
+              "name": "installation_credential_algorithm_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "revoked_at",
+                "revocation_reason",
+                "revoked_by"
+              ],
+              "definition": "CHECK ((revoked_at IS NULL) = (revocation_reason IS NULL) AND (revoked_at IS NULL) = (revoked_by IS NULL))",
+              "name": "installation_credential_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "epoch"
+              ],
+              "definition": "CHECK (epoch > 0)",
+              "name": "installation_credential_epoch_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "epoch"
+              ],
+              "definition": "NOT NULL epoch",
+              "name": "installation_credential_epoch_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "NOT NULL id",
+              "name": "installation_credential_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "installation_id",
+                "epoch"
+              ],
+              "definition": "UNIQUE (installation_id, epoch)",
+              "name": "installation_credential_installation_id_epoch_key",
+              "type": "u"
+            },
+            {
+              "columns": [
+                "installation_id"
+              ],
+              "definition": "FOREIGN KEY (installation_id) REFERENCES administration.installation(id)",
+              "name": "installation_credential_installation_id_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "administration",
+                "table": "installation"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "installation_id"
+              ],
+              "definition": "NOT NULL installation_id",
+              "name": "installation_credential_installation_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "key_id"
+              ],
+              "definition": "CHECK (key_id ~ '^[a-f0-9]{64}$'::text)",
+              "name": "installation_credential_key_id_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "key_id"
+              ],
+              "definition": "UNIQUE (key_id)",
+              "name": "installation_credential_key_id_key",
+              "type": "u"
+            },
+            {
+              "columns": [
+                "key_id"
+              ],
+              "definition": "NOT NULL key_id",
+              "name": "installation_credential_key_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "PRIMARY KEY (id)",
+              "name": "installation_credential_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "public_key"
+              ],
+              "definition": "CHECK (octet_length(public_key) >= 64 AND octet_length(public_key) <= 160)",
+              "name": "installation_credential_public_key_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "public_key"
+              ],
+              "definition": "NOT NULL public_key",
+              "name": "installation_credential_public_key_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "revocation_reason"
+              ],
+              "definition": "CHECK (revocation_reason = ANY (ARRAY['superseded'::text, 'deactivated'::text]))",
+              "name": "installation_credential_revocation_reason_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "revoked_by"
+              ],
+              "definition": "FOREIGN KEY (revoked_by) REFERENCES administration.operator_account(id)",
+              "name": "installation_credential_revoked_by_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "administration",
+                "table": "operator_account"
+              },
+              "type": "f"
+            }
+          ],
+          "context": "administration",
+          "documentation": {
+            "description": "Llave pública del equipo vinculada a una instalación aprovisionada, con su época y su revocación.",
+            "sources": [
+              {
+                "path": "libs/backend/administration/src/infrastructure/installation-credential-migration.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/installation-credential.store.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/application/installation-activation.service.ts"
               },
               {
                 "path": "libs/backend/administration/src/application/local-identity.service.ts"
               }
             ],
-            "usage": "La tabla conserva la huella del token y su vigencia. Al validar una sesión se vuelven a comprobar la cuenta, la asignación, el rol operativo y la instalación."
+            "usage": "La activación agrega una fila y revoca la anterior de la misma instalación; el login verifica con esta llave la firma del desafío. Como mucho una fila activa por instalación; una revocada nunca vuelve a activarse y la clave privada nunca sale del equipo."
           },
           "indexes": [
             {
-              "definition": "CREATE INDEX lab_session_expiration ON administration.lab_session USING btree (expires_at)",
-              "name": "lab_session_expiration"
+              "definition": "CREATE UNIQUE INDEX installation_credential_active ON administration.installation_credential USING btree (installation_id) WHERE (revoked_at IS NULL)",
+              "name": "installation_credential_active"
             },
             {
-              "definition": "CREATE UNIQUE INDEX lab_session_pkey ON administration.lab_session USING btree (id)",
-              "name": "lab_session_pkey"
+              "definition": "CREATE UNIQUE INDEX installation_credential_installation_id_epoch_key ON administration.installation_credential USING btree (installation_id, epoch)",
+              "name": "installation_credential_installation_id_epoch_key"
             },
             {
-              "definition": "CREATE UNIQUE INDEX lab_session_token_hash_key ON administration.lab_session USING btree (token_hash)",
-              "name": "lab_session_token_hash_key"
+              "definition": "CREATE UNIQUE INDEX installation_credential_key_id_key ON administration.installation_credential USING btree (key_id)",
+              "name": "installation_credential_key_id_key"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX installation_credential_pkey ON administration.installation_credential USING btree (id)",
+              "name": "installation_credential_pkey"
             }
           ],
-          "name": "lab_session",
+          "name": "installation_credential",
           "schema": "administration"
         },
         {
@@ -1801,6 +2673,262 @@
             }
           ],
           "name": "legal_entity",
+          "schema": "administration"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": "true",
+              "documentation": {
+                "description": "Marca de la única fila de la tabla.",
+                "example": true,
+                "usage": "Impide que exista más de una llave vigente."
+              },
+              "name": "singleton",
+              "nullable": false,
+              "type": "boolean"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Llave de 32 bytes del HMAC de los desafíos.",
+                "exampleOmittedReason": "Se omite: es material secreto de autenticación.",
+                "usage": "Autentica el identificador, la instalación, la época y el vencimiento de cada desafío."
+              },
+              "name": "secret",
+              "nullable": false,
+              "type": "bytea"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Instante en que se generó la llave.",
+                "example": "2026-11-17T12:00:00.000Z",
+                "usage": "Identifica cuándo se creó o rotó."
+              },
+              "name": "created_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "created_at"
+              ],
+              "definition": "NOT NULL created_at",
+              "name": "login_challenge_key_created_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "singleton"
+              ],
+              "definition": "PRIMARY KEY (singleton)",
+              "name": "login_challenge_key_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "secret"
+              ],
+              "definition": "CHECK (octet_length(secret) = 32)",
+              "name": "login_challenge_key_secret_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "secret"
+              ],
+              "definition": "NOT NULL secret",
+              "name": "login_challenge_key_secret_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "singleton"
+              ],
+              "definition": "CHECK (singleton)",
+              "name": "login_challenge_key_singleton_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "singleton"
+              ],
+              "definition": "NOT NULL singleton",
+              "name": "login_challenge_key_singleton_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "administration",
+          "documentation": {
+            "description": "Llave de la base con la que el servidor autentica los desafíos de login (HMAC-SHA256).",
+            "sources": [
+              {
+                "path": "libs/backend/administration/src/infrastructure/installation-credential-migration.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/installation-credential.store.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/application/local-identity.service.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/installation-keys.ts"
+              }
+            ],
+            "usage": "La genera la migración 254, una por base, y la comparten todas las réplicas de la API. La cuenta de ejecución solo la lee: con ella emite desafíos sin guardarlos y verifica los que vuelven. Rotarla invalida los desafíos en curso, que duran 60 segundos. De ella se deriva con HKDF, con una etiqueta propia, la llave del HMAC de los códigos de activación (TASK-416): rotarla invalida también los códigos abiertos, que duran diez minutos."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE UNIQUE INDEX login_challenge_key_pkey ON administration.login_challenge_key USING btree (singleton)",
+              "name": "login_challenge_key_pkey"
+            }
+          ],
+          "name": "login_challenge_key",
+          "schema": "administration"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identificador del desafío usado.",
+                "example": "10000000-0000-4000-8000-000000000041",
+                "usage": "Su unicidad hace atómico el consumo, también entre réplicas."
+              },
+              "name": "challenge_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instalación para la que se emitió el desafío.",
+                "example": "10000000-0000-4000-8000-000000000005",
+                "usage": "Relaciona el uso con la caja que intentó iniciar sesión."
+              },
+              "name": "installation_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Vencimiento del desafío.",
+                "example": "2026-11-17T12:01:00.000Z",
+                "usage": "Decide cuándo puede purgarse la fila: pasado el vencimiento el desafío ya se rechaza por sí solo."
+              },
+              "name": "expires_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Instante del intento de login que usó el desafío.",
+                "example": "2026-11-17T12:00:20.000Z",
+                "usage": "Ordena los intentos en una investigación."
+              },
+              "name": "used_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "challenge_id"
+              ],
+              "definition": "NOT NULL challenge_id",
+              "name": "login_challenge_use_challenge_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "expires_at"
+              ],
+              "definition": "NOT NULL expires_at",
+              "name": "login_challenge_use_expires_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "installation_id"
+              ],
+              "definition": "FOREIGN KEY (installation_id) REFERENCES administration.installation(id)",
+              "name": "login_challenge_use_installation_id_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "administration",
+                "table": "installation"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "installation_id"
+              ],
+              "definition": "NOT NULL installation_id",
+              "name": "login_challenge_use_installation_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "challenge_id"
+              ],
+              "definition": "PRIMARY KEY (challenge_id)",
+              "name": "login_challenge_use_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "used_at"
+              ],
+              "definition": "NOT NULL used_at",
+              "name": "login_challenge_use_used_at_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "administration",
+          "documentation": {
+            "description": "Desafíos de login ya usados, para que cada uno sirva una sola vez.",
+            "sources": [
+              {
+                "path": "libs/backend/administration/src/infrastructure/installation-credential-migration.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/installation-credential.store.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/application/local-identity.service.ts"
+              }
+            ],
+            "usage": "El login inserta el desafío después de autenticarlo y antes de verificar la firma: un segundo uso choca con la clave primaria y se rechaza como CHALLENGE_REPLAYED. Emitir desafíos no escribe aquí, así que pedir muchos no deja a un equipo sin login. La cuenta propietaria purga los vencidos hace más de una hora con database.js purge-login-challenges."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE INDEX login_challenge_use_expiration ON administration.login_challenge_use USING btree (expires_at)",
+              "name": "login_challenge_use_expiration"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX login_challenge_use_pkey ON administration.login_challenge_use USING btree (challenge_id)",
+              "name": "login_challenge_use_pkey"
+            }
+          ],
+          "name": "login_challenge_use",
           "schema": "administration"
         },
         {
@@ -1938,7 +3066,7 @@
               "documentation": {
                 "description": "Sucursal que recibió el aprovisionamiento operativo.",
                 "example": "10000000-0000-4000-8000-000000000001",
-                "usage": "La vincula al realm local y permite distinguir esta base de una instalación de laboratorio."
+                "usage": "La vincula al realm local: sin este registro la base no es una sucursal aprovisionada y la API no queda lista."
               },
               "name": "branch_id",
               "nullable": false,
@@ -1962,7 +3090,7 @@
               "documentation": {
                 "description": "Perfil operativo de la sucursal aprovisionada.",
                 "example": "operational",
-                "usage": "Permite comprobar que la identidad se inicializó para operación y no para datos de laboratorio."
+                "usage": "Registra que la identidad se inicializó para operación; desde ADR-25 es el único modo de identidad."
               },
               "name": "profile",
               "nullable": false,
@@ -2403,18 +3531,6 @@
               "comment": null,
               "default": null,
               "documentation": {
-                "description": "Nombre de inicio de sesión normalizado de la cuenta.",
-                "example": "operador.ejemplo",
-                "usage": "El servicio lo busca al autenticar; no es el nombre visible ni una credencial secreta."
-              },
-              "name": "username",
-              "nullable": false,
-              "type": "text"
-            },
-            {
-              "comment": null,
-              "default": null,
-              "documentation": {
                 "description": "Nombre visible del operador dentro del POS.",
                 "example": "Operador de ejemplo",
                 "usage": "Se presenta al usuario y permite reconocer la cuenta al administrar el equipo."
@@ -2449,11 +3565,11 @@
             },
             {
               "comment": null,
-              "default": "'laboratory'::text",
+              "default": "'operational'::text",
               "documentation": {
-                "description": "Perfil de identidad al que pertenece la cuenta.",
+                "description": "Modo de identidad de la cuenta.",
                 "example": "operational",
-                "usage": "Separa cuentas de laboratorio y operativas durante autenticación y administración."
+                "usage": "Desde ADR-25 toda cuenta nueva o modificada es operational: la migración 409 lo fija como valor por defecto y lo exige con una restricción que no revalida las filas existentes. Las cuentas laboratory de bases anteriores conservan su historial, pero no autentican ni dejan lista la API."
               },
               "name": "profile",
               "nullable": false,
@@ -2470,6 +3586,66 @@
               "name": "version",
               "nullable": false,
               "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": "false",
+              "documentation": {
+                "description": "Indica que la contraseña vigente la eligió otra persona y que su dueño debe reemplazarla.",
+                "example": true,
+                "usage": "El aprovisionamiento del administrador inicial, el alta de un operador y el restablecimiento por un administrador la dejan en verdadero; el cambio propio la deja en falso. Mientras sea verdadera, la sesión solo consulta su identidad, cambia su contraseña o cierra sesión, y el servidor rechaza el resto con PASSWORD_CHANGE_REQUIRED."
+              },
+              "name": "password_change_required",
+              "nullable": false,
+              "type": "boolean"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Correo con que la persona ingresa al POS, normalizado sin espacios y en minúsculas.",
+                "example": "cajera.uno@example.com",
+                "usage": "El login, la activación por cuenta y la recuperación de emergencia buscan la cuenta por este valor; es único entre todas las cuentas, también las deshabilitadas, porque pueden volver a habilitarse. No es la llave: cambiarlo conserva el id, el historial, la auditoría y las sesiones. Las cuentas anteriores a la migración 256 quedan con su usuario como parte local de una dirección del dominio reservado .invalid hasta que un administrador registre su buzón."
+              },
+              "name": "email",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": "'local'::text",
+              "documentation": {
+                "description": "Origen de la cuenta: local, creada en el POS, o erp, empleado del ERP.",
+                "example": "local",
+                "usage": "La administración del POS solo crea cuentas local (administración, soporte, TI); una sincronización futura del ERP será la única que cree o modifique cuentas erp. Es inmutable: protege a las cuentas local de esa sincronización como un dato, no como una excepción en el código."
+              },
+              "name": "origin",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "RecId del trabajador del ERP (HcmWorker) vinculado a la cuenta, si lo hay.",
+                "example": "5637144576",
+                "usage": "Dato de referencia, nunca llave ni credencial: obligatorio en las cuentas erp, opcional en las local y como mucho una cuenta por trabajador. Prepara la atribución del vendedor de una venta (F04-08) y la sincronización de empleados; la administración no lo cambia en una cuenta erp."
+              },
+              "name": "worker_rec_id",
+              "nullable": true,
+              "type": "bigint"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Número de personal del trabajador del ERP (PERSONNELNUMBER), si lo hay.",
+                "example": "000123",
+                "usage": "Dato de referencia para reconocer al trabajador junto con worker_rec_id; no autentica ni es llave."
+              },
+              "name": "personnel_number",
+              "nullable": true,
+              "type": "text"
             }
           ],
           "comment": null,
@@ -2492,6 +3668,22 @@
             },
             {
               "columns": [
+                "email"
+              ],
+              "definition": "CHECK (email = lower(btrim(email)) AND length(email) >= 3 AND length(email) <= 254 AND email ~ '^[^@[:space:]]+@[^@[:space:]]+[.][^@[:space:]]+$'::text)",
+              "name": "operator_account_email_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "email"
+              ],
+              "definition": "NOT NULL email",
+              "name": "operator_account_email_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
                 "enabled"
               ],
               "definition": "NOT NULL enabled",
@@ -2500,10 +3692,51 @@
             },
             {
               "columns": [
+                "origin",
+                "worker_rec_id"
+              ],
+              "definition": "CHECK (origin <> 'erp'::text OR worker_rec_id IS NOT NULL)",
+              "name": "operator_account_erp_worker",
+              "type": "c"
+            },
+            {
+              "columns": [
                 "id"
               ],
               "definition": "NOT NULL id",
               "name": "operator_account_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "profile"
+              ],
+              "definition": "CHECK (profile = 'operational'::text) NOT VALID",
+              "name": "operator_account_operational_only",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "origin"
+              ],
+              "definition": "CHECK (origin = ANY (ARRAY['local'::text, 'erp'::text]))",
+              "name": "operator_account_origin_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "origin"
+              ],
+              "definition": "NOT NULL origin",
+              "name": "operator_account_origin_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "password_change_required"
+              ],
+              "definition": "NOT NULL password_change_required",
+              "name": "operator_account_password_change_required_not_null",
               "type": "n"
             },
             {
@@ -2521,6 +3754,14 @@
               "definition": "NOT NULL password_hash",
               "name": "operator_account_password_hash_not_null",
               "type": "n"
+            },
+            {
+              "columns": [
+                "personnel_number"
+              ],
+              "definition": "CHECK (personnel_number ~ '^[A-Za-z0-9._-]{1,25}$'::text)",
+              "name": "operator_account_personnel_number_check",
+              "type": "c"
             },
             {
               "columns": [
@@ -2548,30 +3789,6 @@
             },
             {
               "columns": [
-                "username"
-              ],
-              "definition": "CHECK (username = lower(username) AND length(username) >= 1 AND length(username) <= 80)",
-              "name": "operator_account_username_check",
-              "type": "c"
-            },
-            {
-              "columns": [
-                "username"
-              ],
-              "definition": "UNIQUE (username)",
-              "name": "operator_account_username_key",
-              "type": "u"
-            },
-            {
-              "columns": [
-                "username"
-              ],
-              "definition": "NOT NULL username",
-              "name": "operator_account_username_not_null",
-              "type": "n"
-            },
-            {
-              "columns": [
                 "version"
               ],
               "definition": "CHECK (version > 0)",
@@ -2585,11 +3802,19 @@
               "definition": "NOT NULL version",
               "name": "operator_account_version_not_null",
               "type": "n"
+            },
+            {
+              "columns": [
+                "worker_rec_id"
+              ],
+              "definition": "CHECK (worker_rec_id > 0)",
+              "name": "operator_account_worker_rec_id_check",
+              "type": "c"
             }
           ],
           "context": "administration",
           "documentation": {
-            "description": "Cuenta local del operador del POS.",
+            "description": "Cuenta local del operador del POS, identificada por su id e ingresada con su correo.",
             "sources": [
               {
                 "path": "libs/backend/administration/src/infrastructure/administration-migrations.ts"
@@ -2602,18 +3827,34 @@
               },
               {
                 "path": "libs/backend/administration/src/infrastructure/management.store.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/operator-email-migration.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/operational-provisioning.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/administrator-recovery.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/identity-retirement-migration.ts"
               }
             ],
-            "usage": "Contiene identidad visible, perfil y credencial protegida. Los permisos y el alcance de operación se obtienen mediante asignaciones y roles, no del nombre de la cuenta."
+            "usage": "Contiene identidad visible, correo de ingreso, origen, referencia opcional al trabajador del ERP, perfil y credencial protegida. Los permisos y el alcance de operación se obtienen mediante asignaciones y roles, no del correo ni del nombre de la cuenta. Desde TASK-416 el correo reemplaza al nombre de usuario, que la migración 257 retira."
           },
           "indexes": [
+            {
+              "definition": "CREATE UNIQUE INDEX operator_account_email ON administration.operator_account USING btree (email)",
+              "name": "operator_account_email"
+            },
             {
               "definition": "CREATE UNIQUE INDEX operator_account_pkey ON administration.operator_account USING btree (id)",
               "name": "operator_account_pkey"
             },
             {
-              "definition": "CREATE UNIQUE INDEX operator_account_username_key ON administration.operator_account USING btree (username)",
-              "name": "operator_account_username_key"
+              "definition": "CREATE UNIQUE INDEX operator_account_worker ON administration.operator_account USING btree (worker_rec_id) WHERE (worker_rec_id IS NOT NULL)",
+              "name": "operator_account_worker"
             }
           ],
           "name": "operator_account",
@@ -2687,7 +3928,7 @@
               "documentation": {
                 "description": "Código de rol asociado al acceso del operador.",
                 "example": "cashier-example",
-                "usage": "En perfil operativo se resuelve contra operational_role de la misma sucursal y debe estar habilitado."
+                "usage": "Se resuelve contra operational_role de la misma sucursal y debe estar habilitado."
               },
               "name": "role_id",
               "nullable": false,
@@ -2697,7 +3938,7 @@
               "comment": null,
               "default": null,
               "documentation": {
-                "description": "Permisos directos almacenados en la asignación de laboratorio.",
+                "description": "Permisos directos de las asignaciones históricas de laboratorio.",
                 "example": [],
                 "usage": "En asignaciones operativas permanece vacío porque los permisos efectivos se heredan del rol; no significa que el usuario carezca de permisos."
               },
@@ -2967,7 +4208,7 @@
                 "path": "libs/backend/administration/src/infrastructure/management.store.ts"
               }
             ],
-            "usage": "Delimita alcance y vigencia. En perfil operativo los permisos provienen de operational_role y permissions se conserva vacío; las asignaciones de laboratorio almacenan permisos directos."
+            "usage": "Delimita alcance y vigencia. Los permisos provienen de operational_role y permissions se conserva vacío; solo las asignaciones históricas de laboratorio, anteriores a ADR-25, almacenan permisos directos."
           },
           "indexes": [
             {
@@ -2980,6 +4221,238 @@
             }
           ],
           "name": "operator_assignment",
+          "schema": "administration"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identificador interno de la sesión local emitida.",
+                "example": "10000000-0000-4000-8000-000000000012",
+                "usage": "Distingue emisiones de sesión para una misma asignación sin exponer el token al consultar referencias."
+              },
+              "name": "id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Huella criptográfica del token secreto de sesión.",
+                "exampleOmittedReason": "Se omite cualquier huella de credencial; los ejemplos públicos no deben contener tokens ni valores reutilizables para autenticación.",
+                "usage": "Permite localizar y revocar la sesión sin almacenar el token presentado por el cliente."
+              },
+              "name": "token_hash",
+              "nullable": false,
+              "type": "character(64)"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Asignación de operador para la que se emitió la sesión.",
+                "example": "10000000-0000-4000-8000-000000000007",
+                "usage": "Recupera el alcance de caja e instalación y los permisos que siguen vigentes al usarla."
+              },
+              "name": "assignment_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instante de emisión de la sesión local.",
+                "example": "2026-01-15T10:00:00.000Z",
+                "usage": "Junto con expires_at registra la duración otorgada por el servicio de identidad."
+              },
+              "name": "issued_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instante a partir del cual la sesión deja de ser válida.",
+                "example": "2026-01-15T18:00:00.000Z",
+                "usage": "La consulta de autenticación exige que este valor sea posterior al reloj actual de la base."
+              },
+              "name": "expires_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instante de revocación explícita de la sesión.",
+                "example": null,
+                "usage": "Cerrar sesión o modificar accesos puede invalidarla antes del vencimiento; vacío significa que no hay revocación registrada."
+              },
+              "name": "revoked_at",
+              "nullable": true,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Credencial del equipo con la que la sesión operativa probó posesión al iniciarse.",
+                "example": "10000000-0000-4000-8000-000000000021",
+                "usage": "Una sesión solo es válida mientras esa credencial siga activa: activar otro equipo en la instalación o desactivarlo desde administración la invalida. Vacío en las sesiones anteriores a la migración 254 y en las de bases de laboratorio previas a ADR-25, que no autentican."
+              },
+              "name": "credential_id",
+              "nullable": true,
+              "type": "uuid"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "assignment_id"
+              ],
+              "definition": "FOREIGN KEY (assignment_id) REFERENCES administration.operator_assignment(id)",
+              "name": "operator_session_assignment_id_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "administration",
+                "table": "operator_assignment"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "assignment_id"
+              ],
+              "definition": "NOT NULL assignment_id",
+              "name": "operator_session_assignment_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "expires_at",
+                "issued_at"
+              ],
+              "definition": "CHECK (expires_at > issued_at)",
+              "name": "operator_session_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "credential_id"
+              ],
+              "definition": "FOREIGN KEY (credential_id) REFERENCES administration.installation_credential(id)",
+              "name": "operator_session_credential_id_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "administration",
+                "table": "installation_credential"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "expires_at"
+              ],
+              "definition": "NOT NULL expires_at",
+              "name": "operator_session_expires_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "NOT NULL id",
+              "name": "operator_session_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "issued_at"
+              ],
+              "definition": "NOT NULL issued_at",
+              "name": "operator_session_issued_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "PRIMARY KEY (id)",
+              "name": "operator_session_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "token_hash"
+              ],
+              "definition": "CHECK (token_hash ~ '^[a-f0-9]{64}$'::text)",
+              "name": "operator_session_token_hash_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "token_hash"
+              ],
+              "definition": "UNIQUE (token_hash)",
+              "name": "operator_session_token_hash_key",
+              "type": "u"
+            },
+            {
+              "columns": [
+                "token_hash"
+              ],
+              "definition": "NOT NULL token_hash",
+              "name": "operator_session_token_hash_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "administration",
+          "documentation": {
+            "description": "Sesión local emitida para una asignación de operador tras probar la posesión de la llave del equipo.",
+            "sources": [
+              {
+                "path": "libs/backend/administration/src/infrastructure/administration-migrations.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/identity.store.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/application/local-identity.service.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/installation-credential-migration.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/identity-retirement-migration.ts"
+              }
+            ],
+            "usage": "La tabla conserva la huella del token y su vigencia. Al validar una sesión se vuelven a comprobar la cuenta, la asignación, el rol operativo, la instalación y la credencial del equipo. Se llamaba lab_session hasta la migración 410, que la renombró conservando sus filas, privilegios y reglas."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE INDEX operator_session_expiration ON administration.operator_session USING btree (expires_at)",
+              "name": "operator_session_expiration"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX operator_session_pkey ON administration.operator_session USING btree (id)",
+              "name": "operator_session_pkey"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX operator_session_token_hash_key ON administration.operator_session USING btree (token_hash)",
+              "name": "operator_session_token_hash_key"
+            }
+          ],
+          "name": "operator_session",
           "schema": "administration"
         },
         {
@@ -4031,7 +5504,7 @@
               "default": null,
               "documentation": {
                 "description": "Etiqueta del origen de la disponibilidad informativa.",
-                "example": "synthetic-laboratory",
+                "example": "synthetic-store",
                 "usage": "Permite mostrar de dónde proviene la observación; la consulta conserva esta etiqueta en su respuesta."
               },
               "name": "source",
@@ -4183,6 +5656,952 @@
             }
           ],
           "name": "availability",
+          "schema": "catalog"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Sucursal a la que se dirige la publicación.",
+                "example": "10000000-0000-4000-8000-000000000001",
+                "usage": "Aísla el registro y sus porciones dentro de la base de esa sucursal; el documento debe nombrar exactamente esta sucursal."
+              },
+              "name": "branch_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identificador de la publicación, elegido por quien la produce.",
+                "example": "20000000-0000-4000-8000-00000000a001",
+                "usage": "Hace idempotente la carga: repetir el mismo contenido recupera el recibo y otro contenido con el mismo identificador es un conflicto."
+              },
+              "name": "publication_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Versión del contrato del archivo recibido.",
+                "example": "commercial-publication-v1",
+                "usage": "Permite que convivan lectores de versiones futuras del contrato; hoy solo existe commercial-publication-v1."
+              },
+              "name": "schema_version",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Versión comercial que la publicación activará.",
+                "example": "qa-2026-11-18.1",
+                "usage": "Es única por sucursal mientras la publicación no esté rechazada, y es la que registran cotizaciones y ventas."
+              },
+              "name": "commercial_version",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Versión activa que la publicación espera reemplazar.",
+                "example": "qa-2026-11-17.1",
+                "usage": "Es el expectedBaseVersion del compare-and-set: si al activar la versión activa es otra, la publicación se rechaza por conflicto. Vacía solo para la primera publicación."
+              },
+              "name": "base_version",
+              "nullable": true,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "SHA-256 del contenido canónico del archivo, declarado por el productor y verificado antes de escribir nada.",
+                "example": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "usage": "Distingue una repetición idéntica de un contenido distinto con el mismo identificador."
+              },
+              "name": "content_hash",
+              "nullable": false,
+              "type": "character(64)"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Inicio de la vigencia comercial.",
+                "example": "2026-11-18T00:00:00.000Z",
+                "usage": "La activación se rechaza si todavía no comienza; también acota el libro de precios."
+              },
+              "name": "valid_from",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Fin de la vigencia comercial.",
+                "example": "2026-12-18T00:00:00.000Z",
+                "usage": "Una publicación vencida no se activa, y la cotización deja de estar disponible al vencer el libro de precios aunque siga activa."
+              },
+              "name": "valid_until",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Etiqueta técnica del origen que produjo la publicación.",
+                "example": "legacy-qa-extractor",
+                "usage": "Identifica el extractor o la sincronización que la entregó; no es un dato de negocio ni una credencial."
+              },
+              "name": "source_ref",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instante del corte de datos en el origen.",
+                "example": "2026-11-17T23:00:00.000Z",
+                "usage": "Se usa como observación de productos y de la proyección de clientes; un corte futuro se rechaza."
+              },
+              "name": "source_cut_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Versión de la proyección de clientes que trae la publicación.",
+                "example": "qa-clientes-2026-11-18.1",
+                "usage": "Junto con customer_sequence decide si la proyección avanza; una secuencia igual con otra versión se rechaza."
+              },
+              "name": "customer_projection_version",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Secuencia monótona de la proyección de clientes.",
+                "example": 3,
+                "usage": "No puede retroceder respecto de catalog.customer_publication; impide que una publicación vieja revierta clientes."
+              },
+              "name": "customer_sequence",
+              "nullable": false,
+              "type": "bigint"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Manifiesto técnico de la carga: conteos por dominio, versión de política y hash de cada porción.",
+                "example": {
+                  "chunks": {
+                    "availability": [
+                      "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+                    ],
+                    "customers": [
+                      "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+                    ],
+                    "products": [
+                      "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+                    ]
+                  },
+                  "counts": {
+                    "availability": 1,
+                    "codes": 3,
+                    "customers": 2,
+                    "prices": 2,
+                    "products": 2,
+                    "rules": 0,
+                    "units": 3
+                  },
+                  "policyVersion": "cl-policy-v1"
+                },
+                "usage": "La validación comprueba con él que la sucursal tiene el paquete completo e inalterado antes de activarlo."
+              },
+              "name": "manifest",
+              "nullable": false,
+              "type": "jsonb"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Estado de la publicación: staged, validated, rejected, active o superseded.",
+                "example": "active",
+                "usage": "Un trigger solo admite avanzar staged→validated→active→superseded o pasar a rejected antes de activar; nunca se borra."
+              },
+              "name": "status",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": "'[]'::jsonb",
+              "documentation": {
+                "description": "Hasta cincuenta hallazgos estructurados de una publicación rechazada.",
+                "example": [
+                  {
+                    "code": "PRICE_COVERAGE_MISSING",
+                    "domain": "pricing",
+                    "index": null,
+                    "path": "productId:20000000-0000-4000-8000-00000000c002"
+                  }
+                ],
+                "usage": "Cada hallazgo tiene código, dominio, índice o ruta de claves; nunca el valor rechazado ni datos personales."
+              },
+              "name": "issues",
+              "nullable": false,
+              "type": "jsonb"
+            },
+            {
+              "comment": null,
+              "default": "0",
+              "documentation": {
+                "description": "Cantidad total de hallazgos, aunque se conserven solo los primeros cincuenta.",
+                "example": 1,
+                "usage": "Mayor que cero si y solo si la publicación está rechazada."
+              },
+              "name": "issue_count",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Versión comercial que estaba activa cuando se activó esta publicación.",
+                "example": "qa-2026-11-17.1",
+                "usage": "Conserva la cadena de reemplazos para auditar y recuperar."
+              },
+              "name": "previous_version",
+              "nullable": true,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": "0",
+              "documentation": {
+                "description": "Clientes de la publicación que no se aplicaron por tener una solicitud de cambio pendiente.",
+                "example": 0,
+                "usage": "Sigue la regla de la proyección: una solicitud pendiente retiene a su cliente hasta resolverse."
+              },
+              "name": "customers_held",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Instante en que se registró la publicación.",
+                "example": "2026-11-18T03:00:00.000Z",
+                "usage": "Marca el inicio de la carga en staging."
+              },
+              "name": "staged_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instante en que la publicación superó la validación.",
+                "example": "2026-11-18T03:00:01.000Z",
+                "usage": "Separa lo recibido de lo validado; vacío mientras está en staging."
+              },
+              "name": "validated_at",
+              "nullable": true,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instante en que la publicación se rechazó.",
+                "example": "2026-11-18T03:00:01.000Z",
+                "usage": "Presente si y solo si el estado es rejected; la versión activa no cambió."
+              },
+              "name": "rejected_at",
+              "nullable": true,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instante del commit que la hizo activa.",
+                "example": "2026-11-18T03:00:02.000Z",
+                "usage": "Presente desde la activación y conservado al ser reemplazada."
+              },
+              "name": "activated_at",
+              "nullable": true,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instante en que otra publicación la reemplazó.",
+                "example": "2026-11-19T03:00:02.000Z",
+                "usage": "Presente si y solo si el estado es superseded; su contenido sigue retenido."
+              },
+              "name": "superseded_at",
+              "nullable": true,
+              "type": "timestamp with time zone"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "base_version"
+              ],
+              "definition": "CHECK (base_version ~ '^[a-zA-Z0-9_.:-]{1,100}$'::text)",
+              "name": "commercial_publication_base_version_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "branch_id"
+              ],
+              "definition": "FOREIGN KEY (branch_id) REFERENCES platform.database_realm(realm_id)",
+              "name": "commercial_publication_branch_id_fkey",
+              "references": {
+                "columns": [
+                  "realm_id"
+                ],
+                "schema": "platform",
+                "table": "database_realm"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "branch_id"
+              ],
+              "definition": "NOT NULL branch_id",
+              "name": "commercial_publication_branch_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "issue_count",
+                "issues"
+              ],
+              "definition": "CHECK (issue_count >= jsonb_array_length(issues))",
+              "name": "commercial_publication_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "valid_until",
+                "valid_from"
+              ],
+              "definition": "CHECK (valid_until > valid_from)",
+              "name": "commercial_publication_check1",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "base_version",
+                "commercial_version"
+              ],
+              "definition": "CHECK (base_version IS DISTINCT FROM commercial_version)",
+              "name": "commercial_publication_check2",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "status",
+                "rejected_at"
+              ],
+              "definition": "CHECK ((status = 'rejected'::text) = (rejected_at IS NOT NULL))",
+              "name": "commercial_publication_check3",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "status",
+                "issue_count"
+              ],
+              "definition": "CHECK ((status = 'rejected'::text) = (issue_count > 0))",
+              "name": "commercial_publication_check4",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "status",
+                "activated_at"
+              ],
+              "definition": "CHECK ((status = ANY (ARRAY['active'::text, 'superseded'::text])) = (activated_at IS NOT NULL))",
+              "name": "commercial_publication_check5",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "status",
+                "superseded_at"
+              ],
+              "definition": "CHECK ((status = 'superseded'::text) = (superseded_at IS NOT NULL))",
+              "name": "commercial_publication_check6",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "status",
+                "validated_at"
+              ],
+              "definition": "CHECK ((status <> ALL (ARRAY['validated'::text, 'active'::text, 'superseded'::text])) OR validated_at IS NOT NULL)",
+              "name": "commercial_publication_check7",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "commercial_version"
+              ],
+              "definition": "CHECK (commercial_version ~ '^[a-zA-Z0-9_.:-]{1,100}$'::text)",
+              "name": "commercial_publication_commercial_version_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "commercial_version"
+              ],
+              "definition": "NOT NULL commercial_version",
+              "name": "commercial_publication_commercial_version_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "content_hash"
+              ],
+              "definition": "CHECK (content_hash ~ '^[a-f0-9]{64}$'::text)",
+              "name": "commercial_publication_content_hash_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "content_hash"
+              ],
+              "definition": "NOT NULL content_hash",
+              "name": "commercial_publication_content_hash_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "customer_projection_version"
+              ],
+              "definition": "CHECK (customer_projection_version ~ '^[a-zA-Z0-9_.:-]{1,100}$'::text)",
+              "name": "commercial_publication_customer_projection_version_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "customer_projection_version"
+              ],
+              "definition": "NOT NULL customer_projection_version",
+              "name": "commercial_publication_customer_projection_version_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "customer_sequence"
+              ],
+              "definition": "CHECK (customer_sequence >= 0)",
+              "name": "commercial_publication_customer_sequence_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "customer_sequence"
+              ],
+              "definition": "NOT NULL customer_sequence",
+              "name": "commercial_publication_customer_sequence_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "customers_held"
+              ],
+              "definition": "CHECK (customers_held >= 0)",
+              "name": "commercial_publication_customers_held_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "customers_held"
+              ],
+              "definition": "NOT NULL customers_held",
+              "name": "commercial_publication_customers_held_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "issue_count"
+              ],
+              "definition": "NOT NULL issue_count",
+              "name": "commercial_publication_issue_count_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "issues"
+              ],
+              "definition": "CHECK (jsonb_typeof(issues) = 'array'::text AND jsonb_array_length(issues) <= 50)",
+              "name": "commercial_publication_issues_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "issues"
+              ],
+              "definition": "NOT NULL issues",
+              "name": "commercial_publication_issues_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "manifest"
+              ],
+              "definition": "CHECK (jsonb_typeof(manifest) = 'object'::text)",
+              "name": "commercial_publication_manifest_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "manifest"
+              ],
+              "definition": "NOT NULL manifest",
+              "name": "commercial_publication_manifest_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "branch_id",
+                "publication_id"
+              ],
+              "definition": "PRIMARY KEY (branch_id, publication_id)",
+              "name": "commercial_publication_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "publication_id"
+              ],
+              "definition": "NOT NULL publication_id",
+              "name": "commercial_publication_publication_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "schema_version"
+              ],
+              "definition": "CHECK (schema_version = 'commercial-publication-v1'::text)",
+              "name": "commercial_publication_schema_version_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "schema_version"
+              ],
+              "definition": "NOT NULL schema_version",
+              "name": "commercial_publication_schema_version_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "source_cut_at"
+              ],
+              "definition": "NOT NULL source_cut_at",
+              "name": "commercial_publication_source_cut_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "source_ref"
+              ],
+              "definition": "CHECK (length(source_ref) >= 1 AND length(source_ref) <= 100)",
+              "name": "commercial_publication_source_ref_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "source_ref"
+              ],
+              "definition": "NOT NULL source_ref",
+              "name": "commercial_publication_source_ref_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "staged_at"
+              ],
+              "definition": "NOT NULL staged_at",
+              "name": "commercial_publication_staged_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "status"
+              ],
+              "definition": "CHECK (status = ANY (ARRAY['staged'::text, 'validated'::text, 'rejected'::text, 'active'::text, 'superseded'::text]))",
+              "name": "commercial_publication_status_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "status"
+              ],
+              "definition": "NOT NULL status",
+              "name": "commercial_publication_status_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "valid_from"
+              ],
+              "definition": "NOT NULL valid_from",
+              "name": "commercial_publication_valid_from_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "valid_until"
+              ],
+              "definition": "NOT NULL valid_until",
+              "name": "commercial_publication_valid_until_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "catalog",
+          "documentation": {
+            "description": "Registro de cada publicación comercial completa recibida por la sucursal: su estado de carga, validación y activación.",
+            "sources": [
+              {
+                "path": "libs/backend/catalog/src/infrastructure/commercial-publication-migration.ts"
+              },
+              {
+                "path": "libs/backend/catalog/src/infrastructure/commercial-publication.ts"
+              },
+              {
+                "path": "libs/backend/catalog/contracts/src/commercial-publication.ts"
+              }
+            ],
+            "usage": "Lo escribe y lee solo el comando propietario import-commercial (TASK-404). Hace idempotente la carga por publication_id, impide reutilizar una versión comercial y conserva el historial de versiones activas y reemplazadas. El rol de ejecución no lo lee: las ventas leen la versión activa en catalog.publication."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE UNIQUE INDEX commercial_publication_active ON catalog.commercial_publication USING btree (branch_id) WHERE (status = 'active'::text)",
+              "name": "commercial_publication_active"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX commercial_publication_pkey ON catalog.commercial_publication USING btree (branch_id, publication_id)",
+              "name": "commercial_publication_pkey"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX commercial_publication_version ON catalog.commercial_publication USING btree (branch_id, commercial_version) WHERE (status <> 'rejected'::text)",
+              "name": "commercial_publication_version"
+            }
+          ],
+          "name": "commercial_publication",
+          "schema": "catalog"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Sucursal de la publicación.",
+                "example": "10000000-0000-4000-8000-000000000001",
+                "usage": "Aísla las porciones por sucursal."
+              },
+              "name": "branch_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Publicación a la que pertenece la porción.",
+                "example": "20000000-0000-4000-8000-00000000a001",
+                "usage": "Relaciona la porción con su registro y su manifiesto."
+              },
+              "name": "publication_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Dominio de la porción: products, availability o customers.",
+                "example": "products",
+                "usage": "Los precios no se guardan aquí: pertenecen a pricing.price_book_candidate."
+              },
+              "name": "domain",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Posición de la porción dentro de su dominio, desde cero.",
+                "example": 0,
+                "usage": "Permite comprobar que no falta ninguna y reconstruir el índice de cada elemento en los hallazgos."
+              },
+              "name": "chunk_index",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Cantidad de elementos de la porción.",
+                "example": 2,
+                "usage": "Coincide con el largo de content; acota cada inserción."
+              },
+              "name": "item_count",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Elementos del dominio tal como los define el contrato commercial-publication-v1.",
+                "example": [
+                  {
+                    "active": true,
+                    "brand": null,
+                    "codes": [
+                      {
+                        "code": "EJ-FILTRO-UN",
+                        "unitId": "UN"
+                      }
+                    ],
+                    "family": null,
+                    "name": "Filtro de ejemplo",
+                    "productId": "20000000-0000-4000-8000-00000000c001",
+                    "sku": "EJ-FILTRO",
+                    "sourceId": "EJ-0001",
+                    "sourceVersion": 1,
+                    "units": [
+                      {
+                        "factor": "1",
+                        "label": "Unidad",
+                        "precision": 0,
+                        "unitId": "UN"
+                      }
+                    ]
+                  }
+                ],
+                "usage": "Se lee como datos y se valida con el mismo esquema del archivo antes de activar."
+              },
+              "name": "content",
+              "nullable": false,
+              "type": "jsonb"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "SHA-256 del contenido canónico de la porción.",
+                "example": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "usage": "Debe coincidir con el manifiesto; una diferencia rechaza la publicación por staging corrupto."
+              },
+              "name": "content_hash",
+              "nullable": false,
+              "type": "character(64)"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Instante en que se escribió la porción.",
+                "example": "2026-11-18T03:00:00.500Z",
+                "usage": "Muestra la duración de la carga en staging."
+              },
+              "name": "received_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "branch_id"
+              ],
+              "definition": "NOT NULL branch_id",
+              "name": "commercial_staging_branch_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "branch_id",
+                "publication_id"
+              ],
+              "definition": "FOREIGN KEY (branch_id, publication_id) REFERENCES catalog.commercial_publication(branch_id, publication_id)",
+              "name": "commercial_staging_branch_id_publication_id_fkey",
+              "references": {
+                "columns": [
+                  "branch_id",
+                  "publication_id"
+                ],
+                "schema": "catalog",
+                "table": "commercial_publication"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "content",
+                "item_count"
+              ],
+              "definition": "CHECK (jsonb_typeof(content) = 'array'::text AND jsonb_array_length(content) = item_count)",
+              "name": "commercial_staging_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "chunk_index"
+              ],
+              "definition": "CHECK (chunk_index >= 0 AND chunk_index <= 9999)",
+              "name": "commercial_staging_chunk_index_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "chunk_index"
+              ],
+              "definition": "NOT NULL chunk_index",
+              "name": "commercial_staging_chunk_index_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "content_hash"
+              ],
+              "definition": "CHECK (content_hash ~ '^[a-f0-9]{64}$'::text)",
+              "name": "commercial_staging_content_hash_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "content_hash"
+              ],
+              "definition": "NOT NULL content_hash",
+              "name": "commercial_staging_content_hash_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "content"
+              ],
+              "definition": "NOT NULL content",
+              "name": "commercial_staging_content_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "domain"
+              ],
+              "definition": "CHECK (domain = ANY (ARRAY['products'::text, 'availability'::text, 'customers'::text]))",
+              "name": "commercial_staging_domain_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "domain"
+              ],
+              "definition": "NOT NULL domain",
+              "name": "commercial_staging_domain_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "item_count"
+              ],
+              "definition": "CHECK (item_count >= 1 AND item_count <= 500)",
+              "name": "commercial_staging_item_count_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "item_count"
+              ],
+              "definition": "NOT NULL item_count",
+              "name": "commercial_staging_item_count_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "branch_id",
+                "publication_id",
+                "domain",
+                "chunk_index"
+              ],
+              "definition": "PRIMARY KEY (branch_id, publication_id, domain, chunk_index)",
+              "name": "commercial_staging_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "publication_id"
+              ],
+              "definition": "NOT NULL publication_id",
+              "name": "commercial_staging_publication_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "received_at"
+              ],
+              "definition": "NOT NULL received_at",
+              "name": "commercial_staging_received_at_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "catalog",
+          "documentation": {
+            "description": "Porciones del contenido de catálogo de una publicación, aisladas de las lecturas de venta.",
+            "sources": [
+              {
+                "path": "libs/backend/catalog/src/infrastructure/commercial-publication-migration.ts"
+              },
+              {
+                "path": "libs/backend/catalog/src/infrastructure/commercial-publication.ts"
+              }
+            ],
+            "usage": "El comando propietario escribe productos, disponibilidad y clientes en porciones de hasta 500 elementos con su hash; la validación las relee y la activación las copia a las tablas activas en una sola transacción. Las de una publicación activa o reemplazada no se pueden borrar ni modificar: son la copia de la versión anterior. Las de una rechazada se eliminan al rechazarla."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE UNIQUE INDEX commercial_staging_pkey ON catalog.commercial_staging USING btree (branch_id, publication_id, domain, chunk_index)",
+              "name": "commercial_staging_pkey"
+            }
+          ],
+          "name": "commercial_staging",
           "schema": "catalog"
         },
         {
@@ -5809,9 +8228,6 @@
                 "path": "libs/backend/catalog/src/infrastructure/sql-catalog.repository.ts"
               },
               {
-                "path": "libs/backend/catalog/src/infrastructure/laboratory-fixture.ts"
-              },
-              {
                 "path": "libs/backend/pricing/src/application/pricing.facade.ts"
               }
             ],
@@ -5863,6 +8279,18 @@
               "name": "published_at",
               "nullable": false,
               "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Publicación comercial que fijó la versión activa.",
+                "example": "20000000-0000-4000-8000-00000000a001",
+                "usage": "Apunta al registro de catalog.commercial_publication; queda vacía en bases cuya versión no entró por la carga comercial, como las de laboratorio anteriores a ADR-25."
+              },
+              "name": "publication_id",
+              "nullable": true,
+              "type": "uuid"
             }
           ],
           "comment": null,
@@ -5921,6 +8349,23 @@
               "definition": "NOT NULL published_at",
               "name": "publication_published_at_not_null",
               "type": "n"
+            },
+            {
+              "columns": [
+                "branch_id",
+                "publication_id"
+              ],
+              "definition": "FOREIGN KEY (branch_id, publication_id) REFERENCES catalog.commercial_publication(branch_id, publication_id)",
+              "name": "publication_source",
+              "references": {
+                "columns": [
+                  "branch_id",
+                  "publication_id"
+                ],
+                "schema": "catalog",
+                "table": "commercial_publication"
+              },
+              "type": "f"
             }
           ],
           "context": "catalog",
@@ -5935,6 +8380,9 @@
               },
               {
                 "path": "libs/backend/catalog/src/infrastructure/pricing-publication.ts"
+              },
+              {
+                "path": "libs/backend/catalog/src/infrastructure/commercial-publication.ts"
               }
             ],
             "usage": "Identifica la versión que deben compartir las proyecciones de productos y las lecturas para precios. El registro permite detectar incompatibilidades, pero no acredita por sí solo una sincronización externa completada."
@@ -16935,6 +19383,18 @@
               "name": "created_at",
               "nullable": false,
               "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Publicación comercial que creó este libro de precios.",
+                "example": "20000000-0000-4000-8000-00000000a001",
+                "usage": "Traza el libro hasta su registro en catalog.commercial_publication; vacía en libros sembrados por el laboratorio retirado (ADR-25)."
+              },
+              "name": "publication_id",
+              "nullable": true,
+              "type": "uuid"
             }
           ],
           "comment": null,
@@ -17066,6 +19526,9 @@
               },
               {
                 "path": "libs/backend/pricing/src/infrastructure/price-book.schema.ts"
+              },
+              {
+                "path": "libs/backend/pricing/src/infrastructure/commercial-price-list.ts"
               }
             ],
             "usage": "La cotización selecciona una publicación por versión comercial y de política dentro de su vigencia. No se modifica una publicación aplicada: una nueva versión conserva la trazabilidad de ventas anteriores."
@@ -17077,6 +19540,382 @@
             }
           ],
           "name": "price_book",
+          "schema": "pricing"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Sucursal de la publicación.",
+                "example": "10000000-0000-4000-8000-000000000001",
+                "usage": "Aísla el candidato por sucursal."
+              },
+              "name": "branch_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Publicación comercial a la que pertenece el candidato.",
+                "example": "20000000-0000-4000-8000-00000000a001",
+                "usage": "Es la misma clave que usa el catálogo para la publicación."
+              },
+              "name": "publication_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Versión comercial que tendrá el libro de precios al activarse.",
+                "example": "qa-2026-11-18.1",
+                "usage": "Se rechaza si ya existe un libro con esa versión."
+              },
+              "name": "commercial_version",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Versión de política a la que se asocia el libro de precios.",
+                "example": "cl-policy-v1",
+                "usage": "Debe coincidir con la política de las asignaciones de la sucursal para que la cotización lo encuentre."
+              },
+              "name": "policy_version",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "SHA-256 canónico del libro candidato y su versión comercial.",
+                "example": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+                "usage": "Distingue una repetición idéntica de un candidato distinto."
+              },
+              "name": "content_hash",
+              "nullable": false,
+              "type": "character(64)"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Etiqueta técnica del origen de la publicación.",
+                "example": "legacy-qa-extractor",
+                "usage": "Se conserva en el libro de precios activado."
+              },
+              "name": "source_ref",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Inicio de la vigencia del libro.",
+                "example": "2026-11-18T00:00:00.000Z",
+                "usage": "Se copia al libro activado; la cotización no lo usa antes."
+              },
+              "name": "valid_from",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Fin de la vigencia del libro.",
+                "example": "2026-12-18T00:00:00.000Z",
+                "usage": "Se copia al libro activado; la cotización no lo usa después."
+              },
+              "name": "valid_until",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Perfil de cálculo: política, moneda, escala, redondeo, vigencia de cotización y límites de descuento.",
+                "example": {
+                  "currency": "CLP",
+                  "maximumManualDiscountPercent": "10",
+                  "quoteTtlSeconds": 300,
+                  "requireSeparateApprover": true,
+                  "roundingMode": "HALF_UP",
+                  "roundingStage": "line",
+                  "scale": 0,
+                  "version": "cl-policy-v1"
+                },
+                "usage": "Moneda CLP y escala 0 en Chile; se valida con el mismo esquema del libro de precios."
+              },
+              "name": "profile",
+              "nullable": false,
+              "type": "jsonb"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Precios netos por unidad base, piso de descuento, impuesto y escalas por producto y clase de cliente.",
+                "example": [
+                  {
+                    "baseUnitPrice": "1000",
+                    "customerClass": "all",
+                    "minimumBaseUnitPrice": "800",
+                    "productId": "20000000-0000-4000-8000-00000000c001",
+                    "taxCode": "IVA",
+                    "taxRate": "19",
+                    "tiers": []
+                  }
+                ],
+                "usage": "El precio de venta es baseUnitPrice; minimumBaseUnitPrice es solo el piso que un descuento no cruza."
+              },
+              "name": "prices",
+              "nullable": false,
+              "type": "jsonb"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Reglas promocionales opcionales del libro.",
+                "example": [],
+                "usage": "Solo pueden referir productos de la misma publicación."
+              },
+              "name": "rules",
+              "nullable": false,
+              "type": "jsonb"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Instante en que se escribió el candidato.",
+                "example": "2026-11-18T03:00:00.000Z",
+                "usage": "Marca la carga de la mitad de precios."
+              },
+              "name": "staged_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "branch_id"
+              ],
+              "definition": "FOREIGN KEY (branch_id) REFERENCES platform.database_realm(realm_id)",
+              "name": "price_book_candidate_branch_id_fkey",
+              "references": {
+                "columns": [
+                  "realm_id"
+                ],
+                "schema": "platform",
+                "table": "database_realm"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "branch_id"
+              ],
+              "definition": "NOT NULL branch_id",
+              "name": "price_book_candidate_branch_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "valid_until",
+                "valid_from"
+              ],
+              "definition": "CHECK (valid_until > valid_from)",
+              "name": "price_book_candidate_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "commercial_version"
+              ],
+              "definition": "CHECK (length(commercial_version) >= 1 AND length(commercial_version) <= 100)",
+              "name": "price_book_candidate_commercial_version_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "commercial_version"
+              ],
+              "definition": "NOT NULL commercial_version",
+              "name": "price_book_candidate_commercial_version_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "content_hash"
+              ],
+              "definition": "CHECK (content_hash ~ '^[a-f0-9]{64}$'::text)",
+              "name": "price_book_candidate_content_hash_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "content_hash"
+              ],
+              "definition": "NOT NULL content_hash",
+              "name": "price_book_candidate_content_hash_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "branch_id",
+                "publication_id"
+              ],
+              "definition": "PRIMARY KEY (branch_id, publication_id)",
+              "name": "price_book_candidate_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "policy_version"
+              ],
+              "definition": "CHECK (length(policy_version) >= 1 AND length(policy_version) <= 100)",
+              "name": "price_book_candidate_policy_version_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "policy_version"
+              ],
+              "definition": "NOT NULL policy_version",
+              "name": "price_book_candidate_policy_version_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "prices"
+              ],
+              "definition": "CHECK (jsonb_typeof(prices) = 'array'::text)",
+              "name": "price_book_candidate_prices_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "prices"
+              ],
+              "definition": "NOT NULL prices",
+              "name": "price_book_candidate_prices_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "profile"
+              ],
+              "definition": "CHECK (jsonb_typeof(profile) = 'object'::text)",
+              "name": "price_book_candidate_profile_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "profile"
+              ],
+              "definition": "NOT NULL profile",
+              "name": "price_book_candidate_profile_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "publication_id"
+              ],
+              "definition": "NOT NULL publication_id",
+              "name": "price_book_candidate_publication_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "rules"
+              ],
+              "definition": "CHECK (jsonb_typeof(rules) = 'array'::text)",
+              "name": "price_book_candidate_rules_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "rules"
+              ],
+              "definition": "NOT NULL rules",
+              "name": "price_book_candidate_rules_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "source_ref"
+              ],
+              "definition": "CHECK (length(source_ref) >= 1 AND length(source_ref) <= 100)",
+              "name": "price_book_candidate_source_ref_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "source_ref"
+              ],
+              "definition": "NOT NULL source_ref",
+              "name": "price_book_candidate_source_ref_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "staged_at"
+              ],
+              "definition": "NOT NULL staged_at",
+              "name": "price_book_candidate_staged_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "valid_from"
+              ],
+              "definition": "NOT NULL valid_from",
+              "name": "price_book_candidate_valid_from_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "valid_until"
+              ],
+              "definition": "NOT NULL valid_until",
+              "name": "price_book_candidate_valid_until_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "pricing",
+          "documentation": {
+            "description": "Libro de precios candidato de una publicación comercial, todavía invisible para la cotización.",
+            "sources": [
+              {
+                "path": "libs/backend/pricing/src/infrastructure/price-book-candidate-migration.ts"
+              },
+              {
+                "path": "libs/backend/pricing/src/infrastructure/commercial-price-list.ts"
+              }
+            ],
+            "usage": "El comando propietario lo escribe al cargar la publicación; la validación aplica las reglas del libro de precios y la cobertura de productos y clases de cliente, y la activación lo copia a pricing.price_book en la misma transacción que cambia la versión activa del catálogo. Se elimina al activarse o al rechazarse."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE UNIQUE INDEX price_book_candidate_pkey ON pricing.price_book_candidate USING btree (branch_id, publication_id)",
+              "name": "price_book_candidate_pkey"
+            }
+          ],
+          "name": "price_book_candidate",
           "schema": "pricing"
         },
         {
