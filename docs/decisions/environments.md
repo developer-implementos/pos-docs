@@ -75,6 +75,12 @@ Reglas del despliegue:
 - **Nunca informa un éxito falso.** Si un paso falla, el ambiente queda detenido y el workflow termina en rojo.
 - **La API se detiene durante el despliegue,** entre 30 s y 1 min, porque su manifiesto de esquema es exacto y dos versiones no conviven.
 - **La base solo avanza.** Volver atrás es desplegar un SHA anterior mientras su esquema siga siendo compatible; si no lo es, se corrige hacia delante o se reinicia el ambiente.
+- **Una versión no corre con los archivos del servidor de otra.**
+  - **Qué declara la versión.** El contenido (SHA-256) y el modo de cada archivo que instala la preparación del servidor: `compose`, recetas de imagen, configuración de nginx y de PostgreSQL y scripts.
+  - **Qué hace el servidor.** Antes de construir, migrar o reiniciar, compara esa declaración con lo instalado. Si un archivo difiere, falta o sobra, se niega, nombra solo las rutas y pide preparar el servidor desde esa versión.
+  - **Qué no cambia.** La versión trae la expectativa, nunca los archivos, así que la llave sigue sin poder instalar nada.
+  - **Por qué.** El 19-11-2026, sin esa comparación, una versión se desplegó en verde con el `compose` de otra.
+  - **Estado.** Lo implementa [TASK-444](https://github.com/developer-implementos/pos-platform/issues/444), en revisión en la rama `work/task-444-deriva-servidor` del producto (`e2d765a`).
 
 ## Riesgos aceptados
 
