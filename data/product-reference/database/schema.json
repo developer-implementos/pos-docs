@@ -197,6 +197,22 @@
         {
           "checksum": "007531c1b0f341847bf5ae8f5b8a3aa519f698c7855514619a0f84410067ed7c",
           "id": "410_operator_session"
+        },
+        {
+          "checksum": "57ed64fd96ec03a9a9b5e171143678d44dd25a1ede3dba9c66860d5434912ba8",
+          "id": "411_catalog_unit_foreign_key_indexes"
+        },
+        {
+          "checksum": "4191cf6fd40417aa4ef48104e686ec78c78e5273d7ff587ae33260f95ed1477b",
+          "id": "412_catalog_publication_verification"
+        },
+        {
+          "checksum": "b4eac857e258855dcb336aa6d79cf6491f02461a960f6860cbd0fd7211066222",
+          "id": "412_price_book_entry"
+        },
+        {
+          "checksum": "0449953ebe8d7f768c0da845c54e3df8cb8b19c16e9358287481d27ee27b25d0",
+          "id": "413_customer_projection_publication"
         }
       ],
       "schemas": [
@@ -5653,6 +5669,10 @@
             {
               "definition": "CREATE UNIQUE INDEX availability_pkey ON catalog.availability USING btree (branch_id, product_id, warehouse_id)",
               "name": "availability_pkey"
+            },
+            {
+              "definition": "CREATE INDEX availability_unit ON catalog.availability USING btree (branch_id, product_id, unit_id)",
+              "name": "availability_unit"
             }
           ],
           "name": "availability",
@@ -5690,7 +5710,7 @@
               "documentation": {
                 "description": "Versión del contrato del archivo recibido.",
                 "example": "commercial-publication-v1",
-                "usage": "Permite que convivan lectores de versiones futuras del contrato; hoy solo existe commercial-publication-v1."
+                "usage": "commercial-publication-v1 trae su proyección de clientes; commercial-publication-v2 (TASK-431) no trae clientes, que llegan en un archivo customer-projection-v1."
               },
               "name": "schema_version",
               "nullable": false,
@@ -5786,10 +5806,10 @@
               "documentation": {
                 "description": "Versión de la proyección de clientes que trae la publicación.",
                 "example": "qa-clientes-2026-11-18.1",
-                "usage": "Junto con customer_sequence decide si la proyección avanza; una secuencia igual con otra versión se rechaza."
+                "usage": "Vacía en commercial-publication-v2, que no trae clientes; en v1, la versión de su proyección de clientes."
               },
               "name": "customer_projection_version",
-              "nullable": false,
+              "nullable": true,
               "type": "text"
             },
             {
@@ -5798,10 +5818,10 @@
               "documentation": {
                 "description": "Secuencia monótona de la proyección de clientes.",
                 "example": 3,
-                "usage": "No puede retroceder respecto de catalog.customer_publication; impide que una publicación vieja revierta clientes."
+                "usage": "Vacía en commercial-publication-v2, que no trae clientes; en v1, la secuencia de su proyección de clientes."
               },
               "name": "customer_sequence",
-              "nullable": false,
+              "nullable": true,
               "type": "bigint"
             },
             {
@@ -6105,6 +6125,16 @@
             },
             {
               "columns": [
+                "schema_version",
+                "customer_projection_version",
+                "customer_sequence"
+              ],
+              "definition": "CHECK ((schema_version = 'commercial-publication-v1'::text) = (customer_projection_version IS NOT NULL AND customer_sequence IS NOT NULL))",
+              "name": "commercial_publication_customer_projection",
+              "type": "c"
+            },
+            {
+              "columns": [
                 "customer_projection_version"
               ],
               "definition": "CHECK (customer_projection_version ~ '^[a-zA-Z0-9_.:-]{1,100}$'::text)",
@@ -6113,27 +6143,11 @@
             },
             {
               "columns": [
-                "customer_projection_version"
-              ],
-              "definition": "NOT NULL customer_projection_version",
-              "name": "commercial_publication_customer_projection_version_not_null",
-              "type": "n"
-            },
-            {
-              "columns": [
                 "customer_sequence"
               ],
               "definition": "CHECK (customer_sequence >= 0)",
               "name": "commercial_publication_customer_sequence_check",
               "type": "c"
-            },
-            {
-              "columns": [
-                "customer_sequence"
-              ],
-              "definition": "NOT NULL customer_sequence",
-              "name": "commercial_publication_customer_sequence_not_null",
-              "type": "n"
             },
             {
               "columns": [
@@ -6212,7 +6226,7 @@
               "columns": [
                 "schema_version"
               ],
-              "definition": "CHECK (schema_version = 'commercial-publication-v1'::text)",
+              "definition": "CHECK (schema_version = ANY (ARRAY['commercial-publication-v1'::text, 'commercial-publication-v2'::text]))",
               "name": "commercial_publication_schema_version_check",
               "type": "c"
             },
@@ -6301,6 +6315,9 @@
               },
               {
                 "path": "libs/backend/catalog/contracts/src/commercial-publication.ts"
+              },
+              {
+                "path": "libs/backend/catalog/src/infrastructure/customer-projection-migration.ts"
               }
             ],
             "usage": "Lo escribe y lee solo el comando propietario import-commercial (TASK-404). Hace idempotente la carga por publication_id, impide reutilizar una versión comercial y conserva el historial de versiones activas y reemplazadas. El rol de ejecución no lo lee: las ventas leen la versión activa en catalog.publication."
@@ -6920,6 +6937,14 @@
               "name": "customer_identity"
             },
             {
+              "definition": "CREATE INDEX customer_open_class ON catalog.customer USING btree (branch_id, classification, observed_at) WHERE (NOT blocked)",
+              "name": "customer_open_class"
+            },
+            {
+              "definition": "CREATE INDEX customer_open_country ON catalog.customer USING btree (branch_id, country_id) WHERE ((NOT blocked) AND (country_id IS NOT NULL))",
+              "name": "customer_open_country"
+            },
+            {
               "definition": "CREATE UNIQUE INDEX customer_pkey ON catalog.customer USING btree (branch_id, customer_id)",
               "name": "customer_pkey"
             },
@@ -7433,6 +7458,770 @@
             }
           ],
           "name": "customer_change_request",
+          "schema": "catalog"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Sucursal de la proyección.",
+                "example": "10000000-0000-4000-8000-000000000001",
+                "usage": "Aísla el registro por sucursal."
+              },
+              "name": "branch_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identidad del archivo de proyección.",
+                "example": "20000000-0000-4000-8000-00000000b001",
+                "usage": "Repetir el mismo archivo recupera su recibo; otro contenido con este id es un conflicto."
+              },
+              "name": "publication_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "SHA-256 del contenido canónico del archivo.",
+                "example": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "usage": "Distingue una repetición del mismo archivo de otro contenido con el mismo id."
+              },
+              "name": "content_hash",
+              "nullable": false,
+              "type": "character(64)"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Versión de la proyección de clientes que publica el archivo.",
+                "example": "customers-example-1",
+                "usage": "Pasa a catalog.customer_publication al terminar de aplicarse."
+              },
+              "name": "projection_version",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Secuencia de la proyección en su origen.",
+                "example": 12,
+                "usage": "Una secuencia menor que la activa, o igual con otra versión, rechaza la proyección; el puntero solo avanza."
+              },
+              "name": "sequence",
+              "nullable": false,
+              "type": "bigint"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Referencia del origen del archivo.",
+                "example": "source-example",
+                "usage": "Trazabilidad técnica del extractor que lo produjo."
+              },
+              "name": "source_ref",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Corte del origen.",
+                "example": "2026-11-02T12:00:00.000Z",
+                "usage": "Pasa a catalog.customer_publication como observación de la proyección."
+              },
+              "name": "source_cut_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Clientes del archivo.",
+                "example": 1203,
+                "usage": "Se contrasta con el staging completo antes de validar."
+              },
+              "name": "customers",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Porciones de hasta 500 clientes.",
+                "example": 3,
+                "usage": "La aplicación termina cuando applied_chunks las alcanza."
+              },
+              "name": "chunks",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "SHA-256 de cada porción canónica, calculado en la primera lectura del archivo.",
+                "example": [
+                  "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                ],
+                "usage": "La segunda lectura solo escribe porciones con este hash, y la validación vuelve a comprobarlas."
+              },
+              "name": "chunk_hashes",
+              "nullable": false,
+              "type": "jsonb"
+            },
+            {
+              "comment": null,
+              "default": "0",
+              "documentation": {
+                "description": "Porciones ya aplicadas a catalog.customer.",
+                "example": 1,
+                "usage": "Una carga interrumpida se reanuda desde aquí."
+              },
+              "name": "applied_chunks",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": "0",
+              "documentation": {
+                "description": "Clientes retenidos por una solicitud de cambio pendiente.",
+                "example": 0,
+                "usage": "Se informa en el recibo; esos clientes no cambian hasta resolverse la solicitud."
+              },
+              "name": "customers_held",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Estado de la proyección: staged, validated, applied o rejected.",
+                "example": "applied",
+                "usage": "Un trigger solo admite las transiciones del protocolo de carga."
+              },
+              "name": "status",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": "'[]'::jsonb",
+              "documentation": {
+                "description": "Primeros hallazgos de un rechazo, sin valores ni datos personales.",
+                "example": [],
+                "usage": "Se devuelven en el recibo."
+              },
+              "name": "issues",
+              "nullable": false,
+              "type": "jsonb"
+            },
+            {
+              "comment": null,
+              "default": "0",
+              "documentation": {
+                "description": "Cantidad total de hallazgos.",
+                "example": 0,
+                "usage": "Distingue un rechazo de una carga válida."
+              },
+              "name": "issue_count",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Registro del archivo.",
+                "example": "2026-11-02T12:00:00.000Z",
+                "usage": "Trazabilidad técnica."
+              },
+              "name": "staged_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Fin de la validación de estado.",
+                "example": "2026-11-02T12:00:05.000Z",
+                "usage": "Trazabilidad técnica."
+              },
+              "name": "validated_at",
+              "nullable": true,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Fin de la aplicación, cuando se movió el puntero de la proyección.",
+                "example": "2026-11-02T12:00:20.000Z",
+                "usage": "Se devuelve en el recibo."
+              },
+              "name": "applied_at",
+              "nullable": true,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instante del rechazo.",
+                "example": "2026-11-02T12:00:05.000Z",
+                "usage": "Trazabilidad técnica; vacío si no se rechazó."
+              },
+              "name": "rejected_at",
+              "nullable": true,
+              "type": "timestamp with time zone"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "applied_chunks"
+              ],
+              "definition": "NOT NULL applied_chunks",
+              "name": "customer_projection_publication_applied_chunks_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "branch_id"
+              ],
+              "definition": "FOREIGN KEY (branch_id) REFERENCES platform.database_realm(realm_id)",
+              "name": "customer_projection_publication_branch_id_fkey",
+              "references": {
+                "columns": [
+                  "realm_id"
+                ],
+                "schema": "platform",
+                "table": "database_realm"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "branch_id"
+              ],
+              "definition": "NOT NULL branch_id",
+              "name": "customer_projection_publication_branch_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "chunk_hashes",
+                "chunks"
+              ],
+              "definition": "CHECK (jsonb_typeof(chunk_hashes) = 'array'::text AND jsonb_array_length(chunk_hashes) = chunks)",
+              "name": "customer_projection_publication_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "applied_chunks",
+                "chunks"
+              ],
+              "definition": "CHECK (applied_chunks >= 0 AND applied_chunks <= chunks)",
+              "name": "customer_projection_publication_check1",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "customers_held",
+                "customers"
+              ],
+              "definition": "CHECK (customers_held >= 0 AND customers_held <= customers)",
+              "name": "customer_projection_publication_check2",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "issue_count",
+                "issues"
+              ],
+              "definition": "CHECK (issue_count >= jsonb_array_length(issues))",
+              "name": "customer_projection_publication_check3",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "status",
+                "rejected_at"
+              ],
+              "definition": "CHECK ((status = 'rejected'::text) = (rejected_at IS NOT NULL))",
+              "name": "customer_projection_publication_check4",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "status",
+                "issue_count"
+              ],
+              "definition": "CHECK ((status = 'rejected'::text) = (issue_count > 0))",
+              "name": "customer_projection_publication_check5",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "status",
+                "applied_at"
+              ],
+              "definition": "CHECK ((status = 'applied'::text) = (applied_at IS NOT NULL))",
+              "name": "customer_projection_publication_check6",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "status",
+                "validated_at"
+              ],
+              "definition": "CHECK ((status <> ALL (ARRAY['validated'::text, 'applied'::text])) OR validated_at IS NOT NULL)",
+              "name": "customer_projection_publication_check7",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "status",
+                "applied_chunks",
+                "chunks"
+              ],
+              "definition": "CHECK (status <> 'applied'::text OR applied_chunks = chunks)",
+              "name": "customer_projection_publication_check8",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "chunk_hashes"
+              ],
+              "definition": "NOT NULL chunk_hashes",
+              "name": "customer_projection_publication_chunk_hashes_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "chunks"
+              ],
+              "definition": "CHECK (chunks > 0)",
+              "name": "customer_projection_publication_chunks_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "chunks"
+              ],
+              "definition": "NOT NULL chunks",
+              "name": "customer_projection_publication_chunks_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "content_hash"
+              ],
+              "definition": "CHECK (content_hash ~ '^[a-f0-9]{64}$'::text)",
+              "name": "customer_projection_publication_content_hash_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "content_hash"
+              ],
+              "definition": "NOT NULL content_hash",
+              "name": "customer_projection_publication_content_hash_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "customers"
+              ],
+              "definition": "CHECK (customers > 0)",
+              "name": "customer_projection_publication_customers_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "customers_held"
+              ],
+              "definition": "NOT NULL customers_held",
+              "name": "customer_projection_publication_customers_held_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "customers"
+              ],
+              "definition": "NOT NULL customers",
+              "name": "customer_projection_publication_customers_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "issue_count"
+              ],
+              "definition": "NOT NULL issue_count",
+              "name": "customer_projection_publication_issue_count_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "issues"
+              ],
+              "definition": "CHECK (jsonb_typeof(issues) = 'array'::text AND jsonb_array_length(issues) <= 50)",
+              "name": "customer_projection_publication_issues_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "issues"
+              ],
+              "definition": "NOT NULL issues",
+              "name": "customer_projection_publication_issues_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "branch_id",
+                "publication_id"
+              ],
+              "definition": "PRIMARY KEY (branch_id, publication_id)",
+              "name": "customer_projection_publication_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "projection_version"
+              ],
+              "definition": "CHECK (projection_version ~ '^[a-zA-Z0-9_.:-]{1,100}$'::text)",
+              "name": "customer_projection_publication_projection_version_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "projection_version"
+              ],
+              "definition": "NOT NULL projection_version",
+              "name": "customer_projection_publication_projection_version_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "publication_id"
+              ],
+              "definition": "NOT NULL publication_id",
+              "name": "customer_projection_publication_publication_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "sequence"
+              ],
+              "definition": "CHECK (sequence >= 0)",
+              "name": "customer_projection_publication_sequence_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "sequence"
+              ],
+              "definition": "NOT NULL sequence",
+              "name": "customer_projection_publication_sequence_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "source_cut_at"
+              ],
+              "definition": "NOT NULL source_cut_at",
+              "name": "customer_projection_publication_source_cut_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "source_ref"
+              ],
+              "definition": "CHECK (length(source_ref) >= 1 AND length(source_ref) <= 100)",
+              "name": "customer_projection_publication_source_ref_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "source_ref"
+              ],
+              "definition": "NOT NULL source_ref",
+              "name": "customer_projection_publication_source_ref_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "staged_at"
+              ],
+              "definition": "NOT NULL staged_at",
+              "name": "customer_projection_publication_staged_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "status"
+              ],
+              "definition": "CHECK (status = ANY (ARRAY['staged'::text, 'validated'::text, 'applied'::text, 'rejected'::text]))",
+              "name": "customer_projection_publication_status_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "status"
+              ],
+              "definition": "NOT NULL status",
+              "name": "customer_projection_publication_status_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "catalog",
+          "documentation": {
+            "description": "Registro de cada archivo customer-projection-v1 cargado en la sucursal: identidad, versión y secuencia de la proyección, avance de su aplicación y resultado.",
+            "sources": [
+              {
+                "path": "libs/backend/catalog/src/infrastructure/customer-projection-migration.ts"
+              },
+              {
+                "path": "libs/backend/catalog/src/infrastructure/customer-projection-import.ts"
+              }
+            ],
+            "usage": "import-customers lo escribe con la cuenta propietaria. Hace idempotente la carga por publicación, permite reanudarla desde la última porción aplicada y conserva los hallazgos de un rechazo. Nunca se borra. El rol de ejecución no lo lee."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE UNIQUE INDEX customer_projection_publication_pkey ON catalog.customer_projection_publication USING btree (branch_id, publication_id)",
+              "name": "customer_projection_publication_pkey"
+            }
+          ],
+          "name": "customer_projection_publication",
+          "schema": "catalog"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Sucursal de la proyección.",
+                "example": "10000000-0000-4000-8000-000000000001",
+                "usage": "Aísla las porciones por sucursal."
+              },
+              "name": "branch_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Proyección a la que pertenece la porción.",
+                "example": "20000000-0000-4000-8000-00000000b001",
+                "usage": "Referencia catalog.customer_projection_publication."
+              },
+              "name": "publication_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Posición de la porción en el archivo.",
+                "example": 0,
+                "usage": "La aplicación avanza en este orden."
+              },
+              "name": "chunk_index",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Clientes de la porción.",
+                "example": 500,
+                "usage": "Coincide con la longitud de content."
+              },
+              "name": "item_count",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Clientes de la porción en su forma canónica.",
+                "exampleOmittedReason": "Se omiten identidades y razones sociales de clientes; el esquema de cada línea es el de commercial-publication-v1.",
+                "usage": "Se valida con el esquema de cliente del contrato antes de aplicarse."
+              },
+              "name": "content",
+              "nullable": false,
+              "type": "jsonb"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "SHA-256 de la porción canónica.",
+                "example": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "usage": "Debe coincidir con chunk_hashes del registro."
+              },
+              "name": "content_hash",
+              "nullable": false,
+              "type": "character(64)"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "branch_id"
+              ],
+              "definition": "NOT NULL branch_id",
+              "name": "customer_projection_staging_branch_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "branch_id",
+                "publication_id"
+              ],
+              "definition": "FOREIGN KEY (branch_id, publication_id) REFERENCES catalog.customer_projection_publication(branch_id, publication_id)",
+              "name": "customer_projection_staging_branch_id_publication_id_fkey",
+              "references": {
+                "columns": [
+                  "branch_id",
+                  "publication_id"
+                ],
+                "schema": "catalog",
+                "table": "customer_projection_publication"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "content",
+                "item_count"
+              ],
+              "definition": "CHECK (jsonb_typeof(content) = 'array'::text AND jsonb_array_length(content) = item_count)",
+              "name": "customer_projection_staging_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "chunk_index"
+              ],
+              "definition": "CHECK (chunk_index >= 0 AND chunk_index <= 99999)",
+              "name": "customer_projection_staging_chunk_index_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "chunk_index"
+              ],
+              "definition": "NOT NULL chunk_index",
+              "name": "customer_projection_staging_chunk_index_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "content_hash"
+              ],
+              "definition": "CHECK (content_hash ~ '^[a-f0-9]{64}$'::text)",
+              "name": "customer_projection_staging_content_hash_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "content_hash"
+              ],
+              "definition": "NOT NULL content_hash",
+              "name": "customer_projection_staging_content_hash_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "content"
+              ],
+              "definition": "NOT NULL content",
+              "name": "customer_projection_staging_content_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "item_count"
+              ],
+              "definition": "CHECK (item_count >= 1 AND item_count <= 500)",
+              "name": "customer_projection_staging_item_count_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "item_count"
+              ],
+              "definition": "NOT NULL item_count",
+              "name": "customer_projection_staging_item_count_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "branch_id",
+                "publication_id",
+                "chunk_index"
+              ],
+              "definition": "PRIMARY KEY (branch_id, publication_id, chunk_index)",
+              "name": "customer_projection_staging_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "publication_id"
+              ],
+              "definition": "NOT NULL publication_id",
+              "name": "customer_projection_staging_publication_id_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "catalog",
+          "documentation": {
+            "description": "Porciones de hasta 500 clientes de una proyección en carga, aisladas de las lecturas de venta.",
+            "sources": [
+              {
+                "path": "libs/backend/catalog/src/infrastructure/customer-projection-migration.ts"
+              },
+              {
+                "path": "libs/backend/catalog/src/infrastructure/customer-projection-import.ts"
+              }
+            ],
+            "usage": "import-customers las escribe en su segunda lectura del archivo, la validación las relee, y cada transacción de aplicación copia una a catalog.customer. Se borran al terminar de aplicarse o al rechazarse. El rol de ejecución no las lee."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE UNIQUE INDEX customer_projection_staging_pkey ON catalog.customer_projection_staging USING btree (branch_id, publication_id, chunk_index)",
+              "name": "customer_projection_staging_pkey"
+            }
+          ],
+          "name": "customer_projection_staging",
           "schema": "catalog"
         },
         {
@@ -8035,6 +8824,10 @@
             {
               "definition": "CREATE UNIQUE INDEX product_code_pkey ON catalog.product_code USING btree (branch_id, code, product_id, unit_id)",
               "name": "product_code_pkey"
+            },
+            {
+              "definition": "CREATE INDEX product_code_unit ON catalog.product_code USING btree (branch_id, product_id, unit_id)",
+              "name": "product_code_unit"
             }
           ],
           "name": "product_code",
@@ -8394,6 +9187,193 @@
             }
           ],
           "name": "publication",
+          "schema": "catalog"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Sucursal cuyo conjunto activo se verificó.",
+                "example": "10000000-0000-4000-8000-000000000001",
+                "usage": "Una fila por sucursal; la base de una sucursal tiene una sola."
+              },
+              "name": "branch_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Versión comercial verificada.",
+                "example": "commercial-example-1",
+                "usage": "Debe coincidir con la del puntero activo para abrir la compuerta."
+              },
+              "name": "commercial_version",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Publicación comercial que escribió el conjunto verificado.",
+                "example": "20000000-0000-4000-8000-00000000a001",
+                "usage": "Debe coincidir con la del puntero activo."
+              },
+              "name": "publication_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Productos activos del conjunto verificado.",
+                "example": 2,
+                "usage": "Evidencia técnica de la activación; no se usa para decidir."
+              },
+              "name": "active_products",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Instante en que la activación registró la verificación.",
+                "example": "2026-11-02T12:00:00.000Z",
+                "usage": "Trazabilidad técnica."
+              },
+              "name": "verified_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "active_products"
+              ],
+              "definition": "CHECK (active_products > 0)",
+              "name": "publication_verification_active_products_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "active_products"
+              ],
+              "definition": "NOT NULL active_products",
+              "name": "publication_verification_active_products_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "branch_id"
+              ],
+              "definition": "FOREIGN KEY (branch_id) REFERENCES platform.database_realm(realm_id)",
+              "name": "publication_verification_branch_id_fkey",
+              "references": {
+                "columns": [
+                  "realm_id"
+                ],
+                "schema": "platform",
+                "table": "database_realm"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "branch_id"
+              ],
+              "definition": "NOT NULL branch_id",
+              "name": "publication_verification_branch_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "branch_id",
+                "publication_id"
+              ],
+              "definition": "FOREIGN KEY (branch_id, publication_id) REFERENCES catalog.commercial_publication(branch_id, publication_id)",
+              "name": "publication_verification_branch_id_publication_id_fkey",
+              "references": {
+                "columns": [
+                  "branch_id",
+                  "publication_id"
+                ],
+                "schema": "catalog",
+                "table": "commercial_publication"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "commercial_version"
+              ],
+              "definition": "CHECK (length(commercial_version) >= 1 AND length(commercial_version) <= 100)",
+              "name": "publication_verification_commercial_version_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "commercial_version"
+              ],
+              "definition": "NOT NULL commercial_version",
+              "name": "publication_verification_commercial_version_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "branch_id"
+              ],
+              "definition": "PRIMARY KEY (branch_id)",
+              "name": "publication_verification_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "publication_id"
+              ],
+              "definition": "NOT NULL publication_id",
+              "name": "publication_verification_publication_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "verified_at"
+              ],
+              "definition": "NOT NULL verified_at",
+              "name": "publication_verification_verified_at_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "catalog",
+          "documentation": {
+            "description": "Prueba registrada al activar de que el conjunto de productos activo de la sucursal cumple las reglas de venta.",
+            "sources": [
+              {
+                "path": "libs/backend/catalog/src/infrastructure/publication-verification-migration.ts"
+              },
+              {
+                "path": "libs/backend/catalog/src/infrastructure/pricing-publication.ts"
+              },
+              {
+                "path": "libs/backend/catalog/src/infrastructure/commercial-publication.ts"
+              }
+            ],
+            "usage": "La compuerta de publicación de la cotización exige este registro, con la misma versión y publicación que el puntero activo, en vez de recorrer productos y unidades en cada lectura. Cualquier escritura en catalog.product o catalog.product_unit fuera de una activación lo borra y cierra la compuerta hasta la próxima publicación. Las reglas de clientes siguen comprobándose en cada lectura."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE UNIQUE INDEX publication_verification_pkey ON catalog.publication_verification USING btree (branch_id)",
+              "name": "publication_verification_pkey"
+            }
+          ],
+          "name": "publication_verification",
           "schema": "catalog"
         },
         {
@@ -19354,7 +20334,7 @@
                     "tiers": []
                   }
                 ],
-                "usage": "El motor calcula sobre la unidad base y selecciona la escala aplicable; los importes son cadenas decimales exactas."
+                "usage": "Desde TASK-431 la venta lee pricing.price_book_entry; la activación sigue escribiendo este arreglo para que el código anterior lea el libro tras una reversión, hasta que una migración posterior lo retire."
               },
               "name": "prices",
               "nullable": false,
@@ -19529,6 +20509,9 @@
               },
               {
                 "path": "libs/backend/pricing/src/infrastructure/commercial-price-list.ts"
+              },
+              {
+                "path": "libs/backend/pricing/src/infrastructure/price-book-rows.ts"
               }
             ],
             "usage": "La cotización selecciona una publicación por versión comercial y de política dentro de su vigencia. No se modifica una publicación aplicada: una nueva versión conserva la trazabilidad de ventas anteriores."
@@ -19916,6 +20899,545 @@
             }
           ],
           "name": "price_book_candidate",
+          "schema": "pricing"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Sucursal del libro de precios.",
+                "example": "10000000-0000-4000-8000-000000000001",
+                "usage": "Con las versiones comercial y de política identifica el libro al que pertenece la fila."
+              },
+              "name": "branch_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Versión comercial del libro.",
+                "example": "commercial-example-1",
+                "usage": "La cotización la toma del puntero activo del catálogo."
+              },
+              "name": "commercial_version",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Versión de política del libro.",
+                "example": "policy-example-1",
+                "usage": "Debe coincidir con la política aprovisionada que usa la cotización."
+              },
+              "name": "policy_version",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Producto al que se aplica el precio.",
+                "example": "10000000-0000-4000-8000-000000000022",
+                "usage": "La cotización filtra por los productos de su carrito."
+              },
+              "name": "product_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Clase de cliente del precio, o all para todas.",
+                "example": "all",
+                "usage": "El motor prefiere el precio de la clase del cliente y, si no existe, el de all."
+              },
+              "name": "customer_class",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Precio de venta neto de impuestos por unidad base.",
+                "example": "1000",
+                "usage": "Una unidad de venta se valoriza multiplicando por su factor; nunca es el precio mínimo heredado."
+              },
+              "name": "base_unit_price",
+              "nullable": false,
+              "type": "numeric(18,6)"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Piso por unidad base que los descuentos no cruzan.",
+                "example": "900",
+                "usage": "No es un precio de venta; el motor lo usa para acotar descuentos."
+              },
+              "name": "minimum_base_unit_price",
+              "nullable": false,
+              "type": "numeric(18,6)"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Código del impuesto aplicado sobre el neto.",
+                "example": "EXAMPLE",
+                "usage": "Se informa en las líneas de la cotización."
+              },
+              "name": "tax_code",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Tasa del impuesto en porcentaje.",
+                "example": "0",
+                "usage": "El motor calcula el impuesto sobre el neto de la línea."
+              },
+              "name": "tax_rate",
+              "nullable": false,
+              "type": "numeric(8,6)"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Escalas de precio por cantidad mínima en unidad base.",
+                "example": [],
+                "usage": "El motor selecciona la escala aplicable dentro del piso y el precio base."
+              },
+              "name": "tiers",
+              "nullable": false,
+              "type": "jsonb"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "base_unit_price"
+              ],
+              "definition": "CHECK (base_unit_price >= 0::numeric)",
+              "name": "price_book_entry_base_unit_price_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "base_unit_price"
+              ],
+              "definition": "NOT NULL base_unit_price",
+              "name": "price_book_entry_base_unit_price_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "branch_id",
+                "commercial_version",
+                "policy_version"
+              ],
+              "definition": "FOREIGN KEY (branch_id, commercial_version, policy_version) REFERENCES pricing.price_book(branch_id, commercial_version, policy_version)",
+              "name": "price_book_entry_branch_id_commercial_version_policy_versi_fkey",
+              "references": {
+                "columns": [
+                  "branch_id",
+                  "commercial_version",
+                  "policy_version"
+                ],
+                "schema": "pricing",
+                "table": "price_book"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "branch_id"
+              ],
+              "definition": "NOT NULL branch_id",
+              "name": "price_book_entry_branch_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "minimum_base_unit_price",
+                "base_unit_price"
+              ],
+              "definition": "CHECK (minimum_base_unit_price >= 0::numeric AND minimum_base_unit_price <= base_unit_price)",
+              "name": "price_book_entry_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "commercial_version"
+              ],
+              "definition": "NOT NULL commercial_version",
+              "name": "price_book_entry_commercial_version_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "customer_class"
+              ],
+              "definition": "CHECK (customer_class = ANY (ARRAY['generic'::text, 'individual'::text, 'organization'::text, 'all'::text]))",
+              "name": "price_book_entry_customer_class_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "customer_class"
+              ],
+              "definition": "NOT NULL customer_class",
+              "name": "price_book_entry_customer_class_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "minimum_base_unit_price"
+              ],
+              "definition": "NOT NULL minimum_base_unit_price",
+              "name": "price_book_entry_minimum_base_unit_price_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "branch_id",
+                "commercial_version",
+                "policy_version",
+                "product_id",
+                "customer_class"
+              ],
+              "definition": "PRIMARY KEY (branch_id, commercial_version, policy_version, product_id, customer_class)",
+              "name": "price_book_entry_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "policy_version"
+              ],
+              "definition": "NOT NULL policy_version",
+              "name": "price_book_entry_policy_version_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "product_id"
+              ],
+              "definition": "NOT NULL product_id",
+              "name": "price_book_entry_product_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "tax_code"
+              ],
+              "definition": "CHECK (length(tax_code) >= 1 AND length(tax_code) <= 100)",
+              "name": "price_book_entry_tax_code_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "tax_code"
+              ],
+              "definition": "NOT NULL tax_code",
+              "name": "price_book_entry_tax_code_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "tax_rate"
+              ],
+              "definition": "CHECK (tax_rate >= 0::numeric AND tax_rate < 100::numeric)",
+              "name": "price_book_entry_tax_rate_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "tax_rate"
+              ],
+              "definition": "NOT NULL tax_rate",
+              "name": "price_book_entry_tax_rate_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "tiers"
+              ],
+              "definition": "CHECK (jsonb_typeof(tiers) = 'array'::text AND jsonb_array_length(tiers) <= 20)",
+              "name": "price_book_entry_tiers_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "tiers"
+              ],
+              "definition": "NOT NULL tiers",
+              "name": "price_book_entry_tiers_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "pricing",
+          "documentation": {
+            "description": "Un precio de un libro de precios activado: producto, clase de cliente, precio neto por unidad base, piso, impuesto y escalas.",
+            "sources": [
+              {
+                "path": "libs/backend/pricing/src/infrastructure/price-book-entry-migration.ts"
+              },
+              {
+                "path": "libs/backend/pricing/src/infrastructure/commercial-price-list.ts"
+              },
+              {
+                "path": "libs/backend/pricing/src/infrastructure/price-book-rows.ts"
+              }
+            ],
+            "usage": "La activación de una publicación comercial copia aquí cada precio del candidato, en la misma transacción. La cotización lee solo las filas de los productos de su carrito, validadas con el mismo esquema que el candidato. Es inmutable, como el libro al que pertenece."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE UNIQUE INDEX price_book_entry_pkey ON pricing.price_book_entry USING btree (branch_id, commercial_version, policy_version, product_id, customer_class)",
+              "name": "price_book_entry_pkey"
+            }
+          ],
+          "name": "price_book_entry",
+          "schema": "pricing"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Sucursal del libro verificado.",
+                "example": "10000000-0000-4000-8000-000000000001",
+                "usage": "Parte de la clave del libro."
+              },
+              "name": "branch_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Versión comercial del libro verificado.",
+                "example": "commercial-example-1",
+                "usage": "Parte de la clave del libro; la cotización la toma del puntero activo."
+              },
+              "name": "commercial_version",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Versión de política del libro verificado.",
+                "example": "policy-example-1",
+                "usage": "Parte de la clave del libro."
+              },
+              "name": "policy_version",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Clases de cliente con precio, propio o de all, para todos los productos activos.",
+                "example": [
+                  "generic",
+                  "individual",
+                  "organization"
+                ],
+                "usage": "La cotización queda disponible solo si cada clase de los clientes que pueden comprar está incluida."
+              },
+              "name": "covered_classes",
+              "nullable": false,
+              "type": "text[]"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Productos activos cuya cobertura se probó.",
+                "example": 2,
+                "usage": "Evidencia técnica de la activación; no se usa para decidir."
+              },
+              "name": "active_products",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Filas de precio escritas para el libro.",
+                "example": 2,
+                "usage": "Evidencia técnica de la activación; coincide con los precios del candidato."
+              },
+              "name": "entries",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Instante en que la activación registró la cobertura.",
+                "example": "2026-11-02T12:00:00.000Z",
+                "usage": "Trazabilidad técnica."
+              },
+              "name": "verified_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "active_products"
+              ],
+              "definition": "CHECK (active_products > 0)",
+              "name": "price_book_verification_active_products_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "active_products"
+              ],
+              "definition": "NOT NULL active_products",
+              "name": "price_book_verification_active_products_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "branch_id",
+                "commercial_version",
+                "policy_version"
+              ],
+              "definition": "FOREIGN KEY (branch_id, commercial_version, policy_version) REFERENCES pricing.price_book(branch_id, commercial_version, policy_version)",
+              "name": "price_book_verification_branch_id_commercial_version_polic_fkey",
+              "references": {
+                "columns": [
+                  "branch_id",
+                  "commercial_version",
+                  "policy_version"
+                ],
+                "schema": "pricing",
+                "table": "price_book"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "branch_id"
+              ],
+              "definition": "NOT NULL branch_id",
+              "name": "price_book_verification_branch_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "commercial_version"
+              ],
+              "definition": "NOT NULL commercial_version",
+              "name": "price_book_verification_commercial_version_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "covered_classes"
+              ],
+              "definition": "CHECK (cardinality(covered_classes) >= 1 AND cardinality(covered_classes) <= 3 AND covered_classes <@ ARRAY['generic'::text, 'individual'::text, 'organization'::text])",
+              "name": "price_book_verification_covered_classes_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "covered_classes"
+              ],
+              "definition": "NOT NULL covered_classes",
+              "name": "price_book_verification_covered_classes_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "entries"
+              ],
+              "definition": "CHECK (entries > 0)",
+              "name": "price_book_verification_entries_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "entries"
+              ],
+              "definition": "NOT NULL entries",
+              "name": "price_book_verification_entries_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "branch_id",
+                "commercial_version",
+                "policy_version"
+              ],
+              "definition": "PRIMARY KEY (branch_id, commercial_version, policy_version)",
+              "name": "price_book_verification_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "policy_version"
+              ],
+              "definition": "NOT NULL policy_version",
+              "name": "price_book_verification_policy_version_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "verified_at"
+              ],
+              "definition": "NOT NULL verified_at",
+              "name": "price_book_verification_verified_at_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "pricing",
+          "documentation": {
+            "description": "Cobertura que la activación probó para un libro de precios: las clases de cliente con precio para todos los productos activos de su versión.",
+            "sources": [
+              {
+                "path": "libs/backend/pricing/src/infrastructure/price-book-entry-migration.ts"
+              },
+              {
+                "path": "libs/backend/pricing/src/infrastructure/commercial-price-list.ts"
+              },
+              {
+                "path": "libs/backend/pricing/src/infrastructure/pricing-availability.ts"
+              }
+            ],
+            "usage": "La disponibilidad de la cotización compara las clases de los clientes que pueden comprar con este registro, en vez de recorrer el libro en cada operación. La activación lo escribe y vuelve a comprobarlo bajo el bloqueo de los lectores. Un libro sin registro, por ejemplo uno activado antes de TASK-431, no abre la cotización hasta republicarse. Es inmutable."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE UNIQUE INDEX price_book_verification_pkey ON pricing.price_book_verification USING btree (branch_id, commercial_version, policy_version)",
+              "name": "price_book_verification_pkey"
+            }
+          ],
+          "name": "price_book_verification",
           "schema": "pricing"
         },
         {
