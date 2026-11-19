@@ -54,7 +54,7 @@ Estados de publicación: `requested → preparing → uploaded → validated →
 node database.js import-commercial --file <ruta absoluta>
 ```
 
-El comando corre con la cuenta propietaria, fuera del listener, en una sucursal operativa ya aprovisionada. El archivo sigue el contrato **`commercial-publication-v1`**: catálogo con unidades y códigos, lista de precios netos por unidad base y clase de cliente con su impuesto, disponibilidad consultiva, proyección de clientes y `contentHash`, el SHA-256 de su contenido canónico. El producto mantiene el esquema, sus límites y un ejemplo sintético; esta página no los repite.
+El comando corre con la cuenta propietaria, fuera del listener, en una sucursal operativa ya aprovisionada. El archivo sigue el contrato **`commercial-publication-v1`**: catálogo con unidades y códigos, lista de precios por unidad base y clase de cliente con su impuesto, netos o con el impuesto incluido según su `priceBasis` ([ADR-28](../decisions/tax-included-pricing.md), en revisión), disponibilidad consultiva, proyección de clientes y `contentHash`, el SHA-256 de su contenido canónico. El producto mantiene el esquema, sus límites y un ejemplo sintético; esta página no los repite.
 
 | Paso | Comportamiento en la revisión | Si falla |
 | --- | --- | --- |
