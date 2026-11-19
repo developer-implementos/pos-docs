@@ -44,6 +44,11 @@ export function projectDatabase(schema, source) {
       'platform.database_realm': [0, 0], 'devices.controller': [1, 0], 'devices.registration': [2, 0], 'devices.job': [3, 0], 'devices.result': [4, 0],
     } : context === 'fiscal' ? {
       'platform.database_realm': [0, 0], 'fiscal.document': [1, 0], 'fiscal.attempt': [2, 0], 'fiscal.evidence': [3, 0], 'fiscal.representation': [1, 1], 'fiscal.representation_content': [2, 1],
+    } : context === 'catalog' ? {
+      'platform.database_realm': [0, 0], 'catalog.commercial_publication': [1, 0], 'catalog.commercial_staging': [2, 0], 'catalog.publication': [3, 0],
+      'catalog.publication_verification': [4, 0], 'catalog.customer_projection_publication': [5, 0], 'catalog.customer_projection_staging': [6, 0],
+      'catalog.product': [0, 1], 'catalog.product_unit': [1, 1], 'catalog.product_code': [2, 1], 'catalog.availability': [3, 1],
+      'catalog.customer_publication': [4, 1], 'catalog.customer': [5, 1], 'catalog.customer_change_request': [6, 1], 'platform.command_receipt': [7, 1],
     } : {};
     const entities = tables.map((table, index) => ({
       id: entityId(table), label: fullname(table), row: placement[fullname(table)]?.[0] ?? Math.floor(index / 2), col: placement[fullname(table)]?.[1] ?? index % 2,
