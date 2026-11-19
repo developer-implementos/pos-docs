@@ -11,7 +11,7 @@ Los topes de la publicación comercial suben a 90 000 productos, 180 000 precios
 
 ## Qué resuelve
 
-La sucursal de QA del legacy tiene 59 600 productos y 242 812 clientes, frente a topes de 10 000 productos y 100 000 clientes. Con publicaciones sintéticas de ese volumen y PostgreSQL y el comando limitados a 1 CPU, como en el ambiente de QA:
+La sucursal de QA del legacy tiene del orden de 60 000 productos y 250 000 clientes, frente a topes de 10 000 productos y 100 000 clientes. Con publicaciones sintéticas de ese volumen y PostgreSQL y el comando limitados a 1 CPU, como en el ambiente de QA:
 
 - **Una publicación con todo**, de 154,9 MiB, necesitó 1,77 GB de memoria, y su activación llegó a 30,1 s y falló por el presupuesto de 30 s por transacción.
 - **Separada en dos**, el catálogo activó en 8,8–12,8 s y los clientes en 15,6–16,8 s.
