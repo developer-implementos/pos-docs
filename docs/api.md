@@ -108,6 +108,15 @@ El puerto 3333 es el predeterminado del ambiente local; `<certificado-local>` es
 
 Readiness de sucursal y país consulta su PostgreSQL correspondiente. Un esquema o ámbito incompatible impide declarar disponibilidad. La sonda no acredita ERP, dispositivos, pagos, permisos del operador o caja abierta; esas condiciones se validan en el caso de uso.
 
+Los clientes conectados usan la readiness de `branch-api` como sonda de su conexión con la sucursal ([TASK-457](https://github.com/developer-implementos/pos-platform/issues/457)), sin agregar carga mientras el tráfico real basta:
+
+- Cada respuesta de la API confirma la conexión, salvo 502, 503 o 504, que cuentan como sucursal no disponible.
+- La sonda corre al arrancar el cliente, cuando una solicitud quedó sin respuesta y, sin tráfico, una vez cada 2 minutos. Una sola solicitud fallida no declara la caída: la decide la sonda.
+- Durante una caída, la sonda se repite con espera exponencial y variación aleatoria, hasta 30 s entre intentos. Con la aplicación oculta o sin red en el equipo no se sondea; al volver a verse, al volver la red o con «Reintentar ahora», se sondea una vez.
+- Mientras la sucursal no responde, el cliente rechaza un comando antes de enviarlo (`BRANCH_UNAVAILABLE`, no enviado), en vez de esperar su plazo y dejarlo con resultado incierto. Las lecturas se siguen enviando, porque una respuesta es lo que prueba la recuperación. El equipo tampoco borra su activación, que no podría renovar sin conexión.
+
+La interfaz muestra ese estado en el menú y en un aviso único en todas las pantallas, que se anuncia al perder la conexión y al recuperarla. La operación sin conexión sigue fuera de alcance (F03-08).
+
 Las rutas llevan el prefijo `/api/v1`; los permisos de la sesión y las capacidades activadas en cada caja limitan su ejecución. El recorrido comercial completo siguiente está verificado sobre una sucursal aprovisionada con la publicación comercial ficticia; la presencia de una ruta no habilita su uso comercial operativo. Los contratos de cada contexto son la fuente de sus DTO; OpenAPI se genera desde esa misma definición.
 
 | Rutas | Responsabilidad |
