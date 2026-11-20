@@ -17,7 +17,7 @@ Espejo Engram: pendiente. La herramienta no está disponible en esta sesión; la
 
 - [x] T1 · S1,S3 · route:inline · Redactar el ADR-29 · status:done · evidence: `docs/decisions/password-recovery.md`
 - [x] T2 · S2 · route:inline · Registrar la decisión en la propuesta y en la barra lateral · status:done · evidence: `docs/propuesta-arquitectura.md`, `apps/starlight/content-map.mjs`
-- [ ] T3 · S1,S2,S3 · route:inline · Regenerar los derivados, ejecutar las comprobaciones editoriales y de build, y abrir la PR · status:in_progress · evidence: en curso en esta rama.
+- [x] T3 · S1,S2,S3 · route:inline · Regenerar los derivados, ejecutar las comprobaciones editoriales y de build, y abrir la PR · status:done · evidence: L3
 - [ ] T4 · S4 · route:inline · Marcar implementado e importar contrato y diccionario cuando TASK-450 se integre · status:pending · evidence: las PR del producto no están integradas.
 
 ## Log
@@ -32,3 +32,11 @@ Y sobre el buzón, decisión del responsable comunicada por la sesión coordinad
   - Es una decisión nueva (ADR-29) y no una nota del ADR-24: agrega contratos HTTP, tablas, configuración, una dependencia de envío de correo y una regla de seguridad para la recuperación de cuentas.
   - El buzón se describe con `no-responder-pos@example.com`, sin el dominio corporativo, y el servicio SMTP como «el que ya usan otros sistemas de la empresa», sin nombrarlo.
   - Se publican los límites y su efecto (a lo más 25 códigos probados al día por cuenta, de 10⁸) porque son parte del diseño de seguridad y no permiten reconstruir una debilidad; no se publican hosts ni ajustes de ningún ambiente.
+- L3 · 2026-11-20 · La cadena del producto quedó completa en cinco PR: #452 integrada y #454, #455, #469 y #471 en revisión. El ADR se ajustó a lo implementado:
+  - el estado lista las cinco PR y corrige el número del adaptador de correo, que es #454;
+  - el pedido responde `200` con `{ accepted: true }`, porque los contratos HTTP del producto solo admiten 200 o 201 como éxito, y el tiempo mínimo es de 750 ms;
+  - un código escrito en otro equipo cuenta como intento fallido, y la confirmación limpia los intentos fallidos del login como un ingreso exitoso;
+  - un trigger de `operator_account` cierra la recuperación abierta ante cualquier cambio de contraseña o de correo, o al deshabilitar la cuenta;
+  - las pantallas, con el código en un solo campo en vez de `p-inputotp`, y el límite del medidor de robustez (P2-6 de pos-platform#451);
+  - los seguimientos del producto: FOLLOWUP-027, el pedido a infraestructura, y FOLLOWUP-028, la decisión del remitente, ya resuelta;
+  - la verificación cita la ficha del producto en `a369729`, con la evidencia de los cinco eslabones y lo que no se verificó.
