@@ -39,7 +39,7 @@ Implementar cada hallazgo por separado habría dejado cinco temporizadores, cinc
 | Activo | La operación normal. Su actividad renueva la sesión. | Acepta la sesión hasta su vencimiento por inactividad y su tope. | Este ADR |
 | Por vencer | Un `alertdialog` con cuenta regresiva, al menos 20 s antes de vencer por inactividad o por el tope. | Nada distinto: la sesión sigue vigente. | Este ADR |
 | Bloqueado | Una capa opaca con su nombre y el motivo, que pide su contraseña y ofrece «Cambiar de usuario». La pantalla de abajo queda inerte, con sus diálogos abiertos. | Rechaza una sesión vencida con 401 `SESSION_EXPIRED`. | Este ADR |
-| Sin conexión | Un indicador global; las escrituras se deshabilitan con su motivo. | — | [TASK-457](https://github.com/developer-implementos/pos-platform/issues/457) |
+| Sin conexión | Un indicador y un aviso globales. Los comandos fallan al instante como no enviados, con su motivo; las lecturas siguen. | — | [TASK-457](https://github.com/developer-implementos/pos-platform/issues/457) |
 | Versión nueva | Un aviso que no bloquea; la recarga espera a que no haya una operación en curso. | — | [TASK-458](https://github.com/developer-implementos/pos-platform/issues/458) |
 | Error | Un aviso con código de referencia, «Reintentar» y «Volver al inicio». | — | [TASK-458](https://github.com/developer-implementos/pos-platform/issues/458) |
 
