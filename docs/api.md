@@ -246,6 +246,24 @@ El cliente lo envía a `POST /api/v1/telemetry/client-failures` (`reportClientFa
 - Si la conexión se interrumpió (`CONNECTION_INTERRUPTED`, por red o tiempo agotado), el relay tampoco recibiría el reporte, porque es el mismo `branch-api`.
 - Una respuesta fuera del contrato (`INVALID_RESPONSE`) también se descarta, y ningún otro componente la reporta.
 
+#### Lo que ve la persona
+
+Desde [TASK-458](https://github.com/developer-implementos/pos-platform/issues/458), un fallo no queda en silencio y se muestra sin detalles técnicos: sin mensaje de la excepción, pila, URL ni valores de la ruta.
+
+- **Código de referencia.** Un error 5xx de `branch-api` o una respuesta fuera del contrato muestran «Código de referencia» con los primeros 8 caracteres de su `x-request-id`, que la API expone por CORS. Soporte lo busca por prefijo en los registros y en el `requestId` de Sentry. Un rechazo 4xx no lo muestra: su mensaje ya dice qué hacer.
+- **Error no controlado.** El `ErrorHandler` muestra un aviso (`role="alert"`) con «Volver al inicio», «Reintentar» y «Cerrar el aviso». «Reintentar» crea de nuevo la pantalla sin recargar la página, porque el token vive sólo en memoria y recargar termina la sesión. Su código de referencia es el `x-request-id` de la respuesta del relay al reporte, el mismo `requestId` del evento reenviado, así que el sobre `client-failure-v1` no cambia. Si el reporte no llegó, el aviso pide indicar la hora.
+- **Módulo que no carga.** Ocurre, por ejemplo, cuando un despliegue reemplazó los archivos de `pos-web`. No se reporta como fallo: el cliente avisa que hay una versión nueva.
+
+#### Versión del cliente
+
+Al configurar un artefacto, `tools/connected-client-policy.mjs` calcula su identidad: el SHA-256 de las rutas y del contenido de cada archivo, con el `index.html` sin sus metadatos de despliegue. La escribe en el sello `client-build.json` (`schemaVersion: 1`, `release`) y en `<meta name="pos-client-release">` del propio `index.html`. El mismo build tiene la misma identidad en cualquier origen; cualquier cambio de un archivo da otra.
+
+- `pos-web` compara su identidad con la que sirve su origen: cada 15 minutos mientras está visible y al volver a verse tras 5 minutos. También la compara ante una respuesta fuera de contrato.
+- Una versión nueva se anuncia con un aviso que no bloquea (`role="status"`). «Actualizar ahora» recarga sólo cuando no hay trabajo en curso: un comando enviado sin respuesta, un cobro, una venta por confirmar o abierta con líneas, o una apertura de caja por confirmar. Si lo hay, el aviso dice qué terminar. Al recargar, la persona vuelve a ingresar y lo guardado en la sucursal se conserva.
+- Escritorio y móvil instalan sus archivos: recargar no los actualiza, así que el aviso pide instalar la actualización.
+
+Si el cliente no logra arrancar, una pantalla propia reemplaza la página en blanco. Muestra la marca, la causa (sin red, configuración del puesto o arranque de la aplicación), «Reintentar» y los datos para soporte: aplicación, versión corta, motivo y hora.
+
 `branch-api` responde siempre `{ received: true }`, se reenvíe o no el reporte. Sin sesión responde 401. Si el sobre no cumple el contrato responde 422 `VALIDATION_ERROR`: campos extra, otra `contractVersion`, más de 40 frames o más de 20 Debug IDs.
 
 Tras validar de nuevo el sobre, lo reenvía con un cliente privado separado a otro proyecto, como evento `javascript`. El reporter del backend y el relay usan el mismo presupuesto: un único tope por hora (`BRANCH_API_SENTRY_MAX_EVENTS_PER_HOUR`) y el mismo enfriamiento. Por eso el relay no cambia el dimensionamiento. Además, cada instalación del puesto tiene un tope por hora propio, para que un equipo ruidoso no consuma el presupuesto de la sucursal.
