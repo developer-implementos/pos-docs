@@ -230,6 +230,7 @@ La [referencia de APIs](/guide/api/pos-platform/) y el [diccionario de datos](/g
 - **[ADR-22](environments.md).** QA y producción difieren solo en configuración: el correo se enciende con sus ajustes en cada ambiente.
 - **[ADR-23](device-activation.md).** Reutiliza la llave no extraíble del equipo y sus desafíos de un solo uso. La contraseña que se recupera la elige la persona, así que no queda marcada para cambio obligatorio.
 - **[ADR-24](email-sign-in.md).** El correo de ingreso es también el buzón de la recuperación. Las cuentas migradas con `.invalid` no reciben códigos. La recuperación de emergencia sigue disponible para el dueño del servidor y ahora también envía el aviso.
+- **[ADR-30](workstation-session.md).** El bloqueo por intentos del ingreso es suyo. Completar una recuperación limpia los fallos del ingreso con la misma operación que un ingreso correcto: la contraseña que se intentaba adivinar ya no existe, y la persona probó su buzón y el equipo. Si la implementación del bloqueo ([TASK-465](https://github.com/developer-implementos/pos-platform/issues/465)) decide que solo un administrador lo levanta, la recuperación sigue esa regla.
 - **[ADR-25](single-operational-mode.md).** Las pruebas cargan sus datos por las puertas oficiales y usan un servidor SMTP de prueba en loopback; nunca envían a un buzón real.
 
 ## Límites

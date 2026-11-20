@@ -40,3 +40,4 @@ Y sobre el buzón, decisión del responsable comunicada por la sesión coordinad
   - las pantallas, con el código en un solo campo en vez de `p-inputotp`, y el límite del medidor de robustez (P2-6 de pos-platform#451);
   - los seguimientos del producto: FOLLOWUP-027, el pedido a infraestructura, y FOLLOWUP-028, la decisión del remitente, ya resuelta;
   - la verificación cita la ficha del producto en `a369729`, con la evidencia de los cinco eslabones y lo que no se verificó.
+  - después de integrarse el ADR-30 en `main`, la relación con ese ADR: la recuperación limpia los fallos del ingreso como un ingreso correcto, y sigue la regla que decida TASK-465 si solo un administrador puede levantar el bloqueo.
