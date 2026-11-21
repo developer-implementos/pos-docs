@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "f3290b5a5180e94a57821d72a1fc7210741b6e24",
+    "revision": "a9b964946df9a95a434828715e9b31676ed12e51",
     "path": "delivery/business-questions.json",
-    "sha256": "5f6530cb5f8b1fd6824ee2d4f64bab6b659d8b4fa34b67a041282fd6e07a372d"
+    "sha256": "d95c84608f759aa126834166a83d71d470e2321769609097f79d3bdda3b0250b"
   },
   "integration": {
     "reference": "main",
@@ -12,7 +12,7 @@
   },
   "content": {
     "schemaVersion": 4,
-    "reviewedOn": "2026-11-13",
+    "reviewedOn": "2026-11-20",
     "audit": "delivery/reviews/pos-parity-2026-11-10",
     "roles": [
       {
@@ -3387,12 +3387,12 @@
           "producto"
         ],
         "owner": null,
-        "followUp": null,
+        "followUp": "FOLLOWUP-026",
         "workPackages": [
           "F01-01"
         ],
         "priority": "P2",
-        "reviewedOn": "2026-11-13",
+        "reviewedOn": "2026-11-20",
         "recommendation": {
           "answer": "Bloquear en servidor la identidad tras 5 intentos fallidos en 15 minutos, durante 30 minutos o hasta que un administrador la desbloquee tras verificar a la persona, con respuesta genérica y auditoría. La sesión dura como máximo 8 horas y su renovación no supera ese tope; tras 15 minutos sin actividad vence en branch-api, y el operador vuelve a autenticarse y retoma su turno y su cesta pausada (Q-08).",
           "scope": "core",
@@ -3507,7 +3507,7 @@
         "question": "¿La fuente de precios publica los precios con IVA incluido, como exige en Chile el precio exhibido, y qué artículos llevan impuestos adicionales a la venta, con qué código del SII?",
         "kind": "fact",
         "state": "open",
-        "currentAnswer": "Legacy: la API de precios devuelve precios enteros, sin moneda ni indicación de neto o bruto; el precio que AX entrega a la sincronización de las sucursales tampoco la trae, y los artículos llegan de AX sin impuestos. La caja trata el precio como IVA incluido por un parámetro que la semilla activa: cobra el precio recibido y obtiene el neto dividiéndolo por uno más la suma de los factores de impuesto del producto; con el parámetro inactivo lo consideraría neto y le sumaría esos impuestos. Informa en el DTE como IVA la suma de los impuestos, con tasa fija del 19 % y sin detallar impuestos adicionales, que sólo existen si se asignan en el mantenedor local: la semilla trae cigarros y bebidas alcohólicas al 10 %, sin código del SII, y un proceso de mantenimiento asigna IVA a todo artículo sin impuesto. No consta el valor del parámetro en producción ni si AX define esos precios con IVA. Falta que TI e Integración ERP, con Comercial, confirme con una muestra contrastada con el precio exhibido si AX publica esos precios con IVA; que Soporte lea el valor vigente del parámetro en la caja productiva, y que Tributario, con TI e Integración ERP, entregue desde el maestro de artículos de AX los artículos con impuestos adicionales y su código del SII. POS Platform: el motor suma al precio un único impuesto por línea, es decir, lo trata como neto; el contrato neto o bruto con la fuente sigue pendiente (F01-11).",
+        "currentAnswer": "Legacy: la API de precios devuelve precios enteros, sin moneda ni indicación de neto o bruto; el precio que AX entrega a la sincronización de las sucursales tampoco la trae, y los artículos llegan de AX sin impuestos. La caja trata el precio como IVA incluido por un parámetro que la semilla activa: cobra el precio recibido y obtiene el neto dividiéndolo por uno más la suma de los factores de impuesto del producto; con el parámetro inactivo lo consideraría neto y le sumaría esos impuestos. Informa en el DTE como IVA la suma de los impuestos, con tasa fija del 19 % y sin detallar impuestos adicionales, que sólo existen si se asignan en el mantenedor local: la semilla trae cigarros y bebidas alcohólicas al 10 %, sin código del SII, y un proceso de mantenimiento asigna IVA a todo artículo sin impuesto. No consta el valor del parámetro en producción ni si AX define esos precios con IVA. Falta que TI e Integración ERP, con Comercial, confirme con una muestra contrastada con el precio exhibido si AX publica esos precios con IVA; que Soporte lea el valor vigente del parámetro en la caja productiva, y que Tributario, con TI e Integración ERP, entregue desde el maestro de artículos de AX los artículos con impuestos adicionales y su código del SII. POS Platform: la publicación comercial declara si sus precios incluyen el impuesto; el extractor de Chile publica el precio entero de la API de precios con el IVA incluido y el motor lo cobra tal cual, con un único impuesto por línea (TASK-445). Los impuestos adicionales siguen sin representación.",
         "answerSources": [
           "code",
           "spec"
@@ -3535,7 +3535,7 @@
           "F02-02"
         ],
         "priority": "P1",
-        "reviewedOn": "2026-11-13",
+        "reviewedOn": "2026-11-19",
         "recommendation": null,
         "decision": null
       },
@@ -3545,7 +3545,7 @@
         "question": "¿Qué método de redondeo de neto e IVA se aprueba y cómo se informan el precio unitario y el monto de cada línea en el DTE?",
         "kind": "rule",
         "state": "open",
-        "currentAnswer": "Legacy: suma sin redondear el neto y los impuestos de cada línea y redondea por separado los totales de neto e impuestos, de modo que neto más IVA puede diferir en $1 del total; con un solo documento, el total enviado por la caja sobrescribe el calculado. En factura informa el neto unitario redondeado al peso y el monto de línea desde el neto con 2 decimales; en boleta, el precio con IVA. POS Platform: el motor suma el impuesto a un precio neto, por línea o por documento según el perfil; aún no genera el detalle del DTE ni hay ejemplos aprobados (F01-02).",
+        "currentAnswer": "Legacy: suma sin redondear el neto y los impuestos de cada línea y redondea por separado los totales de neto e impuestos, de modo que neto más IVA puede diferir en $1 del total; con un solo documento, el total enviado por la caja sobrescribe el calculado. En factura informa el neto unitario redondeado al peso y el monto de línea desde el neto con 2 decimales; en boleta, el precio con IVA. POS Platform: con precios publicados con IVA, el motor cobra la suma de las líneas con IVA y deriva de ese total el neto y el IVA por documento y tasa, como el legacy pero sin la diferencia de $1 (TASK-445, decisión del responsable del producto del 2026-11-19); aún no genera el detalle del DTE ni hay vectores aprobados por Tributario (F01-02).",
         "answerSources": [
           "code",
           "spec"
@@ -3570,7 +3570,7 @@
           "F02-02"
         ],
         "priority": "P1",
-        "reviewedOn": "2026-11-13",
+        "reviewedOn": "2026-11-19",
         "recommendation": {
           "answer": "Calcular una vez en servidor y emitir esos mismos importes, sin que un total de la caja los sobrescriba. Con precios publicados con IVA, el total es la suma de las líneas con IVA y nunca la supera: neto e IVA se derivan de ese total por documento y tasa. La boleta informa precio y línea con IVA. La factura usa el indicador de montos brutos si no lleva impuestos adicionales y, si los lleva, PrcItem neto con hasta 6 decimales, MontoItem neto al peso e IVA sobre MntNeto. Tributario aprueba los vectores y su validación ante el SII.",
           "scope": "country",

@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "f3290b5a5180e94a57821d72a1fc7210741b6e24",
+    "revision": "a9b964946df9a95a434828715e9b31676ed12e51",
     "path": "delivery/follow-ups.json",
-    "sha256": "e2354daeee98d42652fdead22b12a1dbe2f40ea596a5cc2174764dfa3c464942"
+    "sha256": "43ffc6c3903639b797e9446bff8102180c976a71dbb9bd92beee142f74886f5d"
   },
   "content": {
     "schemaVersion": 1,
-    "reviewedOn": "2026-11-13",
+    "reviewedOn": "2026-11-20",
     "items": [
       {
         "id": "FOLLOWUP-001",
@@ -843,11 +843,253 @@
           }
         ],
         "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-025",
+        "kind": "decision",
+        "state": "open",
+        "workPackages": [
+          "F03-09",
+          "F03-10"
+        ],
+        "summary": "Decidir cómo representar en el POS los precios y clientes del legacy que el contrato no admite",
+        "impact": "El extractor del QA del legacy publica el precio que cobra la caja al cliente genérico de la sucursal y los clientes con su tipo y bloqueo. Cuatro hechos del legacy no tenían una representación exacta. El primero ya está decidido: la cotización redondeaba a pesos el subtotal neto antes del IVA, y en el 16 % de los precios brutos el total difería en un peso del legacy; el 2026-11-19 el responsable del producto decidió cobrar como el legacy, y TASK-445 publica los precios de Chile con el IVA incluido y deriva el neto y el IVA del total del documento. Siguen abiertos tres: el precio normal de referencia de una oferta no tiene campo; el grupo de precio y el crédito del cliente no están en la proyección; y el bloqueo que solo impide facturar se publica sin bloqueo. Nada de esto impide cargar QA, pero sí afecta la comparación con producción.",
+        "impactScope": "technical",
+        "nextAction": "Pedir al dueño comercial y a quien responde por pricing que decidan, con los casos de TASK-405: si el contrato agrega el precio de referencia de una oferta; si la proyección de clientes agrega el grupo y el crédito con su catálogo (CX-069, CX-070 y CX-101); y cómo se restringe la factura a un cliente.",
+        "requestedFrom": "Dueño comercial y responsable de pricing",
+        "owner": null,
+        "closureCriteria": "Una decisión registrada para cada uno de los cuatro hechos, con su cambio de contrato o la aceptación explícita del límite. No se resuelve por falta de respuesta.",
+        "reviewedOn": "2026-11-19",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/405",
+            "label": "TASK-405: extractor del QA del legacy"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/pull/441",
+            "label": "Fuente de precios y hallazgo del redondeo de la cotización"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/445",
+            "label": "TASK-445: cobrar en la cotización de Chile el mismo bruto que la caja legacy"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-026",
+        "kind": "decision",
+        "state": "open",
+        "workPackages": [
+          "F01-01",
+          "F01-07"
+        ],
+        "summary": "Confirmar con seguridad la política de sesión y de bloqueo por intentos adoptada como provisional en QA",
+        "impact": "El 2026-11-20 el responsable del producto adoptó como valor provisional de QA, hasta que seguridad decida Q-58, la recomendación de esa pregunta: 5 intentos fallidos en 15 minutos bloquean la identidad 30 minutos o hasta que un administrador la desbloquee tras verificar a la persona; la sesión dura como máximo 8 horas sin que la renovación supere ese tope, y vence tras 15 minutos sin actividad. El ADR-30 de POS Docs los publica como una política de acceso versionada, junto con dos valores que agrega: 60 segundos de aviso antes de cada vencimiento y 5 minutos de validez para la reautenticación de una acción sensible. Mientras seguridad no decida, CAJ-052, CAJ-071 y CAJ-072 no se aceptan como criterios de F01-01 y esos valores no se toman como definitivos fuera de QA.",
+        "impactScope": "operational",
+        "nextAction": "Llevar a seguridad, consultando a operaciones y producto, los valores provisionales de Q-58 y los dos que agrega el ADR-30, y registrar su decisión en Q-58. Si la decisión difiere, publicar una revisión nueva de la política de acceso en cada ambiente con el comando propietario, sin cambiar código.",
+        "requestedFrom": "Seguridad, con operaciones y producto como consultados",
+        "owner": null,
+        "closureCriteria": "Q-58 decidida por seguridad y registrada en business-questions.json, y la revisión vigente de la política de acceso de cada ambiente coincide con esa decisión.",
+        "reviewedOn": "2026-11-20",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/461",
+            "label": "TASK-461: diseño del modelo de sesión del puesto (ADR-30) y adopción provisional de Q-58"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/451",
+            "label": "Auditoría de pantallas y recorridos faltantes: hallazgos P0-1, P0-2 y P1-4"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-027",
+        "kind": "access",
+        "state": "open",
+        "workPackages": [
+          "F01-01",
+          "F04-06"
+        ],
+        "summary": "Crear el buzón propio del POS con su credencial y abrir la salida SMTP desde los servidores",
+        "impact": "La recuperación de contraseña por correo y el aviso de cada cambio de contraseña (TASK-450, ADR-29 de POS Docs) se verificaron contra un servidor SMTP de prueba, pero ningún ambiente tiene correo. Sin él, la API no envía avisos ni ofrece la recuperación, y el inicio de sesión remite el restablecimiento a quien administra los usuarios. No bloquea la verificación técnica: bloquea encender la recuperación en QA y en producción.",
+        "impactScope": "operational",
+        "nextAction": "Pedir a infraestructura que cree el buzón del POS y su credencial en el servicio SMTP corporativo para QA y producción; que entregue host, puerto y modo TLS (o el nombre del servicio), usuario y contraseña al archivo de secretos de cada servidor, sin pasar por un repositorio ni por un chat; y que abra la salida SMTP desde el servidor de QA, el de producción y cada sucursal. Después, encender el correo en QA con la guía de tools/deploy/README.md.",
+        "requestedFrom": "Infraestructura",
+        "owner": null,
+        "closureCriteria": "Buzón y credencial instalados en el archivo de secretos de QA y de producción, salida SMTP abierta desde esos servidores y desde las sucursales, y en QA la disponibilidad en true y una recuperación completa entregada a un buzón que controla quien prueba, sin publicar el dominio, los hosts ni la credencial.",
+        "reviewedOn": "2026-11-20",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/450",
+            "label": "TASK-450: recuperación de contraseña por correo"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/pull/455",
+            "label": "Outbox y avisos de cambio de contraseña, apagados sin correo"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/5bcdbc201a35aaeddb813c89f4da2747557ea2cb/odd/tasks/password-recovery.md",
+            "label": "Ficha ODD de TASK-450, con la decisión del responsable sobre el buzón"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-028",
+        "kind": "decision",
+        "state": "resolved",
+        "workPackages": [
+          "F01-01",
+          "F04-06"
+        ],
+        "summary": "Decidir el remitente y la cuenta de los correos del POS",
+        "impact": "Los códigos de recuperación y los avisos de cambio de contraseña necesitan un remitente que la persona reconozca y una cuenta cuya credencial no se comparta con otros sistemas.",
+        "impactScope": "operational",
+        "nextAction": "Ninguna en esta decisión: la dirección exacta se fija al crear el buzón, según FOLLOWUP-027.",
+        "requestedFrom": "Responsable del producto",
+        "owner": null,
+        "closureCriteria": "Remitente y cuenta de envío del POS decididos por el responsable del producto.",
+        "reviewedOn": "2026-11-20",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/450",
+            "label": "TASK-450: recuperación de contraseña por correo"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/5bcdbc201a35aaeddb813c89f4da2747557ea2cb/odd/tasks/password-recovery.md",
+            "label": "Ficha ODD de TASK-450, con la decisión del responsable sobre el buzón"
+          }
+        ],
+        "resolution": {
+          "resolvedOn": "2026-11-20",
+          "summary": "El responsable del producto decidió el 2026-11-20 que el POS envíe con un remitente propio, del tipo no-responder-pos en el dominio corporativo, en el mismo servicio SMTP corporativo que usa core y con una credencial separada de la de core. Infraestructura crea el buzón y entrega host, puerto, usuario y contraseña, que van al archivo de secretos de cada servidor y nunca a un repositorio.",
+          "evidence": [
+            {
+              "url": "https://github.com/developer-implementos/pos-platform/blob/5bcdbc201a35aaeddb813c89f4da2747557ea2cb/odd/tasks/password-recovery.md",
+              "label": "Ficha ODD de TASK-450, con la decisión del responsable sobre el buzón"
+            }
+          ]
+        }
+      },
+      {
+        "id": "FOLLOWUP-029",
+        "kind": "decision",
+        "state": "open",
+        "workPackages": [
+          "F02-06"
+        ],
+        "summary": "Confirmar con Tesorería la regla del voucher manual de tarjeta adoptada como provisional en QA",
+        "impact": "El 2026-11-20 el responsable del producto adoptó como valor provisional de QA, hasta que Tesorería decida Q-73, su recomendación: «Voucher: aplicado al registrarlo con datos completos y únicos. Transferencia: verificador distinto del registrador. Ambos conciliados a diario por Tesorería del país, con el detalle del adquirente o la cartola.» En QA se configura en la plantilla versionada de la política del voucher que entrega TASK-494, aplicada en cada terminal con el comando propietario database.js provision-card-voucher-policy: confirmationMode on-registration y, también como valor provisional, porque la recomendación remite al formato del adquirente sin fijarlo, un authorizationPattern de 6 caracteres alfanuméricos. La transferencia conserva el verificador independiente que su cuenta receptora exige por defecto (F02-06). La conciliación diaria con el detalle del adquirente o la cartola no forma parte de esta adopción. Mientras Tesorería no decida, esos valores no se toman como definitivos fuera de QA.",
+        "impactScope": "operational",
+        "nextAction": "Llevar a Tesorería, consultando a operaciones y producto, el valor provisional de Q-73 y el patrón del código de autorización, y registrar su decisión en Q-73. Si la decisión difiere, publicar una revisión nueva de la política del voucher de cada terminal con provision-card-voucher-policy, sin cambiar código.",
+        "requestedFrom": "Tesorería, con operaciones y producto como consultados",
+        "owner": null,
+        "closureCriteria": "Q-73 decidida por Tesorería y registrada en business-questions.json, y la revisión vigente de la política del voucher de cada terminal, en cada ambiente, coincide con esa decisión, incluido el patrón del código de autorización.",
+        "reviewedOn": "2026-11-20",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/495",
+            "label": "TASK-495: registro de las adopciones provisionales de la caja de QA"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/494",
+            "label": "TASK-494: habilitación de la venta en las cajas de QA y plantilla de la política del voucher"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-030",
+        "kind": "decision",
+        "state": "open",
+        "workPackages": [
+          "F04-03",
+          "F04-04"
+        ],
+        "summary": "Confirmar con Tesorería y Operaciones las reglas del cierre de turno adoptadas como provisionales en QA",
+        "impact": "El 2026-11-20 el responsable del producto adoptó como valores provisionales de QA, hasta que el negocio decida cada pregunta, sus recomendaciones: Q-14, «Tolerancia 0 por moneda: toda diferencia exige motivo y aprobación»; Q-104, «Ciego en todo el país; efectivo por denominación; cheques y vouchers manuales cotejados uno a uno; tarjeta integrada, transferencias, crédito, NC y anticipos sin declaración», y Q-116, «Cierre parcial y traspaso deshabilitados; cerrar un turno ajeno, sólo un supervisor con motivo y testigo». Se configuran en la política de cierre versionada que entrega TASK-496, aprovisionada en cada sucursal con el comando propietario de database.js que agrega esa tarea; un valor null queda pendiente y no se aplica. TASK-496 no incluye el cierre de un turno ajeno: qué parte de cada valor aplica el cierre lo acredita la evidencia de esa tarea. Mientras el negocio no decida, esos valores no se toman como definitivos fuera de QA.",
+        "impactScope": "operational",
+        "nextAction": "Llevar a Tesorería, consultando a finanzas y operaciones, los valores provisionales de Q-14 y Q-104, y a Operaciones, consultando a Tesorería y producto, el de Q-116; registrar cada decisión en su pregunta. Si una decisión difiere, publicar una revisión nueva de la política de cierre de cada sucursal con su comando propietario, sin cambiar código.",
+        "requestedFrom": "Tesorería para Q-14 y Q-104, y Operaciones para Q-116, con finanzas y producto como consultados",
+        "owner": null,
+        "closureCriteria": "Q-14, Q-104 y Q-116 decididas y registradas en business-questions.json, y la revisión vigente de la política de cierre de cada sucursal, en cada ambiente, coincide con esas decisiones.",
+        "reviewedOn": "2026-11-20",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/495",
+            "label": "TASK-495: registro de las adopciones provisionales de la caja de QA"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/496",
+            "label": "TASK-496: resumen del turno y cierre ciego con motivo de diferencia, con su política de cierre versionada"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-031",
+        "kind": "decision",
+        "state": "open",
+        "workPackages": [
+          "F04-05"
+        ],
+        "summary": "Confirmar con Operaciones los reportes del turno adoptados como provisionales en QA",
+        "impact": "El 2026-11-20 el responsable del producto adoptó como valor provisional de QA, hasta que Operaciones decida Q-28, su recomendación: «Chile: resumen de ventas por medio, cierre y su detalle, recaudación, confirmación de depósito, transacciones de caja, custodia de cheques a fecha, listados del turno (comprobantes, cobranzas, anticipos, NC emitidas y devoluciones de dinero) y cartola; el informe Z y la conciliación, sólo si se identifica su consumidor; Perú y España: los fija Operaciones de cada país, consultando a Finanzas, antes de su piloto». No es un valor configurable: lo aplican las vistas del turno, el resumen que entrega TASK-496 y el listado de ventas del turno que entrega TASK-497. El resto del conjunto recomendado no está implementado y no se presenta como disponible. Mientras Operaciones no decida, ese conjunto no se toma como definitivo fuera de QA.",
+        "impactScope": "operational",
+        "nextAction": "Llevar a Operaciones, consultando a Tesorería, finanzas, cobranza y tributario, el conjunto provisional de Q-28, y registrar su decisión en Q-28. Si la decisión difiere, ajustar los reportes del turno a esa decisión en las tareas de F04-05.",
+        "requestedFrom": "Operaciones, con Tesorería, finanzas, cobranza y tributario como consultados",
+        "owner": null,
+        "closureCriteria": "Q-28 decidida por Operaciones y registrada en business-questions.json, y los reportes del turno que ofrece el producto en cada ambiente coinciden con esa decisión.",
+        "reviewedOn": "2026-11-20",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/495",
+            "label": "TASK-495: registro de las adopciones provisionales de la caja de QA"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/496",
+            "label": "TASK-496: resumen del turno"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/497",
+            "label": "TASK-497: listado de las ventas del turno con acceso a su comprobante"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-032",
+        "kind": "decision",
+        "state": "open",
+        "workPackages": [
+          "F02-06"
+        ],
+        "summary": "Confirmar qué rol recibe los permisos del voucher manual, adoptados como provisionales en QA para el administrador protegido",
+        "impact": "El 2026-11-20 el responsable del producto adoptó como valor provisional de QA, hasta que se decida Q-57 (matriz de perfiles y acciones del piloto), que el administrador protegido reciba payment.voucher.record y payment.voucher.verify. Lo aplica la herramienta del operador deploy enable-checkout de TASK-494 junto con los permisos de pago que exigen las capacidades activadas (payment.create y payment.transfer.*); no concede payment.execute, reconcile, compensate ni fiscal.request. Ningún otro rol recibe esos permisos por defecto: asignarlos a cajeros o supervisores se hace desde la administración de roles. Afecta la habilitación operativa del voucher en QA, no la verificación técnica de F02-06.",
+        "impactScope": "operational",
+        "nextAction": "Llevar la matriz de perfiles de Q-57 a su responsable, consultando a Tesorería por el voucher (Q-73), y registrar la decisión en Q-57. Si la decisión asigna los permisos del voucher a otros roles, aplicarla en cada ambiente y retirar del administrador protegido lo que no le corresponda.",
+        "requestedFrom": "Responsable de la matriz de perfiles del piloto (Q-57), con Tesorería y operaciones como consultados",
+        "owner": null,
+        "closureCriteria": "Q-57 decidida y registrada en business-questions.json, y los permisos payment.voucher.record y payment.voucher.verify están asignados en cada ambiente sólo a los roles que esa decisión indica.",
+        "reviewedOn": "2026-11-20",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/527",
+            "label": "TASK-527: registro de la adopción provisional de Q-57 en QA"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/pull/500",
+            "label": "TASK-494: deploy enable-checkout concede los permisos provisionales del voucher al administrador protegido"
+          }
+        ],
+        "resolution": null
       }
     ]
   },
   "issues": {
-    "observedAt": "2026-11-17T14:25:41.214Z",
+    "observedAt": "2026-11-21T13:25:12.771Z",
     "repository": "https://github.com/developer-implementos/pos-platform",
     "entries": [
       {
@@ -1264,7 +1506,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:50:42Z"
+        "updatedAt": "2026-11-20T17:32:29Z"
       },
       {
         "code": "F03-12",
@@ -1385,7 +1627,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T04:08:55Z"
+        "updatedAt": "2026-11-20T22:44:37Z"
       },
       {
         "code": "F04-11",
@@ -1418,7 +1660,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:51:55Z"
+        "updatedAt": "2026-11-21T02:21:21Z"
       },
       {
         "code": "F05-03",
@@ -1473,7 +1715,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:52:21Z"
+        "updatedAt": "2026-11-20T21:51:04Z"
       },
       {
         "code": "F05-08",
@@ -1495,7 +1737,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-03T04:52:31Z"
+        "updatedAt": "2026-11-19T02:18:27Z"
       },
       {
         "code": "F05-10",
@@ -1517,7 +1759,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-13T18:28:16Z"
+        "updatedAt": "2026-11-20T19:39:59Z"
       },
       {
         "code": "F05-12",
@@ -1528,7 +1770,7 @@
           "status:triage"
         ],
         "assignees": [],
-        "updatedAt": "2026-11-12T04:09:28Z"
+        "updatedAt": "2026-11-21T00:16:58Z"
       },
       {
         "code": "F06-01",
