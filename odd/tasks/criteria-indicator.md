@@ -15,7 +15,7 @@ Espejo Engram: pendiente. La herramienta no está disponible en esta sesión; la
 
 - [x] T1 · S1 · route:inline · Validar e importar los conteos opcionales · status:done · evidence: pruebas de `portal/progress.test.mjs` y `tools/sync-project-progress.test.mjs`
 - [x] T2 · S2,S3 · route:inline · Mostrar el indicador y su definición · status:done · evidence: pruebas de `portal/project-view.test.mjs`
-- [ ] T3 · S1,S2,S3 · route:inline · Verificar y abrir la PR · status:in_progress · evidence: pendiente de `npm run verify` y de la PR
+- [x] T3 · S1,S2,S3 · route:inline · Verificar y abrir la PR · status:done · evidence: `npm run verify` en verde (exit 0) sobre `2e5d839`; PR abierta sin integrar
 
 ## Log
 
@@ -26,3 +26,4 @@ Espejo Engram: pendiente. La herramienta no está disponible en esta sesión; la
 > display, next to the official percentage, the indicator "Criterios cumplidos con evidencia: met de total (X %)" globally, per phase and per package, with a short explanation that distinguishes it from the official percentage and links the definition; when the fields are absent, show nothing (no fake zeros)
 
 - L2 · 2026-11-23 · El contrato del producto se implementa en paralelo. `summary` de `delivery/progress.json` es texto, así que el agregado se acepta en `criteria` del contenido; las fases y el total se derivan sumando los entregables, sólo cuando todos los informan, y un agregado declarado debe coincidir con esa suma. Un entregable con total 0 no muestra indicador. Coordinar ese campo con la PR del producto.
+- L3 · 2026-11-23 · `npm run verify` falló primero en `diagrams:test` porque la colección de Excalidraw empaqueta `docs/project-progress.md`; se regeneró con `python tools/diagrams/package-excalidraw.py` (`2e5d839`) y la segunda corrida terminó en verde, incluido `project:check`.
