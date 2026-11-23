@@ -8,6 +8,8 @@
 - [TASK-465](https://github.com/developer-implementos/pos-platform/issues/465): bloqueo por intentos fallidos y desbloqueo por un administrador.
 - [TASK-466](https://github.com/developer-implementos/pos-platform/issues/466): encabezado, «Mi cuenta», ayuda y «Acerca de este equipo».
 
+Después, [TASK-705](https://github.com/developer-implementos/pos-platform/issues/705) agrega el [perfil del equipo](#perfil-del-equipo), para que la bienvenida muestre los nombres vigentes sin iniciar sesión.
+
 Los valores de la política son los **provisionales de QA** que el responsable adoptó el 20-11-2026 a partir de la recomendación de [Q-58](/project/questions/#q-58), hasta que seguridad la decida. Este ADR no acredita la implementación, el despliegue en QA, la homologación ni la aceptación.
 
 **Decisión:**
@@ -187,6 +189,18 @@ Queda fuera autorizar la acción con la credencial de un supervisor cuando el ac
 - `GET /auth/sessions` (`listOwnSessionsV1`) lista las sesiones vigentes de la persona en la sucursal, con su caja, canal, inicio, última renovación y plazos, y marca la actual.
 - `POST /auth/sessions/:sessionId/revoke` (`revokeOwnSessionV1`) cierra una sesión propia y está en el catálogo de acciones sensibles. Cerrar la actual es «Cerrar sesión».
 
+### Perfil del equipo
+
+[TASK-705](https://github.com/developer-implementos/pos-platform/issues/705). La bienvenida muestra la caja y la sucursal antes de que alguien inicie sesión. Hasta este cambio las tomaba de lo que el equipo guardó al activarse, así que no veía un renombre posterior ni el nombre de la sucursal.
+
+- `POST /auth/device-profile` (`readDeviceProfileV1`) es público, como el ingreso. El equipo prueba la posesión de su llave con un desafío de un solo uso de `createLoginChallengeV1`, firmado con el dominio `pos-device-profile-v1`. Una firma de ingreso, renovación o recuperación no lee el perfil, y una firma de perfil no inicia sesión.
+- Responde los nombres que la base tiene ahora: `{installationId, channel, branch: {branchId, name}, register: {registerId, name}}`. La sucursal sin nombre visible responde `name: null`.
+- Cualquier rechazo responde `UNAUTHORIZED` sin decir su causa, y deja una fila `installation.profile` denegada con el motivo. Una lectura correcta no deja fila: no devuelve datos sensibles y se repite en cada apertura de la bienvenida.
+- **No informa el estado de la instalación.** Una instalación deshabilitada o revocada no puede firmar un desafío válido, y responderlo sin esa prueba se lo diría a quien conozca el `installationId`, que no es secreto ([ADR-23](device-activation.md)). Ese equipo se entera al intentar ingresar, como antes.
+- **Caché y revalidación.** La bienvenida muestra al instante los nombres guardados en la credencial del equipo y lee el perfil en segundo plano, una vez por apertura. Sin conexión o ante un rechazo conserva lo guardado y no muestra error.
+- **Escritura condicional.** La credencial guarda los nombres nuevos solo si sigue siendo la que firmó (misma instalación, época y llave), en una sola transacción. Si el equipo se activó otra vez mientras leía el perfil, conserva su credencial nueva.
+- Cada apertura suma dos solicitudes a `/api/v1/auth/` (el desafío y el perfil), dentro del límite por IP de nginx.
+
 ### Errores públicos nuevos
 
 | Código | Estado | Cuándo | Qué hace el cliente |
@@ -233,6 +247,8 @@ Es la ruta `/account`, con el título «Mi cuenta · POS Platform», y se abre d
 - Son diálogos, no rutas: abrirlos no saca a la persona de la venta. «Ayuda» está siempre en el mismo lugar, el perfil, y también en el login (WCAG 2.2, 3.2.6).
 - «Ayuda» trae una guía breve del puesto (bloqueo, vencimiento, cuenta bloqueada, contraseña olvidada y sin conexión) y el contacto de soporte del sello de compilación. Sin contacto configurado, indica pedir ayuda a quien administra la sucursal.
 - «Acerca de este equipo» muestra la revisión del cliente, el canal, la caja, la instalación (un identificador que no es secreto), la versión de la API y la sucursal. «Copiar datos para soporte» copia esos datos, sin nombre, correo ni credenciales.
+- Sin sesión, la caja y la sucursal son las que el equipo leyó con su [perfil](#perfil-del-equipo). Si todavía no leyó ninguna sucursal, indica «Se informa al iniciar sesión».
+- La bienvenida muestra «Equipo activado para {caja}.» y, debajo, «Sucursal {nombre}.» cuando la sucursal tiene nombre visible.
 
 ## Datos
 
