@@ -1,109 +1,30 @@
 {
   "components": {
-    "schemas": {
-      "ApiErrorDto": {
-        "properties": {
-          "category": {
-            "description": "Categoría del error.",
-            "enum": [
-              "VALIDATION",
-              "NOT_FOUND",
-              "AUTHORIZATION",
-              "CONFLICT",
-              "SECURITY",
-              "EXTERNAL",
-              "TIMEOUT",
-              "TECHNICAL"
-            ],
-            "type": "string"
-          },
-          "code": {
-            "description": "Código estable para identificar el error.",
-            "example": "VALIDATION_ERROR",
-            "type": "string"
-          },
-          "message": {
-            "description": "Descripción del error.",
-            "example": "Invalid request",
-            "type": "string"
-          },
-          "timestamp": {
-            "description": "Fecha y hora del error en UTC.",
-            "example": "2026-10-14T12:00:00.000Z",
-            "format": "date-time",
-            "type": "string"
-          }
-        },
-        "required": [
-          "code",
-          "message",
-          "category",
-          "timestamp"
-        ],
-        "type": "object"
+    "headers": {
+      "CorrelationId": {
+        "description": "Identificador de correlación generado por el servidor; hoy coincide con x-request-id.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
       },
-      "LivenessResponseDto": {
-        "properties": {
-          "status": {
-            "description": "El servicio puede responder solicitudes.",
-            "enum": [
-              "ok"
-            ],
-            "type": "string"
-          }
-        },
-        "required": [
-          "status"
-        ],
-        "type": "object"
+      "RequestId": {
+        "description": "Identificador de la solicitud generado por el servidor; es la referencia ante soporte.",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
       },
-      "ReadinessResponseDto": {
-        "properties": {
-          "status": {
-            "description": "El servicio terminó de iniciar y está disponible para recibir solicitudes.",
-            "enum": [
-              "ready"
-            ],
-            "type": "string"
-          }
-        },
-        "required": [
-          "status"
-        ],
-        "type": "object"
-      },
-      "RuntimeInfoDto": {
-        "properties": {
-          "apiVersion": {
-            "description": "Versión de la API.",
-            "enum": [
-              "1"
-            ],
-            "type": "string"
-          },
-          "mode": {
-            "description": "Base de API, sin operaciones de negocio ni integraciones conectadas.",
-            "enum": [
-              "foundation"
-            ],
-            "type": "string"
-          },
-          "service": {
-            "description": "Identificador del servicio.",
-            "enum": [
-              "country-api"
-            ],
-            "type": "string"
-          }
-        },
-        "required": [
-          "service",
-          "apiVersion",
-          "mode"
-        ],
-        "type": "object"
+      "RetryAfter": {
+        "description": "Segundos que conviene esperar antes de reintentar, cuando la API los indica.",
+        "required": false,
+        "schema": {
+          "minimum": 0,
+          "type": "integer"
+        }
       }
     },
+    "schemas": {},
     "securitySchemes": {
       "bearer": {
         "bearerFormat": "JWT",
@@ -116,16 +37,23 @@
         "description": "Credencial privada de instalación del host de periféricos; no acepta sesiones de operador.",
         "scheme": "bearer",
         "type": "http"
+      },
+      "workload": {
+        "bearerFormat": "JWT",
+        "description": "Credencial de carga de trabajo de una sucursal, provisional hasta la identidad de F03-06; no acepta sesiones de operador.",
+        "scheme": "bearer",
+        "type": "http"
       }
     }
   },
   "info": {
     "contact": {},
-    "description": "Identidad técnica y verificación de PostgreSQL de país. F01 no habilita recepción de ventas, maestros ni integración ERP.",
+    "description": "Identidad técnica, verificación de PostgreSQL de país y recepción durable de los lotes DeliverEvents de las sucursales. Recibir un evento no lo aplica ni lo integra con el ERP; no hay maestros ni integración ERP.",
     "title": "POS Platform · API de País",
     "version": "1.0.0"
   },
-  "openapi": "3.0.0",
+  "jsonSchemaDialect": "https://spec.openapis.org/oas/3.1/dialect/base",
+  "openapi": "3.1.0",
   "paths": {
     "/api/v1": {
       "get": {
@@ -137,16 +65,891 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RuntimeInfoDto"
+                  "additionalProperties": false,
+                  "properties": {
+                    "apiVersion": {
+                      "const": "1",
+                      "description": "Versión de la API.",
+                      "type": "string"
+                    },
+                    "mode": {
+                      "const": "foundation",
+                      "description": "Base de API, sin operaciones de negocio ni integraciones conectadas.",
+                      "type": "string"
+                    },
+                    "service": {
+                      "const": "country-api",
+                      "description": "Identificador del servicio.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "service",
+                    "apiVersion",
+                    "mode"
+                  ],
+                  "type": "object"
                 }
               }
             },
-            "description": "Información de la API disponible."
+            "description": "Información de la API disponible.",
+            "headers": {
+              "x-correlation-id": {
+                "$ref": "#/components/headers/CorrelationId"
+              },
+              "x-request-id": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           }
         },
         "summary": "Obtener información del servicio de país",
         "tags": [
           "Plataforma"
+        ]
+      }
+    },
+    "/api/v1/sync/deliveries": {
+      "post": {
+        "description": "Recibe el lote DeliverEvents v1 que envía el worker de sincronización de una sucursal autenticada con su credencial de carga de trabajo, provisional hasta F03-06; sin credencial configurada la recepción responde `UNAUTHORIZED`. El origen declarado debe ser el autenticado, o la respuesta es `SCOPE_MISMATCH`. Un lote que no cumple el sobre (más de 100 eventos, más de 512 KiB, `eventId` repetidos o ausentes) se rechaza completo con `VALIDATION_ERROR`. Cada evento recibe un resultado después del COMMIT del inbox: `accepted` (guardado ahora con su trabajo pendiente), `duplicate` (ya recibido con el mismo hash), `conflict` (`eventId` o posición del agregado ya ocupados por otro contenido), `invalid` (no cumple su contrato) o `retryable` (falta la secuencia anterior o la base no está disponible). Un evento inválido no rechaza a los demás. Recibir un evento no lo aplica ni lo integra con el ERP.",
+        "operationId": "deliverEventsV1",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "oneSale": {
+                  "summary": "Lote de una sucursal con una venta confirmada",
+                  "value": {
+                    "batchId": "10000000-0000-4000-8000-000000000080",
+                    "contractVersion": 1,
+                    "events": [
+                      {
+                        "aggregateId": "10000000-0000-4000-8000-000000000071",
+                        "aggregateType": "sale",
+                        "contractVersion": 1,
+                        "eventId": "10000000-0000-4000-8000-000000000070",
+                        "eventType": "SaleConfirmed",
+                        "occurredAt": "2026-11-18T12:00:00.000Z",
+                        "payload": {
+                          "aggregateId": "10000000-0000-4000-8000-000000000071",
+                          "aggregateVersion": 1,
+                          "contractVersion": 1,
+                          "eventId": "10000000-0000-4000-8000-000000000070",
+                          "eventType": "SaleConfirmed",
+                          "occurredAt": "2026-11-18T12:00:00.000Z",
+                          "payload": {
+                            "currency": "CLP",
+                            "currencyScale": 0,
+                            "paymentId": "10000000-0000-4000-8000-000000000072",
+                            "quoteId": "10000000-0000-4000-8000-000000000074",
+                            "saleId": "10000000-0000-4000-8000-000000000071",
+                            "shiftId": "10000000-0000-4000-8000-000000000073",
+                            "total": "11900"
+                          },
+                          "scope": {
+                            "branchId": "10000000-0000-4000-8000-000000000002",
+                            "countryId": "CL",
+                            "installationId": "10000000-0000-4000-8000-000000000005",
+                            "legalEntityId": "10000000-0000-4000-8000-000000000001",
+                            "registerId": "10000000-0000-4000-8000-000000000003"
+                          }
+                        },
+                        "payloadHash": "4276358c038116a13506bd492e1c88bf2f6f03ad7a2bfcf88bfbd8ede3e4ab8a",
+                        "sequence": 1
+                      }
+                    ],
+                    "origin": {
+                      "branchId": "10000000-0000-4000-8000-000000000002",
+                      "countryId": "CL",
+                      "installationId": "10000000-0000-4000-8000-000000000081"
+                    }
+                  }
+                }
+              },
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "batchId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "contractVersion": {
+                    "const": 1,
+                    "type": "number"
+                  },
+                  "events": {
+                    "items": {
+                      "additionalProperties": true,
+                      "description": "Evento DeliverEvents v1: eventId, eventType, contractVersion, aggregateType, aggregateId, sequence, occurredAt, payload y payloadHash. Un evento que no cumple su contrato vuelve como invalid sin rechazar el lote.",
+                      "properties": {
+                        "eventId": {
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "eventId"
+                      ],
+                      "type": "object"
+                    },
+                    "maxItems": 100,
+                    "minItems": 1,
+                    "type": "array"
+                  },
+                  "origin": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "branchId": {
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                        "type": "string"
+                      },
+                      "countryId": {
+                        "maxLength": 100,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "installationId": {
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "countryId",
+                      "branchId",
+                      "installationId"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "contractVersion",
+                  "batchId",
+                  "origin",
+                  "events"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "accepted": {
+                    "summary": "Evento guardado en el inbox de país",
+                    "value": {
+                      "batchId": "10000000-0000-4000-8000-000000000080",
+                      "contractVersion": 1,
+                      "results": [
+                        {
+                          "code": "EVENT_ACCEPTED",
+                          "eventId": "10000000-0000-4000-8000-000000000070",
+                          "status": "accepted"
+                        }
+                      ]
+                    }
+                  },
+                  "mixed": {
+                    "summary": "Resultados distintos por evento en un mismo lote",
+                    "value": {
+                      "batchId": "10000000-0000-4000-8000-000000000082",
+                      "contractVersion": 1,
+                      "results": [
+                        {
+                          "code": "EVENT_ALREADY_RECEIVED",
+                          "eventId": "10000000-0000-4000-8000-000000000083",
+                          "status": "duplicate"
+                        },
+                        {
+                          "code": "EVENT_ID_REUSED",
+                          "eventId": "10000000-0000-4000-8000-000000000084",
+                          "status": "conflict"
+                        },
+                        {
+                          "code": "PAYLOAD_HASH_MISMATCH",
+                          "eventId": "10000000-0000-4000-8000-000000000085",
+                          "status": "invalid"
+                        },
+                        {
+                          "code": "PREDECESSOR_MISSING",
+                          "eventId": "10000000-0000-4000-8000-000000000086",
+                          "status": "retryable"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "batchId": {
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                      "type": "string"
+                    },
+                    "contractVersion": {
+                      "const": 1,
+                      "type": "number"
+                    },
+                    "results": {
+                      "items": {
+                        "oneOf": [
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "code": {
+                                "const": "EVENT_ACCEPTED",
+                                "type": "string"
+                              },
+                              "eventId": {
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                                "type": "string"
+                              },
+                              "status": {
+                                "const": "accepted",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "eventId",
+                              "status",
+                              "code"
+                            ],
+                            "type": "object"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "code": {
+                                "const": "EVENT_ALREADY_RECEIVED",
+                                "type": "string"
+                              },
+                              "eventId": {
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                                "type": "string"
+                              },
+                              "status": {
+                                "const": "duplicate",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "eventId",
+                              "status",
+                              "code"
+                            ],
+                            "type": "object"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "code": {
+                                "const": "EVENT_ID_REUSED",
+                                "type": "string"
+                              },
+                              "eventId": {
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                                "type": "string"
+                              },
+                              "status": {
+                                "const": "conflict",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "eventId",
+                              "status",
+                              "code"
+                            ],
+                            "type": "object"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "code": {
+                                "enum": [
+                                  "PAYLOAD_HASH_MISMATCH",
+                                  "EVENT_TYPE_UNSUPPORTED",
+                                  "CONTRACT_VERSION_UNSUPPORTED",
+                                  "EVENT_SCOPE_MISMATCH",
+                                  "EVENT_PAYLOAD_INVALID"
+                                ],
+                                "type": "string"
+                              },
+                              "eventId": {
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                                "type": "string"
+                              },
+                              "status": {
+                                "const": "invalid",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "eventId",
+                              "status",
+                              "code"
+                            ],
+                            "type": "object"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "code": {
+                                "enum": [
+                                  "RECEIVER_UNAVAILABLE",
+                                  "RECEIVER_BUSY",
+                                  "PREDECESSOR_MISSING"
+                                ],
+                                "type": "string"
+                              },
+                              "eventId": {
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                                "type": "string"
+                              },
+                              "status": {
+                                "const": "retryable",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "eventId",
+                              "status",
+                              "code"
+                            ],
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "maxItems": 100,
+                      "minItems": 1,
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "contractVersion",
+                    "batchId",
+                    "results"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Resultado de la operación.",
+            "headers": {
+              "x-correlation-id": {
+                "$ref": "#/components/headers/CorrelationId"
+              },
+              "x-request-id": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "VALIDATION_ERROR": {
+                    "summary": "Invalid request",
+                    "value": {
+                      "category": "VALIDATION",
+                      "code": "VALIDATION_ERROR",
+                      "message": "Invalid request",
+                      "timestamp": "2026-01-15T12:00:00.000Z"
+                    }
+                  }
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "description": "Categoría del error.",
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "description": "Código estable del catálogo público para identificar el error.",
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "Descripción genérica del error, sin detalles internos.",
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "description": "Fecha y hora del error en UTC.",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Solicitud que el servidor no puede interpretar, como un JSON mal formado.",
+            "headers": {
+              "x-correlation-id": {
+                "$ref": "#/components/headers/CorrelationId"
+              },
+              "x-request-id": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "UNAUTHORIZED": {
+                    "summary": "La sesión no es válida o ha caducado.",
+                    "value": {
+                      "category": "AUTHORIZATION",
+                      "code": "UNAUTHORIZED",
+                      "message": "La sesión no es válida o ha caducado.",
+                      "timestamp": "2026-01-15T12:00:00.000Z"
+                    }
+                  }
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "description": "Categoría del error.",
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "description": "Código estable del catálogo público para identificar el error.",
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "Descripción genérica del error, sin detalles internos.",
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "description": "Fecha y hora del error en UTC.",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Credencial ausente, desconocida, revocada o vencida.",
+            "headers": {
+              "x-correlation-id": {
+                "$ref": "#/components/headers/CorrelationId"
+              },
+              "x-request-id": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "SCOPE_MISMATCH": {
+                    "summary": "El recurso no pertenece al ámbito autorizado.",
+                    "value": {
+                      "category": "AUTHORIZATION",
+                      "code": "SCOPE_MISMATCH",
+                      "message": "El recurso no pertenece al ámbito autorizado.",
+                      "timestamp": "2026-01-15T12:00:00.000Z"
+                    }
+                  }
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "description": "Categoría del error.",
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "description": "Código estable del catálogo público para identificar el error.",
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "Descripción genérica del error, sin detalles internos.",
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "description": "Fecha y hora del error en UTC.",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "La credencial es válida, pero no autoriza esta acción.",
+            "headers": {
+              "x-correlation-id": {
+                "$ref": "#/components/headers/CorrelationId"
+              },
+              "x-request-id": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "PAYLOAD_TOO_LARGE": {
+                    "summary": "Request body too large",
+                    "value": {
+                      "category": "VALIDATION",
+                      "code": "PAYLOAD_TOO_LARGE",
+                      "message": "Request body too large",
+                      "timestamp": "2026-01-15T12:00:00.000Z"
+                    }
+                  }
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "description": "Categoría del error.",
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "description": "Código estable del catálogo público para identificar el error.",
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "Descripción genérica del error, sin detalles internos.",
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "description": "Fecha y hora del error en UTC.",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "El cuerpo de la solicitud supera el límite de 1 MiB.",
+            "headers": {
+              "x-correlation-id": {
+                "$ref": "#/components/headers/CorrelationId"
+              },
+              "x-request-id": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
+          },
+          "415": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "UNSUPPORTED_MEDIA_TYPE": {
+                    "summary": "Unsupported media type",
+                    "value": {
+                      "category": "VALIDATION",
+                      "code": "UNSUPPORTED_MEDIA_TYPE",
+                      "message": "Unsupported media type",
+                      "timestamp": "2026-01-15T12:00:00.000Z"
+                    }
+                  }
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "description": "Categoría del error.",
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "description": "Código estable del catálogo público para identificar el error.",
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "Descripción genérica del error, sin detalles internos.",
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "description": "Fecha y hora del error en UTC.",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "El tipo de contenido del cuerpo no es compatible; envíalo como `application/json`.",
+            "headers": {
+              "x-correlation-id": {
+                "$ref": "#/components/headers/CorrelationId"
+              },
+              "x-request-id": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "VALIDATION_ERROR": {
+                    "summary": "La solicitud no cumple el contrato requerido.",
+                    "value": {
+                      "category": "VALIDATION",
+                      "code": "VALIDATION_ERROR",
+                      "message": "La solicitud no cumple el contrato requerido.",
+                      "timestamp": "2026-01-15T12:00:00.000Z"
+                    }
+                  }
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "description": "Categoría del error.",
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "description": "Código estable del catálogo público para identificar el error.",
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "Descripción genérica del error, sin detalles internos.",
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "description": "Fecha y hora del error en UTC.",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "La solicitud no cumple el contrato o una regla de negocio.",
+            "headers": {
+              "x-correlation-id": {
+                "$ref": "#/components/headers/CorrelationId"
+              },
+              "x-request-id": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "INTERNAL_ERROR": {
+                    "summary": "Internal server error",
+                    "value": {
+                      "category": "TECHNICAL",
+                      "code": "INTERNAL_ERROR",
+                      "message": "Internal server error",
+                      "timestamp": "2026-01-15T12:00:00.000Z"
+                    }
+                  }
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "description": "Categoría del error.",
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "description": "Código estable del catálogo público para identificar el error.",
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "Descripción genérica del error, sin detalles internos.",
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "description": "Fecha y hora del error en UTC.",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Error interno; la respuesta no contiene detalles.",
+            "headers": {
+              "x-correlation-id": {
+                "$ref": "#/components/headers/CorrelationId"
+              },
+              "x-request-id": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "workload": []
+          }
+        ],
+        "summary": "Recibir un lote de eventos de una sucursal y confirmar cada evento sólo después de guardarlo en el inbox de país",
+        "tags": [
+          "Sincronización"
         ]
       }
     },
@@ -160,11 +963,30 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LivenessResponseDto"
+                  "additionalProperties": false,
+                  "properties": {
+                    "status": {
+                      "const": "ok",
+                      "description": "El servicio puede responder solicitudes.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ],
+                  "type": "object"
                 }
               }
             },
-            "description": "El servicio responde."
+            "description": "El servicio responde.",
+            "headers": {
+              "x-correlation-id": {
+                "$ref": "#/components/headers/CorrelationId"
+              },
+              "x-request-id": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           }
         },
         "summary": "Verificar actividad del servicio",
@@ -183,21 +1005,88 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ReadinessResponseDto"
+                  "additionalProperties": false,
+                  "properties": {
+                    "status": {
+                      "const": "ready",
+                      "description": "El servicio terminó de iniciar y está disponible para recibir solicitudes.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ],
+                  "type": "object"
                 }
               }
             },
-            "description": "El servicio está disponible."
+            "description": "El servicio está disponible.",
+            "headers": {
+              "x-correlation-id": {
+                "$ref": "#/components/headers/CorrelationId"
+              },
+              "x-request-id": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           },
           "503": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiErrorDto"
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "description": "Categoría del error.",
+                      "enum": [
+                        "VALIDATION",
+                        "NOT_FOUND",
+                        "AUTHORIZATION",
+                        "CONFLICT",
+                        "SECURITY",
+                        "EXTERNAL",
+                        "TIMEOUT",
+                        "TECHNICAL"
+                      ],
+                      "type": "string"
+                    },
+                    "code": {
+                      "description": "Código estable del catálogo público para identificar el error.",
+                      "pattern": "^[A-Z][A-Z0-9_]{0,63}$",
+                      "type": "string"
+                    },
+                    "message": {
+                      "description": "Descripción genérica del error, sin detalles internos.",
+                      "maxLength": 200,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "timestamp": {
+                      "description": "Fecha y hora del error en UTC.",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "category",
+                    "timestamp"
+                  ],
+                  "type": "object"
                 }
               }
             },
-            "description": "El servicio aún no está disponible o se está cerrando."
+            "description": "El servicio aún no está disponible o se está cerrando.",
+            "headers": {
+              "x-correlation-id": {
+                "$ref": "#/components/headers/CorrelationId"
+              },
+              "x-request-id": {
+                "$ref": "#/components/headers/RequestId"
+              }
+            }
           }
         },
         "summary": "Verificar disponibilidad del servicio",
@@ -218,8 +1107,8 @@
       "name": "Plataforma"
     },
     {
-      "description": "Recepción acotada de fallos técnicos de los clientes, sin datos de negocio ni personales.",
-      "name": "Telemetría"
+      "description": "Recepción en el país de los eventos que entregan las sucursales, con deduplicación estricta y un resultado por evento.",
+      "name": "Sincronización"
     }
   ]
 }
