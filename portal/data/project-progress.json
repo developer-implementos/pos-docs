@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "4999b1a97df8331d16ca2bc3e91500820c53940a",
+    "revision": "690662a6e02c82fdeff9d0cf61a5bc7db013ee2d",
     "path": "delivery/progress.json",
-    "sha256": "04c1e70681d8260176cd52ab299fbdcd643ad0323dafdb1dc054a17cc1a736b8"
+    "sha256": "d76b6a752b49daf56070df9d67150b8eb3e3d61b090cc09c91d4532433088b9d"
   },
   "content": {
     "schemaVersion": 2,
@@ -17,6 +17,36 @@
       "sha256": "e91cff0a30c2162a36a05b0542eed7e5a25e0490ea898481a37969f2fb21e514"
     },
     "summary": "Quince entregables están técnicamente verificados: doce de F01 y los pagos combinados, el protocolo de dispositivos y la recuperación de cobros de F02. El cliente recupera ventas y registra revisiones durables sin duplicar efectos. Efectivo y transferencia manual están conectados; tarjeta y fiscalidad conservan sus pendientes de proveedor operativo. La aceptación humana y la habilitación productiva se registran por separado.",
+    "criteria": {
+      "met": 156,
+      "total": 594,
+      "phases": {
+        "F01": {
+          "met": 93,
+          "total": 110
+        },
+        "F02": {
+          "met": 49,
+          "total": 118
+        },
+        "F03": {
+          "met": 9,
+          "total": 97
+        },
+        "F04": {
+          "met": 3,
+          "total": 100
+        },
+        "F05": {
+          "met": 2,
+          "total": 97
+        },
+        "F06": {
+          "met": 0,
+          "total": 72
+        }
+      }
+    },
     "applications": [
       {
         "id": "pos-desktop",
@@ -218,6 +248,10 @@
     "workPackages": [
       {
         "id": "F01-01",
+        "criteria": {
+          "met": 9,
+          "total": 9
+        },
         "apps": [
           "pos-desktop",
           "branch-api"
@@ -255,6 +289,10 @@
       },
       {
         "id": "F01-02",
+        "criteria": {
+          "met": 7,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api"
@@ -288,6 +326,10 @@
       },
       {
         "id": "F01-03",
+        "criteria": {
+          "met": 8,
+          "total": 8
+        },
         "apps": [
           "branch-api"
         ],
@@ -316,6 +358,10 @@
       },
       {
         "id": "F01-04",
+        "criteria": {
+          "met": 10,
+          "total": 11
+        },
         "apps": [
           "pos-desktop",
           "pos-mobile",
@@ -378,6 +424,10 @@
       },
       {
         "id": "F01-05",
+        "criteria": {
+          "met": 0,
+          "total": 0
+        },
         "apps": [
           "pos-desktop",
           "pos-mobile",
@@ -464,6 +514,10 @@
       },
       {
         "id": "F01-06",
+        "criteria": {
+          "met": 8,
+          "total": 9
+        },
         "apps": [
           "branch-api",
           "country-api"
@@ -493,6 +547,10 @@
       },
       {
         "id": "F01-07",
+        "criteria": {
+          "met": 11,
+          "total": 11
+        },
         "apps": [
           "branch-api",
           "country-api",
@@ -527,6 +585,10 @@
       },
       {
         "id": "F01-08",
+        "criteria": {
+          "met": 9,
+          "total": 9
+        },
         "apps": [
           "pos-desktop",
           "branch-api"
@@ -560,6 +622,10 @@
       },
       {
         "id": "F01-09",
+        "criteria": {
+          "met": 8,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api"
@@ -601,6 +667,10 @@
       },
       {
         "id": "F01-10",
+        "criteria": {
+          "met": 8,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api"
@@ -626,6 +696,10 @@
       },
       {
         "id": "F01-11",
+        "criteria": {
+          "met": 0,
+          "total": 12
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -638,6 +712,10 @@
       },
       {
         "id": "F01-12",
+        "criteria": {
+          "met": 8,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -672,6 +750,10 @@
       },
       {
         "id": "F01-13",
+        "criteria": {
+          "met": 7,
+          "total": 9
+        },
         "apps": [
           "pos-desktop",
           "pos-mobile",
@@ -709,6 +791,10 @@
       },
       {
         "id": "F02-01",
+        "criteria": {
+          "met": 1,
+          "total": 11
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -721,6 +807,10 @@
       },
       {
         "id": "F02-02",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api"
@@ -732,6 +822,10 @@
       },
       {
         "id": "F02-03",
+        "criteria": {
+          "met": 4,
+          "total": 9
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -744,6 +838,10 @@
       },
       {
         "id": "F02-04",
+        "criteria": {
+          "met": 1,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -756,6 +854,10 @@
       },
       {
         "id": "F02-05",
+        "criteria": {
+          "met": 8,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api"
@@ -805,6 +907,10 @@
       },
       {
         "id": "F02-06",
+        "criteria": {
+          "met": 3,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api"
@@ -816,6 +922,10 @@
       },
       {
         "id": "F02-07",
+        "criteria": {
+          "met": 5,
+          "total": 9
+        },
         "apps": [
           "branch-api",
           "country-api",
@@ -829,6 +939,10 @@
       },
       {
         "id": "F02-08",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "branch-api",
           "country-api"
@@ -840,6 +954,10 @@
       },
       {
         "id": "F02-09",
+        "criteria": {
+          "met": 8,
+          "total": 8
+        },
         "apps": [
           "branch-api",
           "device-agent",
@@ -902,6 +1020,10 @@
       },
       {
         "id": "F02-10",
+        "criteria": {
+          "met": 2,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -914,6 +1036,10 @@
       },
       {
         "id": "F02-11",
+        "criteria": {
+          "met": 0,
+          "total": 9
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -926,6 +1052,10 @@
       },
       {
         "id": "F02-12",
+        "criteria": {
+          "met": 5,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api"
@@ -937,6 +1067,10 @@
       },
       {
         "id": "F02-13",
+        "criteria": {
+          "met": 8,
+          "total": 8
+        },
         "apps": [
           "branch-api",
           "pos-desktop"
@@ -974,6 +1108,10 @@
       },
       {
         "id": "F02-14",
+        "criteria": {
+          "met": 4,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -986,6 +1124,10 @@
       },
       {
         "id": "F03-01",
+        "criteria": {
+          "met": 5,
+          "total": 8
+        },
         "apps": [
           "branch-api",
           "branch-sync-worker",
@@ -998,6 +1140,10 @@
       },
       {
         "id": "F03-02",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "erp-worker",
           "country-api",
@@ -1011,6 +1157,10 @@
       },
       {
         "id": "F03-03",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "country-api",
           "erp-worker"
@@ -1022,6 +1172,10 @@
       },
       {
         "id": "F03-04",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "branch-sync-worker",
           "country-api",
@@ -1035,6 +1189,10 @@
       },
       {
         "id": "F03-05",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "country-api",
           "erp-worker"
@@ -1046,6 +1204,10 @@
       },
       {
         "id": "F03-06",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "branch-api",
           "branch-sync-worker",
@@ -1060,6 +1222,10 @@
       },
       {
         "id": "F03-07",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -1072,6 +1238,10 @@
       },
       {
         "id": "F03-08",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -1084,6 +1254,10 @@
       },
       {
         "id": "F03-09",
+        "criteria": {
+          "met": 0,
+          "total": 9
+        },
         "apps": [
           "erp-worker",
           "country-api"
@@ -1095,6 +1269,10 @@
       },
       {
         "id": "F03-10",
+        "criteria": {
+          "met": 1,
+          "total": 8
+        },
         "apps": [
           "branch-sync-worker",
           "branch-api"
@@ -1106,6 +1284,10 @@
       },
       {
         "id": "F03-11",
+        "criteria": {
+          "met": 3,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -1121,6 +1303,10 @@
       },
       {
         "id": "F03-12",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-sync-worker",
@@ -1134,6 +1320,10 @@
       },
       {
         "id": "F04-01",
+        "criteria": {
+          "met": 0,
+          "total": 7
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -1147,6 +1337,10 @@
       },
       {
         "id": "F04-02",
+        "criteria": {
+          "met": 0,
+          "total": 10
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -1159,6 +1353,10 @@
       },
       {
         "id": "F04-03",
+        "criteria": {
+          "met": 1,
+          "total": 11
+        },
         "apps": [
           "pos-desktop",
           "branch-api"
@@ -1170,6 +1368,10 @@
       },
       {
         "id": "F04-04",
+        "criteria": {
+          "met": 0,
+          "total": 7
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -1183,6 +1385,10 @@
       },
       {
         "id": "F04-05",
+        "criteria": {
+          "met": 2,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -1195,6 +1401,10 @@
       },
       {
         "id": "F04-06",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -1207,6 +1417,10 @@
       },
       {
         "id": "F04-07",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -1220,6 +1434,10 @@
       },
       {
         "id": "F04-08",
+        "criteria": {
+          "met": 0,
+          "total": 10
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -1233,6 +1451,10 @@
       },
       {
         "id": "F04-09",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -1246,6 +1468,10 @@
       },
       {
         "id": "F04-10",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -1259,6 +1485,10 @@
       },
       {
         "id": "F04-11",
+        "criteria": {
+          "met": 0,
+          "total": 15
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -1272,6 +1502,10 @@
       },
       {
         "id": "F05-01",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -1287,6 +1521,10 @@
       },
       {
         "id": "F05-02",
+        "criteria": {
+          "met": 1,
+          "total": 9
+        },
         "apps": [
           "branch-api",
           "branch-sync-worker",
@@ -1301,6 +1539,10 @@
       },
       {
         "id": "F05-03",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -1316,6 +1558,10 @@
       },
       {
         "id": "F05-04",
+        "criteria": {
+          "met": 0,
+          "total": 7
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -1331,6 +1577,10 @@
       },
       {
         "id": "F05-05",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -1346,6 +1596,10 @@
       },
       {
         "id": "F05-06",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -1361,6 +1615,10 @@
       },
       {
         "id": "F05-07",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -1376,6 +1634,10 @@
       },
       {
         "id": "F05-08",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "pos-mobile",
@@ -1392,6 +1654,10 @@
       },
       {
         "id": "F05-09",
+        "criteria": {
+          "met": 1,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "pos-mobile",
@@ -1408,6 +1674,10 @@
       },
       {
         "id": "F05-10",
+        "criteria": {
+          "met": 0,
+          "total": 9
+        },
         "apps": [
           "branch-api",
           "branch-sync-worker",
@@ -1422,6 +1692,10 @@
       },
       {
         "id": "F05-11",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "pos-mobile",
@@ -1438,6 +1712,10 @@
       },
       {
         "id": "F05-12",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -1450,6 +1728,10 @@
       },
       {
         "id": "F06-01",
+        "criteria": {
+          "met": 0,
+          "total": 7
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -1464,6 +1746,10 @@
       },
       {
         "id": "F06-02",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "pos-mobile",
           "branch-api",
@@ -1476,6 +1762,10 @@
       },
       {
         "id": "F06-03",
+        "criteria": {
+          "met": 0,
+          "total": 7
+        },
         "apps": [
           "pos-desktop",
           "pos-mobile",
@@ -1492,6 +1782,10 @@
       },
       {
         "id": "F06-04",
+        "criteria": {
+          "met": 0,
+          "total": 7
+        },
         "apps": [
           "country-api",
           "erp-worker",
@@ -1504,6 +1798,10 @@
       },
       {
         "id": "F06-05",
+        "criteria": {
+          "met": 0,
+          "total": 11
+        },
         "apps": [
           "pos-desktop",
           "pos-mobile",
@@ -1517,6 +1815,10 @@
       },
       {
         "id": "F06-06",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "branch-api",
@@ -1532,6 +1834,10 @@
       },
       {
         "id": "F06-07",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "branch-api",
           "branch-sync-worker",
@@ -1545,6 +1851,10 @@
       },
       {
         "id": "F06-08",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "pos-desktop",
           "pos-mobile",
@@ -1561,6 +1871,10 @@
       },
       {
         "id": "F06-09",
+        "criteria": {
+          "met": 0,
+          "total": 8
+        },
         "apps": [
           "branch-api",
           "branch-sync-worker",
