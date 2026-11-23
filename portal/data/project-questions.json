@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "04883330804cc7e84e3b7169c069c690ffa28479",
+    "revision": "4999b1a97df8331d16ca2bc3e91500820c53940a",
     "path": "delivery/business-questions.json",
-    "sha256": "132be25929223b37ae29496e6db6cc364897fa90912399cca3ff35a5ff306296"
+    "sha256": "903140bd0e9e3b14750f870b09100e684fd55d412405281f903fdb9dc7c56deb"
   },
   "integration": {
     "reference": "main",
@@ -12,7 +12,7 @@
   },
   "content": {
     "schemaVersion": 4,
-    "reviewedOn": "2026-11-20",
+    "reviewedOn": "2026-11-23",
     "audit": "delivery/reviews/pos-parity-2026-11-10",
     "roles": [
       {
@@ -7370,6 +7370,78 @@
           "proposedOn": "2026-11-12"
         },
         "decision": null
+      },
+      {
+        "id": "Q-126",
+        "topic": "Cierre",
+        "question": "¿Una transferencia o un voucher manual de tarjeta declarado en el turno y todavía sin confirmar impide cerrar el turno, o el cierre se registra y esa transacción queda como diferencia pendiente de su medio de pago?",
+        "kind": "rule",
+        "state": "open",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-08"
+        ],
+        "decider": "tesoreria",
+        "consulted": [
+          "finanzas",
+          "operaciones"
+        ],
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-03"
+        ],
+        "reviewedOn": "2026-11-23",
+        "recommendation": null,
+        "decision": null,
+        "priority": "P1",
+        "currentAnswer": "POS Platform, de forma provisional: impide cerrar. closeShiftV1 rechaza el cierre con SHIFT_PAYMENTS_UNRESOLVED mientras el turno tenga un plan de cobro abierto o una asignación pending, uncertain o reconciliation-required, y una transferencia o un voucher declarado que espera su confirmación queda pending (uncertain si su política es block-sale), de modo que su venta no finaliza y el turno no cierra (TASK-496). La ficha propone otra regla, pendiente de decisión: LC-059 pide que cada medio con confirmación detallada confirme o marque faltante cada transacción y que las no confirmadas queden como diferencia de ese medio. Q-14 decide qué impide cerrar en general y Q-104 qué medios declara y coteja el cajero; esta pregunta decide sólo el tratamiento al cierre de un medio declarado sin confirmar.",
+        "sources": [
+          "libs/backend/cash/src/application/shift-closing.service.ts#L255-L257",
+          "libs/backend/payments/src/infrastructure/shift-activity.ts#L23-L32",
+          "libs/backend/payments/src/infrastructure/shift-activity.ts#L88-L91",
+          "libs/backend/payments/src/infrastructure/payment-plan.store.ts#L75",
+          "libs/backend/payments/src/infrastructure/payment-plan.store.ts#L161",
+          "delivery/specs/F04-03.md"
+        ]
+      },
+      {
+        "id": "Q-127",
+        "topic": "Cierre",
+        "question": "Cuando el primer conteo ciego pide motivo y el turno sigue abierto, ¿su diferencia, calculada contra el esperado de ese momento, sigue rigiendo el motivo y la aprobación aunque después se registren más ventas o movimientos de efectivo, o se recalcula contra el esperado vigente al cierre?",
+        "kind": "rule",
+        "state": "open",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [
+          "P-08"
+        ],
+        "decider": "tesoreria",
+        "consulted": [
+          "finanzas",
+          "operaciones"
+        ],
+        "owner": null,
+        "followUp": "FOLLOWUP-017",
+        "workPackages": [
+          "F04-03"
+        ],
+        "reviewedOn": "2026-11-23",
+        "recommendation": null,
+        "decision": null,
+        "priority": "P2",
+        "currentAnswer": "POS Platform, de forma provisional: sigue rigiendo. Cada declaración se guarda como conteo inmutable con el esperado de ese momento; si difiere y no hay motivo, closeShiftV1 responde reason-required y deja el turno abierto, y las ventas pueden continuar. Al cerrar, el motivo se exige si difiere el conteo final o el primero, y la aprobación sobre la tolerancia se exige si cualquiera de los dos la supera, aunque el esperado del primer conteo ya no sea el vigente (TASK-496); el supervisor decide sobre ese cierre sin modificar los conteos (TASK-556). Q-104 decide la forma de la declaración y del recuento, y Q-14 la tolerancia y la aprobación; esta pregunta decide sólo qué esperado rige un primer conteo cuando el turno siguió operando.",
+        "sources": [
+          "libs/backend/cash/src/application/shift-closing.service.ts#L258-L280",
+          "delivery/specs/F04-03.md"
+        ]
       }
     ],
     "merged": [
