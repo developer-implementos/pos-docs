@@ -11,6 +11,45 @@ Los cambios de herramientas, pruebas y CI no aparecen aquí; quedan en el [regis
 
 Este archivo lo escribe [release-please](https://github.com/googleapis/release-please) desde los títulos de los PR, y cada versión queda como [release en GitHub](https://github.com/developer-implementos/pos-docs/releases). Para recibir un aviso por versión, usa *Watch → Custom → Releases* en el repositorio. No se edita a mano: cómo se escribe una buena entrada está en la [guía de versiones](tools/release/README.md).
 
+## [0.10.20](https://github.com/developer-implementos/pos-docs/compare/v0.10.19...v0.10.20) (2026-11-23)
+
+
+### Contenido actualizado
+
+* **follow-up:** FOLLOWUP-025 nuevo · Decisión: Decidir cómo representar en el POS los precios y clientes del legacy que el contrato no admite ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **follow-up:** FOLLOWUP-026 nuevo · Decisión: Confirmar con seguridad la política de sesión y de bloqueo por intentos adoptada como provisional en QA ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **follow-up:** FOLLOWUP-027 nuevo · Acceso: Crear el buzón propio del POS con su credencial y abrir la salida SMTP desde los servidores ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **follow-up:** FOLLOWUP-028 nuevo · Decisión: Decidir el remitente y la cuenta de los correos del POS ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **follow-up:** FOLLOWUP-029 nuevo · Decisión: Confirmar con Tesorería la regla del voucher manual de tarjeta adoptada como provisional en QA ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **follow-up:** FOLLOWUP-030 nuevo · Decisión: Confirmar con Tesorería y Operaciones las reglas del cierre de turno adoptadas como provisionales en QA ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **follow-up:** FOLLOWUP-031 nuevo · Decisión: Confirmar con Operaciones los reportes del turno adoptados como provisionales en QA ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **follow-up:** FOLLOWUP-032 nuevo · Decisión: Confirmar qué rol recibe los permisos del voucher manual, adoptados como provisionales en QA para el administrador protegido ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **follow-up:** FOLLOWUP-033 nuevo · Decisión: Fijar con el negocio las ventanas reales de soporte y deprecación de las versiones de contrato, adoptadas como provisionales sin plazo fijo ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **follow-up:** FOLLOWUP-034 nuevo · Decisión: Rehabilitar los adjuntos de transferencias y vouchers sólo cuando exista un escáner de seguridad, deshabilitados por política de forma provisional ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **follow-up:** FOLLOWUP-035 nuevo · Decisión: Definir las reglas de negocio de la reimpresión que Q-17 no fija ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **follow-up:** FOLLOWUP-036 nuevo · Decisión: Decidir si una cuenta receptora puede bloquear la venta mientras no existe un verificador de transferencias autorizado ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **progress:** F01-09 actualizado (resumen): Verificados borradores y presupuestos persistidos, captura por código/unidad, cantidad repetida, pausa y recuperación explícita entre puestos con CAS ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **progress:** F02-01 actualizado (resumen): Intenciones, intentos y destinos durables, reserva de venta y recuperación implementados y probados en PostgreSQL ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **progress:** F02-04 actualizado (resumen): Seguimiento conectado muestra por operación los estados independientes de venta, pago, documento fiscal e impresión con su evidencia cronológica (TASK-11… ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **progress:** F02-05 actualizado (resumen): Verificados el plan de cobro congelado, las asignaciones exactas, el bloqueo del saldo incierto, los reintentos y el vuelto sólo de efectivo ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **progress:** F02-06 actualizado (resumen): Implementadas transferencias manuales con cuenta autorizada, referencia única entre ventas de la sucursal, aprobación independiente, bandeja por permisos… ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **progress:** F02-07 actualizado (resumen): Perfiles de pago versionados, destino fiscal congelado y asignación de instalación/época implementados ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **progress:** F02-14 pasa de Pendiente a En desarrollo ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **progress:** F03-06 pasa de Pendiente a En desarrollo ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **progress:** F03-07 actualizado (resumen): Pendiente de implementación y verificación técnica: El operador usa identidad corporativa homologada y la sucursal aplica autorizaciones de continuidad f… ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **progress:** F03-09 pasa de Pendiente a En desarrollo ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **progress:** F03-10 pasa de Pendiente a En desarrollo ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **progress:** F03-11 pasa de Pendiente a En desarrollo ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **progress:** F04-05 pasa de Pendiente a En desarrollo ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **progress:** F04-10 pasa de Pendiente a En desarrollo ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **progress:** F05-02 pasa de Pendiente a En desarrollo ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **progress:** F05-06 actualizado (resumen): Pendiente de implementación y verificación técnica: Se detectan fallos y degradación del recorrido mediante métricas y alertas accionables con responsabl… ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **progress:** F05-07 pasa de Pendiente a En desarrollo ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **progress:** F05-11 pasa de Pendiente a En desarrollo ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **progress:** F05-12 pasa de Pendiente a En desarrollo ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **progress:** F06-03 actualizado (resumen): Pendiente de implementación y verificación técnica: Configuraciones aceptadas se habilitan gradualmente con versiones compatibles y criterios explícitos… ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+* **project:** [TASK-361] importar el corte 0488333 de avance, seguimientos y preguntas ([eda2ddd](https://github.com/developer-implementos/pos-docs/commit/eda2ddd67c691c7f81edf1f58bd08a501f4cad72))
+
 ## [0.10.19](https://github.com/developer-implementos/pos-docs/compare/v0.10.18...v0.10.19) (2026-11-20)
 
 
