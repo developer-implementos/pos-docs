@@ -11,6 +11,20 @@ Los cambios de herramientas, pruebas y CI no aparecen aquí; quedan en el [regis
 
 Este archivo lo escribe [release-please](https://github.com/googleapis/release-please) desde los títulos de los PR, y cada versión queda como [release en GitHub](https://github.com/developer-implementos/pos-docs/releases). Para recibir un aviso por versión, usa *Watch → Custom → Releases* en el repositorio. No se edita a mano: cómo se escribe una buena entrada está en la [guía de versiones](tools/release/README.md).
 
+## [0.10.21](https://github.com/developer-implementos/pos-docs/compare/v0.10.20...v0.10.21) (2026-11-23)
+
+
+### Contenido actualizado
+
+* **api:** [TASK-635] describir la vista previa por PR y la publicación en Apidog desde el artefacto de main ([38bd3c8](https://github.com/developer-implementos/pos-docs/commit/38bd3c8645688326ad602b884af36e88623647b0))
+* **api:** [TASK-679] importar los contratos del producto en d94dfbe con la documentación OpenAPI de pagos, reporting, fiscal y pricing ([38bd3c8](https://github.com/developer-implementos/pos-docs/commit/38bd3c8645688326ad602b884af36e88623647b0))
+* **architecture:** [TASK-663] registrar en el ADR-30 el renombre auditado de una caja ([38bd3c8](https://github.com/developer-implementos/pos-docs/commit/38bd3c8645688326ad602b884af36e88623647b0))
+* **devices:** [TASK-581] documentar la reimpresión autorizada con permiso propio y motivo ([38bd3c8](https://github.com/developer-implementos/pos-docs/commit/38bd3c8645688326ad602b884af36e88623647b0))
+* **devices:** [TASK-655] documentar la lectura acotada de errores y el acuse aplazado del host ([38bd3c8](https://github.com/developer-implementos/pos-docs/commit/38bd3c8645688326ad602b884af36e88623647b0))
+* **payments:** [TASK-658] documentar el rechazo de block-sale sin verificador autorizado y FOLLOWUP-036 ([38bd3c8](https://github.com/developer-implementos/pos-docs/commit/38bd3c8645688326ad602b884af36e88623647b0))
+* **sync:** [TASK-636] documentar la recepción del país con deduplicación estricta y lotes concurrentes ([38bd3c8](https://github.com/developer-implementos/pos-docs/commit/38bd3c8645688326ad602b884af36e88623647b0))
+* **testing:** [TASK-676] registrar la medición de carga de la exportación de ventas del turno ([38bd3c8](https://github.com/developer-implementos/pos-docs/commit/38bd3c8645688326ad602b884af36e88623647b0))
+
 ## [0.10.20](https://github.com/developer-implementos/pos-docs/compare/v0.10.19...v0.10.20) (2026-11-23)
 
 
