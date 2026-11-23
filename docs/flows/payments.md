@@ -6,6 +6,8 @@ El recorrido comienza en una cesta y cotización identificadas. La [guía de cob
 
 Un dato capturado por el cajero no confirma una transferencia. Un timeout tampoco demuestra que el proveedor rechazó un cobro. El intento conserva su identidad y destino; la consulta y la compensación tienen autorizaciones y efectos distintos.
 
+La [política de la cuenta receptora](/guide/implementation/phase-2/#consulta-al-verificador-y-bloqueo-de-la-venta) decide si una transferencia sin resolver deja la venta pendiente o la bloquea. Hoy la sucursal no compone un verificador autorizado, así que el aprovisionamiento rechaza el bloqueo (`verifier-not-authorized`) hasta que Tesorería decida [FOLLOWUP-036](/project/attention/#followup-036).
+
 El [ciclo del intento de cobro](/explore/state-payment/) muestra las transiciones implementadas en `98f8987` y sus predicados: una incertidumbre conduce a consulta o conciliación, sin habilitar otro despacho del mismo cargo. Su alcance es el intento externo; el plan de pagos y el efectivo tienen contratos propios.
 
 [Explorar un pago incierto](/explore/uncertain-payment/) muestra una extensión **propuesta** por SDK local, sujeta a homologación. La [admisión de proveedores](/guide/implementation/phase-2/#admisión-de-proveedores) describe el control local disponible y sus límites, y la [lista de perfiles](/guide/implementation/phase-2/#perfiles-de-pago-y-su-ejecutabilidad) usa el mismo diagnóstico. No hay un adaptador bancario operativo acreditado por este recorrido.

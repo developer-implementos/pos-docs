@@ -213,6 +213,62 @@
         {
           "checksum": "0449953ebe8d7f768c0da845c54e3df8cb8b19c16e9358287481d27ee27b25d0",
           "id": "413_customer_projection_publication"
+        },
+        {
+          "checksum": "9a9b04f8129e6c7a577cdee88b97f3da78ac72b2fb6d1daa58cf3eda8fcb4b58",
+          "id": "450_email_outbox"
+        },
+        {
+          "checksum": "6c58b2a38de706c77bfa19716d704d43c343e8bdfcb348d10c584a2daad0b534",
+          "id": "450_password_recovery"
+        },
+        {
+          "checksum": "58b51161b513fc7cca8bec5b12b02015e4cbba19304cfc47cec40220ecb08289",
+          "id": "459_authorization_audit_read"
+        },
+        {
+          "checksum": "ab49563118d8d2f684120cd989cb44733074187e83d66f63f4ab336634a1d581",
+          "id": "462_access_policy"
+        },
+        {
+          "checksum": "7462598b0758ec228f8fa8b9d0db74e60c34d9baacb018f297ff671fb885f809",
+          "id": "462_session_idle_renewal"
+        },
+        {
+          "checksum": "b272c640742757365b7f15f4ef2f6fa0c51e067d0d871081cdd9950af99f7f7c",
+          "id": "464_session_reauthentication"
+        },
+        {
+          "checksum": "553fb8e3a7d040689617ae375d0cffc3f6a8bad54b5c811e3f1ca10ededc00a5",
+          "id": "465_sign_in_lockout_window"
+        },
+        {
+          "checksum": "94d16986b8197b1c8e0035171fa9119c0c79f781502900bcd78b6dd9eff64573",
+          "id": "466_branch_display_name"
+        },
+        {
+          "checksum": "f1313bb6ede4fdbe330bd8139c4cb916ab2e5b46f673a1b8e118ab635c0ce387",
+          "id": "563_device_delivery_hold"
+        },
+        {
+          "checksum": "d732089a6ef94f8470b3e437b28b9ed926bf7f4e1d76ff2d274e414e02a989a9",
+          "id": "568_transfer_verification_check"
+        },
+        {
+          "checksum": "f943faccd3f4055980b8309a1a7ecaa9898da5599302f59116c4530088224395",
+          "id": "579_terminal_maintenance_result"
+        },
+        {
+          "checksum": "e7a7799a34f6b81f2d4e0e5e80947249b1b66ccadeabe711f0db8dc5c93920ca",
+          "id": "581_device_print_request"
+        },
+        {
+          "checksum": "b0d2844ecd88984aeb0970b706c643d54afd433e929d7eedf2cc64a2235f0d7d",
+          "id": "581_device_reprint_access"
+        },
+        {
+          "checksum": "037ad85c58953a581375d577967902b8945a4d4e2fb321a89cb4980cabe5e7da",
+          "id": "663_register_display_name_line"
         }
       ],
       "schemas": [
@@ -235,6 +291,264 @@
               "comment": null,
               "default": null,
               "documentation": {
+                "description": "Identificador de la revisión, elegido por el documento que la publica.",
+                "example": "74983dbd-7367-4f07-8282-687ee50db713",
+                "usage": "Hace idempotente la publicación: repetir el documento no crea otra revisión y reutilizarlo con otro contenido es un conflicto. La revisión 1 tiene un identificador fijo, igual en todas las bases."
+              },
+              "name": "id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Secuencia de publicación asignada por la base de datos.",
+                "example": "1",
+                "usage": "Es la versión de la política que informa el servidor y desempata dos revisiones con la misma vigencia; no es una fecha."
+              },
+              "name": "revision_number",
+              "nullable": false,
+              "type": "bigint"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Inicio de vigencia de la revisión.",
+                "example": "2026-11-20T00:00:00.000Z",
+                "usage": "Rige la revisión más reciente cuyo inicio ya pasó según el reloj de la base. La publicación exige que empiece después de todas las anteriores, así que también admite programarla."
+              },
+              "name": "effective_from",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Rol que decidió los valores, nunca una persona.",
+                "example": "Responsable del producto",
+                "usage": "Registra la procedencia de la decisión junto con su fuente."
+              },
+              "name": "decided_by",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Fuente de la decisión: la pregunta, el acta o la norma que la sustenta.",
+                "example": "Q-58, valor provisional de QA del 20-11-2026, pendiente de seguridad",
+                "usage": "Permite rastrear por qué rige cada valor, por ejemplo hasta que seguridad decida Q-58."
+              },
+              "name": "source",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Valores de la política, en segundos o intentos.",
+                "example": {
+                  "expiryWarningSeconds": 60,
+                  "idleTimeoutSeconds": 900,
+                  "lockoutDurationSeconds": 1800,
+                  "lockoutThreshold": 5,
+                  "lockoutWindowSeconds": 900,
+                  "maxSessionSeconds": 28800,
+                  "reauthenticationWindowSeconds": 300
+                },
+                "usage": "El servidor exige un objeto con las siete claves, enteros positivos, el aviso antes del vencimiento por inactividad y este dentro del tope de 8 h; si la revisión vigente no cumple, no emite sesiones. La publicación, además, los limita a los rangos del ADR-30."
+              },
+              "name": "values",
+              "nullable": false,
+              "type": "jsonb"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Instante en que la revisión se escribió en la base.",
+                "example": "2026-11-20T15:30:00.000Z",
+                "usage": "Distingue cuándo se publicó de cuándo empieza a regir."
+              },
+              "name": "published_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": "CURRENT_USER",
+              "documentation": {
+                "description": "Rol de base de datos que escribió la revisión.",
+                "example": "pos_branch_owner",
+                "usage": "Identifica la cuenta propietaria que la publicó, por la migración o por el comando propietario; el rol de ejecución no puede publicar."
+              },
+              "name": "published_by",
+              "nullable": false,
+              "type": "text"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "decided_by"
+              ],
+              "definition": "CHECK (length(decided_by) >= 1 AND length(decided_by) <= 120)",
+              "name": "access_policy_revision_decided_by_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "decided_by"
+              ],
+              "definition": "NOT NULL decided_by",
+              "name": "access_policy_revision_decided_by_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "effective_from"
+              ],
+              "definition": "NOT NULL effective_from",
+              "name": "access_policy_revision_effective_from_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "NOT NULL id",
+              "name": "access_policy_revision_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "PRIMARY KEY (id)",
+              "name": "access_policy_revision_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "published_at"
+              ],
+              "definition": "NOT NULL published_at",
+              "name": "access_policy_revision_published_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "published_by"
+              ],
+              "definition": "CHECK (length(published_by) >= 1 AND length(published_by) <= 63)",
+              "name": "access_policy_revision_published_by_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "published_by"
+              ],
+              "definition": "NOT NULL published_by",
+              "name": "access_policy_revision_published_by_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "revision_number"
+              ],
+              "definition": "UNIQUE (revision_number)",
+              "name": "access_policy_revision_revision_number_key",
+              "type": "u"
+            },
+            {
+              "columns": [
+                "revision_number"
+              ],
+              "definition": "NOT NULL revision_number",
+              "name": "access_policy_revision_revision_number_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "source"
+              ],
+              "definition": "CHECK (length(source) >= 1 AND length(source) <= 500)",
+              "name": "access_policy_revision_source_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "source"
+              ],
+              "definition": "NOT NULL source",
+              "name": "access_policy_revision_source_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "values"
+              ],
+              "definition": "CHECK (jsonb_typeof(\"values\") = 'object'::text)",
+              "name": "access_policy_revision_values_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "values"
+              ],
+              "definition": "NOT NULL \"values\"",
+              "name": "access_policy_revision_values_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "administration",
+          "documentation": {
+            "description": "Revisión publicada e inmutable de la política de acceso de la base de sucursal: plazos de la sesión, bloqueo por intentos y ventana de reautenticación (ADR-30).",
+            "sources": [
+              {
+                "path": "libs/backend/administration/src/infrastructure/access-policy-migration.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/access-policy.store.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/access-policy-publication.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/domain/access-policy.ts"
+              }
+            ],
+            "usage": "Rige la revisión más reciente cuya vigencia ya empezó; el login fija con ella el tope de cada sesión nueva y no cambia las abiertas. La migración 462 publica la revisión 1 con los valores provisionales de QA de Q-58, y el dueño del servidor publica las siguientes con database.js publish-access-policy, que valida los rangos del ADR-30 y es idempotente. El rol de ejecución solo la lee y nadie la modifica ni la borra."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE INDEX access_policy_revision_effective ON administration.access_policy_revision USING btree (effective_from DESC, revision_number DESC)",
+              "name": "access_policy_revision_effective"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX access_policy_revision_pkey ON administration.access_policy_revision USING btree (id)",
+              "name": "access_policy_revision_pkey"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX access_policy_revision_revision_number_key ON administration.access_policy_revision USING btree (revision_number)",
+              "name": "access_policy_revision_revision_number_key"
+            }
+          ],
+          "name": "access_policy_revision",
+          "schema": "administration"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
                 "description": "Identificador de la decisión de seguridad.",
                 "example": "10000000-0000-4000-8000-000000000009",
                 "usage": "Distingue cada evaluación auditada, incluso si el actor repite la misma acción."
@@ -249,7 +563,7 @@
               "documentation": {
                 "description": "Cuenta de operador identificada al evaluar la solicitud.",
                 "example": "10000000-0000-4000-8000-000000000006",
-                "usage": "Relaciona la decisión con operator_account; puede quedar vacío cuando todavía no se conoce una cuenta válida, y lo está en la recuperación de emergencia (administrator.recover), que ejecuta la credencial propietaria fuera de banda. En el canje de un código de activación es quien lo generó."
+                "usage": "Relaciona la decisión con operator_account; puede quedar vacío cuando todavía no se conoce una cuenta válida, y lo está en la recuperación de emergencia (administrator.recover), que ejecuta la credencial propietaria fuera de banda. En el canje de un código de activación es quien lo generó. La consulta muestra su nombre visible, nunca su correo."
               },
               "name": "actor_id",
               "nullable": true,
@@ -261,7 +575,7 @@
               "documentation": {
                 "description": "Instalación del cliente asociada a la solicitud evaluada.",
                 "example": "10000000-0000-4000-8000-000000000005",
-                "usage": "Permite ubicar el cliente que pidió acceso; se omite si la identidad de instalación no está disponible."
+                "usage": "Permite ubicar el cliente que pidió acceso; se omite si la identidad de instalación no está disponible. En un ingreso es la instalación que el cliente declaró, que puede no existir: la consulta sólo muestra la caja y el canal de una instalación de la sucursal."
               },
               "name": "installation_id",
               "nullable": true,
@@ -273,7 +587,7 @@
               "documentation": {
                 "description": "Acción de seguridad cuya autorización se evaluó.",
                 "example": "catalog.read",
-                "usage": "Distingue el permiso o evento de acceso que produjo la decisión, según el servicio que escribe la auditoría."
+                "usage": "Distingue el permiso o evento de acceso que produjo la decisión, según el servicio que escribe la auditoría. session.verify se escribe en cada solicitud autenticada; la consulta la omite por omisión y la muestra al filtrarla."
               },
               "name": "action",
               "nullable": false,
@@ -285,7 +599,7 @@
               "documentation": {
                 "description": "Referencia del recurso al que se intentó acceder.",
                 "example": "10000000-0000-4000-8000-000000000003",
-                "usage": "Sitúa la decisión en una caja, instalación u otro recurso concreto; no contiene el resultado de la operación. Al generar un código de activación es el id del código, y al canjearlo, la credencial del equipo que lo canjeó."
+                "usage": "Sitúa la decisión en una caja, instalación u otro recurso concreto; no contiene el resultado de la operación. Al generar un código de activación es el id del código, y al canjearlo, la credencial del equipo que lo canjeó. En `sale.read` permitido es el turno que la persona exportó a CSV (`exportShiftSalesCsvV1`, TASK-545), registrado antes de la primera fila: la lista y el comprobante sólo auditan denegaciones, así que un `sale.read` permitido identifica una exportación; denegado durante una exportación, es el turno cuya exportación se cortó por sesión revocada o vencida o permiso retirado. La consulta lo devuelve sólo si es un identificador (UUID, el rol en administration.roles.manage o un canal) con el nombre de la persona, asignación, rol o caja que identifica; otro texto, como la referencia de un terminal escrita por el operador, no sale de la tabla."
               },
               "name": "resource_id",
               "nullable": false,
@@ -297,7 +611,7 @@
               "documentation": {
                 "description": "Versión de la política de acceso aplicada a la evaluación.",
                 "example": "policy-example-1",
-                "usage": "Conserva la política usada en ese momento, aunque posteriormente cambie la asignación o el rol."
+                "usage": "Conserva la política usada en ese momento, aunque posteriormente cambie la asignación o el rol. La consulta de TASK-459 no lo devuelve."
               },
               "name": "policy_version",
               "nullable": false,
@@ -321,7 +635,7 @@
               "documentation": {
                 "description": "Instante de registro de la decisión de seguridad.",
                 "example": "2026-01-15T10:00:00.000Z",
-                "usage": "Ordena la auditoría con el reloj de la base de datos y permite correlacionarla con solicitudes."
+                "usage": "Ordena la auditoría con el reloj de la base de datos y permite correlacionarla con solicitudes. La consulta pagina por este instante con microsegundos y por id, en orden descendente."
               },
               "name": "occurred_at",
               "nullable": false,
@@ -456,16 +770,25 @@
           ],
           "context": "administration",
           "documentation": {
-            "description": "Decisiones de autorización registradas por el servicio local de identidad.",
+            "description": "Decisiones de autorización y eventos de seguridad de la sucursal, de solo agregar durante su retención de 90 días.",
             "sources": [
               {
                 "path": "libs/backend/administration/src/infrastructure/administration-migrations.ts"
               },
               {
+                "path": "libs/backend/administration/src/infrastructure/installation-credential-migration.ts",
+                "symbol": "installationCredentialMigration"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/authorization-audit-migration.ts",
+                "symbol": "authorizationAuditReadMigration"
+              },
+              {
                 "path": "libs/backend/administration/src/infrastructure/identity.store.ts"
               },
               {
-                "path": "libs/backend/administration/src/application/transaction-authorization.ts"
+                "path": "libs/backend/administration/contracts/src/index.ts",
+                "symbol": "AuthorizationAuditPort"
               },
               {
                 "path": "libs/backend/administration/src/application/local-identity.service.ts"
@@ -478,11 +801,33 @@
               },
               {
                 "path": "libs/backend/administration/src/infrastructure/administrator-recovery.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/operational-provisioning.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/checkout-activation.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/application/authorization-audit.service.ts",
+                "symbol": "AuthorizationAuditService"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/authorization-audit.reader.ts",
+                "symbol": "SqlAuthorizationAuditReader"
               }
             ],
-            "usage": "Permite reconstruir quién solicitó una acción, sobre qué recurso y con qué política. Una decisión denegada también se registra; una fila no demuestra que la operación de negocio se haya completado."
+            "usage": "Permite reconstruir quién solicitó una acción, sobre qué recurso y con qué política. Una decisión denegada también se registra; una fila no demuestra que la operación de negocio se haya completado. Los contextos de negocio escriben mediante AuthorizationAuditPort, que implementa el almacén de identidad; la provisión, la activación de cajas y la recuperación de emergencia escriben con la credencial propietaria. Desde TASK-459 un administrador con administration.audit.read la consulta, sin modificarla, en «Auditoría de accesos»: la lectura excluye por omisión las verificaciones de sesión permitidas, nunca devuelve policy_version ni una referencia de texto libre, y queda auditada como administration.audit.read."
           },
           "indexes": [
+            {
+              "definition": "CREATE INDEX authorization_audit_action ON administration.authorization_audit USING btree (action, occurred_at, id)",
+              "name": "authorization_audit_action"
+            },
+            {
+              "definition": "CREATE INDEX authorization_audit_actor ON administration.authorization_audit USING btree (actor_id, occurred_at, id) WHERE ((actor_id IS NOT NULL) AND ((action <> 'session.verify'::text) OR (decision <> 'allowed'::text)))",
+              "name": "authorization_audit_actor"
+            },
             {
               "definition": "CREATE UNIQUE INDEX authorization_audit_pkey ON administration.authorization_audit USING btree (id)",
               "name": "authorization_audit_pkey"
@@ -490,6 +835,10 @@
             {
               "definition": "CREATE INDEX authorization_audit_retention ON administration.authorization_audit USING btree (occurred_at)",
               "name": "authorization_audit_retention"
+            },
+            {
+              "definition": "CREATE INDEX authorization_audit_timeline ON administration.authorization_audit USING btree (occurred_at, id) WHERE ((action <> 'session.verify'::text) OR (decision <> 'allowed'::text))",
+              "name": "authorization_audit_timeline"
             }
           ],
           "name": "authorization_audit",
@@ -532,6 +881,18 @@
               "name": "country_id",
               "nullable": false,
               "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Nombre visible opcional de la sucursal, una sola línea sin espacios en los extremos.",
+                "example": "Sucursal de ejemplo",
+                "usage": "Lo fijan el aprovisionamiento (branchName) o el comando propietario name-branch, que también puede vaciarlo; getOwnAccountV1 lo entrega al encabezado, a «Mi cuenta» y a «Acerca de este equipo». Vacío si nadie lo fijó: el cliente no inventa un nombre."
+              },
+              "name": "display_name",
+              "nullable": true,
+              "type": "text"
             }
           ],
           "comment": null,
@@ -543,6 +904,14 @@
               "definition": "NOT NULL country_id",
               "name": "branch_country_id_not_null",
               "type": "n"
+            },
+            {
+              "columns": [
+                "display_name"
+              ],
+              "definition": "CHECK (length(display_name) >= 1 AND length(display_name) <= 120 AND display_name = btrim(display_name) AND display_name !~ '[[:cntrl:]]'::text)",
+              "name": "branch_display_name_line",
+              "type": "c"
             },
             {
               "columns": [
@@ -620,6 +989,15 @@
               },
               {
                 "path": "libs/backend/administration/src/infrastructure/operational-provisioning.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/branch-display-name-migration.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/branch-naming.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/own-account.store.ts"
               }
             ],
             "usage": "Define el ámbito local usado por cajas, dispositivos y asignaciones. La identidad debe corresponder al realm de la base de sucursal."
@@ -1290,6 +1668,432 @@
             }
           ],
           "name": "device",
+          "schema": "administration"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identificador del mensaje.",
+                "example": "10000000-0000-4000-8000-000000000071",
+                "usage": "Forma el Message-ID que recibe el servidor SMTP, igual en cada reintento, y los eventos del despachador lo citan en vez del destinatario."
+              },
+              "name": "id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Tipo de correo: password-changed, el aviso de un cambio de contraseña, o password-recovery-code, el código de una recuperación de contraseña.",
+                "example": "password-recovery-code",
+                "usage": "Decide cómo el despachador compone el mensaje al enviarlo."
+              },
+              "name": "kind",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Cuenta sobre la que trata el mensaje.",
+                "example": "10000000-0000-4000-8000-000000000006",
+                "usage": "El despachador lee de ella el nombre con que saluda; un aviso de una cuenta que ya no existe se cancela."
+              },
+              "name": "operator_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Hecho del que nace el mensaje, cuando el tipo lo necesita.",
+                "example": "10000000-0000-4000-8000-000000000081",
+                "usage": "En un código de recuperación es la recuperación (administration.password_recovery): el despachador calcula el código desde ella al enviarlo y cancela el mensaje si la recuperación ya se cerró, se verificó o venció. Los avisos de cambio de contraseña lo dejan vacío."
+              },
+              "name": "reference_id",
+              "nullable": true,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Datos del mensaje que no son personales ni secretos, como texto JSON acotado.",
+                "example": {
+                  "changedAt": "2026-11-20T15:30:00.000Z",
+                  "method": "self"
+                },
+                "usage": "En un aviso de cambio de contraseña: la vía del cambio (self, administrator, recovery o emergency) y su instante, que el correo muestra en la hora del país de la sucursal. Un código de recuperación lo deja vacío: su contenido sale de la recuperación."
+              },
+              "name": "payload",
+              "nullable": false,
+              "type": "jsonb"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Correo al que se envía el mensaje, el de la cuenta en el momento del hecho.",
+                "example": "persona@example.test",
+                "usage": "Solo existe mientras el mensaje está pendiente: se borra al cerrarlo, sea cual sea el resultado."
+              },
+              "name": "recipient",
+              "nullable": true,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Instante en que se registró el mensaje.",
+                "example": "2026-11-20T15:30:00Z",
+                "usage": "Ordena el historial de envíos de una cuenta."
+              },
+              "name": "created_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instante después del cual el mensaje ya no se envía.",
+                "example": "2026-11-21T15:30:00Z",
+                "usage": "Un aviso vale un día. Un mensaje pendiente pasado este plazo se cierra como expired sin enviarse."
+              },
+              "name": "deliver_by",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": "'pending'::text",
+              "documentation": {
+                "description": "Estado del mensaje: pending, sent (el servidor lo aceptó), failed (rechazo permanente o intentos agotados), expired (venció su plazo) o cancelled (el hecho ya no vale).",
+                "example": "sent",
+                "usage": "Solo pending admite cambios; los demás estados son finales."
+              },
+              "name": "state",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": "0",
+              "documentation": {
+                "description": "Intentos de entrega hechos.",
+                "example": 1,
+                "usage": "Cada arriendo cuenta uno; el octavo intento fallido cierra el mensaje como failed."
+              },
+              "name": "attempts",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Instante desde el que el despachador puede intentar la entrega.",
+                "example": "2026-11-20T15:30:05Z",
+                "usage": "Al diferirse una entrega se corre con backoff exponencial y jitter, de 5 segundos hasta 5 minutos entre intentos."
+              },
+              "name": "next_attempt_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Arriendo vigente de un despachador sobre el mensaje.",
+                "example": "10000000-0000-4000-8000-000000000072",
+                "usage": "Solo quien tiene el arriendo registra el resultado: dos instancias de branch-api nunca envían el mismo mensaje a la vez."
+              },
+              "name": "lease_token",
+              "nullable": true,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Fin del arriendo vigente.",
+                "example": "2026-11-20T15:31:00Z",
+                "usage": "Dura un minuto, más que el plazo de envío: si el despachador muere, otro retoma el mensaje cuando vence."
+              },
+              "name": "lease_expires_at",
+              "nullable": true,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Motivo del último intento fallido, sin valores del mensaje ni de la respuesta del servidor.",
+                "example": "timeout",
+                "usage": "Uno de connection, tls, authentication, timeout, aborted, recipient, sender, message, protocol o unknown."
+              },
+              "name": "last_failure",
+              "nullable": true,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instante en que el mensaje llegó a un estado final.",
+                "example": "2026-11-20T15:30:02Z",
+                "usage": "Las filas cerradas hace más de 90 días puede borrarlas el dueño de la base."
+              },
+              "name": "closed_at",
+              "nullable": true,
+              "type": "timestamp with time zone"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "attempts"
+              ],
+              "definition": "CHECK (attempts >= 0 AND attempts <= 100)",
+              "name": "email_outbox_attempts_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "attempts"
+              ],
+              "definition": "NOT NULL attempts",
+              "name": "email_outbox_attempts_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "deliver_by",
+                "created_at"
+              ],
+              "definition": "CHECK (deliver_by > created_at)",
+              "name": "email_outbox_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "state",
+                "closed_at"
+              ],
+              "definition": "CHECK ((state = 'pending'::text) = (closed_at IS NULL))",
+              "name": "email_outbox_check1",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "state",
+                "recipient"
+              ],
+              "definition": "CHECK ((state = 'pending'::text) = (recipient IS NOT NULL))",
+              "name": "email_outbox_check2",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "lease_token",
+                "lease_expires_at"
+              ],
+              "definition": "CHECK ((lease_token IS NULL) = (lease_expires_at IS NULL))",
+              "name": "email_outbox_check3",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "state",
+                "lease_token"
+              ],
+              "definition": "CHECK (state = 'pending'::text OR lease_token IS NULL)",
+              "name": "email_outbox_check4",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "created_at"
+              ],
+              "definition": "NOT NULL created_at",
+              "name": "email_outbox_created_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "deliver_by"
+              ],
+              "definition": "NOT NULL deliver_by",
+              "name": "email_outbox_deliver_by_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "NOT NULL id",
+              "name": "email_outbox_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "kind"
+              ],
+              "definition": "CHECK (kind = ANY (ARRAY['password-changed'::text, 'password-recovery-code'::text]))",
+              "name": "email_outbox_kind_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "kind"
+              ],
+              "definition": "NOT NULL kind",
+              "name": "email_outbox_kind_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "last_failure"
+              ],
+              "definition": "CHECK (last_failure IS NULL OR last_failure ~ '^[a-z]{1,32}$'::text)",
+              "name": "email_outbox_last_failure_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "next_attempt_at"
+              ],
+              "definition": "NOT NULL next_attempt_at",
+              "name": "email_outbox_next_attempt_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "operator_id"
+              ],
+              "definition": "FOREIGN KEY (operator_id) REFERENCES administration.operator_account(id)",
+              "name": "email_outbox_operator_id_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "administration",
+                "table": "operator_account"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "operator_id"
+              ],
+              "definition": "NOT NULL operator_id",
+              "name": "email_outbox_operator_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "payload"
+              ],
+              "definition": "CHECK (jsonb_typeof(payload) = 'object'::text AND length(payload::text) <= 2048)",
+              "name": "email_outbox_payload_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "payload"
+              ],
+              "definition": "NOT NULL payload",
+              "name": "email_outbox_payload_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "PRIMARY KEY (id)",
+              "name": "email_outbox_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "recipient"
+              ],
+              "definition": "CHECK (recipient IS NULL OR length(recipient) >= 3 AND length(recipient) <= 254)",
+              "name": "email_outbox_recipient_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "state"
+              ],
+              "definition": "CHECK (state = ANY (ARRAY['pending'::text, 'sent'::text, 'failed'::text, 'expired'::text, 'cancelled'::text]))",
+              "name": "email_outbox_state_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "state"
+              ],
+              "definition": "NOT NULL state",
+              "name": "email_outbox_state_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "administration",
+          "documentation": {
+            "description": "Outbox de los correos que la sucursal envía sobre sus cuentas: cada fila es un mensaje por entregar o ya cerrado.",
+            "sources": [
+              {
+                "path": "libs/backend/administration/src/infrastructure/email-outbox-migration.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/email-outbox.store.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/email-outbox-dispatcher.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/application/operator-management.service.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/administrator-recovery.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/application/password-recovery.service.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/password-recovery-migration.ts"
+              }
+            ],
+            "usage": "El mensaje se inserta en la misma transacción del hecho que lo origina, como el cambio de una contraseña, y el despachador de branch-api lo entrega después por SMTP: si el hecho no se confirma no hay correo, y si se confirma el correo no se pierde aunque el servidor SMTP no responda o el proceso se reinicie. La fila no guarda el cuerpo ni ningún código: el despachador compone el mensaje al enviarlo. Guarda el destinatario solo mientras el mensaje está pendiente. Una fila solo avanza: se arrienda, se reintenta y se cierra una vez; el dueño de la base puede borrar las cerradas hace más de 90 días."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE INDEX email_outbox_due ON administration.email_outbox USING btree (next_attempt_at) WHERE (state = 'pending'::text)",
+              "name": "email_outbox_due"
+            },
+            {
+              "definition": "CREATE INDEX email_outbox_operator ON administration.email_outbox USING btree (operator_id)",
+              "name": "email_outbox_operator"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX email_outbox_pkey ON administration.email_outbox USING btree (id)",
+              "name": "email_outbox_pkey"
+            },
+            {
+              "definition": "CREATE INDEX email_outbox_retention ON administration.email_outbox USING btree (closed_at) WHERE (closed_at IS NOT NULL)",
+              "name": "email_outbox_retention"
+            }
+          ],
+          "name": "email_outbox",
           "schema": "administration"
         },
         {
@@ -2953,9 +3757,9 @@
               "comment": null,
               "default": null,
               "documentation": {
-                "description": "Huella del nombre de usuario normalizado usado en el intento.",
+                "description": "Huella SHA-256 del correo de ingreso normalizado (sin espacios y en minúsculas).",
                 "exampleOmittedReason": "Se omite la huella de identidad para no publicar material correlacionable con cuentas de acceso.",
-                "usage": "Agrupa intentos por identidad sin guardar aquí el nombre de usuario en texto plano."
+                "usage": "Agrupa los intentos por correo sin guardarlo en claro, exista o no una cuenta con él; el listado de bloqueos la calcula para cada cuenta de la sucursal."
               },
               "name": "identity_hash",
               "nullable": false,
@@ -2965,9 +3769,9 @@
               "comment": null,
               "default": null,
               "documentation": {
-                "description": "Contador de fallos de autenticación de la ventana activa.",
+                "description": "Fallos contados en la ventana en curso.",
                 "example": 3,
-                "usage": "El servicio lo incrementa o reinicia y lo usa para decidir el bloqueo temporal."
+                "usage": "El fallo que llega al umbral de la política vigente bloquea la identidad; un ingreso correcto o un desbloqueo lo devuelven a cero. Un fallo fuera de la ventana, o después de un bloqueo ya terminado, empieza a contar de nuevo desde uno."
               },
               "name": "failed_attempts",
               "nullable": false,
@@ -2977,9 +3781,9 @@
               "comment": null,
               "default": null,
               "documentation": {
-                "description": "Fin del bloqueo temporal de esta identidad.",
-                "example": null,
-                "usage": "Si supera el reloj actual se rechaza el intento; vacío indica que no hay bloqueo programado."
+                "description": "Fin del bloqueo del ingreso de esta identidad.",
+                "example": "2026-11-20T16:00:00.000Z",
+                "usage": "Mientras supera el reloj de la base, todo ingreso, activación, reautenticación o cambio de contraseña propia con este correo responde 429 SIGN_IN_LOCKED sin verificar nada, con los segundos que faltan en Retry-After; vacío indica que no hay bloqueo."
               },
               "name": "blocked_until",
               "nullable": true,
@@ -2991,10 +3795,22 @@
               "documentation": {
                 "description": "Instante del último intento registrado para esta identidad.",
                 "example": "2026-01-15T10:00:00.000Z",
-                "usage": "Permite evaluar la ventana de fallos y reiniciar el contador cuando corresponde."
+                "usage": "Registra cuándo se contó el último intento; el inicio de la ventana está en window_started_at."
               },
               "name": "last_attempt_at",
               "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Inicio de la ventana de conteo: el instante del primer fallo que se está contando.",
+                "example": "2026-11-20T15:28:00.000Z",
+                "usage": "Un fallo cuenta en la misma ventana mientras no pasen lockoutWindowSeconds desde este instante; vacío cuando no hay fallos contados. La migración 465 lo completó con el último intento de las identidades que ya tenían fallos."
+              },
+              "name": "window_started_at",
+              "nullable": true,
               "type": "timestamp with time zone"
             }
           ],
@@ -3047,23 +3863,42 @@
               "definition": "PRIMARY KEY (identity_hash)",
               "name": "login_throttle_pkey",
               "type": "p"
+            },
+            {
+              "columns": [
+                "failed_attempts",
+                "window_started_at",
+                "last_attempt_at"
+              ],
+              "definition": "CHECK ((failed_attempts = 0) = (window_started_at IS NULL) AND window_started_at <= last_attempt_at)",
+              "name": "login_throttle_window",
+              "type": "c"
             }
           ],
           "context": "administration",
           "documentation": {
-            "description": "Estado de limitación de intentos de acceso para una identidad de inicio de sesión.",
+            "description": "Conteo de intentos fallidos y bloqueo del ingreso de una identidad, por la huella de su correo normalizado (ADR-30).",
             "sources": [
               {
                 "path": "libs/backend/administration/src/infrastructure/administration-migrations.ts"
               },
               {
+                "path": "libs/backend/administration/src/infrastructure/sign-in-lockout-migration.ts"
+              },
+              {
                 "path": "libs/backend/administration/src/infrastructure/identity.store.ts"
               },
               {
+                "path": "libs/backend/administration/src/application/sign-in-lockout.ts"
+              },
+              {
                 "path": "libs/backend/administration/src/application/local-identity.service.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/application/operator-management.service.ts"
               }
             ],
-            "usage": "Serializa intentos concurrentes y aplica el bloqueo temporal definido por el servicio local. Un acceso exitoso reinicia el contador; no almacena contraseñas."
+            "usage": "Cuentan los fallos del login (también el desbloqueo del puesto), de la activación con la cuenta, de la reautenticación y del cambio de la contraseña propia, exista o no una cuenta con ese correo. Con los valores de la política de acceso vigente, lockoutThreshold fallos dentro de lockoutWindowSeconds, contados desde el primero, bloquean el ingreso por lockoutDurationSeconds; durante el bloqueo no se verifica ni se cuenta nada y la API responde 429 SIGN_IN_LOCKED con Retry-After. Un ingreso correcto reinicia el conteo, y también lo limpian el desbloqueo de un administrador que verificó a la persona y la recuperación de emergencia del servidor. No guarda contraseñas ni correos en claro."
           },
           "indexes": [
             {
@@ -4259,7 +5094,7 @@
               "documentation": {
                 "description": "Huella criptográfica del token secreto de sesión.",
                 "exampleOmittedReason": "Se omite cualquier huella de credencial; los ejemplos públicos no deben contener tokens ni valores reutilizables para autenticación.",
-                "usage": "Permite localizar y revocar la sesión sin almacenar el token presentado por el cliente."
+                "usage": "Permite localizar y revocar la sesión sin almacenar el token presentado por el cliente. Cada renovación lo rota en la misma transacción y el token anterior deja de valer."
               },
               "name": "token_hash",
               "nullable": false,
@@ -4293,9 +5128,9 @@
               "comment": null,
               "default": null,
               "documentation": {
-                "description": "Instante a partir del cual la sesión deja de ser válida.",
+                "description": "Tope de la sesión: el ingreso más el tope de su política de acceso.",
                 "example": "2026-01-15T18:00:00.000Z",
-                "usage": "La consulta de autenticación exige que este valor sea posterior al reloj actual de la base."
+                "usage": "Ninguna renovación lo mueve. A partir de este instante la sesión responde SESSION_EXPIRED, aunque haya actividad."
               },
               "name": "expires_at",
               "nullable": false,
@@ -4307,7 +5142,7 @@
               "documentation": {
                 "description": "Instante de revocación explícita de la sesión.",
                 "example": null,
-                "usage": "Cerrar sesión o modificar accesos puede invalidarla antes del vencimiento; vacío significa que no hay revocación registrada."
+                "usage": "Cerrar sesión o modificar accesos puede invalidarla antes del vencimiento, y cerrar sesión también revoca una sesión ya vencida. La migración 462 revocó las sesiones abiertas antes del vencimiento por inactividad. Vacío significa que no hay revocación registrada."
               },
               "name": "revoked_at",
               "nullable": true,
@@ -4324,10 +5159,69 @@
               "name": "credential_id",
               "nullable": true,
               "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Revisión de la política de acceso que rige la sesión desde que se emitió.",
+                "example": "74983dbd-7367-4f07-8282-687ee50db713",
+                "usage": "Fija la inactividad con la que se renueva y el aviso que informa al cliente; una revisión posterior no la cambia. Las sesiones anteriores a la migración 462, que esa migración revocó, apuntan a la revisión 1."
+              },
+              "name": "access_policy_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Vencimiento por inactividad de la sesión.",
+                "example": "2026-01-15T10:15:00.000Z",
+                "usage": "Al ingresar y en cada renovación vale el momento más la inactividad de su política, sin pasar expires_at. Solo avanza, y solo mientras la sesión no está revocada; en las sesiones anteriores a la migración 462 es igual al tope."
+              },
+              "name": "idle_expires_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instante de la última renovación de la sesión.",
+                "example": "2026-01-15T10:08:00.000Z",
+                "usage": "Registra cuándo la persona renovó la sesión con la llave del equipo; vacío si nunca se renovó."
+              },
+              "name": "renewed_at",
+              "nullable": true,
+              "type": "timestamp with time zone"
             }
           ],
           "comment": null,
           "constraints": [
+            {
+              "columns": [
+                "access_policy_id"
+              ],
+              "definition": "FOREIGN KEY (access_policy_id) REFERENCES administration.access_policy_revision(id)",
+              "name": "operator_session_access_policy_id_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "administration",
+                "table": "access_policy_revision"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "access_policy_id"
+              ],
+              "definition": "NOT NULL access_policy_id",
+              "name": "operator_session_access_policy_id_not_null",
+              "type": "n"
+            },
             {
               "columns": [
                 "assignment_id"
@@ -4393,6 +5287,24 @@
             },
             {
               "columns": [
+                "idle_expires_at"
+              ],
+              "definition": "NOT NULL idle_expires_at",
+              "name": "operator_session_idle_expires_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "idle_expires_at",
+                "issued_at",
+                "expires_at"
+              ],
+              "definition": "CHECK (idle_expires_at > issued_at AND idle_expires_at <= expires_at)",
+              "name": "operator_session_idle_within_cap",
+              "type": "c"
+            },
+            {
+              "columns": [
                 "issued_at"
               ],
               "definition": "NOT NULL issued_at",
@@ -4406,6 +5318,16 @@
               "definition": "PRIMARY KEY (id)",
               "name": "operator_session_pkey",
               "type": "p"
+            },
+            {
+              "columns": [
+                "renewed_at",
+                "issued_at",
+                "idle_expires_at"
+              ],
+              "definition": "CHECK (renewed_at IS NULL OR renewed_at > issued_at AND renewed_at < idle_expires_at)",
+              "name": "operator_session_renewal_within_lifetime",
+              "type": "c"
             },
             {
               "columns": [
@@ -4450,9 +5372,12 @@
               },
               {
                 "path": "libs/backend/administration/src/infrastructure/identity-retirement-migration.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/session-renewal-migration.ts"
               }
             ],
-            "usage": "La tabla conserva la huella del token y su vigencia. Al validar una sesión se vuelven a comprobar la cuenta, la asignación, el rol operativo, la instalación y la credencial del equipo. Se llamaba lab_session hasta la migración 410, que la renombró conservando sus filas, privilegios y reglas."
+            "usage": "La tabla conserva la huella del token y sus dos plazos (ADR-30): el vencimiento por inactividad, que avanza con cada renovación, y el tope, que no cambia. Al validar una sesión se vuelven a comprobar la cuenta, la asignación, el rol operativo, la instalación y la credencial del equipo; vencida responde SESSION_EXPIRED y revocada o desconocida, UNAUTHORIZED. Se llamaba lab_session hasta la migración 410, que la renombró conservando sus filas, privilegios y reglas."
           },
           "indexes": [
             {
@@ -4469,6 +5394,491 @@
             }
           ],
           "name": "operator_session",
+          "schema": "administration"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identificador de la recuperación.",
+                "example": "10000000-0000-4000-8000-000000000081",
+                "usage": "Entra en el cálculo del código junto con code_nonce, y el correo del código lo referencia desde email_outbox.reference_id."
+              },
+              "name": "id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Cuenta cuya contraseña se recupera.",
+                "example": "10000000-0000-4000-8000-000000000006",
+                "usage": "El pedido la resuelve por su correo y solo crea la fila si la cuenta está habilitada, tiene buzón y opera en el equipo que pide; los límites por cuenta cuentan sus filas."
+              },
+              "name": "operator_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Equipo activado desde el que se pidió el código.",
+                "example": "10000000-0000-4000-8000-000000000041",
+                "usage": "La verificación y la confirmación solo valen desde este mismo equipo: un código escrito en otro cuenta como intento fallido. El correo nombra la caja de este equipo."
+              },
+              "name": "installation_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Valor aleatorio de 32 bytes del que se deriva el código de 8 dígitos.",
+                "exampleOmittedReason": "Se omite: junto con el secreto de la configuración determina un código de recuperación, y un ejemplo no aporta a la explicación.",
+                "usage": "El despachador y la verificación calculan el código con HMAC-SHA256 desde este valor, el id y la llave que HKDF deriva del secreto BRANCH_API_PASSWORD_RECOVERY_SECRET; sin ese secreto no sirve para calcular ni probar un código."
+              },
+              "name": "code_nonce",
+              "nullable": false,
+              "type": "bytea"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Instante en que se emitió el código.",
+                "example": "2026-11-20T15:30:00Z",
+                "usage": "Aplica el enfriamiento de un minuto entre códigos de una cuenta y el tope de cinco códigos por cuenta en 24 horas."
+              },
+              "name": "issued_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instante en que vence el código, a lo más 15 minutos después de emitido.",
+                "example": "2026-11-20T15:45:00Z",
+                "usage": "Un código vencido no se verifica, y su correo, si sigue pendiente, se cancela en vez de enviarse."
+              },
+              "name": "expires_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": "0",
+              "documentation": {
+                "description": "Códigos equivocados escritos para esta recuperación, incluidos los escritos en otro equipo.",
+                "example": 1,
+                "usage": "Al quinto la recuperación se cierra como attempts-exhausted y el código deja de valer."
+              },
+              "name": "failed_attempts",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instante en que el código correcto se canjeó por la autorización de cambio.",
+                "example": "2026-11-20T15:33:00Z",
+                "usage": "Un código se canjea una sola vez; desde ahí solo vale la autorización."
+              },
+              "name": "verified_at",
+              "nullable": true,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "SHA-256 en hexadecimal de la autorización de un solo uso que recibe el equipo al verificar el código.",
+                "exampleOmittedReason": "Se omite cualquier huella de credencial; los ejemplos públicos no deben contener valores reutilizables para autenticación.",
+                "usage": "La confirmación busca la recuperación por esta huella; la autorización en claro solo la conoce el equipo que la recibió."
+              },
+              "name": "grant_hash",
+              "nullable": true,
+              "type": "character(64)"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instante en que vence la autorización, a lo más 10 minutos después de verificar el código.",
+                "example": "2026-11-20T15:43:00Z",
+                "usage": "Una autorización vencida no cambia la contraseña; hay que pedir otro código."
+              },
+              "name": "grant_expires_at",
+              "nullable": true,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instante en que la recuperación dejó de valer.",
+                "example": "2026-11-20T15:35:00Z",
+                "usage": "Una recuperación cerrada no se verifica ni se confirma, y su correo pendiente se cancela."
+              },
+              "name": "closed_at",
+              "nullable": true,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Por qué se cerró: completed (la contraseña cambió con ella), superseded (se pidió otro código), attempts-exhausted (cinco códigos equivocados), password-changed, email-changed o account-disabled (la cuenta cambió por otra vía).",
+                "example": "completed",
+                "usage": "Distingue en el historial una recuperación usada de una abandonada o invalidada; las causas de cada rechazo quedan además en authorization_audit."
+              },
+              "name": "closed_reason",
+              "nullable": true,
+              "type": "text"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "expires_at",
+                "issued_at"
+              ],
+              "definition": "CHECK (expires_at > issued_at AND expires_at <= (issued_at + '00:15:00'::interval))",
+              "name": "password_recovery_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "closed_at",
+                "closed_reason"
+              ],
+              "definition": "CHECK ((closed_at IS NULL) = (closed_reason IS NULL))",
+              "name": "password_recovery_check1",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "verified_at",
+                "grant_hash",
+                "grant_expires_at"
+              ],
+              "definition": "CHECK ((verified_at IS NULL) = (grant_hash IS NULL) AND (grant_hash IS NULL) = (grant_expires_at IS NULL))",
+              "name": "password_recovery_check2",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "grant_expires_at",
+                "verified_at"
+              ],
+              "definition": "CHECK (grant_expires_at IS NULL OR grant_expires_at <= (verified_at + '00:10:00'::interval))",
+              "name": "password_recovery_check3",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "closed_reason",
+                "verified_at"
+              ],
+              "definition": "CHECK (closed_reason IS DISTINCT FROM 'completed'::text OR verified_at IS NOT NULL)",
+              "name": "password_recovery_check4",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "closed_reason"
+              ],
+              "definition": "CHECK (closed_reason = ANY (ARRAY['completed'::text, 'superseded'::text, 'attempts-exhausted'::text, 'password-changed'::text, 'email-changed'::text, 'account-disabled'::text]))",
+              "name": "password_recovery_closed_reason_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "code_nonce"
+              ],
+              "definition": "CHECK (octet_length(code_nonce) = 32)",
+              "name": "password_recovery_code_nonce_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "code_nonce"
+              ],
+              "definition": "NOT NULL code_nonce",
+              "name": "password_recovery_code_nonce_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "expires_at"
+              ],
+              "definition": "NOT NULL expires_at",
+              "name": "password_recovery_expires_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "failed_attempts"
+              ],
+              "definition": "CHECK (failed_attempts >= 0 AND failed_attempts <= 5)",
+              "name": "password_recovery_failed_attempts_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "failed_attempts"
+              ],
+              "definition": "NOT NULL failed_attempts",
+              "name": "password_recovery_failed_attempts_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "grant_hash"
+              ],
+              "definition": "CHECK (grant_hash ~ '^[a-f0-9]{64}$'::text)",
+              "name": "password_recovery_grant_hash_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "NOT NULL id",
+              "name": "password_recovery_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "installation_id"
+              ],
+              "definition": "FOREIGN KEY (installation_id) REFERENCES administration.installation(id)",
+              "name": "password_recovery_installation_id_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "administration",
+                "table": "installation"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "installation_id"
+              ],
+              "definition": "NOT NULL installation_id",
+              "name": "password_recovery_installation_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "issued_at"
+              ],
+              "definition": "NOT NULL issued_at",
+              "name": "password_recovery_issued_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "operator_id"
+              ],
+              "definition": "FOREIGN KEY (operator_id) REFERENCES administration.operator_account(id)",
+              "name": "password_recovery_operator_id_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "administration",
+                "table": "operator_account"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "operator_id"
+              ],
+              "definition": "NOT NULL operator_id",
+              "name": "password_recovery_operator_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "PRIMARY KEY (id)",
+              "name": "password_recovery_pkey",
+              "type": "p"
+            }
+          ],
+          "context": "administration",
+          "documentation": {
+            "description": "Recuperaciones de contraseña por correo: cada fila es un código pedido desde un equipo activado para una cuenta, y lo que pasó con él.",
+            "sources": [
+              {
+                "path": "libs/backend/administration/src/infrastructure/password-recovery-migration.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/password-recovery.store.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/application/password-recovery.service.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/email-outbox-dispatcher.ts"
+              }
+            ],
+            "usage": "branch-api la escribe en los tres pasos de la recuperación: el pedido inserta la fila y encola el correo con el código en el mismo commit, la verificación cuenta los intentos fallidos o canjea el código por una autorización de un solo uso, y la confirmación cambia la contraseña y la cierra. La fila no guarda el código ni un hash de él: el código se calcula con HMAC-SHA256 desde code_nonce y un secreto de la configuración, de modo que una copia de la base no permite calcularlo ni probarlo. Una cuenta tiene a lo más una recuperación abierta; pedir otra la cierra, y un trigger de operator_account la cierra cuando cambian la contraseña o el correo de la cuenta o se deshabilita, por cualquier vía. Una fila solo avanza; el dueño de la base puede borrar las cerradas hace más de 90 días."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE UNIQUE INDEX password_recovery_grant ON administration.password_recovery USING btree (grant_hash) WHERE (grant_hash IS NOT NULL)",
+              "name": "password_recovery_grant"
+            },
+            {
+              "definition": "CREATE INDEX password_recovery_installation ON administration.password_recovery USING btree (installation_id)",
+              "name": "password_recovery_installation"
+            },
+            {
+              "definition": "CREATE INDEX password_recovery_issued ON administration.password_recovery USING btree (operator_id, issued_at)",
+              "name": "password_recovery_issued"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX password_recovery_open ON administration.password_recovery USING btree (operator_id) WHERE (closed_at IS NULL)",
+              "name": "password_recovery_open"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX password_recovery_pkey ON administration.password_recovery USING btree (id)",
+              "name": "password_recovery_pkey"
+            }
+          ],
+          "name": "password_recovery",
+          "schema": "administration"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Equipo activado que pide.",
+                "example": "10000000-0000-4000-8000-000000000041",
+                "usage": "Una fila por equipo; solo la crea un pedido con una prueba de posesión válida."
+              },
+              "name": "installation_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Inicio de la ventana de una hora en curso.",
+                "example": "2026-11-20T15:00:00Z",
+                "usage": "Un pedido posterior a una hora desde este instante abre una ventana nueva."
+              },
+              "name": "window_started_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Pedidos del equipo en la ventana en curso, con un tope de registro de 1000.",
+                "example": 3,
+                "usage": "Sobre diez, los pedidos de la ventana se rechazan."
+              },
+              "name": "requests",
+              "nullable": false,
+              "type": "integer"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "installation_id"
+              ],
+              "definition": "FOREIGN KEY (installation_id) REFERENCES administration.installation(id)",
+              "name": "password_recovery_throttle_installation_id_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "administration",
+                "table": "installation"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "installation_id"
+              ],
+              "definition": "NOT NULL installation_id",
+              "name": "password_recovery_throttle_installation_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "installation_id"
+              ],
+              "definition": "PRIMARY KEY (installation_id)",
+              "name": "password_recovery_throttle_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "requests"
+              ],
+              "definition": "CHECK (requests >= 0 AND requests <= 1000)",
+              "name": "password_recovery_throttle_requests_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "requests"
+              ],
+              "definition": "NOT NULL requests",
+              "name": "password_recovery_throttle_requests_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "window_started_at"
+              ],
+              "definition": "NOT NULL window_started_at",
+              "name": "password_recovery_throttle_window_started_at_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "administration",
+          "documentation": {
+            "description": "Pedidos de recuperación de contraseña de cada equipo activado en su ventana de una hora.",
+            "sources": [
+              {
+                "path": "libs/backend/administration/src/infrastructure/password-recovery-migration.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/password-recovery.store.ts"
+              }
+            ],
+            "usage": "El pedido de un código la incrementa antes de mirar la cuenta, sea cual sea el correo pedido; sobre diez pedidos en la ventana el equipo recibe TOO_MANY_REQUESTS. La ventana se reinicia cuando tiene más de una hora."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE UNIQUE INDEX password_recovery_throttle_pkey ON administration.password_recovery_throttle USING btree (installation_id)",
+              "name": "password_recovery_throttle_pkey"
+            }
+          ],
+          "name": "password_recovery_throttle",
           "schema": "administration"
         },
         {
@@ -4501,9 +5911,9 @@
               "comment": null,
               "default": null,
               "documentation": {
-                "description": "Nombre visible opcional de la caja para el equipo de operación.",
+                "description": "Nombre visible de la caja para el equipo de operación, una sola línea sin espacios en los extremos.",
                 "example": "Caja de ejemplo 01",
-                "usage": "Ayuda a reconocerla en administración sin reemplazar su identificador estable."
+                "usage": "Lo fija el aprovisionamiento (registerName) y lo cambia después el comando propietario name-register, que no lo vacía y deja cada cambio en la auditoría como register.name. Ayuda a reconocer la caja en administración, en la auditoría y al activar o identificar un equipo, sin reemplazar su identificador estable."
               },
               "name": "display_name",
               "nullable": true,
@@ -4539,8 +5949,8 @@
               "columns": [
                 "display_name"
               ],
-              "definition": "CHECK (length(display_name) >= 1 AND length(display_name) <= 120)",
-              "name": "register_display_name_check",
+              "definition": "CHECK (length(display_name) >= 1 AND length(display_name) <= 120 AND display_name = btrim(display_name) AND display_name !~ '[[:cntrl:]]'::text)",
+              "name": "register_display_name_line",
               "type": "c"
             },
             {
@@ -4584,6 +5994,12 @@
               },
               {
                 "path": "libs/backend/administration/src/infrastructure/management.store.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/register-display-name-migration.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/register-naming.ts"
               }
             ],
             "usage": "Es el punto de asignación de instalaciones, operadores y configuración. Su identidad participa en turnos y comandos; no equivale al dispositivo físico que ejecuta el cliente."
@@ -4599,6 +6015,161 @@
             }
           ],
           "name": "register",
+          "schema": "administration"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Sesión que se reautenticó.",
+                "example": "6f1c2d3e-4b5a-4c6d-8e7f-9a0b1c2d3e4f",
+                "usage": "La prueba vale solo para esa sesión: otra sesión de la misma persona, en el mismo equipo o en otro, necesita la suya. Sobrevive a la rotación del token, porque la renovación no cambia la sesión."
+              },
+              "name": "session_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "operationId de la acción sensible para la que vale la prueba.",
+                "example": "createOperatorV1",
+                "usage": "El servicio solo acepta operaciones del catálogo REAUTHENTICATION_REQUIRED_OPERATIONS; la restricción de la tabla solo exige el formato de un operationId. Una prueba para una acción no autoriza otra."
+              },
+              "name": "operation_id",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instante de la última reautenticación concedida para esa sesión y esa acción.",
+                "example": "2026-11-20T15:30:00.000Z",
+                "usage": "Se actualiza cuando la persona vuelve a confirmar su contraseña para la misma acción; el historial completo está en la auditoría."
+              },
+              "name": "reauthenticated_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Fin de la validez de la prueba.",
+                "example": "2026-11-20T15:35:00.000Z",
+                "usage": "Es la reautenticación más reauthenticationWindowSeconds de la revisión de la política que rige la sesión (300 s con la revisión 1). Pasado ese instante, la acción vuelve a responder REAUTHENTICATION_REQUIRED."
+              },
+              "name": "expires_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "expires_at"
+              ],
+              "definition": "NOT NULL expires_at",
+              "name": "session_reauthentication_expires_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "operation_id"
+              ],
+              "definition": "CHECK (operation_id ~ '^[a-z][A-Za-z0-9]{1,62}V[1-9][0-9]{0,2}$'::text)",
+              "name": "session_reauthentication_operation_id_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "operation_id"
+              ],
+              "definition": "NOT NULL operation_id",
+              "name": "session_reauthentication_operation_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "session_id",
+                "operation_id"
+              ],
+              "definition": "PRIMARY KEY (session_id, operation_id)",
+              "name": "session_reauthentication_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "reauthenticated_at"
+              ],
+              "definition": "NOT NULL reauthenticated_at",
+              "name": "session_reauthentication_reauthenticated_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "session_id"
+              ],
+              "definition": "FOREIGN KEY (session_id) REFERENCES administration.operator_session(id)",
+              "name": "session_reauthentication_session_id_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "administration",
+                "table": "operator_session"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "session_id"
+              ],
+              "definition": "NOT NULL session_id",
+              "name": "session_reauthentication_session_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "expires_at",
+                "reauthenticated_at"
+              ],
+              "definition": "CHECK (expires_at > reauthenticated_at)",
+              "name": "session_reauthentication_window",
+              "type": "c"
+            }
+          ],
+          "context": "administration",
+          "documentation": {
+            "description": "Prueba vigente de que quien tiene una sesión abierta confirmó su contraseña y la llave del equipo para una acción sensible (ADR-30).",
+            "sources": [
+              {
+                "path": "libs/backend/administration/src/infrastructure/session-reauthentication-migration.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/infrastructure/identity.store.ts"
+              },
+              {
+                "path": "libs/backend/administration/src/application/local-identity.service.ts"
+              },
+              {
+                "path": "libs/backend/administration/contracts/src/reauthentication.ts"
+              }
+            ],
+            "usage": "El guard HTTP la exige antes de ejecutar cada operación de REAUTHENTICATION_REQUIRED_OPERATIONS: sin una fila vigente de esa sesión y esa operación, la API responde 403 REAUTHENTICATION_REQUIRED. POST /auth/session/reauthentications la crea o la renueva con la contraseña del titular y la posesión de la misma credencial del ingreso. Hay una fila por sesión y operación, que se reutiliza mientras no vence; cada intento, concedido o rechazado, queda en authorization_audit. El rol de ejecución lee, inserta y renueva filas, pero no las mueve a otra sesión ni a otra operación, ni las borra."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE UNIQUE INDEX session_reauthentication_pkey ON administration.session_reauthentication USING btree (session_id, operation_id)",
+              "name": "session_reauthentication_pkey"
+            }
+          ],
+          "name": "session_reauthentication",
           "schema": "administration"
         },
         {
@@ -9844,10 +11415,62 @@
               "name": "execution_granted_at",
               "nullable": true,
               "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Motivo por el que un trabajo en cola sigue sin entregarse al host que consulta.",
+                "example": "HOST_CAPABILITY_UNSUPPORTED",
+                "usage": "Lo escribe la consulta del host cuando su declaración no incluye la versión de contrato o la capacidad del trabajo, sólo si el motivo cambia; se limpia en cuanto el host declara soporte, aunque el trabajo quede fuera de la página entregada, y al registrar la recepción tardía de un trabajo vencido, de modo que un trabajo recibido nunca lo conserva. Mientras está fijado en un trabajo en cola, branch-api rechaza su recepción sin cambios hasta que una consulta que lo admite lo libera. No es un estado terminal ni un resultado del dispositivo, y se conserva como evidencia si el trabajo vence. Lo muestra el seguimiento de operaciones."
+              },
+              "name": "delivery_hold",
+              "nullable": true,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Primer instante en que se observó la retención del trabajo, aunque su motivo haya cambiado después.",
+                "example": "2026-11-21T12:00:01.000Z",
+                "usage": "Se fija junto con delivery_hold; no se renueva en consultas repetidas ni cuando otra declaración cambia el motivo, y conserva el instante más antiguo aunque dos consultas concurrentes terminen en otro orden. Se limpia junto con delivery_hold."
+              },
+              "name": "delivery_held_since",
+              "nullable": true,
+              "type": "timestamp with time zone"
             }
           ],
           "comment": null,
           "constraints": [
+            {
+              "columns": [
+                "delivery_hold",
+                "delivery_held_since"
+              ],
+              "definition": "CHECK ((delivery_hold IS NULL) = (delivery_held_since IS NULL))",
+              "name": "device_job_delivery_hold_observed",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "delivery_hold",
+                "state"
+              ],
+              "definition": "CHECK (delivery_hold IS NULL OR (state = ANY (ARRAY['queued'::text, 'expired'::text])))",
+              "name": "device_job_delivery_hold_undelivered",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "job_id",
+                "document_id",
+                "branch_id"
+              ],
+              "definition": "UNIQUE (job_id, document_id, branch_id)",
+              "name": "device_job_document_identity",
+              "type": "u"
+            },
             {
               "columns": [
                 "actor_id"
@@ -9913,6 +11536,14 @@
               "definition": "NOT NULL created_at",
               "name": "job_created_at_not_null",
               "type": "n"
+            },
+            {
+              "columns": [
+                "delivery_hold"
+              ],
+              "definition": "CHECK (delivery_hold = ANY (ARRAY['HOST_CONTRACT_VERSION_UNSUPPORTED'::text, 'HOST_CAPABILITY_UNSUPPORTED'::text]))",
+              "name": "job_delivery_hold_check",
+              "type": "c"
             },
             {
               "columns": [
@@ -10065,6 +11696,9 @@
               },
               {
                 "path": "libs/backend/devices/contracts/src/index.ts"
+              },
+              {
+                "path": "libs/backend/devices/src/infrastructure/device-delivery-hold-migration.ts"
               }
             ],
             "usage": "Distingue recepción, autorización de ejecución y evidencia del efecto físico. Un permiso ya concedido no se vuelve a emitir al repetir la petición; una respuesta perdida exige conciliación."
@@ -10073,6 +11707,14 @@
             {
               "definition": "CREATE INDEX device_job_delivery ON devices.job USING btree (controller_installation_id, controller_epoch, created_at, job_id) WHERE (state = 'queued'::text)",
               "name": "device_job_delivery"
+            },
+            {
+              "definition": "CREATE INDEX device_job_document ON devices.job USING btree (branch_id, register_id, document_id, created_at, job_id)",
+              "name": "device_job_document"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX device_job_document_identity ON devices.job USING btree (job_id, document_id, branch_id)",
+              "name": "device_job_document_identity"
             },
             {
               "definition": "CREATE INDEX device_job_lookup ON devices.job USING btree (branch_id, register_id, client_installation_id, created_at DESC, job_id DESC)",
@@ -10088,6 +11730,341 @@
             }
           ],
           "name": "job",
+          "schema": "devices"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Trabajo de dispositivo de la reimpresión.",
+                "example": "10000000-0000-4000-8000-000000000101",
+                "usage": "Identifica la copia; junto con documento y sucursal referencia al trabajo en devices.job."
+              },
+              "name": "job_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Sucursal del trabajo y de su original.",
+                "example": "10000000-0000-4000-8000-000000000001",
+                "usage": "Forma parte de las claves compuestas que obligan a que copia y original sean de la misma sucursal."
+              },
+              "name": "branch_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Documento reimpreso; hoy, la venta confirmada del recibo local no fiscal.",
+                "example": "10000000-0000-4000-8000-000000000050",
+                "usage": "Las claves compuestas obligan a que la copia y su original sean del mismo documento; la reimpresión no crea otro número."
+              },
+              "name": "document_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Primer trabajo original (no copia) del documento en la caja.",
+                "example": "10000000-0000-4000-8000-000000000100",
+                "usage": "Conserva el vínculo con el efecto original; una reimpresión de una reimpresión sigue apuntando al original."
+              },
+              "name": "original_job_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Representación impresa que se reproduce.",
+                "example": "sale-receipt.v1",
+                "usage": "Fija el formato y el límite de copias; hoy sólo sale-receipt.v1."
+              },
+              "name": "representation_version",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Motivo que declara quien solicita la reimpresión.",
+                "example": "El cliente perdió el recibo",
+                "usage": "Obligatorio por Q-17; texto libre acotado de 5 a 160 caracteres, sin catálogo decidido. Se muestra en la consulta del trabajo y no se imprime."
+              },
+              "name": "copy_reason",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Operador que autorizó la reimpresión con el permiso device.reprint.",
+                "example": "10000000-0000-4000-8000-000000000010",
+                "usage": "Atribuye la autorización; hoy coincide con quien la solicita, porque no existe una autorización de supervisor aparte."
+              },
+              "name": "authorized_by",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Copias solicitadas en esta reimpresión.",
+                "example": 1,
+                "usage": "No supera copy_limit; cada copia es un trabajo con resultado propio."
+              },
+              "name": "copies",
+              "nullable": false,
+              "type": "smallint"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Copias que admite la representación por solicitud al momento de admitirla.",
+                "example": 1,
+                "usage": "Conserva el límite aplicado aunque la representación cambie después; sale-receipt.v1 admite una."
+              },
+              "name": "copy_limit",
+              "nullable": false,
+              "type": "smallint"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Instante en que se registró la solicitud.",
+                "example": "2026-11-22T12:00:00.000Z",
+                "usage": "Ordena la evidencia de reimpresiones del documento."
+              },
+              "name": "created_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "authorized_by"
+              ],
+              "definition": "NOT NULL authorized_by",
+              "name": "print_request_authorized_by_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "branch_id"
+              ],
+              "definition": "NOT NULL branch_id",
+              "name": "print_request_branch_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "original_job_id",
+                "job_id"
+              ],
+              "definition": "CHECK (original_job_id <> job_id)",
+              "name": "print_request_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "copies",
+                "copy_limit"
+              ],
+              "definition": "CHECK (copies <= copy_limit)",
+              "name": "print_request_check1",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "copies"
+              ],
+              "definition": "CHECK (copies >= 1)",
+              "name": "print_request_copies_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "copies"
+              ],
+              "definition": "NOT NULL copies",
+              "name": "print_request_copies_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "copy_limit"
+              ],
+              "definition": "CHECK (copy_limit >= 1)",
+              "name": "print_request_copy_limit_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "copy_limit"
+              ],
+              "definition": "NOT NULL copy_limit",
+              "name": "print_request_copy_limit_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "copy_reason"
+              ],
+              "definition": "CHECK (char_length(copy_reason) >= 5 AND char_length(copy_reason) <= 160 AND copy_reason = btrim(copy_reason))",
+              "name": "print_request_copy_reason_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "copy_reason"
+              ],
+              "definition": "NOT NULL copy_reason",
+              "name": "print_request_copy_reason_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "created_at"
+              ],
+              "definition": "NOT NULL created_at",
+              "name": "print_request_created_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "document_id"
+              ],
+              "definition": "NOT NULL document_id",
+              "name": "print_request_document_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "job_id",
+                "document_id",
+                "branch_id"
+              ],
+              "definition": "FOREIGN KEY (job_id, document_id, branch_id) REFERENCES devices.job(job_id, document_id, branch_id)",
+              "name": "print_request_job_id_document_id_branch_id_fkey",
+              "references": {
+                "columns": [
+                  "job_id",
+                  "document_id",
+                  "branch_id"
+                ],
+                "schema": "devices",
+                "table": "job"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "job_id"
+              ],
+              "definition": "NOT NULL job_id",
+              "name": "print_request_job_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "original_job_id",
+                "document_id",
+                "branch_id"
+              ],
+              "definition": "FOREIGN KEY (original_job_id, document_id, branch_id) REFERENCES devices.job(job_id, document_id, branch_id)",
+              "name": "print_request_original_job_id_document_id_branch_id_fkey",
+              "references": {
+                "columns": [
+                  "job_id",
+                  "document_id",
+                  "branch_id"
+                ],
+                "schema": "devices",
+                "table": "job"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "original_job_id"
+              ],
+              "definition": "NOT NULL original_job_id",
+              "name": "print_request_original_job_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "job_id"
+              ],
+              "definition": "PRIMARY KEY (job_id)",
+              "name": "print_request_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "representation_version"
+              ],
+              "definition": "CHECK (representation_version = 'sale-receipt.v1'::text)",
+              "name": "print_request_representation_version_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "representation_version"
+              ],
+              "definition": "NOT NULL representation_version",
+              "name": "print_request_representation_version_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "devices",
+          "documentation": {
+            "description": "Solicitud de reimpresión de un documento existente: cada fila es otro trabajo de dispositivo autorizado y motivado (F02-10, Q-17).",
+            "sources": [
+              {
+                "path": "libs/backend/devices/src/infrastructure/print-request-migration.ts"
+              },
+              {
+                "path": "libs/backend/devices/src/infrastructure/device.repository.ts"
+              },
+              {
+                "path": "libs/backend/devices/src/application/device.service.ts"
+              }
+            ],
+            "usage": "La escribe printExistingDocumentV1 en la misma transacción que su trabajo y la leen las consultas de trabajos del puesto. Enlaza el trabajo original del mismo documento; no representa un cobro, una venta ni una emisión fiscal, y es de sólo inserción."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE INDEX device_print_request_job ON devices.print_request USING btree (job_id, document_id, branch_id)",
+              "name": "device_print_request_job"
+            },
+            {
+              "definition": "CREATE INDEX device_print_request_original ON devices.print_request USING btree (original_job_id, document_id, branch_id)",
+              "name": "device_print_request_original"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX print_request_pkey ON devices.print_request USING btree (job_id)",
+              "name": "print_request_pkey"
+            }
+          ],
+          "name": "print_request",
           "schema": "devices"
         },
         {
@@ -17873,7 +19850,7 @@
               "documentation": {
                 "description": "Estado de la operación: requested, succeeded, failed o uncertain.",
                 "example": "succeeded",
-                "usage": "requested significa admitida y con la guarda tomada, no un efecto confirmado; uncertain no se convierte en éxito."
+                "usage": "requested significa admitida y con la guarda tomada, no un efecto confirmado; uncertain no se convierte en éxito salvo por una consulta concluyente del mismo destino, que queda marcada en resolved_at."
               },
               "name": "state",
               "nullable": false,
@@ -17927,6 +19904,40 @@
                 "usage": "Conserva la evidencia validada, sin respuesta cruda del proveedor, llaves ni datos de tarjeta; vacía si no hubo respuesta."
               },
               "name": "observation",
+              "nullable": true,
+              "type": "jsonb"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Momento en que una consulta por la clave propia de la operación resolvió un mantenimiento incierto.",
+                "example": "2026-11-22T10:05:00.000Z",
+                "usage": "Sólo existe en una operación succeeded o failed que antes fue uncertain; conserva finished_at y se informa como resolvedBy inquiry. Vacía cuando el resultado llegó en la respuesta original."
+              },
+              "name": "resolved_at",
+              "nullable": true,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Resultado de una capacidad de lectura del terminal: el último comprobante o los totales informados por el proveedor.",
+                "example": {
+                  "amount": {
+                    "amount": "1190",
+                    "currency": "CLP",
+                    "scale": 0
+                  },
+                  "category": "sale",
+                  "kind": "last-transaction",
+                  "occurredAt": "2026-11-22T10:00:00.000Z",
+                  "transactionRef": "receipt-fixture-1"
+                },
+                "usage": "Sólo existe en una operación succeeded de last-transaction o totals, con kind igual a la capacidad y evidencia del mismo terminal y clave. El comprobante lleva referencia, categoría del proveedor, monto y fecha, sin datos de tarjeta; los totales, categorías del proveedor con cantidad y monto. No reemplaza el libro de caja ni registra una venta o un pago. Vacío en las operaciones anteriores a TASK-579."
+              },
+              "name": "result",
               "nullable": true,
               "type": "jsonb"
             }
@@ -18137,6 +20148,26 @@
             },
             {
               "columns": [
+                "resolved_at",
+                "state",
+                "finished_at"
+              ],
+              "definition": "CHECK (resolved_at IS NULL OR (state = ANY (ARRAY['succeeded'::text, 'failed'::text])) AND resolved_at >= finished_at)",
+              "name": "terminal_operation_resolution",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "result",
+                "state",
+                "capability"
+              ],
+              "definition": "CHECK (result IS NULL OR jsonb_typeof(result) = 'object'::text AND state = 'succeeded'::text AND (capability = ANY (ARRAY['last-transaction'::text, 'totals'::text])) AND (result ->> 'kind'::text) = capability)",
+              "name": "terminal_operation_result",
+              "type": "c"
+            },
+            {
+              "columns": [
                 "state"
               ],
               "definition": "CHECK (state = ANY (ARRAY['requested'::text, 'succeeded'::text, 'failed'::text, 'uncertain'::text]))",
@@ -18169,6 +20200,10 @@
                 "symbol": "terminalMaintenanceMigration"
               },
               {
+                "path": "libs/backend/payments/src/infrastructure/terminal-maintenance-result.migration.ts",
+                "symbol": "terminalMaintenanceResultMigration"
+              },
+              {
                 "path": "libs/backend/payments/src/infrastructure/terminal-maintenance.store.ts",
                 "symbol": "SqlTerminalMaintenanceStore"
               },
@@ -18180,7 +20215,7 @@
                 "path": "libs/backend/payments/integration/terminal-maintenance.test.ts"
               }
             ],
-            "usage": "RequestTerminalMaintenance la inserta en estado requested y toma la guarda del terminal en la misma transacción, antes de llamar al adaptador; un resultado concluyente la cierra como succeeded o failed y libera la guarda. Un resultado desconocido o una evidencia que no corresponde queda uncertain, conserva la guarda y excluye el terminal. Se identifica por commandId para recuperar una respuesta perdida sin repetir el efecto. No se borra ni se reescribe."
+            "usage": "RequestTerminalMaintenance la inserta en estado requested y toma la guarda del terminal en la misma transacción, antes de llamar al adaptador; un resultado concluyente la cierra como succeeded o failed y libera la guarda. Un resultado desconocido o una evidencia que no corresponde queda uncertain, conserva la guarda y excluye el terminal. Se identifica por commandId para recuperar una respuesta perdida sin repetir el efecto: repetir el mismo comando sobre una operación uncertain sólo consulta al adaptador por la clave propia de la operación, en la revisión de perfil registrada, y únicamente un resultado concluyente la resuelve. El último comprobante y los totales se guardan como resultado de lectura: no crean ventas, pagos ni movimientos de caja y no cierran la caja. No se borra."
           },
           "indexes": [
             {
@@ -18279,7 +20314,7 @@
               "documentation": {
                 "description": "Estado de análisis de seguridad del archivo adjunto.",
                 "example": "not-scanned",
-                "usage": "not-scanned deja explícito que el flujo actual no acredita un escaneo antimalware."
+                "usage": "not-scanned deja explícito que no se acreditó un escaneo antimalware; la descarga exige clean, valor que ningún flujo actual produce."
               },
               "name": "security_status",
               "nullable": false,
@@ -18456,7 +20491,7 @@
                 "path": "libs/backend/payments/integration/payment-plans.test.ts"
               }
             ],
-            "usage": "El archivo acompaña la revisión humana y se descarga mediante acceso autorizado. Adjuntarlo no confirma el abono; el estado not-scanned indica que no se ha acreditado un análisis de malware."
+            "usage": "El archivo acompaña la revisión humana. Desde TASK-568 la carga está deshabilitada por política (PAYMENT_ATTACHMENTS_DISABLED) hasta contar con análisis de seguridad, y sólo un adjunto con análisis clean puede descargarse: los conservados como not-scanned se rechazan (PAYMENT_ATTACHMENT_NOT_SCANNED). Adjuntarlo nunca confirma el abono."
           },
           "indexes": [
             {
@@ -19049,6 +21084,696 @@
             }
           ],
           "name": "transfer_verification",
+          "schema": "payments"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identificador de la consulta.",
+                "example": "10000000-0000-4000-8000-000000000071",
+                "usage": "Recurso auditado de la decisión de autorización."
+              },
+              "name": "id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Transferencia declarada consultada.",
+                "example": "10000000-0000-4000-8000-000000000059",
+                "usage": "Sólo se admite mientras la evidencia está declarada en un plan abierto."
+              },
+              "name": "evidence_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Operador que solicitó la consulta.",
+                "example": "10000000-0000-4000-8000-000000000006",
+                "usage": "Conserva la autoría sin atribuirle verificación de fondos."
+              },
+              "name": "checked_by",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Contrato del verificador consultado, nulo si no había uno autorizado.",
+                "example": "synthetic-bank.inquiry",
+                "usage": "Distingue la ausencia de verificador de un verificador inaccesible."
+              },
+              "name": "verifier_contract",
+              "nullable": true,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Resultado de la consulta.",
+                "example": "pending_verification",
+                "usage": "pending_verification conserva la incertidumbre; matched es una coincidencia observada que no confirma el dinero."
+              },
+              "name": "status",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Motivo estable del resultado.",
+                "example": "verifier-unavailable",
+                "usage": "Explica por qué sigue pendiente (sin verificador, inaccesible, plazo vencido, respuesta inválida, no encontrada o discrepancia de referencia, cuenta o importe) o verifier-match."
+              },
+              "name": "reason",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Bloqueo de la política aplicado a un resultado pendiente.",
+                "example": "keep-sale-pending",
+                "usage": "Copia el bloqueo vigente al consultar; nulo cuando hubo coincidencia."
+              },
+              "name": "blocking",
+              "nullable": true,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Instante de la consulta.",
+                "example": "2026-11-21T14:31:00.000Z",
+                "usage": "Ordena las consultas para elegir la última."
+              },
+              "name": "created_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "blocking"
+              ],
+              "definition": "CHECK (blocking = ANY (ARRAY['keep-sale-pending'::text, 'block-sale'::text]))",
+              "name": "transfer_verification_check_blocking_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "status",
+                "reason"
+              ],
+              "definition": "CHECK ((status = 'matched'::text) = (reason = 'verifier-match'::text))",
+              "name": "transfer_verification_check_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "status",
+                "blocking"
+              ],
+              "definition": "CHECK ((status = 'pending_verification'::text) = (blocking IS NOT NULL))",
+              "name": "transfer_verification_check_check1",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "status",
+                "verifier_contract"
+              ],
+              "definition": "CHECK (status <> 'matched'::text OR verifier_contract IS NOT NULL)",
+              "name": "transfer_verification_check_check2",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "reason",
+                "verifier_contract"
+              ],
+              "definition": "CHECK (reason <> 'no-authorized-verifier'::text OR verifier_contract IS NULL)",
+              "name": "transfer_verification_check_check3",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "checked_by"
+              ],
+              "definition": "NOT NULL checked_by",
+              "name": "transfer_verification_check_checked_by_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "created_at"
+              ],
+              "definition": "NOT NULL created_at",
+              "name": "transfer_verification_check_created_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "evidence_id"
+              ],
+              "definition": "FOREIGN KEY (evidence_id) REFERENCES payments.transfer_evidence(id)",
+              "name": "transfer_verification_check_evidence_id_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "payments",
+                "table": "transfer_evidence"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "evidence_id"
+              ],
+              "definition": "NOT NULL evidence_id",
+              "name": "transfer_verification_check_evidence_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "NOT NULL id",
+              "name": "transfer_verification_check_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "id"
+              ],
+              "definition": "PRIMARY KEY (id)",
+              "name": "transfer_verification_check_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "reason"
+              ],
+              "definition": "CHECK (reason = ANY (ARRAY['no-authorized-verifier'::text, 'verifier-unavailable'::text, 'verifier-timeout'::text, 'verifier-invalid-response'::text, 'transfer-not-found'::text, 'reference-mismatch'::text, 'receiver-mismatch'::text, 'amount-mismatch'::text, 'verifier-match'::text]))",
+              "name": "transfer_verification_check_reason_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "reason"
+              ],
+              "definition": "NOT NULL reason",
+              "name": "transfer_verification_check_reason_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "status"
+              ],
+              "definition": "CHECK (status = ANY (ARRAY['pending_verification'::text, 'matched'::text]))",
+              "name": "transfer_verification_check_status_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "status"
+              ],
+              "definition": "NOT NULL status",
+              "name": "transfer_verification_check_status_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "verifier_contract"
+              ],
+              "definition": "CHECK (verifier_contract ~ '^[a-z0-9][a-z0-9.-]{2,79}$'::text)",
+              "name": "transfer_verification_check_verifier_contract_check",
+              "type": "c"
+            }
+          ],
+          "context": "payments",
+          "documentation": {
+            "description": "Registro inmutable de cada consulta de una transferencia declarada al verificador autorizado.",
+            "sources": [
+              {
+                "path": "libs/backend/payments/src/infrastructure/transfer-verification.migration.ts",
+                "symbol": "transferVerificationMigration"
+              },
+              {
+                "path": "libs/backend/payments/src/infrastructure/transfer-verification.store.ts",
+                "symbol": "SqlTransferVerificationStore"
+              },
+              {
+                "path": "libs/backend/payments/src/infrastructure/payment-plan.store.ts",
+                "symbol": "SqlPaymentPlanStore"
+              },
+              {
+                "path": "libs/backend/payments/integration/payment-plans.test.ts"
+              }
+            ],
+            "usage": "POST /payment-transfers/{evidenceId}/verification-checks lo escribe; la carga del plan lee el último registro para aplicar el bloqueo. Ninguna consulta cambia el estado de la evidencia: confirmar o rechazar dinero sigue siendo la decisión manual autorizada."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE INDEX transfer_verification_check_latest ON payments.transfer_verification_check USING btree (evidence_id, created_at DESC, id DESC)",
+              "name": "transfer_verification_check_latest"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX transfer_verification_check_pkey ON payments.transfer_verification_check USING btree (id)",
+              "name": "transfer_verification_check_pkey"
+            }
+          ],
+          "name": "transfer_verification_check",
+          "schema": "payments"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Sucursal del comando.",
+                "example": "10000000-0000-4000-8000-000000000001",
+                "usage": "Junto con command_id identifica la reserva, como en el journal de comandos."
+              },
+              "name": "branch_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identificador del comando de consulta.",
+                "example": "10000000-0000-4000-8000-000000000072",
+                "usage": "Clave de idempotencia compartida con el journal."
+              },
+              "name": "command_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Transferencia declarada que el comando consulta.",
+                "example": "10000000-0000-4000-8000-000000000059",
+                "usage": "Otro evidenceId bajo el mismo comando se rechaza con IDEMPOTENCY_CONFLICT."
+              },
+              "name": "evidence_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Operador que reservó el comando.",
+                "example": "10000000-0000-4000-8000-000000000006",
+                "usage": "Otro operador bajo el mismo comando se rechaza con SCOPE_MISMATCH."
+              },
+              "name": "actor_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Caja de la reserva.",
+                "example": "10000000-0000-4000-8000-000000000003",
+                "usage": "Forma parte del ámbito comprobado con SCOPE_MISMATCH."
+              },
+              "name": "register_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instalación de la reserva.",
+                "example": "10000000-0000-4000-8000-000000000004",
+                "usage": "Forma parte del ámbito comprobado con SCOPE_MISMATCH."
+              },
+              "name": "installation_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identificador del intento que tiene la reserva.",
+                "example": "10000000-0000-4000-8000-000000000073",
+                "usage": "Sólo ese intento vence su propio plazo; al retomarla, otro intento lo reemplaza."
+              },
+              "name": "claim_token",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Vencimiento de la reserva: plazo de la política más un margen para registrar el resultado.",
+                "example": "2026-11-21T14:31:35.000Z",
+                "usage": "Mientras está vigente, un duplicado recibe COMMAND_IN_PROGRESS; vencida, un reintento sin resultado registrado puede retomarla y consultar."
+              },
+              "name": "lease_expires_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Instante de la primera reserva.",
+                "example": "2026-11-21T14:31:00.000Z",
+                "usage": "Trazabilidad operativa de la reserva."
+              },
+              "name": "created_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "actor_id"
+              ],
+              "definition": "NOT NULL actor_id",
+              "name": "transfer_verification_claim_actor_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "branch_id"
+              ],
+              "definition": "NOT NULL branch_id",
+              "name": "transfer_verification_claim_branch_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "claim_token"
+              ],
+              "definition": "NOT NULL claim_token",
+              "name": "transfer_verification_claim_claim_token_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "command_id"
+              ],
+              "definition": "NOT NULL command_id",
+              "name": "transfer_verification_claim_command_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "created_at"
+              ],
+              "definition": "NOT NULL created_at",
+              "name": "transfer_verification_claim_created_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "evidence_id"
+              ],
+              "definition": "FOREIGN KEY (evidence_id) REFERENCES payments.transfer_evidence(id)",
+              "name": "transfer_verification_claim_evidence_id_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "payments",
+                "table": "transfer_evidence"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "evidence_id"
+              ],
+              "definition": "NOT NULL evidence_id",
+              "name": "transfer_verification_claim_evidence_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "installation_id"
+              ],
+              "definition": "NOT NULL installation_id",
+              "name": "transfer_verification_claim_installation_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "lease_expires_at"
+              ],
+              "definition": "NOT NULL lease_expires_at",
+              "name": "transfer_verification_claim_lease_expires_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "branch_id",
+                "command_id"
+              ],
+              "definition": "PRIMARY KEY (branch_id, command_id)",
+              "name": "transfer_verification_claim_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "register_id"
+              ],
+              "definition": "NOT NULL register_id",
+              "name": "transfer_verification_claim_register_id_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "payments",
+          "documentation": {
+            "description": "Reserva durable de un comando de consulta al verificador, con plazo, para consultar como máximo una vez por commandId entre procesos.",
+            "sources": [
+              {
+                "path": "libs/backend/payments/src/infrastructure/transfer-verification.migration.ts",
+                "symbol": "transferVerificationMigration"
+              },
+              {
+                "path": "libs/backend/payments/src/infrastructure/transfer-verification.store.ts",
+                "symbol": "SqlTransferVerificationStore"
+              },
+              {
+                "path": "libs/backend/payments/src/application/transfer-verification.service.ts",
+                "symbol": "TransferVerificationService"
+              },
+              {
+                "path": "libs/backend/payments/integration/payment-plans.test.ts"
+              }
+            ],
+            "usage": "POST /payment-transfers/{evidenceId}/verification-checks la escribe en una transacción corta antes de la llamada externa y la lee para responder COMMAND_IN_PROGRESS a un duplicado mientras su plazo sigue vigente. Un intento que no registra resultado vence su plazo; uno vencido lo retoma el siguiente reintento. El resultado lo responde el journal de comandos, no esta tabla."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE UNIQUE INDEX transfer_verification_claim_pkey ON payments.transfer_verification_claim USING btree (branch_id, command_id)",
+              "name": "transfer_verification_claim_pkey"
+            }
+          ],
+          "name": "transfer_verification_claim",
+          "schema": "payments"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Cuenta receptora a la que se aplica la política.",
+                "example": "10000000-0000-4000-8000-000000000070",
+                "usage": "Una sola política por cuenta; el ámbito de sucursal lo aporta la cuenta."
+              },
+              "name": "receiver_account_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Contrato de verificación autorizado para consultar la transferencia, o nulo si no hay ninguno.",
+                "example": "synthetic-bank.inquiry",
+                "usage": "Sólo se consulta un verificador registrado para ese contrato; nulo deja la evidencia pendiente con motivo no-authorized-verifier."
+              },
+              "name": "verifier_contract",
+              "nullable": true,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Bloqueo aplicado mientras la verificación no se resuelve.",
+                "example": "block-sale",
+                "usage": "keep-sale-pending reserva el importe y admite otros medios; block-sale deja la asignación incierta y detiene medios, cargos, finalización y cancelación hasta la decisión manual. El aprovisionamiento rechaza block-sale mientras la sucursal no compone un verificador para el contrato declarado (TASK-658)."
+              },
+              "name": "unavailable_blocking",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Plazo máximo de espera de la respuesta del verificador.",
+                "example": 5000,
+                "usage": "Al vencer se aborta la consulta y se registra verifier-timeout, sin confirmar ni rechazar."
+              },
+              "name": "verifier_timeout_ms",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Instante del aprovisionamiento.",
+                "example": "2026-11-21T14:30:00.000Z",
+                "usage": "Identifica cuándo quedó vigente la política inmutable."
+              },
+              "name": "created_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "created_at"
+              ],
+              "definition": "NOT NULL created_at",
+              "name": "transfer_verification_policy_created_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "receiver_account_id"
+              ],
+              "definition": "PRIMARY KEY (receiver_account_id)",
+              "name": "transfer_verification_policy_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "receiver_account_id"
+              ],
+              "definition": "FOREIGN KEY (receiver_account_id) REFERENCES payments.receiver_account(id)",
+              "name": "transfer_verification_policy_receiver_account_id_fkey",
+              "references": {
+                "columns": [
+                  "id"
+                ],
+                "schema": "payments",
+                "table": "receiver_account"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "receiver_account_id"
+              ],
+              "definition": "NOT NULL receiver_account_id",
+              "name": "transfer_verification_policy_receiver_account_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "unavailable_blocking"
+              ],
+              "definition": "CHECK (unavailable_blocking = ANY (ARRAY['keep-sale-pending'::text, 'block-sale'::text]))",
+              "name": "transfer_verification_policy_unavailable_blocking_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "unavailable_blocking"
+              ],
+              "definition": "NOT NULL unavailable_blocking",
+              "name": "transfer_verification_policy_unavailable_blocking_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "verifier_contract"
+              ],
+              "definition": "CHECK (verifier_contract ~ '^[a-z0-9][a-z0-9.-]{2,79}$'::text)",
+              "name": "transfer_verification_policy_verifier_contract_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "verifier_timeout_ms"
+              ],
+              "definition": "CHECK (verifier_timeout_ms >= 500 AND verifier_timeout_ms <= 30000)",
+              "name": "transfer_verification_policy_verifier_timeout_ms_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "verifier_timeout_ms"
+              ],
+              "definition": "NOT NULL verifier_timeout_ms",
+              "name": "transfer_verification_policy_verifier_timeout_ms_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "payments",
+          "documentation": {
+            "description": "Política inmutable de verificación de una cuenta receptora de transferencias.",
+            "sources": [
+              {
+                "path": "libs/backend/payments/src/infrastructure/transfer-verification.migration.ts",
+                "symbol": "transferVerificationMigration"
+              },
+              {
+                "path": "libs/backend/payments/src/infrastructure/transfer-verification-policy.ts",
+                "symbol": "provisionTransferVerificationPolicy"
+              },
+              {
+                "path": "libs/backend/payments/src/infrastructure/transfer-verification.store.ts",
+                "symbol": "SqlTransferVerificationStore"
+              }
+            ],
+            "usage": "La aprovisiona el propietario con database.js provision-transfer-verification-policy. TransferVerificationService la lee para elegir el verificador autorizado y el bloqueo de una consulta sin resolver; sin política no hay verificador y la venta queda pendiente."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE UNIQUE INDEX transfer_verification_policy_pkey ON payments.transfer_verification_policy USING btree (receiver_account_id)",
+              "name": "transfer_verification_policy_pkey"
+            }
+          ],
+          "name": "transfer_verification_policy",
           "schema": "payments"
         },
         {
@@ -20301,7 +23026,7 @@
               "comment": null,
               "default": null,
               "documentation": {
-                "description": "Perfil de moneda, redondeo y autorización de descuentos.",
+                "description": "Perfil de moneda, redondeo, base de los precios y autorización de descuentos.",
                 "example": {
                   "currency": "CLP",
                   "maximumManualDiscountPercent": "10",
@@ -20312,7 +23037,7 @@
                   "scale": 0,
                   "version": "profile-example-1"
                 },
-                "usage": "PriceBookSchema valida la estructura. Estos valores ilustrativos no constituyen una política financiera aprobada."
+                "usage": "PriceBookSchema valida la estructura. priceBasis solo aparece con el valor tax-included, cuando los importes del libro incluyen el impuesto (TASK-445); sin él, el libro es neto, como todos los publicados antes. Estos valores ilustrativos no constituyen una política financiera aprobada."
               },
               "name": "profile",
               "nullable": false,
@@ -20322,7 +23047,7 @@
               "comment": null,
               "default": null,
               "documentation": {
-                "description": "Precios base, escalas de cantidad e impuestos por producto y clase de cliente.",
+                "description": "Precios base, escalas de cantidad e impuestos por producto y clase de cliente, en la base de precios del perfil.",
                 "example": [
                   {
                     "baseUnitPrice": "1000",
@@ -20627,7 +23352,7 @@
               "comment": null,
               "default": null,
               "documentation": {
-                "description": "Perfil de cálculo: política, moneda, escala, redondeo, vigencia de cotización y límites de descuento.",
+                "description": "Perfil de cálculo: política, moneda, escala, redondeo, base de los precios, vigencia de cotización y límites de descuento.",
                 "example": {
                   "currency": "CLP",
                   "maximumManualDiscountPercent": "10",
@@ -20638,7 +23363,7 @@
                   "scale": 0,
                   "version": "cl-policy-v1"
                 },
-                "usage": "Moneda CLP y escala 0 en Chile; se valida con el mismo esquema del libro de precios."
+                "usage": "Moneda CLP y escala 0 en Chile; se valida con el mismo esquema del libro de precios. Lleva priceBasis tax-included cuando la publicación declara precios con impuesto incluido; una publicación neta no lo escribe."
               },
               "name": "profile",
               "nullable": false,
@@ -20648,7 +23373,7 @@
               "comment": null,
               "default": null,
               "documentation": {
-                "description": "Precios netos por unidad base, piso de descuento, impuesto y escalas por producto y clase de cliente.",
+                "description": "Precios por unidad base, piso de descuento, impuesto y escalas por producto y clase de cliente, en la base de precios del perfil.",
                 "example": [
                   {
                     "baseUnitPrice": "1000",
@@ -20967,7 +23692,7 @@
               "comment": null,
               "default": null,
               "documentation": {
-                "description": "Precio de venta neto de impuestos por unidad base.",
+                "description": "Precio de venta por unidad base, neto o con el impuesto incluido según la base de precios del perfil del libro.",
                 "example": "1000",
                 "usage": "Una unidad de venta se valoriza multiplicando por su factor; nunca es el precio mínimo heredado."
               },
@@ -20979,7 +23704,7 @@
               "comment": null,
               "default": null,
               "documentation": {
-                "description": "Piso por unidad base que los descuentos no cruzan.",
+                "description": "Piso por unidad base que los descuentos no cruzan, en la misma base que el precio.",
                 "example": "900",
                 "usage": "No es un precio de venta; el motor lo usa para acotar descuentos."
               },
@@ -20991,7 +23716,7 @@
               "comment": null,
               "default": null,
               "documentation": {
-                "description": "Código del impuesto aplicado sobre el neto.",
+                "description": "Código del impuesto de la línea.",
                 "example": "EXAMPLE",
                 "usage": "Se informa en las líneas de la cotización."
               },
@@ -21005,7 +23730,7 @@
               "documentation": {
                 "description": "Tasa del impuesto en porcentaje.",
                 "example": "0",
-                "usage": "El motor calcula el impuesto sobre el neto de la línea."
+                "usage": "Con un libro neto, el motor suma el impuesto sobre lo que cobra la línea. Con el impuesto incluido, lo cobrado es el total y el impuesto es la parte que la tasa implica, obtenida por línea o por documento según el perfil."
               },
               "name": "tax_rate",
               "nullable": false,
@@ -21015,7 +23740,7 @@
               "comment": null,
               "default": null,
               "documentation": {
-                "description": "Escalas de precio por cantidad mínima en unidad base.",
+                "description": "Escalas de precio por cantidad mínima en unidad base, en la base de precios del libro.",
                 "example": [],
                 "usage": "El motor selecciona la escala aplicable dentro del piso y el precio base."
               },
@@ -21189,7 +23914,7 @@
           ],
           "context": "pricing",
           "documentation": {
-            "description": "Un precio de un libro de precios activado: producto, clase de cliente, precio neto por unidad base, piso, impuesto y escalas.",
+            "description": "Un precio de un libro de precios activado: producto, clase de cliente, precio por unidad base en la base del libro, piso, impuesto y escalas.",
             "sources": [
               {
                 "path": "libs/backend/pricing/src/infrastructure/price-book-entry-migration.ts"
@@ -21646,7 +24371,7 @@
                     }
                   }
                 },
-                "usage": "Conserva líneas, decisiones, importes y redondeo para confirmar y explicar el precio. El ejemplo es sintético y sin impuestos."
+                "usage": "Conserva líneas, decisiones, importes y redondeo para confirmar y explicar el precio. Con un libro de impuesto incluido lleva priceBasis tax-included: el total de cada línea es lo que cobra, y el subtotal y el descuento se expresan netos. El ejemplo es sintético y sin impuestos."
               },
               "name": "result",
               "nullable": false,
@@ -25553,7 +28278,7 @@
               "documentation": {
                 "description": "Estado persistido de entrega del evento de salida.",
                 "example": "pending",
-                "usage": "Empieza como pending; delivered requiere fecha de entrega. No equivale al estado de un job BullMQ ni acredita por sí mismo contabilización en el ERP."
+                "usage": "Empieza como pending; el despachador lo pasa a delivered sólo cuando el país responde accepted o duplicate, con fecha de entrega. Un rechazo permanente sigue pending hasta que exista un estado de cuarentena, que requiere una migración. No equivale al estado de un job BullMQ ni acredita contabilización en el ERP."
               },
               "name": "state",
               "nullable": false,
@@ -25563,9 +28288,9 @@
               "comment": null,
               "default": "0",
               "documentation": {
-                "description": "Contador reservado para intentos de entrega del evento.",
-                "example": 0,
-                "usage": "Se inicializa en cero al crear el evento; el publicador actual no lo incrementa ni ejecuta reintentos."
+                "description": "Intentos fallidos de entrega del evento, o la marca de rechazo permanente.",
+                "example": 1,
+                "usage": "Se inicializa en cero. Cada resultado reintentable o envío sin resultado conocido lo incrementa, hasta 2147483646. El valor 2147483647 marca un rechazo permanente (conflict, invalid o evento almacenado inválido) mientras no exista estado de cuarentena; un reintento posterior lo conserva y mantiene la espera máxima, sin desbordar la columna. Un envío abortado por cierre o por pérdida de la conexión no lo incrementa, porque su transacción se revierte."
               },
               "name": "attempts",
               "nullable": false,
@@ -25576,8 +28301,8 @@
               "default": "clock_timestamp()",
               "documentation": {
                 "description": "Instante desde el cual la entrega pendiente puede seleccionarse.",
-                "example": "2026-01-15T10:00:00.000Z",
-                "usage": "Ordena el índice de pendientes; inicialmente se fija con el reloj de la base y permite representar una programación de entrega."
+                "example": "2026-01-15T10:00:02.000Z",
+                "usage": "El despachador sólo reclama filas con available_at vencido según el reloj de la base. Un reintento lo fija con backoff exponencial y jitter completo; un rechazo permanente, con la espera máxima configurada."
               },
               "name": "available_at",
               "nullable": false,
@@ -25588,8 +28313,8 @@
               "default": null,
               "documentation": {
                 "description": "Instante de entrega registrada para el evento.",
-                "example": null,
-                "usage": "Permanece vacío mientras está pendiente y acompaña el estado delivered cuando exista una entrega confirmada."
+                "example": "2026-01-15T10:00:03.000Z",
+                "usage": "Permanece vacío mientras está pendiente; el despachador lo fija con el reloj de la base al registrar el ACK del país. La fila y su evento se conservan después del ACK para recuperación."
               },
               "name": "delivered_at",
               "nullable": true,
@@ -25685,9 +28410,12 @@
             "sources": [
               {
                 "path": "libs/backend/sync/src/infrastructure/sale-outbox.ts"
+              },
+              {
+                "path": "libs/backend/sync/src/delivery/outbox-delivery.store.ts"
               }
             ],
-            "usage": "La confirmación de venta inserta esta fila como pendiente en la misma transacción del evento. El esquema prepara estado, intentos y programación de entrega; SqlSaleOutbox sólo los inicializa y no implementa aquí el transporte ni su confirmación."
+            "usage": "La confirmación de venta inserta esta fila como pendiente en la misma transacción del evento. OutboxDispatcher de branch-sync-worker la reclama con FOR UPDATE SKIP LOCKED dentro de la transacción del envío al país y, antes de confirmar, registra el ACK, el reintento o el rechazo permanente. El rol de ejecución sólo puede actualizar state, attempts, available_at y delivered_at; la fila no se purga al recibir el ACK."
           },
           "indexes": [
             {
@@ -25758,7 +28486,7 @@
               "documentation": {
                 "description": "Versión del agregado de venta representada por el evento.",
                 "example": 1,
-                "usage": "Junto con sucursal, tipo e identidad del agregado evita publicar dos eventos para la misma versión; no cuenta intentos de entrega."
+                "usage": "Junto con sucursal, tipo e identidad del agregado evita publicar dos eventos para la misma versión; no cuenta intentos de entrega. El despachador sólo entrega una secuencia mayor que 1 cuando su predecesora inmediata ya está entregada, de modo que un hueco detiene ese agregado sin bloquear otros."
               },
               "name": "sequence",
               "nullable": false,
@@ -25817,7 +28545,7 @@
                     "registerId": "10000000-0000-4000-8000-000000000003"
                   }
                 },
-                "usage": "Incluye identidad, alcance, versión, fecha y el payload de negocio interior. El ejemplo corresponde al contrato de efectivo versión uno."
+                "usage": "Incluye identidad, alcance, versión, fecha y el payload de negocio interior. El despachador lo envía sin modificarlo y calcula payloadHash con SHA-256 de su JSON canónico. El ejemplo corresponde al contrato de efectivo versión uno."
               },
               "name": "payload",
               "nullable": false,
@@ -25986,6 +28714,9 @@
               },
               {
                 "path": "libs/backend/sync/contracts/src/index.ts"
+              },
+              {
+                "path": "libs/backend/sync/src/delivery/outbox-dispatcher.ts"
               }
             ],
             "usage": "Se escribe usando la misma transacción que confirma la venta y su recibo. Conserva el sobre completo SaleConfirmed para poder despacharlo sin reconstruir una operación desde Redis; no contiene credenciales ni la ficha personal del cliente."
@@ -26014,10 +28745,15 @@
         {
           "checksum": "0274ff1bb7fe6a5ec6a2ace4adb586bbf5acfd58a9814af170f73dbdda7ce640",
           "id": "001_platform"
+        },
+        {
+          "checksum": "4d0fb76e551bb39caab082b022d50e5d931506b6e8ddb70d1ef7731b7b2e465f",
+          "id": "636_country_inbox"
         }
       ],
       "schemas": [
-        "platform"
+        "platform",
+        "sync"
       ],
       "tables": [
         {
@@ -26626,6 +29362,737 @@
           ],
           "name": "schema_migration",
           "schema": "platform"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Ámbito de país dueño de la base que recibió el evento.",
+                "example": "10000000-0000-4000-8000-000000000009",
+                "usage": "Primer componente de la clave única; referencia platform.database_realm y separa el inbox de este país de cualquier otro."
+              },
+              "name": "realm_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Sucursal autenticada que envió el evento.",
+                "example": "10000000-0000-4000-8000-000000000001",
+                "usage": "Forma parte de la clave única: el mismo event_id de otra sucursal es otro evento. Coincide con el origen declarado del lote, que el receptor exige igual al origen de la credencial."
+              },
+              "name": "origin_branch_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Consumidor del inbox que recibió el evento.",
+                "example": "deliver-events",
+                "usage": "Forma parte de la clave única. Hoy sólo existe deliver-events, la recepción HTTP de TASK-636; un consumidor futuro tendrá su propio valor."
+              },
+              "name": "consumer",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identidad estable del evento asignada por la sucursal.",
+                "example": "40000000-0000-4000-8000-000000000001",
+                "usage": "Clave de deduplicación junto con ámbito, sucursal y consumidor. Nunca se deduplica por parecido: dos eventos con el mismo contenido y distinto event_id son dos filas."
+              },
+              "name": "event_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "País declarado por el origen autenticado del lote.",
+                "example": "CL",
+                "usage": "Se guarda como evidencia del origen; el receptor exige que el alcance del payload pertenezca a este país."
+              },
+              "name": "origin_country_id",
+              "nullable": false,
+              "type": "character varying(100)"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instalación del worker de sincronización que envió el lote en el que el evento se recibió por primera vez.",
+                "example": "10000000-0000-4000-8000-000000000081",
+                "usage": "Evidencia del envío; no forma parte de la clave, para que el reenvío desde una reinstalación de la misma sucursal siga siendo duplicate."
+              },
+              "name": "origin_installation_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Lote DeliverEvents en el que el evento se recibió por primera vez.",
+                "example": "10000000-0000-4000-8000-000000000080",
+                "usage": "Identifica el intento que lo guardó; un reenvío usa otro batch_id y no cambia esta fila."
+              },
+              "name": "batch_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Tipo de evento de negocio recibido.",
+                "example": "SaleConfirmed",
+                "usage": "Hoy sólo SaleConfirmed; el receptor responde invalid con EVENT_TYPE_UNSUPPORTED a otro tipo sin guardarlo."
+              },
+              "name": "event_type",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Versión del contrato del payload del evento, no de DeliverEvents.",
+                "example": 1,
+                "usage": "SaleConfirmed admite las versiones 1 y 2; otra versión se responde invalid con CONTRACT_VERSION_UNSUPPORTED."
+              },
+              "name": "contract_version",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Tipo del agregado al que pertenece el evento.",
+                "example": "sale",
+                "usage": "Junto con aggregate_id y sequence ordena los eventos del agregado; hoy sólo sale."
+              },
+              "name": "aggregate_type",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Agregado de la sucursal al que pertenece el evento.",
+                "example": "40000000-0000-4000-8000-000000000002",
+                "usage": "Una restricción única impide dos eventos en la misma posición del agregado de una sucursal; otro event_id en una posición ocupada se responde conflict. Un evento con sequence mayor que uno sólo se recibe si la secuencia anterior del mismo agregado ya está en el inbox; si falta, la respuesta es retryable con PREDECESSOR_MISSING."
+              },
+              "name": "aggregate_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Posición del evento dentro de su agregado.",
+                "example": 1,
+                "usage": "Ordena la recepción por agregado y, con el agregado, identifica una posición que sólo un evento puede ocupar. La venta confirmada usa hoy sólo la secuencia uno."
+              },
+              "name": "sequence",
+              "nullable": false,
+              "type": "integer"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Instante del hecho de negocio según la sucursal.",
+                "example": "2026-01-15T10:00:00.000Z",
+                "usage": "Copia del occurredAt del evento; no es el instante de recepción."
+              },
+              "name": "occurred_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Sobre del evento recibido, tal como la sucursal lo almacenó.",
+                "example": {
+                  "aggregateId": "40000000-0000-4000-8000-000000000002",
+                  "aggregateVersion": 1,
+                  "contractVersion": 1,
+                  "eventId": "40000000-0000-4000-8000-000000000001",
+                  "eventType": "SaleConfirmed",
+                  "occurredAt": "2026-01-15T10:00:00.000Z",
+                  "payload": {
+                    "currency": "CLP",
+                    "currencyScale": 0,
+                    "paymentId": "40000000-0000-4000-8000-000000000003",
+                    "quoteId": "40000000-0000-4000-8000-000000000005",
+                    "saleId": "40000000-0000-4000-8000-000000000002",
+                    "shiftId": "40000000-0000-4000-8000-000000000004",
+                    "total": "1190"
+                  },
+                  "scope": {
+                    "branchId": "10000000-0000-4000-8000-000000000001",
+                    "countryId": "CL",
+                    "installationId": "10000000-0000-4000-8000-000000000005",
+                    "legalEntityId": "10000000-0000-4000-8000-000000000002",
+                    "registerId": "10000000-0000-4000-8000-000000000003"
+                  }
+                },
+                "usage": "Envelope SaleConfirmed validado por SaleConfirmedEventSchema y por su hash; el paso siguiente lo leerá desde aquí. El ejemplo corresponde al contrato de efectivo versión uno."
+              },
+              "name": "payload",
+              "nullable": false,
+              "type": "jsonb"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "SHA-256 en hexadecimal del JSON canónico del payload recibido.",
+                "example": "4276358c038116a13506bd492e1c88bf2f6f03ad7a2bfcf88bfbd8ede3e4ab8a",
+                "usage": "El receptor lo recalcula antes de guardar; distingue un reenvío (mismo hash, duplicate) de un event_id reutilizado (otro hash, conflict)."
+              },
+              "name": "payload_hash",
+              "nullable": false,
+              "type": "character(64)"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Instante en que la base de país guardó el evento por primera vez.",
+                "example": "2026-01-15T10:00:05.000Z",
+                "usage": "Lo fija el reloj de la base al insertar; un reenvío no lo cambia."
+              },
+              "name": "received_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "aggregate_id"
+              ],
+              "definition": "NOT NULL aggregate_id",
+              "name": "country_inbox_aggregate_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "realm_id",
+                "origin_branch_id",
+                "consumer",
+                "aggregate_type",
+                "aggregate_id",
+                "sequence"
+              ],
+              "definition": "UNIQUE (realm_id, origin_branch_id, consumer, aggregate_type, aggregate_id, sequence)",
+              "name": "country_inbox_aggregate_position",
+              "type": "u"
+            },
+            {
+              "columns": [
+                "aggregate_type"
+              ],
+              "definition": "CHECK (aggregate_type = 'sale'::text)",
+              "name": "country_inbox_aggregate_type_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "aggregate_type"
+              ],
+              "definition": "NOT NULL aggregate_type",
+              "name": "country_inbox_aggregate_type_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "batch_id"
+              ],
+              "definition": "NOT NULL batch_id",
+              "name": "country_inbox_batch_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "consumer"
+              ],
+              "definition": "CHECK (consumer = 'deliver-events'::text)",
+              "name": "country_inbox_consumer_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "consumer"
+              ],
+              "definition": "NOT NULL consumer",
+              "name": "country_inbox_consumer_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "contract_version"
+              ],
+              "definition": "CHECK (contract_version > 0)",
+              "name": "country_inbox_contract_version_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "contract_version"
+              ],
+              "definition": "NOT NULL contract_version",
+              "name": "country_inbox_contract_version_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "event_id"
+              ],
+              "definition": "NOT NULL event_id",
+              "name": "country_inbox_event_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "event_type"
+              ],
+              "definition": "CHECK (event_type = 'SaleConfirmed'::text)",
+              "name": "country_inbox_event_type_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "event_type"
+              ],
+              "definition": "NOT NULL event_type",
+              "name": "country_inbox_event_type_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "occurred_at"
+              ],
+              "definition": "NOT NULL occurred_at",
+              "name": "country_inbox_occurred_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "origin_branch_id"
+              ],
+              "definition": "NOT NULL origin_branch_id",
+              "name": "country_inbox_origin_branch_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "origin_country_id"
+              ],
+              "definition": "CHECK (length(origin_country_id::text) > 0)",
+              "name": "country_inbox_origin_country_id_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "origin_country_id"
+              ],
+              "definition": "NOT NULL origin_country_id",
+              "name": "country_inbox_origin_country_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "origin_installation_id"
+              ],
+              "definition": "NOT NULL origin_installation_id",
+              "name": "country_inbox_origin_installation_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "payload"
+              ],
+              "definition": "CHECK (jsonb_typeof(payload) = 'object'::text)",
+              "name": "country_inbox_payload_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "payload_hash"
+              ],
+              "definition": "CHECK (payload_hash ~ '^[0-9a-f]{64}$'::text)",
+              "name": "country_inbox_payload_hash_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "payload_hash"
+              ],
+              "definition": "NOT NULL payload_hash",
+              "name": "country_inbox_payload_hash_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "payload"
+              ],
+              "definition": "NOT NULL payload",
+              "name": "country_inbox_payload_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "realm_id",
+                "origin_branch_id",
+                "consumer",
+                "event_id"
+              ],
+              "definition": "PRIMARY KEY (realm_id, origin_branch_id, consumer, event_id)",
+              "name": "country_inbox_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "realm_id"
+              ],
+              "definition": "FOREIGN KEY (realm_id) REFERENCES platform.database_realm(realm_id)",
+              "name": "country_inbox_realm_id_fkey",
+              "references": {
+                "columns": [
+                  "realm_id"
+                ],
+                "schema": "platform",
+                "table": "database_realm"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "realm_id"
+              ],
+              "definition": "NOT NULL realm_id",
+              "name": "country_inbox_realm_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "received_at"
+              ],
+              "definition": "NOT NULL received_at",
+              "name": "country_inbox_received_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "sequence"
+              ],
+              "definition": "CHECK (sequence > 0)",
+              "name": "country_inbox_sequence_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "sequence"
+              ],
+              "definition": "NOT NULL sequence",
+              "name": "country_inbox_sequence_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "sync",
+          "documentation": {
+            "description": "Inbox durable de país: un evento DeliverEvents recibido de una sucursal, inmutable.",
+            "sources": [
+              {
+                "path": "libs/backend/sync/src/country-inbox/country-inbox.migration.ts"
+              },
+              {
+                "path": "libs/backend/sync/src/country-inbox/country-inbox.store.ts"
+              }
+            ],
+            "usage": "Sólo en la base de país. CountryInboxService de country-api inserta la fila en la transacción del lote, junto con su sync.country_work, y responde accepted después del COMMIT. Un reenvío con el mismo event_id y payload_hash es duplicate sin fila nueva; el mismo event_id con otro hash es conflict y la fila original se conserva. Una posición de agregado (sucursal, consumidor, aggregate_type, aggregate_id, sequence) admite un solo evento: otro event_id en una posición ocupada también es conflict. Un evento cuyo valor PostgreSQL no puede guardar, como un carácter NUL, se responde invalid sin fila. El rol de ejecución sólo puede leer e insertar; un trigger impide modificarla o borrarla. Recibir un evento no lo aplica ni lo integra con el ERP."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE UNIQUE INDEX country_inbox_aggregate_position ON sync.country_inbox USING btree (realm_id, origin_branch_id, consumer, aggregate_type, aggregate_id, sequence)",
+              "name": "country_inbox_aggregate_position"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX country_inbox_pkey ON sync.country_inbox USING btree (realm_id, origin_branch_id, consumer, event_id)",
+              "name": "country_inbox_pkey"
+            }
+          ],
+          "name": "country_inbox",
+          "schema": "sync"
+        },
+        {
+          "columns": [
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Identidad del trabajo pendiente.",
+                "example": "50000000-0000-4000-8000-000000000001",
+                "usage": "La genera la base con gen_random_uuid al insertar."
+              },
+              "name": "work_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Ámbito de país del evento al que corresponde el trabajo.",
+                "example": "10000000-0000-4000-8000-000000000009",
+                "usage": "Parte de la referencia a la fila de sync.country_inbox."
+              },
+              "name": "realm_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Sucursal de origen del evento al que corresponde el trabajo.",
+                "example": "10000000-0000-4000-8000-000000000001",
+                "usage": "Parte de la referencia a la fila de sync.country_inbox."
+              },
+              "name": "origin_branch_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Consumidor del inbox del evento al que corresponde el trabajo.",
+                "example": "deliver-events",
+                "usage": "Parte de la referencia a la fila de sync.country_inbox."
+              },
+              "name": "consumer",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Evento recibido al que corresponde el trabajo.",
+                "example": "40000000-0000-4000-8000-000000000001",
+                "usage": "Con ámbito, sucursal y consumidor referencia una única fila de sync.country_inbox; la restricción única impide dos trabajos del mismo tipo para el mismo evento."
+              },
+              "name": "event_id",
+              "nullable": false,
+              "type": "uuid"
+            },
+            {
+              "comment": null,
+              "default": null,
+              "documentation": {
+                "description": "Paso siguiente que el evento recibido necesita.",
+                "example": "apply-event",
+                "usage": "Hoy sólo apply-event: aplicar el evento en país, que ningún proceso implementa todavía."
+              },
+              "name": "work_type",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": "'pending'::text",
+              "documentation": {
+                "description": "Estado del trabajo.",
+                "example": "pending",
+                "usage": "Sólo pending: no existe aún el proceso que lo tome ni sus estados posteriores, que requieren una migración."
+              },
+              "name": "state",
+              "nullable": false,
+              "type": "text"
+            },
+            {
+              "comment": null,
+              "default": "clock_timestamp()",
+              "documentation": {
+                "description": "Instante en que la base de país registró el trabajo.",
+                "example": "2026-01-15T10:00:05.000Z",
+                "usage": "Lo fija el reloj de la base en la transacción de la recepción; ordena el índice de pendientes."
+              },
+              "name": "created_at",
+              "nullable": false,
+              "type": "timestamp with time zone"
+            }
+          ],
+          "comment": null,
+          "constraints": [
+            {
+              "columns": [
+                "consumer"
+              ],
+              "definition": "NOT NULL consumer",
+              "name": "country_work_consumer_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "created_at"
+              ],
+              "definition": "NOT NULL created_at",
+              "name": "country_work_created_at_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "event_id"
+              ],
+              "definition": "NOT NULL event_id",
+              "name": "country_work_event_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "origin_branch_id"
+              ],
+              "definition": "NOT NULL origin_branch_id",
+              "name": "country_work_origin_branch_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "work_id"
+              ],
+              "definition": "PRIMARY KEY (work_id)",
+              "name": "country_work_pkey",
+              "type": "p"
+            },
+            {
+              "columns": [
+                "realm_id"
+              ],
+              "definition": "NOT NULL realm_id",
+              "name": "country_work_realm_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "realm_id",
+                "origin_branch_id",
+                "consumer",
+                "event_id"
+              ],
+              "definition": "FOREIGN KEY (realm_id, origin_branch_id, consumer, event_id) REFERENCES sync.country_inbox(realm_id, origin_branch_id, consumer, event_id)",
+              "name": "country_work_realm_id_origin_branch_id_consumer_event_id_fkey",
+              "references": {
+                "columns": [
+                  "realm_id",
+                  "origin_branch_id",
+                  "consumer",
+                  "event_id"
+                ],
+                "schema": "sync",
+                "table": "country_inbox"
+              },
+              "type": "f"
+            },
+            {
+              "columns": [
+                "realm_id",
+                "origin_branch_id",
+                "consumer",
+                "event_id",
+                "work_type"
+              ],
+              "definition": "UNIQUE (realm_id, origin_branch_id, consumer, event_id, work_type)",
+              "name": "country_work_realm_id_origin_branch_id_consumer_event_id_wo_key",
+              "type": "u"
+            },
+            {
+              "columns": [
+                "state"
+              ],
+              "definition": "CHECK (state = 'pending'::text)",
+              "name": "country_work_state_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "state"
+              ],
+              "definition": "NOT NULL state",
+              "name": "country_work_state_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "work_id"
+              ],
+              "definition": "NOT NULL work_id",
+              "name": "country_work_work_id_not_null",
+              "type": "n"
+            },
+            {
+              "columns": [
+                "work_type"
+              ],
+              "definition": "CHECK (work_type = 'apply-event'::text)",
+              "name": "country_work_work_type_check",
+              "type": "c"
+            },
+            {
+              "columns": [
+                "work_type"
+              ],
+              "definition": "NOT NULL work_type",
+              "name": "country_work_work_type_not_null",
+              "type": "n"
+            }
+          ],
+          "context": "sync",
+          "documentation": {
+            "description": "Paso siguiente durable de un evento recibido en el inbox de país.",
+            "sources": [
+              {
+                "path": "libs/backend/sync/src/country-inbox/country-inbox.migration.ts"
+              },
+              {
+                "path": "libs/backend/sync/src/country-inbox/country-inbox.store.ts"
+              }
+            ],
+            "usage": "Sólo en la base de país. CountryInboxService la inserta en la misma sentencia y transacción que su fila de sync.country_inbox, así que un evento aceptado siempre tiene su trabajo pendiente y un duplicate no agrega otro. Ningún proceso la consume todavía: no aplica el evento, no proyecta ni llama al ERP. El rol de ejecución sólo puede leer e insertar."
+          },
+          "indexes": [
+            {
+              "definition": "CREATE UNIQUE INDEX country_work_pkey ON sync.country_work USING btree (work_id)",
+              "name": "country_work_pkey"
+            },
+            {
+              "definition": "CREATE UNIQUE INDEX country_work_realm_id_origin_branch_id_consumer_event_id_wo_key ON sync.country_work USING btree (realm_id, origin_branch_id, consumer, event_id, work_type)",
+              "name": "country_work_realm_id_origin_branch_id_consumer_event_id_wo_key"
+            },
+            {
+              "definition": "CREATE INDEX pending_country_work ON sync.country_work USING btree (created_at, work_id) WHERE (state = 'pending'::text)",
+              "name": "pending_country_work"
+            }
+          ],
+          "name": "country_work",
+          "schema": "sync"
         }
       ]
     }

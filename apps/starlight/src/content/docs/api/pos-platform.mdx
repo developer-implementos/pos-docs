@@ -11,8 +11,20 @@ Consulta el contrato preciso después de seguir el [recorrido de negocio](/guide
 
 <ProductApiCatalog />
 
+## Qué documenta cada operación
+
+Las operaciones documentadas declaran una descripción en español con sus precondiciones, permisos y efectos; un tag del catálogo cerrado del producto; los códigos de error que responden realmente sus casos de uso; y ejemplos sintéticos validados contra su esquema al arrancar la aplicación. Desde la revisión [`d94dfbe`](https://github.com/developer-implementos/pos-platform/commit/d94dfbe8c3895499f6afbebc75025d61005aaa41) lo hacen, además de `catalog`, las 33 operaciones principales de pagos ([TASK-678](https://github.com/developer-implementos/pos-platform/pull/688): intenciones, compensaciones, planes de cobro, perfiles, recuperación y terminales) y las 21 de evidencia y expedientes de operación, documentos fiscales y precios ([TASK-679](https://github.com/developer-implementos/pos-platform/pull/685)). La descarga del PDF fiscal conserva su respuesta binaria, sin ejemplo JSON.
+
+Otras operaciones todavía se publican sin descripción, tag o ejemplos; el producto mide ese pendiente con su lint de OpenAPI. Una descripción afirma reglas leídas del código de esa revisión y la revisión humana comprueba su contenido: su presencia no acredita que sea exacta.
+
 ## Usar estos contratos en Apidog
 
 Importa el OpenAPI de la aplicación que necesitas. El contrato se modifica en POS Platform y se vuelve a exportar; Apidog consume esa revisión. Conserva los entornos y credenciales fuera del portal público.
 
-La automatización, el control de revisiones y la actualización de estas referencias se describen en [Mantenimiento de la documentación](/guide/reference/documentation-system/). La integración está preparada para configurarse con el proyecto del equipo; esta publicación no acredita una conexión a Apidog ni la ejecución de sus escenarios.
+Desde [TASK-635](https://github.com/developer-implementos/pos-platform/pull/640), revisión [`7ad6b41`](https://github.com/developer-implementos/pos-platform/commit/7ad6b4121da828bfffed7e2a1de1e5dadb59eedd), POS Platform puede publicar toda la API, `branch-api` y `country-api`, desde el artefacto verificado de una corrida verde de `main`:
+
+- **Vista previa en cada PR, sin red hacia Apidog.** Compara el contrato candidato con el último artefacto de `main` y resume las operaciones agregadas, cambiadas y eliminadas, y los cambios incompatibles. Es informativa: no hace fallar la PR.
+- **Publicación después de integrar.** Un workflow propio importa el artefacto en un ambiente protegido de GitHub, después de comprobar su revisión y sus hashes. Está apagado mientras el administrador no habilite `APIDOG_PUBLISH_ENABLED`.
+- **Retiro.** Una operación eliminada se publica una vez más como obsoleta. Borrar en Apidog exige un despacho manual explícito.
+
+El proyecto y la cuenta de Apidog, los módulos por aplicación y los ambientes a cargar son decisiones pendientes del equipo. La automatización, el control de revisiones y la actualización de estas referencias se describen en [Mantenimiento de la documentación](/guide/reference/documentation-system/). Esta publicación no acredita una conexión a Apidog, una importación realizada ni la ejecución de sus escenarios.
