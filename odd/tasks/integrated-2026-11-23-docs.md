@@ -26,7 +26,7 @@ Espejo Engram: pendiente. La herramienta no está disponible en esta sesión; la
 - [x] T4 · S8 · route:inline · ADR-30 · status:done · evidence: `1283066`
 - [x] T5 · S3,S4 · route:inline · Referencia de contratos y sistema documental · status:done · evidence: `167af82`
 - [x] T6 · S5 · route:inline · Guía de pruebas · status:done · evidence: `8cfa1dc`
-- [ ] T7 · S1,S2,S3,S4,S5,S6,S7,S8,S9 · route:inline · Regenerar la colección de Excalidraw, verificar y abrir la PR · status:in_progress · evidence: PR pendiente
+- [ ] T7 · S1,S2,S3,S4,S5,S6,S7,S8,S9 · route:inline · Regenerar la colección de Excalidraw, verificar y abrir la PR · status:in_progress · evidence: `npm run verify` en verde sobre 438515a (L3); PR abierta
 
 ## Log
 
@@ -35,3 +35,4 @@ Espejo Engram: pendiente. La herramienta no está disponible en esta sesión; la
 > Update the editorial repository developer-implementos/pos-docs so its canonical pages reflect behavior that landed today in developer-implementos/pos-platform main. […] Only document what is implemented; mark limits and open decisions as such; do not describe pending PRs (#508/#557 shift close, #695 country consumer, #690 outbox quarantine) as implemented. Find the existing canonical page for each (business flow, API guide, architecture, roadmap work item) and update it in place instead of adding duplicate pages
 
 - L2 · 2026-11-23 · La referencia se importó del artefacto `documentation-contracts` de la corrida de `main` 45238596815 (verde) sobre `d94dfbe`, copiado a un checkout limpio de esa revisión fuera de este repositorio; `sync.mjs` validó el manifiesto y los hashes. No había página de capacidad o carga: la medición va en la guía de pruebas, que ya reúne la cobertura por ubicación. TASK-568 (#571), base de la política de verificación, no estaba documentada; se resume sólo lo necesario para explicar TASK-658. El renombre de cajas en cada despliegue de QA (TASK-702) llegó después y queda fuera de esta ficha.
+- L3 · 2026-11-23 · `npm run verify` falló dos veces y se corrigió: la presentación de arquitectura fija el hash del ADR-17 (se revisó el deck, que no menciona la reimpresión, y se renovó la fuente), y Archify rechazó los diagramas de datos con las tablas nuevas (se ubicaron las de administration y devices, y payments pasa a tres columnas). Sobre 438515a `npm run verify` sale 0, incluidos build, enlaces, Archify y comprobaciones de navegador. No hubo revisión visual humana de los diagramas.
