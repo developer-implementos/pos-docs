@@ -40,8 +40,10 @@ export function projectDatabase(schema, source) {
       'administration.operator_account': [0, 1], 'administration.authorization_audit': [1, 1], 'administration.checkout_activation': [2, 1], 'administration.configuration_revision': [3, 1],
       'administration.operator_assignment': [4, 1], 'administration.operator_session': [5, 1], 'administration.operational_profile': [6, 1], 'administration.operational_role': [7, 1],
       'administration.login_throttle': [9, 1], 'administration.login_challenge_key': [10, 1],
+      'administration.password_recovery': [0, 2], 'administration.password_recovery_throttle': [1, 2], 'administration.email_outbox': [2, 2],
+      'administration.access_policy_revision': [4, 2], 'administration.session_reauthentication': [5, 2],
     } : context === 'devices' ? {
-      'platform.database_realm': [0, 0], 'devices.controller': [1, 0], 'devices.registration': [2, 0], 'devices.job': [3, 0], 'devices.result': [4, 0],
+      'platform.database_realm': [0, 0], 'devices.controller': [1, 0], 'devices.registration': [2, 0], 'devices.job': [3, 0], 'devices.result': [4, 0], 'devices.print_request': [3, 1],
     } : context === 'fiscal' ? {
       'platform.database_realm': [0, 0], 'fiscal.document': [1, 0], 'fiscal.attempt': [2, 0], 'fiscal.evidence': [3, 0], 'fiscal.representation': [1, 1], 'fiscal.representation_content': [2, 1],
     } : context === 'catalog' ? {
@@ -50,8 +52,10 @@ export function projectDatabase(schema, source) {
       'catalog.product': [0, 1], 'catalog.product_unit': [1, 1], 'catalog.product_code': [2, 1], 'catalog.availability': [3, 1],
       'catalog.customer_publication': [4, 1], 'catalog.customer': [5, 1], 'catalog.customer_change_request': [6, 1], 'platform.command_receipt': [7, 1],
     } : {};
+    // The viewer admits 13 grid rows; contexts that outgrow two columns use a third.
+    const columns = tables.length > 26 ? 3 : 2;
     const entities = tables.map((table, index) => ({
-      id: entityId(table), label: fullname(table), row: placement[fullname(table)]?.[0] ?? Math.floor(index / 2), col: placement[fullname(table)]?.[1] ?? index % 2,
+      id: entityId(table), label: fullname(table), row: placement[fullname(table)]?.[0] ?? Math.floor(index / columns), col: placement[fullname(table)]?.[1] ?? index % columns,
       attributes: table.columns.map(column => {
         const key = [...new Set(table.constraints.filter(constraint => roles[constraint.type] && constraint.columns.includes(column.name)).map(constraint => roles[constraint.type]))];
         const references = [...new Set(table.constraints.filter(constraint => constraint.type === 'f' && constraint.columns.includes(column.name)).map(constraint => `${entityId(constraint.references)}.${constraint.references.columns[constraint.columns.indexOf(column.name)]}`))];

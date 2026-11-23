@@ -44,6 +44,14 @@ Entre el 16 y el 17-11-2026 se integraron los incrementos siguientes, hasta la [
 | F02-06 · [Voucher manual de tarjeta](#voucher-manual-de-tarjeta) (TASK-377) | [PR #379](https://github.com/developer-implementos/pos-platform/pull/379), commit [`e260b8f`](https://github.com/developer-implementos/pos-platform/commit/e260b8f143160ad94798c5da92eecc0a2c192736) | Registrar un voucher una sola vez por comercio, terminal y código, con verificador independiente si la política lo declara |
 | F02-14 · [Cierre del lote del terminal](#cierre-del-lote-del-terminal) (TASK-376) | [PR #380](https://github.com/developer-implementos/pos-platform/pull/380), commit [`db49e43`](https://github.com/developer-implementos/pos-platform/commit/db49e43f4d002b2492b2d759deee1196f7e5c956) | Cerrar el lote sin tocar la caja y recuperar su resultado sin repetirlo |
 
+El 23-11-2026 se integraron los incrementos siguientes. Cada fila cita el commit que lo incorporó a `main`. Cerrar estas tareas no verifica sus entregables ni registra aceptación humana.
+
+| Incremento | Revisión de producto | Resultado acotado |
+| --- | --- | --- |
+| F02-10 · [Reimpresión autorizada](#reimpresión-autorizada-de-un-documento) (TASK-581) | [PR #588](https://github.com/developer-implementos/pos-platform/pull/588), commit [`2bcff89`](https://github.com/developer-implementos/pos-platform/commit/2bcff892ce23748c43fe93b825d43070cd50864c) | Reimprimir un documento existente con el permiso `device.reprint` y un motivo, sin otra venta, pago ni documento |
+| F02-06 · [Bloqueo de la venta sin verificador](#consulta-al-verificador-y-bloqueo-de-la-venta) (TASK-658) | [PR #680](https://github.com/developer-implementos/pos-platform/pull/680), commit [`13b0e59`](https://github.com/developer-implementos/pos-platform/commit/13b0e59f280e1ebda4a92eb907720a2ef0f70be2) | Rechazar al aprovisionar una política `block-sale` sin verificador autorizado (`verifier-not-authorized`) y registrar las consultas fallidas |
+| Mantenimiento del host (TASK-655) | [PR #672](https://github.com/developer-implementos/pos-platform/pull/672), commit [`8a9b191`](https://github.com/developer-implementos/pos-platform/commit/8a9b191b221da652c67837dd27606fe060662681) | [Leer acotado el cuerpo de error](#respuestas-de-error-y-compatibilidad-del-host) y aplazar el acuse sólo ante un trabajo retenido |
+
 ## Aplicaciones y autoridad
 
 | Pieza | Implementación y estado | Límite |
@@ -150,6 +158,25 @@ La referencia normalizada no puede usarse de nuevo en otra venta dentro de la su
 La evidencia estructurada conserva cuenta, referencia, importe, operador, decisión y motivo. El backend incorpora una bandeja de declaraciones por verificar y confirmaciones manuales por conciliar, accesible con el permiso específico aunque el verificador no pueda registrar pagos. Mantiene sucursal, puesto e instalación y paginación vinculada al estado; no restringe la revisión al creador del pago.
 
 La migración 239 conserva un PDF opcional privado de hasta **512 KiB**, con hash y metadatos inmutables en PostgreSQL. Sólo el registrador autorizado puede adjuntarlo; un lector, verificador o conciliador habilitado del ámbito puede consultarlo. El permiso de registrar no concede por sí solo descarga. Un reenvío conserva ID y contenido; adjuntar no confirma ni vuelve a aplicar el pago. Se comprobaron acceso, límites, integridad, inmutabilidad y bytes/cabeceras de descarga mediante PostgreSQL y HTTP; también las reglas del cliente. El archivo se descarga como adjunto y permanece `not-scanned`: no demuestra liquidación ni se presenta la validación de formato como análisis antimalware.
+
+### Consulta al verificador y bloqueo de la venta
+
+**TASK-658 · integrado en `main` mediante la [PR #680](https://github.com/developer-implementos/pos-platform/pull/680), revisión [`13b0e59`](https://github.com/developer-implementos/pos-platform/commit/13b0e59f280e1ebda4a92eb907720a2ef0f70be2).** Endurece la política de verificación por cuenta receptora que incorporó [TASK-568](https://github.com/developer-implementos/pos-platform/pull/571), en la revisión [`6ecc549`](https://github.com/developer-implementos/pos-platform/commit/6ecc5497484625a4906cccfa80a5b2635f83d498).
+
+El propietario aprovisiona la política de cada cuenta receptora con `database.js provision-transfer-verification-policy`, fuera del runtime. La política es inmutable y declara el contrato del verificador autorizado, o ninguno, su plazo de respuesta y qué ocurre mientras la verificación no se resuelve:
+
+| Política | Mientras la transferencia no se resuelve |
+| --- | --- |
+| `keep-sale-pending` | El importe queda reservado y la venta admite otros medios |
+| `block-sale` | La asignación queda incierta y se detienen otros medios, cargos, la finalización y la cancelación hasta la decisión manual |
+
+Sólo se consulta un verificador que la sucursal compone para el contrato declarado. Hoy `branch-api` no compone ninguno, así que toda consulta queda pendiente con su motivo y nunca confirma ni rechaza por sí sola. Un plazo vencido aborta la consulta y la registra sin decidir.
+
+Como salvaguarda técnica, el aprovisionamiento rechaza `block-sale` con el código fijo `verifier-not-authorized` mientras la sucursal no componga un verificador para ese contrato, incluido un contrato nulo, y lo hace antes de escribir. Sin ella, cada transferencia a esa cuenta dejaría la venta sin poder finalizarse ni cancelarse. `keep-sale-pending` sigue disponible, y una política ya aprovisionada no cambia. Los demás rechazos del comando también usan códigos fijos (`branch-mismatch`, `scope-mismatch`, `document-invalid` y `revision-content-conflict`), con código de salida 1.
+
+Una consulta inaccesible, vencida o con respuesta inválida emite el evento técnico `payment.transfer.verification.failed`, con un motivo fijo y el contrato del verificador. No incluye importe, cuenta, referencia, evidencia ni actor.
+
+La salvaguarda no es una regla de negocio. Si una cuenta sin verificador autorizado puede bloquear la venta lo decide Tesorería en [FOLLOWUP-036](/project/attention/#followup-036). Si lo admite, el comando deberá aceptarlo con un aviso explícito al operador. No hay un verificador bancario real compuesto.
 
 ### Recuperación y devolución de efectivo
 
@@ -395,6 +422,28 @@ El mismo `commandId` nunca vuelve a llamar al cierre. Si se perdió la respuesta
 
 El incremento no decide si el cierre de caja exige, advierte o ignora el cierre del lote ([Q-55](/project/questions/#q-55)) ni qué rol puede cerrarlo ([Q-57](/project/questions/#q-57)); la conciliación entre los totales y los pagos registrados pertenece a F04. El cierre real y la restricción homologada frente a un cobro siguen en [FOLLOWUP-002](/project/attention/#followup-002) y [FOLLOWUP-004](/project/attention/#followup-004). Cerrar la tarea no verifica F02-14.
 
+## Reimpresión autorizada de un documento
+
+**TASK-581 · integrado en `main` mediante la [PR #588](https://github.com/developer-implementos/pos-platform/pull/588), revisión [`2bcff89`](https://github.com/developer-implementos/pos-platform/commit/2bcff892ce23748c43fe93b825d43070cd50864c).** Es un corte de [F02-10](https://github.com/developer-implementos/pos-platform/issues/32) y aplica la respuesta de [Q-17](/project/questions/#q-17): la reimpresión exige un permiso propio y un motivo.
+
+`POST /api/v1/device-jobs/reprints` (`printExistingDocumentV1`) recibe el documento, la versión de su representación, las copias y el motivo, y es idempotente por `commandId`. Crea un trabajo nuevo en el dispositivo del trabajo original y sólo lee el documento guardado: no cobra, no emite un documento fiscal ni confirma otra venta, y conserva el documento y sus importes. `devices.print_request`, de la migración `581_device_print_request`, registra cada solicitud sin modificarla y vincula la copia con su original del mismo documento y sucursal; la reimpresión de una reimpresión enlaza el primer original.
+
+| Situación | Respuesta |
+| --- | --- |
+| Operador sin `device.reprint` | 403, con la denegación auditada |
+| Motivo ausente o vacío, o representación desconocida | 422 `VALIDATION_ERROR` |
+| Más copias que el límite de la representación | 422 `DEVICE_COPY_LIMIT_EXCEEDED`; `sale-receipt.v1` admite una copia por solicitud |
+| Documento sin impresión original en la caja | 404 `DEVICE_ORIGINAL_NOT_FOUND` |
+| Copia o segundo original pedidos con `createDeviceJobV1` | 409 `DEVICE_REPRINT_REQUIRED` |
+
+`createDeviceJobV1` imprime ahora sólo el original. Las solicitudes de un mismo documento se serializan con un bloqueo transaccional, así que dos impresiones simultáneas admiten un único original. Un original fallido se vuelve a imprimir como reimpresión autorizada y motivada.
+
+En el comprobante de venta, la sección «Reimprimir copia» aparece sólo para quien tiene `device.reprint`. Pide un motivo de 5 a 160 caracteres y muestra el envío, el error y el resultado. Si se pierde la respuesta, reenvía la misma solicitud, que no imprime otra copia. «Seguimiento de operaciones» identifica la «Reimpresión del recibo local no fiscal».
+
+Reglas provisionales, pendientes de Producto en [FOLLOWUP-035](/project/attention/#followup-035): sólo el administrador de sucursal recibe `device.reprint`, al migrar con `581_device_reprint_access`; un documento sin impresión original no se imprime como copia; no hay un tope total de reimpresiones por documento; y el motivo es texto libre, sin catálogo.
+
+**Límites.** Cubre sólo el recibo local no fiscal `sale-receipt.v1`: no hay plantilla DTE ni adaptador homologado, y el host sigue sin driver físico habilitado. Ningún recorrido Playwright cubre la sección. Los demás criterios de F02-10 siguen pendientes: caída después del spooler, falta de papel y caracteres especiales con una capacidad homologada, y plantilla desconocida o payload excesivo en el host. Cerrar la tarea no verifica F02-10.
+
 ## Recorrido durable del host
 
 El diagrama describe el recorrido de un adaptador habilitado. El runtime actual detecta que no hay driver, registra un resultado conocido sin efecto y consulta el permiso al entregar esa evidencia; no invoca hardware ni finge recorrer la rama física.
@@ -460,6 +509,17 @@ Los UUID se expresan en minúsculas, los hashes en hexadecimal y las fechas UTC 
 El resultado y su intento permanecen correlacionados. Evidencia tardía más débil del mismo intento se conserva sin hacer retroceder el estado. El acuse del resultado significa recepción durable, no que ese resultado haya reemplazado la evidencia más fuerte. Un intento distinto no puede apropiarse del trabajo. Si el servidor ya resolvió el intento o reconoce otro intento autoritativo, el host conserva su evidencia como superada por la resolución remota, sin fingir un acuse de entrega.
 
 `occurredAt` describe la observación del host; la admisión y las transiciones se deciden con el permiso, el ámbito y el estado durable del servidor. El reloj del puesto no convierte evidencia en autorización ni invalida por sí solo un reporte ya conservado.
+
+### Respuestas de error y compatibilidad del host
+
+**TASK-655 · integrado en `main` mediante la [PR #672](https://github.com/developer-implementos/pos-platform/pull/672), revisión [`8a9b191`](https://github.com/developer-implementos/pos-platform/commit/8a9b191b221da652c67837dd27606fe060662681).** No cambia el contrato `device-protocol`, el esquema ni las respuestas de `branch-api`.
+
+- **Lectura acotada.** El transporte del host lee como máximo 1 MiB de una respuesta correcta y 4 KiB de un cuerpo de error, aunque la respuesta no declare `Content-Length`, y descarta el resto. Del cuerpo de error común sólo conserva `code`.
+- **Aplazamiento del acuse.** En `/ack`, `DEVICE_STATE_CONFLICT` corresponde sólo a un trabajo retenido en cola y vigente. El host aplaza su ciclo únicamente ante un 409 con ese código; los demás rechazos siguen siendo fatales.
+- **`branch-api` anterior.** Si el poll con declaración de capacidades recibe 422 `VALIDATION_ERROR`, el host registra una vez `DeviceHostDeclarationRejected` y consulta sin declaración hasta reiniciarse. Sólo lo hace si su declaración incluye v1 y `receipt.print`, lo que el servidor actual entiende por una consulta sin declaración, y cada trabajo entregado se sigue validando igual. El orden de despliegue es primero `branch-api` y después el host.
+- **Reversión.** Volver `branch-api` a una versión anterior a la migración `563_device_delivery_hold` sin revertir los datos hace fallar la recepción de un trabajo retenido en cola, y el host aplaza su ciclo, hasta que el rol propietario libera esas retenciones según la [guía de devices](https://github.com/developer-implementos/pos-platform/blob/8a9b191b221da652c67837dd27606fe060662681/libs/backend/devices/README.md). Es un límite aceptado y no se automatiza.
+
+Las pruebas .NET (`device:check`), la interoperabilidad (`device:interop`) y la integración de `devices` sobre PostgreSQL cubren estos casos con datos sintéticos; no acreditan un driver ni hardware.
 
 ## Host, almacenamiento y entrega
 

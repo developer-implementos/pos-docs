@@ -260,6 +260,7 @@ Es la ruta `/account`, con el título «Mi cuenta · POS Platform», y se abre d
 - `administration.session_reauthentication`: tabla nueva, con la sesión, la acción, el momento y el vencimiento de cada prueba.
 - `administration.login_throttle` agrega el inicio de la ventana de conteo.
 - `administration.branch` agrega un nombre visible opcional, que se fija al aprovisionar o con un comando propietario.
+- El nombre de la caja (`administration.register.display_name`) que muestran el perfil y «Acerca de este equipo» se cambia con el comando propietario `database name-register` ([TASK-663](https://github.com/developer-implementos/pos-platform/pull/671), integrado en [`0488333`](https://github.com/developer-implementos/pos-platform/commit/04883330804cc7e84e3b7169c069c690ffa28479)). Funciona como el de la sucursal: bloquea la fila, responde `named` o `unchanged` y, al renombrar, deja una sola auditoría `register.name` con la caja como recurso. Rechaza otra sucursal (`SCOPE_MISMATCH`), una caja inexistente (`RESOURCE_NOT_FOUND`) y una base sin aprovisionar (`CONFIGURATION_INCOMPATIBLE`). La migración `663_register_display_name_line` le aplica la misma regla de una línea que al nombre de la sucursal: de 1 a 120 caracteres, sin espacios en los extremos ni caracteres de control. Si una caja existente no la cumple, la migración falla entera en vez de reescribir el nombre.
 
 Cada cambio actualiza el diccionario de datos del contexto.
 
@@ -267,7 +268,8 @@ Cada cambio actualiza el diccionario de datos del contexto.
 
 - Los clientes y `branch-api` se publican juntos ([ADR-22](environments.md)). Los contratos nuevos son operaciones nuevas. Las respuestas que agregan campos, la sesión y el login, las leen los clientes de la misma versión; un cliente anterior que recibe un contrato distinto lo trata como versión nueva ([TASK-458](https://github.com/developer-implementos/pos-platform/issues/458)).
 - Al migrar, las sesiones abiertas se cierran una vez: quien estaba operando vuelve a ingresar.
-- En QA la revisión 1 llega con la migración: no hay que configurar nada para tener los valores provisionales. La etiqueta del ambiente, el contacto de soporte y el nombre de la sucursal se fijan según la guía de despliegue del producto.
+- En QA la revisión 1 llega con la migración: no hay que configurar nada para tener los valores provisionales. La etiqueta del ambiente, el contacto de soporte y los nombres de la sucursal y de sus cajas se fijan según la guía de despliegue del producto.
+- Un equipo sin sesión abierta sigue mostrando en el inicio de sesión y en «Acerca de este equipo» el nombre de la caja guardado en su credencial local hasta renovarla; con sesión abierta ya ve el nombre nuevo.
 
 ## Alternativas descartadas
 

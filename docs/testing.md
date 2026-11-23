@@ -31,9 +31,26 @@ Hay [evidencia nativa conservada de `aa373b2`](https://github.com/developer-impl
 | Fronteras arquitectónicas | `tools/eslint` | Reglas de imports y calidad existentes | La organización objetivo requiere comprobar todos sus límites con casos negativos |
 | Artefactos backend | `tools/verify-api-artifact.mjs` | Arranque fuera del workspace con dependencias de producción | No acredita recuperación comercial |
 | Documentación, en POS Docs | `apps/starlight/scripts` | Fuentes, catálogo, build, enlaces, búsqueda y navegador | Se ejecuta en otro repositorio; no acredita funcionamiento del POS |
+| Carga de la sucursal | `tools/load` | Confirmaciones de venta concurrentes y exportación CSV del turno contra `branch-api` y PostgreSQL, con informes fechados por revisión | Hardware de desarrollo; no mide la capacidad del piloto |
 | Escritorio Windows | Job manual `windows-desktop` de `native.yml`, en runner alojado | Compilación y empaquetado Tauri de la revisión ejecutada | No es una suite E2E nativa ni prueba instalación, firma o hardware; no corre en cada PR |
 
 El [corte F02](phase-2-payments-documents.md) incorpora `pnpm run device:check` para build, formato y pruebas .NET, y `pnpm run device:interop` para el recorrido entre procesos. Los fixtures comunes validan sobre, resultado, recepción y permiso de ejecución tanto en TypeScript como en C#. La comprobación negativa de TLS ocurre antes de transmitir credenciales; la confianza en la CA efímera sólo existe en el helper de pruebas.
+
+### Mediciones de carga
+
+El arnés de `tools/load` carga sus datos por las puertas oficiales (`database.js provision`, `activate-checkout`, `import-commercial` y la API de administración), sólo en loopback y con efectivo sin proveedor. Desde [TASK-676](https://github.com/developer-implementos/pos-platform/pull/691), revisión [`c6e2445`](https://github.com/developer-implementos/pos-platform/commit/c6e2445ac29cf5915cf4ac966a9aa54abd946d24), mide además la exportación CSV de «Ventas del turno» mientras otras cajas confirman ventas: algunas sesiones exportan su turno y otras cancelan la descarga a mitad. Cada nivel se mide primero sin exportaciones y después con ellas, en la misma corrida.
+
+El [informe del 23-11-2026](https://github.com/developer-implementos/pos-platform/blob/c6e2445ac29cf5915cf4ac966a9aa54abd946d24/tools/load/reports/2026-11-23-branch-api-export-b98ba9f.md), de 30 minutos sobre `b98ba9f`, registra:
+
+| Observación | Resultado |
+| --- | --- |
+| Confirmación de venta con 4 cajas (p50/p95/p99) | De 133/160/178 ms sin exportaciones a 160/472/718 ms con ellas |
+| Confirmación de venta con 8 cajas | 396/1002/1349 ms y 292/982/1222 ms: el tramo sin exportaciones ya estaba degradado y la corrida no separa el efecto |
+| Ventas y errores | 4433 de 4433 ventas confirmadas, sin errores en ninguna fase |
+| Exportaciones | Sin respuestas 429 ni transferencias interrumpidas; cada cancelación liberó su cupo y las exportaciones posteriores coinciden con las ventas persistidas |
+| Recursos | Memoria de la API entre 166 y 183 MiB, sin crecimiento por la exportación; ningún bloqueo de PostgreSQL quedó sin conceder |
+
+Se midió en un equipo de desarrollo, con PostgreSQL en una máquina virtual compartida con otras bases, así que la variación entre tramos es alta. Es evidencia para los criterios de medición con exportación de [F05-07](https://github.com/developer-implementos/pos-platform/issues/66) y de exportación sin bloquear la venta de F04-05; no representa la capacidad del piloto ni verifica esos entregables, que necesitan un perfil de carga aprobado y el hardware de su topología.
 
 ## Proyecto E2E de clientes objetivo
 

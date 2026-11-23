@@ -6,7 +6,7 @@
 
 `apps/branch-api` compone el backend modular de sucursal con NestJS 12, Fastify 5 y TypeScript. Publica contratos HTTP v1 desde las bibliotecas de cada contexto, valida solicitudes con Zod y ejecuta los casos de uso mediante puertos. PostgreSQL 18.6 y `pg` 8.23.1 conservan la operación y su resultado durable. El [ADR-19](decisions/postgresql-unit-of-work.md) fija transacciones, migraciones y privilegios.
 
-Los clientes `pos-desktop`, `pos-mobile` y `pos-web` sólo admiten el estado inicial `unconfigured` y el perfil conectado `branch`, que usa la API; un perfil inválido detiene el arranque. `country-api` tiene persistencia y sonda de ámbito propias, todavía sin recepción comercial. Los workers no procesan jobs de negocio; `erp-worker` incorpora una CLI separada de consultas Mountain que aún no alimenta el espejo ni la UI.
+Los clientes `pos-desktop`, `pos-mobile` y `pos-web` sólo admiten el estado inicial `unconfigured` y el perfil conectado `branch`, que usa la API; un perfil inválido detiene el arranque. `country-api` tiene persistencia y sonda de ámbito propias y [recibe los lotes de la sucursal](flows/synchronization.md#qué-está-implementado) sin aplicarlos. Los workers no procesan jobs de negocio; `erp-worker` incorpora una CLI separada de consultas Mountain que aún no alimenta el espejo ni la UI.
 
 ## Corte parcial F02 integrado
 
