@@ -11,6 +11,36 @@ Los cambios de herramientas, pruebas y CI no aparecen aquí; quedan en el [regis
 
 Este archivo lo escribe [release-please](https://github.com/googleapis/release-please) desde los títulos de los PR, y cada versión queda como [release en GitHub](https://github.com/developer-implementos/pos-docs/releases). Para recibir un aviso por versión, usa *Watch → Custom → Releases* en el repositorio. No se edita a mano: cómo se escribe una buena entrada está en la [guía de versiones](tools/release/README.md).
 
+## [0.11.0](https://github.com/developer-implementos/pos-docs/compare/v0.10.22...v0.11.0) (2026-11-23)
+
+
+### Novedades
+
+* **project:** [TASK-716] mostrar los criterios cumplidos con evidencia junto al porcentaje ([#161](https://github.com/developer-implementos/pos-docs/issues/161)) ([347a76c](https://github.com/developer-implementos/pos-docs/commit/347a76cda60799d08b6546530665348b33c74af1))
+
+
+### Contenido actualizado
+
+* **follow-up:** FOLLOWUP-017 actualizado (impacto): Obtener las decisiones de negocio del registro de preguntas y reglas de paridad ([4237c8e](https://github.com/developer-implementos/pos-docs/commit/4237c8e919878498452da92637f51c71a3167210))
+* **progress:** F01-02 actualizado (resumen): Verificados cálculo decimal, cotización reproducible y comparación con consentimiento o rechazo de recotización ([4237c8e](https://github.com/developer-implementos/pos-docs/commit/4237c8e919878498452da92637f51c71a3167210))
+* **progress:** F01-09 actualizado (resumen): Verificados borradores y presupuestos persistidos, captura por código/unidad, cantidad repetida, pausa y recuperación explícita entre puestos con CAS ([4237c8e](https://github.com/developer-implementos/pos-docs/commit/4237c8e919878498452da92637f51c71a3167210))
+* **progress:** F01-12 actualizado (resumen): Revalidados contratos v1, errores, límites, idempotencia y consumidores ([4237c8e](https://github.com/developer-implementos/pos-docs/commit/4237c8e919878498452da92637f51c71a3167210))
+* **progress:** F02-04 actualizado (resumen): Seguimiento conectado muestra por operación los estados independientes de venta, pago, documento fiscal e impresión con su evidencia cronológica (TASK-11… ([4237c8e](https://github.com/developer-implementos/pos-docs/commit/4237c8e919878498452da92637f51c71a3167210))
+* **progress:** F02-05 actualizado (resumen): Verificados el plan de cobro congelado, las asignaciones exactas, el bloqueo del saldo incierto, los reintentos y el vuelto sólo de efectivo ([4237c8e](https://github.com/developer-implementos/pos-docs/commit/4237c8e919878498452da92637f51c71a3167210))
+* **progress:** F02-06 actualizado (resumen): Implementadas transferencias manuales con cuenta autorizada, referencia única entre ventas de la sucursal, aprobación independiente, bandeja por permisos… ([4237c8e](https://github.com/developer-implementos/pos-docs/commit/4237c8e919878498452da92637f51c71a3167210))
+* **progress:** F02-10 actualizado (resumen): Contrato de recibo no fiscal existente, payload/hash y distinción spool/efecto implementados ([4237c8e](https://github.com/developer-implementos/pos-docs/commit/4237c8e919878498452da92637f51c71a3167210))
+* **progress:** F02-14 actualizado (resumen): GetTerminalStatus distingue desconectado, conectado en modo manual, listo e indisponible con su origen y antigüedad, y sólo un adaptador puede afirmar qu… ([4237c8e](https://github.com/developer-implementos/pos-docs/commit/4237c8e919878498452da92637f51c71a3167210))
+* **progress:** F03-01 pasa de Pendiente a En desarrollo ([4237c8e](https://github.com/developer-implementos/pos-docs/commit/4237c8e919878498452da92637f51c71a3167210))
+* **progress:** F03-11 actualizado (resumen): pnpm run contracts:check compara los esquemas del código con un manifiesto versionado (tools/contracts/contract-manifest.json) y rechaza sin cambio de ve… ([4237c8e](https://github.com/developer-implementos/pos-docs/commit/4237c8e919878498452da92637f51c71a3167210))
+* **progress:** F04-03 pasa de Pendiente a En desarrollo ([4237c8e](https://github.com/developer-implementos/pos-docs/commit/4237c8e919878498452da92637f51c71a3167210))
+* **progress:** F04-05 actualizado (resumen): listShiftSalesV1 lista con sale.read y paginación keyset las ventas que el solicitante confirmó en su turno, caja e instalación, y cada fila abre su comp… ([4237c8e](https://github.com/developer-implementos/pos-docs/commit/4237c8e919878498452da92637f51c71a3167210))
+* **progress:** F05-02 actualizado (resumen): database.js backup respalda la base de sucursal con pg_dump sobre una instantánea REPEATABLE READ y un manifiesto con SHA-256, versiones, ámbito, migraci… ([4237c8e](https://github.com/developer-implementos/pos-docs/commit/4237c8e919878498452da92637f51c71a3167210))
+* **progress:** F05-06 pasa de Pendiente a En desarrollo ([4237c8e](https://github.com/developer-implementos/pos-docs/commit/4237c8e919878498452da92637f51c71a3167210))
+* **progress:** F05-07 actualizado (resumen): tools/load mide branch-api con escenarios reproducibles por semilla, preparados sólo por las puertas oficiales, e informa percentiles, errores, recursos… ([4237c8e](https://github.com/developer-implementos/pos-docs/commit/4237c8e919878498452da92637f51c71a3167210))
+* **progress:** F05-09 pasa de Pendiente a En desarrollo ([4237c8e](https://github.com/developer-implementos/pos-docs/commit/4237c8e919878498452da92637f51c71a3167210))
+* **progress:** F05-12 actualizado (resumen): El recorrido del cajero se completa sólo con teclado, desde la apertura del turno hasta el comprobante, con foco visible, diálogos que devuelven el foco… ([4237c8e](https://github.com/developer-implementos/pos-docs/commit/4237c8e919878498452da92637f51c71a3167210))
+* **project:** [TASK-361] importar el corte 4999b1a de avance, seguimientos y preguntas ([4237c8e](https://github.com/developer-implementos/pos-docs/commit/4237c8e919878498452da92637f51c71a3167210))
+
 ## [0.10.22](https://github.com/developer-implementos/pos-docs/compare/v0.10.21...v0.10.22) (2026-11-23)
 
 
