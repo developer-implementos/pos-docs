@@ -18,6 +18,15 @@ const routes = ['/project/', '/project/plan/', '/project/work/', '/project/atten
 const escapeText = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 const reviewDate = value => new Intl.DateTimeFormat('es-CL', { dateStyle: 'medium', timeZone: 'UTC' }).format(new Date(`${value}T00:00:00Z`));
 
+/** The published snapshot without spec criteria, so tests prove behavior whatever the latest import carries. */
+function snapshotWithoutCriteria() {
+  const snapshot = JSON.parse(fs.readFileSync(new URL('./data/project-progress.json', import.meta.url), 'utf8'));
+  delete snapshot.content.criteria;
+  for (const work of snapshot.content.workPackages) delete work.criteria;
+  snapshot.source.sha256 = progressContentHash(snapshot.content);
+  return snapshot;
+}
+
 function questionsWith(mutate = () => {}, integration = questionsSnapshot.integration, followUpModel = followUp) {
   const snapshot = structuredClone(questionsSnapshot);
   mutate(snapshot.content);
@@ -150,7 +159,8 @@ test('fully resolved actions leave no open action or assignment count and remain
 });
 
 test('schema 1 acceptance stays historical across summary, breakdowns, dates and work detail', () => {
-  const snapshot = JSON.parse(fs.readFileSync(new URL('./data/project-progress.json', import.meta.url), 'utf8'));
+  // Schema 1 predates spec criteria, so the fixture starts from a snapshot without them.
+  const snapshot = snapshotWithoutCriteria();
   snapshot.content.schemaVersion = 1;
   snapshot.content.summary = 'Aceptaciones registradas en el corte histórico del fixture.';
   const evidence = [{path: 'delivery/evidence/historical-acceptance.md', label: 'Acta de aceptación del fixture'}];
@@ -580,7 +590,7 @@ test('the rules catalog explains an unpublished register', () => {
 });
 
 function withCriteria(mutate) {
-  const snapshot = JSON.parse(fs.readFileSync(new URL('./data/project-progress.json', import.meta.url), 'utf8'));
+  const snapshot = snapshotWithoutCriteria();
   mutate(snapshot.content);
   snapshot.source.sha256 = progressContentHash(snapshot.content);
   const model = deriveProgress(snapshot, fs.readFileSync(new URL('../docs/roadmap.json', import.meta.url), 'utf8'));
