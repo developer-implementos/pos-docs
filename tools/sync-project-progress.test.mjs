@@ -412,3 +412,33 @@ test('schema 2 rejects tracked symlinks as technical verification evidence', t =
   assert.throws(() => syncProjectProgress(item), /unsupported Git object/);
   assert.equal(fs.readFileSync(item.destination, 'utf8'), previous);
 });
+
+test('spec criteria are optional, imported unchanged and validated before the snapshot is replaced', t => {
+  const item = fixture(t);
+  technicalRegistry(item);
+  item.update();
+  assert.equal(syncProjectProgress(item).criteria, null, 'A registry without criteria keeps importing without fabricated counts');
+  assert.ok(!('criteria' in JSON.parse(fs.readFileSync(item.destination, 'utf8')).content));
+
+  item.content.workPackages[0].criteria = { met: 7, total: 7 };
+  item.content.workPackages[1].criteria = { met: 2, total: 9 };
+  item.content.criteria = { met: 9, total: 16 };
+  item.update();
+  const result = syncProjectProgress(item);
+  assert.deepEqual(result.criteria, { met: 9, total: 16, percent: 56.3 });
+  assert.deepEqual(JSON.parse(fs.readFileSync(item.destination, 'utf8')).content, item.content);
+  const published = fs.readFileSync(item.destination, 'utf8');
+
+  for (const invalid of [{ met: 3, total: 2 }, { met: 1.5, total: 2 }, { met: '1', total: 2 }, { met: -1, total: 2 }, { met: 1 }]) {
+    item.content.workPackages[1].criteria = invalid;
+    item.content.criteria = { met: 7 + (Number.isInteger(invalid.met) ? invalid.met : 0), total: 7 + (invalid.total ?? 0) };
+    item.update();
+    assert.throws(() => syncProjectProgress(item), /criteria/, `Reject ${JSON.stringify(invalid)}`);
+    assert.equal(fs.readFileSync(item.destination, 'utf8'), published, 'An invalid count never replaces the published snapshot');
+  }
+  item.content.workPackages[1].criteria = { met: 2, total: 9 };
+  item.content.criteria = { met: 10, total: 16 };
+  item.update();
+  assert.throws(() => syncProjectProgress(item), /differ from the sum/);
+  assert.equal(fs.readFileSync(item.destination, 'utf8'), published);
+});

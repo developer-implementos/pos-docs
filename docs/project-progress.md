@@ -74,6 +74,14 @@ Esta medida expresa implementación y verificación de los entregables acordados
 
 El resumen de cada app señala el alcance comprobado y sus límites: una prueba de navegador no acredita instalación nativa, una consulta local de contrato no acredita el proveedor y una CI verde no acredita por sí sola todos los criterios del entregable. La integración en `main` no verifica automáticamente una tarea ni registra aceptación manual. El resumen del proyecto muestra cuántos entregables están verificados, cuántos aceptó el equipo y cuántos verificados esperan esa revisión manual.
 
+## Criterios cumplidos con evidencia
+
+Junto al porcentaje oficial, el resumen del proyecto, cada fase y cada entregable pueden mostrar un segundo indicador: **criterios de las fichas cumplidos con evidencia**, expresado como cumplidos de total y su porcentaje. Cuenta las casillas de las secciones `## Implementación` y `## Criterios de aceptación` de cada ficha `delivery/specs/Fxx-xx.md` de POS Platform. Una casilla cuenta como cumplida sólo cuando está marcada con evidencia integrada en `main`; POS Platform comprueba esa evidencia antes de publicar los conteos en `delivery/progress.json`.
+
+Este indicador muestra el trabajo integrado dentro de los entregables en curso, pero no sustituye ni modifica el porcentaje oficial: éste cuenta sólo entregables verificados completos, sin crédito parcial. Un entregable con todas sus casillas marcadas no queda verificado por ello. Tampoco acredita aceptación humana, habilitación operativa ni homologación de proveedores o dispositivos.
+
+Los conteos son opcionales. Cuando el registro importado no los contiene, el panel no muestra el indicador en lugar de presentar un cero. La fase y el total se calculan sumando los conteos de sus entregables, sólo cuando todos los entregables los informan. La importación rechaza valores que no sean enteros, un cumplido mayor que el total o un total declarado que difiera de esa suma.
+
 ## Estados y evidencia
 
 | Estado del registro | Significado | Aporta al porcentaje |

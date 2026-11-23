@@ -578,3 +578,44 @@ test('the rules catalog explains an unpublished register', () => {
   assert.match(html, /todavía no publica el registro de reglas/);
   assert.doesNotMatch(html, /data-project-item/);
 });
+
+function withCriteria(mutate) {
+  const snapshot = JSON.parse(fs.readFileSync(new URL('./data/project-progress.json', import.meta.url), 'utf8'));
+  mutate(snapshot.content);
+  snapshot.source.sha256 = progressContentHash(snapshot.content);
+  const model = deriveProgress(snapshot, fs.readFileSync(new URL('../docs/roadmap.json', import.meta.url), 'utf8'));
+  return { model, pages: renderProjectPages(model, loadFollowUp(root, model)) };
+}
+
+test('spec criteria render next to the official percentage globally, per phase and per package', () => {
+  // Synthetic counts: every package reports 3 of 4 criteria, except the first, which reports none to measure.
+  const { model, pages } = withCriteria(content => {
+    content.workPackages.forEach((work, index) => { work.criteria = index === 0 ? { met: 0, total: 0 } : { met: 3, total: 4 }; });
+    const measured = content.workPackages.length - 1;
+    content.criteria = { met: measured * 3, total: measured * 4 };
+  });
+  const format = value => new Intl.NumberFormat('es-CL', { maximumFractionDigits: 1 }).format(value);
+  const summary = pages.get('/project/').body;
+  assert.ok(summary.includes(`<strong id="criteria-title">Criterios cumplidos con evidencia:</strong> ${model.criteria.met} de ${model.criteria.total} (75 %)`));
+  assert.ok(summary.indexOf('class="project-kpis"') < summary.indexOf('class="project-criteria"'), 'The indicator follows the official KPIs');
+  assert.ok(summary.includes(`<strong>${format(model.percent)} %</strong>`), 'The official percentage is still shown');
+  assert.match(summary, /Complementa el avance oficial, que cuenta únicamente entregables verificados completos, sin crédito parcial; no acredita aceptación humana ni homologación/);
+  assert.match(summary, /href="\/guide\/implementation\/progress\/#criterios-cumplidos-con-evidencia"/);
+  for (const phase of model.phases) {
+    const line = phase.criteria.total ? `Criterios con evidencia: ${phase.criteria.met} de ${phase.criteria.total} (${format(phase.criteria.percent)} %)` : null;
+    if (line) assert.ok(summary.includes(line), `${phase.id} shows its criteria`);
+  }
+  const work = pages.get('/project/work/').body;
+  assert.equal((work.match(/Criterios con evidencia: 3 de 4 \(75 %\)/g) || []).length, model.workPackages.length - 1);
+  assert.doesNotMatch(work, /Criterios con evidencia: 0 de 0/, 'A package without criteria to measure shows nothing');
+  assert.match(work, /Definición del indicador/);
+});
+
+test('without spec criteria no indicator, zero or definition note is published', () => {
+  const { pages } = withCriteria(() => {});
+  for (const page of pages.values()) assert.doesNotMatch(page.body, /Criterios cumplidos con evidencia|Criterios con evidencia|criterios-cumplidos-con-evidencia/);
+  const partial = withCriteria(content => { content.workPackages[0].criteria = { met: 1, total: 2 }; });
+  const summary = partial.pages.get('/project/').body;
+  assert.doesNotMatch(summary, /Criterios cumplidos con evidencia/, 'No global figure from a partial registry');
+  assert.match(partial.pages.get('/project/work/').body, /Criterios con evidencia: 1 de 2 \(50 %\)/);
+});

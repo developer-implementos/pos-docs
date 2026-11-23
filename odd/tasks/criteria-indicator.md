@@ -1,0 +1,28 @@
+# Indicador de criterios cumplidos con evidencia
+
+Objetivo: importar y mostrar en `/project/`, junto al porcentaje oficial, los criterios de las fichas cumplidos con evidencia, global, por fase y por entregable. Issue: https://github.com/developer-implementos/pos-platform/issues/716 (TASK-716). Responsable: floxcristian.
+Rama: `work/task-716-criteria-indicator`. Entrega: una PR editorial coordinada con la PR del producto de TASK-716, sin integrar. No cierra la issue del producto ni acredita verificación, aceptación ni homologación.
+Test runner: `node --test` mediante los scripts del repositorio y el build de Starlight.
+Espejo Engram: pendiente. La herramienta no está disponible en esta sesión; la ficha versionada es la fuente recuperable.
+
+## Specs
+
+- S1. La importación (`tools/sync-project-progress.mjs` mediante `portal/progress.mjs`) acepta y conserva los campos opcionales `criteria: { met, total }` de cada entregable y el agregado de `delivery/progress.json`; valida enteros con `0 <= met <= total`, rechaza campos desconocidos, el esquema 1 y un agregado distinto de la suma, sin reemplazar el snapshot publicado. Checks: `npm run progress:test`.
+- S2. Las páginas del proyecto muestran «Criterios cumplidos con evidencia: met de total (X %)» junto al porcentaje oficial, global, por fase y por entregable, con una explicación que lo distingue del porcentaje oficial y enlaza su definición; sin los campos no muestran nada. Checks: `npm run project:test`, `npm run project:check`.
+- S3. `docs/project-progress.md` define el indicador y su diferencia con el porcentaje oficial, sin aceptación ni homologación. Checks: `npm run verify`.
+
+## Tasks
+
+- [x] T1 · S1 · route:inline · Validar e importar los conteos opcionales · status:done · evidence: pruebas de `portal/progress.test.mjs` y `tools/sync-project-progress.test.mjs`
+- [x] T2 · S2,S3 · route:inline · Mostrar el indicador y su definición · status:done · evidence: pruebas de `portal/project-view.test.mjs`
+- [ ] T3 · S1,S2,S3 · route:inline · Verificar y abrir la PR · status:in_progress · evidence: pendiente de `npm run verify` y de la PR
+
+## Log
+
+- L1 · 2026-11-23 · Solicitud de la sesión coordinadora, literal:
+
+> show a second progress indicator next to the official percentage (issue developer-implementos/pos-platform#716, TASK-716)
+
+> display, next to the official percentage, the indicator "Criterios cumplidos con evidencia: met de total (X %)" globally, per phase and per package, with a short explanation that distinguishes it from the official percentage and links the definition; when the fields are absent, show nothing (no fake zeros)
+
+- L2 · 2026-11-23 · El contrato del producto se implementa en paralelo. `summary` de `delivery/progress.json` es texto, así que el agregado se acepta en `criteria` del contenido; las fases y el total se derivan sumando los entregables, sólo cuando todos los informan, y un agregado declarado debe coincidir con esa suma. Un entregable con total 0 no muestra indicador. Coordinar ese campo con la PR del producto.

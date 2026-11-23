@@ -122,7 +122,7 @@ export function syncProjectProgress({ root = repositoryRoot, workspace, check = 
       if (fs.existsSync(temporary)) fs.unlinkSync(temporary);
     }
   }
-  return { changed, revision, destination, measurement: metrics.measurement, verified: metrics.verified, accepted: metrics.accepted, total: metrics.total };
+  return { changed, revision, destination, measurement: metrics.measurement, verified: metrics.verified, accepted: metrics.accepted, total: metrics.total, criteria: metrics.criteria };
 }
 
 export function parseProgressArguments(args) {
@@ -141,5 +141,6 @@ export function parseProgressArguments(args) {
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const result = syncProjectProgress(parseProgressArguments(process.argv.slice(2)));
   const measured = result.measurement === 'verification' ? `${result.verified}/${result.total} technically verified; ${result.accepted} manually accepted` : `${result.accepted}/${result.total} accepted (schema 1)`;
-  console.log(`Product progress: ${measured}; revision ${result.revision.slice(0, 12)}; ${result.changed ? 'snapshot updated' : 'snapshot current'}.`);
+  const criteria = result.criteria ? `; spec criteria ${result.criteria.met}/${result.criteria.total} met with evidence` : '';
+  console.log(`Product progress: ${measured}${criteria}; revision ${result.revision.slice(0, 12)}; ${result.changed ? 'snapshot updated' : 'snapshot current'}.`);
 }

@@ -18,6 +18,7 @@
 .project-freshness .project-update>summary{padding-block:10px;min-height:44px;font-size:12px}
 .project-freshness .project-update>div{display:grid;gap:8px;padding:12px 0;font-size:12px}
 .project-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:24px}
+.project-criteria{margin:-8px 0 24px;padding:14px 18px;background:var(--surface);border:1px solid var(--line);border-radius:10px}.project-criteria p{margin:0}.project-criteria .project-note{margin-top:6px}.project-criteria-line{display:block;margin-top:6px;color:var(--muted);font-size:13px}
 .project-kpi{display:flex;flex-direction:column;align-items:flex-start;padding:22px;background:var(--surface);border:1px solid var(--line);border-radius:10px;color:var(--ink);text-decoration:none;min-height:180px;transition:border-color .18s ease,background-color .18s ease}
 .project-kpi:first-child{border-top:3px solid var(--primary);padding-top:20px}
 .project-kpi:hover{border-color:var(--primary);background:var(--tonal);color:var(--ink)}
