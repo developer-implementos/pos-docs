@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "f3290b5a5180e94a57821d72a1fc7210741b6e24",
+    "revision": "04883330804cc7e84e3b7169c069c690ffa28479",
     "path": "delivery/progress.json",
-    "sha256": "dac20e77f13f0c727a3c956427276b7d1be67c96210b710dee783e7a59fb8cba"
+    "sha256": "22acce1e6a6833c99d56ad67d0fd87982f810a4a8ac02c35be57a782d85aca85"
   },
   "content": {
     "schemaVersion": 2,
-    "reviewedOn": "2026-11-12",
+    "reviewedOn": "2026-11-22",
     "productRevision": "source",
     "scope": {
       "repository": "https://github.com/developer-implementos/pos-docs",
@@ -21,7 +21,7 @@
       {
         "id": "pos-desktop",
         "stage": "functional",
-        "summary": "Cliente Angular conectado con administración POS, cestas recuperables, recotización y cobro combinado de efectivo y transferencia manual. Recupera planes y comandos sin duplicar dinero; el verificador dispone de una bandeja con permisos propios. Conserva el empaquetado Tauri Windows probado en F01-04, cuya verificación espera la prueba con teclado (#275). Tarjetas, guardado real de archivos en WebView y periféricos mantienen sus límites. Incluye recuperación comercial y revisión operativa durable de pagos.",
+        "summary": "Cliente Angular conectado con administración POS, cestas recuperables, recotización y cobro combinado de efectivo y transferencia manual. Recupera planes y comandos sin duplicar dinero; el verificador dispone de una bandeja con permisos propios. Conserva el empaquetado Tauri Windows probado en F01-04, verificado junto con el recorrido sólo con teclado (#275). El recorrido de caja se completa sólo con teclado y con atajos de función (TASK-514), los importes se leen en formato monetario local (TASK-591, TASK-603) y el cobro en efectivo ayuda con el monto exacto y el vuelto (TASK-590). Tarjetas, guardado real de archivos en WebView y periféricos mantienen sus límites. Incluye recuperación comercial y revisión operativa durable de pagos.",
         "nextStep": "Completar los flujos de excepción y medios pendientes, validar exportación nativa y enlazar fuentes comerciales autorizadas; la evidencia de navegador no acredita proveedores ni hardware.",
         "evidence": [
           {
@@ -89,7 +89,7 @@
       {
         "id": "branch-api",
         "stage": "functional",
-        "summary": "API NestJS/Fastify sobre PostgreSQL con administración, HTTPS y venta local. Los planes congelan el importe y finalizan venta, caja por su fracción y outbox en la misma transacción. Transferencias conservan autoridad manual y evidencia privada. El protocolo de dispositivos está verificado con .NET/SQLite/HTTPS; no habilita cobros, fiscalidad o drivers externos por defecto. Incluye recuperación comercial y revisión operativa durable de pagos.",
+        "summary": "API NestJS/Fastify sobre PostgreSQL con administración, HTTPS y venta local. Los planes congelan el importe y finalizan venta, caja por su fracción y outbox en la misma transacción. Transferencias conservan autoridad manual y evidencia privada. El protocolo de dispositivos está verificado con .NET/SQLite/HTTPS; no habilita cobros, fiscalidad o drivers externos por defecto. Incluye recuperación comercial y revisión operativa durable de pagos. El CLI propietario respalda la base y sólo pone en servicio una restauración verificada (TASK-513, TASK-533), y la confirmación de venta rechaza con 429 lo que excede su capacidad sin persistirlo (TASK-523).",
         "nextStep": "Completar la fuente comercial autorizada, los adaptadores y flujos de excepción pendientes; mantener activación explícita, permisos actuales e incertidumbre durable cuando falta una respuesta externa.",
         "evidence": [
           {
@@ -553,7 +553,7 @@
           "branch-api"
         ],
         "status": "verified",
-        "summary": "Verificados borradores y presupuestos persistidos, captura por código/unidad, cantidad repetida, pausa y recuperación explícita entre puestos con CAS. Al retomar una cesta pausada, desde «Cestas guardadas» tras otra venta, desde otro puesto o tras recargar, el importe recotizado exige aceptación explícita antes de confirmar (#272). Se preserva el origen y no se permite modificar una cesta con pago pendiente.",
+        "summary": "Verificados borradores y presupuestos persistidos, captura por código/unidad, cantidad repetida, pausa y recuperación explícita entre puestos con CAS. Al retomar una cesta pausada, desde «Cestas guardadas» tras otra venta, desde otro puesto o tras recargar, el importe recotizado exige aceptación explícita antes de confirmar (#272). Se preserva el origen y no se permite modificar una cesta con pago pendiente. Con una cotización vigente, cada línea muestra precio unitario, subtotal, descuento, impuestos, total y las reglas evaluadas con su motivo; sin ella indica «Precio al cotizar» y no muestra importes (TASK-589, d2e66a8, PR #592).",
         "acceptance": null,
         "verification": {
           "revision": "e332352920085ff9601e8667c14e208d35b5556c",
@@ -703,7 +703,7 @@
           "device-agent"
         ],
         "status": "in_progress",
-        "summary": "Intenciones, intentos y destinos durables, reserva de venta y recuperación implementados y probados en PostgreSQL. La consulta explícita del efecto original desde Seguimiento (TASK-165, bf05f73) y la recuperación comercial con anulación o reembolso (F02-13) ya operan en el cliente conectado. Pendientes: adaptador Transbank POS integrado y evidencia del proveedor; la UX para iniciar un cobro con tarjeta, hoy deshabilitada en el cliente conectado, donde payment.card no figura entre las capacidades soportadas del perfil operativo; y la ejecución del SDK mediante device-agent, cuyo protocolo sólo declara la capacidad receipt.print.",
+        "summary": "Intenciones, intentos y destinos durables, reserva de venta y recuperación implementados y probados en PostgreSQL. La consulta explícita del efecto original desde Seguimiento (TASK-165, bf05f73) y la recuperación comercial con anulación o reembolso (F02-13) ya operan en el cliente conectado. La caja conectada ofrece el cobro con tarjeta sólo cuando payment.card está activa, el usuario tiene los permisos de pago y GET /payment-profiles informa un perfil ejecutable; recupera la creación y la ejecución con el mismo commandId y deriva los estados inciertos a Seguimiento sin permitir otro cobro (TASK-375, f3d2713). Como branch-api no compone adaptadores de pago, todo perfil resulta adapter-unavailable y la opción permanece oculta. Pendientes: adaptador Transbank POS integrado y evidencia del proveedor, y la ejecución del SDK mediante device-agent, cuyo protocolo sólo declara la capacidad receipt.print.",
         "acceptance": null,
         "verification": null
       },
@@ -738,7 +738,7 @@
           "device-agent"
         ],
         "status": "in_progress",
-        "summary": "Seguimiento conectado muestra por operación los estados independientes de venta, pago, documento fiscal e impresión con su evidencia cronológica (TASK-110, 3669873). Los expedientes asignan responsables y conservan motivos y transiciones auditadas, con permisos explícitos y concurrencia, sin modificar dinero (TASK-114, 6e679f6). Desde el detalle, un operador autorizado consulta el efecto original de un pago o documento incierto en su destino congelado y recupera la misma solicitud tras perder la respuesta (TASK-165, bf05f73; runbook en libs/backend/fiscal/README.inquiries.md), y cancela antes del despacho una reserva de anulación o reembolso sin intentos, sin devolver dinero (TASK-166, 3929549; migración 243). La anulación y el reembolso del pago se reservan y ejecutan desde el mismo detalle mediante F02-13. Pendientes: bandeja transversal ListOperationExceptions; reintento seguro y reversa por efecto donde el contrato del propietario los admita; reimpresión autorizada, cuyo contrato PrintExistingDocument pertenece a F02-10; acciones sobre trabajos de dispositivo inciertos, hoy sólo consultables; aprobación o doble control según el acuerdo de Operaciones, Finanzas y Soporte; y runbooks de dispositivo, fallo conocido y escalamiento con resultado verificable en sandbox, ya que los actuales usan proveedores controlados en fixtures. Este incremento no completa F02-04.",
+        "summary": "Seguimiento conectado muestra por operación los estados independientes de venta, pago, documento fiscal e impresión con su evidencia cronológica (TASK-110, 3669873). Los expedientes asignan responsables y conservan motivos y transiciones auditadas, con permisos explícitos y concurrencia, sin modificar dinero (TASK-114, 6e679f6). Desde el detalle, un operador autorizado consulta el efecto original de un pago o documento incierto en su destino congelado y recupera la misma solicitud tras perder la respuesta (TASK-165, bf05f73; runbook en libs/backend/fiscal/README.inquiries.md), y cancela antes del despacho una reserva de anulación o reembolso sin intentos, sin devolver dinero (TASK-166, 3929549; migración 243). La anulación y el reembolso del pago se reservan y ejecutan desde el mismo detalle mediante F02-13. La bandeja transversal ListOperationExceptions lista pagos y compensaciones inciertos o por conciliar, documentos fiscales desconocidos o rechazados y trabajos de impresión inciertos, con reasonCodes, allowedActions y cobertura por permiso calculados en el servidor, y abre el detalle existente sin consultar proveedores ni ejecutar efectos (TASK-364, 635b643 y b6500cd; filtro operable durante la recarga, TASK-400, c29e2cb). Pendientes: reintento seguro y reversa por efecto donde el contrato del propietario los admita; reimpresión autorizada, cuyo contrato PrintExistingDocument pertenece a F02-10; acciones sobre trabajos de dispositivo inciertos, hoy sólo consultables; aprobación o doble control según el acuerdo de Operaciones, Finanzas y Soporte; y runbooks de dispositivo, fallo conocido y escalamiento con resultado verificable en sandbox, ya que los actuales usan proveedores controlados en fixtures. Estos incrementos no completan F02-04.",
         "acceptance": null,
         "verification": null
       },
@@ -749,7 +749,7 @@
           "branch-api"
         ],
         "status": "verified",
-        "summary": "Verificados el plan de cobro congelado, las asignaciones exactas, el bloqueo del saldo incierto, los reintentos y el vuelto sólo de efectivo. Venta, fracción de caja y outbox se confirman atómicamente. La interfaz conectada opera efectivo y transferencia manual; el contrato de tarjeta se prueba con adaptador controlado y no acredita un proveedor operativo.",
+        "summary": "Verificados el plan de cobro congelado, las asignaciones exactas, el bloqueo del saldo incierto, los reintentos y el vuelto sólo de efectivo. Venta, fracción de caja y outbox se confirman atómicamente. La interfaz conectada opera efectivo y transferencia manual; propone el saldo por asignar y el monto exacto, anuncia el vuelto estimado o el faltante sin punto flotante y, tras la confirmación del servidor, resume la venta con sus medios, el vuelto y el comprobante (TASK-590, fea5ea5, PR #594). El contrato de tarjeta se prueba con adaptador controlado y no acredita un proveedor operativo.",
         "acceptance": null,
         "verification": {
           "revision": "2f4528fd734f4ba14130a8a6f4e12268ee876afb",
@@ -798,7 +798,7 @@
           "branch-api"
         ],
         "status": "in_progress",
-        "summary": "Implementadas transferencias manuales con cuenta autorizada, referencia única entre ventas de la sucursal, aprobación independiente, bandeja por permisos y PDF opcional privado e inmutable. La confirmación manual no acredita liquidación bancaria. Faltan los perfiles de otros medios/vouchers y sus controles de seguridad y retención; cuentas compartidas entre sucursales necesitan una autoridad de deduplicación común. Los adjuntos permanecen not-scanned.",
+        "summary": "Implementadas transferencias manuales con cuenta autorizada, referencia única entre ventas de la sucursal, aprobación independiente, bandeja por permisos y PDF opcional privado e inmutable. El voucher manual de tarjeta registra código de autorización, últimos 4 dígitos, importe y terminal, sin el número completo; es único por comercio, terminal y código, y su modo de confirmación lo fija una política aprovisionada por terminal sin valor por defecto, por lo que la capacidad nace apagada (TASK-377, e260b8f). El voucher figura en la cronología de Seguimiento con su estado y eventos; el detalle declarado sólo se entrega con los permisos de voucher, y un recorrido de navegador conectado lo registra, lo deja pendiente según la política y lo confirma otro usuario (TASK-567, 7b534f6, PR #572). La confirmación manual no acredita liquidación bancaria ni conciliación con el adquirente. Faltan la consulta de verificación mediante contratos autorizados y los perfiles de otros medios manuales con sus controles de seguridad y retención; cuentas compartidas entre sucursales necesitan una autoridad de deduplicación común. Los adjuntos permanecen not-scanned.",
         "acceptance": null,
         "verification": null
       },
@@ -811,7 +811,7 @@
           "device-agent"
         ],
         "status": "in_progress",
-        "summary": "Perfiles de pago versionados, destino fiscal congelado y asignación de instalación/época implementados. Antes de reservar saldo o crear la intención, la admisión rechaza un destino sin adaptador registrado de proveedor, versión y contrato exactos, sin capacidad de cobro o que declara consulta o compensación que ese adaptador no implementa, y conserva el recibo del rechazo (1350ad6, PR #93). Contrato estable del protocolo de dispositivos. Pendientes: comando propietario para provisionar perfiles de pago, hoy sólo una función que usan las pruebas; validación por país y entidad con CountryProfile.paymentProviderIds; kit de conformidad y simulador de fallos por capacidad para adaptadores; declaración de canales de notificación con su autenticidad; y matriz de proveedores/SDK.",
+        "summary": "Perfiles de pago versionados, destino fiscal congelado y asignación de instalación/época implementados. Antes de reservar saldo o crear la intención, la admisión rechaza un destino sin adaptador registrado de proveedor, versión y contrato exactos, sin capacidad de cobro o que declara consulta, compensación o un canal de notificación que ese adaptador no implementa, y conserva el recibo del rechazo (1350ad6, PR #93; TASK-367, 8728d6e). GET /payment-profiles lista los perfiles del puesto con executable y reasonCodes derivados del mismo diagnóstico que la admisión (TASK-363, b9164c1). Las capacidades declaran de forma opcional su canal de notificación con autenticación y deduplicación, y un kit de conformidad reutilizable, sólo de pruebas, valida cualquier adaptador de pago junto al simulador de fallos controlado (TASK-367); superarlo no homologa un proveedor. Los perfiles de pago se provisionan con el comando propietario database.js provision-payment-profile de branch-api, separado del runtime y con el rol propietario (TASK-487, 3adf56e, PR #492). Kits equivalentes, sólo de pruebas, validan cualquier adaptador fiscal (FiscalProviderPort) y el driver receipt.print, cada uno con un simulador de fallos nombrados que nunca informa una respuesta perdida, una recepción sin autoridad o una cola de impresión como éxito (TASK-580); no ejecutan el host .NET ni homologan un proveedor o dispositivo. Contrato estable del protocolo de dispositivos. Pendientes: validación por país y entidad con CountryProfile.paymentProviderIds; pruebas de autenticidad, replay, reordenamiento y rotación de un canal de notificación real, hoy inexistente; y matriz de proveedores/SDK.",
         "acceptance": null,
         "verification": null
       },
@@ -967,8 +967,8 @@
           "branch-api",
           "device-agent"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementación y verificación técnica: Un operador autorizado consulta y mantiene el terminal homologado con operaciones auditadas, diferenciando cierre de terminal y cierre de caja.",
+        "status": "in_progress",
+        "summary": "GetTerminalStatus distingue desconectado, conectado en modo manual, listo e indisponible con su origen y antigüedad, y sólo un adaptador puede afirmar que está listo; RequestTerminalMaintenance exige terminal.maintain, es idempotente por commandId y registra la solicitud bajo la guarda que el terminal comparte con los cobros (TASK-365, d6c0d14). CloseTerminalBatch registra el intento antes del efecto, rechaza el cierre durante un cobro en curso, incierto o en cuarentena sin descartarlo, conserva batchRef y los totales del proveedor sin cerrar cash_shift ni crear ventas o pagos, y ante una respuesta perdida recupera el mismo cierre sin repetirlo; un resultado desconocido queda incierto y excluye el terminal (TASK-376, db49e43). database.js provision-terminal-capability publica con el rol propietario el inventario de capacidades administrativas del terminal, rechaza un terminal ajeno a los perfiles de pago de la sucursal y la capacidad provisionada figura con available:false mientras no haya adaptador (TASK-488, ccc9845, PR #505). Probado con un adaptador controlado en pruebas: branch-api no compone adaptadores de terminal, por lo que todo terminal responde unavailable y no se admiten mantenimientos ni cierres. Pendientes: adaptador homologado mediante device-agent y su restricción homologada (FOLLOWUP-002 y FOLLOWUP-004), inicialización, carga de llaves y último comprobante reales, resolución de mantenimientos o cierres inciertos, y asignación de terminal.maintain a roles (Q-57).",
         "acceptance": null,
         "verification": null
       },
@@ -1041,8 +1041,8 @@
           "erp-worker",
           "device-agent"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementación y verificación técnica: Cada instalación y workload se autentica con su propia identidad, ámbito y capacidades; alta, rotación, revocación y restore no clonan autoridad.",
+        "status": "in_progress",
+        "summary": "Las instalaciones cliente de escritorio, móvil y web se activan, por quien tiene installation.activate o con un código de un solo uso, vinculando una llave ECDSA P-256 no extraíble; cada inicio de sesión firma un desafío de un uso ligado a instalación y época, y reactivar sube la época, revoca la credencial anterior y cierra sus sesiones (TASK-412, 47e1461 y 588e11c; TASK-416, 1bd312c). Los rechazos se prueban contra PostgreSQL y los recorridos de navegador en Chromium. Pendientes: identidades propias de los workloads y de device-agent con mTLS, ámbito y capacidades; rotación con solapamiento; restore sin clonar autoridad; y homologación. La llave no se ha probado dentro de WebView2 ni del WebView de Android.",
         "acceptance": null,
         "verification": null
       },
@@ -1054,7 +1054,7 @@
           "country-api"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementación y verificación técnica: El operador usa identidad corporativa homologada y la sucursal aplica autorizaciones de continuidad firmadas y acotadas durante cortes de WAN.",
+        "summary": "Pendiente de implementación y verificación técnica: El operador usa identidad corporativa homologada y la sucursal aplica autorizaciones de continuidad firmadas y acotadas durante cortes de WAN. TASK-416 (1bd312c) introdujo el ingreso con correo y el origen local o erp de la cuenta como preparación, sin integrar identidad corporativa ni grants de continuidad.",
         "acceptance": null,
         "verification": null
       },
@@ -1076,8 +1076,8 @@
           "erp-worker",
           "country-api"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementación y verificación técnica: erp-worker prepara catálogo, clientes y precios desde sus fuentes autorizadas con un punto de corte consistente y manifiesto verificable.",
+        "status": "in_progress",
+        "summary": "El erp-worker lee del QA del legacy catálogo y clientes de una sucursal mediante MasterDataSourcePort, en una sola transacción REPEATABLE READ READ ONLY como corte consistente y con versión de esquema declarada, y obtiene sus precios con PriceSourcePort, cuyo adaptador cl-api-precio consulta por lotes acotados con reintento y corte por presupuesto (TASK-405, 5ef4aff, f3d3b8a y 7fb57d1). Cada SKU termina en un precio o un hallazgo explícito, y customer-projection-v1 y commercial-publication-v2 se validan con las mismas funciones de la carga antes de escribirse. La base de precios con impuesto incluido reproduce el cobro del legacy (TASK-445, 0c86066). Es un comando a demanda que produce archivos locales. Pendientes: autoridad de ejecuciones, checkpoints y manifiestos en country-api con contratos HTTPS autenticados; reanudación de una extracción interrumpida sin mezclar cortes y reconstrucción desde país; deltas, bajas y estrategia completa documentada por adaptador; inventario de autoridad por maestro; y los puntos abiertos de FOLLOWUP-025.",
         "acceptance": null,
         "verification": null
       },
@@ -1087,8 +1087,8 @@
           "branch-sync-worker",
           "branch-api"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementación y verificación técnica: La sucursal descarga y valida candidatas sin alterar el conjunto activo; sólo cambia versión, inbox y cursor aplicado en un commit completo.",
+        "status": "in_progress",
+        "summary": "database.js import-commercial carga desde archivo una publicación comercial con StageCandidate, ValidateCandidate y ActivateCommercialVersion(expectedBaseVersion): valida esquema, hash, sucursal, reglas y cobertura antes de activar, y activa en una transacción con compare-and-set del puntero y una postcondición con las compuertas de la cotización. Una carga inválida, una base desactualizada o un activador concurrente conservan la versión activa, y la anterior queda superseded e inmutable (TASK-404, 14b9969; TASK-424, cc7ebc8). El libro de precios en filas con verificaciones registradas al activar, commercial-publication-v2 sin clientes, la proyección de clientes por import-customers en porciones y los índices de claves foráneas cargan el volumen medido de una sucursal real sin ventas fallidas durante la carga (TASK-431, d60d998 y 3561274; TASK-432, b58125d). Pendientes: descarga autenticada de manifiestos y porciones por branch-sync-worker con reanudación; cursores recibido y aplicado e inbox aplicada en el mismo commit; deltas y huecos de secuencia; recuperación ante caída alrededor del commit; vencimiento de versiones activas; retención y limpieza; y el retiro del libro JSONB que TASK-431 mantiene para reversión.",
         "acceptance": null,
         "verification": null
       },
@@ -1102,8 +1102,8 @@
           "erp-worker",
           "device-agent"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementación y verificación técnica: Las versiones de cliente, sucursal, país, ERP y dispositivo pueden coexistir dentro de una matriz declarada sin interpretar incorrectamente mensajes persistidos.",
+        "status": "in_progress",
+        "summary": "pnpm run contracts:check compara los esquemas del código con un manifiesto versionado (tools/contracts/contract-manifest.json) y rechaza sin cambio de versión un campo o mensaje retirado, un campo nuevo obligatorio, un enum, tipo o límite estrechado, la pérdida de null y cualquier cambio de un campo monetario; los fixtures de cada versión admitida pasan por el consumidor real (TASK-489, 9f13bfc, PR #493). Pagos, fiscalidad, import-commercial, import-customers y los trabajos de dispositivo rechazan una versión no soportada antes de cualquier efecto durable, con pruebas sobre PostgreSQL; el manifiesto declara dónde se persiste cada versión, impide retirar una versión persistida o todavía emitida o leída, y exige que cada despliegue lea lo que emiten sus productores (TASK-562, 73fb3b2, PR #570). Pendientes: handshake de capacidades entre componentes, cuarentena de mensajes no soportados, los contratos de país y ERP, aún inexistentes, y el acuerdo de expansión, contracción y orden de despliegue.",
         "acceptance": null,
         "verification": null
       },
@@ -1176,8 +1176,8 @@
           "branch-api",
           "country-api"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementación y verificación técnica: Reportes de ventas, medios de pago, cierres, cobranzas y devoluciones consultables y exportables con permisos, corte y frescura visibles.",
+        "status": "in_progress",
+        "summary": "listShiftSalesV1 lista con sale.read y paginación keyset las ventas que el solicitante confirmó en su turno, caja e instalación, y cada fila abre su comprobante interno (TASK-497, b395a7b, PR #507). exportShiftSalesCsvV1 exporta en CSV las ventas del turno por páginas, cancelable, con límites de filas, bytes, tiempo y concurrencia validados al arrancar, revalidación de la sesión por página, neutralización de fórmulas y auditoría; nunca entrega un archivo truncado como completo (TASK-545, d921e1e, PR #553). El componente «Ventas del turno» aún no está montado en ninguna ruta, y en escritorio el CSV usa la descarga del WebView sin prueba en Tauri. Pendientes: definiciones aprobadas de indicadores y totales por moneda, proyecciones reconstruibles con frescura visible, reportes de medios de pago, cierres, cobranzas y devoluciones, comparación con un conjunto de referencia y contrato de salida analítica.",
         "acceptance": null,
         "verification": null
       },
@@ -1240,8 +1240,8 @@
           "country-api",
           "erp-worker"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementación y verificación técnica: Soporte y operaciones consultan el estado completo de una operación y gestionan excepciones con permisos y evidencia, cubriendo la administración central necesaria.",
+        "status": "in_progress",
+        "summary": "El panel «Pendientes de la sucursal» de Seguimiento de operaciones cuenta, con las lecturas y permisos existentes, transferencias y vouchers por verificar o conciliar, pagos inciertos o por conciliar, efectos sin resolver y expedientes abiertos; muestra «50+» sin estimar totales, omite los conteos sin permiso y recupera por separado un conteo fallido (TASK-498, 73a519e, PR #503). listOpenOperationCasesV1 pagina los expedientes abiertos del ámbito de la sesión sin revelar identidad, hora ni cantidad de los ocultos (TASK-521, 4e2e82a, PR #526). Pendientes: inventario de acciones del concentrador legacy y su correspondencia, vistas por trabajo y ERP, solicitudes de reintento, cuarentena y resolución con aprobación según el contexto dueño, control de conflicto entre operadores y procedimiento ante caída de la consola.",
         "acceptance": null,
         "verification": null
       },
@@ -1282,8 +1282,8 @@
           "erp-worker",
           "device-agent"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementación y verificación técnica: Procedimientos ensayados para recuperar sucursal y país con evidencia de pérdida de datos, tiempo de recuperación y conciliación.",
+        "status": "in_progress",
+        "summary": "database.js backup respalda la base de sucursal con pg_dump sobre una instantánea REPEATABLE READ y un manifiesto con SHA-256, versiones, ámbito, migraciones y filas por tabla; database.js restore la restaura en una base nueva y vacía, rechaza antes de escribir un archivo alterado, otra sucursal, otras migraciones o versiones, y compara después historial, ámbito y filas (TASK-513, d4822fd, PR #518). Una restauración no verificada queda marcada en la propia base y migrate, las órdenes de propietario, el respaldo y la readiness la rechazan hasta descartarla con restore-discard (TASK-533, c78b14a, PR #539). Las pruebas usan PostgreSQL local; no hubo restauración en QA ni servidores reales. Pendientes: copias independientes del servidor y respaldo de país; ensayos de pérdida de proceso, disco o servidor y de restore anterior a un acuse sin repetir efectos; exclusión del escritor anterior; reconstrucción de BullMQ desde PostgreSQL; recuperación del SQLite de device-agent; y mediciones de RPO/RTO.",
         "acceptance": null,
         "verification": null
       },
@@ -1343,7 +1343,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementación y verificación técnica: Se detectan fallos y degradación del recorrido mediante métricas y alertas accionables con responsables y objetivos medidos.",
+        "summary": "Pendiente de implementación y verificación técnica: Se detectan fallos y degradación del recorrido mediante métricas y alertas accionables con responsables y objetivos medidos. TASK-148 (95ccc5e, b66a31a, 6d9194b y d55bad7) dejó el relay de fallos de clientes y el presupuesto de errores de Sentry como base técnica; no define SLI, alertas, responsables ni objetivos.",
         "acceptance": null,
         "verification": null
       },
@@ -1357,8 +1357,8 @@
           "erp-worker",
           "device-agent"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementación y verificación técnica: El alcance piloto cumple objetivos de latencia, volumen y recuperación medidos con carga representativa, límites y backpressure verificables.",
+        "status": "in_progress",
+        "summary": "tools/load mide branch-api con escenarios reproducibles por semilla, preparados sólo por las puertas oficiales, e informa percentiles, errores, recursos y esperas de PostgreSQL de búsqueda, cotización y confirmación de venta en efectivo con N cajas; la línea base es de hardware de desarrollo y no constituye capacidad del piloto (TASK-515, 72c1e5d, PR #519). La confirmación de venta en efectivo se admite por proceso y por caja antes de cualquier escritura y, al agotar la capacidad, responde 429 CAPACITY_EXHAUSTED con Retry-After sin persistir nada; en las corridas medidas ninguna venta se informó confirmada sin persistir (TASK-523, 148999a, PR #525). Sus límites son provisionales. Pendientes: perfil de carga y objetivos aprobados por negocio, medición con exportación, espejo y reconexión en segundo plano, ensayos de proveedor lento, disco bajo y Redis perdido, soak con retención y rotación, y capacidad documentada por hardware y topología.",
         "acceptance": null,
         "verification": null
       },
@@ -1419,8 +1419,8 @@
           "erp-worker",
           "device-agent"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementación y verificación técnica: Cada release piloto tiene procedencia, inventario de dependencias/licencias y vulnerabilidades revisadas, sin excepciones silenciosas.",
+        "status": "in_progress",
+        "summary": "tools/supply-chain genera un SBOM CycloneDX 1.5 determinista por artefacto (cuatro apps Nest, tres clientes Angular y el host .NET), lo evalúa contra una política de licencias provisional, pendiente de aprobación de Seguridad y legal, lo compara con un inventario versionado, y seal/verify fallan si cambia un archivo del artefacto o su manifiesto (TASK-512, 43b2c61, PR #517). El cierre npm se calcula desde el lockfile podado del artefacto (TASK-547, 32446fa, PR #549). Un resultado limpio no acredita cumplimiento. Pendientes: SBOM de los paquetes Tauri y Capacitor y de SDK y drivers de terceros; aprobación de la política de licencias; evaluación de avisos de seguridad con aceptación de riesgo con vencimiento; separación de secretos de firma; y reconstrucción verificable desde un tag.",
         "acceptance": null,
         "verification": null
       },
@@ -1431,8 +1431,8 @@
           "branch-api",
           "device-agent"
         ],
-        "status": "not_started",
-        "summary": "Pendiente de implementación y verificación técnica: Los recorridos del piloto se pueden ejecutar en los puestos elegidos con teclado, ayudas accesibles, errores comprensibles y periféricos homologados.",
+        "status": "in_progress",
+        "summary": "El recorrido del cajero se completa sólo con teclado, desde la apertura del turno hasta el comprobante, con foco visible, diálogos que devuelven el foco y axe sin violaciones serious ni critical en nueve pasos, y la venta ofrece atajos F2, F4, F8 y F9 con aria-keyshortcuts y leyenda visible (TASK-514, 781e0f8, PR #520). La venta y las pantallas de pagos muestran los importes en formato monetario local desde el string del contrato, sin redondear (TASK-591, 7e1e1ef, PR #593; TASK-603, 1a26320, PR #604). Verificado en Chromium, sin prueba en Tauri/WebView2. Pendientes: matriz acordada de pantallas, escalado, lector de pantalla y periféricos; pruebas de zoom y resoluciones; comunicación de fallos de impresora, lector o permiso; devolución y cierre; y sesiones con usuarios representativos y revisión humana.",
         "acceptance": null,
         "verification": null
       },
@@ -1474,7 +1474,7 @@
           "device-agent"
         ],
         "status": "not_started",
-        "summary": "Pendiente de implementación y verificación técnica: Configuraciones aceptadas se habilitan gradualmente con versiones compatibles y criterios explícitos de avance o detención.",
+        "summary": "Pendiente de implementación y verificación técnica: Configuraciones aceptadas se habilitan gradualmente con versiones compatibles y criterios explícitos de avance o detención. El despliegue manual del ambiente QA (TASK-402 y TASK-444) no constituye habilitación gradual por anillos.",
         "acceptance": null,
         "verification": null
       },
