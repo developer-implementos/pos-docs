@@ -80,7 +80,7 @@ Junto al porcentaje oficial, el resumen del proyecto, cada fase y cada entregabl
 
 Este indicador muestra el trabajo integrado dentro de los entregables en curso, pero no sustituye ni modifica el porcentaje oficial: éste cuenta sólo entregables verificados completos, sin crédito parcial. Un entregable con todas sus casillas marcadas no queda verificado por ello. Tampoco acredita aceptación humana, habilitación operativa ni homologación de proveedores o dispositivos.
 
-Los conteos son opcionales. Cuando el registro importado no los contiene, el panel no muestra el indicador en lugar de presentar un cero. La fase y el total se calculan sumando los conteos de sus entregables, sólo cuando todos los entregables los informan. La importación rechaza valores que no sean enteros, un cumplido mayor que el total o un total declarado que difiera de esa suma.
+Los conteos son opcionales. Cuando el registro importado no los contiene, el panel no muestra el indicador en lugar de presentar un cero. La fase y el total se calculan sumando los conteos de sus entregables, sólo cuando todos los entregables los informan. El registro puede declarar también el total por fase (`F01`, `F02`…); en ese caso debe cubrir todas las fases del roadmap. La importación rechaza valores que no sean enteros, un cumplido mayor que el total, campos desconocidos, una fase que difiera de la suma de sus entregables y fases cuya suma no coincida con el total declarado.
 
 ## Estados y evidencia
 

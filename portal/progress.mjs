@@ -207,9 +207,25 @@ export function deriveProgress(snapshot, roadmapSource) {
   const overall = totals(workPackages);
   if (Object.hasOwn(content, 'criteria')) {
     assert.ok(technical, 'Spec criteria require product progress schema 2');
-    const declared = criteria(content.criteria, 'Progress criteria');
+    const { phases: declaredPhases, ...aggregate } = content.criteria && typeof content.criteria === 'object' ? content.criteria : {};
+    const declared = criteria(Object.hasOwn(content.criteria ?? {}, 'phases') ? aggregate : content.criteria, 'Progress criteria');
     assert.ok(overall.criteria, 'Progress criteria require criteria on every work package');
     assert.deepEqual(declared, { met: overall.criteria.met, total: overall.criteria.total }, 'Progress criteria differ from the sum of its work packages');
+    if (Object.hasOwn(content.criteria, 'phases')) {
+      assert.ok(declaredPhases && typeof declaredPhases === 'object' && !Array.isArray(declaredPhases), 'Progress phase criteria must be an object');
+      const expected = phases.map(phase => `F${phase.id.slice(-2)}`);
+      for (const key of Object.keys(declaredPhases)) assert.match(key, /^F\d\d$/, `Unknown phase criteria key: ${key}`);
+      assert.deepEqual(Object.keys(declaredPhases).sort(), [...expected].sort(), 'Progress phase criteria must cover exactly the roadmap phases');
+      const sum = { met: 0, total: 0 };
+      for (const phase of phases) {
+        const key = `F${phase.id.slice(-2)}`;
+        const value = criteria(declaredPhases[key], `${key} criteria`);
+        assert.deepEqual(value, { met: phase.criteria.met, total: phase.criteria.total }, `${key} criteria differ from the sum of its work packages`);
+        sum.met += value.met;
+        sum.total += value.total;
+      }
+      assert.deepEqual(sum, declared, 'Phase criteria do not add up to the progress criteria');
+    }
   }
   return { measurement, ...overall, applications, phases, workPackages, counts, source: snapshot.source, scope: content.scope, reviewedOn: content.reviewedOn, productRevision, summary: content.summary };
 }

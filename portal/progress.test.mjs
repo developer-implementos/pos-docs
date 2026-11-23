@@ -442,3 +442,27 @@ test('spec criteria fail closed on invalid counts, unknown fields, schema 1 and 
   assert.throws(() => derive(fixture(), content => { content.workPackages[0].criteria = { met: 1, total: 2 }; }), /missing or unknown fields/);
   assert.throws(() => derive(fixture(), content => { content.criteria = { met: 0, total: 0 }; }), /schema 2/);
 });
+
+test('declared phase criteria must cover each roadmap phase and match its packages and the total', () => {
+  const counted = content => {
+    content.workPackages[0].criteria = { met: 4, total: 5 };
+    content.workPackages[1].criteria = { met: 1, total: 3 };
+    content.workPackages[2].criteria = { met: 2, total: 7 };
+    content.criteria = { met: 7, total: 15, phases: { F01: { met: 5, total: 8 }, F02: { met: 2, total: 7 } } };
+  };
+  const result = derive(technicalFixture(), counted);
+  assert.deepEqual(result.criteria, { met: 7, total: 15, percent: 46.7 });
+  assert.deepEqual(result.phases.map(phase => [phase.id, phase.criteria.met, phase.criteria.total]), [['phase-01', 5, 8], ['phase-02', 2, 7]]);
+  const invalid = [
+    [content => { content.criteria.phases.F01 = { met: 6, total: 8 }; content.criteria.phases.F02 = { met: 1, total: 7 }; }, /F01 criteria differ from the sum/],
+    [content => { delete content.criteria.phases.F02; }, /exactly the roadmap phases/],
+    [content => { content.criteria.phases.F03 = { met: 0, total: 0 }; }, /exactly the roadmap phases/],
+    [content => { content.criteria.phases['phase-01'] = content.criteria.phases.F01; delete content.criteria.phases.F01; }, /Unknown phase criteria key/],
+    [content => { content.criteria.phases.F01 = { met: 5, total: 8, percent: 62.5 }; }, /missing or unknown fields/],
+    [content => { content.criteria.phases.F01 = { met: 9, total: 8 }; }, /between 0 and total/],
+    [content => { content.criteria.phases.F02 = { met: 2.5, total: 7 }; }, /between 0 and total/],
+    [content => { content.criteria.phases = [1]; }, /must be an object/],
+    [content => { content.criteria.extra = 1; }, /missing or unknown fields/],
+  ];
+  for (const [mutate, message] of invalid) assert.throws(() => derive(technicalFixture(), content => { counted(content); mutate(content); }), message);
+});

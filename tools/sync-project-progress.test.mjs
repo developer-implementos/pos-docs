@@ -442,3 +442,21 @@ test('spec criteria are optional, imported unchanged and validated before the sn
   assert.throws(() => syncProjectProgress(item), /differ from the sum/);
   assert.equal(fs.readFileSync(item.destination, 'utf8'), published);
 });
+
+test('imports the real shape of the product generator with phase totals that add up', t => {
+  const item = fixture(t);
+  technicalRegistry(item);
+  // Phase figures reported by the product on 2026-11-23 (F01 93/110); the fixture roadmap has one phase.
+  item.content.workPackages[0].criteria = { met: 60, total: 62 };
+  item.content.workPackages[1].criteria = { met: 33, total: 48 };
+  item.content.criteria = { met: 93, total: 110, phases: { F01: { met: 93, total: 110 } } };
+  item.update();
+  assert.deepEqual(syncProjectProgress(item).criteria, { met: 93, total: 110, percent: 84.5 });
+  const published = fs.readFileSync(item.destination, 'utf8');
+  assert.deepEqual(JSON.parse(published).content.criteria, item.content.criteria);
+
+  item.content.criteria.phases.F01 = { met: 92, total: 110 };
+  item.update();
+  assert.throws(() => syncProjectProgress(item), /F01 criteria differ from the sum/);
+  assert.equal(fs.readFileSync(item.destination, 'utf8'), published, 'A disagreeing phase never replaces the published snapshot');
+});

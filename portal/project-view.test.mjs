@@ -619,3 +619,27 @@ test('without spec criteria no indicator, zero or definition note is published',
   assert.doesNotMatch(summary, /Criterios cumplidos con evidencia/, 'No global figure from a partial registry');
   assert.match(partial.pages.get('/project/work/').body, /Criterios con evidencia: 1 de 2 \(50 %\)/);
 });
+
+test('the real totals of 2026-11-23 render globally and per phase from the declared phases', () => {
+  // Product figures of 2026-11-23, spread over each phase's packages to exercise the declared shape.
+  const real = { F01: [93, 110], F02: [49, 118], F03: [9, 97], F04: [3, 100], F05: [2, 97], F06: [0, 72] };
+  const { model, pages } = withCriteria(content => {
+    const byPhase = new Map();
+    for (const work of content.workPackages) {
+      const key = work.id.slice(0, 3);
+      byPhase.set(key, [...(byPhase.get(key) || []), work]);
+    }
+    for (const [key, works] of byPhase) {
+      const [met, total] = real[key];
+      works.forEach((work, index) => { work.criteria = index === 0 ? { met, total } : { met: 0, total: 0 }; });
+    }
+    content.criteria = { met: 156, total: 594, phases: Object.fromEntries([...byPhase.keys()].map(key => [key, { met: real[key][0], total: real[key][1] }])) };
+  });
+  const summary = pages.get('/project/').body;
+  assert.match(summary, /Criterios cumplidos con evidencia:<\/strong> 156 de 594 \(26,3 %\)/);
+  for (const phase of model.phases) {
+    const [met, total] = real[`F${phase.id.slice(-2)}`];
+    const percent = new Intl.NumberFormat('es-CL', { maximumFractionDigits: 1 }).format(met / total * 100);
+    assert.ok(summary.includes(`Criterios con evidencia: ${met} de ${total} (${percent} %)`), `${phase.id} shows ${met}/${total}`);
+  }
+});
