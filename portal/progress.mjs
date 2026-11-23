@@ -12,9 +12,32 @@ const sha = /^[a-f0-9]{40}$/;
 const digest = /^[a-f0-9]{64}$/;
 const appId = /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/;
 
-function shape(value, fields, label) {
+function shape(value, fields, label, optional = []) {
   assert.ok(value && typeof value === 'object' && !Array.isArray(value), `${label} must be an object`);
-  assert.deepEqual(Object.keys(value).sort(), [...fields].sort(), `${label} has missing or unknown fields`);
+  const present = [...fields, ...optional.filter(field => Object.hasOwn(value, field))];
+  assert.deepEqual(Object.keys(value).sort(), present.sort(), `${label} has missing or unknown fields`);
+}
+
+/** Spec criteria met with merged evidence. Optional; a present value must be exact. */
+function criteria(value, label) {
+  shape(value, ['met', 'total'], label);
+  assert.ok(Number.isSafeInteger(value.total) && value.total >= 0, `${label} total must be a nonnegative integer`);
+  assert.ok(Number.isSafeInteger(value.met) && value.met >= 0 && value.met <= value.total, `${label} met must be an integer between 0 and total`);
+  return { met: value.met, total: value.total };
+}
+
+/** Sum package criteria only when every package reports them; a partial sum would understate the scope. */
+function criteriaTotals(assigned) {
+  if (!assigned.every(entry => entry.criteria)) return null;
+  const met = assigned.reduce((sum, entry) => sum + entry.criteria.met, 0);
+  const total = assigned.reduce((sum, entry) => sum + entry.criteria.total, 0);
+  return { met, total, percent: criteriaPercent(met, total) };
+}
+
+/** One decimal; never rounds a partial count up to 100 %. Null without criteria to measure. */
+export function criteriaPercent(met, total) {
+  if (total === 0) return null;
+  return met === total ? 100 : Math.min(99.9, Math.round(met / total * 1000) / 10);
 }
 
 function text(value, label, limit = 2000) {
@@ -98,7 +121,7 @@ export function deriveProgress(snapshot, roadmapSource) {
   assert.equal(progressContentHash(snapshot.content), snapshot.source.sha256, 'Progress source content hash mismatch');
 
   const content = snapshot.content;
-  shape(content, ['schemaVersion', 'reviewedOn', 'productRevision', 'scope', 'summary', 'applications', 'workPackages'], 'Progress content');
+  shape(content, ['schemaVersion', 'reviewedOn', 'productRevision', 'scope', 'summary', 'applications', 'workPackages'], 'Progress content', ['criteria']);
   assert.ok([1, 2].includes(content.schemaVersion), 'Unsupported product progress schema');
   const technical = content.schemaVersion === 2;
   const statuses = technical ? technicalStatuses : legacyStatuses;
@@ -132,7 +155,7 @@ export function deriveProgress(snapshot, roadmapSource) {
   const workIds = new Set();
   const counts = Object.fromEntries(statuses.map(status => [status, 0]));
   const workPackages = content.workPackages.map(entry => {
-    shape(entry, technical ? ['id', 'apps', 'status', 'summary', 'verification', 'acceptance'] : ['id', 'apps', 'status', 'summary', 'acceptance'], 'Progress work package');
+    shape(entry, technical ? ['id', 'apps', 'status', 'summary', 'verification', 'acceptance'] : ['id', 'apps', 'status', 'summary', 'acceptance'], 'Progress work package', technical ? ['criteria'] : []);
     assert.ok(scope.work.has(entry.id) && !workIds.has(entry.id), `Unknown or duplicate progress work package: ${entry.id}`);
     workIds.add(entry.id);
     const definition = scope.work.get(entry.id);
@@ -156,8 +179,9 @@ export function deriveProgress(snapshot, roadmapSource) {
     } else {
       assert.equal(entry.acceptance, null, `${entry.id} cannot claim acceptance before it is accepted`);
     }
+    const measured = Object.hasOwn(entry, 'criteria') ? criteria(entry.criteria, `${entry.id} criteria`) : null;
     counts[entry.status]++;
-    return { ...entry, phase: definition.phase, phaseTitle: definition.phaseTitle, title: definition.title, href: `/guide/roadmap/${definition.phase}/#work-${entry.id.toLowerCase()}` };
+    return { ...entry, criteria: measured ? { ...measured, percent: criteriaPercent(measured.met, measured.total) } : null, phase: definition.phase, phaseTitle: definition.phaseTitle, title: definition.title, href: `/guide/roadmap/${definition.phase}/#work-${entry.id.toLowerCase()}` };
   });
   assert.deepEqual([...workIds].sort(), [...scope.work.keys()].sort(), 'Progress must cover every roadmap work package');
 
@@ -169,7 +193,7 @@ export function deriveProgress(snapshot, roadmapSource) {
     const accepted = assigned.filter(entry => entry.acceptance !== null).length;
     const verified = technical ? assigned.filter(entry => entry.status === 'verified').length : null;
     const completed = technical ? verified : accepted;
-    return { total, completed, verified, accepted, pendingAcceptance: technical ? verified - accepted : null, percent: percent(completed, total) };
+    return { total, completed, verified, accepted, pendingAcceptance: technical ? verified - accepted : null, percent: percent(completed, total), criteria: criteriaTotals(assigned) };
   };
   const applications = content.applications.map(app => {
     const assigned = workPackages.filter(entry => entry.apps.includes(app.id));
@@ -180,7 +204,30 @@ export function deriveProgress(snapshot, roadmapSource) {
     const assigned = workPackages.filter(entry => entry.phase === id);
     return { id, title: assigned[0].phaseTitle, href: `/guide/roadmap/${id}/`, ...totals(assigned) };
   });
-  return { measurement, ...totals(workPackages), applications, phases, workPackages, counts, source: snapshot.source, scope: content.scope, reviewedOn: content.reviewedOn, productRevision, summary: content.summary };
+  const overall = totals(workPackages);
+  if (Object.hasOwn(content, 'criteria')) {
+    assert.ok(technical, 'Spec criteria require product progress schema 2');
+    const { phases: declaredPhases, ...aggregate } = content.criteria && typeof content.criteria === 'object' ? content.criteria : {};
+    const declared = criteria(Object.hasOwn(content.criteria ?? {}, 'phases') ? aggregate : content.criteria, 'Progress criteria');
+    assert.ok(overall.criteria, 'Progress criteria require criteria on every work package');
+    assert.deepEqual(declared, { met: overall.criteria.met, total: overall.criteria.total }, 'Progress criteria differ from the sum of its work packages');
+    if (Object.hasOwn(content.criteria, 'phases')) {
+      assert.ok(declaredPhases && typeof declaredPhases === 'object' && !Array.isArray(declaredPhases), 'Progress phase criteria must be an object');
+      const expected = phases.map(phase => `F${phase.id.slice(-2)}`);
+      for (const key of Object.keys(declaredPhases)) assert.match(key, /^F\d\d$/, `Unknown phase criteria key: ${key}`);
+      assert.deepEqual(Object.keys(declaredPhases).sort(), [...expected].sort(), 'Progress phase criteria must cover exactly the roadmap phases');
+      const sum = { met: 0, total: 0 };
+      for (const phase of phases) {
+        const key = `F${phase.id.slice(-2)}`;
+        const value = criteria(declaredPhases[key], `${key} criteria`);
+        assert.deepEqual(value, { met: phase.criteria.met, total: phase.criteria.total }, `${key} criteria differ from the sum of its work packages`);
+        sum.met += value.met;
+        sum.total += value.total;
+      }
+      assert.deepEqual(sum, declared, 'Phase criteria do not add up to the progress criteria');
+    }
+  }
+  return { measurement, ...overall, applications, phases, workPackages, counts, source: snapshot.source, scope: content.scope, reviewedOn: content.reviewedOn, productRevision, summary: content.summary };
 }
 
 export function loadProgress(root) {

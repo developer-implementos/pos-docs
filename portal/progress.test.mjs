@@ -393,3 +393,76 @@ test('loadProgress uses only the pinned editorial checkout files', t => {
   fs.writeFileSync(path.join(root, 'portal/data/project-progress.json'), JSON.stringify(current.snapshot));
   assert.equal(loadProgress(root).total, 3);
 });
+
+test('spec criteria stay optional and never become zeros when the registry omits them', () => {
+  const result = derive(technicalFixture(), content => { verify(content.workPackages[0]); });
+  assert.equal(result.criteria, null);
+  assert.ok(result.phases.every(phase => phase.criteria === null));
+  assert.ok(result.workPackages.every(work => work.criteria === null));
+  assert.equal(result.percent, 33.3, 'The official percentage is unchanged');
+});
+
+test('spec criteria sum per phase and in total only where every package reports them', () => {
+  const result = derive(technicalFixture(), content => {
+    verify(content.workPackages[0]);
+    content.workPackages[0].criteria = { met: 10, total: 10 };
+    content.workPackages[1].criteria = { met: 1, total: 6 };
+    content.workPackages[2].criteria = { met: 0, total: 0 };
+    content.criteria = { met: 11, total: 16 };
+  });
+  assert.deepEqual(result.criteria, { met: 11, total: 16, percent: 68.8 });
+  assert.deepEqual(result.phases.map(phase => phase.criteria), [{ met: 11, total: 16, percent: 68.8 }, { met: 0, total: 0, percent: null }]);
+  assert.deepEqual(result.workPackages.map(work => work.criteria), [{ met: 10, total: 10, percent: 100 }, { met: 1, total: 6, percent: 16.7 }, { met: 0, total: 0, percent: null }]);
+  assert.equal(result.percent, 33.3, 'Criteria never change the official percentage');
+  assert.equal(result.verified, 1);
+
+  const partial = derive(technicalFixture(), content => { content.workPackages[2].criteria = { met: 1, total: 3 }; });
+  assert.equal(partial.criteria, null, 'A partial sum would understate the scope');
+  assert.deepEqual(partial.phases.map(phase => phase.criteria), [null, { met: 1, total: 3, percent: 33.3 }]);
+
+  const nearly = derive(technicalFixture(), content => { content.workPackages.forEach((work, index) => { work.criteria = index ? { met: 0, total: 0 } : { met: 1999, total: 2000 }; }); });
+  assert.equal(nearly.criteria.percent, 99.9, 'Incomplete criteria never round to 100 %');
+});
+
+test('spec criteria fail closed on invalid counts, unknown fields, schema 1 and an inconsistent total', () => {
+  const invalid = [
+    [content => { content.workPackages[0].criteria = { met: 3, total: 2 }; }, /between 0 and total/],
+    [content => { content.workPackages[0].criteria = { met: -1, total: 2 }; }, /between 0 and total/],
+    [content => { content.workPackages[0].criteria = { met: 1.5, total: 2 }; }, /between 0 and total/],
+    [content => { content.workPackages[0].criteria = { met: 1, total: '2' }; }, /nonnegative integer/],
+    [content => { content.workPackages[0].criteria = { met: 1, total: Number.MAX_SAFE_INTEGER + 1 }; }, /nonnegative integer/],
+    [content => { content.workPackages[0].criteria = { met: 1, total: 2, percent: 50 }; }, /missing or unknown fields/],
+    [content => { content.workPackages[0].criteria = null; }, /must be an object/],
+    [content => { content.workPackages[0].criteria = [1, 2]; }, /must be an object/],
+    [content => { content.criteria = { met: 0, total: 0 }; }, /every work package/],
+    [content => { content.workPackages.forEach(work => { work.criteria = { met: 1, total: 2 }; }); content.criteria = { met: 3, total: 5 }; }, /differ from the sum/],
+    [content => { content.criteria = { met: 2, total: 1 }; }, /between 0 and total/],
+  ];
+  for (const [mutate, message] of invalid) assert.throws(() => derive(technicalFixture(), mutate), message);
+  assert.throws(() => derive(fixture(), content => { content.workPackages[0].criteria = { met: 1, total: 2 }; }), /missing or unknown fields/);
+  assert.throws(() => derive(fixture(), content => { content.criteria = { met: 0, total: 0 }; }), /schema 2/);
+});
+
+test('declared phase criteria must cover each roadmap phase and match its packages and the total', () => {
+  const counted = content => {
+    content.workPackages[0].criteria = { met: 4, total: 5 };
+    content.workPackages[1].criteria = { met: 1, total: 3 };
+    content.workPackages[2].criteria = { met: 2, total: 7 };
+    content.criteria = { met: 7, total: 15, phases: { F01: { met: 5, total: 8 }, F02: { met: 2, total: 7 } } };
+  };
+  const result = derive(technicalFixture(), counted);
+  assert.deepEqual(result.criteria, { met: 7, total: 15, percent: 46.7 });
+  assert.deepEqual(result.phases.map(phase => [phase.id, phase.criteria.met, phase.criteria.total]), [['phase-01', 5, 8], ['phase-02', 2, 7]]);
+  const invalid = [
+    [content => { content.criteria.phases.F01 = { met: 6, total: 8 }; content.criteria.phases.F02 = { met: 1, total: 7 }; }, /F01 criteria differ from the sum/],
+    [content => { delete content.criteria.phases.F02; }, /exactly the roadmap phases/],
+    [content => { content.criteria.phases.F03 = { met: 0, total: 0 }; }, /exactly the roadmap phases/],
+    [content => { content.criteria.phases['phase-01'] = content.criteria.phases.F01; delete content.criteria.phases.F01; }, /Unknown phase criteria key/],
+    [content => { content.criteria.phases.F01 = { met: 5, total: 8, percent: 62.5 }; }, /missing or unknown fields/],
+    [content => { content.criteria.phases.F01 = { met: 9, total: 8 }; }, /between 0 and total/],
+    [content => { content.criteria.phases.F02 = { met: 2.5, total: 7 }; }, /between 0 and total/],
+    [content => { content.criteria.phases = [1]; }, /must be an object/],
+    [content => { content.criteria.extra = 1; }, /missing or unknown fields/],
+  ];
+  for (const [mutate, message] of invalid) assert.throws(() => derive(technicalFixture(), content => { counted(content); mutate(content); }), message);
+});
