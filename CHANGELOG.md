@@ -11,6 +11,15 @@ Los cambios de herramientas, pruebas y CI no aparecen aquí; quedan en el [regis
 
 Este archivo lo escribe [release-please](https://github.com/googleapis/release-please) desde los títulos de los PR, y cada versión queda como [release en GitHub](https://github.com/developer-implementos/pos-docs/releases). Para recibir un aviso por versión, usa *Watch → Custom → Releases* en el repositorio. No se edita a mano: cómo se escribe una buena entrada está en la [guía de versiones](tools/release/README.md).
 
+## [0.11.6](https://github.com/developer-implementos/pos-docs/compare/v0.11.5...v0.11.6) (2026-11-24)
+
+
+### Contenido actualizado
+
+* **progress:** F03-01 actualizado (resumen): branch-sync-worker entrega al país los eventos confirmados del outbox con el contrato DeliverEvents v1, en orden por agregado (un hueco o una predecesora… ([c1ff511](https://github.com/developer-implementos/pos-docs/commit/c1ff511c52472af152d4d66175c920e785cd4b70))
+* **progress:** F04-10 actualizado (resumen): El panel «Pendientes de la sucursal» de Seguimiento de operaciones cuenta, con las lecturas y permisos existentes, transferencias y vouchers por verifica… ([c1ff511](https://github.com/developer-implementos/pos-docs/commit/c1ff511c52472af152d4d66175c920e785cd4b70))
+* **project:** [TASK-361] importar el corte c55c31a de avance y preguntas ([c1ff511](https://github.com/developer-implementos/pos-docs/commit/c1ff511c52472af152d4d66175c920e785cd4b70))
+
 ## [0.11.5](https://github.com/developer-implementos/pos-docs/compare/v0.11.4...v0.11.5) (2026-11-24)
 
 
