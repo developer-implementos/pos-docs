@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "d549e189f5f50cff73cffea6812a8d172aa8a4a2",
+    "revision": "c55c31a1e67d80c276a91d7e90a820494aaa02bd",
     "path": "delivery/progress.json",
-    "sha256": "22c14cfcb6f40dc687968d3d851bfa176a0fbd5e3f85747e733011980efabae0"
+    "sha256": "17cb965a8d5dd871d268f8832ab270516514df6197a948e7ba5d12d63a876b9b"
   },
   "content": {
     "schemaVersion": 2,
@@ -18,7 +18,7 @@
     },
     "summary": "Quince entregables están técnicamente verificados: doce de F01 y los pagos combinados, el protocolo de dispositivos y la recuperación de cobros de F02. El cliente recupera ventas y registra revisiones durables sin duplicar efectos. Efectivo y transferencia manual están conectados; tarjeta y fiscalidad conservan sus pendientes de proveedor operativo. La aceptación humana y la habilitación productiva se registran por separado.",
     "criteria": {
-      "met": 178,
+      "met": 191,
       "total": 594,
       "phases": {
         "F01": {
@@ -30,15 +30,15 @@
           "total": 118
         },
         "F03": {
-          "met": 15,
+          "met": 17,
           "total": 97
         },
         "F04": {
-          "met": 5,
+          "met": 14,
           "total": 100
         },
         "F05": {
-          "met": 4,
+          "met": 6,
           "total": 97
         },
         "F06": {
@@ -1125,7 +1125,7 @@
       {
         "id": "F03-01",
         "criteria": {
-          "met": 6,
+          "met": 7,
           "total": 8
         },
         "apps": [
@@ -1134,7 +1134,7 @@
           "country-api"
         ],
         "status": "in_progress",
-        "summary": "branch-sync-worker entrega al país los eventos confirmados del outbox con el contrato DeliverEvents v1, en orden por agregado (un hueco o una predecesora sin entregar detiene sólo ese agregado), con reintentos con backoff y jitter, rechazo permanente marcado sin purgar y adaptador HTTPS acotado; run está deshabilitado por defecto (TASK-621, 6a082cb, PR #629). country-api recibe los lotes en deliverEventsV1, guarda cada evento nuevo en sync.country_inbox junto con su trabajo durable en una transacción y responde por evento tras el COMMIT: duplicate sólo con el mismo eventId y hash, conflict ante un ID reutilizado con otro hash, invalid o retryable con código fijo, de modo que un lote parcialmente inválido confirma los válidos; la autenticación por credencial de sucursal está cerrada por defecto (TASK-636, 2f0cc55, PR #645), y un lote idéntico concurrente se clasifica como duplicado desde una sola lectura (TASK-696, ab44071, PR #700). apply.js aplica ese trabajo en orden por agregado a la proyección idempotente sync.country_sale_projection en la misma transacción que lo marca aplicado, con reintentos y cuarentena en failed, separando recepción y aplicación (TASK-689, 1c5a579, PR #695). Pendientes: cuarentena durable de los rechazos del outbox de sucursal, estado ERP separado y conservación del origen durante la ventana de replay y restauración, recorrido verificado entre procesos reales con ACK perdido y reinicio del worker, y el acuerdo de Integración sobre efecto local por evento, retención y cadencia de lotes.",
+        "summary": "branch-sync-worker entrega al país los eventos confirmados del outbox con el contrato DeliverEvents v1, en orden por agregado (un hueco o una predecesora sin entregar detiene sólo ese agregado), con reintentos con backoff y jitter, rechazo permanente marcado sin purgar y adaptador HTTPS acotado; run está deshabilitado por defecto (TASK-621, 6a082cb, PR #629). country-api recibe los lotes en deliverEventsV1, guarda cada evento nuevo en sync.country_inbox junto con su trabajo durable en una transacción y responde por evento tras el COMMIT: duplicate sólo con el mismo eventId y hash, conflict ante un ID reutilizado con otro hash, invalid o retryable con código fijo, de modo que un lote parcialmente inválido confirma los válidos; la autenticación por credencial de sucursal está cerrada por defecto (TASK-636, 2f0cc55, PR #645), y un lote idéntico concurrente se clasifica como duplicado desde una sola lectura (TASK-696, ab44071, PR #700). apply.js aplica ese trabajo en orden por agregado a la proyección idempotente sync.country_sale_projection en la misma transacción que lo marca aplicado, con reintentos y cuarentena en failed, separando recepción y aplicación (TASK-689, 1c5a579, PR #695). La consulta de estado por evento distingue recibido, aplicado y resultado ERP, y el inbox conserva el evento aplicado (TASK-758, 03e0b1d, PR #768). Pendientes: cuarentena durable de los rechazos del outbox de sucursal, recorrido verificado entre procesos reales con ACK perdido y reinicio del worker, y el acuerdo de Integración sobre efecto local por evento, retención y cadencia de lotes.",
         "acceptance": null,
         "verification": null
       },
@@ -1304,7 +1304,7 @@
       {
         "id": "F03-12",
         "criteria": {
-          "met": 0,
+          "met": 1,
           "total": 8
         },
         "apps": [
@@ -1354,7 +1354,7 @@
       {
         "id": "F04-03",
         "criteria": {
-          "met": 1,
+          "met": 2,
           "total": 11
         },
         "apps": [
@@ -1369,7 +1369,7 @@
       {
         "id": "F04-04",
         "criteria": {
-          "met": 0,
+          "met": 1,
           "total": 7
         },
         "apps": [
@@ -1402,7 +1402,7 @@
       {
         "id": "F04-06",
         "criteria": {
-          "met": 0,
+          "met": 3,
           "total": 8
         },
         "apps": [
@@ -1469,7 +1469,7 @@
       {
         "id": "F04-10",
         "criteria": {
-          "met": 0,
+          "met": 4,
           "total": 8
         },
         "apps": [
@@ -1479,7 +1479,7 @@
           "erp-worker"
         ],
         "status": "in_progress",
-        "summary": "El panel «Pendientes de la sucursal» de Seguimiento de operaciones cuenta, con las lecturas y permisos existentes, transferencias y vouchers por verificar o conciliar, pagos inciertos o por conciliar, efectos sin resolver y expedientes abiertos; muestra «50+» sin estimar totales, omite los conteos sin permiso y recupera por separado un conteo fallido (TASK-498, 73a519e, PR #503). listOpenOperationCasesV1 pagina los expedientes abiertos del ámbito de la sesión sin revelar identidad, hora ni cantidad de los ocultos (TASK-521, 4e2e82a, PR #526). Pendientes: inventario de acciones del concentrador legacy y su correspondencia, vistas por trabajo y ERP, solicitudes de reintento, cuarentena y resolución con aprobación según el contexto dueño, control de conflicto entre operadores y procedimiento ante caída de la consola.",
+        "summary": "El panel «Pendientes de la sucursal» de Seguimiento de operaciones cuenta, con las lecturas y permisos existentes, transferencias y vouchers por verificar o conciliar, pagos inciertos o por conciliar, efectos sin resolver y expedientes abiertos; muestra «50+» sin estimar totales, omite los conteos sin permiso y recupera por separado un conteo fallido (TASK-498, 73a519e, PR #503). listOpenOperationCasesV1 pagina los expedientes abiertos del ámbito de la sesión sin revelar identidad, hora ni cantidad de los ocultos (TASK-521, 4e2e82a, PR #526). requestOperationalActionV1 solicita sobre un expediente abierto la consulta o conciliación del dueño, idempotente por commandId y con expectedVersion: un segundo operador recibe VERSION_CONFLICT sin doble efecto, una respuesta desconocida queda requested y se retoma sin volver a cobrar, y las denegaciones de otra sucursal quedan auditadas; la consola caída no detiene la venta ni el outbox (TASK-736, 9587db6, PR #755). Pendientes: inventario de acciones del concentrador legacy y su correspondencia, vistas por trabajo y ERP, solicitudes de reintento, cuarentena y resolución con aprobación según el contexto dueño.",
         "acceptance": null,
         "verification": null
       },
@@ -1635,7 +1635,7 @@
       {
         "id": "F05-08",
         "criteria": {
-          "met": 0,
+          "met": 2,
           "total": 8
         },
         "apps": [
