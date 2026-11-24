@@ -11,7 +11,7 @@
 
 ## Qué resuelve
 
-En el legacy, un cajero continúa su trabajo en otro equipo cuando falla el suyo, se corta la luz o necesita moverse: ingresa desde cualquier equipo, incluso un celular, ve las cajas de la sucursal y elige la suya. Las cajas se descargan del ERP; una caja nueva se crea en el ERP y aparece después de la sincronización. El listado distingue las cajas disponibles, las ocupadas y la propia, que se puede continuar mientras no se cierre. Lo describen la regla CAJ-006 y los endpoints `/cajas/cajas-disponibles` y `/cajas-usuario` del [catálogo del legacy](/guide/api/mountain-concentrator/).
+En el legacy, un cajero continúa su trabajo en otro equipo cuando falla el suyo, se corta la luz o necesita moverse: ingresa desde cualquier equipo, incluso un celular, ve las cajas de la sucursal y elige la suya. Las cajas se descargan del ERP; una caja nueva se crea en el ERP y aparece después de la sincronización. El listado distingue las cajas disponibles, las ocupadas y la propia, que se puede continuar mientras no se cierre. Lo describen la regla CAJ-006 y los endpoints `/cajas/cajas-disponibles` y `/cajas-usuario` del [catálogo del legacy](/guide/api/mountain/).
 
 El POS derivaba la caja de la instalación ([ADR-23](device-activation.md)) y fijaba el canal en ella ([ADR-21](web-client.md)). Eso dejaba un solo equipo posible por caja, impedía continuar un turno en otro equipo y obligaba a reiniciar el ambiente para agregar cajas. La prueba de posesión, en cambio, sí corrigió un problema real del modelo anterior: identificadores que cualquiera podía copiar. Esta decisión conserva esa corrección y devuelve el comportamiento de negocio.
 
