@@ -19,7 +19,7 @@ Clasificación: unidad sustancial, no inline. Registra tres decisiones de arquit
 - [x] T2 · S2,S5 · route:inline · Redactar el ADR-32 · status:done · evidence: `docs/decisions/support-access.md`
 - [x] T3 · S3,S5 · route:inline · Redactar el ADR-33 · status:done · evidence: `docs/decisions/operations-console.md`
 - [x] T4 · S4 · route:inline · Registrar las decisiones en la propuesta y en la barra lateral · status:done · evidence: `docs/propuesta-arquitectura.md`, `apps/starlight/content-map.mjs`
-- [ ] T5 · S1,S2,S3,S4,S5 · route:inline · Regenerar los derivados, ejecutar las comprobaciones editoriales y de build, y abrir la PR · status:in_progress · evidence: en curso en esta rama.
+- [x] T5 · S1,S2,S3,S4,S5 · route:inline · Regenerar los derivados, ejecutar las comprobaciones editoriales y de build, y abrir la PR · status:done · evidence: `npm run verify` sale 0 en `e4301fc`; build, diagramas y enlaces repetidos en `39c53a1`
 
 ## Log
 
