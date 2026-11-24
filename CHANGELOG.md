@@ -11,6 +11,19 @@ Los cambios de herramientas, pruebas y CI no aparecen aquí; quedan en el [regis
 
 Este archivo lo escribe [release-please](https://github.com/googleapis/release-please) desde los títulos de los PR, y cada versión queda como [release en GitHub](https://github.com/developer-implementos/pos-docs/releases). Para recibir un aviso por versión, usa *Watch → Custom → Releases* en el repositorio. No se edita a mano: cómo se escribe una buena entrada está en la [guía de versiones](tools/release/README.md).
 
+## [0.11.5](https://github.com/developer-implementos/pos-docs/compare/v0.11.4...v0.11.5) (2026-11-24)
+
+
+### Contenido actualizado
+
+* **progress:** F02-03 actualizado (resumen): Host .NET, SQLite, HTTPS, deduplicación y recuperación implementados ([67f77f9](https://github.com/developer-implementos/pos-docs/commit/67f77f956e45f71a91234ea116eda3538cca4bdc))
+* **progress:** F02-07 actualizado (resumen): Perfiles de pago versionados, destino fiscal congelado y asignación de instalación/época implementados ([67f77f9](https://github.com/developer-implementos/pos-docs/commit/67f77f956e45f71a91234ea116eda3538cca4bdc))
+* **progress:** F03-11 actualizado (resumen): pnpm run contracts:check compara los esquemas del código con un manifiesto versionado (tools/contracts/contract-manifest.json) y rechaza sin cambio de ve… ([67f77f9](https://github.com/developer-implementos/pos-docs/commit/67f77f956e45f71a91234ea116eda3538cca4bdc))
+* **progress:** F04-05 actualizado (resumen): listShiftSalesV1 lista con sale.read y paginación keyset las ventas que el solicitante confirmó en su turno, caja e instalación, y cada fila abre su comp… ([67f77f9](https://github.com/developer-implementos/pos-docs/commit/67f77f956e45f71a91234ea116eda3538cca4bdc))
+* **progress:** F05-09 actualizado (resumen): Datos personales, auditoría, documentos y evidencias técnicas tienen propiedad, retención y acceso aprobados y mecanismos comprobables. database.js reten… ([67f77f9](https://github.com/developer-implementos/pos-docs/commit/67f77f956e45f71a91234ea116eda3538cca4bdc))
+* **progress:** F05-11 actualizado (resumen): tools/supply-chain genera un SBOM CycloneDX 1.5 determinista por artefacto (cuatro apps Nest, tres clientes Angular y el host .NET), lo evalúa contra una… ([67f77f9](https://github.com/developer-implementos/pos-docs/commit/67f77f956e45f71a91234ea116eda3538cca4bdc))
+* **project:** [TASK-361] importar el corte d549e18 de avance ([67f77f9](https://github.com/developer-implementos/pos-docs/commit/67f77f956e45f71a91234ea116eda3538cca4bdc))
+
 ## [0.11.4](https://github.com/developer-implementos/pos-docs/compare/v0.11.3...v0.11.4) (2026-11-24)
 
 
