@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "690662a6e02c82fdeff9d0cf61a5bc7db013ee2d",
+    "revision": "35eeb5c892091e23e6ad86e8c79777cc6c4a9cd8",
     "path": "delivery/follow-ups.json",
-    "sha256": "897f28124b107ee9dbaae24721632a1467fb98ef8255f175bf4710f73b2f5616"
+    "sha256": "db6ff37da17205d6814992c936c0b9be4b2180e3e6df0eb6d10b931fd8df02a2"
   },
   "content": {
     "schemaVersion": 1,
@@ -1202,11 +1202,42 @@
           }
         ],
         "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-037",
+        "kind": "decision",
+        "state": "open",
+        "workPackages": [
+          "F04-03"
+        ],
+        "summary": "Decidir si un cobro con tarjeta sin plan de pago y de resultado no resuelto debe seguir impidiendo el cierre de todos los turnos de su caja",
+        "impact": "Un cobro con tarjeta sin plan de pago no pertenece a ningún turno. Mientras siga creado, en envío, incierto o en conciliación, el resumen lo cuenta como pago no resuelto y el cierre de cualquier turno de esa caja responde SHIFT_PAYMENTS_UNRESOLVED, aunque se haya creado antes de abrir el turno y sin límite de antigüedad. Es la opción conservadora: no cerrar una caja sobre un cobro de resultado desconocido. Acotarlo al turno o a una antigüedad dejaría cerrar con dinero posiblemente cobrado sin conciliar. TASK-706 conserva el comportamiento. No afecta la verificación técnica de F04-03.",
+        "impactScope": "operational",
+        "nextAction": "Preguntar a Tesorería si un cobro con tarjeta sin plan y sin resolver debe bloquear el cierre de cada turno de la caja hasta su conciliación, o si basta con mostrarlo como pendiente y exigir la conciliación por otra vía.",
+        "requestedFrom": "Tesorería, con el responsable del producto como consultado",
+        "owner": null,
+        "closureCriteria": "Decisión de Tesorería registrada con evidencia. Si se conserva el bloqueo, la regla queda documentada como tal; si se acota, el cambio de SqlShiftPaymentActivity incluye su prueba y la vía de conciliación del cobro excluido.",
+        "reviewedOn": "2026-11-23",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/706",
+            "label": "TASK-706: observaciones no bloqueantes de las revisiones"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/pull/508",
+            "label": "TASK-496: resumen y cierre a ciegas del turno"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/51",
+            "label": "F04-03: cierre de turno"
+          }
+        ],
+        "resolution": null
       }
     ]
   },
   "issues": {
-    "observedAt": "2026-11-23T23:24:56.078Z",
+    "observedAt": "2026-11-24T00:40:19.621Z",
     "repository": "https://github.com/developer-implementos/pos-platform",
     "entries": [
       {

@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "690662a6e02c82fdeff9d0cf61a5bc7db013ee2d",
+    "revision": "35eeb5c892091e23e6ad86e8c79777cc6c4a9cd8",
     "path": "delivery/business-questions.json",
-    "sha256": "903140bd0e9e3b14750f870b09100e684fd55d412405281f903fdb9dc7c56deb"
+    "sha256": "01c263bf6f83cff956332f967e0fb1ffd900d4ad3907e1549c271a5b8d309038"
   },
   "integration": {
     "reference": "main",
@@ -7441,6 +7441,129 @@
         "sources": [
           "libs/backend/cash/src/application/shift-closing.service.ts#L258-L280",
           "delivery/specs/F04-03.md"
+        ]
+      },
+      {
+        "id": "Q-128",
+        "topic": "Caja",
+        "question": "¿Sobre qué monto un retiro de efectivo del turno exige la aprobación de un supervisor, y basta con que el supervisor de la misma caja lo registre con su propia cuenta?",
+        "kind": "rule",
+        "state": "open",
+        "answerSources": [
+          "code",
+          "configuration"
+        ],
+        "auditRefs": [],
+        "parityRefs": [],
+        "decider": "tesoreria",
+        "consulted": [
+          "operaciones",
+          "finanzas"
+        ],
+        "owner": null,
+        "followUp": null,
+        "workPackages": [
+          "F04-03"
+        ],
+        "reviewedOn": "2026-11-23",
+        "recommendation": null,
+        "decision": null,
+        "priority": "P2",
+        "currentAnswer": "POS Platform, de forma provisional (TASK-709): el umbral es una clave opcional de la política de cierre de la sucursal, aprovisionada por el propietario; sin umbral, todo retiro exige supervisor. Sobre el umbral, el retiro lo registra un supervisor de la misma caja con su cuenta, distinto de quien opera el turno, y así queda aprobado. El recorrido de QA usa 5.000 CLP como valor de prueba, no como decisión.",
+        "sources": [
+          "libs/backend/cash/src/application/shift-cash-movement.service.ts",
+          "libs/backend/cash/src/infrastructure/shift-close-policy.ts"
+        ]
+      },
+      {
+        "id": "Q-129",
+        "topic": "Caja",
+        "question": "Con cierre a ciegas, ¿los retiros rechazados por superar el efectivo esperado deben además limitarse en cantidad o derivarse a un supervisor, para que el cajero no pueda deducir el esperado con intentos sucesivos?",
+        "kind": "rule",
+        "state": "open",
+        "answerSources": [
+          "code"
+        ],
+        "auditRefs": [],
+        "parityRefs": [],
+        "decider": "tesoreria",
+        "consulted": [
+          "operaciones",
+          "seguridad"
+        ],
+        "owner": null,
+        "followUp": null,
+        "workPackages": [
+          "F04-03"
+        ],
+        "reviewedOn": "2026-11-23",
+        "recommendation": null,
+        "decision": null,
+        "priority": "P2",
+        "currentAnswer": "POS Platform (TASK-709): cada retiro rechazado por superar el esperado o por faltar aprobación queda auditado como denegado, con operador, turno y monto, en cash.shift_cash_movement_refusal y en la auditoría de accesos; no se limita la cantidad de intentos ni se deriva a un supervisor.",
+        "sources": [
+          "libs/backend/cash/src/application/shift-cash-movement.service.ts"
+        ]
+      },
+      {
+        "id": "Q-130",
+        "topic": "Cierre",
+        "question": "¿El corte del efectivo del turno es el primer conteo ciego o el cierre final, si después de un conteo que pide motivo (reason-required) se siguen aceptando ventas, ingresos y retiros cuando el cajero ya sabe que hay diferencia?",
+        "kind": "rule",
+        "state": "open",
+        "answerSources": [
+          "code"
+        ],
+        "auditRefs": [],
+        "parityRefs": [],
+        "decider": "tesoreria",
+        "consulted": [
+          "operaciones",
+          "finanzas"
+        ],
+        "owner": null,
+        "followUp": null,
+        "workPackages": [
+          "F04-03"
+        ],
+        "reviewedOn": "2026-11-23",
+        "recommendation": null,
+        "decision": null,
+        "priority": "P2",
+        "currentAnswer": "POS Platform, de forma provisional: el corte es el cierre final. Tras reason-required el turno sigue abierto y admite ventas, ingresos y retiros, que entran en el esperado del cierre; el primer conteo sigue rigiendo el motivo y la aprobación (Q-127).",
+        "sources": [
+          "libs/backend/cash/src/application/shift-closing.service.ts",
+          "libs/backend/cash/src/application/shift-cash-movement.service.ts"
+        ]
+      },
+      {
+        "id": "Q-131",
+        "topic": "Caja",
+        "question": "¿El umbral de aprobación de retiros debe ser acumulado por turno, ya que un retiro grande puede dividirse en varios retiros menores que el umbral sin pasar por un supervisor?",
+        "kind": "rule",
+        "state": "open",
+        "answerSources": [
+          "code"
+        ],
+        "auditRefs": [],
+        "parityRefs": [],
+        "decider": "tesoreria",
+        "consulted": [
+          "operaciones",
+          "seguridad"
+        ],
+        "owner": null,
+        "followUp": null,
+        "workPackages": [
+          "F04-03"
+        ],
+        "reviewedOn": "2026-11-23",
+        "recommendation": null,
+        "decision": null,
+        "priority": "P2",
+        "currentAnswer": "POS Platform, de forma provisional (TASK-709): el umbral se compara con cada retiro por separado; varios retiros menores que el umbral no exigen supervisor, aunque su suma lo supere. Cada retiro queda registrado con su responsable.",
+        "sources": [
+          "libs/backend/cash/src/application/shift-cash-movement.service.ts"
         ]
       }
     ],
