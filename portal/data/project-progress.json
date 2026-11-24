@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "8dd59cf3cfa4bdc014c3e2f0e52a61bb650519da",
+    "revision": "d549e189f5f50cff73cffea6812a8d172aa8a4a2",
     "path": "delivery/progress.json",
-    "sha256": "691cc16fa9aeefb0be30cd507d7542f9eada9f0b4c9226173cbff0f568896e4d"
+    "sha256": "22c14cfcb6f40dc687968d3d851bfa176a0fbd5e3f85747e733011980efabae0"
   },
   "content": {
     "schemaVersion": 2,
-    "reviewedOn": "2026-11-23",
+    "reviewedOn": "2026-11-24",
     "productRevision": "source",
     "scope": {
       "repository": "https://github.com/developer-implementos/pos-docs",
@@ -18,7 +18,7 @@
     },
     "summary": "Quince entregables están técnicamente verificados: doce de F01 y los pagos combinados, el protocolo de dispositivos y la recuperación de cobros de F02. El cliente recupera ventas y registra revisiones durables sin duplicar efectos. Efectivo y transferencia manual están conectados; tarjeta y fiscalidad conservan sus pendientes de proveedor operativo. La aceptación humana y la habilitación productiva se registran por separado.",
     "criteria": {
-      "met": 157,
+      "met": 178,
       "total": 594,
       "phases": {
         "F01": {
@@ -26,19 +26,19 @@
           "total": 110
         },
         "F02": {
-          "met": 49,
+          "met": 61,
           "total": 118
         },
         "F03": {
-          "met": 10,
+          "met": 15,
           "total": 97
         },
         "F04": {
-          "met": 3,
+          "met": 5,
           "total": 100
         },
         "F05": {
-          "met": 2,
+          "met": 4,
           "total": 97
         },
         "F06": {
@@ -823,7 +823,7 @@
       {
         "id": "F02-03",
         "criteria": {
-          "met": 4,
+          "met": 7,
           "total": 9
         },
         "apps": [
@@ -832,14 +832,14 @@
           "device-agent"
         ],
         "status": "in_progress",
-        "summary": "Host .NET, SQLite, HTTPS, deduplicación y recuperación implementados. Pendientes SDK/driver, arquitectura y cuenta/sesión homologadas; la publicación win-x64 no acredita operación física.",
+        "summary": "Host .NET, SQLite, HTTPS, deduplicación y recuperación implementados. Exclusión por dispositivo, parada acotada, actualización y no repetición tras el spooler probadas con procesos del host (TASK-732, 2a7ccbf, PR #745). Pendientes SDK/driver, arquitectura y cuenta/sesión homologadas, y el servicio instalado frente a pos-desktop real; la publicación win-x64 no acredita operación física.",
         "acceptance": null,
         "verification": null
       },
       {
         "id": "F02-04",
         "criteria": {
-          "met": 1,
+          "met": 3,
           "total": 8
         },
         "apps": [
@@ -908,7 +908,7 @@
       {
         "id": "F02-06",
         "criteria": {
-          "met": 3,
+          "met": 4,
           "total": 8
         },
         "apps": [
@@ -923,7 +923,7 @@
       {
         "id": "F02-07",
         "criteria": {
-          "met": 5,
+          "met": 7,
           "total": 9
         },
         "apps": [
@@ -933,7 +933,7 @@
           "device-agent"
         ],
         "status": "in_progress",
-        "summary": "Perfiles de pago versionados, destino fiscal congelado y asignación de instalación/época implementados. Antes de reservar saldo o crear la intención, la admisión rechaza un destino sin adaptador registrado de proveedor, versión y contrato exactos, sin capacidad de cobro o que declara consulta, compensación o un canal de notificación que ese adaptador no implementa, y conserva el recibo del rechazo (1350ad6, PR #93; TASK-367, 8728d6e). GET /payment-profiles lista los perfiles del puesto con executable y reasonCodes derivados del mismo diagnóstico que la admisión (TASK-363, b9164c1). Las capacidades declaran de forma opcional su canal de notificación con autenticación y deduplicación, y un kit de conformidad reutilizable, sólo de pruebas, valida cualquier adaptador de pago junto al simulador de fallos controlado (TASK-367); superarlo no homologa un proveedor. Los perfiles de pago se provisionan con el comando propietario database.js provision-payment-profile de branch-api, separado del runtime y con el rol propietario (TASK-487, 3adf56e, PR #492). Kits equivalentes, sólo de pruebas, validan cualquier adaptador fiscal (FiscalProviderPort) y el driver receipt.print, cada uno con un simulador de fallos nombrados que nunca informa una respuesta perdida, una recepción sin autoridad o una cola de impresión como éxito (TASK-580); no ejecutan el host .NET ni homologan un proveedor o dispositivo. Contrato estable del protocolo de dispositivos. Pendientes: validación por país y entidad con CountryProfile.paymentProviderIds; pruebas de autenticidad, replay, reordenamiento y rotación de un canal de notificación real, hoy inexistente; y matriz de proveedores/SDK.",
+        "summary": "Perfiles de pago versionados, destino fiscal congelado y asignación de instalación/época implementados. Antes de reservar saldo o crear la intención, la admisión rechaza un destino sin adaptador registrado de proveedor, versión y contrato exactos, sin capacidad de cobro o que declara consulta, compensación o un canal de notificación que ese adaptador no implementa, y conserva el recibo del rechazo (1350ad6, PR #93; TASK-367, 8728d6e). GET /payment-profiles lista los perfiles del puesto con executable y reasonCodes derivados del mismo diagnóstico que la admisión (TASK-363, b9164c1). Las capacidades declaran de forma opcional su canal de notificación con autenticación y deduplicación, y un kit de conformidad reutilizable, sólo de pruebas, valida cualquier adaptador de pago junto al simulador de fallos controlado (TASK-367); superarlo no homologa un proveedor. Los perfiles de pago se provisionan con el comando propietario database.js provision-payment-profile de branch-api, separado del runtime y con el rol propietario (TASK-487, 3adf56e, PR #492). Kits equivalentes, sólo de pruebas, validan cualquier adaptador fiscal (FiscalProviderPort) y el driver receipt.print, cada uno con un simulador de fallos nombrados que nunca informa una respuesta perdida, una recepción sin autoridad o una cola de impresión como éxito (TASK-580); no ejecutan el host .NET ni homologan un proveedor o dispositivo. Contrato estable del protocolo de dispositivos. La admisión y el diagnóstico validan además que el perfil del país admita el proveedor y que la entidad legal tenga la cuenta de comercio, y nuevos kits validan el mantenimiento del terminal y PaymentVerifier (TASK-733, 8dd59cf, PR #754); branch-api compone un ámbito vacío hasta que exista una matriz aprobada. Pendientes: pruebas de autenticidad, replay, reordenamiento y rotación de un canal de notificación real, hoy inexistente; y matriz de proveedores/SDK.",
         "acceptance": null,
         "verification": null
       },
@@ -1021,7 +1021,7 @@
       {
         "id": "F02-10",
         "criteria": {
-          "met": 2,
+          "met": 4,
           "total": 8
         },
         "apps": [
@@ -1053,7 +1053,7 @@
       {
         "id": "F02-12",
         "criteria": {
-          "met": 5,
+          "met": 7,
           "total": 8
         },
         "apps": [
@@ -1255,7 +1255,7 @@
       {
         "id": "F03-09",
         "criteria": {
-          "met": 0,
+          "met": 1,
           "total": 9
         },
         "apps": [
@@ -1285,7 +1285,7 @@
       {
         "id": "F03-11",
         "criteria": {
-          "met": 3,
+          "met": 7,
           "total": 8
         },
         "apps": [
@@ -1297,7 +1297,7 @@
           "device-agent"
         ],
         "status": "in_progress",
-        "summary": "pnpm run contracts:check compara los esquemas del código con un manifiesto versionado (tools/contracts/contract-manifest.json) y rechaza sin cambio de versión un campo o mensaje retirado, un campo nuevo obligatorio, un enum, tipo o límite estrechado, la pérdida de null y cualquier cambio de un campo monetario; los fixtures de cada versión admitida pasan por el consumidor real (TASK-489, 9f13bfc, PR #493). Pagos, fiscalidad, import-commercial, import-customers y los trabajos de dispositivo rechazan una versión no soportada antes de cualquier efecto durable, con pruebas sobre PostgreSQL; el manifiesto declara dónde se persiste cada versión, impide retirar una versión persistida o todavía emitida o leída, y exige que cada despliegue lea lo que emiten sus productores (TASK-562, 73fb3b2, PR #570). En el protocolo de dispositivos, el host declara en cada consulta sus versiones de contrato y capacidades y branch-api retiene, sin entregarlos, los trabajos que no admite (TASK-563, 3600aa8, PR #564); la repetición de un resultado de impresión anterior a esa retención devuelve la vista original (TASK-657, 5f32842, PR #661), y el host acota los cuerpos de error, tolera un branch-api anterior que rechaza la declaración y documenta el orden de despliegue (TASK-655, 8a9b191, PR #672). Pendientes: handshake de capacidades entre los demás componentes, cuarentena de mensajes no soportados, los contratos de país y ERP, aún inexistentes, y el acuerdo de expansión, contracción y orden de despliegue.",
+        "summary": "pnpm run contracts:check compara los esquemas del código con un manifiesto versionado (tools/contracts/contract-manifest.json) y rechaza sin cambio de versión un campo o mensaje retirado, un campo nuevo obligatorio, un enum, tipo o límite estrechado, la pérdida de null y cualquier cambio de un campo monetario; los fixtures de cada versión admitida pasan por el consumidor real (TASK-489, 9f13bfc, PR #493). Pagos, fiscalidad, import-commercial, import-customers y los trabajos de dispositivo rechazan una versión no soportada antes de cualquier efecto durable, con pruebas sobre PostgreSQL; el manifiesto declara dónde se persiste cada versión, impide retirar una versión persistida o todavía emitida o leída, y exige que cada despliegue lea lo que emiten sus productores (TASK-562, 73fb3b2, PR #570). En el protocolo de dispositivos, el host declara en cada consulta sus versiones de contrato y capacidades y branch-api retiene, sin entregarlos, los trabajos que no admite (TASK-563, 3600aa8, PR #564); la repetición de un resultado de impresión anterior a esa retención devuelve la vista original (TASK-657, 5f32842, PR #661), y el host acota los cuerpos de error, tolera un branch-api anterior que rechaza la declaración y documenta el orden de despliegue (TASK-655, 8a9b191, PR #672). Cada versión declara su regla de campos desconocidos, country-api publica getSyncCapabilitiesV1 y el worker no envía lo que el país no lista (queda pendiente) ni lo retirado (cuarentena); una prueba actualiza una sucursal con eventos pendientes y los entrega sin pérdida (TASK-742, 0b8d24e, PR #750). Pendientes: los contratos de país y ERP, aún inexistentes, y el acuerdo de expansión, contracción y orden de despliegue, hoy política provisional de FOLLOWUP-033.",
         "acceptance": null,
         "verification": null
       },
@@ -1386,7 +1386,7 @@
       {
         "id": "F04-05",
         "criteria": {
-          "met": 2,
+          "met": 4,
           "total": 8
         },
         "apps": [
@@ -1395,7 +1395,7 @@
           "country-api"
         ],
         "status": "in_progress",
-        "summary": "listShiftSalesV1 lista con sale.read y paginación keyset las ventas que el solicitante confirmó en su turno, caja e instalación, y cada fila abre su comprobante interno (TASK-497, b395a7b, PR #507). exportShiftSalesCsvV1 exporta en CSV las ventas del turno por páginas, cancelable, con límites de filas, bytes, tiempo y concurrencia validados al arrancar, revalidación de la sesión por página, neutralización de fórmulas y auditoría; nunca entrega un archivo truncado como completo (TASK-545, d921e1e, PR #553). «Mi caja» monta «Ventas del turno» junto al resumen y al cierre del turno (TASK-556, e64de48, PR #557), y la exportación se midió bajo carga junto con confirmaciones de venta (TASK-676, c6e2445, PR #691). En escritorio el CSV usa la descarga del WebView sin prueba en Tauri. Pendientes: definiciones aprobadas de indicadores y totales por moneda, proyecciones reconstruibles con frescura visible, reportes de medios de pago, cierres, cobranzas y devoluciones, comparación con un conjunto de referencia y contrato de salida analítica.",
+        "summary": "listShiftSalesV1 lista con sale.read y paginación keyset las ventas que el solicitante confirmó en su turno, caja e instalación, y cada fila abre su comprobante interno (TASK-497, b395a7b, PR #507). exportShiftSalesCsvV1 exporta en CSV las ventas del turno por páginas, cancelable, con límites de filas, bytes, tiempo y concurrencia validados al arrancar, revalidación de la sesión por página, neutralización de fórmulas y auditoría; nunca entrega un archivo truncado como completo (TASK-545, d921e1e, PR #553). «Mi caja» monta «Ventas del turno» junto al resumen y al cierre del turno (TASK-556, e64de48, PR #557), y la exportación se midió bajo carga junto con confirmaciones de venta (TASK-676, c6e2445, PR #691). En escritorio el CSV usa la descarga del WebView sin prueba en Tauri. La lista y el CSV aceptan un corte y declaran asOf, cutoff y coverage, y un conjunto de referencia sintético cuadra lista, CSV, resumen por medio y cierre explicando cada exclusión (TASK-735, a7787a1, PR #752). Pendientes: definiciones aprobadas de indicadores (Q-28 provisional), proyecciones reconstruibles, reportes de cobranzas y devoluciones, filtros y exportaciones con caducidad y contrato de salida analítica.",
         "acceptance": null,
         "verification": null
       },
@@ -1655,7 +1655,7 @@
       {
         "id": "F05-09",
         "criteria": {
-          "met": 1,
+          "met": 2,
           "total": 8
         },
         "apps": [
@@ -1668,7 +1668,7 @@
           "device-agent"
         ],
         "status": "in_progress",
-        "summary": "Datos personales, auditoría, documentos y evidencias técnicas tienen propiedad, retención y acceso aprobados y mecanismos comprobables. database.js retention-plan simula, en una transacción de sólo lectura y con sólo conteos, la purga por categoría (outbox de sincronización, pagos con tarjeta, documentos fiscales y trabajos de dispositivo) con sus motivos de retención; una ventana sin configurar queda retenida por policy-not-approved y nunca borra (TASK-623, 7e5dc5f, PR #627). Pendientes: políticas aprobadas de propiedad, retención y acceso, purga y archivado, legal hold con autoridad, auditoría y exportación restringida, y saneamiento de diagnóstico.",
+        "summary": "Datos personales, auditoría, documentos y evidencias técnicas tienen propiedad, retención y acceso aprobados y mecanismos comprobables. database.js retention-plan simula, en una transacción de sólo lectura y con sólo conteos, la purga por categoría (outbox de sincronización, pagos con tarjeta, documentos fiscales y trabajos de dispositivo) con sus motivos de retención; una ventana sin configurar queda retenida por policy-not-approved y nunca borra (TASK-623, 7e5dc5f, PR #627). La auditoría de una acción sensible se reconstruye por su lector y el rol de ejecución no puede modificarla (TASK-743, f11f86b, PR #747). Pendientes: políticas aprobadas de propiedad, retención y acceso, purga y archivado, legal hold con autoridad, exportación restringida y saneamiento de diagnóstico.",
         "acceptance": null,
         "verification": null
       },
@@ -1693,7 +1693,7 @@
       {
         "id": "F05-11",
         "criteria": {
-          "met": 0,
+          "met": 1,
           "total": 8
         },
         "apps": [
@@ -1706,7 +1706,7 @@
           "device-agent"
         ],
         "status": "in_progress",
-        "summary": "tools/supply-chain genera un SBOM CycloneDX 1.5 determinista por artefacto (cuatro apps Nest, tres clientes Angular y el host .NET), lo evalúa contra una política de licencias provisional, pendiente de aprobación de Seguridad y legal, lo compara con un inventario versionado, y seal/verify fallan si cambia un archivo del artefacto o su manifiesto (TASK-512, 43b2c61, PR #517). El cierre npm se calcula desde el lockfile podado del artefacto (TASK-547, 32446fa, PR #549). Un resultado limpio no acredita cumplimiento. Pendientes: SBOM de los paquetes Tauri y Capacitor y de SDK y drivers de terceros; aprobación de la política de licencias; evaluación de avisos de seguridad con aceptación de riesgo con vencimiento; separación de secretos de firma; y reconstrucción verificable desde un tag.",
+        "summary": "tools/supply-chain genera un SBOM CycloneDX 1.5 determinista por artefacto (cuatro apps Nest, tres clientes Angular y el host .NET), lo evalúa contra una política de licencias provisional, pendiente de aprobación de Seguridad y legal, lo compara con un inventario versionado, y seal/verify fallan si cambia un archivo del artefacto o su manifiesto (TASK-512, 43b2c61, PR #517). El cierre npm se calcula desde el lockfile podado del artefacto (TASK-547, 32446fa, PR #549). Un resultado limpio no acredita cumplimiento. La auditoría de avisos falla ante un aviso sin remediación ni excepción vigente, con responsable, decisión y vencimiento de cada excepción; la evidencia se firma con una clave efímera y la reconstrucción doble se compara (TASK-743, f11f86b, PR #747). Pendientes: SBOM de los paquetes Tauri y Capacitor y de SDK y drivers de terceros; aprobación de la política de licencias; custodia de la clave de firma y controles compensatorios acordados (FOLLOWUP-038).",
         "acceptance": null,
         "verification": null
       },
