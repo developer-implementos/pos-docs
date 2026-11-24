@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "73a7dd9f4468286f9bf6dbf8d1d456a8caefda5a",
+    "revision": "8dd59cf3cfa4bdc014c3e2f0e52a61bb650519da",
     "path": "delivery/follow-ups.json",
-    "sha256": "db6ff37da17205d6814992c936c0b9be4b2180e3e6df0eb6d10b931fd8df02a2"
+    "sha256": "79a90e5c2209917f96578699a1a8c56c390871775ce5b7b95e5295a955b98967"
   },
   "content": {
     "schemaVersion": 1,
@@ -1233,11 +1233,38 @@
           }
         ],
         "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-038",
+        "kind": "decision",
+        "state": "open",
+        "workPackages": [
+          "F05-11"
+        ],
+        "summary": "Definir quién aprueba una excepción de aviso de seguridad y acordar los controles compensatorios de la reconstrucción nativa",
+        "impact": "Desde TASK-743 un aviso de producción sólo deja de bloquear con una excepción versionada que nombra responsable, decisión enlazada, motivo y vencimiento de hasta 90 días, pero ningún registro identifica qué rol de Seguridad puede aprobarla. La reconstrucción compara dos compilaciones de los artefactos Nest y Angular; la variación conocida de Tauri y .NET y sus controles compensatorios están documentados como propuesta, no como controles acordados. La firma de la evidencia usa una clave efímera por corrida; la custodia de una clave de publicación sigue sin definir.",
+        "impactScope": "review",
+        "nextAction": "Seguridad nombra el rol que aprueba excepciones y su registro de aprobación, revisa la tabla de variación legítima de tools/supply-chain/README.md y decide si una clave de publicación custodiada reemplaza a la efímera.",
+        "requestedFrom": "Responsable de Seguridad de F05-11",
+        "owner": null,
+        "closureCriteria": "Rol aprobador de excepciones registrado y aplicado en la revisión de tools/supply-chain/advisory-exceptions.json; controles compensatorios de Tauri y .NET aceptados o reemplazados con evidencia; decisión sobre la clave de publicación.",
+        "reviewedOn": "2026-11-23",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/743",
+            "label": "TASK-743"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/73a7dd9f4468286f9bf6dbf8d1d456a8caefda5a/delivery/specs/F05-11.md",
+            "label": "Criterios F05-11"
+          }
+        ],
+        "resolution": null
       }
     ]
   },
   "issues": {
-    "observedAt": "2026-11-24T01:28:59.572Z",
+    "observedAt": "2026-11-24T12:31:52.713Z",
     "repository": "https://github.com/developer-implementos/pos-platform",
     "entries": [
       {
