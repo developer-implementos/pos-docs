@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "35b6caea5c11306cebdf0bab3ceebe320946b310",
+    "revision": "cf0002372fcdd8a768f72c5e7248f8032f3b0dad",
     "path": "delivery/progress.json",
-    "sha256": "4cfbf8017ac20e023c96fa3271dc7b29b85363458476430c31d3d31c895a7d6b"
+    "sha256": "f54264879113d6e7356068cc8704cffb9a382110ba3b1f8d86fffabf6692b676"
   },
   "content": {
     "schemaVersion": 2,
@@ -18,7 +18,7 @@
     },
     "summary": "Quince entregables están técnicamente verificados: doce de F01 y los pagos combinados, el protocolo de dispositivos y la recuperación de cobros de F02. El cliente recupera ventas y registra revisiones durables sin duplicar efectos. Efectivo y transferencia manual están conectados; tarjeta y fiscalidad conservan sus pendientes de proveedor operativo. La aceptación humana y la habilitación productiva se registran por separado.",
     "criteria": {
-      "met": 198,
+      "met": 200,
       "total": 594,
       "phases": {
         "F01": {
@@ -38,7 +38,7 @@
           "total": 100
         },
         "F05": {
-          "met": 8,
+          "met": 10,
           "total": 97
         },
         "F06": {
@@ -1597,6 +1597,25 @@
       {
         "id": "F05-06",
         "criteria": {
+          "met": 2,
+          "total": 8
+        },
+        "apps": [
+          "pos-desktop",
+          "branch-api",
+          "branch-sync-worker",
+          "country-api",
+          "erp-worker",
+          "device-agent"
+        ],
+        "status": "in_progress",
+        "summary": "Se detectan fallos y degradación del recorrido mediante métricas y alertas accionables con responsables y objetivos medidos. TASK-148 (95ccc5e, b66a31a, 6d9194b y d55bad7) dejó el relay de fallos de clientes y el presupuesto de errores de Sentry como base técnica; no define SLI, alertas, responsables ni objetivos. getSyncBacklogV1 resume, sin identificadores ni payload, el outbox pendiente de la sucursal: cantidad, el más antiguo, los que reintentan, los entregados en 24 h y tramos fijos de antigüedad, en total y por tipo de evento, sin cambiar la readiness (TASK-622, 5b0d95f, PR #626). Canarios sintéticos buscados en el stream Pino real y en los envelopes de Sentry, y en el host .NET, no se filtran (TASK-764, 5466e5e, PR #771). Con un colector que no responde, ninguna venta medida se perdió, y cada envío a Sentry tiene un plazo de 5 s que recupera la telemetría (TASK-763, 718e402, PR #804). Pendientes: SLI y objetivos acordados, alertas con responsables y escalamiento, métricas del recorrido y de los demás procesos, y ensayos que prueben la detección.",
+        "acceptance": null,
+        "verification": null
+      },
+      {
+        "id": "F05-07",
+        "criteria": {
           "met": 1,
           "total": 8
         },
@@ -1609,26 +1628,7 @@
           "device-agent"
         ],
         "status": "in_progress",
-        "summary": "Se detectan fallos y degradación del recorrido mediante métricas y alertas accionables con responsables y objetivos medidos. TASK-148 (95ccc5e, b66a31a, 6d9194b y d55bad7) dejó el relay de fallos de clientes y el presupuesto de errores de Sentry como base técnica; no define SLI, alertas, responsables ni objetivos. getSyncBacklogV1 resume, sin identificadores ni payload, el outbox pendiente de la sucursal: cantidad, el más antiguo, los que reintentan, los entregados en 24 h y tramos fijos de antigüedad, en total y por tipo de evento, sin cambiar la readiness (TASK-622, 5b0d95f, PR #626). Canarios sintéticos buscados en el stream Pino real y en los envelopes de Sentry, y en el host .NET, no se filtran (TASK-764, 5466e5e, PR #771). Pendientes: SLI y objetivos acordados, alertas con responsables y escalamiento, métricas del recorrido y de los demás procesos, ensayos que prueben la detección y su comportamiento bajo carga.",
-        "acceptance": null,
-        "verification": null
-      },
-      {
-        "id": "F05-07",
-        "criteria": {
-          "met": 0,
-          "total": 8
-        },
-        "apps": [
-          "pos-desktop",
-          "branch-api",
-          "branch-sync-worker",
-          "country-api",
-          "erp-worker",
-          "device-agent"
-        ],
-        "status": "in_progress",
-        "summary": "tools/load mide branch-api con escenarios reproducibles por semilla, preparados sólo por las puertas oficiales, e informa percentiles, errores, recursos y esperas de PostgreSQL de búsqueda, cotización y confirmación de venta en efectivo con N cajas; la línea base es de hardware de desarrollo y no constituye capacidad del piloto (TASK-515, 72c1e5d, PR #519). La confirmación de venta en efectivo se admite por proceso y por caja antes de cualquier escritura y, al agotar la capacidad, responde 429 CAPACITY_EXHAUSTED con Retry-After sin persistir nada; en las corridas medidas ninguna venta se informó confirmada sin persistir (TASK-523, 148999a, PR #525). El escenario branch-export mide las confirmaciones con y sin exportaciones CSV del turno en curso y canceladas: todas las ventas se confirmaron, las cancelaciones liberaron su cupo y la memoria de la API no creció; con 4 cajas el p95 de la confirmación pasó de 160 a 472 ms (informe tools/load/reports/2026-11-23-branch-api-export-b98ba9f.md; TASK-676, c6e2445, PR #691). Sus límites son provisionales. Pendientes: perfil de carga y objetivos aprobados por negocio, medición con espejo y reconexión en segundo plano, ensayos de proveedor lento, disco bajo y Redis perdido, soak con retención y rotación, y capacidad documentada por hardware y topología.",
+        "summary": "tools/load mide branch-api con escenarios reproducibles por semilla, preparados sólo por las puertas oficiales, e informa percentiles, errores, recursos y esperas de PostgreSQL de búsqueda, cotización y confirmación de venta en efectivo con N cajas; la línea base es de hardware de desarrollo y no constituye capacidad del piloto (TASK-515, 72c1e5d, PR #519). La confirmación de venta en efectivo se admite por proceso y por caja antes de cualquier escritura y, al agotar la capacidad, responde 429 CAPACITY_EXHAUSTED con Retry-After sin persistir nada; en las corridas medidas ninguna venta se informó confirmada sin persistir (TASK-523, 148999a, PR #525). El escenario branch-export mide las confirmaciones con y sin exportaciones CSV del turno en curso y canceladas: todas las ventas se confirmaron, las cancelaciones liberaron su cupo y la memoria de la API no creció; con 4 cajas el p95 de la confirmación pasó de 160 a 472 ms (informe tools/load/reports/2026-11-23-branch-api-export-b98ba9f.md; TASK-676, c6e2445, PR #691). La admisión cubre también tarjeta, transferencia y fiscal, y con el pool agotado rechaza antes de escribir; medida con capacidad reducida, nada se confirmó sin persistir (TASK-763, 718e402, PR #773 y #804). Sus límites son provisionales. Pendientes: perfil de carga y objetivos aprobados por negocio, medición con espejo y reconexión en segundo plano, ensayos de proveedor lento, disco bajo y Redis perdido, soak con retención y rotación, y capacidad documentada por hardware y topología.",
         "acceptance": null,
         "verification": null
       },
