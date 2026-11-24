@@ -14,7 +14,7 @@ Test runner: `node --test` mediante los scripts del repositorio y el build de St
 ## Tasks
 
 - [x] T1 · S1,S2,S3,S4 · route:inline · Corregir el ADR-31 · status:done · evidence: `docs/decisions/register-tenure.md`
-- [ ] T2 · S1,S2,S3,S4 · route:inline · Regenerar los derivados, verificar y abrir la PR · status:in_progress · evidence: en curso en esta rama.
+- [x] T2 · S1,S2,S3,S4 · route:inline · Regenerar los derivados, verificar y abrir la PR · status:done · evidence: `npm run verify` sale 0 en `2d7282a`
 
 ## Log
 
