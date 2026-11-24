@@ -11,6 +11,14 @@ Los cambios de herramientas, pruebas y CI no aparecen aquí; quedan en el [regis
 
 Este archivo lo escribe [release-please](https://github.com/googleapis/release-please) desde los títulos de los PR, y cada versión queda como [release en GitHub](https://github.com/developer-implementos/pos-docs/releases). Para recibir un aviso por versión, usa *Watch → Custom → Releases* en el repositorio. No se edita a mano: cómo se escribe una buena entrada está en la [guía de versiones](tools/release/README.md).
 
+## [0.11.2](https://github.com/developer-implementos/pos-docs/compare/v0.11.1...v0.11.2) (2026-11-24)
+
+
+### Contenido actualizado
+
+* **follow-up:** FOLLOWUP-037 nuevo · Decisión: Decidir si un cobro con tarjeta sin plan de pago y de resultado no resuelto debe seguir impidiendo el cierre de todos los turnos de su caja ([e758074](https://github.com/developer-implementos/pos-docs/commit/e758074b38e9e4f65f62355f71965dbd4bf76ca9))
+* **project:** [TASK-361] importar el corte 35eeb5c de seguimientos y preguntas ([e758074](https://github.com/developer-implementos/pos-docs/commit/e758074b38e9e4f65f62355f71965dbd4bf76ca9))
+
 ## [0.11.1](https://github.com/developer-implementos/pos-docs/compare/v0.11.0...v0.11.1) (2026-11-23)
 
 
