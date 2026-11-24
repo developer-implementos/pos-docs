@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "c55c31a1e67d80c276a91d7e90a820494aaa02bd",
+    "revision": "35b6caea5c11306cebdf0bab3ceebe320946b310",
     "path": "delivery/follow-ups.json",
-    "sha256": "79a90e5c2209917f96578699a1a8c56c390871775ce5b7b95e5295a955b98967"
+    "sha256": "5f8d1f40dca840e6a36e74433364e13116905aac39936acb6d9a5a4b908d0e9c"
   },
   "content": {
     "schemaVersion": 1,
-    "reviewedOn": "2026-11-23",
+    "reviewedOn": "2026-11-24",
     "items": [
       {
         "id": "FOLLOWUP-001",
@@ -885,13 +885,13 @@
           "F01-07"
         ],
         "summary": "Confirmar con seguridad la política de sesión y de bloqueo por intentos adoptada como provisional en QA",
-        "impact": "El 2026-11-20 el responsable del producto adoptó como valor provisional de QA, hasta que seguridad decida Q-58, la recomendación de esa pregunta: 5 intentos fallidos en 15 minutos bloquean la identidad 30 minutos o hasta que un administrador la desbloquee tras verificar a la persona; la sesión dura como máximo 8 horas sin que la renovación supere ese tope, y vence tras 15 minutos sin actividad. El ADR-30 de POS Docs los publica como una política de acceso versionada, junto con dos valores que agrega: 60 segundos de aviso antes de cada vencimiento y 5 minutos de validez para la reautenticación de una acción sensible. Mientras seguridad no decida, CAJ-052, CAJ-071 y CAJ-072 no se aceptan como criterios de F01-01 y esos valores no se toman como definitivos fuera de QA.",
+        "impact": "El 2026-11-20 el responsable del producto adoptó como valor provisional de QA, hasta que seguridad decida Q-58, la recomendación de esa pregunta: 5 intentos fallidos en 15 minutos bloquean la identidad 30 minutos o hasta que un administrador la desbloquee tras verificar a la persona; la sesión dura como máximo 8 horas sin que la renovación supere ese tope, y vence tras 15 minutos sin actividad. El ADR-30 de POS Docs los publica como una política de acceso versionada, junto con dos valores que agrega: un aviso antes de cada vencimiento, de 60 segundos en la revisión 1 y de 120 segundos en la revisión 2, adoptada el 2026-11-24 como valor provisional porque 60 segundos no alcanzaban para volver a la pantalla (TASK-778), y 5 minutos de validez para la reautenticación de una acción sensible. Mientras seguridad no decida, CAJ-052, CAJ-071 y CAJ-072 no se aceptan como criterios de F01-01 y esos valores no se toman como definitivos fuera de QA.",
         "impactScope": "operational",
         "nextAction": "Llevar a seguridad, consultando a operaciones y producto, los valores provisionales de Q-58 y los dos que agrega el ADR-30, y registrar su decisión en Q-58. Si la decisión difiere, publicar una revisión nueva de la política de acceso en cada ambiente con el comando propietario, sin cambiar código.",
         "requestedFrom": "Seguridad, con operaciones y producto como consultados",
         "owner": null,
         "closureCriteria": "Q-58 decidida por seguridad y registrada en business-questions.json, y la revisión vigente de la política de acceso de cada ambiente coincide con esa decisión.",
-        "reviewedOn": "2026-11-20",
+        "reviewedOn": "2026-11-24",
         "evidence": [
           {
             "url": "https://github.com/developer-implementos/pos-platform/issues/461",
@@ -900,6 +900,10 @@
           {
             "url": "https://github.com/developer-implementos/pos-platform/issues/451",
             "label": "Auditoría de pantallas y recorridos faltantes: hallazgos P0-1, P0-2 y P1-4"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/778",
+            "label": "TASK-778: revisión 2 de la política de acceso, con 120 segundos de aviso, y vigencia de la sesión en el encabezado"
           }
         ],
         "resolution": null
@@ -1260,11 +1264,61 @@
           }
         ],
         "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-039",
+        "kind": "decision",
+        "state": "open",
+        "workPackages": [
+          "F05-08"
+        ],
+        "summary": "Decidir si un cambio de red de una sesión alerta o bloquea, y fijar la retención de la dirección registrada",
+        "impact": "Desde TASK-777 la auditoría de accesos y cada sesión conservan la dirección de red observada por branch-api, como señal complementaria del riesgo RK-1 (un token copiado sirve desde otro equipo hasta que vence). Ningún proceso la compara ni alerta: una diferencia entre el ingreso y la renovación sólo queda registrada. La retención provisional es la de la auditoría, 90 días (Q-135).",
+        "impactScope": "review",
+        "nextAction": "Seguridad decide si un cambio de red entre ingreso, renovación y solicitudes debe alertar, exigir reautenticación o sólo registrarse, con qué tolerancia para redes móviles o compartidas, y responde Q-135 sobre retención y acceso a la dirección.",
+        "requestedFrom": "Responsable de Seguridad de F05-08",
+        "owner": null,
+        "closureCriteria": "Decisión registrada sobre alertas o bloqueo por cambio de red, con su tolerancia, y respuesta de Q-135; si se decide alertar, una tarea que la implemente.",
+        "reviewedOn": "2026-11-24",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/777",
+            "label": "TASK-777"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/blob/aa66fc90a8bbf1fc0a6eb7d1c11ad4bb3c43ed18/delivery/reviews/F05-08-threat-model.md",
+            "label": "Modelo de amenazas F05-08 (RK-1)"
+          }
+        ],
+        "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-040",
+        "kind": "validation",
+        "state": "open",
+        "workPackages": [
+          "F05-08"
+        ],
+        "summary": "Declarar el proxy de QA en BRANCH_API_TRUSTED_PROXIES para registrar la dirección real del equipo",
+        "impact": "En QA nginx (contenedor web) precede a branch-api y escribe X-Forwarded-For, pero la configuración no declara su dirección porque la red de Compose no fija direcciones. Hasta declararla, la auditoría y «Mi cuenta» de QA registran la dirección del contenedor web y no la del equipo; la dirección no es falsa, pero no sirve para investigar RK-1 allí.",
+        "impactScope": "operational",
+        "nextAction": "Infraestructura fija la dirección o la subred del contenedor web en tools/deploy/qa/compose.yaml sin chocar con las redes del servidor compartido, la declara en BRANCH_API_TRUSTED_PROXIES de secrets/branch-runtime.env y comprueba en la auditoría que se registra la dirección del equipo.",
+        "requestedFrom": "Infraestructura de QA",
+        "owner": null,
+        "closureCriteria": "Dirección del proxy de QA declarada y una sesión de QA cuya dirección registrada es la del equipo y no la del contenedor web.",
+        "reviewedOn": "2026-11-24",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/777",
+            "label": "TASK-777"
+          }
+        ],
+        "resolution": null
       }
     ]
   },
   "issues": {
-    "observedAt": "2026-11-24T16:28:00.766Z",
+    "observedAt": "2026-11-24T19:06:35.806Z",
     "repository": "https://github.com/developer-implementos/pos-platform",
     "entries": [
       {
