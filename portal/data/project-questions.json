@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "d549e189f5f50cff73cffea6812a8d172aa8a4a2",
+    "revision": "c55c31a1e67d80c276a91d7e90a820494aaa02bd",
     "path": "delivery/business-questions.json",
-    "sha256": "01c263bf6f83cff956332f967e0fb1ffd900d4ad3907e1549c271a5b8d309038"
+    "sha256": "ddc88e51cab5e37c364f5cf8e7a0cd45a72c0ff364946db2ccb9647fbdbde772"
   },
   "integration": {
     "reference": "main",
@@ -7564,6 +7564,39 @@
         "currentAnswer": "POS Platform, de forma provisional (TASK-709): el umbral se compara con cada retiro por separado; varios retiros menores que el umbral no exigen supervisor, aunque su suma lo supere. Cada retiro queda registrado con su responsable.",
         "sources": [
           "libs/backend/cash/src/application/shift-cash-movement.service.ts"
+        ]
+      },
+      {
+        "id": "Q-132",
+        "topic": "Cierre",
+        "question": "¿Cuánto tiempo vale la aprobación de un supervisor para decidir un cierre pendiente o registrar un retiro en el turno del cajero, y desde cuándo se mide: desde que el supervisor ingresó en la caja o desde que se pidió la aprobación?",
+        "kind": "rule",
+        "state": "open",
+        "answerSources": [
+          "code"
+        ],
+        "auditRefs": [],
+        "parityRefs": [],
+        "decider": "tesoreria",
+        "consulted": [
+          "operaciones",
+          "seguridad"
+        ],
+        "owner": null,
+        "followUp": null,
+        "workPackages": [
+          "F04-03",
+          "F04-04"
+        ],
+        "reviewedOn": "2026-11-23",
+        "recommendation": null,
+        "decision": null,
+        "priority": "P2",
+        "currentAnswer": "POS Platform, de forma provisional (TASK-739): la aprobación vale 900 segundos desde que el supervisor ingresó en la caja, medidos con el reloj de la base; cada revisión de la política de cierre puede fijar otro valor entre 1 y 86.400 segundos. Vencida, la decisión del cierre o el movimiento del supervisor se rechaza con CASH_APPROVAL_EXPIRED, sin registrar nada, y el supervisor vuelve a ingresar. No vence la solicitud: un cierre pendiente puede aprobarse días después, porque vencerlo dejaría la caja retenida sin salida.",
+        "sources": [
+          "libs/backend/cash/src/application/shift-closing.service.ts",
+          "libs/backend/cash/src/application/shift-cash-movement.service.ts",
+          "libs/backend/cash/src/infrastructure/approval-expiry-migration.ts"
         ]
       }
     ],
