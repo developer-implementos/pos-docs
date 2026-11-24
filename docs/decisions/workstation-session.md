@@ -58,7 +58,7 @@ Cómo se combinan:
 | Parámetro | Valor provisional | Rango aceptado | Fuente |
 | --- | --- | --- | --- |
 | `idleTimeoutSeconds` | 900 (15 min) | 60 a 3 600 | Q-58; PCI DSS 4.0.1, 8.2.8 |
-| `expiryWarningSeconds` | 60 | 20 a 300, menor que los otros dos plazos | WCAG 2.2, 2.2.1 (al menos 20 s); la caja legacy avisa un minuto antes |
+| `expiryWarningSeconds` | 120 desde la revisión 2; 60 en la revisión 1 | 20 a 300, menor que los otros dos plazos | WCAG 2.2, 2.2.1 (al menos 20 s); [patrón de HMRC](https://design.tax.service.gov.uk/hmrc-design-patterns/service-timeout/), que avisa 2 min antes de 15 min de inactividad |
 | `maxSessionSeconds` | 28 800 (8 h) | 300 a 28 800 | Q-58; OWASP sugiere de 4 a 8 h |
 | `lockoutThreshold` | 5 | 3 a 10 | Q-58; PCI DSS 4.0.1, 8.3.4 (no más de 10) |
 | `lockoutWindowSeconds` | 900 (15 min) | 60 a 86 400 | Q-58 |
@@ -131,7 +131,7 @@ Desbloquear es un ingreso completo, con el mismo login y el mismo bloqueo por in
 
 ### Aviso y vuelta al lugar
 
-- **Por inactividad,** el `alertdialog` aparece `expiryWarningSeconds` antes y cuenta hacia atrás. «Seguir trabajando», o Escape, renueva.
+- **Por inactividad,** el `alertdialog` aparece `expiryWarningSeconds` antes y cuenta hacia atrás. «Seguir trabajando», o Escape, renueva. Muestra la cuenta en minutos y segundos con su progreso, y el título de la ventana también la muestra mientras está abierto. Un lector de pantalla oye el plazo al abrirse y después a los 60, 30 y 10 s.
 - **Por el tope,** el mismo aviso no puede extender la sesión. Ofrece «Confirmar mi contraseña ahora», que abre la capa de desbloqueo antes de tiempo, o seguir y confirmarla al vencer.
 - WCAG 2.2.1 pide poder extender un límite de tiempo con una acción simple. Un tope de seguridad no se extiende sin reautenticarse; a cambio, tras reautenticarse se sigue sin perder datos, como pide 2.2.5 (AAA, de referencia).
 - **La vuelta al lugar no navega.** El shell no se destruye mientras la persona sea la misma, así que no hay una URL de retorno que validar y la aplicación no sigue ninguna que reciba.
@@ -222,10 +222,12 @@ De izquierda a derecha:
 2. la etiqueta del ambiente, cuando el paquete del cliente la trae;
 3. el lugar del indicador de conexión;
 4. el turno;
-5. el perfil;
-6. «Cerrar sesión».
+5. la vigencia de la sesión;
+6. el perfil;
+7. «Cerrar sesión».
 
 - **Ambiente.** El sello de compilación del cliente, `client-build.json`, se genera al empaquetar y puede traer una etiqueta, por ejemplo «QA». El cliente la muestra tal cual, con el color de advertencia del preset y en todos los anchos; sin etiqueta no muestra nada. El cliente no tiene lógica por ambiente.
+- **Vigencia de la sesión.** Muestra «Sesión hasta 18:30», la hora del tope, sin un contador que se reinicie con la actividad. Desde 15 min antes del tope, o durante el aviso, destaca el tiempo restante y cede el turno o el texto del perfil si falta ancho. Bajo 1280 px la hora queda en el menú del perfil; bajo 880 px el tiempo restante lo dan el aviso, los anuncios y ese menú (TASK-778).
 - **Conexión.** El encabezado reserva el lugar por proyección de contenido (`[posHeaderStatus]`). [TASK-457](https://github.com/developer-implementos/pos-platform/issues/457) es dueña del indicador y de su store.
 - **Turno.** Muestra «Turno abierto desde HH:MM» o «Sin turno abierto», solo a quien puede ver la caja.
 - **Perfil.** Muestra un avatar tonal de 32 px, con radio de 8 px y las iniciales, el nombre y, debajo, el rol y la caja. Lleva 12 px de separación horizontal y 2 px entre líneas, según las reglas de diseño de `AGENTS.md`. Por debajo de 800 px queda solo el avatar, en un botón de 44 × 44 px.
@@ -254,6 +256,7 @@ Es la ruta `/account`, con el título «Mi cuenta · POS Platform», y se abre d
 
 - `administration.access_policy_revision`: tabla nueva, inmutable.
 - `administration.operator_session` agrega la revisión de la política que la rige, `idle_expires_at` y la última renovación.
+- La auditoría de autorización y la sesión guardan la dirección de red que observa `branch-api`: la del ingreso y la última renovación, visibles en «Mi cuenta» sólo para su titular. Una cabecera de reenvío sólo cuenta si llega desde un proxy declarado en `BRANCH_API_TRUSTED_PROXIES`. Es un dato personal: no va a logs ni a Sentry, y su retención provisional es de 90 días (Q-135, TASK-777).
   - El token puede rotar mientras la sesión está vigente.
   - El inicio, el tope, la asignación y la credencial siguen inmutables.
   - Al migrar se cierran las sesiones abiertas.
