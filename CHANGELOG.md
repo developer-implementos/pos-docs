@@ -11,6 +11,25 @@ Los cambios de herramientas, pruebas y CI no aparecen aquí; quedan en el [regis
 
 Este archivo lo escribe [release-please](https://github.com/googleapis/release-please) desde los títulos de los PR, y cada versión queda como [release en GitHub](https://github.com/developer-implementos/pos-docs/releases). Para recibir un aviso por versión, usa *Watch → Custom → Releases* en el repositorio. No se edita a mano: cómo se escribe una buena entrada está en la [guía de versiones](tools/release/README.md).
 
+## [0.11.8](https://github.com/developer-implementos/pos-docs/compare/v0.11.7...v0.11.8) (2026-11-24)
+
+
+### Contenido actualizado
+
+* **architecture:** [TASK-778] registrar el aviso de 120 s y la vigencia de la sesión en el ADR-30 ([#181](https://github.com/developer-implementos/pos-docs/issues/181)) ([42fcd8a](https://github.com/developer-implementos/pos-docs/commit/42fcd8a8c432f7df66ad127c1b33ceb99b578d02))
+* **architecture:** [TASK-782] corregir la época, los periféricos y los roles del ADR-31 ([#184](https://github.com/developer-implementos/pos-docs/issues/184)) ([c7b4df0](https://github.com/developer-implementos/pos-docs/commit/c7b4df0af1a339a839087ffc553d8e2f9f2558f0))
+* **follow-up:** FOLLOWUP-026 actualizado (impacto): Confirmar con seguridad la política de sesión y de bloqueo por intentos adoptada como provisional en QA ([638016a](https://github.com/developer-implementos/pos-docs/commit/638016a1c4126fac480b03bb88abd7ef4cc3e7d8))
+* **follow-up:** FOLLOWUP-039 nuevo · Decisión: Decidir si un cambio de red de una sesión alerta o bloquea, y fijar la retención de la dirección registrada ([638016a](https://github.com/developer-implementos/pos-docs/commit/638016a1c4126fac480b03bb88abd7ef4cc3e7d8))
+* **follow-up:** FOLLOWUP-040 nuevo · Validación: Declarar el proxy de QA en BRANCH_API_TRUSTED_PROXIES para registrar la dirección real del equipo ([638016a](https://github.com/developer-implementos/pos-docs/commit/638016a1c4126fac480b03bb88abd7ef4cc3e7d8))
+* **progress:** F03-10 actualizado (resumen): database.js import-commercial carga desde archivo una publicación comercial con StageCandidate, ValidateCandidate y ActivateCommercialVersion(expectedBas… ([638016a](https://github.com/developer-implementos/pos-docs/commit/638016a1c4126fac480b03bb88abd7ef4cc3e7d8))
+* **progress:** F04-03 actualizado (resumen): getShiftSummaryV1 resume el turno propio con ventas finalizadas y cobros por medio separados en aceptado, pendiente y excluido mediante un puerto público… ([638016a](https://github.com/developer-implementos/pos-docs/commit/638016a1c4126fac480b03bb88abd7ef4cc3e7d8))
+* **progress:** F05-06 actualizado (resumen): Se detectan fallos y degradación del recorrido mediante métricas y alertas accionables con responsables y objetivos medidos ([a8798e4](https://github.com/developer-implementos/pos-docs/commit/a8798e4ea6f2887a71d3a94fe31a7c553fdfa8ab))
+* **progress:** F05-06 actualizado (resumen): Se detectan fallos y degradación del recorrido mediante métricas y alertas accionables con responsables y objetivos medidos ([638016a](https://github.com/developer-implementos/pos-docs/commit/638016a1c4126fac480b03bb88abd7ef4cc3e7d8))
+* **progress:** F05-07 actualizado (resumen): tools/load mide branch-api con escenarios reproducibles por semilla, preparados sólo por las puertas oficiales, e informa percentiles, errores, recursos… ([a8798e4](https://github.com/developer-implementos/pos-docs/commit/a8798e4ea6f2887a71d3a94fe31a7c553fdfa8ab))
+* **progress:** F05-12 actualizado (resumen): El recorrido del cajero se completa sólo con teclado, desde la apertura del turno hasta el comprobante, con foco visible, diálogos que devuelven el foco… ([638016a](https://github.com/developer-implementos/pos-docs/commit/638016a1c4126fac480b03bb88abd7ef4cc3e7d8))
+* **project:** [TASK-361] importar el corte 35b6cae de avance, seguimientos y preguntas ([638016a](https://github.com/developer-implementos/pos-docs/commit/638016a1c4126fac480b03bb88abd7ef4cc3e7d8))
+* **project:** [TASK-361] importar el corte cf00023 de avance ([a8798e4](https://github.com/developer-implementos/pos-docs/commit/a8798e4ea6f2887a71d3a94fe31a7c553fdfa8ab))
+
 ## [0.11.7](https://github.com/developer-implementos/pos-docs/compare/v0.11.6...v0.11.7) (2026-11-24)
 
 
