@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "35eeb5c892091e23e6ad86e8c79777cc6c4a9cd8",
+    "revision": "73a7dd9f4468286f9bf6dbf8d1d456a8caefda5a",
     "path": "delivery/progress.json",
-    "sha256": "d76b6a752b49daf56070df9d67150b8eb3e3d61b090cc09c91d4532433088b9d"
+    "sha256": "691cc16fa9aeefb0be30cd507d7542f9eada9f0b4c9226173cbff0f568896e4d"
   },
   "content": {
     "schemaVersion": 2,
@@ -18,7 +18,7 @@
     },
     "summary": "Quince entregables están técnicamente verificados: doce de F01 y los pagos combinados, el protocolo de dispositivos y la recuperación de cobros de F02. El cliente recupera ventas y registra revisiones durables sin duplicar efectos. Efectivo y transferencia manual están conectados; tarjeta y fiscalidad conservan sus pendientes de proveedor operativo. La aceptación humana y la habilitación productiva se registran por separado.",
     "criteria": {
-      "met": 156,
+      "met": 157,
       "total": 594,
       "phases": {
         "F01": {
@@ -30,7 +30,7 @@
           "total": 118
         },
         "F03": {
-          "met": 9,
+          "met": 10,
           "total": 97
         },
         "F04": {
@@ -1125,7 +1125,7 @@
       {
         "id": "F03-01",
         "criteria": {
-          "met": 5,
+          "met": 6,
           "total": 8
         },
         "apps": [
