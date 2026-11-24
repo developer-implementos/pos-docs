@@ -201,6 +201,14 @@ Queda fuera autorizar la acción con la credencial de un supervisor cuando el ac
 - **Escritura condicional.** La credencial guarda los nombres nuevos solo si sigue siendo la que firmó (misma instalación, época y llave), en una sola transacción. Si el equipo se activó otra vez mientras leía el perfil, conserva su credencial nueva.
 - Cada apertura suma dos solicitudes a `/api/v1/auth/` (el desafío y el perfil), dentro del límite por IP de nginx.
 
+### Nombre de la sucursal en un equipo sin activar
+
+[TASK-785](https://github.com/developer-implementos/pos-platform/issues/785). Un equipo sin activar no tiene llave con que leer el perfil, así que la primera vez que se abre la dirección de una sucursal la bienvenida no decía cuál era.
+
+- `GET /auth/branch-identity` (`getBranchIdentityV1`) es público y responde solo `{name}`, con `null` si la sucursal no tiene nombre visible. No recibe parámetros ni devuelve identificadores, cajas o estados de equipos. Una lectura no deja fila de auditoría.
+- El nombre no es confidencial: estará en la dirección del ambiente. Aun así sale de la base y no de la dirección, para que sea el mismo al entrar por un alias o una IP.
+- Lo lee solo el equipo sin credencial. Uno activado conserva el perfil firmado. Sin nombre o sin respuesta, la bienvenida no muestra sucursal ni error.
+
 ### Errores públicos nuevos
 
 | Código | Estado | Cuándo | Qué hace el cliente |
@@ -248,7 +256,7 @@ Es la ruta `/account`, con el título «Mi cuenta · POS Platform», y se abre d
 - «Ayuda» trae una guía breve del puesto (bloqueo, vencimiento, cuenta bloqueada, contraseña olvidada y sin conexión) y el contacto de soporte del sello de compilación. Sin contacto configurado, indica pedir ayuda a quien administra la sucursal.
 - «Acerca de este equipo» muestra la revisión del cliente, el canal, la caja, la instalación (un identificador que no es secreto), la versión de la API y la sucursal. «Copiar datos para soporte» copia esos datos, sin nombre, correo ni credenciales.
 - Sin sesión, la caja y la sucursal son las que el equipo leyó con su [perfil](#perfil-del-equipo). Si todavía no leyó ninguna sucursal, indica «Se informa al iniciar sesión».
-- La bienvenida muestra «Equipo activado para {caja}.» y, debajo, «Sucursal {nombre}.» cuando la sucursal tiene nombre visible.
+- La bienvenida muestra «Equipo activado para {caja}.» y, debajo, «Sucursal {nombre}.» cuando la sucursal tiene nombre visible. Un equipo sin activar muestra ese segundo texto bajo el aviso de activación.
 
 ## Datos
 
