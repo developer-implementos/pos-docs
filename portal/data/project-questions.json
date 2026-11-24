@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "c55c31a1e67d80c276a91d7e90a820494aaa02bd",
+    "revision": "35b6caea5c11306cebdf0bab3ceebe320946b310",
     "path": "delivery/business-questions.json",
-    "sha256": "ddc88e51cab5e37c364f5cf8e7a0cd45a72c0ff364946db2ccb9647fbdbde772"
+    "sha256": "fc67da296a7d9b85d05c63767d2c6a3512942b8e7bdb09fb770b0ddcc7030873"
   },
   "integration": {
     "reference": "main",
@@ -12,7 +12,7 @@
   },
   "content": {
     "schemaVersion": 4,
-    "reviewedOn": "2026-11-23",
+    "reviewedOn": "2026-11-24",
     "audit": "delivery/reviews/pos-parity-2026-11-10",
     "roles": [
       {
@@ -3369,7 +3369,7 @@
         "question": "¿Cuántos intentos fallidos bloquean una cuenta, por cuánto tiempo, y cuánto dura la sesión del cajero?",
         "kind": "rule",
         "state": "open",
-        "currentAnswer": "Legacy: no bloquea por intentos fallidos. Con sus valores iniciales, la pantalla cierra la sesión tras 59 minutos sin actividad, avisa un minuto antes y renueva el token cada 60 minutos; el token vence según una variable de ambiente. POS Platform implementa, sin aprobación de negocio, la revisión 1 de la política de acceso versionada (ADR-30) con los valores provisionales de FOLLOWUP-026. 5 intentos fallidos con un mismo correo dentro de 15 minutos, contados desde el primero, bloquean ese ingreso 30 minutos, exista o no la cuenta, con la misma respuesta y el tiempo de espera; cuentan el login, la activación con la cuenta, la reautenticación y el cambio de la contraseña propia, y un ingreso correcto reinicia el conteo. Quien administra los usuarios ve los bloqueos vigentes y puede desbloquear tras declarar que verificó a la persona, con reautenticación y auditoría. La sesión vence en branch-api tras 15 minutos sin renovarse y dura como máximo 8 horas desde el ingreso; se renueva con la llave del equipo sin pasar ese tope, aunque el cliente todavía no renueva. F01-01 propone que la renovación no supere la duración máxima (LC-001). Q-42 trata la recuperación de la clave.",
+        "currentAnswer": "Legacy: no bloquea por intentos fallidos. Con sus valores iniciales, la pantalla cierra la sesión tras 59 minutos sin actividad, avisa un minuto antes y renueva el token cada 60 minutos; el token vence según una variable de ambiente. POS Platform implementa, sin aprobación de negocio, la política de acceso versionada (ADR-30) con los valores provisionales de FOLLOWUP-026: la revisión 1 y, desde TASK-778, la revisión 2, que sólo amplía de 60 a 120 segundos el aviso antes de cada vencimiento; el encabezado dice hasta qué hora vale la sesión, sin un contador permanente. 5 intentos fallidos con un mismo correo dentro de 15 minutos, contados desde el primero, bloquean ese ingreso 30 minutos, exista o no la cuenta, con la misma respuesta y el tiempo de espera; cuentan el login, la activación con la cuenta, la reautenticación y el cambio de la contraseña propia, y un ingreso correcto reinicia el conteo. Quien administra los usuarios ve los bloqueos vigentes y puede desbloquear tras declarar que verificó a la persona, con reautenticación y auditoría. La sesión vence en branch-api tras 15 minutos sin renovarse y dura como máximo 8 horas desde el ingreso; se renueva con la llave del equipo sin pasar ese tope, aunque el cliente todavía no renueva. F01-01 propone que la renovación no supere la duración máxima (LC-001). Q-42 trata la recuperación de la clave.",
         "answerSources": [
           "code"
         ],
@@ -3394,7 +3394,7 @@
           "F01-01"
         ],
         "priority": "P2",
-        "reviewedOn": "2026-11-20",
+        "reviewedOn": "2026-11-24",
         "recommendation": {
           "answer": "Bloquear en servidor la identidad tras 5 intentos fallidos en 15 minutos, durante 30 minutos o hasta que un administrador la desbloquee tras verificar a la persona, con respuesta genérica y auditoría. La sesión dura como máximo 8 horas y su renovación no supera ese tope; tras 15 minutos sin actividad vence en branch-api, y el operador vuelve a autenticarse y retoma su turno y su cesta pausada (Q-08).",
           "scope": "core",
@@ -7597,6 +7597,102 @@
           "libs/backend/cash/src/application/shift-closing.service.ts",
           "libs/backend/cash/src/application/shift-cash-movement.service.ts",
           "libs/backend/cash/src/infrastructure/approval-expiry-migration.ts"
+        ]
+      },
+      {
+        "id": "Q-133",
+        "topic": "Cierre",
+        "question": "¿Qué denominaciones de cada moneda ofrece el conteo del cierre en cada sucursal (por ejemplo, si en Chile se cuentan las monedas de 1 y 5 pesos) y quién publica sus cambios?",
+        "kind": "rule",
+        "state": "open",
+        "answerSources": [
+          "code"
+        ],
+        "auditRefs": [],
+        "parityRefs": [],
+        "decider": "tesoreria",
+        "owner": null,
+        "followUp": "FOLLOWUP-030",
+        "workPackages": [
+          "F04-03"
+        ],
+        "reviewedOn": "2026-11-24",
+        "recommendation": null,
+        "decision": null,
+        "priority": "P1",
+        "consulted": [
+          "operaciones",
+          "finanzas"
+        ],
+        "currentAnswer": "POS Platform, de forma provisional (TASK-761, CX-104): cada revisión de la política de cierre de la sucursal declara sus denominaciones con su comando propietario; sin ellas el cierre declara sólo el total. Con denominaciones, branch-api rechaza una denominación desconocida o repetida, o una cantidad negativa, y exige que el total declarado sea la suma exacta. Las pruebas usan como fixture sintético 20.000, 10.000, 5.000, 2.000, 1.000, 500, 100, 50 y 10 pesos; no es un valor decidido.",
+        "sources": [
+          "libs/backend/cash/src/infrastructure/shift-close-policy.ts",
+          "libs/backend/cash/src/domain/denomination-count.ts",
+          "delivery/specs/F04-03.md"
+        ]
+      },
+      {
+        "id": "Q-134",
+        "topic": "Turno",
+        "question": "En el cierre de un turno ajeno, ¿cómo se identifica al testigo (basta con registrarlo, o debe autenticarse) y, si se habilita el traspaso, quién puede recibir la caja y debe abrir su turno con el efectivo contado?",
+        "kind": "rule",
+        "state": "open",
+        "answerSources": [
+          "code"
+        ],
+        "auditRefs": [],
+        "parityRefs": [],
+        "decider": "tesoreria",
+        "owner": null,
+        "followUp": "FOLLOWUP-030",
+        "workPackages": [
+          "F04-03"
+        ],
+        "reviewedOn": "2026-11-24",
+        "recommendation": null,
+        "decision": null,
+        "priority": "P1",
+        "consulted": [
+          "operaciones",
+          "seguridad"
+        ],
+        "currentAnswer": "POS Platform, de forma provisional (TASK-761, Q-116): un supervisor de la caja con shift.close.approve cierra el turno de otro cajero sólo con motivo y testigo; el testigo es una persona asignada en la sucursal, distinta del supervisor y del titular, que se registra por su identificador sin autenticarse. El traspaso está deshabilitado por defecto; si una revisión de la política lo habilita, cierra el turno completo a nombre del titular y registra a la persona asignada que recibe la caja, que abre su propio turno sin que se exija abrirlo con el efectivo contado.",
+        "sources": [
+          "libs/backend/cash/src/application/shift-closing.service.ts",
+          "libs/backend/cash/src/infrastructure/shift-handover-migration.ts",
+          "delivery/specs/F04-03.md"
+        ]
+      },
+      {
+        "id": "Q-135",
+        "topic": "Seguridad",
+        "question": "¿Cuánto tiempo se conserva la dirección de red que el servidor registra en la auditoría de accesos y en cada sesión, y quién puede consultarla?",
+        "kind": "rule",
+        "state": "open",
+        "answerSources": [
+          "code"
+        ],
+        "auditRefs": [],
+        "parityRefs": [],
+        "decider": "seguridad",
+        "consulted": [
+          "legal",
+          "operaciones"
+        ],
+        "owner": null,
+        "followUp": "FOLLOWUP-039",
+        "workPackages": [
+          "F05-08"
+        ],
+        "reviewedOn": "2026-11-24",
+        "recommendation": null,
+        "decision": null,
+        "priority": "P2",
+        "currentAnswer": "POS Platform, de forma provisional (TASK-777): branch-api registra la dirección observada en cada decisión de authorization_audit y, en la sesión, la del ingreso y la de la última renovación. Se conserva con la retención de la auditoría: la fila de auditoría es inmutable 90 días y después la cuenta propietaria puede borrarla; las direcciones de una sesión terminada hace más de 90 días se borran con database.js purge-session-addresses. La persona ve las de sus propias sesiones en «Mi cuenta»; la consulta de auditoría para administradores no la muestra. No se registra en logs ni en Sentry.",
+        "sources": [
+          "libs/backend/administration/src/infrastructure/request-origin-migration.ts",
+          "libs/shared/backend/runtime/src/common/http/request-origin.ts",
+          "delivery/reviews/F05-08-threat-model.md"
         ]
       }
     ],

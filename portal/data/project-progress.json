@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "c55c31a1e67d80c276a91d7e90a820494aaa02bd",
+    "revision": "35b6caea5c11306cebdf0bab3ceebe320946b310",
     "path": "delivery/progress.json",
-    "sha256": "17cb965a8d5dd871d268f8832ab270516514df6197a948e7ba5d12d63a876b9b"
+    "sha256": "4cfbf8017ac20e023c96fa3271dc7b29b85363458476430c31d3d31c895a7d6b"
   },
   "content": {
     "schemaVersion": 2,
@@ -18,7 +18,7 @@
     },
     "summary": "Quince entregables están técnicamente verificados: doce de F01 y los pagos combinados, el protocolo de dispositivos y la recuperación de cobros de F02. El cliente recupera ventas y registra revisiones durables sin duplicar efectos. Efectivo y transferencia manual están conectados; tarjeta y fiscalidad conservan sus pendientes de proveedor operativo. La aceptación humana y la habilitación productiva se registran por separado.",
     "criteria": {
-      "met": 191,
+      "met": 198,
       "total": 594,
       "phases": {
         "F01": {
@@ -30,15 +30,15 @@
           "total": 118
         },
         "F03": {
-          "met": 17,
+          "met": 21,
           "total": 97
         },
         "F04": {
-          "met": 14,
+          "met": 15,
           "total": 100
         },
         "F05": {
-          "met": 6,
+          "met": 8,
           "total": 97
         },
         "F06": {
@@ -1270,7 +1270,7 @@
       {
         "id": "F03-10",
         "criteria": {
-          "met": 1,
+          "met": 4,
           "total": 8
         },
         "apps": [
@@ -1278,7 +1278,7 @@
           "branch-api"
         ],
         "status": "in_progress",
-        "summary": "database.js import-commercial carga desde archivo una publicación comercial con StageCandidate, ValidateCandidate y ActivateCommercialVersion(expectedBaseVersion): valida esquema, hash, sucursal, reglas y cobertura antes de activar, y activa en una transacción con compare-and-set del puntero y una postcondición con las compuertas de la cotización. Una carga inválida, una base desactualizada o un activador concurrente conservan la versión activa, y la anterior queda superseded e inmutable (TASK-404, 14b9969; TASK-424, cc7ebc8). El libro de precios en filas con verificaciones registradas al activar, commercial-publication-v2 sin clientes, la proyección de clientes por import-customers en porciones y los índices de claves foráneas cargan el volumen medido de una sucursal real sin ventas fallidas durante la carga (TASK-431, d60d998 y 3561274; TASK-432, b58125d). Pendientes: descarga autenticada de manifiestos y porciones por branch-sync-worker con reanudación; cursores recibido y aplicado e inbox aplicada en el mismo commit; deltas y huecos de secuencia; recuperación ante caída alrededor del commit; vencimiento de versiones activas; retención y limpieza; y el retiro del libro JSONB que TASK-431 mantiene para reversión.",
+        "summary": "database.js import-commercial carga desde archivo una publicación comercial con StageCandidate, ValidateCandidate y ActivateCommercialVersion(expectedBaseVersion): valida esquema, hash, sucursal, reglas y cobertura antes de activar, y activa en una transacción con compare-and-set del puntero y una postcondición con las compuertas de la cotización. Una carga inválida, una base desactualizada o un activador concurrente conservan la versión activa, y la anterior queda superseded e inmutable (TASK-404, 14b9969; TASK-424, cc7ebc8). El libro de precios en filas con verificaciones registradas al activar, commercial-publication-v2 sin clientes, la proyección de clientes por import-customers en porciones y los índices de claves foráneas cargan el volumen medido de una sucursal real sin ventas fallidas durante la carga (TASK-431, d60d998 y 3561274; TASK-432, b58125d). El inbox durable y los cursores recibido y aplicado se confirman con el puntero activo en un solo commit, con recuperación ante caída en cinco puntos y vencimiento de versiones; retention-plan simula la retención de versiones comerciales sin borrar (TASK-759, d3a2dba, PR #772). Pendientes: descarga autenticada de manifiestos y porciones por branch-sync-worker con reanudación; deltas y huecos de secuencia; limpieza efectiva de versiones; y el retiro del libro JSONB que TASK-431 mantiene para reversión.",
         "acceptance": null,
         "verification": null
       },
@@ -1304,7 +1304,7 @@
       {
         "id": "F03-12",
         "criteria": {
-          "met": 1,
+          "met": 2,
           "total": 8
         },
         "apps": [
@@ -1354,7 +1354,7 @@
       {
         "id": "F04-03",
         "criteria": {
-          "met": 2,
+          "met": 3,
           "total": 11
         },
         "apps": [
@@ -1362,7 +1362,7 @@
           "branch-api"
         ],
         "status": "in_progress",
-        "summary": "getShiftSummaryV1 resume el turno propio con ventas finalizadas y cobros por medio separados en aceptado, pendiente y excluido mediante un puerto público de payments; closeShiftV1 cierra a ciegas con shift.close y expectedVersion, rechaza el cierre con cobros abiertos o pagos sin resolver o sin política decidida, registra cada declaración como conteo inmutable antes de decir si cuadra, exige motivo si el conteo o el primer conteo difieren, deja pending-approval sobre la tolerancia, rechaza ventas después del corte y repite el primer resultado con el mismo commandId; la política de cierre se aprovisiona con database.js provision-shift-close-policy y nace pendiente (TASK-496, 255f5e5, PR #508). decideShiftCloseV1 permite a un supervisor con shift.close.approve, distinto de quien cerró u operó el turno, aprobar o rechazar con motivo una sola vez, como hecho aparte que no modifica cierre ni conteos, y la caja no abre otro turno hasta un cierre que cuadra o aprobado (TASK-556, e64de48, PR #557). Los valores de la política son provisionales de QA (FOLLOWUP-030); Q-126 y Q-127 registran si un medio declarado sin confirmar bloquea el cierre o es una diferencia de su medio, y si el primer conteo sigue rigiendo cuando las ventas continúan. Pendientes: ingresos y retiros, conteo por denominación, custodia y depósito, cierre parcial y traspaso, intención de integración del cierre, vuelto convertido en anticipo, supervisión de turnos ajenos y la corrección de un cierre rechazado (F04-04).",
+        "summary": "getShiftSummaryV1 resume el turno propio con ventas finalizadas y cobros por medio separados en aceptado, pendiente y excluido mediante un puerto público de payments; closeShiftV1 cierra a ciegas con shift.close y expectedVersion, rechaza el cierre con cobros abiertos o pagos sin resolver o sin política decidida, registra cada declaración como conteo inmutable antes de decir si cuadra, exige motivo si el conteo o el primer conteo difieren, deja pending-approval sobre la tolerancia, rechaza ventas después del corte y repite el primer resultado con el mismo commandId; la política de cierre se aprovisiona con database.js provision-shift-close-policy y nace pendiente (TASK-496, 255f5e5, PR #508). decideShiftCloseV1 permite a un supervisor con shift.close.approve, distinto de quien cerró u operó el turno, aprobar o rechazar con motivo una sola vez, como hecho aparte que no modifica cierre ni conteos, y la caja no abre otro turno hasta un cierre que cuadra o aprobado (TASK-556, e64de48, PR #557). Los valores de la política son provisionales de QA (FOLLOWUP-030); Q-126 y Q-127 registran si un medio declarado sin confirmar bloquea el cierre o es una diferencia de su medio, y si el primer conteo sigue rigiendo cuando las ventas continúan. Un operador tiene un solo turno abierto en la sucursal, un supervisor cierra un turno ajeno con motivo y testigo, el traspaso está deshabilitado por defecto y el conteo por denominación exige la suma exacta, con reglas provisionales Q-56, Q-104 y Q-116 (TASK-761, ee2b226, PR #775). Pendientes: ingresos y retiros, custodia y depósito, intención de integración del cierre, vuelto convertido en anticipo, formularios del cliente para el cierre ajeno y el traspaso, y la corrección de un cierre rechazado (F04-04).",
         "acceptance": null,
         "verification": null
       },
@@ -1597,7 +1597,7 @@
       {
         "id": "F05-06",
         "criteria": {
-          "met": 0,
+          "met": 1,
           "total": 8
         },
         "apps": [
@@ -1609,7 +1609,7 @@
           "device-agent"
         ],
         "status": "in_progress",
-        "summary": "Se detectan fallos y degradación del recorrido mediante métricas y alertas accionables con responsables y objetivos medidos. TASK-148 (95ccc5e, b66a31a, 6d9194b y d55bad7) dejó el relay de fallos de clientes y el presupuesto de errores de Sentry como base técnica; no define SLI, alertas, responsables ni objetivos. getSyncBacklogV1 resume, sin identificadores ni payload, el outbox pendiente de la sucursal: cantidad, el más antiguo, los que reintentan, los entregados en 24 h y tramos fijos de antigüedad, en total y por tipo de evento, sin cambiar la readiness (TASK-622, 5b0d95f, PR #626). Pendientes: SLI y objetivos acordados, alertas con responsables y escalamiento, métricas del recorrido y de los demás procesos, y ensayos que prueben la detección.",
+        "summary": "Se detectan fallos y degradación del recorrido mediante métricas y alertas accionables con responsables y objetivos medidos. TASK-148 (95ccc5e, b66a31a, 6d9194b y d55bad7) dejó el relay de fallos de clientes y el presupuesto de errores de Sentry como base técnica; no define SLI, alertas, responsables ni objetivos. getSyncBacklogV1 resume, sin identificadores ni payload, el outbox pendiente de la sucursal: cantidad, el más antiguo, los que reintentan, los entregados en 24 h y tramos fijos de antigüedad, en total y por tipo de evento, sin cambiar la readiness (TASK-622, 5b0d95f, PR #626). Canarios sintéticos buscados en el stream Pino real y en los envelopes de Sentry, y en el host .NET, no se filtran (TASK-764, 5466e5e, PR #771). Pendientes: SLI y objetivos acordados, alertas con responsables y escalamiento, métricas del recorrido y de los demás procesos, ensayos que prueben la detección y su comportamiento bajo carga.",
         "acceptance": null,
         "verification": null
       },
@@ -1713,7 +1713,7 @@
       {
         "id": "F05-12",
         "criteria": {
-          "met": 0,
+          "met": 1,
           "total": 8
         },
         "apps": [
@@ -1722,7 +1722,7 @@
           "device-agent"
         ],
         "status": "in_progress",
-        "summary": "El recorrido del cajero se completa sólo con teclado, desde la apertura del turno hasta el comprobante, con foco visible, diálogos que devuelven el foco y axe sin violaciones serious ni critical en nueve pasos, y la venta ofrece atajos F2, F4, F8 y F9 con aria-keyshortcuts y leyenda visible (TASK-514, 781e0f8, PR #520). La venta y las pantallas de pagos muestran los importes en formato monetario local desde el string del contrato, sin redondear (TASK-591, 7e1e1ef, PR #593; TASK-603, 1a26320, PR #604). El cierre de lote del terminal y el registro de operaciones también usan el formato monetario local (TASK-607, 93e7091, PR #610). La venta, la cesta y el cobro en efectivo hasta la venta confirmada se recorren a 1280×720 con zoom 200 % y a 320 px sin desplazamiento horizontal, acciones ocultas ni errores superpuestos, y axe sin violaciones serias ni críticas (TASK-615, b37c45f, PR #619). Verificado en Chromium, sin prueba en Tauri/WebView2. Pendientes: matriz acordada de pantallas, escalado, lector de pantalla y periféricos; zoom y resoluciones en las demás pantallas; comunicación de fallos de impresora, lector o permiso; devolución y cierre; y sesiones con usuarios representativos y revisión humana.",
+        "summary": "El recorrido del cajero se completa sólo con teclado, desde la apertura del turno hasta el comprobante, con foco visible, diálogos que devuelven el foco y axe sin violaciones serious ni critical en nueve pasos, y la venta ofrece atajos F2, F4, F8 y F9 con aria-keyshortcuts y leyenda visible (TASK-514, 781e0f8, PR #520). La venta y las pantallas de pagos muestran los importes en formato monetario local desde el string del contrato, sin redondear (TASK-591, 7e1e1ef, PR #593; TASK-603, 1a26320, PR #604). El cierre de lote del terminal y el registro de operaciones también usan el formato monetario local (TASK-607, 93e7091, PR #610). La venta, la cesta y el cobro en efectivo hasta la venta confirmada se recorren a 1280×720 con zoom 200 % y a 320 px sin desplazamiento horizontal, acciones ocultas ni errores superpuestos, y axe sin violaciones serias ni críticas (TASK-615, b37c45f, PR #619). El comprobante y el seguimiento comunican el resultado real de la impresión y su recuperación autorizada sin repetir el pago (TASK-766, d9f1677, PR #770). Verificado en Chromium, sin prueba en Tauri/WebView2. Pendientes: matriz acordada de pantallas, escalado, lector de pantalla y periféricos; zoom y resoluciones en las demás pantallas; comunicación de fallos de lector; devolución y cierre; y sesiones con usuarios representativos y revisión humana.",
         "acceptance": null,
         "verification": null
       },
