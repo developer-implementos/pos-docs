@@ -2,11 +2,13 @@
 
 **Estado:** propuesta del 24-11-2026 de [TASK-782](https://github.com/developer-implementos/pos-platform/issues/782), aceptada por el responsable del producto el mismo día: «me parece todo bien». Se implementa por tareas registradas en la ficha de la issue; este ADR no acredita implementación, despliegue en QA, homologación ni aceptación.
 
-**Decisión:** soporte nunca entra con la cuenta ni la contraseña de otra persona. Actúa siempre con su propia identidad y usa tres herramientas, de menor a mayor privilegio:
+**Decisión:** soporte nunca entra con la cuenta ni la contraseña de otra persona. Actúa siempre con su propia identidad y usa tres herramientas:
 
-1. **Diagnóstico.** Los errores y los diagnósticos que envía el cajero llegan a la [consola de operaciones](operations-console.md) con su contexto, sin entrar a ninguna sesión.
-2. **«Ver como», de solo lectura.** Soporte ve las pantallas, los datos y los permisos efectivos de una persona; el servidor rechaza toda escritura.
-3. **Rol propio y temporal.** Para reproducir un error, soporte recibe una asignación con vencimiento a un rol de la sucursal. Lo que hace queda a su nombre, en su propio turno.
+1. **Diagnóstico.** El cajero envía un diagnóstico técnico con un código; soporte lo busca en la [consola de operaciones](operations-console.md).
+2. **Asistencia remota, solo para ver.** Con la herramienta corporativa aprobada y el permiso del cajero en el momento. No es código de este producto.
+3. **Rol propio y temporal.** Para reproducir un error, soporte recibe un acceso con vencimiento a un rol de la sucursal. Lo que hace queda a su nombre, en su propio turno.
+
+Observar la sesión de otra persona («ver como») no se construye en esta etapa.
 
 ## Qué resuelve
 
@@ -20,24 +22,25 @@ La necesidad es legítima; el mecanismo, no:
 
 ## Diagnóstico
 
-- Cada error del cliente lleva el identificador de la solicitud, la pantalla, la sucursal, la caja, el equipo, la versión del cliente y la hora. No lleva contraseñas, tokens, datos de tarjetas ni el contenido de los documentos.
-- El cajero tiene la acción **«Enviar diagnóstico»** en la ayuda del encabezado ([ADR-30](workstation-session.md)): adjunta el estado técnico reciente del puesto y le muestra el código del envío para citarlo a soporte.
-- Los diagnósticos viajan al país por el canal de sincronización y soporte los consulta en la consola por persona, caja, equipo y hora. Nadie se conecta a la base de una sucursal.
+- **«Enviar diagnóstico»** está en la ayuda del encabezado ([ADR-30](workstation-session.md)) y no exige una caja elegida. Muestra exactamente lo que va a enviar y responde un código corto para citarlo a soporte.
+- Lleva la aplicación, su versión, la plantilla de la pantalla, el estado de conexión y los últimos identificadores de solicitud y fallas, en una lista cerrada de campos. No lleva texto libre, capturas, direcciones, cuerpos, documentos, clientes ni credenciales. La sucursal, la persona, la caja y el equipo salen de la sesión.
+- Viaja al país con la credencial de la sucursal, en un carril propio y después de las ventas: la bandeja de salida de las ventas es inmutable y no admite borrar. Se conserva 7 días en la sucursal y 30 en el país, valores provisionales.
+- Si la sucursal no responde, el diálogo dice que no se envió y ofrece copiar la referencia.
+- Los errores automáticos del cliente siguen en el monitoreo técnico, que no lleva identificadores.
 
-## «Ver como»
+## Por qué no observar la sesión desde la consola
 
-- Requiere el permiso `support.view_as`, que no tiene ningún rol de tienda. Lo da una asignación con ámbito: una sucursal o el país.
-- Se inicia desde la consola con la persona, el motivo y un ticket. Dura como máximo 30 minutos y se puede cerrar antes.
-- El servidor calcula los permisos efectivos de la persona observada y los aplica a las lecturas. **Toda escritura se rechaza en el servidor** con `SUPPORT_VIEW_READ_ONLY`, no solo en la interfaz.
-- Una franja fija muestra «Viendo como \<persona\> · solo lectura» y el tiempo restante.
-- No toma la tenencia de ninguna caja ni sube su época ([ADR-31](register-tenure.md)): el cajero sigue vendiendo sin interrupción.
-- Queda en la auditoría al iniciar y al terminar, con quién observó a quién, el motivo, el ticket y cada vista abierta. La persona observada lo ve en «Mi cuenta».
+- El país solo conoce totales de ventas y el estado de las cajas. Mostrar ahí las pantallas del cajero exigiría copiar al centro sus datos y los de los clientes, y aun así estarían atrasados.
+- No existe un canal del país hacia la sucursal, y abrirlo para lecturas interactivas dejaría que un país comprometido leyera cualquier tienda.
+- Una vista nueva no muestra lo que el cajero tiene sin guardar en su pantalla: la asistencia remota sí.
+
+Si después de 30 días de uso en QA queda una necesidad sin cubrir, la observación se diseña dentro de la sucursal, iniciada por soporte con su propia cuenta, con las escrituras rechazadas por el servidor y sin tomar la tenencia de una caja.
 
 ## Rol propio y temporal
 
-- Una asignación operativa con `valid_from` y `valid_to`, como las de [F04-06](/guide/roadmap/phase-04/#work-f04-06), da a la cuenta de soporte un rol de la sucursal, por ejemplo cajero.
-- En QA, soporte la tiene de forma permanente para reproducir errores con datos de prueba.
-- En producción, la asignación exige aprobación de otra persona con el permiso de administración, dura como máximo una jornada y vence sola.
+- Es un acceso temporal que se suma al rol base de la persona en la sucursal, con vencimiento obligatorio, motivo y auditoría ([ADR-31](register-tenure.md)).
+- Se pide desde la consola con un código y lo aprueba en la sucursal alguien con el permiso de administración, distinto de quien lo recibe. La consola muestra «solicitado» hasta que la sucursal confirma.
+- Dura como máximo una jornada y vence solo. En QA, soporte tiene una asignación normal.
 - Soporte abre su propio turno en una caja libre. Nunca opera el turno de otra persona; cerrar un turno ajeno sigue el cierre con supervisor y testigo de [TASK-761](https://github.com/developer-implementos/pos-platform/issues/761).
 
 ## Lo que no se permite
@@ -49,16 +52,15 @@ La necesidad es legítima; el mecanismo, no:
 ## Relación con otras decisiones
 
 - **[ADR-24](email-sign-in.md) y [ADR-29](password-recovery.md).** Se mantiene que nadie conoce la contraseña de otro.
-- **[ADR-30](workstation-session.md).** «Enviar diagnóstico» vive en la ayuda del encabezado; «Mi cuenta» muestra las observaciones.
-- **[ADR-31](register-tenure.md).** «Ver como» no toma la tenencia de una caja.
-- **[ADR-33](operations-console.md).** La consola aloja el diagnóstico, «ver como» y la solicitud de una asignación temporal.
+- **[ADR-30](workstation-session.md).** «Enviar diagnóstico» vive en la ayuda del encabezado.
+- **[ADR-31](register-tenure.md).** El acceso temporal es parte de la asignación por sucursal; soporte nunca toma la caja de otra persona.
+- **[ADR-33](operations-console.md).** La consola aloja la búsqueda de diagnósticos y la solicitud de un acceso temporal.
 
 ## Límites
 
-- «Ver como» muestra los datos que la sucursal publicó al país; si la sucursal está sin conexión, la consola muestra la hora del último dato.
-- Reproducir un error del equipo físico (impresora, gaveta, terminal de pago) necesita el equipo; para eso sirve el diagnóstico, no «ver como».
-- Los valores de 30 minutos y una jornada son provisionales de QA hasta que seguridad los decida.
+- La asistencia remota depende de la herramienta que apruebe la organización. Tomar el control del equipo del cajero no está permitido: lo hecho quedaría a su nombre.
+- Los plazos de conservación y la jornada son provisionales hasta que los decidan seguridad y privacidad.
 
 ## Verificación
 
-Cada tarea prueba con PostgreSQL real que una escritura durante «ver como» se rechaza en el servidor, que «ver como» no cambia la tenencia de la caja, que una asignación temporal vence sola y que todo queda en la auditoría.
+Cada tarea prueba con PostgreSQL real que un diagnóstico no acepta campos fuera de su lista, que su volumen no demora una venta, que se borra en su plazo y que un acceso temporal vence solo y queda en la auditoría.
