@@ -13,7 +13,7 @@ Test runner: `node --test` mediante los scripts del repositorio y el build de St
 ## Tasks
 
 - [x] T1 · S1,S2,S3 · route:inline · Corregir los ADR y sus índices · status:done · evidence: `docs/decisions/support-access.md`, `docs/decisions/operations-console.md`
-- [ ] T2 · S1,S2,S3 · route:inline · Regenerar los derivados, verificar y abrir la PR · status:in_progress · evidence: en curso en esta rama.
+- [x] T2 · S1,S2,S3 · route:inline · Regenerar los derivados, verificar y abrir la PR · status:done · evidence: `npm run verify` sale 0
 
 ## Log
 
