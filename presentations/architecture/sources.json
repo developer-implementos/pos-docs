@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "reviewedOn": "2026-11-24",
+  "reviewedOn": "2026-11-25",
   "repository": "https://github.com/developer-implementos/pos-docs",
-  "revision": "1b6e8d02a1dfdb97c9a054d19058f0c5a23cd2ad",
+  "revision": "4d66809bf0d4ef0d776fee932acd3c164d79a70a",
   "sourceStatus": "Fuentes documentales verificadas en la revisión indicada; F01 incluye administración POS y entregables técnicamente verificados. F02 incluye cobro combinado y protocolo de dispositivos técnicamente verificados, junto con persistencia fiscal y host .NET/SQLite; no habilita proveedores operativos ni drivers físicos. La aceptación manual y la habilitación productiva se mantienen separadas.",
   "roadmapStatus": "Propuesta de secuencia para acordar con producto, operaciones y desarrollo. Sin fechas comprometidas.",
   "inputs": [
@@ -12,7 +12,7 @@
     },
     {
       "path": "docs/propuesta-arquitectura.md",
-      "sha256": "2876378e60ff9aa15d8b32dfedece5b0120ff347d8a4d4287cf11a28593b1792"
+      "sha256": "6fb93003ee66b8c8d001450b1bce978efcc3c53e503fb5d6a360385b6fbecd26"
     },
     {
       "path": "docs/implementation-plan.md",

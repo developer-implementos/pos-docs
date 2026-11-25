@@ -74,7 +74,7 @@ Los periféricos son del equipo y no son las capacidades de la aplicación, que 
 
 ## Un rol por persona en cada sucursal
 
-Decisión del responsable del producto del 24-11-2026. Una persona tiene un solo rol por sucursal y sus permisos no cambian al pasar de una caja a otra. Quien además supervisa usa un rol con ambos permisos; las reglas por persona, como no aprobar el propio cierre, siguen aplicando. Un reemplazo cambia el rol con vencimiento. El acceso temporal de soporte va aparte ([ADR-32](support-access.md)). Reservar una caja para ciertas personas, si hiciera falta, es una restricción de la caja y no otro rol.
+Decisión del responsable del producto del 24-11-2026. Una persona tiene un solo rol por sucursal y sus permisos no cambian al pasar de una caja a otra. Quien además supervisa usa un rol con ambos permisos; las reglas por persona, como no aprobar el propio cierre, siguen aplicando. Un reemplazo o el trabajo de soporte ([ADR-32](support-access.md)) usan un acceso temporal, que suma permisos al rol base, vence siempre y queda en la auditoría con su motivo. Reservar una caja para ciertas personas, si hiciera falta, es una restricción de la caja y no otro rol.
 
 ## Lo que queda en curso al cambiar de equipo
 
@@ -107,7 +107,7 @@ Diseño lógico; la implementación define tablas y nombres finales.
 | --- | --- |
 | Caja | Código del ERP, estado y revisión del maestro, además del nombre |
 | Instalación | Sin caja: sucursal, canal, periféricos y nombre visible |
-| Asignación operativa | La persona, su único rol en la sucursal y la vigencia, sin caja ni instalación |
+| Asignación operativa | La persona, su rol base en la sucursal y sus accesos temporales, sin caja ni instalación |
 | Tenencia de la caja | La caja, el turno, el equipo y la época vigentes; una por caja |
 | Historial de la tenencia | Cada apertura y transferencia, con persona, equipo, época y motivo |
 | Sesión | La caja y la época de la tenencia elegidas, si ya eligió |
@@ -122,7 +122,7 @@ Las tablas de negocio siguen guardando la caja y el equipo que escribió cada re
 - **[ADR-23](device-activation.md).** Se mantienen la llave, el desafío, la época de la credencial y la revocación. Cambian dos cosas: la activación crea la instalación en la sucursal, y el inicio de sesión ya no deriva la caja.
 - **[ADR-24](email-sign-in.md).** El código de activación es de la sucursal y del canal.
 - **[ADR-30](workstation-session.md).** El encabezado muestra la caja elegida; el bloqueo del puesto no libera la caja.
-- **[ADR-32](support-access.md).** «Ver como» nunca toma la tenencia.
+- **[ADR-32](support-access.md).** El acceso temporal de soporte se suma al rol base; soporte nunca toma la caja de otra persona.
 - **[ADR-33](operations-console.md).** La consola muestra el tablero de todas las sucursales.
 
 ## Límites

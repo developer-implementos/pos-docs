@@ -32,15 +32,15 @@ Meter la vista del país en el POS obligaría a cada equipo de tienda a hablar c
 - **Equipos:** canal, capacidades, estado de la credencial y última señal.
 - **Errores y diagnósticos:** por sucursal, caja, equipo y persona, con el identificador de la solicitud ([ADR-32](support-access.md)).
 - **Pendientes de integración con el ERP:** con antigüedad e intentos ([F04-10](/guide/roadmap/phase-04/#work-f04-10)).
-- **Acciones de soporte:** «ver como» de solo lectura y la solicitud de una asignación temporal ([ADR-32](support-access.md)).
+- **Soporte:** búsqueda de diagnósticos por código y solicitud de un acceso temporal ([ADR-32](support-access.md)).
 
-Cada dato muestra la hora de su última actualización. Una sucursal sin conexión aparece como «sin señal desde las 10:42», no como cajas vacías.
+Cada dato muestra la hora de su última actualización. Hasta que la sucursal envíe una señal periódica, la consola muestra la hora del último evento y no afirma que una sucursal esté sin conexión: una tienda sin movimiento no es una tienda caída. Las sucursales configuradas que nunca publicaron también aparecen.
 
 ## Cómo llegan los datos
 
 - La sucursal publica al país, por el canal de sincronización durable de [F03-01](/guide/roadmap/phase-03/#work-f03-01), eventos de estado: tenencia y turnos de sus cajas, señales de sus equipos, errores y diagnósticos.
 - `country-api` los recibe con la identidad de la sucursal y los proyecta en una vista de lectura. La proyección es eventualmente consistente.
-- La consola nunca consulta la base de una sucursal. Una acción que cambia algo en la tienda viaja como comando autorizado hacia la sucursal, y la sucursal decide con sus propias reglas.
+- La consola nunca consulta la base de una sucursal y, en esta etapa, no le envía comandos: no existe un canal del país hacia la sucursal. Lo que cambia algo en la tienda se aprueba en la tienda.
 
 ## Ámbitos y permisos
 
@@ -51,15 +51,22 @@ Cada dato muestra la hora de su última actualización. Una sucursal sin conexi�
 ## Relación con otras decisiones
 
 - **[ADR-31](register-tenure.md).** La consola muestra el tablero de cajas que publica cada sucursal.
-- **[ADR-32](support-access.md).** Aloja el diagnóstico, «ver como» y las asignaciones temporales.
+- **[ADR-32](support-access.md).** Aloja la búsqueda de diagnósticos y la solicitud de accesos temporales.
 - **[ADR-21](web-client.md).** El cliente web del POS sigue sirviéndose desde cada sucursal; la consola es la única aplicación web central.
 - **[F04-06](/guide/roadmap/phase-04/#work-f04-06) y [F04-10](/guide/roadmap/phase-04/#work-f04-10).** Este ADR es su decisión de arquitectura para la administración central y la consola de pendientes.
 
+## Identidad de la consola
+
+- Mientras no exista la identidad corporativa con segundo factor ([F03-07](/guide/roadmap/phase-03/#work-f03-07)), QA usa cuentas locales de `country-api`, deshabilitadas por defecto y con vencimiento. Es una protección menor que la del POS, que además exige un equipo activado, y no se usa en producción.
+- La sesión vive en una cookie que el código de la página no puede leer, con 15 minutos de inactividad y 8 horas de tope.
+- El ámbito sale de la sesión: una persona de una sucursal no puede pedir otra, y ese intento queda en la auditoría.
+- Los permisos de la consola son un vocabulario aparte: ningún rol de tienda los puede contener.
+
 ## Límites
 
-- La identidad corporativa con segundo factor depende de [F03-07](/guide/roadmap/phase-03/#work-f03-07). Mientras no exista, QA usa cuentas locales de `country-api` con los mismos permisos y la misma auditoría.
+- La consola necesita desplegar `country-api`, su proceso de aplicación y el de sincronización de la sucursal, que hoy no corren en QA.
 - La consola no reemplaza la administración de la tienda: usuarios, equipos y cierres con supervisor siguen en el POS.
 
 ## Verificación
 
-Cada tarea prueba que la consola solo lee de `country-api`, que una persona con ámbito de sucursal no ve otras sucursales y que una sucursal sin conexión se muestra con la hora de su último dato.
+Cada tarea prueba que la consola solo lee de `country-api`, que una persona con ámbito de sucursal no ve otras sucursales y que cada sucursal se muestra con la hora de su último evento.
