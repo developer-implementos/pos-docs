@@ -1,4 +1,4 @@
-| [M11](https://github.com/developer-implementos/pos-platform/issues/867) || [M10](https://github.com/developer-implementos/pos-platform/issues/866) || [M9](https://github.com/developer-implementos/pos-platform/issues/865) || [M8](https://github.com/developer-implementos/pos-platform/issues/864) || [M7](https://github.com/developer-implementos/pos-platform/issues/863) || [M6](https://github.com/developer-implementos/pos-platform/issues/862) || [M5](https://github.com/developer-implementos/pos-platform/issues/861) || [M4](https://github.com/developer-implementos/pos-platform/issues/860) || [M3](https://github.com/developer-implementos/pos-platform/issues/859) || [M2](https://github.com/developer-implementos/pos-platform/issues/858) || [M1](https://github.com/developer-implementos/pos-platform/issues/857) |# ADR-34 · Sincronizador corporativo de maestros multipaís
+# ADR-34 · Sincronizador corporativo de maestros multipaís
 
 **Estado:** propuesta (RFC) del 25-11-2026 de [TASK-782](https://github.com/developer-implementos/pos-platform/issues/782), pendiente de aceptación del responsable del producto. Su pedido fue: «debes pensarlo en coorporativo. Chile sincroniza contra eso, pero perú y españa pueden tener o manejar otros campos quizas. Por eso debemos tener quizas un sincronizador corporativo multipaís», y después «haz todo lo necesario. crea un rfc detallado con el plan de trabajo». Extiende el [ADR-15](../propuesta-arquitectura.md#adr-15) y el [contrato de publicación de maestros](../contracts/master-data-publication.md); concreta la capa anticorrupción que el [ADR-31](register-tenure.md) exige para el maestro de cajas.
 
@@ -96,17 +96,17 @@ Cada unidad sale en su propia PR, con su issue hija de #782 y su verificación. 
 
 | Orden | Unidad | Resultado | Depende de |
 | --- | --- | --- | --- |
-| M1 | Contrato `register-master-v1` con extensión por país y esquema de Chile | El maestro canónico de cajas y sus medios de pago, con punto de emisión, plaza y grupo de banco como extensión de Chile | Esta propuesta |
-| M2 | Correspondencia de identidad en el país | Tabla, reasignación explícita, historia y pruebas de no reutilización | M1 |
-| M3 | Puerto de origen del maestro de cajas y adaptador de Chile sobre el legacy | La importación de QA pasa a ser el primer adaptador, con `RecId` como clave y nombre, punto de emisión, plaza y grupo de banco | M1, M2 |
-| M4 | Revisión, política de retención y cuarentena | Diferencia canónica, umbrales por país, retención y su aprobación auditada | M2 |
-| M5 | Publicación y acuse por sucursal | Publicación por el ciclo existente, acuse, detección de saltos y reenvío | M4 |
-| M6 | Preparación de QA sin cajas por canal, importación y reinicio | QA con las cajas reales de una sucursal, publicadas por el país | M3, M5 e inscripción del equipo en la sucursal |
-| M7 | Consola: revisiones retenidas, cuarentena y sucursales atrasadas | Aprobar o descartar con motivo; ver el estado por sucursal | M4, M5, consola conectada |
-| M8 | Conciliación periódica | Comparación de origen, publicado y aplicado, con casos operativos | M5 |
-| M9 | Adaptador de Chile sobre AX y modo sombra | Lectura de la fuente autorizada de AX, en sombra contra el sincronizador vigente | M3 a M8; acceso autorizado de integración |
-| M10 | Extender a sucursales, medios de pago, personas, productos y precios | Cada maestro con su contrato y su adaptador de Chile | M5 |
-| M11 | Perú y España | Inventario con sus responsables de qué sistema entrega cada maestro, sus esquemas de país y sus adaptadores | M1 a M5; decisiones de cada país |
+| [M1](https://github.com/developer-implementos/pos-platform/issues/857) | Contrato `register-master-v1` con extensión por país y esquema de Chile | El maestro canónico de cajas y sus medios de pago, con punto de emisión, plaza y grupo de banco como extensión de Chile | Esta propuesta |
+| [M2](https://github.com/developer-implementos/pos-platform/issues/858) | Correspondencia de identidad en el país | Tabla, reasignación explícita, historia y pruebas de no reutilización | M1 |
+| [M3](https://github.com/developer-implementos/pos-platform/issues/859) | Puerto de origen del maestro de cajas y adaptador de Chile sobre el legacy | La importación de QA pasa a ser el primer adaptador, con `RecId` como clave y nombre, punto de emisión, plaza y grupo de banco | M1, M2 |
+| [M4](https://github.com/developer-implementos/pos-platform/issues/860) | Revisión, política de retención y cuarentena | Diferencia canónica, umbrales por país, retención y su aprobación auditada | M2 |
+| [M5](https://github.com/developer-implementos/pos-platform/issues/861) | Publicación y acuse por sucursal | Publicación por el ciclo existente, acuse, detección de saltos y reenvío | M4 |
+| [M6](https://github.com/developer-implementos/pos-platform/issues/862) | Preparación de QA sin cajas por canal, importación y reinicio | QA con las cajas reales de una sucursal, publicadas por el país | M3, M5 e inscripción del equipo en la sucursal |
+| [M7](https://github.com/developer-implementos/pos-platform/issues/863) | Consola: revisiones retenidas, cuarentena y sucursales atrasadas | Aprobar o descartar con motivo; ver el estado por sucursal | M4, M5, consola conectada |
+| [M8](https://github.com/developer-implementos/pos-platform/issues/864) | Conciliación periódica | Comparación de origen, publicado y aplicado, con casos operativos | M5 |
+| [M9](https://github.com/developer-implementos/pos-platform/issues/865) | Adaptador de Chile sobre AX y modo sombra | Lectura de la fuente autorizada de AX, en sombra contra el sincronizador vigente | M3 a M8; acceso autorizado de integración |
+| [M10](https://github.com/developer-implementos/pos-platform/issues/866) | Extender a sucursales, medios de pago, personas, productos y precios | Cada maestro con su contrato y su adaptador de Chile | M5 |
+| [M11](https://github.com/developer-implementos/pos-platform/issues/867) | Perú y España | Inventario con sus responsables de qué sistema entrega cada maestro, sus esquemas de país y sus adaptadores | M1 a M5; decisiones de cada país |
 
 ## Lo que queda abierto
 
