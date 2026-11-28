@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "cf0002372fcdd8a768f72c5e7248f8032f3b0dad",
+    "revision": "ed96da3df9592e5567948ac0243e4c04eef93616",
     "path": "delivery/business-questions.json",
-    "sha256": "fc67da296a7d9b85d05c63767d2c6a3512942b8e7bdb09fb770b0ddcc7030873"
+    "sha256": "f05676cfdebb58d7d0d4032f4dc22037475ed228ef79f950aee3ee66d8af9b3d"
   },
   "integration": {
     "reference": "main",
@@ -3222,13 +3222,14 @@
       {
         "id": "Q-56",
         "topic": "Turno",
-        "question": "¿Un cajero puede tener turno abierto en más de una caja o sucursal a la vez y, al volver a ingresar, retoma el suyo?",
+        "question": "¿Un cajero puede tener turno abierto en más de una caja o sucursal a la vez y, al volver a ingresar, retoma el suyo, también desde otro equipo?",
         "kind": "rule",
         "state": "open",
-        "currentAnswer": "Legacy: rechaza abrir una segunda caja sólo dentro de la sucursal del servidor y, al iniciar sesión, recupera la caja abierta del usuario. POS Platform: exige un turno activo por caja (F01-01); la exclusión por operador sigue pendiente y hoy un mismo usuario puede abrir dos cajas",
+        "currentAnswer": "Legacy: rechaza abrir una segunda caja sólo dentro de la sucursal del servidor y, al iniciar sesión, recupera la caja abierta del usuario; según el responsable del producto, el cajero puede continuar desde otro equipo, incluso un celular, eligiendo la caja en la que estaba mientras no se cierre. POS Platform: exige un turno activo por caja (F01-01) y, de forma provisional desde TASK-761, uno por persona en la sucursal: abrir otro se rechaza con SHIFT_OPERATOR_BUSY. Al volver a ingresar en la caja de su turno lo retoma. Desde TASK-794 y TASK-809 cada caja registra qué equipo escribe en su turno, y al titular que escribe desde un equipo que ya no la tiene se le rechaza con REGISTER_TENURE_LOST; todavía no se puede continuar el turno en otro equipo, porque la sesión sigue atada a la caja del equipo. Entre sucursales no hay exclusión.",
         "answerSources": [
           "code",
-          "spec"
+          "spec",
+          "person"
         ],
         "auditRefs": [],
         "parityRefs": [
@@ -3237,7 +3238,10 @@
         ],
         "sources": [
           "delivery/specs/F01-01.md",
-          "delivery/reviews/pos-parity-2026-11-10/cumplimiento-f01-f02.md"
+          "delivery/reviews/pos-parity-2026-11-10/cumplimiento-f01-f02.md",
+          "odd/tasks/register-tenure.md",
+          "libs/backend/cash/src/application/cash.service.ts",
+          "libs/backend/administration/src/infrastructure/register-tenure.ts"
         ],
         "decider": "operaciones",
         "consulted": [
@@ -3250,12 +3254,12 @@
           "F01-01"
         ],
         "priority": "P1",
-        "reviewedOn": "2026-11-13",
+        "reviewedOn": "2026-11-24",
         "recommendation": {
-          "answer": "No: un operador tiene a lo sumo un turno abierto en todas las sucursales de su país, y branch-api rechaza abrir otro con un conflicto que indica la caja y la sucursal del turno vigente. Al volver a ingresar en esa caja retoma su propio turno; para operar otra caja primero lo cierra, y ningún otro usuario lo usa. En la sucursal lo garantiza una restricción única por operador; entre sucursales, la consulta a country-api, y sin conexión el traslape queda como excepción visible.",
+          "answer": "No: una persona tiene a lo sumo un turno abierto en la sucursal, y branch-api rechaza abrir otro con un conflicto que indica la caja del turno vigente. Mientras no lo cierre, lo continúa en su misma caja desde cualquier equipo inscrito de la sucursal: continuar transfiere la tenencia de la caja, sube su época y, desde entonces, el servidor rechaza lo que escriba el equipo anterior. Nadie toma el turno de otra persona; uno ajeno sólo se cierra (Q-116). La exclusión entre sucursales se evalúa después, con la consulta a country-api; mientras tanto, o sin conexión, un traslape queda como excepción visible.",
           "scope": "core",
           "default": null,
-          "rationale": "Un turno por persona y por cajón deja cada movimiento de efectivo y cada diferencia del arqueo atribuibles a quien lo custodia, el control que Dynamics 365 Commerce describe para turnos de un solo usuario. Hoy F01-01 sólo impide dos turnos en una caja (TC-04), y el legacy valida sólo dentro de la sucursal de su servidor. Mover un turno a otra caja, como un cajón flotante, exige suspensión y custodia, que corresponden a F04. La regla es igual en Chile, Perú y España.",
+          "rationale": "Un turno por persona y por cajón deja cada movimiento y cada diferencia del arqueo atribuibles a quien lo custodia, el control que Dynamics 365 Commerce describe para turnos de un solo usuario. Atar el turno a la persona y a la caja, y no al equipo, permite seguir trabajando si el equipo falla; la época evita que dos equipos escriban el mismo turno, y todo ocurre en la sucursal, sin depender del país. El ADR-31 lo adopta y el responsable del producto lo aceptó como decisión de arquitectura; Operaciones aún no decide la regla. Mover un turno a otra caja exige suspensión y custodia, que corresponden a F04. Qué ocurre con lo que quedó en curso lo decide Q-138. Es igual en Chile, Perú y España.",
           "basis": [
             "architecture",
             "practice",
@@ -3269,21 +3273,22 @@
             {
               "label": "POS Docs · Roadmap F01-01: identidad, permisos y apertura de turno",
               "url": "https://pos-docs-starlight.vercel.app/guide/roadmap/phase-01/#work-f01-01"
+            },
+            {
+              "label": "POS Docs · ADR-31: caja tomada por la persona y continuidad del turno",
+              "url": "https://pos-docs-starlight.vercel.app/guide/architecture/register-tenure/"
             }
           ],
           "sources": [
-            "delivery/specs/F01-01.md#L11",
-            "delivery/specs/F01-01.md#L29",
-            "delivery/specs/F01-01.md#L37",
-            "delivery/specs/F01-01.md#L42",
-            "delivery/specs/F01-01.md#L54",
             "libs/backend/cash/src/infrastructure/cash-migration.ts#L17",
             "delivery/reviews/pos-parity-2026-11-10/cumplimiento-f01-f02.md#L57",
             "delivery/reviews/pos-parity-2026-11-10/casos-prueba.md#L45-L49",
-            "delivery/business-rules.json#L399"
+            "delivery/specs/F01-01.md",
+            "delivery/business-rules.json",
+            "odd/tasks/register-tenure.md"
           ],
-          "agent": "Claude Code · TASK-296",
-          "proposedOn": "2026-11-12"
+          "agent": "Claude Code · TASK-782",
+          "proposedOn": "2026-11-24"
         },
         "decision": null
       },
@@ -6710,7 +6715,7 @@
         "question": "¿Quién recibe en custodia el efectivo y los cheques de cada cierre, quién confirma su depósito en el banco, y qué medios se depositan o se entregan a custodia: efectivo, cheques al día, cheques a fecha u otros?",
         "kind": "rule",
         "state": "open",
-        "currentAnswer": "Legacy: el resumen del cierre descarga un archivo para el portal de custodia con los cheques a fecha del cierre, sin filtrar los que el cajero no confirmó, y un informe de confirmación de depósito con el efectivo y los cheques al día; ninguna operación registra la entrega, la recepción ni el depósito. POS Platform: no implementa custodia ni depósito; F04-03 propone la entrega a custodia y la confirmación del depósito como confirmaciones independientes con responsable, y el contenido de ambos informes (LC-065); sigue abierto quién cuenta, custodia y confirma el depósito. No está confirmado qué formato exige el custodio de cheques.",
+        "currentAnswer": "Legacy: el resumen del cierre descarga un archivo para el portal de custodia con los cheques a fecha del cierre, sin filtrar los que el cajero no confirmó, y un informe de confirmación de depósito con el efectivo y los cheques al día; ninguna operación registra la entrega, la recepción ni el depósito. POS Platform, provisional (TASK-811), sólo efectivo: la política de cierre de la sucursal habilita la custodia (`custody`, apagada por defecto). Quien operó o cerró el turno entrega a otra persona activa, con importe exacto, motivo y referencia, efectivo de un cierre decidido, sin superar lo declarado menos lo entregado y no anulado. Quien recibe acusa recibo; sin acuse la obligación y su responsabilidad siguen en quien entregó, y con él en quien recibe. Otra persona, distinta de quien entregó y de quien recibió, con ingreso vigente, confirma el depósito con una referencia bancaria que no se reutiliza (sin distinguir mayúsculas, espacios ni formas Unicode); el fallo o rechazo con motivo también lo registra quien recibió y mantiene la obligación y su responsable. Si quien debía recibir no puede, un supervisor ajeno a ambos anula la entrega antes del acuse, con motivo: el efectivo vuelve al cierre y la evidencia se conserva. Nunca una sola persona cierra una obligación y siempre queda una vía para avanzar; consultar o descargar no cambia el estado. Siguen abiertos quién recibe y quién confirma el depósito en cada sucursal, cómo acredita su recepción un transportador externo que no ingresa en la caja, la custodia de cheques y su formato, y el informe de LC-065.",
         "answerSources": [
           "code",
           "spec"
@@ -6720,7 +6725,9 @@
           "P-08"
         ],
         "sources": [
-          "delivery/specs/F04-03.md"
+          "delivery/specs/F04-03.md",
+          "libs/backend/cash/src/application/cash-custody.service.ts",
+          "libs/backend/cash/src/infrastructure/cash-custody-migration.ts"
         ],
         "decider": "tesoreria",
         "consulted": [
@@ -7688,12 +7695,431 @@
         "recommendation": null,
         "decision": null,
         "priority": "P2",
-        "currentAnswer": "POS Platform, de forma provisional (TASK-777): branch-api registra la dirección observada en cada decisión de authorization_audit y, en la sesión, la del ingreso y la de la última renovación. Se conserva con la retención de la auditoría: la fila de auditoría es inmutable 90 días y después la cuenta propietaria puede borrarla; las direcciones de una sesión terminada hace más de 90 días se borran con database.js purge-session-addresses. La persona ve las de sus propias sesiones en «Mi cuenta»; la consulta de auditoría para administradores no la muestra. No se registra en logs ni en Sentry.",
+        "currentAnswer": "POS Platform, de forma provisional (TASK-777): branch-api registra la dirección observada en cada decisión de authorization_audit y, en la sesión, la del ingreso y la de la última renovación. Se conserva con la retención de la auditoría: la fila de auditoría es inmutable 90 días y después la cuenta propietaria puede borrarla; las direcciones de una sesión terminada hace más de 90 días se borran con database.js purge-session-addresses, que desde TASK-815 también ejecuta database.js maintenance en lotes acotados, de forma excluyente y con constancia (la definición para programarlo vive en tools/database/maintenance y no está instalada en ningún servidor). Desde TASK-814 branch-api audita, una vez por sesión y dirección, que una solicitud autenticada llegó desde una dirección distinta de la última conocida, sin bloquear; esas direcciones se guardan en session_network_observation con la misma retención y se borran con la misma orden. La comparación usa la dirección completa: la tolerancia a direcciones IPv6 temporales o redes móviles queda para esta decisión, sin regla de prefijo inventada. La persona ve las de sus propias sesiones en «Mi cuenta»; la consulta de auditoría para administradores no la muestra. No se registra en logs ni en Sentry.",
         "sources": [
           "libs/backend/administration/src/infrastructure/request-origin-migration.ts",
+          "libs/backend/administration/src/infrastructure/session-network-migration.ts",
+          "apps/branch-api/src/maintenance.ts",
           "libs/shared/backend/runtime/src/common/http/request-origin.ts",
           "delivery/reviews/F05-08-threat-model.md"
         ]
+      },
+      {
+        "id": "Q-136",
+        "topic": "Cajas",
+        "question": "¿Las cajas de una sucursal son un maestro del ERP, que el POS sólo recibe, y qué ocurre con una caja retirada que tiene un turno abierto?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: según el responsable del producto, la caja nueva se crea en el ERP y aparece en el listado después de la sincronización. POS Platform: el aprovisionamiento crea las cajas con sus equipos. Desde TASK-783 database.js apply-register-master aplica además un maestro versionado que crea, renombra, retira y reactiva cajas por su código del ERP, sin tocar las del aprovisionamiento; una caja con turno abierto no se retira y queda diferida. TASK-819 publica la configuración de cada caja creada, sin habilitar la venta. No hay integración con el ERP: el documento se aplica con ese comando, y TASK-807 lo extrae del legacy; no hay evidencia de que se haya aplicado en QA.",
+        "answerSources": [
+          "code",
+          "person"
+        ],
+        "auditRefs": [],
+        "parityRefs": [],
+        "sources": [
+          "odd/tasks/register-tenure.md",
+          "libs/backend/administration/src/infrastructure/register-master.ts",
+          "delivery/specs/F01-07.md"
+        ],
+        "decider": "ti-erp",
+        "consulted": [
+          "operaciones",
+          "producto"
+        ],
+        "owner": null,
+        "followUp": "FOLLOWUP-041",
+        "workPackages": [
+          "F01-07",
+          "F03-03",
+          "F04-06"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-24",
+        "recommendation": {
+          "answer": "Sí: las cajas llegan por la capa anticorrupción como un maestro versionado y completo, identificadas por el código del ERP; el POS no las crea, renombra ni retira por su cuenta. Una revisión anterior, o la misma con otro contenido, se rechaza. Una caja con turno abierto no se retira hasta su cierre, y el retiro pendiente queda visible. Una caja nueva no vende hasta que se habilite su configuración.",
+          "scope": "core",
+          "default": null,
+          "rationale": "Un solo dueño del maestro evita cajas distintas en el ERP y en la tienda, y conserva la forma en que hoy se crean. Aplicar revisiones completas hace explícito un retiro, y diferirlo protege el efectivo de un turno en curso. El invariante es igual en todos los países; cada ERP lo publica por su adaptador (ADR-31).",
+          "basis": [
+            "architecture",
+            "legacy"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · ADR-31: caja tomada por la persona y continuidad del turno",
+              "url": "https://pos-docs-starlight.vercel.app/guide/architecture/register-tenure/"
+            }
+          ],
+          "sources": [
+            "odd/tasks/register-tenure.md"
+          ],
+          "agent": "Claude Code · TASK-782",
+          "proposedOn": "2026-11-24"
+        },
+        "decision": null
+      },
+      {
+        "id": "Q-137",
+        "topic": "Cajas",
+        "question": "¿Qué campo de la caja en el legacy contiene el código con que el ERP la identifica, y cuál es su nombre visible?",
+        "kind": "fact",
+        "state": "open",
+        "currentAnswer": "No verificado. El extractor de cajas (TASK-807) exige que se configuren la columna del código del ERP y la del nombre, sin valores por defecto, porque el repositorio no evidencia cuáles son. Un código repetido o una caja inválida rechazan la extracción, y cambiar de columna después de aplicar una revisión retiraría las cajas del maestro y crearía otras.",
+        "answerSources": [
+          "code"
+        ],
+        "auditRefs": [],
+        "parityRefs": [],
+        "sources": [
+          "libs/backend/erp/src/infrastructure/legacy-master/mountain-register-source.ts",
+          "odd/tasks/register-tenure.md"
+        ],
+        "decider": "ti-erp",
+        "consulted": [
+          "soporte",
+          "operaciones"
+        ],
+        "owner": null,
+        "followUp": "FOLLOWUP-041",
+        "workPackages": [
+          "F03-03"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-24",
+        "recommendation": null,
+        "decision": null
+      },
+      {
+        "id": "Q-138",
+        "topic": "Turno",
+        "question": "Al continuar un turno en otro equipo, ¿qué ocurre con los borradores, cobros y otros trabajos que quedaron en curso en el anterior, y se puede cerrar el turno con uno de resultado desconocido?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "POS Platform: continuar en otro equipo no está implementado. Los planes y pagos, los recibos de comando y las acciones guardan el equipo que los inició. Desde TASK-821 pagos, ventas y reportes cuentan el trabajo en curso de una caja y una persona por equipo, separando el de resultado desconocido, pero nada lo usa todavía y no cubre periféricos ni fiscal. El dueño de una cesta ya puede recuperarla desde otra caja de la sucursal (Q-08). Los valores del ADR-31 son provisionales.",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [],
+        "sources": [
+          "odd/tasks/register-tenure.md",
+          "libs/shared/kernel/src/lib/register-pending-work.ts"
+        ],
+        "decider": "operaciones",
+        "consulted": [
+          "tesoreria",
+          "tributario",
+          "producto"
+        ],
+        "owner": null,
+        "followUp": "FOLLOWUP-041",
+        "workPackages": [
+          "F01-01",
+          "F04-03"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-24",
+        "recommendation": {
+          "answer": "Continuar no se bloquea por trabajo en curso. Los borradores se adoptan en el equipo nuevo. Un cobro u otro efecto externo de resultado desconocido nunca se repite: se resuelve por consulta o conciliación y queda visible como pendiente. Cerrar el turno con uno pendiente exige la autorización de un supervisor. El equipo nuevo ve las ventas anteriores del mismo turno.",
+          "scope": "core",
+          "default": null,
+          "rationale": "Bloquear la continuidad impediría usarla justo cuando el equipo falló. Repetir un efecto desconocido podría cobrar o documentar dos veces, y cerrar sin autorización dejaría el arqueo sin explicación. Q-08 decide la venta en espera; Q-19, la anulación del cobro con tarjeta, y esta pregunta, sólo lo que pasa al cambiar de equipo.",
+          "basis": [
+            "architecture",
+            "practice"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · ADR-31: caja tomada por la persona y continuidad del turno",
+              "url": "https://pos-docs-starlight.vercel.app/guide/architecture/register-tenure/"
+            }
+          ],
+          "sources": [
+            "odd/tasks/register-tenure.md"
+          ],
+          "agent": "Claude Code · TASK-782",
+          "proposedOn": "2026-11-24"
+        },
+        "decision": null
+      },
+      {
+        "id": "Q-139",
+        "topic": "Permisos",
+        "question": "¿Una persona tiene un solo rol por sucursal, igual en todas sus cajas, y los reemplazos y accesos temporales cómo se conceden?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "POS Platform: hoy una asignación une a la persona con un rol en una caja y un equipo, así que sus permisos pueden variar entre cajas; admite vigencia. El ADR-31 adopta un rol por persona y sucursal, por decisión del responsable del producto del 2026-11-24, aún sin implementar.",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [],
+        "sources": [
+          "odd/tasks/register-tenure.md",
+          "libs/backend/administration/src/infrastructure/administration-migrations.ts"
+        ],
+        "decider": "operaciones",
+        "consulted": [
+          "seguridad",
+          "producto"
+        ],
+        "owner": null,
+        "followUp": "FOLLOWUP-041",
+        "workPackages": [
+          "F01-01",
+          "F04-06"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-24",
+        "recommendation": {
+          "answer": "Sí: un solo rol base por persona y sucursal, sin cambios al pasar de una caja a otra. Quien además supervisa usa un rol con ambos permisos, y siguen valiendo las reglas por persona, como no aprobar el propio cierre. Un reemplazo cambia el rol con vencimiento. El acceso temporal de soporte es una asignación aparte (Q-143). Reservar una caja a ciertas personas, si hace falta, es una restricción de la caja y no otro rol.",
+          "scope": "core",
+          "default": null,
+          "rationale": "La persona elige la caja después de ingresar: permisos distintos por caja harían impredecible lo que puede hacer y más difícil auditarlo. Q-57 decide qué permisos tiene cada rol, Q-107 quién los modifica y esta pregunta cuántos roles tiene una persona. Es igual en todos los países.",
+          "basis": [
+            "architecture",
+            "practice"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · ADR-31: caja tomada por la persona y continuidad del turno",
+              "url": "https://pos-docs-starlight.vercel.app/guide/architecture/register-tenure/"
+            }
+          ],
+          "sources": [
+            "odd/tasks/register-tenure.md"
+          ],
+          "agent": "Claude Code · TASK-782",
+          "proposedOn": "2026-11-24"
+        },
+        "decision": null
+      },
+      {
+        "id": "Q-140",
+        "topic": "Cajas",
+        "question": "¿Una caja sin medios de pago habilitados se oculta del listado, o se muestra sin permitir abrirla?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "Legacy: no aparece en el listado de apertura (CAJ-006). POS Platform: el listado de cajas no existe todavía, y el ADR-31 no decide este caso. La extracción del legacy (TASK-807) omite del maestro una caja sin medios asociados, así que una que los pierde se retira al aplicar la revisión siguiente. Las cajas creadas por el maestro nacen con configuración y sin habilitar la venta (TASK-819).",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [],
+        "sources": [
+          "libs/backend/erp/src/infrastructure/legacy-master/mountain-register-source.ts",
+          "delivery/specs/F01-07.md",
+          "delivery/specs/F01-01.md",
+          "odd/tasks/register-tenure.md"
+        ],
+        "decider": "operaciones",
+        "consulted": [
+          "tesoreria",
+          "producto"
+        ],
+        "owner": null,
+        "followUp": "FOLLOWUP-041",
+        "workPackages": [
+          "F01-01",
+          "F01-07",
+          "F04-06"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-24",
+        "recommendation": {
+          "answer": "Se muestra como no disponible, con el motivo, y branch-api rechaza abrirla. Sólo deja de listarse la caja que el maestro retira. Quitar los medios de una caja con turno abierto no la retira ni cierra su turno.",
+          "scope": "core",
+          "default": null,
+          "rationale": "Mostrar el motivo permite corregir la configuración; ocultarla hace parecer que la caja no llegó del ERP. El estado del maestro y los medios habilitados son cosas distintas. Coincide con LC-057, que propone rechazar la apertura con motivo. Es igual en todos los países.",
+          "basis": [
+            "practice"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · ADR-31: caja tomada por la persona y continuidad del turno",
+              "url": "https://pos-docs-starlight.vercel.app/guide/architecture/register-tenure/"
+            }
+          ],
+          "sources": [
+            "delivery/specs/F01-01.md"
+          ],
+          "agent": "Claude Code · TASK-782",
+          "proposedOn": "2026-11-24"
+        },
+        "decision": null
+      },
+      {
+        "id": "Q-141",
+        "topic": "Equipos",
+        "question": "¿Quién puede inscribir equipos en una sucursal, cuántos admite por canal y qué ocurre con los que dejan de usarse?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "POS Platform: activa un equipo quien tiene installation.activate, con su cuenta o con un código de un solo uso; cada equipo se activa en una instalación declarada en el aprovisionamiento, con canal y caja fijos. El ADR-31 hace que la activación cree la instalación en la sucursal, sin caja, y no fija un máximo.",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [],
+        "sources": [
+          "odd/tasks/register-tenure.md",
+          "libs/backend/administration/src/application/installation-activation.service.ts",
+          "delivery/specs/F03-06.md"
+        ],
+        "decider": "seguridad",
+        "consulted": [
+          "operaciones",
+          "soporte",
+          "producto"
+        ],
+        "owner": null,
+        "followUp": "FOLLOWUP-041",
+        "workPackages": [
+          "F01-01",
+          "F03-06",
+          "F04-06"
+        ],
+        "priority": "P1",
+        "reviewedOn": "2026-11-24",
+        "recommendation": {
+          "answer": "Sólo quien tiene installation.activate en esa sucursal, con un código de un solo uso por sucursal y canal o con su cuenta. Un máximo de equipos activos por sucursal y canal, configurable; al alcanzarlo, la activación se rechaza con motivo y quien administra desactiva uno. Los equipos sin señal se informan para revisarlos, sin desactivarlos solos. Cada alta, baja y rechazo queda en la auditoría.",
+          "scope": "branch",
+          "default": "El máximo lo fija Seguridad con Operaciones antes del piloto",
+          "rationale": "Al dejar de atar el equipo a una caja, la lista del aprovisionamiento ya no acota cuántos hay: un tope visible y reversible limita altas por error sin frenar un reemplazo urgente. La prueba de posesión no cambia y es común; el máximo varía por sucursal.",
+          "basis": [
+            "architecture",
+            "practice"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · ADR-31: caja tomada por la persona y continuidad del turno",
+              "url": "https://pos-docs-starlight.vercel.app/guide/architecture/register-tenure/"
+            },
+            {
+              "label": "POS Docs · ADR-23: activación de equipos",
+              "url": "https://pos-docs-starlight.vercel.app/guide/architecture/device-activation/"
+            }
+          ],
+          "sources": [
+            "odd/tasks/register-tenure.md"
+          ],
+          "agent": "Claude Code · TASK-782",
+          "proposedOn": "2026-11-24"
+        },
+        "decision": null
+      },
+      {
+        "id": "Q-142",
+        "topic": "Soporte",
+        "question": "¿Con qué identidad se ingresa a la consola central de operaciones, quién recibe ámbito de sucursal o de país y quién lo aprueba?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "POS Platform: no existe la consola. country-api recibe y proyecta el estado de las cajas (TASK-805), sin publicador en la sucursal ni consulta expuesta. El ADR-33 la define como aplicación web propia con identidad corporativa y segundo factor (F03-07) y, hasta entonces, cuentas locales de country-api en QA.",
+        "answerSources": [
+          "code",
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [],
+        "sources": [
+          "odd/tasks/register-tenure.md",
+          "libs/backend/sync/README.md",
+          "delivery/specs/F04-10.md"
+        ],
+        "decider": "seguridad",
+        "consulted": [
+          "soporte",
+          "operaciones",
+          "producto"
+        ],
+        "owner": null,
+        "followUp": "FOLLOWUP-041",
+        "workPackages": [
+          "F03-07",
+          "F04-06",
+          "F04-10"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-24",
+        "recommendation": {
+          "answer": "Cuenta corporativa personal con segundo factor, sin equipo de caja. Cada persona recibe un ámbito explícito, de sucursal o de país, con vigencia y aprobación de otra persona; sin ámbito no ve nada. Las cuentas locales de country-api sólo se admiten en QA. Cada consulta y acción queda en la auditoría del país.",
+          "scope": "core",
+          "default": null,
+          "rationale": "La consola reúne datos de todas las sucursales, así que su acceso exige más que el de una tienda y no debe depender de un equipo de caja. El mecanismo es común a todos los países; qué proveedor de identidad lo cumple se define en F03-07.",
+          "basis": [
+            "architecture",
+            "practice"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · ADR-33: consola de operaciones central",
+              "url": "https://pos-docs-starlight.vercel.app/guide/architecture/operations-console/"
+            }
+          ],
+          "sources": [
+            "odd/tasks/register-tenure.md"
+          ],
+          "agent": "Claude Code · TASK-782",
+          "proposedOn": "2026-11-24"
+        },
+        "decision": null
+      },
+      {
+        "id": "Q-143",
+        "topic": "Soporte",
+        "question": "¿Cómo accede Soporte al trabajo de una persona para diagnosticar: con qué duración, quién lo aprueba y qué queda registrado?",
+        "kind": "rule",
+        "state": "open",
+        "currentAnswer": "POS Platform: no existe acceso de soporte. El ADR-32 adopta diagnóstico, «ver como» de solo lectura y una asignación propia y temporal; sus 30 minutos y una jornada son valores provisionales de QA, sin implementar, hasta que Seguridad los decida.",
+        "answerSources": [
+          "spec"
+        ],
+        "auditRefs": [],
+        "parityRefs": [],
+        "sources": [
+          "odd/tasks/register-tenure.md",
+          "delivery/specs/F04-10.md"
+        ],
+        "decider": "seguridad",
+        "consulted": [
+          "soporte",
+          "operaciones",
+          "legal"
+        ],
+        "owner": null,
+        "followUp": "FOLLOWUP-041",
+        "workPackages": [
+          "F04-06",
+          "F04-10"
+        ],
+        "priority": "P2",
+        "reviewedOn": "2026-11-24",
+        "recommendation": {
+          "answer": "Soporte actúa siempre con su propia cuenta. «Ver como» exige un permiso con ámbito, motivo y ticket, vence y el servidor rechaza toda escritura; no toma la tenencia de la caja, y la persona observada lo ve en «Mi cuenta». Para reproducir un error recibe una asignación temporal, aprobada por otra persona, que vence sola, y abre su propio turno en una caja libre. Todo queda en la auditoría, también cada vista abierta.",
+          "scope": "country",
+          "default": "«Ver como», 30 minutos; asignación temporal en producción, una jornada",
+          "rationale": "Conserva la capacidad de diagnosticar sin atribuir a una persona lo que hizo otra. El invariante es común; las duraciones y el aviso a la persona observada los confirma cada país con Seguridad y Legal.",
+          "basis": [
+            "architecture",
+            "practice"
+          ],
+          "references": [
+            {
+              "label": "POS Docs · ADR-32: acceso de soporte sin suplantar a la persona",
+              "url": "https://pos-docs-starlight.vercel.app/guide/architecture/support-access/"
+            }
+          ],
+          "sources": [
+            "odd/tasks/register-tenure.md"
+          ],
+          "agent": "Claude Code · TASK-782",
+          "proposedOn": "2026-11-24"
+        },
+        "decision": null
       }
     ],
     "merged": [
