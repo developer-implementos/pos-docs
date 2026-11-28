@@ -44,7 +44,7 @@ Reactivar un equipo, desactivarlo y perder la llave funcionan como en el [ADR-23
 ## Iniciar sesión y elegir la caja
 
 1. El inicio de sesión no cambia: desafío de un solo uso, firma con la llave del equipo y contraseña. La sesión queda ligada a la persona y a la credencial del equipo, **sin caja**.
-2. Con una sesión sin caja, la persona solo puede ver el tablero de cajas, ir a «Mi cuenta» y cerrar sesión. Las pantallas de administración no exigen caja.
+2. Con una sesión sin caja, la persona ve el tablero de cajas, «Mi cuenta» y el trabajo de la sucursal que su rol permite: administración (usuarios, roles, equipos y auditoría), «Turnos de la sucursal» y «Seguimiento de operaciones», con sus expedientes y conciliaciones. Sus operaciones no exigen caja en el servidor ([TASK-855](https://github.com/developer-implementos/pos-platform/issues/855)). Un administrador entra directo a administración; elegir una caja en el tablero abre el trabajo de esa caja. Lo que escribe en un turno sigue exigiendo caja: vender, cobrar, mover efectivo, consultar documentos fiscales, imprimir y verificar como segunda persona.
 3. El tablero muestra cada caja activa de la sucursal en uno de estos estados:
 
 | Estado | Qué ve la persona | Qué puede hacer |
@@ -68,9 +68,8 @@ Asistir liga la sesión a la caja que tiene este equipo, **sin época y sin toma
 | `pricing.discount.authorize` | Autorizar un descuento manual |
 | `payment.transfer.verify` | Verificar como otra persona una transferencia declarada en ese turno |
 | `payment.voucher.verify` | Verificar como otra persona un voucher manual de tarjeta |
-| `operation.case.assign`, `operation.case.resolve` | Asignar o resolver el expediente de una de sus operaciones |
 
-Los cuatro últimos se agregaron por decisión del responsable del producto del 28-11-2026 ([TASK-881](https://github.com/developer-implementos/pos-platform/issues/881)). Las listas de transferencias y vouchers por verificar, y el detalle de un pago, se leen en la caja y el equipo de la sesión, y quien verifica debe ser otra persona que el titular. Sin asistencia, la verificación independiente era imposible mientras el turno seguía abierto. Leer un expediente no alcanza: solo los actos que deciden sobre la operación.
+Los dos últimos se agregaron por decisión del responsable del producto del 28-11-2026 ([TASK-881](https://github.com/developer-implementos/pos-platform/issues/881)). Verificar una transferencia o un voucher ocurre en la caja: quien verifica debe ser otra persona que el titular, y sin asistencia la verificación independiente era imposible mientras el turno seguía abierto. Los expedientes, la conciliación y las colas de revisión son trabajo de la sucursal y no exigen caja, así que ninguno de sus permisos asiste una.
 
 ## Tenencia y exclusión del equipo anterior
 
