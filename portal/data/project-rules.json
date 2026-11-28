@@ -2,17 +2,17 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "cf0002372fcdd8a768f72c5e7248f8032f3b0dad",
+    "revision": "ed96da3df9592e5567948ac0243e4c04eef93616",
     "path": "delivery/business-rules.json"
   },
   "integration": {
     "reference": "main",
     "included": true
   },
-  "sha256": "6cc351a8030b0cb104395005dbf2388f2597d7517414daf618cb113e367b9040",
+  "sha256": "f2fb08ec5a9ca8aa1e7843e7203fc66d6d3265ee3e95a1aeac783524ae2ba5eb",
   "register": {
     "schemaVersion": 2,
-    "reviewedOn": "2026-11-13",
+    "reviewedOn": "2026-11-24",
     "posPlatformRevision": "00faf56f1f4205c54fd52bb3e77d880b808b42a2",
     "areas": {
       "CAJ": "Caja",
@@ -136,7 +136,10 @@
         "area": "CAJ",
         "disclosure": "public",
         "workPackage": "F01-07",
-        "questions": [],
+        "questions": [
+          "Q-136",
+          "Q-140"
+        ],
         "title": "Listado de cajas disponibles por sucursal",
         "type": "operacion",
         "kind": "capacidad",
@@ -1124,7 +1127,8 @@
         "disclosure": "public",
         "workPackage": "F01-01",
         "questions": [
-          "Q-56"
+          "Q-56",
+          "Q-138"
         ],
         "title": "Al iniciar sesión se recupera la caja abierta del usuario en la sucursal",
         "type": "operacion",

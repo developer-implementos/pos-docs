@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "source": {
     "repository": "https://github.com/developer-implementos/pos-platform",
-    "revision": "cf0002372fcdd8a768f72c5e7248f8032f3b0dad",
+    "revision": "ed96da3df9592e5567948ac0243e4c04eef93616",
     "path": "delivery/follow-ups.json",
-    "sha256": "5f8d1f40dca840e6a36e74433364e13116905aac39936acb6d9a5a4b908d0e9c"
+    "sha256": "9af33da7c193d8b2c849684c13969de502a63d2f0c70a744c39b3127491dddc3"
   },
   "content": {
     "schemaVersion": 1,
@@ -1273,9 +1273,9 @@
           "F05-08"
         ],
         "summary": "Decidir si un cambio de red de una sesión alerta o bloquea, y fijar la retención de la dirección registrada",
-        "impact": "Desde TASK-777 la auditoría de accesos y cada sesión conservan la dirección de red observada por branch-api, como señal complementaria del riesgo RK-1 (un token copiado sirve desde otro equipo hasta que vence). Ningún proceso la compara ni alerta: una diferencia entre el ingreso y la renovación sólo queda registrada. La retención provisional es la de la auditoría, 90 días (Q-135).",
+        "impact": "Desde TASK-777 la auditoría de accesos y cada sesión conservan la dirección de red observada por branch-api, como señal complementaria del riesgo RK-1 (un token copiado sirve desde otro equipo hasta que vence). Desde TASK-814 una solicitud autenticada que llega desde una dirección distinta de la última conocida (renovación, si no ingreso) se audita una vez por sesión y dirección, con la acción session.network-change y un aviso técnico sin dirección ni sesión; nunca bloquea, exige reautenticación ni cambia la respuesta, y se acota a 10 direcciones por sesión. Las direcciones se comparan completas: una red móvil o IPv6 con direcciones temporales produce entradas que no son abuso, y no se fija ninguna regla de prefijo. La retención provisional es la de la auditoría, 90 días (Q-135).",
         "impactScope": "review",
-        "nextAction": "Seguridad decide si un cambio de red entre ingreso, renovación y solicitudes debe alertar, exigir reautenticación o sólo registrarse, con qué tolerancia para redes móviles o compartidas, y responde Q-135 sobre retención y acceso a la dirección.",
+        "nextAction": "Seguridad decide si un cambio de red entre ingreso, renovación y solicitudes debe alertar, exigir reautenticación o sólo registrarse, con qué tolerancia para redes móviles, compartidas o IPv6 con direcciones temporales (comparar un prefijo, p. ej. /64, o la dirección completa como hoy), y responde Q-135 sobre retención y acceso a la dirección.",
         "requestedFrom": "Responsable de Seguridad de F05-08",
         "owner": null,
         "closureCriteria": "Decisión registrada sobre alertas o bloqueo por cambio de red, con su tolerancia, y respuesta de Q-135; si se decide alertar, una tarea que la implemente.",
@@ -1314,11 +1314,45 @@
           }
         ],
         "resolution": null
+      },
+      {
+        "id": "FOLLOWUP-041",
+        "kind": "decision",
+        "state": "open",
+        "workPackages": [
+          "F01-01",
+          "F01-07",
+          "F03-03",
+          "F03-06",
+          "F03-07",
+          "F04-03",
+          "F04-06",
+          "F04-10"
+        ],
+        "summary": "Confirmar con el negocio las reglas que los ADR-31, ADR-32 y ADR-33 dejan provisionales: cajas, equipos, continuidad del turno, soporte y consola",
+        "impact": "El responsable del producto aceptó los tres ADR como decisiones de arquitectura el 2026-11-24. Las reglas de negocio de Q-136 y Q-138 a Q-143 siguen abiertas, sin decisión registrada. El hecho de Q-137 (qué campo del legacy es el código del ERP) debe confirmarse antes de aplicar el maestro en QA: cambiar de campo después retiraría las cajas del maestro y crearía otras.",
+        "impactScope": "operational",
+        "nextAction": "TI e Integración ERP confirma Q-137 y decide Q-136. Llevar a Operaciones Q-138, Q-139 y Q-140, y a Seguridad Q-141, Q-142 y Q-143, con los consultados de cada una; registrar cada respuesta o decisión en su pregunta según delivery/README.md y trasladarla a su ficha.",
+        "requestedFrom": "TI e Integración ERP, Operaciones de tiendas y Seguridad TI",
+        "owner": null,
+        "closureCriteria": "Q-137 respondida con evidencia, y Q-136 y Q-138 a Q-143 decididas en business-questions.json y trasladadas a sus fichas.",
+        "reviewedOn": "2026-11-24",
+        "evidence": [
+          {
+            "url": "https://github.com/developer-implementos/pos-platform/issues/782",
+            "label": "TASK-782: caja tomada por la persona, soporte y consola"
+          },
+          {
+            "url": "https://github.com/developer-implementos/pos-docs/pull/177",
+            "label": "POS Docs #177: ADR-31, ADR-32 y ADR-33"
+          }
+        ],
+        "resolution": null
       }
     ]
   },
   "issues": {
-    "observedAt": "2026-11-24T20:57:48.225Z",
+    "observedAt": "2026-11-28T19:24:54.270Z",
     "repository": "https://github.com/developer-implementos/pos-platform",
     "entries": [
       {
