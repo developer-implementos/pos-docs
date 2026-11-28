@@ -50,12 +50,27 @@ Reactivar un equipo, desactivarlo y perder la llave funcionan como en el [ADR-23
 | Estado | Qué ve la persona | Qué puede hacer |
 | --- | --- | --- |
 | Disponible | Sin turno abierto | Abrirla, si su rol lo permite y no tiene otro turno abierto |
-| Ocupada | Quién la tiene, desde qué hora y en qué equipo, con su última señal | Nada; un supervisor puede cerrar ese turno con testigo ([TASK-761](https://github.com/developer-implementos/pos-platform/issues/761)) |
+| Ocupada | Quién la tiene, desde qué hora y en qué equipo, con su última señal | Nada como titular. Desde el equipo del turno, quien tiene un permiso de asistencia la asiste (ver [Asistir una caja](#asistir-una-caja)); un supervisor puede cerrar ese turno con testigo ([TASK-761](https://github.com/developer-implementos/pos-platform/issues/761)) |
 | Tu turno | Su propio turno abierto, en este equipo o en otro | Continuar aquí |
 | Arqueo pendiente | Un turno abierto de un día anterior | El arqueo antes de cualquier otra cosa |
-| Retenida por un cierre | Sin turno abierto, con un cierre que espera la decisión de un supervisor o fue rechazado | Nada hasta que se resuelva |
+| Retenida por un cierre | Sin turno abierto, con un cierre que espera la decisión de un supervisor o fue rechazado | Nada hasta que se resuelva; quien aprueba cierres la asiste desde el equipo que cerró para decidirlo |
 
 4. Elegir una caja liga la sesión a la caja y a la época de su tenencia. Desde ahí, el servidor deriva la caja de la sesión: el cliente nunca la declara en una operación.
+
+## Asistir una caja
+
+Asistir liga la sesión a la caja que tiene este equipo, **sin época y sin tomar la tenencia**, para actuar sobre el turno de otra persona. Quien asiste no obtiene los permisos del titular: no vende ni mueve efectivo como titular, y solo ejerce los actos de aprobación de sus propios permisos. Se asiste desde el equipo del turno, o desde el equipo que hizo el cierre que retiene la caja.
+
+| Permiso | Acto sobre el turno de otra persona |
+| --- | --- |
+| `shift.close.approve` | Cerrar el turno con testigo o decidir un cierre; es el único que alcanza una caja retenida por un cierre, sin turno |
+| `cash.movement.approve` | Aprobar un movimiento de efectivo |
+| `pricing.discount.authorize` | Autorizar un descuento manual |
+| `payment.transfer.verify` | Verificar como otra persona una transferencia declarada en ese turno |
+| `payment.voucher.verify` | Verificar como otra persona un voucher manual de tarjeta |
+| `operation.case.assign`, `operation.case.resolve` | Asignar o resolver el expediente de una de sus operaciones |
+
+Los cuatro últimos se agregaron por decisión del responsable del producto del 28-11-2026 ([TASK-881](https://github.com/developer-implementos/pos-platform/issues/881)). Las listas de transferencias y vouchers por verificar, y el detalle de un pago, se leen en la caja y el equipo de la sesión, y quien verifica debe ser otra persona que el titular. Sin asistencia, la verificación independiente era imposible mientras el turno seguía abierto. Leer un expediente no alcanza: solo los actos que deciden sobre la operación.
 
 ## Tenencia y exclusión del equipo anterior
 
@@ -93,7 +108,7 @@ Valores provisionales, pendientes de operaciones:
 | El cliente no decide en qué caja escribe | El servidor deriva la caja de la sesión y valida la tenencia en cada comando |
 | Dos equipos no escriben el mismo turno | La época de la tenencia excluye al anterior, también si vuelve la conexión |
 | Cada movimiento de un turno tiene responsable | La auditoría registra cada apertura, transferencia y rechazo, con persona, equipo y época |
-| Nadie opera el turno de otra persona | Un turno ajeno solo se cierra, con supervisor y testigo |
+| Nadie opera el turno de otra persona | Un turno ajeno solo se cierra, con supervisor y testigo; quien asiste no toma la tenencia ni los permisos del titular |
 
 ## Publicación al país
 
