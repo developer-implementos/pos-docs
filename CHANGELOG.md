@@ -11,6 +11,13 @@ Los cambios de herramientas, pruebas y CI no aparecen aquí; quedan en el [regis
 
 Este archivo lo escribe [release-please](https://github.com/googleapis/release-please) desde los títulos de los PR, y cada versión queda como [release en GitHub](https://github.com/developer-implementos/pos-docs/releases). Para recibir un aviso por versión, usa *Watch → Custom → Releases* en el repositorio. No se edita a mano: cómo se escribe una buena entrada está en la [guía de versiones](tools/release/README.md).
 
+## [0.11.11](https://github.com/developer-implementos/pos-docs/compare/v0.11.10...v0.11.11) (2026-11-28)
+
+
+### Contenido actualizado
+
+* **architecture:** [TASK-881] documentar en el ADR-31 quién asiste una caja y para qué ([#190](https://github.com/developer-implementos/pos-docs/issues/190)) ([9384205](https://github.com/developer-implementos/pos-docs/commit/9384205bb32c113b75454bee9dbba2794081d4b4))
+
 ## [0.11.10](https://github.com/developer-implementos/pos-docs/compare/v0.11.9...v0.11.10) (2026-11-27)
 
 
